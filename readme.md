@@ -4,8 +4,6 @@
 
 esmBot is an entertainment-focused Discord bot made using [Eris](https://abal.moe/Eris/) with soundboard and image manipulation commands.
 
-[![Discord Bots](https://discordbots.org/api/widget/429305856241172480.svg)](https://discordbots.org/bot/429305856241172480)
-
 ## Usage
 You can invite the bot to your server using this link: https://discordapp.com/oauth2/authorize?client_id=515571942418546689&scope=bot&permissions=70642766
 
