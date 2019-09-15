@@ -20,7 +20,6 @@
     "bufferutil": "^4.0.1",
     "cowsay": "^1.4.0",
     "dblapi.js": "^2.3.0",
-    "dotbeat": "^1.0.2",
     "enmap": "^4.8.5",
     "eris": "github:abalabahaha/eris#dev",
     "erlpack": "github:discordapp/erlpack",
