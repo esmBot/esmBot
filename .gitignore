@@ -36,3 +36,4 @@ bannedusers.json
 todo.txt
 tweets.json
 .vscode/
+migratedb.js
