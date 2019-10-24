@@ -1,4 +1,6 @@
 const client = require("./client.js");
+const fs = require("fs");
+const logger = require("./logger.js");
 
 module.exports = async (sound, message) => {
   if (message.member.voiceState.channelID) {
@@ -9,10 +11,10 @@ module.exports = async (sound, message) => {
     if (connection.playing) {
       connection.stopPlaying();
     }
-    connection.play(require("fs").createReadStream(sound));
+    connection.play(fs.createReadStream(sound));
     connection.on("error", (error) => {
       voiceChannel.leave();
-      require("./logger.js").error(error);
+      logger.error(error);
     });
     connection.once("end", () => {
       voiceChannel.leave();

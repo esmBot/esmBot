@@ -16,7 +16,8 @@ module.exports = async (message) => {
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildConf.prefix;
 
   // ignore other stuff
-  if (message.content.startsWith(prefix) === false && message.mentions.indexOf(client.user) <= -1 && message.channel.id !== "573553254575898626") return;
+  // && !message.attachments && message.attachments[0].filename !== "1561668913236-3.gif"
+  if (message.content.startsWith(prefix) === false && message.mentions.indexOf(client.user) <= -1 && message.channel.id !== "573553254575898626" && (!message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) return;
 
   // funny stuff
   if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
@@ -31,6 +32,12 @@ module.exports = async (message) => {
     } else {
       await client.createMessage(generalChannel.id, message.content);
     }
+  }
+  const odyMessages = ["Nope!", "No jojo gif here", "sorry ody, this gif is illegal", "get owned"];
+  // || (message.attachments && message.attachments[0].filename === "1561668913236-3.gif")
+  if (message.channel.guild.id === "322114245632327703" && (message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) {
+    await message.delete("anti-jojo mechanism");
+    await client.createMessage(message.channel.id, misc.random(odyMessages));
   }
 
   // separate commands and args
