@@ -7,10 +7,18 @@ const misc = require("../utils/misc.js");
 // run when ready
 module.exports = async () => {
   // make sure settings/tags exist
-  client.guilds.forEach(guild => {
-    database.settings.ensure(guild.id, misc.defaults);
-    database.tags.ensure(guild.id, misc.tagDefaults);
-  });
+  for (const guild of client.guilds) {
+    const guildDB = (await database.find({ id: guild.id }).exec())[0];
+    if (!guildDB) {
+      console.log(`Registering database entry for ${guild.id}...`);
+      const newGuild = new database({
+        id: guild.id,
+        tags: misc.tagDefaults,
+        prefix: "&"
+      });
+      await newGuild.save();
+    }
+  }
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {

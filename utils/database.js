@@ -1,6 +1,11 @@
 // database stuff
-const Enmap = require("enmap");
-const settings = new Enmap({ name: "settings" });
-exports.settings = settings;
-const tags = new Enmap({ name: "tags" });
-exports.tags = tags;
+const mongoose = require("mongoose");
+const config = require("../config.json");
+mongoose.connect(config.mongoURL);
+const guildSchema = new mongoose.Schema({
+  id: String,
+  tags: Map,
+  prefix: String
+});
+const Guild = mongoose.model("Guild", guildSchema);
+module.exports = Guild;

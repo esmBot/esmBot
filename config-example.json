@@ -6,6 +6,7 @@
   "cseID": "<PUT CUSTOM SEARCH ID HERE>",
   "dblToken": "<PUT DISCORDBOTS.ORG TOKEN HERE>",
   "botOwner": "<PUT THE USER ID OF THE BOT OWNER HERE>",
+  "mongoURL": "<PUT MONGODB DATABASE URL HERE>",
   "activityMessages": [
     "<PUT WHATEVER MESSAGES YOU WANT HERE>",
     "<LIKE THIS>"

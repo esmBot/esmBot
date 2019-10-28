@@ -12,7 +12,7 @@ module.exports = async (message) => {
 
   // prefix can be a mention or a set of special characters
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const guildConf = database.settings.ensure(message.channel.guild.id, misc.defaults);
+  const guildConf = (await database.find({ id: message.channel.guild.id }).exec())[0];
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildConf.prefix;
 
   // ignore other stuff
