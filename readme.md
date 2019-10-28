@@ -22,7 +22,8 @@ npm install
 ```
 
 Finally, fill in the info inside `config.json` and run `app.js`.
+If you want to run this on Windows, I highly recommend using Windows Subsystem for Linux.
 
 ## Credits
-Logo by [Stellio](https://twitter.com/MeloncholySteel).
+Icon by [Stellio](https://twitter.com/MeloncholySteel).
 All images and sounds are copyright of their respective owners.

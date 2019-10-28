@@ -12,7 +12,7 @@ exports.run = async (message) => {
   const template = "./assets/images/scott.png";
   const imageData = await fetch(image.url);
   const imageBuffer = await imageData.buffer();
-  const path = require("tempy").file({ extension: image.type });
+  const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   require("util").promisify(fs.writeFile)(path, imageBuffer);
   const command = gm(template).out("-gravity").out("Center").out("(").out(path).out("-virtual-pixel").out("transparent").out("-resize").out("415x234!").out("+distort").out("Perspective").out("0,0 129,187 415,0 517,182 415,234 517,465 0,234 132,418").out("-geometry").out("-110+83").out(")").out("-composite");
   const resultBuffer = await gmToBuffer(command);

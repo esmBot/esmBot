@@ -3,7 +3,6 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const tempy = require("tempy");
 const fetch = require("node-fetch");
 
 exports.run = async (message) => {
@@ -12,12 +11,8 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const imageData = await fetch(image.url);
   const imageBuffer = await imageData.buffer();
-  const data = tempy.file({
-    extension: image.type
-  });
-  const data2 = tempy.file({
-    extension: image.type
-  });
+  const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
+  const data2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   gm(imageBuffer).gravity("North").crop(0, "50%").strip().write(data2, (error) => {
     if (error) console.error;
     gm(data2).flip().strip().write(data, async (error) => {
