@@ -5,28 +5,28 @@ const paginator = require("../utils/pagination/pagination.js");
 const { random } = require("../utils/misc.js");
 
 exports.run = async (message, args) => {
-  const guild = (await database.find({ id: message.channel.guild.id }).exec())[0];
+  const guild = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
   const tags = guild.tags;
   const blacklist = ["add", "edit", "remove", "delete", "list", "random"];
   switch (args[0].toLowerCase()) {
     case "add":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to add!`;
       if (blacklist.indexOf(args[1].toLowerCase()) > -1) return `${message.author.mention}, you can't make a tag with that name!`;
-      if (tags.exists(args[1].toLowerCase())) return `${message.author.mention}, this tag already exists!`;
+      if (tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag already exists!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been added!`;
     case "delete":
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
-      if (!tags.exists(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags[args[1].toLowerCase()].author !== message.author.id && tags[args[1].toLowerCase()].author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
+      if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
       tags.set(args[1].toLowerCase(), undefined);
       await guild.save();
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
     case "edit":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to edit!`;
-      if (!tags.exists(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags[args[1].toLowerCase()].author !== message.author.id && tags[args[1].toLowerCase()].author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
+      if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been edited!`;
     case "list":
@@ -34,11 +34,11 @@ exports.run = async (message, args) => {
       if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
       var pageSize = 15;
       var embeds = [];
-      console.log(Array.from(tags.keys()));
       var groups = Array.from(tags.keys()).map((item, index) => {
         return index % pageSize === 0 ? Array.from(tags.keys()).slice(index, index + pageSize) : null;
+      }).filter((item) => {
+        return item;
       });
-      console.log(groups);
       for (const [i, value] of groups.entries()) {
         embeds.push({
           "embed": {
@@ -61,8 +61,8 @@ exports.run = async (message, args) => {
       return tags[random(Object.keys(tags))].content;
     default:
       if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
-      if (!tags.exists(args[0].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      return tags[`${args[0].toLowerCase()}.content`];
+      if (!tags.has(args[0].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
+      return tags.get(args[0].toLowerCase()).content;
   }
 };
 

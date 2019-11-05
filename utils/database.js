@@ -8,4 +8,14 @@ const guildSchema = new mongoose.Schema({
   prefix: String
 });
 const Guild = mongoose.model("Guild", guildSchema);
-module.exports = Guild;
+/*const membersSchema = new mongoose.Schema({
+
+});*/
+const xpSchema = new mongoose.Schema({
+  id: String,
+  members: Map,
+  enabled: Boolean
+});
+const XP = mongoose.model("XP", xpSchema);
+exports.guilds = Guild;
+exports.xp = XP;

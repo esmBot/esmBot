@@ -31,12 +31,12 @@
     "mongoose": "^5.7.7",
     "node-fetch": "^2.6.0",
     "node-opus": "^0.3.3",
-    "qrcode": "^1.4.2",
+    "qrcode": "^1.4.3",
     "retrotext": "github:TheEssem/retrotext",
     "sharp": "^0.22.1",
     "uws": "^10.148.1",
     "winston": "^3.2.1",
-    "zlib-sync": "^0.1.5"
+    "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
     "eslint": "^5.15.2",

@@ -12,16 +12,58 @@ module.exports = async (message) => {
 
   // prefix can be a mention or a set of special characters
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const guildConf = (await database.find({ id: message.channel.guild.id }).exec())[0];
+  const guildConf = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildConf.prefix;
 
+  // xp stuff
+  const xp = (await database.xp.find({ id: message.channel.guild.id }).exec())[0];
+  if (xp.enabled === true) {
+    //console.log(xp.members);
+    const info = xp.members.get(message.author.id);
+    if (!info) {
+      logger.log("Member not in XP database, adding");
+      const memberInfo = {
+        xpAmount: 1,
+        level: 0
+      };
+      xp.members.set(message.author.id, memberInfo);
+      await xp.save();
+    } else {
+      let newLevel;
+      const newAmount = info.xpAmount + 1;
+      //xp.members[message.author.id].xpAmount++;
+      const level = Math.floor(0.1 * Math.sqrt(newAmount));
+      if (info.level < level) {
+        newLevel = info.level++;
+        //xp.members[message.author.id].level++;
+        logger.log(`${message.author.username} has leveled up`);
+        if (message.channel.guild.id === "631290275456745502" && level === 5) {
+          await message.author.addRole("638759280752853022", "level 5");
+          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the better members role!`);
+        } else if (message.channel.guild.id === "631290275456745502" && level === 10) {
+          await message.author.addRole("638822807626711078", "level 10");
+          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the even better members role!`);
+        } else if (message.channel.guild.id === "631290275456745502" && level === 25) {
+          await message.author.addRole("631299545657114645", "level 25");
+          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the best members role!`);
+        } else {
+          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}!`);
+        }
+      }
+      xp.members.set(message.author.id, {
+        xpAmount: newAmount,
+        level: newLevel ? newLevel : info.level
+      });
+      await xp.save();
+    }
+  }
+
   // ignore other stuff
-  // && !message.attachments && message.attachments[0].filename !== "1561668913236-3.gif"
   if (message.content.startsWith(prefix) === false && message.mentions.indexOf(client.user) <= -1 && message.channel.id !== "573553254575898626" && (!message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) return;
 
   // funny stuff
   if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
-    const generalChannel = client.guilds.get("322114245632327703").channels.get("322114245632327703");
+    const generalChannel = client.guilds.get("631290275456745502").channels.get("631290275888627713");
     if (message.attachments.length !== 0) {
       const attachments = [];
       for (const attachment of message.attachments) {

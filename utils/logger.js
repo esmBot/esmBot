@@ -9,7 +9,7 @@ const logger = winston.createLogger({
   format: winston.format.printf(log => `[${moment().format("YYYY-MM-DD HH:mm:ss")}]: [${log.level.toUpperCase()}] - ${log.message}`)
 });
 
-exports.log = (type = "info", content) => logger.log(type, content);
+exports.log = (type, content) => content ? logger.log(type, content) : logger.log("info", content);
 
 exports.error = (...args) => this.log("error", ...args);
 
