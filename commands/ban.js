@@ -6,7 +6,7 @@ exports.run = async (message) => {
   const member = message.mentions[0];
   if (member) {
     try {
-      await message.channel.guild.banMember(member.id);
+      await message.channel.guild.banMember(member.id, 0, `ban command used by @${message.author.username}#${message.author.discriminator}`);
       return `Successfully banned ${member.mention}.`;
     } catch (error) {
       console.error(error);
