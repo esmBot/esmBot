@@ -3,17 +3,14 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const fetch = require("node-fetch");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to mirror!`;
   message.channel.sendTyping();
-  const imageData = await fetch(image.url);
-  const imageBuffer = await imageData.buffer();
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   const data2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
-  gm(imageBuffer).gravity("East").crop("50%", 0).strip().write(data2, (error) => {
+  gm(image.data).gravity("East").crop("50%", 0).strip().write(data2, (error) => {
     if (error) console.error;
     gm(data2).flop().strip().write(data, async (error) => {
       if (error) console.error;

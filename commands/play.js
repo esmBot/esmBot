@@ -11,9 +11,9 @@ exports.run = async (message) => {
       inlineVolume: true
     });
     connection.setVolume(0.5);
-    connection.on("error", () => {
+    connection.on("error", (error) => {
       voiceChannel.leave();
-      console.error;
+      throw error;
     });
     connection.on("end", () => {
       voiceChannel.leave();

@@ -2,20 +2,17 @@ const gm = require("gm").subClass({
   imageMagick: true
 });
 const gmToBuffer = require("../utils/gmbuffer.js");
-const fetch = require("node-fetch");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a MemeCenter watermark!`;
   message.channel.sendTyping();
   const watermark = "./assets/images/memecenter.png";
-  const imageData = await fetch(image.url);
-  const imageBuffer = await imageData.buffer();
   let resultBuffer;
-  gm(imageBuffer).size(async (error, size) => {
+  gm(image.data).size(async (error, size) => {
     if (error) console.error;
-    const command = gm(imageBuffer).out(watermark).background("#FFFFFF").gravity("East").out("-smush").out("-9");
-    const output = await gmToBuffer(command);
+    const command = gm(image.data).out(watermark).background("#FFFFFF").gravity("East").out("-smush").out("-9");
+    const output = await gmToBuffer(command, "png");
     gm(output).size(async (error, size2) => {
       if (error) console.error;
       resultBuffer = output;
@@ -25,7 +22,7 @@ exports.run = async (message) => {
       }
       return message.channel.createMessage("", {
         file: resultBuffer,
-        name: "memecenter.png"
+        name: `memecenter.${image.type}`
       });
     });
   });

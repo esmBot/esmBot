@@ -19,7 +19,8 @@ exports.clean = async (text) => {
     .replace(config.catToken, "<redacted>")
     .replace(config.googleKey, "<redacted>")
     .replace(config.cseID, "<redacted>")
-    .replace(config.dblToken, "<redacted>");
+    .replace(config.dblToken, "<redacted>")
+    .replace(config.mongoURL, "<redacted>");
 
   return text;
 };

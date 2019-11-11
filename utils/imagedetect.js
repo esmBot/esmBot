@@ -14,14 +14,14 @@ const typeCheck = async (image) => {
       // if it is, then return the url with the file type
       return {
         type: imageType.ext,
-        url: image
+        data: imageBuffer
       };
     } else {
-      // if not, then return a message
-      return "Not the correct file type";
+      // if not, then return false
+      return false;
     }
   } catch (error) {
-    if (error) console.error;
+    throw error;
   }
 };
 
@@ -36,7 +36,7 @@ module.exports = async (cmdMessage) => {
       // get type of file
       const type = await typeCheck(message.attachments[0].url);
       // move to the next message if the file isn't an image
-      if (type === "Not the correct file type") continue;
+      if (type === false) continue;
       // if the file is an image then return it
       return type;
       // if there's nothing in the attachments check the embeds next
@@ -44,12 +44,12 @@ module.exports = async (cmdMessage) => {
       // embeds can have 2 possible entries with images, we check the thumbnail first
       if (message.embeds[0].thumbnail) {
         const type = await typeCheck(message.embeds[0].thumbnail.url);
-        if (type === "Not the correct file type") continue;
+        if (type === false) continue;
         return type;
         // if there isn't a thumbnail check the image area
       } else if (message.embeds[0].image) {
         const type = await typeCheck(message.embeds[0].image.url);
-        if (type === "Not the correct file type") continue;
+        if (type === false) continue;
         return type;
       }
     }

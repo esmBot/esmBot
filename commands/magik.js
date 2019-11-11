@@ -2,15 +2,12 @@ const gm = require("gm").subClass({
   imageMagick: true
 });
 const gmToBuffer = require("../utils/gmbuffer.js");
-const fetch = require("node-fetch");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add some magik!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
-  const imageData = await fetch(image.url);
-  const imageBuffer = await imageData.buffer();
-  gm(imageBuffer).resize(800, 800).stream((error, stream) => {
+  gm(image.data).resize(800, 800).stream((error, stream) => {
     if (error) console.error;
     gm(stream).out("-liquid-rescale", "400x400").stream(async (error, stream2) => {
       if (error) console.error;

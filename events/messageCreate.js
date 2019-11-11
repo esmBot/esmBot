@@ -101,7 +101,7 @@ module.exports = async (message) => {
     }
   } catch (error) {
     logger.error(error.stack);
-    await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here: <https://github.com/TheEssem/esmBot-rewrite/issues>", [{
+    await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/TheEssem/esmBot-rewrite/issues>", [{
       file: Buffer.from(`Message: ${error}\n\nStack Trace: ${error.stack}`),
       name: "error.txt"
     }]);
