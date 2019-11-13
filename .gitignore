@@ -3,6 +3,7 @@ data/
 appold.js
 migrate.js
 config.json
+.env
 logs
 *.log
 npm-debug.log*

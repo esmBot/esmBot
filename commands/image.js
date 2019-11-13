@@ -1,7 +1,6 @@
 const { google } = require("googleapis");
 const client = require("../utils/client.js");
 const paginator = require("../utils/pagination/pagination");
-const config = require("../config.json");
 const search = google.customsearch("v1");
 
 exports.run = async (message, args) => {
@@ -9,7 +8,7 @@ exports.run = async (message, args) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide something to search for!`;
   const embeds = [];
-  const images = await search.cse.list({ searchType: "image", safe: "active", cx: config.cseID, q: args.join(" "), auth: config.googleKey });
+  const images = await search.cse.list({ searchType: "image", safe: "active", cx: process.env.CSE, q: args.join(" "), auth: process.env.GOOGLE });
   for (const [i, value] of images.data.items.entries()) {
     embeds.push({
       "embed": {

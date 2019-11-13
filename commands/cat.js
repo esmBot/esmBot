@@ -1,11 +1,10 @@
 const fetch = require("node-fetch");
-const config = require("../config.json");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const data = await fetch("https://api.thecatapi.com/v1/images/search?format=json", {
     headers: {
-      "x-api-key": config.catToken
+      "x-api-key": process.env.CAT
     }
   });
   const json = await data.json();

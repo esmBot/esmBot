@@ -19,6 +19,7 @@
     "bufferutil": "^4.0.1",
     "cowsay": "^1.4.0",
     "dblapi.js": "^2.3.0",
+    "dotenv": "^8.2.0",
     "eris": "github:abalabahaha/eris#dev",
     "erlpack": "github:discordapp/erlpack",
     "eventemitter3": "^3.1.2",

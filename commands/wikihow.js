@@ -1,11 +1,10 @@
 const fetch = require("node-fetch");
-const config = require("../config.json");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const request = await fetch("https://hargrimm-wikihow-v1.p.mashape.com/images?count=1", {
     headers: {
-      "X-Mashape-Key": config.mashapeKey,
+      "X-Mashape-Key": process.env.MASHAPE,
       "Accept": "application/json"
     }
   });

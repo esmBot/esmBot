@@ -1,7 +1,7 @@
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
-const config = require("../config.json");
+const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
 
 // run when ready
@@ -43,7 +43,7 @@ module.exports = async () => {
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {
-    client.editStatus("dnd", { name: `${misc.random(config.activityMessages)} | @esmBot help`, url: "https://essem.space/esmBot/commands.html?dev=true" });
+    client.editStatus("dnd", { name: `${misc.random(messages)} | @esmBot help`, url: "https://essem.space/esmBot/commands.html?dev=true" });
     setTimeout(activityChanger, 900000);
   })();
 

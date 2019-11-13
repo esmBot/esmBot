@@ -5,22 +5,21 @@ exports.random = (array) => {
 
 // clean(text) to clean message of any private info or mentions
 exports.clean = async (text) => {
-  const config = require("../config.json");
   if (text && text.constructor.name == "Promise")
     text = await text;
-  if (typeof evaled !== "string")
+  if (typeof text !== "string")
     text = require("util").inspect(text, { depth: 1 });
 
   text = text
     .replace(/`/g, `\`${String.fromCharCode(8203)}`)
     .replace(/@/g, `@${String.fromCharCode(8203)}`)
-    .replace(config.token, "<redacted>")
-    .replace(config.mashapeKey, "<redacted>")
-    .replace(config.catToken, "<redacted>")
-    .replace(config.googleKey, "<redacted>")
-    .replace(config.cseID, "<redacted>")
-    .replace(config.dblToken, "<redacted>")
-    .replace(config.mongoURL, "<redacted>");
+    .replace(process.env.TOKEN, "<redacted>")
+    .replace(process.env.MASHAPE, "<redacted>")
+    .replace(process.env.CAT, "<redacted>")
+    .replace(process.env.GOOGLE, "<redacted>")
+    .replace(process.env.CSE, "<redacted>")
+    .replace(process.env.DBL, "<redacted>")
+    .replace(process.env.MONGO, "<redacted>");
 
   return text;
 };

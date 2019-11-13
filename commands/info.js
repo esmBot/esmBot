@@ -1,8 +1,7 @@
 const client = require("../utils/client.js");
-const config = require("../config.json");
 
 exports.run = async (message) => {
-  const dev = client.users.get(config.botOwner);
+  const dev = client.users.get(process.env.OWNER);
   const artist = client.users.get("401980971517214723");
   const infoEmbed = {
     "embed": {

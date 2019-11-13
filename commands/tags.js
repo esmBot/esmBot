@@ -1,5 +1,4 @@
 const database = require("../utils/database.js");
-const config = require("../config.json");
 const client = require("../utils/client.js");
 const paginator = require("../utils/pagination/pagination.js");
 const { random } = require("../utils/misc.js");
@@ -19,14 +18,14 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       tags.set(args[1].toLowerCase(), undefined);
       await guild.save();
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
     case "edit":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to edit!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== config.botOwner) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been edited!`;
     case "list":

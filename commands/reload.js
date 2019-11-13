@@ -1,7 +1,7 @@
 const handler = require("../utils/handler.js");
 
 exports.run = async (message, args) => {
-  if (message.author.id !== require("../config.json").botOwner) return `${message.author.mention}, only the bot owner can reload commands!`;
+  if (message.author.id !== process.env.OWNER) return `${message.author.mention}, only the bot owner can reload commands!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide a command to reload!`;
   try {
     await handler.unload(args[0]);

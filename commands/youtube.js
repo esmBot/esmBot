@@ -1,8 +1,7 @@
 const { google } = require("googleapis");
-const config = require("../config.json");
 const youtube = google.youtube({
   version: "v3",
-  auth: config.googleKey,
+  auth: process.env.GOOGLE,
 });
 
 exports.run = async (message, args) => {
