@@ -3,6 +3,7 @@ const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
+const twitter = process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
 
 // run when ready
 module.exports = async () => {
@@ -46,6 +47,30 @@ module.exports = async () => {
     client.editStatus("dnd", { name: `${misc.random(messages)} | @esmBot help`, url: "https://essem.space/esmBot/commands.html?dev=true" });
     setTimeout(activityChanger, 900000);
   })();
+
+  // tweet stuff
+  if (twitter !== null) {
+    (async function tweet() {
+      const tweetContent = await misc.getTweet(twitter);
+      const info = await twitter.client.post("statuses/update", { status: tweetContent });
+      logger.log(`Tweet with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+      setTimeout(tweet, 1800000);
+    })();
+    const stream = twitter.client.stream("statuses/filter", {
+      track: `@${process.env.HANDLE}`
+    });
+    stream.on("tweet", async (tweet) => {
+      if (tweet.user.screen_name !== "esmBot_") {
+        const tweetContent = await misc.getTweet(twitter, true);
+        const payload = {
+          status: `@${tweet.user.screen_name} ${tweetContent}`,
+          in_reply_to_status_id: tweet.id_str
+        };
+        const info = await twitter.client.post("statuses/update", payload);
+        logger.log(`Reply with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+      }
+    });
+  }
 
   logger.log("info", `Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
 };

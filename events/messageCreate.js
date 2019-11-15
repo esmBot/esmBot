@@ -75,9 +75,9 @@ module.exports = async (message) => {
       await client.createMessage(generalChannel.id, message.content);
     }
   }
-  const odyMessages = ["Nope!", "No jojo gif here", "sorry ody, this gif is illegal", "get owned"];
   // || (message.attachments && message.attachments[0].filename === "1561668913236-3.gif")
   if (message.channel.guild.id === "322114245632327703" && (message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) {
+    const odyMessages = ["Nope!", "No jojo gif here", "sorry ody, this gif is illegal", "get owned"];
     await message.delete("anti-jojo mechanism");
     await client.createMessage(message.channel.id, misc.random(odyMessages));
   }

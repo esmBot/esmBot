@@ -3,7 +3,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 exports.run = async (message, args) => {
-  if (message.author.id !== "198198681982205953") return `${message.author.mention}, only the bot owner can use exec!`;
+  if (message.author.id !== process.env.OWNER) return `${message.author.mention}, only the bot owner can use exec!`;
   const code = args.join(" ");
   try {
     const execed = await exec(code);

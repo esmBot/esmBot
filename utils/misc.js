@@ -19,9 +19,34 @@ exports.clean = async (text) => {
     .replace(process.env.GOOGLE, "<redacted>")
     .replace(process.env.CSE, "<redacted>")
     .replace(process.env.DBL, "<redacted>")
-    .replace(process.env.MONGO, "<redacted>");
+    .replace(process.env.MONGO, "<redacted>")
+    .replace(process.env.TWITTER_KEY, "<redacted>")
+    .replace(process.env.CONSUMER_SECRET, "<redacted>")
+    .replace(process.env.ACCESS_TOKEN, "<redacted>")
+    .replace(process.env.ACCESS_SECRET, "<redacted>");
 
   return text;
+};
+
+// get random tweet to post
+exports.getTweet = async (twitter, reply = false) => {
+  const randomTweet = this.random(reply ? twitter.tweets.replies : twitter.tweets.tweets);
+  if (randomTweet.match("{{message}}")) {
+    const randomMessage = await this.getRandomMessage();
+    return randomTweet.replace("{{message}}", randomMessage);
+  } else {
+    return randomTweet.replace("{{media}}", this.random(twitter.tweets.media))
+      .replace("{{games}}", this.random(twitter.tweets.games))
+      .replace("{{phrases}}", this.random(twitter.tweets.phrases));
+  }
+};
+
+exports.getRandomMessage = async () => {
+  const messages = await require("./client.js").guilds.get("631290275456745502").channels.get("631290275888627713").getMessages(50);
+  const randomMessage = this.random(messages);
+  if (randomMessage.content.length > 144) return await this.getRandomMessage();
+  if (randomMessage.content.match(/<@!?\d+>/g)) return await this.getRandomMessage();
+  return randomMessage.content;
 };
 
 // regexEscape(string) to escape characters in a string for use in a regex

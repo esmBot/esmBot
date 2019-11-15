@@ -38,7 +38,7 @@ exports.run = async (message, args) => {
         },
         {
           "name": "🎮 **Playing:**",
-          "value": member.activities ? member.activities[0].name : "Nothing"
+          "value": member.game ? member.game.name : "Nothing"
         }
       ]
     }

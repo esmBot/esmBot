@@ -38,3 +38,5 @@ exports.run = async (message) => {
   };
   return message.channel.createMessage(embed);
 };
+
+exports.aliases = ["status", "stat"];
