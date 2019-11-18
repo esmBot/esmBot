@@ -44,24 +44,27 @@ module.exports = async () => {
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {
-    client.editStatus("dnd", { name: `${misc.random(messages)} | @esmBot help`, url: "https://essem.space/esmBot/commands.html?dev=true" });
+    client.editStatus("dnd", { name: `${misc.random(messages)} | @esmBot help` });
     setTimeout(activityChanger, 900000);
   })();
 
   // tweet stuff
   if (twitter !== null) {
-    (async function tweet() {
-      const tweetContent = await misc.getTweet(twitter);
+    const tweet = async () => {
+      const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
+      const tweetContent = await misc.getTweet(tweets);
       const info = await twitter.client.post("statuses/update", { status: tweetContent });
       logger.log(`Tweet with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
-      setTimeout(tweet, 1800000);
-    })();
+    };
+    tweet();
+    setInterval(tweet, 1800000);
     const stream = twitter.client.stream("statuses/filter", {
       track: `@${process.env.HANDLE}`
     });
     stream.on("tweet", async (tweet) => {
       if (tweet.user.screen_name !== "esmBot_") {
-        const tweetContent = await misc.getTweet(twitter, true);
+        const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
+        const tweetContent = await misc.getTweet(tweets, true);
         const payload = {
           status: `@${tweet.user.screen_name} ${tweetContent}`,
           in_reply_to_status_id: tweet.id_str

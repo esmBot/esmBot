@@ -30,7 +30,7 @@ module.exports = async (message) => {
       await xp.save();
     } else {
       let newLevel;
-      const newAmount = info.xpAmount + 1;
+      const newAmount = info.xpAmount + 10;
       //xp.members[message.author.id].xpAmount++;
       const level = Math.floor(0.1 * Math.sqrt(newAmount));
       if (info.level < level) {

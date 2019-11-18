@@ -15,5 +15,17 @@ const xpSchema = new mongoose.Schema({
 });
 const XP = mongoose.model("XP", xpSchema);
 
+const tweetSchema = new mongoose.Schema({
+  tweets: [String],
+  replies: [String],
+  media: [String],
+  phrases: [String],
+  games: [String],
+  characters: [String],
+  enabled: Boolean
+});
+const TweetCollection = mongoose.model("TweetCollection", tweetSchema);
+
 exports.guilds = Guild;
 exports.xp = XP;
+exports.tweets = TweetCollection;

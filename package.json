@@ -12,9 +12,6 @@
     "type": "git",
     "url": "git+https://github.com/TheEssem/esmBot.git"
   },
-  "scripts": {
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
-  },
   "dependencies": {
     "bufferutil": "^4.0.1",
     "cowsay": "^1.4.0",
