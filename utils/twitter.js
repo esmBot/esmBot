@@ -6,6 +6,7 @@ const T = new Twit({
   access_token_secret: process.env.ACCESS_SECRET
 });
 exports.client = T;
+exports.active = false;
 require("../utils/database.js").tweets.find({ enabled: true }, (error, docs) => {
   if (error) throw error;
   exports.tweets = docs[0];

@@ -49,22 +49,37 @@ module.exports = async () => {
   })();
 
   // tweet stuff
-  if (twitter !== null) {
+  if (twitter !== null && twitter.active === false) {
     const tweet = async () => {
       const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
       const tweetContent = await misc.getTweet(tweets);
-      const info = await twitter.client.post("statuses/update", { status: tweetContent });
-      logger.log(`Tweet with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+      try {
+        const info = await twitter.client.post("statuses/update", { status: tweetContent });
+        logger.log(`Tweet with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+      } catch (e) {
+        const error = JSON.stringify(e);
+        if (error.includes("Status is a duplicate.")) {
+          logger.log("Duplicate tweet, will retry in 30 minutes");
+        } else {
+          logger.error(e);
+        }
+      }
     };
     tweet();
     setInterval(tweet, 1800000);
+    twitter.active = true;
     const stream = twitter.client.stream("statuses/filter", {
       track: `@${process.env.HANDLE}`
     });
     stream.on("tweet", async (tweet) => {
       if (tweet.user.screen_name !== "esmBot_") {
         const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
-        const tweetContent = await misc.getTweet(tweets, true);
+        let tweetContent;
+        if (tweet.text.includes("@this_vid") || tweet.text.includes("@DownloaderBot") || tweet.text.includes("@GetVideoBot") || tweet.text.includes("@DownloaderB0t") || tweet.text.includes("@thisvid_")) {
+          tweetContent = await misc.getTweet(tweet, true, true);
+        } else {
+          tweetContent = await misc.getTweet(tweets, true);
+        }
         const payload = {
           status: `@${tweet.user.screen_name} ${tweetContent}`,
           in_reply_to_status_id: tweet.id_str

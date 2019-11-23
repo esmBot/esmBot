@@ -22,6 +22,7 @@ const tweetSchema = new mongoose.Schema({
   phrases: [String],
   games: [String],
   characters: [String],
+  download: [String],
   enabled: Boolean
 });
 const TweetCollection = mongoose.model("TweetCollection", tweetSchema);

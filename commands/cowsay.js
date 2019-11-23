@@ -52,7 +52,7 @@ exports.run = async (message, args) => {
   ];
   if (args.length === 0) {
     return `${message.author.mention}, you need to provide some text for the cow to say!`;
-  } else if (cowList.indexOf(args[0].toLowerCase()) > -1) {
+  } else if (cowList.includes(args[0].toLowerCase())) {
     const cow = args.shift().toLowerCase();
     return `\`\`\`\n${cowsay.say({
       text: args.join(" "),

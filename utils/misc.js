@@ -29,16 +29,15 @@ exports.clean = async (text) => {
 };
 
 // get random tweet to post
-exports.getTweet = async (tweets, reply = false) => {
-  const randomTweet = this.random(reply ? tweets.replies : tweets.tweets);
+exports.getTweet = async (tweets, reply = false, isDownload = false) => {
+  const randomTweet = this.random(reply ? (isDownload ? tweets.download : tweets.replies) : tweets.tweets);
   if (randomTweet.match("{{message}}")) {
-    const randomMessage = await this.getRandomMessage();
-    return randomTweet.replace("{{message}}", randomMessage);
+    return randomTweet.replace(/{{message}}/g, await this.getRandomMessage());
   } else {
-    return randomTweet.replace("{{media}}", this.random(tweets.media))
-      .replace("{{games}}", this.random(tweets.games))
-      .replace("{{phrases}}", this.random(tweets.phrases))
-      .replace("{{characters}}", this.random(tweets.characters));
+    return randomTweet.replace(/{{media}}/g, this.random(tweets.media))
+      .replace(/{{games}}/g, this.random(tweets.games))
+      .replace(/{{phrases}}/g, this.random(tweets.phrases))
+      .replace(/{{characters}}/g, this.random(tweets.characters));
   }
 };
 

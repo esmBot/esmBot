@@ -17,25 +17,20 @@ module.exports = async (message) => {
 
   // xp stuff
   const xp = (await database.xp.find({ id: message.channel.guild.id }).exec())[0];
-  if (xp.enabled === true) {
-    //console.log(xp.members);
+  if (xp.enabled === true && !message.member.roles.includes("631290345824714762")) {
     const info = xp.members.get(message.author.id);
     if (!info) {
       logger.log("Member not in XP database, adding");
       const memberInfo = {
-        xpAmount: 1,
+        xpAmount: 10,
         level: 0
       };
       xp.members.set(message.author.id, memberInfo);
       await xp.save();
     } else {
-      let newLevel;
       const newAmount = info.xpAmount + 10;
-      //xp.members[message.author.id].xpAmount++;
       const level = Math.floor(0.1 * Math.sqrt(newAmount));
       if (info.level < level) {
-        newLevel = info.level++;
-        //xp.members[message.author.id].level++;
         logger.log(`${message.author.username} has leveled up`);
         if (message.channel.guild.id === "631290275456745502" && level === 5) {
           await message.author.addRole("638759280752853022", "level 5");
@@ -52,14 +47,14 @@ module.exports = async (message) => {
       }
       xp.members.set(message.author.id, {
         xpAmount: newAmount,
-        level: newLevel ? newLevel : info.level
+        level: level
       });
       await xp.save();
     }
   }
 
   // ignore other stuff
-  if (message.content.startsWith(prefix) === false && message.mentions.indexOf(client.user) <= -1 && message.channel.id !== "573553254575898626" && (!message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) return;
+  if (message.content.startsWith(prefix) === false && !message.mentions.includes(client.user) && message.channel.id !== "573553254575898626") return;
 
   // funny stuff
   if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
@@ -74,12 +69,6 @@ module.exports = async (message) => {
     } else {
       await client.createMessage(generalChannel.id, message.content);
     }
-  }
-  // || (message.attachments && message.attachments[0].filename === "1561668913236-3.gif")
-  if (message.channel.guild.id === "322114245632327703" && (message.content.match(/https?:\/\/(media|cdn)\.discordapp\.(net|com)\/attachments\/596766080014221373\/606176845871972383\/1561668913236-3.gif/))) {
-    const odyMessages = ["Nope!", "No jojo gif here", "sorry ody, this gif is illegal", "get owned"];
-    await message.delete("anti-jojo mechanism");
-    await client.createMessage(message.channel.id, misc.random(odyMessages));
   }
 
   // separate commands and args

@@ -10,7 +10,7 @@ exports.run = async (message, args) => {
   switch (args[0].toLowerCase()) {
     case "add":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to add!`;
-      if (blacklist.indexOf(args[1].toLowerCase()) > -1) return `${message.author.mention}, you can't make a tag with that name!`;
+      if (blacklist.includes(args[1].toLowerCase())) return `${message.author.mention}, you can't make a tag with that name!`;
       if (tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag already exists!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been added!`;
