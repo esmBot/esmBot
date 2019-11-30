@@ -45,6 +45,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
           if (manageMessages) msg.removeReaction("▶", userID);
           break;
         case "🗑":
+          reactionCollector.emit("end");
           currentPage.delete();
           return;
         default:
@@ -52,7 +53,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
       }
     }
   });
-  reactionCollector.on("end", () => {
+  reactionCollector.once("end", () => {
     try {
       currentPage.removeReactions();
     } catch (e) {

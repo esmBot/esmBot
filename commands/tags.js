@@ -12,7 +12,8 @@ exports.run = async (message, args) => {
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to add!`;
       if (blacklist.includes(args[1].toLowerCase())) return `${message.author.mention}, you can't make a tag with that name!`;
       if (tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag already exists!`;
-      await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
+      var result = await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
+      if (result) return result;
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been added!`;
     case "delete":
     case "remove":
@@ -66,13 +67,18 @@ exports.run = async (message, args) => {
 };
 
 const setTag = async (content, name, message, guild) => {
-  if (content === undefined || content.length === 0) return `${message.author.mention}, you need to provide the content of the tag!`;
-  if (message.attachments.length !== 0) {
+  if ((!content || content.length === 0) && message.attachments.length === 0) return `${message.author.mention}, you need to provide the content of the tag!`;
+  if (message.attachments.length !== 0 && content) {
     guild.tags.set(name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id });
+    await guild.save();
+  } else if (message.attachments.length !== 0) {
+    guild.tags.set(name, { content: message.attachments[0].url, author: message.author.id });
+    await guild.save();
   } else {
     guild.tags.set(name, { content: content, author: message.author.id });
+    await guild.save();
   }
-  await guild.save();
+  return;
 };
 
 exports.aliases = ["t", "tag", "ta"];
