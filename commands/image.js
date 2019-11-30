@@ -32,3 +32,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["im", "photo", "img"];
+
+exports.requires = "google";

@@ -11,3 +11,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["add"];
+
+exports.requires = "twitter";

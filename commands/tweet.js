@@ -7,3 +7,5 @@ exports.run = async (message, args) => {
   if (info.resp.statusCode !== 200) return `Something happened when trying to post this tweet: ${info.resp.statusCode} ${info.resp.statusMessage}`;
   return `${message.author.mention}, a tweet with id ${info.data.id_str} has been posted with status code ${info.resp.statusCode} ${info.resp.statusMessage}.`;
 };
+
+exports.requires = "twitter";

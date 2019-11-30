@@ -52,7 +52,13 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
       }
     }
   });
-  reactionCollector.on("end", () => currentPage.removeReactions());
+  reactionCollector.on("end", () => {
+    try {
+      currentPage.removeReactions();
+    } catch (e) {
+      console.log("Reaction message was deleted");
+    }
+  });
   return currentPage;
 };
 module.exports = paginationEmbed;

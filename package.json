@@ -24,6 +24,7 @@
     "gm": "^1.23.1",
     "googleapis": "^44.0.0",
     "jsqr": "^1.2.0",
+    "mmmagic": "^0.5.3",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.7.10",

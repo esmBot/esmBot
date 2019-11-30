@@ -20,24 +20,24 @@ async function init() {
   // register commands
   const commands = await readdir("./commands/");
   logger.log("info", `Attempting to load ${commands.length} commands...`);
-  commands.forEach(commandFile => {
+  for (const commandFile of commands) {
     logger.log("info", `Loading command ${commandFile}...`);
     try {
-      handler.load(commandFile);
+      await handler.load(commandFile);
     } catch (e) {
       logger.error(`Failed to register command ${commandFile.split(".")[0]}: ${e}`);
     }
-  });
+  }
 
   // register events
   const events = await readdir("./events/");
   logger.log("info", `Attempting to load ${events.length} events...`);
-  events.forEach(file => {
+  for (const file of events) {
     logger.log("info", `Loading event ${file}...`);
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     client.on(eventName, event);
-  });
+  }
 
   // login
   client.connect();

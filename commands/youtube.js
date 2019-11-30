@@ -18,3 +18,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["yt", "video", "ytsearch"];
+
+exports.requires = "google";

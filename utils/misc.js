@@ -32,12 +32,21 @@ exports.clean = async (text) => {
 exports.getTweet = async (tweets, reply = false, isDownload = false) => {
   const randomTweet = this.random(reply ? (isDownload ? tweets.download : tweets.replies) : tweets.tweets);
   if (randomTweet.match("{{message}}")) {
-    return randomTweet.replace(/{{message}}/g, await this.getRandomMessage());
+    return randomTweet.replace(/{{message}}/gm, await this.getRandomMessage());
   } else {
-    return randomTweet.replace(/{{media}}/g, this.random(tweets.media))
-      .replace(/{{games}}/g, this.random(tweets.games))
-      .replace(/{{phrases}}/g, this.random(tweets.phrases))
-      .replace(/{{characters}}/g, this.random(tweets.characters));
+    return randomTweet
+      .replace(/{{media}}/gm, () => {
+        return this.random(tweets.media);
+      })
+      .replace(/{{games}}/gm, () => {
+        return this.random(tweets.games);
+      })
+      .replace(/{{phrases}}/gm, () => {
+        return this.random(tweets.phrases);
+      })
+      .replace(/{{characters}}/gm, () => {
+        return this.random(tweets.characters);
+      });
   }
 };
 

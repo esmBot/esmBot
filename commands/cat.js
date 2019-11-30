@@ -19,3 +19,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["kitters", "kitties", "kitty", "cattos", "catto", "cats"];
+
+exports.requires = "cat";

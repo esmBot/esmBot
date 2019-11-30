@@ -18,3 +18,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["wiki"];
+
+exports.requires = "mashape";

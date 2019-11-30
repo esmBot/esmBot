@@ -1,8 +1,15 @@
 const collections = require("./collections.js");
+const logger = require("./logger.js");
 
+// load command into memory
 exports.load = async (command) => {
   const props = require(`../commands/${command}`);
+  if (props.requires === "google" && process.env.GOOGLE === "") return logger.log("info", `Google info not provided in config, skipped loading command ${command}...`);
+  if (props.requires === "cat" && process.env.CAT === "") return logger.log("info", `Cat API info not provided in config, skipped loading command ${command}...`);
+  if (props.requires === "mashape" && process.env.MASHAPE === "") return logger.log("info", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
+  if (props.requires === "twitter" && process.env.TWITTER === "false") return logger.log("info", `Twitter bot disabled, skipped loading command ${command}...`);
   collections.commands.set(command.split(".")[0], props.run);
+  // add each alias to
   if (props.aliases) {
     props.aliases.forEach(alias => {
       collections.aliases.set(alias, command.split(".")[0]);
@@ -11,6 +18,7 @@ exports.load = async (command) => {
   return false;
 };
 
+// unload command from memory
 exports.unload = async (command) => {
   let cmd;
   if (collections.commands.has(command)) {
