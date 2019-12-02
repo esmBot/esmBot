@@ -5,3 +5,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["tape", "flextape", "phil", "philswift"];
+exports.category = 6;
+exports.help = "Plays the Flex Tape boat sound effect";

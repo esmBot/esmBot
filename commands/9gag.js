@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a 9GAG watermark!`;
-  message.channel.sendTyping();
   const watermark = "./assets/images/9gag.png";
   const data = gm(image.data).composite(watermark).gravity("East");
   const resultBuffer = await gmToBuffer(data);
@@ -17,3 +17,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["ninegag", "gag"];
+exports.category = 5;
+exports.help = "Adds the 9gag watermark to an image";

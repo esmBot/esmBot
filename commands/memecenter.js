@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a MemeCenter watermark!`;
-  message.channel.sendTyping();
   const watermark = "./assets/images/memecenter.png";
   let resultBuffer;
   gm(image.data).size(async (error, size) => {
@@ -29,3 +29,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["memec", "mcenter"];
+exports.category = 5;
+exports.help = "Adds the MemeCenter watermark to an image";

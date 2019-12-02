@@ -13,3 +13,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["setprefix", "changeprefix", "checkprefix"];
+exports.category = 1;
+exports.help = "Checks/changes the server prefix";

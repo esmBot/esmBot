@@ -8,3 +8,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["yodish"];
+exports.category = 4;
+exports.help = "Translates a message to Yodish";

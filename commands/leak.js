@@ -5,9 +5,9 @@ const gmToBuffer = require("../utils/gmbuffer.js");
 const fs = require("fs");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a Super Smash Bros. leak meme!`;
-  message.channel.sendTyping();
   const template = "./assets/images/leak.png";
   const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   require("util").promisify(fs.writeFile)(path, image.data);
@@ -20,3 +20,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["smash", "laxchris", "ssbu", "smashleak"];
+exports.category = 5;
+exports.help = "Creates a fake Smash leak thumbnail from an image";

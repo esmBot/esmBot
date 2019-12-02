@@ -5,8 +5,10 @@ exports.run = async (message, args) => {
     return `Successfully banned user with ID \`${args[0]}\`.`;
   } catch (e) {
     console.error(e);
-    return `${message.author.mention}, I was unable to kick the member. Have you given me permissions?`;
+    return `${message.author.mention}, I was unable to ban the member. Have you given me permissions?`;
   }
 };
 
 exports.aliases = ["prevent", "preban"];
+exports.category = 2;
+exports.help = "Bans a member via user id";

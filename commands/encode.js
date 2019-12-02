@@ -4,3 +4,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["b64encode", "base64encode"];
+exports.category = 1;
+exports.help = "Encodes a Base64 string";

@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to tile!`;
-  message.channel.sendTyping();
   gm(image.data).command("montage").out("-duplicate").out(24).tile("5x5").geometry("+0+0").stream(async (error, output) => {
     if (error) console.error;
     const data = gm(output).resize("800x800>");
@@ -19,3 +19,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["wall2"];
+exports.category = 5;
+exports.help = "Creates a tile pattern from an image";

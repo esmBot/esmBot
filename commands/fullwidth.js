@@ -4,3 +4,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["aesthetic", "aesthetics", "aes"];
+exports.category = 4;
+exports.help = "Converts a message to fullwidth/aesthetic text";

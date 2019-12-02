@@ -82,3 +82,14 @@ const setTag = async (content, name, message, guild) => {
 };
 
 exports.aliases = ["t", "tag", "ta"];
+exports.category = 3;
+exports.help = "placeholder";
+
+/*{
+  default: "Gets a tag",
+  add: "Adds a tag",
+  delete: "Deletes a tag",
+  edit: "Edits a tag",
+  list: "Lists all tags in the server",
+  random: "Gets a random tag"
+}*/

@@ -40,3 +40,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["status", "stat"];
+exports.category = 1;
+exports.help = "Gets some statistics about me";

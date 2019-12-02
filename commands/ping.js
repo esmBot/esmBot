@@ -6,3 +6,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["pong"];
+exports.category = 1;
+exports.help = "Pings the server I'm hosted on";

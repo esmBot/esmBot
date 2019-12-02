@@ -5,3 +5,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["juice", "grandma"];
+exports.category = 6;
+exports.help = "Plays the \"Drink yo prune juice\" sound effect";

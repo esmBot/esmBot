@@ -5,3 +5,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["dance", "defaultdance"];
+exports.category = 6;
+exports.help = "Plays the Fortnite default dance sound";

@@ -11,3 +11,6 @@ exports.run = async (message, args) => {
     if (error) console.error;
   }
 };
+
+exports.category = 7;
+exports.help = "Reloads a command";

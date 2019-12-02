@@ -16,3 +16,6 @@ exports.run = async (message) => {
     return `${message.author.mention}, you need to provide a member to kick!`;
   }
 };
+
+exports.category = 2;
+exports.help = "Kicks a member";

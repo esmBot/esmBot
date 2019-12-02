@@ -18,9 +18,6 @@ module.exports = async (sound, message) => {
       playingMessage.delete();
       logger.error(error);
     });
-    connection.on("warn", (warn) => {
-      logger.warn(warn);
-    });
     connection.once("end", () => {
       voiceChannel.leave();
       playingMessage.delete();

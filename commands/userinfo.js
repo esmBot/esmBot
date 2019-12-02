@@ -47,3 +47,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["user"];
+exports.category = 1;
+exports.help = "Gets info about a user";

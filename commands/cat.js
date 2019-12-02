@@ -19,5 +19,6 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["kitters", "kitties", "kitty", "cattos", "catto", "cats"];
-
+exports.category = 4;
+exports.help = "Gets a random cat picture";
 exports.requires = "cat";

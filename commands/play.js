@@ -23,3 +23,6 @@ exports.run = async (message) => {
     return `${message.author.mention}, you need to be in a voice channel first!`;
   }
 };
+
+exports.category = 7;
+exports.help = "Plays an audio file";

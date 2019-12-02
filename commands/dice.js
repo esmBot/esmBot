@@ -13,3 +13,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["roll", "die", "rng", "random"];
+exports.category = 4;
+exports.help = "Rolls the dice";

@@ -19,3 +19,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["rotate"];
+exports.category = 5;
+exports.help = "Spins an image";

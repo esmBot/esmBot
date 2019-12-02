@@ -5,3 +5,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["notification", "notif"];
+exports.category = 6;
+exports.help = "Plays a Discord ping sound effect";

@@ -13,3 +13,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["prune"];
+exports.category = 2;
+exports.help = "Purges messages in a channel";

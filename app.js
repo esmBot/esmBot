@@ -17,7 +17,7 @@ const handler = require("./utils/handler.js");
 
 // registers stuff and logs in the bot
 async function init() {
-  // register commands
+  // register commands and their info
   const commands = await readdir("./commands/");
   logger.log("info", `Attempting to load ${commands.length} commands...`);
   for (const commandFile of commands) {

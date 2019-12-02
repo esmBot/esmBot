@@ -43,3 +43,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["server"];
+exports.category = 1;
+exports.help = "Gets some info about the server";

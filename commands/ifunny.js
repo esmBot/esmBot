@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a iFunny watermark!`;
-  message.channel.sendTyping();
   const watermark = "./assets/images/ifunny.png";
   gm(image.data).size(async (error, size) => {
     if (error) console.error;
@@ -18,3 +18,6 @@ exports.run = async (message) => {
     });
   });
 };
+
+exports.category = 5;
+exports.help = "Adds the iFunny watermark to an image";

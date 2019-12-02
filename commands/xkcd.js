@@ -17,7 +17,10 @@ exports.run = async (message, args) => {
       }
     };
     return message.channel.createMessage(embed);
-  } catch {
-    return `${message.author.mention}, I couldn't find that XKCD!`;
+  } catch (e) {
+    return `${message.author.mention}, I couldn't get that XKCD!`;
   }
 };
+
+exports.category = 4;
+exports.help = "Gets an XKCD comic";

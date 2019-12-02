@@ -15,3 +15,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["birb", "birds", "birbs"];
+exports.category = 4;
+exports.help = "Gets a random bird picture";

@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to invert!`;
-  message.channel.sendTyping();
   const data = gm(image.data).negative();
   const resultBuffer = await gmToBuffer(data);
   return message.channel.createMessage("", {
@@ -16,3 +16,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["inverse", "negate", "negative"];
+exports.category = 5;
+exports.help = "Inverts an image's colors";

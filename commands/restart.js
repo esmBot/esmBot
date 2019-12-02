@@ -11,3 +11,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["reboot"];
+exports.category = 7;
+exports.help = "Restarts me";

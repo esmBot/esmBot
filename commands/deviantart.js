@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a DeviantArt watermark!`;
-  message.channel.sendTyping();
   const watermark = "./assets/images/deviantart.png";
   gm(image.data).size(async (error, size) => {
     if (error) console.error;
@@ -20,3 +20,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["da", "deviant"];
+exports.category = 5;
+exports.help = "Adds a DeviantArt watermark to an image";

@@ -9,7 +9,11 @@ exports.load = async (command) => {
   if (props.requires === "mashape" && process.env.MASHAPE === "") return logger.log("info", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
   if (props.requires === "twitter" && process.env.TWITTER === "false") return logger.log("info", `Twitter bot disabled, skipped loading command ${command}...`);
   collections.commands.set(command.split(".")[0], props.run);
-  // add each alias to
+  collections.info.set(command.split(".")[0], {
+    category: props.category,
+    description: props.help,
+    aliases: props.aliases
+  });
   if (props.aliases) {
     props.aliases.forEach(alias => {
       collections.aliases.set(alias, command.split(".")[0]);

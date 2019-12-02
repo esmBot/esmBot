@@ -5,9 +5,9 @@ const gm = require("gm").subClass({
 });
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to mirror!`;
-  message.channel.sendTyping();
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   const data2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   gm(image.data).gravity("North").crop(0, "50%").strip().write(data2, (error) => {
@@ -26,3 +26,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["magik5", "mirror3"];
+exports.category = 5;
+exports.help = "Mirrors the top of an image onto the bottom";

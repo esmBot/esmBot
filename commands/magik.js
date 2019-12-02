@@ -23,3 +23,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["imagemagic", "imagemagick", "imagemagik", "magic", "magick", "cas", "liquid"];
+exports.category = 5;
+exports.help = "Adds a content aware scale effect to an image";

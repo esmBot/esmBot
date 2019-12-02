@@ -1,10 +1,10 @@
 const { spawn } = require("child_process");
 
 exports.run = async (message, args) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to generate a meme!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a meme!`;
-  message.channel.sendTyping();
   const [topText, bottomText] = args.join(" ").split(",").map(elem => elem.trim());
   const child = spawn("./utils/meme.sh", [topText.toUpperCase().replace(/\\/g, "\\\\"), bottomText ? bottomText.toUpperCase().replace(/\\/g, "\\\\") : ""]);
   child.stdin.write(image.data);
@@ -27,3 +27,6 @@ exports.run = async (message, args) => {
     });
   });
 };
+
+exports.category = 5;
+exports.help = "Generates a meme from an image";

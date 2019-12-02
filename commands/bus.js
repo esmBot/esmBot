@@ -5,3 +5,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["noyelling", "busyell"];
+exports.category = 6;
+exports.help = "Plays the \"no yelling on the bus\" sound effect";

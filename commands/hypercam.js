@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Hypercam watermark!`;
-  message.channel.sendTyping();
   const watermark = "./assets/images/hypercam.png";
   gm(image.data).size(async (error, size) => {
     if (error) console.error;
@@ -20,3 +20,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["hcam"];
+exports.category = 5;
+exports.help = "Adds the Hypercam watermark to an image";

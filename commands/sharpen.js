@@ -1,9 +1,9 @@
 const sharp = require("sharp");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to sharpen!`;
-  message.channel.sendTyping();
   const resultBuffer = await sharp(image.data).sharpen(5).toBuffer();
   return message.channel.createMessage("", {
     file: resultBuffer,
@@ -13,3 +13,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["sharp"];
+exports.category = 5;
+exports.help = "Sharpens an image";

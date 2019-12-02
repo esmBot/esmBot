@@ -18,5 +18,6 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["wiki"];
-
+exports.category = 4;
+exports.help = "Gets a random WikiHow image";
 exports.requires = "mashape";

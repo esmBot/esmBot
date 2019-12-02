@@ -21,3 +21,6 @@ exports.run = async (message, args) => {
     });
   });
 };
+
+exports.category = 1;
+exports.help = "Generates a QR code";

@@ -33,3 +33,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["request", "report", "complain", "compliment"];
+exports.category = 1;
+exports.help = "Leaves some feedback for the bot owner";

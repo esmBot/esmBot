@@ -5,9 +5,9 @@ const gmToBuffer = require("../utils/gmbuffer.js");
 const fs = require("fs");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a Trump meme!`;
-  message.channel.sendTyping();
   const template = "./assets/images/trump.png";
   const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   require("util").promisify(fs.writeFile)(path, image.data);
@@ -18,3 +18,6 @@ exports.run = async (message) => {
     name: "trump.png"
   });
 };
+
+exports.category = 5;
+exports.help = "Makes Trump display an image";

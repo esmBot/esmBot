@@ -4,9 +4,9 @@ const gm = require("gm").subClass({
 const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
+  message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to swirl!`;
-  message.channel.sendTyping();
   const data = gm(image.data).swirl(180);
   const resultBuffer = await gmToBuffer(data);
   return message.channel.createMessage("", {
@@ -16,3 +16,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["whirlpool"];
+exports.category = 5;
+exports.help = "Swirls an image";

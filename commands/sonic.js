@@ -5,7 +5,7 @@ const gmToBuffer = require("../utils/gmbuffer.js");
 const wrap = require("../utils/wrap.js");
 
 exports.run = async (message, args) => {
-  if (args.length === 0) return `${message.author.mention}, you need to provide an image to make a Sonic meme!`;
+  if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a Sonic meme!`;
   message.channel.sendTyping();
   const template = "./assets/images/sonic.jpg";
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
@@ -20,3 +20,6 @@ exports.run = async (message, args) => {
     });
   });
 };
+
+exports.category = 4;
+exports.help = "Creates a Sonic speech bubble image";

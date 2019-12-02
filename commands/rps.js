@@ -23,3 +23,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["rockpaperscissors"];
+exports.category = 4;
+exports.help = "Plays rock, paper, scissors with me";

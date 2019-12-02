@@ -3,3 +3,6 @@ exports.run = async (message, args) => {
   if (message.content.includes("@everyone") || message.content.includes("@here")) return "I don't know about you, but that seems like a bad idea.";
   return args.join(" ").repeat(500).substring(0, 500);
 };
+
+exports.category = 8;
+exports.help = "placeholder";

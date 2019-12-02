@@ -15,3 +15,5 @@ exports.run = async (message) => {
 };
 
 exports.aliases = ["doggos", "doggo", "pupper", "puppers", "dogs", "puppy", "puppies", "pups", "pup"];
+exports.category = 4;
+exports.help = "Gets a random dog picture";

@@ -8,4 +8,6 @@ exports.run = async (message, args) => {
   return `${message.author.mention}, a tweet with id ${info.data.id_str} has been posted with status code ${info.resp.statusCode} ${info.resp.statusMessage}.`;
 };
 
+exports.category = 7;
+exports.help = "Tweets a message";
 exports.requires = "twitter";
