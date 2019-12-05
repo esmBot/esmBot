@@ -23,3 +23,4 @@ exports.run = async (message, args) => {
 
 exports.category = 4;
 exports.help = "Creates a Sonic speech bubble image";
+exports.params = "[text]";

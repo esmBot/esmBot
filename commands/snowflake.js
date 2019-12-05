@@ -5,4 +5,5 @@ exports.run = async (message, args) => {
 
 exports.aliases = ["timestamp", "snowstamp", "snow"];
 exports.category = 1;
-exports.help = "Converts a Discord snowflake into a timestamp";
+exports.help = "Converts a Discord snowflake id into a timestamp";
+exports.params = "[id]";

@@ -13,3 +13,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["longurl", "lengthenurl", "longuri", "lengthenuri", "unshorten"];
 exports.category = 1;
 exports.help = "Lengthens a short URL";
+exports.params = "[url]";

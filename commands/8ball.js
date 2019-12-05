@@ -29,3 +29,4 @@ exports.run = async () => {
 exports.aliases = ["magicball", "magikball", "magic8ball", "magik8ball", "eightball"];
 exports.category = 4;
 exports.help = "Asks the magic 8-ball a question";
+exports.params = "{text}";

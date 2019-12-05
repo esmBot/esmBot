@@ -7,7 +7,7 @@ esmBot is an entertainment-focused Discord bot made using [Eris](https://abal.mo
 ## Usage
 You can invite the bot to your server using this link: https://discordapp.com/oauth2/authorize?client_id=515571942418546689&scope=bot&permissions=70642766
 
-A command list can be found [here](https://essem.space/esmBot/commands.html?dev=true).
+A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 
 If you want to run it locally, you should install ImageMagick, FFmpeg, and MongoDB:
 
@@ -27,4 +27,4 @@ If you want to run this on Windows, I highly recommend using Windows Subsystem f
 
 ## Credits
 Icon by [Stellio](https://twitter.com/MeloncholySteel).
-All images and sounds are copyright of their respective owners.
+All images, sounds, and fonts are copyright of their respective owners.

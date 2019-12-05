@@ -21,3 +21,4 @@ exports.aliases = ["yt", "video", "ytsearch"];
 exports.category = 1;
 exports.help = "Searches YouTube";
 exports.requires = "google";
+exports.params = "[query]";

@@ -24,3 +24,4 @@ exports.run = async (message, args) => {
 
 exports.category = 4;
 exports.help = "Gets an XKCD comic";
+exports.params = "{id}";

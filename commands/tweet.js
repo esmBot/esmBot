@@ -11,3 +11,4 @@ exports.run = async (message, args) => {
 exports.category = 7;
 exports.help = "Tweets a message";
 exports.requires = "twitter";
+exports.params = "[message]";

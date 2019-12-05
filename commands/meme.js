@@ -29,4 +29,5 @@ exports.run = async (message, args) => {
 };
 
 exports.category = 5;
-exports.help = "Generates a meme from an image";
+exports.help = "Generates a meme from an image (separate top/bottom text with a comma)";
+exports.params = "[top text], {bottom text}";

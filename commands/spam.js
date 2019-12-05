@@ -6,3 +6,4 @@ exports.run = async (message, args) => {
 
 exports.category = 8;
 exports.help = "placeholder";
+exports.params = "[text]";

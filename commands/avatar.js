@@ -13,3 +13,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["pfp", "ava"];
 exports.category = 1;
 exports.help = "Gets a user's avatar";
+exports.params = "{mention/id}";

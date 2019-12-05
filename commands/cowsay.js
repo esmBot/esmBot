@@ -66,3 +66,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["cow"];
 exports.category = 4;
 exports.help = "Makes an ASCII cow say a message";
+exports.params = "[text]";

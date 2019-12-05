@@ -18,3 +18,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["runcmd"];
 exports.category = 7;
 exports.help = "Executes a terminal command";
+exports.params = "[command]";

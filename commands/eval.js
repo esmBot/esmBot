@@ -15,3 +15,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["run"];
 exports.category = 7;
 exports.help = "Executes JavaScript code";
+exports.params = "[code]";

@@ -19,3 +19,4 @@ exports.run = async (message) => {
 
 exports.category = 2;
 exports.help = "Bans a server member";
+exports.params = "[mention]";

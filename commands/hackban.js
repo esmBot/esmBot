@@ -12,3 +12,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["prevent", "preban"];
 exports.category = 2;
 exports.help = "Bans a member via user id";
+exports.params = "[id]";

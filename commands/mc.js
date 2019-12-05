@@ -14,3 +14,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["ach", "achievement", "minecraft"];
 exports.category = 4;
 exports.help = "Generates a Minecraft achievement image";
+exports.params = "[text]";

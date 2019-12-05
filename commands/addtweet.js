@@ -14,3 +14,4 @@ exports.aliases = ["add"];
 exports.category = 7;
 exports.help = "Adds a tweet to the database";
 exports.requires = "twitter";
+exports.params = "[category] [message]";

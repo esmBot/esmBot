@@ -12,7 +12,8 @@ exports.load = async (command) => {
   collections.info.set(command.split(".")[0], {
     category: props.category,
     description: props.help,
-    aliases: props.aliases
+    aliases: props.aliases,
+    params: props.params
   });
   if (props.aliases) {
     props.aliases.forEach(alias => {

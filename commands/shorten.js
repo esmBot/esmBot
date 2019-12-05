@@ -11,3 +11,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["urlshorten", "shortenlink", "urishorten", "shortenuri", "shortenurl"];
 exports.category = 1;
 exports.help = "Shortens a URL";
+exports.params = "[url]";
