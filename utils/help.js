@@ -2,8 +2,7 @@ const pug = require("pug");
 const collections = require("./collections.js");
 const fs = require("fs");
 
-module.exports = async () => {
-  //const compiledFunction = pug.compileFile("./assets/pages/help.pug");
+module.exports = async (output) => {
   const commands = Array.from(collections.commands.keys());
   const categories = {
     general: [],
@@ -31,7 +30,7 @@ module.exports = async () => {
       categories.soundboard.push(`<strong>${command}</strong>${params ? ` ${params}` : ""} - ${description}`);
     }
   }
-  fs.writeFile("../help.html", pug.renderFile("./assets/pages/help.pug", { commands: categories }), () => {
-    console.log("hi");
+  fs.writeFile(output, pug.renderFile("./assets/pages/help.pug", { commands: categories }), () => {
+    console.log("The docs have been generated.");
   });
 };

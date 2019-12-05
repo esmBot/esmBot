@@ -3,6 +3,7 @@ const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
+const helpGenerator = process.env.OUTPUT !== "" ? require("../utils/help.js") : null;
 const twitter = process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
 
 // run when ready
@@ -40,6 +41,11 @@ module.exports = async () => {
       });
       await newXP.save();
     }
+  }
+
+  // generate docs
+  if (helpGenerator) {
+    await helpGenerator(process.env.OUTPUT);
   }
 
   // set activity (a.k.a. the gamer code)

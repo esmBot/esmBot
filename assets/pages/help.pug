@@ -48,46 +48,46 @@ body
     h2#table-of-contents Table of Contents
     ul
       li
-        a(href='#💻-general')
+        a(href='#general')
           strong General
       li
-        a(href='#🔨-moderation')
+        a(href='#moderation')
           strong Moderation
       li
-        a(href='#🏷️-tags')
+        a(href='#tags')
           strong Tags
       li
-        a(href='#👌-fun')
+        a(href='#fun')
           strong Fun
       li
-        a(href='#🖼️-image-editing')
+        a(href='#images')
           strong Image Editing
       li
-        a(href='#🔊-soundboard')
+        a(href='#soundboard')
           strong Soundboard
-    h2(id='💻-general') &#x1F4BB; General
+    h2(id='general') &#x1F4BB; General
     each command in commands.general
       ul
         li!= command
-    h2(id='🔨-moderation') &#x1F528; Moderation
+    h2(id='moderation') &#x1F528; Moderation
     each command in commands.moderation
       ul
         li!= command
-    h2(id='🏷️-tags') &#x1F3F7;&#xFE0F; Tags
+    h2(id='tags') &#x1F3F7;&#xFE0F; Tags
     each command in commands.tags
       ul
         li!= command
-    h2(id='👌-fun') &#x1F44C; Fun
+    h2(id='fun') &#x1F44C; Fun
     each command in commands.fun
       ul
         li!= command
-    h2(id='🖼️-image-editing') &#x1F5BC;&#xFE0F; Image Editing
+    h2(id='images') &#x1F5BC;&#xFE0F; Image Editing
     blockquote
       p These commands support the PNG, JPEG, and WEBP formats.
     each command in commands.images
       ul
         li!= command
-    h2(id='🔊-soundboard') &#x1F50A; Soundboard
+    h2(id='soundboard') &#x1F50A; Soundboard
     each command in commands.soundboard
       ul
         li!= command
