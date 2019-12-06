@@ -44,7 +44,10 @@ body
       code &amp;
       | .
     blockquote
-      p Tip: Use Ctrl+F to find the command you want!
+      p
+        | Tip: You can get more info about a command by using 
+        code help [command]
+        | .
     h2#table-of-contents Table of Contents
     ul
       li
@@ -74,6 +77,8 @@ body
       ul
         li!= command
     h2(id='tags') &#x1F3F7;&#xFE0F; Tags
+    blockquote
+      p Every command in this category is a subcommand of the tag command.
     each command in commands.tags
       ul
         li!= command

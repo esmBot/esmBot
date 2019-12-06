@@ -19,3 +19,4 @@ exports.run = async (message, args) => {
 exports.aliases = ["hbc", "brew", "wiibrew"];
 exports.category = 4;
 exports.help = "Creates a Homebrew Channel edit";
+exports.params = "[text]";

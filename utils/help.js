@@ -1,5 +1,6 @@
 const pug = require("pug");
 const collections = require("./collections.js");
+const logger = require("./logger.js");
 const fs = require("fs");
 
 module.exports = async (output) => {
@@ -21,7 +22,10 @@ module.exports = async (output) => {
     } else if (category === 2) {
       categories.moderation.push(`<strong>${command}</strong>${params ? ` ${params}` : ""} - ${description}`);
     } else if (category === 3) {
-      categories.tags.push(`<strong>${command}</strong>${params ? ` ${params}` : ""} - ${description}`);
+      const subCommands = Array.from(Object.keys(description));
+      for (const subCommand of subCommands) {
+        categories.tags.push(`<strong>tags${subCommand !== "default" ? ` ${subCommand}` : ""}</strong>${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+      }
     } else if (category === 4) {
       categories.fun.push(`<strong>${command}</strong>${params ? ` ${params}` : ""} - ${description}`);
     } else if (category === 5) {
@@ -31,6 +35,6 @@ module.exports = async (output) => {
     }
   }
   fs.writeFile(output, pug.renderFile("./assets/pages/help.pug", { commands: categories }), () => {
-    console.log("The docs have been generated.");
+    logger.log("The help docs have been generated.");
   });
 };

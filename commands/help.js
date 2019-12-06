@@ -50,7 +50,10 @@ exports.run = async (message, args) => {
       } else if (category === 2) {
         categories.moderation.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       } else if (category === 3) {
-        categories.tags.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
+        const subCommands = Array.from(Object.keys(description));
+        for (const subCommand of subCommands) {
+          categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+        }
       } else if (category === 4) {
         categories.fun.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       } else if (category === 5) {
