@@ -69,7 +69,7 @@ exports.defaults = {
 };
 exports.tagDefaults = {
   help: {
-    content: "https://essem.space/esmBot/commands.html?dev=true",
+    content: "https://projectlounge.pw/esmBot/help.html",
     author: "198198681982205953"
   }
 };

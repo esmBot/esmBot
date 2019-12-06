@@ -5,7 +5,7 @@
 esmBot is an entertainment-focused Discord bot made using [Eris](https://abal.moe/Eris/) with soundboard, utility, and image manipulation commands.
 
 ## Usage
-You can invite the bot to your server using this link: https://discordapp.com/oauth2/authorize?client_id=515571942418546689&scope=bot&permissions=70642766
+You can invite the bot to your server using this link: https://projectlounge.pw/invitedev
 
 A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 
@@ -26,5 +26,5 @@ Finally, fill in the info inside `.env.example`, rename it to `.env`, and run `a
 If you want to run this on Windows, I highly recommend using Windows Subsystem for Linux. I personally used the [Ubuntu](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) distro for testing, however other distros might work as well.
 
 ## Credits
-Icon by [Stellio](https://twitter.com/MeloncholySteel).
+Icon by [Stellio](https://twitter.com/SteelStellio).
 All images, sounds, and fonts are copyright of their respective owners.
