@@ -30,6 +30,10 @@ exports.run = async (message) => {
       {
         "name": "💻 Source Code:",
         "value": "[Click here!](https://github.com/TheEssem/esmBot-rewrite)"
+      },
+      {
+        "name": "<:twitter:652550515372064768> Twitter:",
+        "value": "[Click here!](https://twitter.com/esmBot_)"
       }
       ]
     }

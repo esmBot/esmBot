@@ -1,15 +1,15 @@
-const { google } = require("googleapis");
 const client = require("../utils/client.js");
-const paginator = require("../utils/pagination/pagination");
-const search = google.customsearch("v1");
+const paginator = require("../utils/pagination/pagination.js");
+const fetch = require("node-fetch");
 
 exports.run = async (message, args) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide something to search for!`;
   const embeds = [];
-  const images = await search.cse.list({ searchType: "image", safe: "active", cx: process.env.CSE, q: args.join(" "), auth: process.env.GOOGLE });
-  for (const [i, value] of images.data.items.entries()) {
+  const request = await fetch(`https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE}&cx=${process.env.CSE}&safe=active&searchType=image&q=${encodeURIComponent(args.join(" "))}`);
+  const images = await request.json();
+  for (const [i, value] of images.items.entries()) {
     embeds.push({
       "embed": {
         "title": "Search Results",

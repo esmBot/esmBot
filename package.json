@@ -20,7 +20,6 @@
     "eris": "^0.11.1",
     "file-type": "^10.9.0",
     "gm": "^1.23.1",
-    "googleapis": "^44.0.0",
     "jsqr": "^1.2.0",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
@@ -42,6 +41,7 @@
     "erlpack": "github:discordapp/erlpack",
     "eventemitter3": "^3.1.2",
     "node-opus": "^0.3.3",
+    "sodium-native": "^2.4.6",
     "uws": "^10.148.1",
     "zlib-sync": "^0.1.6"
   }

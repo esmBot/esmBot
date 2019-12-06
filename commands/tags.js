@@ -4,6 +4,7 @@ const paginator = require("../utils/pagination/pagination.js");
 const { random } = require("../utils/misc.js");
 
 exports.run = async (message, args) => {
+  if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
   const guild = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
   const tags = guild.tags;
   const blacklist = ["add", "edit", "remove", "delete", "list", "random"];
@@ -60,7 +61,6 @@ exports.run = async (message, args) => {
     case "random":
       return tags[random(Object.keys(tags))].content;
     default:
-      if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
       if (!tags.has(args[0].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
       return tags.get(args[0].toLowerCase()).content;
   }
