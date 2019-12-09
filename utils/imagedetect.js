@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fileType = require("file-type");
+const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 
 // this checks if the file is, in fact, an image
 const typeCheck = async (image) => {
@@ -39,7 +40,17 @@ module.exports = async (cmdMessage) => {
       if (type === false) continue;
       // if the file is an image then return it
       return type;
-      // if there's nothing in the attachments check the embeds next
+      // if there's nothing in the attachments check the urls in the message if there are any
+    } else if (urlRegex.test(message.content)) {
+      // get url
+      const url = message.content.match(urlRegex);
+      // get type of file
+      const type = await typeCheck(url[0]);
+      // move to the next message if the file isn't an image
+      if (type === false) continue;
+      // if the file is an image then return it
+      return type;
+      // if there's no urls then check the embeds
     } else if (message.embeds.length !== 0) {
       // embeds can have 2 possible entries with images, we check the thumbnail first
       if (message.embeds[0].thumbnail) {

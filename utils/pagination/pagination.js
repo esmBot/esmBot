@@ -5,6 +5,7 @@ const client = require("../client.js");
 const paginationEmbed = async (message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
+  let deleted = false;
   pages[page].embed.footer.text = `Page ${page + 1} of ${pages.length}`;
   const currentPage = await message.channel.createMessage(pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
@@ -45,6 +46,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
           if (manageMessages) msg.removeReaction("▶", userID);
           break;
         case "🗑":
+          deleted = true;
           reactionCollector.emit("end");
           currentPage.delete();
           return;
@@ -55,7 +57,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
   });
   reactionCollector.once("end", () => {
     try {
-      currentPage.removeReactions();
+      if (!deleted) currentPage.removeReactions();
     } catch (e) {
       console.log("Reaction message was deleted");
     }

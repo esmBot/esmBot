@@ -105,6 +105,7 @@ exports.run = async (message, args) => {
   }
 };
 
+exports.aliases = ["commands"];
 exports.category = 1;
 exports.help = "Gets a list of commands";
 exports.params = "{command}";
