@@ -13,10 +13,10 @@ exports.run = async (message) => {
         "icon_url": client.user.avatarURL
       },
       "color": 16711680,
-      "description": "**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs.**",
+      "description": process.env.NODE_ENV === "development" ? "**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs.**" : "",
       "fields": [{
         "name": "Version",
-        "value": `v${version}-dev`
+        "value": `v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`
       },
       {
         "name": "Memory Usage",

@@ -11,11 +11,10 @@ exports.run = async (message, args) => {
   const aliases = Array.from(collections.aliases.keys());
   if (args.length !== 0 && (commands.includes(args[0].toLowerCase()) || aliases.includes(args[0].toLowerCase()))) {
     const info = aliases.includes(args[0].toLowerCase()) ? collections.info.get(collections.aliases.get(args[0].toLowerCase())) : collections.info.get(args[0].toLowerCase());
-    console.log(collections.aliases.get(args[0].toLowerCase()));
     const embed = {
       "embed": {
         "author": {
-          "name": "esmBot Dev Help",
+          "name": "esmBot Help",
           "icon_url": client.user.avatarURL
         },
         "title": `${guild.prefix}${aliases.includes(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
@@ -83,7 +82,7 @@ exports.run = async (message, args) => {
       embeds.push({
         "embed": {
           "author": {
-            "name": "esmBot Dev Help",
+            "name": "esmBot Help",
             "icon_url": client.user.avatarURL
           },
           "title": value.title,

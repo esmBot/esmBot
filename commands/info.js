@@ -1,17 +1,22 @@
 const client = require("../utils/client.js");
-const dev = client.users.get(process.env.OWNER);
-const artist = client.users.get("401980971517214723");
+const { version } = require("../package.json");
 
 exports.run = async (message) => {
+  const dev = client.users.get(process.env.OWNER);
+  const artist = client.users.get("401980971517214723");
   const infoEmbed = {
     "embed": {
-      "description": "**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs.**",
+      "description": process.env.NODE_ENV === "development" ? "**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs.**" : "",
       "color": 16711680,
       "author": {
         "name": "esmBot Info/Credits",
         "icon_url": client.user.avatarURL
       },
       "fields": [{
+        "name": "ℹ️ Version:",
+        "value": `v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`
+      },
+      {
         "name": "📝 Credits:",
         "value": `Bot by **${dev.username}#${dev.discriminator}**\nIcon by **${artist.username}#${artist.discriminator}**`
       },
