@@ -11,11 +11,11 @@ exports.run = async (message) => {
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   const data2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   gm(image.data).gravity("East").crop("50%", 0).strip().write(data2, (error) => {
-    if (error) console.error;
+    if (error) throw error;
     gm(data2).flop().strip().write(data, async (error) => {
-      if (error) console.error;
+      if (error) throw error;
       gm(data).append(data2, true).toBuffer(image.type, (error, resultBuffer) => {
-        if (error) console.error;
+        if (error) throw error;
         return message.channel.createMessage("", {
           file: resultBuffer,
           name: `waaw.${image.type}`

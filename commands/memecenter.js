@@ -10,11 +10,11 @@ exports.run = async (message) => {
   const watermark = "./assets/images/memecenter.png";
   let resultBuffer;
   gm(image.data).size(async (error, size) => {
-    if (error) console.error;
+    if (error) throw error;
     const command = gm(image.data).out(watermark).background("#FFFFFF").gravity("East").out("-smush").out("-9");
     const output = await gmToBuffer(command, "png");
     gm(output).size(async (error, size2) => {
-      if (error) console.error;
+      if (error) throw error;
       resultBuffer = output;
       if (size.width !== size2.width) {
         const command2 = gm(output).gravity("West").chop(size2.width - size.width, 0);

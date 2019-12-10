@@ -97,12 +97,3 @@ exports.params = {
   delete: "[name]",
   edit: "[name] [content]"
 };
-
-/*{
-  default: "Gets a tag",
-  add: "Adds a tag",
-  delete: "Deletes a tag",
-  edit: "Edits a tag",
-  list: "Lists all tags in the server",
-  random: "Gets a random tag"
-}*/

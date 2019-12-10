@@ -9,7 +9,7 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a iFunny watermark!`;
   const watermark = "./assets/images/ifunny.png";
   gm(image.data).size(async (error, size) => {
-    if (error) console.error;
+    if (error) throw error;
     const data = gm(image.data).append(watermark).gravity("South").resize(size.width, null);
     const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {

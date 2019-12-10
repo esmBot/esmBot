@@ -14,10 +14,10 @@ exports.run = async (message, args) => {
     chunks.push(data);
   });
   child.once("error", (error) => {
-    if (error) console.error;
+    if (error) throw error;
   });
   child.stderr.once("data", (error) => {
-    if (error) console.error;
+    if (error) throw error;
   });
   child.stdout.once("close", () => {
     const data = Buffer.concat(chunks);

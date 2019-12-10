@@ -4,8 +4,8 @@ exports.run = async (message, args) => {
     await message.channel.guild.banMember(args[0], 0, `hackban command used by @${message.author.username}#${message.author.discriminator}`);
     return `Successfully banned user with ID \`${args[0]}\`.`;
   } catch (e) {
-    console.error(e);
-    return `${message.author.mention}, I was unable to ban the member. Have you given me permissions?`;
+    throw e;
+    //return `${message.author.mention}, I was unable to ban the member. Have you given me permissions?`;
   }
 };
 

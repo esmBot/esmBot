@@ -11,7 +11,7 @@ exports.run = async (message, args) => {
     chunks.push(chunk);
   });
   writable.once("error", (error) => {
-    if (error) console.error;
+    if (error) throw error;
   });
   writable.once("end", () => {
     const imageBuffer = Buffer.concat(chunks);

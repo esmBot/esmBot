@@ -9,7 +9,7 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Bandicam watermark!`;
   const watermark = "./assets/images/bandicam.png";
   gm(image.data).size(async (error, size) => {
-    if (error) console.error;
+    if (error) throw error;
     const data = gm(image.data).composite(watermark).gravity("North").resize(null, size.height);
     const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {

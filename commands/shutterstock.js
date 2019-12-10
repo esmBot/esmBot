@@ -9,7 +9,7 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Shutterstock watermark!`;
   const watermark = "./assets/images/shutterstock.png";
   gm(image.data).size(async (error, size) => {
-    if (error) console.error;
+    if (error) throw error;
     const command = gm(image.data).composite(watermark).gravity("Center").resize(null, size.height);
     const output = await gmToBuffer(command);
     return message.channel.createMessage("", {

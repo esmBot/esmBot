@@ -9,8 +9,8 @@ exports.run = async (message) => {
       await message.channel.guild.kickMember(member.id, `kick command used by @${message.author.username}#${message.author.discriminator}`);
       return `Successfully kicked ${member.mention}.`;
     } catch (error) {
-      console.error(error);
-      return `${message.author.mention}, I was unable to kick the member. Have you given me permissions?`;
+      throw error;
+      //return `${message.author.mention}, I was unable to kick the member. Have you given me permissions?`;
     }
   } else {
     return `${message.author.mention}, you need to provide a member to kick!`;

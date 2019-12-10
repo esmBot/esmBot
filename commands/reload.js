@@ -8,7 +8,7 @@ exports.run = async (message, args) => {
     await handler.load(args[0]);
     return `${message.author.mention}, the command \`${args[0]}\` has been reloaded.`;
   } catch (error) {
-    if (error) console.error;
+    if (error) throw error;
   }
 };
 
