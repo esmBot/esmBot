@@ -28,7 +28,6 @@ exports.run = async (message, args) => {
       }
     });
   }
-  //if (embeds.length === 0) return `${message.author.mention}, I couldn't find any results!`;
   return paginator(message, embeds);
 };
 

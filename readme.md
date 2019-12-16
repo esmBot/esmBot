@@ -4,12 +4,14 @@
 
 esmBot is an entertainment-focused Discord bot made using [Eris](https://abal.moe/Eris/) with soundboard, utility, and image manipulation commands.
 
+[![Top.gg](https://top.gg/api/widget/429305856241172480.svg)](https://top.gg/bot/429305856241172480)
+
 ## Usage
-You can invite the bot to your server using this link: https://projectlounge.pw/invitedev
+You can invite the bot to your server using this link: https://projectlounge.pw/invite
 
 A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 
-If you want to run it locally, you should install ImageMagick, FFmpeg, and MongoDB:
+If you want to run it locally for testing purposes, you should install ImageMagick, FFmpeg, and MongoDB:
 
 ```shell
 sudo apt-get install imagemagick ffmpeg mongodb

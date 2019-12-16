@@ -10,6 +10,9 @@ module.exports = async (message) => {
   if (message.author.bot) return;
   if (!message.channel.guild) return;
 
+  // don't run command if bot can't send messages
+  if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") && !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
+
   // prefix can be a mention or a set of special characters
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
   const guildConf = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];

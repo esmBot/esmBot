@@ -10,7 +10,6 @@ exports.run = async (message) => {
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
     const data = gm(image.data).resize(`${(size.width * 19) / 2}x${size.height / 2}!`);
-    //.gravity("Center").extent(size.width, size.height)
     const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {
       file: resultBuffer,
