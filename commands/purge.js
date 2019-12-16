@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
   const numberOfMessages = parseInt(args[0]) + 1;
   await message.channel.purge(numberOfMessages);
   const purgeMessage = await message.channel.createMessage(`Successfully purged ${args[0]} messages.`);
-  await require("util").promisify(setTimeout)(10000);
+  await require("util").promisify(setTimeout)(5000);
   await purgeMessage.delete();
   return;
 };

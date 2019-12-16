@@ -7,6 +7,7 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const rawData = await sharp(image.data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
+  if (!qrBuffer) return `${message.author.mention}, I couldn't find a QR code!`;
   return `\`\`\`\n${qrBuffer.data}\n\`\`\``;
 };
 

@@ -9,6 +9,7 @@ exports.run = async (message, args) => {
   const embeds = [];
   const request = await fetch(`https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE}&cx=${process.env.CSE}&safe=active&searchType=image&q=${encodeURIComponent(args.join(" "))}`);
   const images = await request.json();
+  if (!images.items) return `${message.author.mention}, I couldn't find any results!`;
   for (const [i, value] of images.items.entries()) {
     embeds.push({
       "embed": {
@@ -27,7 +28,7 @@ exports.run = async (message, args) => {
       }
     });
   }
-  if (embeds.length === 0) return `${message.author.mention}, I couldn't find any results!`;
+  //if (embeds.length === 0) return `${message.author.mention}, I couldn't find any results!`;
   return paginator(message, embeds);
 };
 

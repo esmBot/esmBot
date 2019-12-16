@@ -15,44 +15,6 @@ module.exports = async (message) => {
   const guildConf = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildConf.prefix;
 
-  // xp stuff
-  const xp = (await database.xp.find({ id: message.channel.guild.id }).exec())[0];
-  if (xp.enabled === true && !message.member.roles.includes("631290345824714762")) {
-    const info = xp.members.get(message.author.id);
-    if (!info) {
-      logger.log("Member not in XP database, adding");
-      const memberInfo = {
-        xpAmount: 10,
-        level: 0
-      };
-      xp.members.set(message.author.id, memberInfo);
-      await xp.save();
-    } else {
-      const newAmount = info.xpAmount + 10;
-      const level = Math.floor(0.1 * Math.sqrt(newAmount));
-      if (info.level < level) {
-        logger.log(`${message.author.username} has leveled up`);
-        if (message.channel.guild.id === "631290275456745502" && level === 5) {
-          await message.author.addRole("638759280752853022", "level 5");
-          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the better members role!`);
-        } else if (message.channel.guild.id === "631290275456745502" && level === 10) {
-          await message.author.addRole("638822807626711078", "level 10");
-          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the even better members role!`);
-        } else if (message.channel.guild.id === "631290275456745502" && level === 25) {
-          await message.author.addRole("631299545657114645", "level 25");
-          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}... AND unlocked the best members role!`);
-        } else {
-          await message.channel.createMessage(`${message.author.mention} just leveled up to level ${level}!`);
-        }
-      }
-      xp.members.set(message.author.id, {
-        xpAmount: newAmount,
-        level: level
-      });
-      await xp.save();
-    }
-  }
-
   // ignore other stuff
   if (message.content.startsWith(prefix) === false && !message.mentions.includes(client.user) && message.channel.id !== "573553254575898626") return;
 

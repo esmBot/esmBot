@@ -8,13 +8,6 @@ const guildSchema = new mongoose.Schema({
 });
 const Guild = mongoose.model("Guild", guildSchema);
 
-const xpSchema = new mongoose.Schema({
-  id: String,
-  members: Map,
-  enabled: Boolean
-});
-const XP = mongoose.model("XP", xpSchema);
-
 const tweetSchema = new mongoose.Schema({
   tweets: [String],
   replies: [String],
@@ -28,5 +21,4 @@ const tweetSchema = new mongoose.Schema({
 const TweetCollection = mongoose.model("TweetCollection", tweetSchema);
 
 exports.guilds = Guild;
-exports.xp = XP;
 exports.tweets = TweetCollection;

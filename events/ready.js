@@ -9,9 +9,8 @@ const twitter = process.env.TWITTER === "true" ? require("../utils/twitter.js") 
 // run when ready
 module.exports = async () => {
   // make sure settings/tags exist
-  for (const [id, guild] of client.guilds) {
+  for (const [id] of client.guilds) {
     const guildDB = (await database.guilds.find({ id: id }).exec())[0];
-    const xpDB = (await database.xp.find({ id: id }).exec())[0];
     if (!guildDB) {
       console.log(`Registering guild database entry for guild ${id}...`);
       const newGuild = new database.guilds({
@@ -20,22 +19,6 @@ module.exports = async () => {
         prefix: "&"
       });
       await newGuild.save();
-    }
-    if (!xpDB) {
-      console.log(`Registering xp database entry for guild ${id}...`);
-      const memberInfo = {};
-      for (const [id] of guild.members) {
-        memberInfo[id] = {
-          xpAmount: 0,
-          level: 0
-        };
-      }
-      const newXP = new database.xp({
-        id: id,
-        members: memberInfo,
-        enabled: false
-      });
-      await newXP.save();
     }
   }
 
