@@ -25,14 +25,15 @@ head
     }
 body    
   article#markdown.markdown-body
-    h1#img-srchttpsrawgithubusercontentcomtheessemesmbot-rewritemasteresmbotpng-width64-esmbot-dev-command-list
-      img(src='https://raw.githubusercontent.com/TheEssem/esmBot-rewrite/master/esmbot.png' width='64')
+    h1#img-srchttpsrawgithubusercontentcomtheessemesmbotmasteresmbotpng-width64-esmbot-dev-command-list
+      img(src='https://raw.githubusercontent.com/TheEssem/esmBot/master/esmbot.png' width='64')
       |  esmBot Command List
-    p
-      strong
-        | You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, 
-        a(href='https://github.com/TheEssem/esmBot-rewrite/issues') report it here
-        |  or in the esmBot Support server.
+    if dev
+      p
+        strong
+          | You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, 
+          a(href='https://github.com/TheEssem/esmBot/issues') report it here
+          |  or in the esmBot Support server.
     p
       code []
       |  means an argument is required, 

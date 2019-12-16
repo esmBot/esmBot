@@ -1,5 +1,5 @@
-# <img src="https://github.com/TheEssem/esmBot-rewrite/raw/master/esmbot.png" width="128"> esmBot
-[![esmBot Support](https://discordapp.com/api/guilds/592399417676529688/embed.png)](https://discord.gg/vfFM7YT) ![GitHub license](https://img.shields.io/github/license/TheEssem/esmBot-rewrite.svg)
+# <img src="https://github.com/TheEssem/esmBot/raw/master/esmbot.png" width="128"> esmBot
+[![esmBot Support](https://discordapp.com/api/guilds/592399417676529688/embed.png)](https://discord.gg/vfFM7YT) ![GitHub license](https://img.shields.io/github/license/TheEssem/esmBot.svg)
 
 
 esmBot is an entertainment-focused Discord bot made using [Eris](https://abal.moe/Eris/) with soundboard, utility, and image manipulation commands.

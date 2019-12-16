@@ -34,7 +34,7 @@ module.exports = async (output) => {
       categories.soundboard.push(`<strong>${command}</strong>${params ? ` ${params}` : ""} - ${description}`);
     }
   }
-  fs.writeFile(output, pug.renderFile("./assets/pages/help.pug", { commands: categories }), () => {
+  fs.writeFile(output, pug.renderFile("./assets/pages/help.pug", { commands: categories, dev: process.env.NODE_ENV === "development" ? true : false }), () => {
     logger.log("The help docs have been generated.");
   });
 };
