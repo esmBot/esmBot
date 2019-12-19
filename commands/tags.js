@@ -49,7 +49,7 @@ exports.run = async (message, args) => {
               "text": `Page ${i + 1} of ${groups.length}`
             },
             "description": value.join("\n"),
-            "fields": [process.env.NODE_ENV === "development" ? {"name": "Note", "value": "Tags created in this version of esmBot will not carry over to the final release."} : null],
+            "fields": process.env.NODE_ENV === "development" ? [{"name": "Note", "value": "Tags created in this version of esmBot will not carry over to the final release."}] : null,
             "author": {
               "name": message.author.username,
               "icon_url": message.author.avatarURL
