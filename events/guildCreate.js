@@ -11,18 +11,5 @@ module.exports = async (guild) => {
     tags: misc.tagDefaults,
     prefix: "&"
   });
-  const memberInfo = {};
-  for (const member of guild.members) {
-    memberInfo[member.id] = {
-      xpAmount: 0,
-      level: 0
-    };
-  }
-  const xpDB = new db.xp({
-    id: guild.id,
-    members: memberInfo,
-    enabled: false
-  });
   await guildDB.save();
-  await xpDB.save();
 };
