@@ -25,7 +25,6 @@
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.7.13",
     "node-fetch": "^2.6.0",
-    "pug": "^2.0.4",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
     "sharp": "^0.22.1",
