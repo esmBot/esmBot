@@ -43,7 +43,9 @@ async function init() {
   client.connect();
 
   // post to DBL
-  // require("./utils/dbl.js");
+  if (process.env.NODE_ENV === "production") {
+    require("./utils/dbl.js");
+  }
 }
 
 // launch the bot
