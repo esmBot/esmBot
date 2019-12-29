@@ -15,7 +15,7 @@ module.exports = (data, format) => {
           resolve(Buffer.concat(chunks));
         });
         stderr.once("data", (data) => {
-          reject(String(data));
+          reject(data.toString());
         });
       });
     } else {
@@ -31,7 +31,7 @@ module.exports = (data, format) => {
           resolve(Buffer.concat(chunks));
         });
         stderr.once("data", (data) => {
-          reject(String(data));
+          reject(data.toString());
         });
       });
     }

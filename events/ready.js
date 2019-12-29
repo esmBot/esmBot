@@ -12,7 +12,7 @@ module.exports = async () => {
   for (const [id] of client.guilds) {
     const guildDB = (await database.guilds.find({ id: id }).exec())[0];
     if (!guildDB) {
-      console.log(`Registering guild database entry for guild ${id}...`);
+      logger.log(`Registering guild database entry for guild ${id}...`);
       const newGuild = new database.guilds({
         id: id,
         tags: misc.tagDefaults,
