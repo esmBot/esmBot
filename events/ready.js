@@ -35,6 +35,7 @@ module.exports = async () => {
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
+    const blocks = await twitter.client.get("blocks/ids");
     const tweet = async () => {
       const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
       const tweetContent = await misc.getTweet(tweets);
@@ -57,7 +58,7 @@ module.exports = async () => {
       track: `@${process.env.HANDLE}`
     });
     stream.on("tweet", async (tweet) => {
-      if (tweet.user.screen_name !== "esmBot_") {
+      if (tweet.user.screen_name !== "esmBot_" && !blocks.data.ids.includes(tweet.user.id_str)) {
         const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
         let tweetContent;
         if (tweet.text.includes("@this_vid") || tweet.text.includes("@DownloaderBot") || tweet.text.includes("@GetVideoBot") || tweet.text.includes("@DownloaderB0t") || tweet.text.includes("@thisvid_")) {
