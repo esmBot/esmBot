@@ -36,7 +36,6 @@ module.exports = async () => {
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
     const blocks = await twitter.client.get("blocks/ids", { stringify_ids: true });
-    console.log(blocks.data);
     const tweet = async () => {
       const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
       const tweetContent = await misc.getTweet(tweets);
