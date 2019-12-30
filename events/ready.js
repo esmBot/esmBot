@@ -58,7 +58,6 @@ module.exports = async () => {
       track: `@${process.env.HANDLE}`
     });
     stream.on("tweet", async (tweet) => {
-      console.log(tweet.user.id_str);
       if (tweet.user.screen_name !== "esmBot_" && !blocks.data.ids.includes(tweet.user.id_str)) {
         const tweets = (await database.tweets.find({ enabled: true }).exec())[0];
         let tweetContent;
