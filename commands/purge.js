@@ -6,10 +6,7 @@ exports.run = async (message, args) => {
   if (args.length === 0 || !args[0].match(/^\d+$/)) return `${message.author.mention}, you need to provide the number of messages to purge!`;
   const numberOfMessages = parseInt(args[0]) + 1;
   await message.channel.purge(numberOfMessages);
-  const purgeMessage = await message.channel.createMessage(`Successfully purged ${args[0]} messages.`);
-  await require("util").promisify(setTimeout)(5000);
-  await purgeMessage.delete();
-  return;
+  return `Successfully purged ${args[0]} messages.`;
 };
 
 exports.aliases = ["prune"];

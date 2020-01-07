@@ -56,7 +56,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
     }
   });
   reactionCollector.once("end", () => {
-    if (!deleted) currentPage.removeReactions();
+    if (!deleted && manageMessages) currentPage.removeReactions();
   });
   return currentPage;
 };
