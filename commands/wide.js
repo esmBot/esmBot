@@ -9,6 +9,7 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to stretch!`;
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
+    if (size.width > 10000) return `${message.author.mention}, this image is too wide!`;
     const data = gm(image.data).resize(`${(size.width * 19) / 2}x${size.height / 2}!`);
     const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {
