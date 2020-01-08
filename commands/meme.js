@@ -4,6 +4,7 @@ exports.run = async (message, args) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to generate a meme!`;
+  if (image.type === "gif") return `${message.author.mention}, this command doesn't work with GIFs!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a meme!`;
   const [topText, bottomText] = args.join(" ").split(",").map(elem => elem.trim());
   const child = spawn("./utils/meme.sh", [topText.toUpperCase().replace(/\\/g, "\\\\"), bottomText ? bottomText.toUpperCase().replace(/\\/g, "\\\\") : ""]);

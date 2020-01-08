@@ -7,7 +7,7 @@ ${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot D
 
 Default prefix is \`&\`.
 
-> Tip: Use Ctrl+F to find the command you want!
+> Tip: You can get more info about a command by using \`help [command]\`.
 
 ## Table of Contents
 + [**General**](#💻-general)
@@ -25,7 +25,7 @@ module.exports = async (output) => {
     moderation: ["## 🔨 Moderation"],
     tags: ["## 🏷️ Tags"],
     fun: ["## 👌 Fun"],
-    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, and WEBP formats."],
+    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)"],
     soundboard: ["## 🔊 Soundboard"]
   };
   for (const command of commands) {

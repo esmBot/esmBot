@@ -11,7 +11,7 @@ const typeCheck = async (image) => {
     // get the file type
     const imageType = fileType(imageBuffer);
     // check if the file is a jpeg, png, or webp
-    if (imageType && ["image/jpeg", "image/png", "image/webp"].includes(imageType.mime)) {
+    if (imageType && ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(imageType.mime)) {
       // if it is, then return the url with the file type
       return {
         type: imageType.ext,
