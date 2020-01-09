@@ -10,7 +10,7 @@ exports.run = async (message) => {
   const watermark = "./assets/images/funky.png";
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
-    const data = gm(image.data).composite(watermark).gravity("NorthEast").resize(null, size.height);
+    const data = gm(image.data).coalesce().out("null:").out(watermark).gravity("NorthEast").resize(null, size.height).out("-layers", "composite");
     const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {
       file: resultBuffer,

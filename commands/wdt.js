@@ -11,11 +11,11 @@ exports.run = async (message) => {
   const template = "./assets/images/whodidthis.png";
   const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   require("util").promisify(fs.writeFile)(path, image.data);
-  const command = gm(template).composite(path).gravity("Center").geometry("374x374+0+0");
-  const resultBuffer = await gmToBuffer(command, "png");
+  const command = gm(template).coalesce().out("null:").out(path).gravity("Center").resize("374x374>").out("-layers", "composite");
+  const resultBuffer = await gmToBuffer(command, image.type);
   return message.channel.createMessage("", {
     file: resultBuffer,
-    name: "wdt.png"
+    name: `wdt.${image.type}`
   });
 };
 

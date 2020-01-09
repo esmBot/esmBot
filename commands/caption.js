@@ -7,6 +7,7 @@ const gmToBuffer = require("../utils/gmbuffer.js");
 exports.run = async (message, args) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to add a caption!`;
+  if (args.length === 0) return `${message.author.mention}, you need to provide some text to add a caption!`;
   const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   require("util").promisify(fs.writeFile)(path, image.data);

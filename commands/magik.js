@@ -6,6 +6,7 @@ const gmToBuffer = require("../utils/gmbuffer.js");
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add some magik!`;
+  if (image.type === "gif") return `${message.author.mention}, this command doesn't work with GIFs!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   gm(image.data).resize(800, 800).stream((error, stream) => {
     if (error) throw error;

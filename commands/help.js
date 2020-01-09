@@ -36,7 +36,7 @@ exports.run = async (message, args) => {
       moderation: [],
       tags: ["**Every command in this category is a subcommand of the tag command.**\n"],
       fun: [],
-      images: ["**These commands support the PNG, JPEG, and WEBP formats.**\n"],
+      images: ["**These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is experimental)**\n"],
       soundboard: [],
       admin: ["**These commands are only available to the bot owner.**\n"]
     };

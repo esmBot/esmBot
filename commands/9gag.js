@@ -8,7 +8,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a 9GAG watermark!`;
   const watermark = "./assets/images/9gag.png";
-  const data = gm(image.data).composite(watermark).gravity("East");
+  const data = gm(image.data).coalesce().out("null:").out(watermark).gravity("East").out("-layers", "composite");
   const resultBuffer = await gmToBuffer(data);
   return message.channel.createMessage("", {
     file: resultBuffer,

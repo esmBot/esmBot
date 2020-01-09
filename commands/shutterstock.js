@@ -10,7 +10,7 @@ exports.run = async (message) => {
   const watermark = "./assets/images/shutterstock.png";
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
-    const command = gm(image.data).composite(watermark).gravity("Center").resize(null, size.height);
+    const command = gm(image.data).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite");
     const output = await gmToBuffer(command);
     return message.channel.createMessage("", {
       file: output,

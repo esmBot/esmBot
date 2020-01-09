@@ -11,11 +11,11 @@ exports.run = async (message) => {
   const template = "./assets/images/scott.png";
   const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
   require("util").promisify(fs.writeFile)(path, image.data);
-  const command = gm(template).out("-gravity").out("Center").out("(").out(path).out("-virtual-pixel").out("transparent").out("-resize").out("415x234!").out("+distort").out("Perspective").out("0,0 129,187 415,0 517,182 415,234 517,465 0,234 132,418").out("-geometry").out("-110+83").out(")").out("-composite");
-  const resultBuffer = await gmToBuffer(command, "png");
+  const command = gm(template).out("null:").out("(").out(path).out("-virtual-pixel", "transparent").resize("415x234!").coalesce().out("+distort", "Perspective", "0,0 129,187 415,0 517,182 415,234 517,465 0,234 132,418").out(")").compose("over").gravity("Center").geometry("-238-98").out("-layers", "composite");
+  const resultBuffer = await gmToBuffer(command, image.type);
   return message.channel.createMessage("", {
     file: resultBuffer,
-    name: "scott.png"
+    name: `scott.${image.type}`
   });
 };
 
