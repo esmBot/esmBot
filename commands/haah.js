@@ -17,7 +17,7 @@ exports.run = async (message) => {
       if (error) throw error;
       gm(data2).flop().write(data, async (error) => {
         if (error) throw error;
-        const command = gm(data2).out("-repage", `${size.width}x${size.height}`).coalesce().out("null:").out("(").out(data).coalesce().out(")").geometry(`+${size.width / 2}+0`).out("-layers", "Composite");
+        const command = gm(data2).out("-repage", `${size.width}x${size.height}`).coalesce().out("null:").out("(").out(data).coalesce().out(")").geometry(`+${size.width / 2}+0`).out("-layers", "Composite").out("-layers", "optimize");
         const resultBuffer = await gmToBuffer(command);
         return message.channel.createMessage("", {
           file: resultBuffer,
