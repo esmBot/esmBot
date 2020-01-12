@@ -9,7 +9,7 @@ exports.run = async (message, args) => {
     for (const codePoint of args[0]) {
       codePoints.push(codePoint.codePointAt(0).toString(16));
     }
-    return `https://twemoji.maxcdn.com/v/latest/72x72/${codePoints.join("-")}.png`;
+    return `https://twemoji.maxcdn.com/v/latest/72x72/${codePoints.join("-").replace("-fe0f", "")}.png`;
   } else {
     return `${message.author.mention}, you need to provide a valid emoji to get an image!`;
   }

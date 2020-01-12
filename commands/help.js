@@ -37,8 +37,7 @@ exports.run = async (message, args) => {
       tags: ["**Every command in this category is a subcommand of the tag command.**\n"],
       fun: [],
       images: ["**These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is experimental)**\n"],
-      soundboard: [],
-      admin: ["**These commands are only available to the bot owner.**\n"]
+      soundboard: []
     };
     for (const command of commands) {
       const category = collections.info.get(command).category;
@@ -59,8 +58,6 @@ exports.run = async (message, args) => {
         categories.images.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       } else if (category === 6) {
         categories.soundboard.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
-      } else if (category === 7) {
-        categories.admin.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       }
     }
     const pages = [];

@@ -27,7 +27,7 @@
     "node-fetch": "^2.6.0",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
-    "sharp": "^0.22.1",
+    "sharp": "^0.23.4",
     "twit": "^2.2.11",
     "winston": "^3.2.1"
   },
