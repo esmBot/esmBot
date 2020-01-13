@@ -8,9 +8,8 @@ exports.run = async (message) => {
     try {
       await message.channel.guild.banMember(member.id, 0, `ban command used by @${message.author.username}#${message.author.discriminator}`);
       return `Successfully banned ${member.mention}.`;
-    } catch (error) {
-      throw error;
-      //return `${message.author.mention}, I was unable to ban the member. Have you given me permissions?`;
+    } catch (e) {
+      return `${message.author.mention}, I was unable to ban the member. Have you given me permissions?`;
     }
   } else {
     return `${message.author.mention}, you need to provide a member to ban!`;

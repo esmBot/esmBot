@@ -39,7 +39,8 @@ module.exports = async (message) => {
   // separate commands and args
   const escapedPrefix = misc.regexEscape(prefix);
   const prefixRegex = new RegExp(`^(${escapedPrefix})`);
-  const args = message.content.replace(prefixRegex, "").trim().split(/ +/g);
+  const content = message.content.replace(prefixRegex, "").trim();
+  const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // check if command exists
@@ -49,7 +50,7 @@ module.exports = async (message) => {
   // actually run the command
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
-    const result = await cmd(message, args);
+    const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     if (typeof result === "string") {
       await client.createMessage(message.channel.id, result);
     }
