@@ -9,7 +9,7 @@ const typeCheck = async (image) => {
   const imageBuffer = await imageRequest.buffer();
   try {
     // get the file type
-    const imageType = fileType(imageBuffer);
+    const imageType = await fileType.fromBuffer(imageBuffer);
     // check if the file is a jpeg, png, or webp
     if (imageType && ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(imageType.mime)) {
       // if it is, then return the url with the file type
