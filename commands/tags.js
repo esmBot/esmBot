@@ -20,7 +20,7 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       tags.set(args[1].toLowerCase(), undefined);
       await guild.save();
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
@@ -30,6 +30,11 @@ exports.run = async (message, args) => {
       if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been edited!`;
+    case "own":
+    case "owner":
+      if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to check the owner of!`;
+      if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
+      return `${message.author.mention}, this tag is owned by **${client.users.get(tags.get(args[1].toLowerCase()).author).username}#${client.users.get(tags.get(args[1].toLowerCase()).author).discriminator}** (\`${tags.get(args[1].toLowerCase()).author}\`).`;
     case "list":
       if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
       if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
