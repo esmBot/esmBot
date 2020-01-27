@@ -1,30 +1,33 @@
-const { spawn } = require("child_process");
+const gm = require("gm").subClass({
+  imageMagick: true
+});
+const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message, args) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to generate a meme!`;
-  if (image.type === "gif") return `${message.author.mention}, this command doesn't work with GIFs!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a meme!`;
   const [topText, bottomText] = args.join(" ").split(",").map(elem => elem.trim());
-  const child = spawn("./utils/meme.sh", [topText.toUpperCase().replace(/\\/g, "\\\\"), bottomText ? bottomText.toUpperCase().replace(/\\/g, "\\\\") : ""]);
-  child.stdin.write(image.data);
-  child.stdin.end();
-  const chunks = [];
-  child.stdout.on("data", (data) => {
-    chunks.push(data);
-  });
-  child.once("error", (error) => {
+  const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.${image.type}`;
+  const file2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
+  const file3 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
+  gm(image.data).resize(600, 600).noProfile().write(file, (error) => {
     if (error) throw error;
-  });
-  child.stderr.once("data", (error) => {
-    if (error) throw new Error(error.toString());
-  });
-  child.stdout.once("close", () => {
-    const data = Buffer.concat(chunks);
-    return message.channel.createMessage("", {
-      file: data,
-      name: "meme.png"
+    gm(file).size((error, size) => {
+      if (error) throw error;
+      gm().out("-size", size.width).background("none").gravity("Center").out("(", "(").font("Impact").out("-pointsize", 40).out(`pango:<span foreground='white'>${topText.toUpperCase()}</span>`).out(")", "(", "+clone").out("-channel", "A").out("-morphology", "EdgeOut", "Octagon", "+channel", "+level-colors", "black", ")").compose("DstOver").out(")", "-composite").write(file2, (error) => {
+        if (error) throw error;
+        gm().out("-size", size.width).background("none").gravity("Center").out("(", "(").font("Impact").out("-pointsize", 40).out(`pango:<span foreground='white'>${bottomText ? bottomText.toUpperCase() : " "}</span>`).out(")", "(", "+clone").out("-channel", "A").out("-morphology", "EdgeOut", "Octagon", "+channel", "+level-colors", "black", ")").compose("DstOver").out(")", "-composite").write(file3, async (error) => {
+          if (error) throw error;
+          const data = gm(file).coalesce().out("null:").gravity("North").out(file2).out("-layers", "composite").out("null:").gravity("South").out(file3).out("-layers", "composite").out("-layers", "optimize");
+          const resultBuffer = await gmToBuffer(data);
+          return message.channel.createMessage("", {
+            file: resultBuffer,
+            name: `meme.${image.type}`
+          });
+        });
+      });
     });
   });
 };
