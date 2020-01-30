@@ -30,15 +30,15 @@ exports.run = async (message, args) => {
         },
         {
           "name": "💬 **Joined this server on:**",
-          "value": new Date(member.joinedAt).toString()
+          "value": member ? new Date(member.joinedAt).toString() : "N/A"
         },
         {
           "name": "ℹ️ **Status:**",
-          "value": member.status
+          "value": member ? member.status : "Unknown"
         },
         {
           "name": "🎮 **Playing:**",
-          "value": member.game ? member.game.name : "Nothing"
+          "value": member ? (member.game ? member.game.name : "Nothing") : "Unknown"
         }
       ]
     }
