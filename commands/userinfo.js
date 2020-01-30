@@ -18,7 +18,7 @@ exports.run = async (message, args) => {
         },
         {
           "name": "📛 **Nickname:**",
-          "value": member.nick ? member.nick : "None"
+          "value": member ? (member.nick ? member.nick : "None") : "N/A"
         },
         {
           "name": "🤖 **Bot:**",
