@@ -9,6 +9,7 @@ exports.run = async (message, args) => {
   const embeds = [];
   const request = await fetch(`https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE}&cx=${process.env.CSE}&safe=active&searchType=image&q=${encodeURIComponent(args.join(" "))}`);
   const images = await request.json();
+  if (images.error && images.error.code === 403) return `${message.author.mention}, the daily search quota has been exceeded. Check back later.`;
   if (!images.items) return `${message.author.mention}, I couldn't find any results!`;
   for (const [i, value] of images.items.entries()) {
     embeds.push({
