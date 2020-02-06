@@ -6,7 +6,6 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
   let deleted = false;
-  pages[page].embed.footer.text = `Page ${page + 1} of ${pages.length}`;
   const currentPage = await message.channel.createMessage(pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
@@ -18,7 +17,6 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
       switch (reaction.name) {
         case "◀":
           page = page > 0 ? --page : pages.length - 1;
-          pages[page].embed.footer.text = `Page ${page + 1} of ${pages.length}`;
           currentPage.edit(pages[page]);
           if (manageMessages) msg.removeReaction("◀", userID);
           break;
@@ -31,7 +29,6 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
             return messageCollector.on("message", response => {
               askMessage.delete();
               page = Number(response.content) - 1;
-              pages[page].embed.footer.text = `Page ${page + 1} of ${pages.length}`;
               currentPage.edit(pages[page]);
               if (manageMessages) msg.removeReaction("🔢", userID);
             });
@@ -41,7 +38,6 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
           break;
         case "▶":
           page = page + 1 < pages.length ? ++page : 0;
-          pages[page].embed.footer.text = `Page ${page + 1} of ${pages.length}`;
           currentPage.edit(pages[page]);
           if (manageMessages) msg.removeReaction("▶", userID);
           break;

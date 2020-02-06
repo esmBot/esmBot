@@ -63,6 +63,24 @@ exports.regexEscape = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 };
 
+// decodeEntities(string)
+exports.decodeEntities = (string) => {
+  var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+  var translate = {
+    "nbsp": " ",
+    "amp": "&",
+    "quot": "\"",
+    "lt": "<",
+    "gt": ">"
+  };
+  return string.replace(translate_re, function(match, entity) {
+    return translate[entity];
+  }).replace(/&#(\d+);/gi, function(match, numStr) {
+    var num = parseInt(numStr, 10);
+    return String.fromCharCode(num);
+  });
+};
+
 // define defaults for prefixes and tags
 exports.defaults = {
   prefix: "&"
