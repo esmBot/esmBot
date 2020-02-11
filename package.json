@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A Discord bot with miscellaneous features",
   "main": "app.js",
   "engines": {
@@ -19,7 +19,6 @@
     "emoji-regex": "^8.0.0",
     "eris": "^0.11.2",
     "file-type": "^13.1.0",
-    "form-data": "^3.0.0",
     "gm": "^1.23.1",
     "jsqr": "^1.2.0",
     "moment": "^2.24.0",
