@@ -10,9 +10,8 @@ exports.run = async (message) => {
   gm(image.data).command("montage").out("-duplicate").out(24).tile("5x5").geometry("+0+0").stream(async (error, output) => {
     if (error) throw error;
     const data = gm(output).resize("800x800>");
-    const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {
-      file: resultBuffer,
+      file: await gmToBuffer(data),
       name: `tile.${image.type}`
     });
   });

@@ -14,9 +14,8 @@ exports.run = async (message, args, content) => {
     if (error) throw error;
   });
   writable.once("end", () => {
-    const imageBuffer = Buffer.concat(chunks);
     return message.channel.createMessage("", {
-      file: imageBuffer,
+      file: Buffer.concat(chunks),
       name: "qr.png"
     });
   });

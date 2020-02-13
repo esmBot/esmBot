@@ -8,9 +8,8 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to invert!`;
   const data = gm(image.data).negative();
-  const resultBuffer = await gmToBuffer(data);
   return message.channel.createMessage("", {
-    file: resultBuffer,
+    file: await gmToBuffer(data),
     name: `invert.${image.type}`
   });
 };

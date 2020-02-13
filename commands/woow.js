@@ -18,9 +18,8 @@ exports.run = async (message) => {
       gm(data2).flip().write(data, async (error) => {
         if (error) throw error;
         const command = gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+0+${size.height / 2}`).out("-layers", "Composite").out("-layers", "optimize");
-        const resultBuffer = await gmToBuffer(command, image.type);
         return message.channel.createMessage("", {
-          file: resultBuffer,
+          file: await gmToBuffer(command, image.type),
           name: `woow.${image.type}`
         });
       });

@@ -11,9 +11,8 @@ exports.run = async (message) => {
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
     const command = gm(image.data).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
-    const output = await gmToBuffer(command);
     return message.channel.createMessage("", {
-      file: output,
+      file: await gmToBuffer(command),
       name: `shutterstock.${image.type}`
     });
   });

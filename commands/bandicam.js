@@ -11,9 +11,8 @@ exports.run = async (message) => {
   gm(image.data).size(async (error, size) => {
     if (error) throw error;
     const data = gm(image.data).coalesce().out("null:").out(watermark).gravity("North").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
-    const resultBuffer = await gmToBuffer(data);
     return message.channel.createMessage("", {
-      file: resultBuffer,
+      file: await gmToBuffer(data),
       name: `bandicam.${image.type}`
     });
   });

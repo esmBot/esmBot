@@ -36,17 +36,19 @@ exports.run = async (message, args) => {
                   gm(text2).size(async (error, size4) => {
                     if (error) throw error;
                     const command2 = gm(await gmToBuffer(command, image.type)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize");
+                    const resultBuffer = await gmToBuffer(command2, image.type);
                     processMessage.delete();
                     return message.channel.createMessage("", {
-                      file: await gmToBuffer(command2, image.type),
+                      file: resultBuffer,
                       name: `motivate.${image.type}`
                     });
                   });
                 });
               } else {
+                const resultBuffer = await gmToBuffer(command, image.type);
                 processMessage.delete();
                 return message.channel.createMessage("", {
-                  file: await gmToBuffer(command, image.type),
+                  file: resultBuffer,
                   name: `motivate.${image.type}`
                 });
               }

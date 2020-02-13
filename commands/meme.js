@@ -21,9 +21,8 @@ exports.run = async (message, args) => {
         gm().out("-size", size.width).background("none").gravity("Center").out("(", "(").font("Impact").out("-pointsize", 40).out(`pango:<span foreground='white'>${bottomText ? bottomText.toUpperCase().replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;") : " "}</span>`).out(")", "(", "+clone").out("-channel", "A").out("-morphology", "EdgeOut", "Octagon", "+channel", "+level-colors", "black", ")").compose("DstOver").out(")", "-composite").write(file3, async (error) => {
           if (error) throw error;
           const data = gm(file).out("-coalesce").out("null:").gravity("North").out(file2).out("-layers", "composite").out("null:").gravity("South").out(file3).out("-layers", "composite").out("-layers", "optimize");
-          const resultBuffer = await gmToBuffer(data, image.type);
           return message.channel.createMessage("", {
-            file: resultBuffer,
+            file: await gmToBuffer(data, image.type),
             name: `meme.${image.type}`
           });
         });

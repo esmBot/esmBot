@@ -9,9 +9,8 @@ exports.run = async (message, args) => {
   const template = "./assets/images/hbc.png";
   const cleanedMessage = args.join(" ").toLowerCase().replace(/\n/g, " ");
   const command = gm(template).gravity("Center").font("./assets/hbc.ttf").out("-kerning", "-5").fill("white").pointSize(96).drawText(0, 0, cleanedMessage);
-  const resultBuffer = await gmToBuffer(command);
   return message.channel.createMessage("", {
-    file: resultBuffer,
+    file: await gmToBuffer(command),
     name: "homebrew.png"
   });
 };
