@@ -1,0 +1,16 @@
+sudo squid & chromium-browser \
+  --disable-background-networking \
+  --disable-default-apps \
+  --disable-extensions \
+  --disable-gpu \
+  --disable-sync \
+  --disable-translate \
+  --headless \
+  --hide-scrollbars \
+  --metrics-recording-only \
+  --mute-audio \
+  --no-first-run \
+  --no-sandbox \
+  --remote-debugging-address=0.0.0.0 \
+  --remote-debugging-port=9222 \
+  --safebrowsing-disable-auto-update

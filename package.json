@@ -6,6 +6,10 @@
   "engines": {
     "node": ">=8"
   },
+  "scripts": {
+    "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
+    "docker:run": "docker run --rm -it --network=\"host\" headless-chrome-alpine"
+  },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
   "repository": {
@@ -25,6 +29,7 @@
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.8.9",
     "node-fetch": "^2.6.0",
+    "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
     "sharp": "^0.23.4",
