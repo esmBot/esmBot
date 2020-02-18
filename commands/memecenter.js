@@ -9,10 +9,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a MemeCenter watermark!`;
   const watermark = "./assets/images/memecenter.png";
   let resultBuffer;
-  gm(image.data).size(async (error, size) => {
+  gm(image.path).size(async (error, size) => {
     if (error) throw error;
-    const command = gm(image.data).coalesce().background("white").extent(size.width, size.height + 15).out("null:").out(watermark).gravity("SouthEast").compose("over").out("-layers", "composite").out("-layers", "optimize");
-    const output = await gmToBuffer(command, image.type);
+    const command = gm(image.path).coalesce().background("white").extent(size.width, size.height + 15).out("null:").out(watermark).gravity("SouthEast").compose("over").out("-layers", "composite").out("-layers", "optimize");
+    const output = await gmToBuffer(command, image.outputType);
     gm(output).size(async (error, size2) => {
       if (error) throw error;
       resultBuffer = output;
@@ -22,7 +22,7 @@ exports.run = async (message) => {
       }
       return message.channel.createMessage("", {
         file: resultBuffer,
-        name: `memecenter.${image.type}`
+        name: `memecenter.${image.outputType}`
       });
     });
   });

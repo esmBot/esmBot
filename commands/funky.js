@@ -8,12 +8,12 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add New Funky Mode!`;
   const watermark = "./assets/images/funky.png";
-  gm(image.data).size(async (error, size) => {
+  gm(image.path).size(async (error, size) => {
     if (error) throw error;
-    const data = gm(image.data).coalesce().out("null:").out(watermark).gravity("NorthEast").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
+    const data = gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthEast").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
     return message.channel.createMessage("", {
-      file: await gmToBuffer(data),
-      name: `funky.${image.type}`
+      file: await gmToBuffer(data, image.outputType),
+      name: `funky.${image.outputType}`
     });
   });
 };

@@ -7,10 +7,10 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to explode!`;
-  const data = gm(image.data).implode([-2]);
+  const data = gm(image.path).coalesce().implode([-2]);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data),
-    name: `explode.${image.type}`
+    file: await gmToBuffer(data, image.outputType),
+    name: `explode.${image.outputType}`
   });
 };
 

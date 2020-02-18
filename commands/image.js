@@ -17,7 +17,7 @@ exports.run = async (message, args) => {
         "title": "Search Results",
         "color": 16711680,
         "footer": {
-          "text": `Page ${i + 1} of ${images.length}`
+          "text": `Page ${i + 1} of ${images.items.length}`
         },
         "image": {
           "url": value.link

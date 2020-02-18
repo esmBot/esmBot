@@ -1,3 +1,4 @@
+const fs = require("fs");
 const gm = require("gm").subClass({
   imageMagick: true
 });
@@ -8,10 +9,10 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a 9GAG watermark!`;
   const watermark = "./assets/images/9gag.png";
-  const data = gm(image.data).coalesce().out("null:").out(watermark).gravity("East").out("-layers", "composite").out("-layers", "optimize");
+  const data = gm(image.path).coalesce().out("null:").out(watermark).gravity("East").out("-layers", "composite").out("-layers", "optimize");
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data),
-    name: `9gag.${image.type}`
+    file: await gmToBuffer(data, image.outputType),
+    name: `9gag.${image.outputType}`
   });
 };
 

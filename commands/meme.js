@@ -12,7 +12,7 @@ exports.run = async (message, args) => {
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const file2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const file3 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
-  gm(image.data).out("-coalesce").resize(600, 600).noProfile().write(file, (error) => {
+  gm(image.path).coalesce().resize(600, 600).noProfile().write(file, (error) => {
     if (error) throw error;
     gm(file).size((error, size) => {
       if (error) throw error;
@@ -22,8 +22,8 @@ exports.run = async (message, args) => {
           if (error) throw error;
           const data = gm(file).out("-coalesce").out("null:").gravity("North").out(file2).out("-layers", "composite").out("null:").gravity("South").out(file3).out("-layers", "composite").out("-layers", "optimize");
           return message.channel.createMessage("", {
-            file: await gmToBuffer(data, image.type),
-            name: `meme.${image.type}`
+            file: await gmToBuffer(data, image.outputType),
+            name: `meme.${image.outputType}`
           });
         });
       });

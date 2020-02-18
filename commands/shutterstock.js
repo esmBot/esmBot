@@ -8,12 +8,12 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Shutterstock watermark!`;
   const watermark = "./assets/images/shutterstock.png";
-  gm(image.data).size(async (error, size) => {
+  gm(image.path).size(async (error, size) => {
     if (error) throw error;
-    const command = gm(image.data).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
+    const command = gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
     return message.channel.createMessage("", {
-      file: await gmToBuffer(command),
-      name: `shutterstock.${image.type}`
+      file: await gmToBuffer(command, image.outputType),
+      name: `shutterstock.${image.outputType}`
     });
   });
 };

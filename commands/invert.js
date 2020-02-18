@@ -7,10 +7,10 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to invert!`;
-  const data = gm(image.data).negative();
+  const data = gm(image.path).negative();
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data),
-    name: `invert.${image.type}`
+    file: await gmToBuffer(data, image.outputType),
+    name: `invert.${image.outputType}`
   });
 };
 

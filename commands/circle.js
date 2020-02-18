@@ -7,10 +7,10 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add radial blur!`;
-  const data = gm(image.data).out("-radial-blur", 10);
+  const data = gm(image.path).coalesce().out("-radial-blur", 10);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data),
-    name: `circle.${image.type}`
+    file: await gmToBuffer(data, image.outputType),
+    name: `circle.${image.outputType}`
   });
 };
 

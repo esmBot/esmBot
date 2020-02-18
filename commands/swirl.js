@@ -7,10 +7,10 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to swirl!`;
-  const data = gm(image.data).swirl(180);
+  const data = gm(image.path).coalesce().swirl(180);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data),
-    name: `swirl.${image.type}`
+    file: await gmToBuffer(data, image.outputType),
+    name: `swirl.${image.outputType}`
   });
 };
 
