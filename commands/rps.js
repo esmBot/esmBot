@@ -1,8 +1,10 @@
+const misc = require("../utils/misc.js");
+
 exports.run = async (message, args) => {
   if (args.length === 0 || (args[0] !== "rock" && args[0] !== "paper" && args[0] !== "scissors")) return `${message.author.mention}, you need to choose whether you want to be rock, paper, or scissors!`;
   let emoji;
   let winOrLose;
-  const result = require("../utils/misc.js").random(["rock", "paper", "scissors"]);
+  const result = misc.random(["rock", "paper", "scissors"]);
   switch (result) {
     case "rock":
       emoji = "✊";

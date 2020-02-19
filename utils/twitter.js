@@ -1,4 +1,5 @@
 const Twit = require("twit");
+const database = require("../utils/database.js");
 const T = new Twit({
   consumer_key: process.env.TWITTER_KEY,
   consumer_secret: process.env.CONSUMER_SECRET,
@@ -7,7 +8,7 @@ const T = new Twit({
 });
 exports.client = T;
 exports.active = false;
-require("../utils/database.js").tweets.find({ enabled: true }, (error, docs) => {
+database.tweets.find({ enabled: true }, (error, docs) => {
   if (error) throw error;
   exports.tweets = docs[0];
 });

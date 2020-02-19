@@ -5,9 +5,7 @@ if (process.version.slice(1).split(".")[0] < 10) throw new Error("Node 10.0.0 or
 require("dotenv").config();
 
 // turn fs.readdir into a promise
-const { promisify } = require("util");
-const fs = require("fs");
-const readdir = promisify(fs.readdir);
+const readdir = require("util").promisify(require("fs").readdir);
 // fancy loggings
 const logger = require("./utils/logger.js");
 // start the client
@@ -15,7 +13,7 @@ const client = require("./utils/client.js");
 // initialize command loader
 const handler = require("./utils/handler.js");
 
-// registers stuff and logs in the bot
+// registers stuff and connects the bot
 async function init() {
   // register commands and their info
   const commands = await readdir("./commands/");

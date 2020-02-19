@@ -1,3 +1,6 @@
+const util = require("util");
+const client = require("./client.js");
+
 // random(array) to select a random entry in array
 exports.random = (array) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -8,7 +11,7 @@ exports.clean = async (text) => {
   if (text && text.constructor.name == "Promise")
     text = await text;
   if (typeof text !== "string")
-    text = require("util").inspect(text, { depth: 1 });
+    text = util.inspect(text, { depth: 1 });
 
   text = text
     .replace(/`/g, `\`${String.fromCharCode(8203)}`)
@@ -51,7 +54,7 @@ exports.getTweet = async (tweets, reply = false, isDownload = false) => {
 };
 
 exports.getRandomMessage = async () => {
-  const messages = await require("./client.js").guilds.get("631290275456745502").channels.get("631290275888627713").getMessages(50);
+  const messages = await client.guilds.get("631290275456745502").channels.get("631290275888627713").getMessages(50);
   const randomMessage = this.random(messages);
   if (randomMessage.content.length > 144) return await this.getRandomMessage();
   if (randomMessage.content.match(/<@!?\d+>/g)) return await this.getRandomMessage();
