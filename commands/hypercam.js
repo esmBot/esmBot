@@ -11,8 +11,9 @@ exports.run = async (message) => {
   gm(image.path).size(async (error, size) => {
     if (error) throw error;
     const data = gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthWest").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
+    const buffer = await gmToBuffer(data, image.outputType);
     return message.channel.createMessage("", {
-      file: await gmToBuffer(data, image.outputType),
+      file: buffer,
       name: `hypercam.${image.outputType}`
     });
   });

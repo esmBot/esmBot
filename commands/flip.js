@@ -8,8 +8,9 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to flip!`;
   const command = gm(image.path).flip();
+  const buffer = await gmToBuffer(command, image.outputType);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(command, image.outputType),
+    file: buffer,
     name: `flip.${image.outputType}`
   });
 };

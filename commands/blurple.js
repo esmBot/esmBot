@@ -8,8 +8,9 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make blurple!`;
   const data = gm(image.path).threshold(75, true).out("+level-colors").out("\"#7289DA\",white");
+  const buffer = await gmToBuffer(data, image.outputType);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data, image.outputType),
+    file: buffer,
     name: `blurple.${image.outputType}`
   });
 };

@@ -21,7 +21,6 @@ const typeCheck = async (image, gifv = false) => {
       return {
         type: imageType.ext,
         data: imageBuffer,
-        url: image,
         outputType: imageType.ext === "mp4" ? "gif" : imageType.ext,
         path: path
       };

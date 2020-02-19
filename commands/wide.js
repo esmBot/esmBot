@@ -11,8 +11,9 @@ exports.run = async (message) => {
     if (error) throw error;
     if (size.width > 10000) return `${message.author.mention}, this image is too wide!`;
     const data = gm(image.path).coalesce().resize(`${(size.width * 19) / 2}x${size.height / 2}!`);
+    const buffer = await gmToBuffer(data, image.outputType);
     return message.channel.createMessage("", {
-      file: await gmToBuffer(data, image.outputType),
+      file: buffer,
       name: `wide.${image.outputType}`
     });
   });

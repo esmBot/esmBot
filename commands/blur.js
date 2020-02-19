@@ -8,8 +8,9 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to blur!`;
   const command = gm(image.path).blur(10);
+  const buffer = await gmToBuffer(command, image.outputType);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(command, image.outputType),
+    file: buffer,
     name: `blur.${image.outputType}`
   });
 };

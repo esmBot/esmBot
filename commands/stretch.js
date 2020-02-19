@@ -8,8 +8,9 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to stretch!`;
   const data = gm(image.path).coalesce().resize("512x512!");
+  const buffer = await gmToBuffer(data, image.outputType);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(data, image.outputType),
+    file: buffer,
     name: `stretch.${image.outputType}`
   });
 };

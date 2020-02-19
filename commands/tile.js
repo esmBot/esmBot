@@ -10,8 +10,9 @@ exports.run = async (message) => {
   gm(image.path).coalesce().command("montage").out("-duplicate").out(24).tile("5x5").geometry("+0+0").stream("miff", async (error, output) => {
     if (error) throw error;
     const data = gm(output).coalesce().resize("800x800>");
+    const buffer = await gmToBuffer(data, image.outputType);
     return message.channel.createMessage("", {
-      file: await gmToBuffer(data, image.outputType),
+      file: buffer,
       name: `tile.${image.outputType}`
     });
   });

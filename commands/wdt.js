@@ -9,8 +9,9 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a "who did this" meme!`;
   const template = "./assets/images/whodidthis.png";
   const command = gm(template).coalesce().out("null:").out(image.path).gravity("Center").resize("374x374>").out("-layers", "composite").out("-layers", "optimize");
+  const buffer = await gmToBuffer(command, image.outputType);
   return message.channel.createMessage("", {
-    file: await gmToBuffer(command, image.outputType),
+    file: buffer,
     name: `wdt.${image.outputType}`
   });
 };

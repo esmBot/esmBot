@@ -13,8 +13,9 @@ exports.run = async (message, args) => {
   gm(474, 332).out("+size").background("none").gravity("Center").out("-pointsize", 72).out("-font", "Bitstream Vera Sans").out(`pango:<span foreground="white">${wrap(cleanedMessage, {width: 15, indent: ""})}</span>`).write(file, async (error) => {
     if (error) throw error;
     const command = gm(template).composite(file).gravity("Center").geometry("474x332+160+10");
+    const buffer = await gmToBuffer(command, "png");
     return message.channel.createMessage("", {
-      file: await gmToBuffer(command, "png"),
+      file: buffer,
       name: "sonic.png"
     });
   });
