@@ -26,5 +26,5 @@ exports.run = async (message, args) => {
 };
 
 exports.aliases = ["webshot", "ss", "shot", "page"];
-exports.category = 5;
+exports.category = 1;
 exports.help = "Screenshots a webpage";
