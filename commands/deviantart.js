@@ -10,7 +10,7 @@ exports.run = async (message) => {
   const watermark = "./assets/images/deviantart.png";
   gm(image.path).size(async (error, size) => {
     if (error) throw error;
-    const data = gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite").out("-layers", "optimize");
+    const data = gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite");
     const buffer = await gmToBuffer(data, image.outputType);
     return message.channel.createMessage("", {
       file: buffer,

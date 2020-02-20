@@ -17,7 +17,7 @@ exports.run = async (message) => {
       if (error) throw error;
       gm(data2).flop().write(data, async (error) => {
         if (error) throw error;
-        const command = gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+${size.width / 2}+0`).out("-layers", "Composite").out("-layers", "optimize");
+        const command = gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+${size.width / 2}+0`).out("-layers", "Composite");
         const buffer = await gmToBuffer(command, image.outputType);
         return message.channel.createMessage("", {
           file: buffer,

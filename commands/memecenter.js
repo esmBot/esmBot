@@ -11,7 +11,7 @@ exports.run = async (message) => {
   let resultBuffer;
   gm(image.path).size(async (error, size) => {
     if (error) throw error;
-    const command = gm(image.path).coalesce().background("white").extent(size.width, size.height + 15).out("null:").out(watermark).gravity("SouthEast").compose("over").out("-layers", "composite").out("-layers", "optimize");
+    const command = gm(image.path).coalesce().background("white").extent(size.width, size.height + 15).out("null:").out(watermark).gravity("SouthEast").compose("over").out("-layers", "composite");
     const output = await gmToBuffer(command, image.outputType);
     gm(output).size(async (error, size2) => {
       if (error) throw error;

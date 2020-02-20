@@ -21,7 +21,7 @@ exports.run = async (message) => {
       });
     } else {
       const numbers = (await util.promisify(exec)(`seq 0 2 ${value.Scene.length}`)).stdout.split("\n").join(",");
-      const data = gm().out("(").out(image.path).coalesce().out(")").out("-delete", numbers).out("-layers", "optimize");
+      const data = gm().out("(").out(image.path).coalesce().out(")").out("-delete", numbers);
       const buffer = await gmToBuffer(data, image.outputType);
       return message.channel.createMessage("", {
         file: buffer,

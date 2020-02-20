@@ -3,7 +3,7 @@
 module.exports = (data, format) => {
   return new Promise((resolve, reject) => {
     if (format) {
-      data.stream(format, (err, stdout, stderr) => {
+      data.out("-layers", "optimize").stream(format, (err, stdout, stderr) => {
         if (err) return reject(err);
         const chunks = [];
         stdout.on("data", (chunk) => {
@@ -19,7 +19,7 @@ module.exports = (data, format) => {
         });
       });
     } else {
-      data.stream((err, stdout, stderr) => {
+      data.out("-layers", "optimize").stream((err, stdout, stderr) => {
         if (err) return reject(err);
         const chunks = [];
         stdout.on("data", (chunk) => {
