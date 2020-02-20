@@ -1,9 +1,9 @@
 // workaround for a gm bug where it doesn't output buffers properly
 // https://github.com/aheckmann/gm/issues/572#issuecomment-293768810
-module.exports = (data, format) => {
+module.exports = (data, format, type) => {
   return new Promise((resolve, reject) => {
     if (format) {
-      data.out("-layers", "optimize").stream(format, (err, stdout, stderr) => {
+      data.out(type !== "sonic" ? "-layers" : "", type !=="sonic" ? "optimize" : "").stream(format, (err, stdout, stderr) => {
         if (err) return reject(err);
         const chunks = [];
         stdout.on("data", (chunk) => {
