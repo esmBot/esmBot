@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.2.0",
+  "version": "1.2.0-1",
   "description": "A Discord bot with miscellaneous features",
   "main": "app.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
-    "docker:run": "docker run --rm -it --network=\"host\" headless-chrome-alpine"
+    "docker:run": "docker run --rm --network=\"host\" headless-chrome-alpine"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
