@@ -33,7 +33,7 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
               if (manageMessages) msg.removeReaction("🔢", userID);
             });
           }).catch(error => {
-            if (error) throw error;
+            throw error;
           });
           break;
         case "▶":

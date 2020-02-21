@@ -10,50 +10,29 @@ exports.run = async (message, args) => {
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   const [topText, bottomText] = args.join(" ").split(",").map(elem => elem.trim());
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
-  const file2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const text = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const text2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
-  gm().in("(").in(image.path).coalesce().resize(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3).out("-layers", "optimize").write(file, (error) => {
-    if (error) throw error;
-    gm(file).size((error, size) => {
-      if (error) throw error;
-      gm(file).coalesce().background("black").gravity("Center").extent(600, size.height + 50).out("+swap").write(file2, () => {
-        // this is commented out because it was causing some issues and I couldn't find an elegant solution
-        // if (error) throw error;
-        gm(file2).size((error, size2) => {
-          if (error) throw error;
-          gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(56).gravity("Center").out(`pango:${topText}`).gravity("South").out("-splice", bottomText ? "0x0" : "0x20").write(text, (error) => {
-            if (error) throw error;
-            gm(text).size(async (error, size3) => {
-              if (error) throw error;
-              const command = gm(file2).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height).out("null:", "(", text, "-set", "page", `+0+${size2.height}`, ")", "-layers", "composite", "-layers", "optimize");
-              if (bottomText) {
-                gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(28).gravity("Center").out(`pango:${bottomText}`).gravity("South").out("-splice", "0x20").write(text2, (error) => {
-                  if (error) throw error;
-                  gm(text2).size(async (error, size4) => {
-                    if (error) throw error;
-                    const command2 = gm(await gmToBuffer(command, image.outputType)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize");
-                    const resultBuffer = await gmToBuffer(command2, image.outputType);
-                    processMessage.delete();
-                    return message.channel.createMessage("", {
-                      file: resultBuffer,
-                      name: `motivate.${image.outputType}`
-                    });
-                  });
-                });
-              } else {
-                const resultBuffer = await gmToBuffer(command, image.outputType);
-                processMessage.delete();
-                return message.channel.createMessage("", {
-                  file: resultBuffer,
-                  name: `motivate.${image.outputType}`
-                });
-              }
-            });
-          });
-        });
-      });
-    });
+  const command = gm().in("(").in(image.path).coalesce().resize(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3);
+  const buffer = await gmToBuffer(command, "miff");
+  const size = await gm(buffer).sizePromise();
+  await gm(buffer).coalesce().background("black").gravity("Center").extent(600, size.height + 50).writePromise(file);
+  const size2 = await gm(file).sizePromise();
+  await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(56).gravity("Center").out(`pango:${topText}`).gravity("South").out("-splice", bottomText ? "0x0" : "0x20").writePromise(text);
+  const size3 = await gm(text).sizePromise();
+  const command2 = gm(file).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height).out("null:", "(", text, "-set", "page", `+0+${size2.height}`, ")", "-layers", "composite", "-layers", "optimize");
+  let resultBuffer;
+  if (bottomText) {
+    await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(28).gravity("Center").out(`pango:${bottomText}`).gravity("South").out("-splice", "0x20").writePromise(text2);
+    const size4 = await gm(text2).sizePromise();
+    const command3 = gm(await gmToBuffer(command2, image.outputType)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize");
+    resultBuffer = await gmToBuffer(command3, image.outputType);
+  } else {
+    resultBuffer = await gmToBuffer(command2, image.outputType);
+  }
+  processMessage.delete();
+  return message.channel.createMessage("", {
+    file: resultBuffer,
+    name: `motivate.${image.outputType}`
   });
 };
 

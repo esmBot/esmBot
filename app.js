@@ -1,6 +1,3 @@
-// check if using node 10 or higher
-if (process.version.slice(1).split(".")[0] < 10) throw new Error("Node 10.0.0 or higher is required. Update Node on your system.");
-
 // load config from .env file
 require("dotenv").config();
 

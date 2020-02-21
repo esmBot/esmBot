@@ -1,3 +1,5 @@
+const gm = require("gm");
+const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
@@ -32,6 +34,12 @@ module.exports = async () => {
     client.editStatus("dnd", { name: `${misc.random(messages)} | @esmBot help` });
     setTimeout(activityChanger, 900000);
   })();
+
+  // add gm extensions
+  gm.prototype.writePromise = promisify(gm.prototype.write);
+  gm.prototype.streamPromise = promisify(gm.prototype.stream);
+  gm.prototype.sizePromise = promisify(gm.prototype.size);
+  gm.prototype.identifyPromise = promisify(gm.prototype.identify);
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
