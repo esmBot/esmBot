@@ -40,6 +40,23 @@ module.exports = async () => {
   gm.prototype.streamPromise = promisify(gm.prototype.stream);
   gm.prototype.sizePromise = promisify(gm.prototype.size);
   gm.prototype.identifyPromise = promisify(gm.prototype.identify);
+  gm.prototype.bufferPromise = promisify(gm.prototype.toBuffer);
+  /*gm.prototype.bufferPromise = async (format, type) => {
+    console.log(this);
+    const stream = await this.out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").streamPromise(format);
+    const chunks = [];
+    stream.stdout.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+    // these are 'once' because they can and do fire multiple times for multiple errors,
+    // but this is an async function so you'll have to deal with them one at a time
+    stream.stdout.once("end", () => {
+      return Buffer.concat(chunks);
+    });
+    stream.stderr.once("data", (data) => {
+      data.toString();
+    });
+  };*/
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {

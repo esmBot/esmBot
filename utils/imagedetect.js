@@ -19,9 +19,8 @@ const typeCheck = async (image, gifv = false) => {
       const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${imageType.ext}`;
       await writeFile(path, imageBuffer);
       return {
-        type: imageType.ext,
         data: imageBuffer,
-        outputType: imageType.ext === "mp4" ? "gif" : imageType.ext,
+        type: imageType.ext === "mp4" ? "gif" : imageType.ext,
         path: path
       };
     } else {

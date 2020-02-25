@@ -1,7 +1,6 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
@@ -12,11 +11,10 @@ exports.run = async (message) => {
   const size = await gm(image.path).sizePromise();
   await gm(image.path).coalesce().gravity("East").crop("50%", 0).out("+repage").writePromise(data2);
   await gm(data2).flop().writePromise(data);
-  const command = gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+${size.width / 2}+0`).out("-layers", "Composite");
-  const buffer = await gmToBuffer(command, image.outputType);
+  const buffer = await gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+${size.width / 2}+0`).out("-layers", "Composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `waaw.${image.outputType}`
+    name: `waaw.${image.type}`
   });
 };
 

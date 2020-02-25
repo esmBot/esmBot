@@ -1,7 +1,6 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
@@ -9,11 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Shutterstock watermark!`;
   const watermark = "./assets/images/shutterstock.png";
   const size = await gm(image.path).sizePromise();
-  const command = gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite");
-  const buffer = await gmToBuffer(command, image.outputType);
+  const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").resize(null, size.height).out("-layers", "composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `shutterstock.${image.outputType}`
+    name: `shutterstock.${image.type}`
   });
 };
 

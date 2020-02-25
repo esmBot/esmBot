@@ -1,18 +1,16 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a "who did this" meme!`;
   const template = "./assets/images/whodidthis.png";
-  const command = gm(template).out("null:").out("(").out(image.path).coalesce().out(")").gravity("Center").resize("374x374>").out("-layers", "composite");
-  const buffer = await gmToBuffer(command, image.outputType);
+  const buffer = await gm(template).out("null:").out("(").out(image.path).coalesce().out(")").gravity("Center").resize("374x374>").out("-layers", "composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `wdt.${image.outputType}`
+    name: `wdt.${image.type}`
   });
 };
 

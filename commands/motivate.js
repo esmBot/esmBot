@@ -1,7 +1,6 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message, args) => {
   const image = await require("../utils/imagedetect.js")(message);
@@ -12,8 +11,7 @@ exports.run = async (message, args) => {
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const text = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const text2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
-  const command = gm().in("(").in(image.path).coalesce().resize(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3);
-  const buffer = await gmToBuffer(command, "miff");
+  const buffer = await gm().in("(").in(image.path).coalesce().resize(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3).bufferPromise("miff");
   const size = await gm(buffer).sizePromise();
   await gm(buffer).coalesce().background("black").gravity("Center").extent(600, size.height + 50).writePromise(file);
   const size2 = await gm(file).sizePromise();
@@ -24,15 +22,14 @@ exports.run = async (message, args) => {
   if (bottomText) {
     await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(28).gravity("Center").out(`pango:${bottomText}`).gravity("South").out("-splice", "0x20").writePromise(text2);
     const size4 = await gm(text2).sizePromise();
-    const command3 = gm(await gmToBuffer(command2, image.outputType)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize");
-    resultBuffer = await gmToBuffer(command3, image.outputType);
+    resultBuffer = await gm(await command2.bufferPromise(image.type)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type);
   } else {
-    resultBuffer = await gmToBuffer(command2, image.outputType);
+    resultBuffer = await command2.bufferPromise(image.type);
   }
   processMessage.delete();
   return message.channel.createMessage("", {
     file: resultBuffer,
-    name: `motivate.${image.outputType}`
+    name: `motivate.${image.type}`
   });
 };
 

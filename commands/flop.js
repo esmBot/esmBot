@@ -1,17 +1,15 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to flop!`;
-  const command = gm(image.path).flop();
-  const buffer = await gmToBuffer(command, image.outputType);
+  const buffer = await gm(image.path).flop().bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `flop.${image.outputType}`
+    name: `flop.${image.type}`
   });
 };
 

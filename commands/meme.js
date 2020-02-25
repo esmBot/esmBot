@@ -1,7 +1,6 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message, args) => {
   message.channel.sendTyping();
@@ -16,11 +15,10 @@ exports.run = async (message, args) => {
   const size = await gm(file).sizePromise();
   await gm().out("-size", size.width).background("none").gravity("Center").out("(", "(").font("Impact").out("-pointsize", 40).out(`pango:<span foreground='white'>${topText.toUpperCase().replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}</span>`).out(")", "(", "+clone").out("-channel", "A").out("-morphology", "EdgeOut", "Octagon", "+channel", "+level-colors", "black", ")").compose("DstOver").out(")", "-composite").writePromise(file2);
   if (bottomText) await gm().out("-size", size.width).background("none").gravity("Center").out("(", "(").font("Impact").out("-pointsize", 40).out(`pango:<span foreground='white'>${bottomText.toUpperCase().replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}</span>`).out(")", "(", "+clone").out("-channel", "A").out("-morphology", "EdgeOut", "Octagon", "+channel", "+level-colors", "black", ")").compose("DstOver").out(")", "-composite").writePromise(file3);
-  const data = gm(file).out("-coalesce").out("null:").gravity("North").out(file2).out("-layers", "composite").out("null:").gravity("South").out(bottomText ? file3 : "null:").out("-layers", "composite");
-  const buffer = await gmToBuffer(data, image.outputType);
+  const buffer = await gm(file).out("-coalesce").out("null:").gravity("North").out(file2).out("-layers", "composite").out("null:").gravity("South").out(bottomText ? file3 : "null:").out("-layers", "composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `meme.${image.outputType}`
+    name: `meme.${image.type}`
   });
 };
 

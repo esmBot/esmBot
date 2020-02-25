@@ -4,7 +4,7 @@
 
 FROM alpine:edge
 
-RUN apk --no-cache upgrade && apk add --no-cache chromium && apk add --no-cache squid && apk add --no-cache sudo
+RUN apk --no-cache upgrade && apk add --no-cache chromium squid sudo
 
 ENV ALL_PROXY "http://localhost:3128"
 RUN echo -e "\nvisible_hostname esmBot\nforwarded_for delete\nvia off\nfollow_x_forwarded_for deny all \

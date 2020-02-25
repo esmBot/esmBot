@@ -1,17 +1,15 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
-const gmToBuffer = require("../utils/gmbuffer.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to flip!`;
-  const command = gm(image.path).flip();
-  const buffer = await gmToBuffer(command, image.outputType);
+  const buffer = await gm(image.path).flip().bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
-    name: `flip.${image.outputType}`
+    name: `flip.${image.type}`
   });
 };
 
