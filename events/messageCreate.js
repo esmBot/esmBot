@@ -55,10 +55,14 @@ module.exports = async (message) => {
       await client.createMessage(message.channel.id, result);
     }
   } catch (error) {
-    logger.error(error.toString());
-    await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/TheEssem/esmBot/issues>", [{
-      file: Buffer.from(`Message: ${error}\n\nStack Trace: ${error.stack}`),
-      name: "error.txt"
-    }]);
+    if (!error.toString().includes("Request entity too large")) {
+      logger.error(error.toString());
+      await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/TheEssem/esmBot/issues>", [{
+        file: Buffer.from(`Message: ${error}\n\nStack Trace: ${error.stack}`),
+        name: "error.txt"
+      }]);
+    } else {
+      await client.createMessage(message.channel.id, `${message.author.mention}, the resulting file was too large to upload. Try again with a smaller image if possible.`);
+    }
   }
 };

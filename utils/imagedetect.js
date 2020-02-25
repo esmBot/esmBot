@@ -46,18 +46,18 @@ module.exports = async (cmdMessage) => {
         if (type === false) continue;
         return type;
       } else if (message.embeds[0].thumbnail) {
-        const type = await typeCheck(message.embeds[0].thumbnail.url);
+        const type = await typeCheck(message.embeds[0].thumbnail.proxy_url);
         if (type === false) continue;
         return type;
         // if there isn't a thumbnail check the image area
       } else if (message.embeds[0].image) {
-        const type = await typeCheck(message.embeds[0].image.url);
+        const type = await typeCheck(message.embeds[0].image.proxy_url);
         if (type === false) continue;
         return type;
       }
     } else if (message.attachments.length !== 0) {
       // get type of file
-      const type = await typeCheck(message.attachments[0].url);
+      const type = await typeCheck(message.attachments[0].proxy_url);
       // move to the next message if the file isn't an image
       if (type === false) continue;
       // if the file is an image then return it
