@@ -50,18 +50,15 @@ module.exports = async () => {
   gm.prototype.bufferPromise = function(format, type) {
     return new Promise((resolve, reject) => {
       if (format) {
-        console.log(format);
         this.out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").stream(format, (err, stdout, stderr) => {
           if (err) return reject(err);
           const chunks = [];
           stdout.on("data", (chunk) => {
-            console.log(chunk);
             chunks.push(chunk);
           });
           // these are 'once' because they can and do fire multiple times for multiple errors,
           // but this is a promise so you'll have to deal with them one at a time
           stdout.once("end", () => {
-            console.log(Buffer.concat(chunks));
             resolve(Buffer.concat(chunks));
           });
           stderr.once("data", (data) => {

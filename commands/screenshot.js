@@ -5,7 +5,7 @@ const fetch = require("node-fetch");
 exports.run = async (message, args) => {
   message.channel.sendTyping();
   if (args.length === 0) return `${message.author.mention}, you need to provide a URL to screenshot!`;
-  const getEndpoint = await fetch("http://172.17.0.2:9222/json/version");
+  const getEndpoint = await fetch(`http://${process.env.NODE_ENV === "development" ? "192.168.99.100" : "172.17.0.2"}:9222/json/version`);
   const endpoint = await getEndpoint.json();
   const url = urlRegex.test(args[0]) ? args[0] : `http://${args[0]}`;
   const browser = await puppeteer.connect({
