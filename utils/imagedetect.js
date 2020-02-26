@@ -20,7 +20,7 @@ const typeCheck = async (image, gifv = false) => {
       await writeFile(path, imageBuffer);
       return {
         data: imageBuffer,
-        type: imageType.ext === "mp4" ? "gif" : imageType.ext,
+        type: imageType.ext !== "mp4" ? (imageType.ext === "jpg" ? "jpeg" : imageType.ext) : "gif",
         path: path
       };
     } else {
