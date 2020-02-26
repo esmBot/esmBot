@@ -6,7 +6,7 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add more JPEG!`;
-  const buffer = await gm(image.path).setFormat("jpeg").quality(1).bufferPromise("jpeg");
+  const buffer = await gm(image.path).setFormat("jpeg").quality(1).bufferPromise();
   return message.channel.createMessage("", {
     file: buffer,
     name: "jpeg.jpg"
