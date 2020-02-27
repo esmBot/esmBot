@@ -1,7 +1,5 @@
 const gm = require("gm");
-const {
-  promisify
-} = require("util");
+const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
@@ -22,9 +20,15 @@ module.exports = async () => {
       const newGuild = new database.guilds({
         id: id,
         tags: misc.tagDefaults,
-        prefix: "&"
+        prefix: "&",
+        warns: {}
       });
       await newGuild.save();
+    }
+    if (!guildDB.warns) {
+      logger.log(`Creating warn object for guild ${id}...`);
+      guildDB.set("warns", {});
+      await guildDB.save();
     }
   }
 

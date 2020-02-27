@@ -4,7 +4,8 @@ mongoose.connect(process.env.MONGO);
 const guildSchema = new mongoose.Schema({
   id: String,
   tags: Map,
-  prefix: String
+  prefix: String,
+  warns: Map
 });
 const Guild = mongoose.model("Guild", guildSchema);
 
