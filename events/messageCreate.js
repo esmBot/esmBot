@@ -15,14 +15,14 @@ module.exports = async (message) => {
 
   // prefix can be a mention or a set of special characters
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const guildConf = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
-  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildConf.prefix;
+  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : (await database.guilds.find({ id: message.channel.guild.id }).exec())[0].prefix;
 
   // ignore other stuff
-  if (message.content.startsWith(prefix) === false && !message.mentions.includes(client.user) && message.channel.id !== "573553254575898626") return;
+  if (message.content.startsWith(prefix) === false && !message.mentions.includes(client.user)) return;
+  // && message.channel.id !== "573553254575898626"
 
   // funny stuff
-  if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
+  /*if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
     const generalChannel = client.guilds.get("631290275456745502").channels.get("631290275888627713");
     if (message.attachments.length !== 0) {
       const attachments = [];
@@ -34,7 +34,7 @@ module.exports = async (message) => {
     } else {
       await client.createMessage(generalChannel.id, message.content);
     }
-  }
+  }*/
 
   // separate commands and args
   const escapedPrefix = misc.regexEscape(prefix);
