@@ -8,10 +8,9 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to mirror!`;
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const data2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
-  const size = await gm(image.path).sizePromise();
   await gm(image.path).coalesce().gravity("North").crop(0, "50%").out("+repage").writePromise(data2);
   await gm(data2).flip().writePromise(data);
-  const buffer = await gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+0+${size.height / 2}`).out("-layers", "Composite").bufferPromise(image.type);
+  const buffer = await gm(data2).extent("%[fx:u.w]", "%[fx:u.h*2]").out("null:").out(data).gravity("South").out("-layers", "Composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
     name: `woow.${image.type}`

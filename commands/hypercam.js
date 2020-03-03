@@ -7,8 +7,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Hypercam watermark!`;
   const watermark = "./assets/images/hypercam.png";
-  const size = await gm(image.path).sizePromise();
-  const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthWest").resize(null, size.height).out("-layers", "composite").bufferPromse(image.type);
+  const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthWest").resize(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type);
   return message.channel.createMessage("", {
     file: buffer,
     name: `hypercam.${image.type}`

@@ -23,7 +23,7 @@
     "emoji-regex": "^8.0.0",
     "eris": "^0.11.2",
     "file-type": "^13.1.0",
-    "gm": "^1.23.1",
+    "gm": "github:TheEssem/gm",
     "jsqr": "^1.2.0",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",

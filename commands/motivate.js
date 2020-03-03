@@ -12,8 +12,7 @@ exports.run = async (message, args) => {
   const text = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const text2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const buffer = await gm().in("(").in(image.path).coalesce().resize(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3).bufferPromise("miff");
-  const size = await gm(buffer).sizePromise();
-  await gm(buffer).coalesce().background("black").gravity("Center").extent(600, size.height + 50).writePromise(file);
+  await gm(buffer).coalesce().background("black").gravity("Center").extent(600, "%[fx:s.h+50]").writePromise(file);
   const size2 = await gm(file).sizePromise();
   await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(56).gravity("Center").out(`pango:${topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}`).gravity("South").out("-splice", bottomText ? "0x0" : "0x20").writePromise(text);
   const size3 = await gm(text).sizePromise();
