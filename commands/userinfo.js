@@ -2,7 +2,19 @@ const client = require("../utils/client.js");
 
 exports.run = async (message, args) => {
   const getUser = message.mentions.length >= 1 ? message.mentions[0] : (args.length !== 0 ? client.users.get(args[0]) : message.author);
-  const user = getUser !== undefined ? getUser : message.author;
+  let user;
+  if (getUser) {
+    user = getUser;
+  } else if (args.join(" ") !== "") {
+    const userRegex = new RegExp(args.join("|"), "i");
+    const member = client.users.find(element => {
+      return userRegex.test(element.username);
+    });
+    user = member ? member : message.author;
+  } else {
+    user = message.author;
+  }
+  //const user = getUser !== undefined ? getUser : (message.author);
   const member = message.channel.guild.members.get(user.id);
   const infoEmbed = {
     "embed": {
