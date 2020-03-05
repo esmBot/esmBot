@@ -24,8 +24,7 @@ module.exports = async () => {
         warns: {}
       });
       await newGuild.save();
-    }
-    if (!guildDB.warns) {
+    } else if (guildDB && !guildDB.warns) {
       logger.log(`Creating warn object for guild ${id}...`);
       guildDB.set("warns", {});
       await guildDB.save();
