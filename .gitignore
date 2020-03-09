@@ -39,3 +39,4 @@ tweets.json
 .vscode/
 migratedb.js
 migratetweets.js
+processed.txt

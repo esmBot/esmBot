@@ -16,12 +16,12 @@ exports.run = async (message, args) => {
   const size2 = await gm(file).sizePromise();
   await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(56).gravity("Center").out(`pango:${topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}`).gravity("South").out("-splice", bottomText ? "0x0" : "0x20").writePromise(text);
   const size3 = await gm(text).sizePromise();
-  const command2 = gm(file).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height).out("null:", "(", text, "-set", "page", `+0+${size2.height}`, ")", "-layers", "composite", "-layers", "optimize");
+  const command2 = gm(file).gravity("North").coalesce().extent(600, size2.height + size3.height).out("null:", "(", text, "-set", "page", `+0+${size2.height}`, ")", "-layers", "composite", "-layers", "optimize");
   let resultBuffer;
   if (bottomText) {
     await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(28).gravity("Center").out(`pango:${bottomText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}`).gravity("South").out("-splice", "0x20").writePromise(text2);
     const size4 = await gm(text2).sizePromise();
-    resultBuffer = await gm(await command2.bufferPromise(image.type)).gravity("North").coalesce().background("black").extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type);
+    resultBuffer = await gm(await command2.bufferPromise(image.type)).gravity("North").coalesce().extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type);
   } else {
     resultBuffer = await command2.bufferPromise(image.type);
   }
