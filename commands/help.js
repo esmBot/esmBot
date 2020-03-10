@@ -7,17 +7,17 @@ const tips = ["You can change the bot's prefix using the prefix command.", "Imag
 
 exports.run = async (message, args) => {
   const guild = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
-  const commands = Array.from(collections.commands.keys());
-  const aliases = Array.from(collections.aliases.keys());
-  if (args.length !== 0 && (commands.includes(args[0].toLowerCase()) || aliases.includes(args[0].toLowerCase()))) {
-    const info = aliases.includes(args[0].toLowerCase()) ? collections.info.get(collections.aliases.get(args[0].toLowerCase())) : collections.info.get(args[0].toLowerCase());
+  const commands = collections.commands;
+  const aliases = collections.aliases;
+  if (args.length !== 0 && (commands.has(args[0].toLowerCase()) || aliases.has(args[0].toLowerCase()))) {
+    const info = aliases.has(args[0].toLowerCase()) ? collections.info.get(collections.aliases.get(args[0].toLowerCase())) : collections.info.get(args[0].toLowerCase());
     const embed = {
       "embed": {
         "author": {
           "name": "esmBot Help",
           "icon_url": client.user.avatarURL
         },
-        "title": `${guild.prefix}${aliases.includes(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
+        "title": `${guild.prefix}${aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
         "description": info.description,
         "color": 16711680,
         "fields": [{
@@ -39,7 +39,7 @@ exports.run = async (message, args) => {
       images: ["**These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is experimental)**\n"],
       soundboard: []
     };
-    for (const command of commands) {
+    for (const [command] of commands) {
       const category = collections.info.get(command).category;
       const description = collections.info.get(command).description;
       const params = collections.info.get(command).params;
@@ -48,7 +48,7 @@ exports.run = async (message, args) => {
       } else if (category === 2) {
         categories.moderation.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       } else if (category === 3) {
-        const subCommands = Array.from(Object.keys(description));
+        const subCommands = [...Object.keys(description)];
         for (const subCommand of subCommands) {
           categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
         }
@@ -67,12 +67,12 @@ exports.run = async (message, args) => {
       }).filter((item) => {
         return item;
       });
-      splitPages.forEach(page => {
+      for (const page of splitPages) {
         pages.push({
           title: category.charAt(0).toUpperCase() + category.slice(1),
           page: page
         });
-      });
+      }
     }
     const embeds = [];
     for (const [i, value] of pages.entries()) {

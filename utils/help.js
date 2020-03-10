@@ -19,7 +19,7 @@ Default prefix is \`&\`.
 + [**Image Editing**](#🖼️-image-editing)
 + [**Soundboard**](#🔊-soundboard)
 `;
-  const commands = Array.from(collections.commands.keys());
+  const commands = collections.commands;
   const categories = {
     general: ["## 💻 General"],
     moderation: ["## 🔨 Moderation"],
@@ -28,7 +28,7 @@ Default prefix is \`&\`.
     images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)"],
     soundboard: ["## 🔊 Soundboard"]
   };
-  for (const command of commands) {
+  for (const [command] of commands) {
     const category = collections.info.get(command).category;
     const description = collections.info.get(command).description;
     const params = collections.info.get(command).params;
@@ -37,7 +37,7 @@ Default prefix is \`&\`.
     } else if (category === 2) {
       categories.moderation.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
     } else if (category === 3) {
-      const subCommands = Array.from(Object.keys(description));
+      const subCommands = [...Object.keys(description)];
       for (const subCommand of subCommands) {
         categories.tags.push(`+ **tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
       }

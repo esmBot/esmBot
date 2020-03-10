@@ -40,8 +40,8 @@ exports.run = async (message, args) => {
       if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
       var pageSize = 15;
       var embeds = [];
-      var groups = Array.from(tags.keys()).map((item, index) => {
-        return index % pageSize === 0 ? Array.from(tags.keys()).slice(index, index + pageSize) : null;
+      var groups = [...tags.keys()].map((item, index) => {
+        return index % pageSize === 0 ? [...tags.keys()].slice(index, index + pageSize) : null;
       }).filter((item) => {
         return item;
       });
@@ -65,7 +65,7 @@ exports.run = async (message, args) => {
       if (embeds.length === 0) return `${message.author.mention}, I couldn't find any tags!`;
       return paginator(message, embeds);
     case "random":
-      return random(Array.from(tags))[1].content;
+      return random([...tags])[1].content;
     default:
       if (!tags.has(args[0].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
       return tags.get(args[0].toLowerCase()).content;

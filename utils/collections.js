@@ -1,5 +1,5 @@
-const { Collection } = require("eris");
+//const { Collection } = require("eris");
 
-exports.commands = new Collection();
-exports.aliases = new Collection();
-exports.info = new Collection();
+exports.commands = new Map();
+exports.aliases = new Map();
+exports.info = new Map();

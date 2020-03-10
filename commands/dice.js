@@ -1,14 +1,10 @@
 const misc = require("../utils/misc.js");
 
 exports.run = async (message, args) => {
-  if (args.length === 0) {
-    return `🎲 The dice landed on ${misc.random(Array.from(Array(6).keys())) + 1}.`;
+  if (args.length === 0 || !args[0].match(/^\d+$/)) {
+    return `🎲 The dice landed on ${misc.random([...Array(6).keys()]) + 1}.`;
   } else {
-    if (args[0].match(/^\d+$/)) {
-      return `🎲 The dice landed on ${misc.random(Array.from(Array(parseInt(args[0])).keys())) + 1}.`;
-    } else {
-      return `🎲 The dice landed on ${misc.random(Array.from(Array(6).keys())) + 1}.`;
-    }
+    return `🎲 The dice landed on ${misc.random([...Array(parseInt(args[0])).keys()]) + 1}.`;
   }
 };
 

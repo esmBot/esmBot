@@ -16,9 +16,9 @@ exports.load = async (command) => {
     params: props.params
   });
   if (props.aliases) {
-    props.aliases.forEach(alias => {
+    for (const alias of props.aliases) {
       collections.aliases.set(alias, command.split(".")[0]);
-    });
+    }
   }
   return false;
 };
