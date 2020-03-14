@@ -18,7 +18,7 @@ module.exports = async (message) => {
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : (await database.guilds.find({ id: message.channel.guild.id }).exec())[0].prefix;
 
   // ignore other stuff
-  if (message.content.startsWith(prefix) === false && !message.mentions.includes(client.user)) return;
+  if (message.content.startsWith(prefix) === false) return;
   // && message.channel.id !== "573553254575898626"
 
   // funny stuff
@@ -37,8 +37,7 @@ module.exports = async (message) => {
   }*/
 
   // separate commands and args
-  const escapedPrefix = misc.regexEscape(prefix);
-  const prefixRegex = new RegExp(`^(${escapedPrefix})`);
+  const prefixRegex = new RegExp(`^(${misc.regexEscape(prefix)})`);
   const content = message.content.replace(prefixRegex, "").trim();
   const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
