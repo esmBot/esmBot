@@ -91,19 +91,16 @@ module.exports = async () => {
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
-    const blocks = await twitter.client.get("blocks/ids", {
-      stringify_ids: true
-    });
+    const blocks = await twitter.client.blocks.ids();
     const tweet = async () => {
       const tweets = (await database.tweets.find({
         enabled: true
       }).exec())[0];
       const tweetContent = await misc.getTweet(tweets);
       try {
-        const info = await twitter.client.post("statuses/update", {
-          status: tweetContent
-        });
-        logger.log(`Tweet with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+        const info = await twitter.client.statuses.update(tweetContent);
+        logger.log(`Tweet with id ${info.id_str} has been posted.`);
+        // with status code ${info.resp.statusCode} ${info.resp.statusMessage}
       } catch (e) {
         const error = JSON.stringify(e);
         if (error.includes("Status is a duplicate.")) {
@@ -116,11 +113,9 @@ module.exports = async () => {
     tweet();
     setInterval(tweet, 1800000);
     twitter.active = true;
-    const stream = twitter.client.stream("statuses/filter", {
-      track: `@${process.env.HANDLE}`
-    });
-    stream.on("tweet", async (tweet) => {
-      if (tweet.user.screen_name !== "esmBot_" && !blocks.data.ids.includes(tweet.user.id_str)) {
+    const stream = twitter.client.statuses.filter(`@${process.env.HANDLE}`);
+    stream.on("data", async (tweet) => {
+      if (tweet.user.screen_name !== "esmBot_" && !blocks.ids.includes(tweet.user.id_str)) {
         const tweets = (await database.tweets.find({
           enabled: true
         }).exec())[0];
@@ -134,8 +129,9 @@ module.exports = async () => {
           status: `@${tweet.user.screen_name} ${tweetContent}`,
           in_reply_to_status_id: tweet.id_str
         };
-        const info = await twitter.client.post("statuses/update", payload);
-        logger.log(`Reply with id ${info.data.id_str} has been tweeted with status code ${info.resp.statusCode} ${info.resp.statusMessage}`);
+        const info = await twitter.client.statuses.update(payload);
+        logger.log(`Reply with id ${info.id_str} has been posted.`);
+        // with status code ${info.resp.statusCode} ${info.resp.statusMessage}
       }
     });
   }

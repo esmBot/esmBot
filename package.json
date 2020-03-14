@@ -29,11 +29,11 @@
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.9.3",
     "node-fetch": "^2.6.0",
+    "node-tweet": "^0.1.2",
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
     "sharp": "^0.25.1",
-    "twit": "^2.2.11",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -42,9 +42,8 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
-    "erlpack": "github:discordapp/erlpack",
+    "erlpack": "github:abalabahaha/erlpack",
     "eventemitter3": "^3.1.2",
-    "node-opus": "^0.3.3",
     "sodium-native": "^2.4.6",
     "uws": "^10.148.1",
     "zlib-sync": "^0.1.6"

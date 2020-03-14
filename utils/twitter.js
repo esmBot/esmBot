@@ -1,12 +1,12 @@
-const Twit = require("twit");
+const Twitter = require("node-tweet");
 const database = require("../utils/database.js");
-const T = new Twit({
-  consumer_key: process.env.TWITTER_KEY,
-  consumer_secret: process.env.CONSUMER_SECRET,
-  access_token: process.env.ACCESS_TOKEN,
-  access_token_secret: process.env.ACCESS_SECRET
+const client = new Twitter({
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.CONSUMER_SECRET,
+  accessToken: process.env.ACCESS_TOKEN,
+  accessSecret: process.env.ACCESS_SECRET
 });
-exports.client = T;
+exports.client = client;
 exports.active = false;
 database.tweets.find({ enabled: true }, (error, docs) => {
   if (error) throw error;
