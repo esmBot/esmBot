@@ -7,7 +7,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a GameXplain thumbnail meme!`;
   const template = "./assets/images/gamexplain.png";
-  const buffer = await gm(template).background("white").out("null:").out("(").out(image.path).coalesce().out("-virtual-pixel", "transparent").resize("1181x571!").out(")").compose("over").gravity("Center").out("-geometry", "+0+40").out("-layers", "composite").bufferPromise(image.type);
+  const buffer = await gm(template).background("white").out("null:").out("(").out(image.path).coalesce().out("-virtual-pixel", "transparent").resize("1181x571!").out(")").compose("over").gravity("Center").out("-geometry", "+0+40").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `gamexplain.${image.type}`

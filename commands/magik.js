@@ -7,7 +7,7 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add some magik!`;
   if (image.type === "gif") return `${message.author.mention}, this command doesn't work with GIFs!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
-  const resultBuffer = await gm(image.path).in("(").in("(").coalesce().resize(600, 600).out(")").out("-liquid-rescale", "300x300").out(")").out("-liquid-rescale", "800x800").bufferPromise(image.type);
+  const resultBuffer = await gm(image.path).in("(").in("(").coalesce().resize(600, 600).out(")").out("-liquid-rescale", "300x300").out(")").out("-liquid-rescale", "800x800").bufferPromise(image.type, image.delay);
   await processMessage.delete();
   return message.channel.createMessage("", {
     file: resultBuffer,

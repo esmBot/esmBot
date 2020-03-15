@@ -7,7 +7,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a "who did this" meme!`;
   const template = "./assets/images/whodidthis.png";
-  const buffer = await gm(template).out("null:").out("(").out(image.path).coalesce().out(")").gravity("Center").resize("374x374>").out("-layers", "composite").bufferPromise(image.type);
+  const buffer = await gm(template).out("null:").out("(").out(image.path).coalesce().out(")").gravity("Center").resize("374x374>").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `wdt.${image.type}`

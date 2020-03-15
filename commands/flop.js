@@ -6,7 +6,7 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to flop!`;
-  const buffer = await gm(image.path).flop().bufferPromise(image.type);
+  const buffer = await gm(image.path).flop().bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `flop.${image.type}`

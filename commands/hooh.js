@@ -9,8 +9,8 @@ exports.run = async (message) => {
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const size = await gm(image.path).sizePromise();
   await gm(image.path).coalesce().gravity("South").crop(0, "50%").out("+repage").writePromise(data);
-  // const buffer = await gm(data2).extent("%[fx:u.w]", "%[fx:u.h*2]").out("null:").out(data).gravity("North").out("-layers", "Composite").bufferPromise(image.type);
-  const buffer = await gm(data).extent(size.width, size.height).out("null:").out("(").out(data).flip().out(")").geometry(`+0+${size.height / 2}`).out("-layers", "Composite").bufferPromise(image.type);
+  // const buffer = await gm(data2).extent("%[fx:u.w]", "%[fx:u.h*2]").out("null:").out(data).gravity("North").out("-layers", "Composite").bufferPromise(image.type, image.delay);
+  const buffer = await gm(data).extent(size.width, size.height).out("null:").out("(").out(data).flip().out(")").geometry(`+0+${size.height / 2}`).out("-layers", "Composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `hooh.${image.type}`

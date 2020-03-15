@@ -14,14 +14,14 @@ exports.run = async (message) => {
   const value = await gm(image.path).identifyPromise();
   const delay = value.Delay ? value.Delay[0].split("x") : [0, 100];
   if (Math.round(parseInt(delay[0]) / 2) >= 2) {
-    const buffer = await gm().delay(`${parseInt(delay[0]) / 2}x${delay[1]}`).out(image.path).bufferPromise(image.type);
+    const buffer = await gm().delay(`${parseInt(delay[0]) / 2}x${delay[1]}`).out(image.path).bufferPromise(image.type, image.delay);
     return message.channel.createMessage("", {
       file: buffer,
       name: "speed.gif"
     });
   } else {
     const numbers = (await util.promisify(exec)(`seq 0 2 ${value.Scene.length}`)).stdout.split("\n").join(",");
-    const buffer = await gm().out("(").out(image.path).coalesce().out(")").out("-delete", numbers).bufferPromise(image.type);
+    const buffer = await gm().out("(").out(image.path).coalesce().out(")").out("-delete", numbers).bufferPromise(image.type, image.delay);
     return message.channel.createMessage("", {
       file: buffer,
       name: "speed.gif"

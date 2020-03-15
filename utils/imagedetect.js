@@ -1,6 +1,8 @@
 const fetch = require("node-fetch");
 const fileType = require("file-type");
-const writeFile = require("util").promisify(require("fs").writeFile);
+const { promisify } = require("util");
+const writeFile = promisify(require("fs").writeFile);
+const execPromise = promisify(require("child_process").exec);
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 
 // this checks if the file is, in fact, an image
@@ -18,11 +20,13 @@ const typeCheck = async (image, gifv = false) => {
       // if it is, then return the url with the file type
       const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${imageType.ext}`;
       await writeFile(path, imageBuffer);
-      return {
+      const payload = {
         data: imageBuffer,
         type: imageType.ext !== "mp4" ? (imageType.ext === "jpg" ? "jpeg" : imageType.ext) : "gif",
         path: path
       };
+      if (gifv) payload.delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${path}`)).stdout.replace("\n", "");
+      return payload;
     } else {
       // if not, then return false
       return false;

@@ -7,7 +7,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a Trump meme!`;
   const template = "./assets/images/trump.png";
-  const buffer = await gm(template).background("white").out("null:").out("(").out(image.path).coalesce().out("-virtual-pixel", "transparent").resize("365x179!").out("+distort", "Perspective", "0,0 207,268 365,0 548,271 365,179 558,450 0,179 193,450").out(")").compose("over").gravity("Center").geometry("-217-135").out("-layers", "composite").bufferPromise(image.type);
+  const buffer = await gm(template).background("white").out("null:").out("(").out(image.path).coalesce().out("-virtual-pixel", "transparent").resize("365x179!").out("+distort", "Perspective", "0,0 207,268 365,0 548,271 365,179 558,450 0,179 193,450").out(")").compose("over").gravity("Center").geometry("-217-135").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `trump.${image.type}`

@@ -7,7 +7,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add New Funky Mode!`;
   const watermark = "./assets/images/funky.png";
-  const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthEast").resize(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type);
+  const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthEast").resize(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,
     name: `funky.${image.type}`

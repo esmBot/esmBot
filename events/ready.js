@@ -50,10 +50,10 @@ module.exports = async () => {
   gm.prototype.sizePromise = promisify(gm.prototype.size);
   gm.prototype.identifyPromise = promisify(gm.prototype.identify);
   //gm.prototype.bufferPromise = promisify(gm.prototype.toBuffer);
-  gm.prototype.bufferPromise = function(format, type) {
+  gm.prototype.bufferPromise = function(format, delay, type) {
     return new Promise((resolve, reject) => {
       if (format) {
-        this.out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").stream(format, (err, stdout, stderr) => {
+        this.in(delay ? "-delay" : "", delay ? delay.split("/").reverse().join("x") : "").out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").out("-limit", "memory", "64MB").out("-limit", "map", "128MB").stream(format, (err, stdout, stderr) => {
           if (err) return reject(err);
           const chunks = [];
           stdout.on("data", (chunk) => {
@@ -69,7 +69,7 @@ module.exports = async () => {
           });
         });
       } else {
-        this.out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").stream((err, stdout, stderr) => {
+        this.in(delay ? "-delay" : "", delay ? delay.split("/").reverse().join("x") : "").out(type !== "sonic" ? "-layers" : "", type !== "sonic" ? "optimize" : "").out("-limit", "memory", "64MB").out("-limit", "map", "128MB").stream((err, stdout, stderr) => {
           if (err) return reject(err);
           const chunks = [];
           stdout.on("data", (chunk) => {
