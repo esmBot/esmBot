@@ -7,7 +7,6 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Bandicam watermark!`;
   const watermark = "./assets/images/bandicam.png";
-  console.log(image.delay);
   const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("North").resize(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return message.channel.createMessage("", {
     file: buffer,

@@ -6,7 +6,14 @@ exports.run = async (message, args) => {
   try {
     const evaled = eval(code);
     const cleaned = await clean(evaled);
-    return `\`\`\`js\n${cleaned}\n\`\`\``;
+    const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
+    if (sendString.length >= 2000) {
+      return message.channel.createMessage("The result was too large, so here it is as a file:", [{
+        file: evaled,
+        name: "result.txt"
+      }]);
+    }
+    return sendString;
   } catch (err) {
     return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
   }

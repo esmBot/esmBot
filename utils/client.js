@@ -14,8 +14,7 @@ const client = new Client(process.env.TOKEN, {
     GUILD_ROLE_DELETE: true,
     GUILD_ROLE_UPDATE: true,
     TYPING_START: true,
-    USER_UPDATE: true,
-    VOICE_STATE_UPDATE: true
+    USER_UPDATE: true
   },
   maxShards: "auto",
   opusOnly: true
