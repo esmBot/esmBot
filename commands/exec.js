@@ -9,7 +9,15 @@ exports.run = async (message, args) => {
     const execed = await exec(code);
     if (execed.stderr) return `\`ERROR\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;
     const cleaned = await clean(execed.stdout);
-    return `\`\`\`bash\n${cleaned}\n\`\`\``;
+    const sendString = `\`\`\`bash\n${cleaned}\n\`\`\``;
+    if (sendString.length >= 2000) {
+      return message.channel.createMessage("The result was too large, so here it is as a file:", [{
+        file: cleaned,
+        name: "result.txt"
+      }]);
+    } else {
+      return sendString;
+    }
   } catch (err) {
     return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
   }
