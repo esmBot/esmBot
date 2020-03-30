@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to make a motivational poster!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a motivational poster!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
-  const [topText, bottomText] = args.join(" ").split(",").map(elem => elem.trim());
+  const [topText, bottomText] = args.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const text = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const text2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;

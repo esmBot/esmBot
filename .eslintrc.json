@@ -6,7 +6,7 @@
   "extends": ["eslint:recommended", "plugin:promise/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2017
+    "ecmaVersion": 2019
   },
   "plugins": ["promise"],
   "rules": {
