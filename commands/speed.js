@@ -20,6 +20,7 @@ exports.run = async (message) => {
       name: "speed.gif"
     });
   } else {
+    if (!value.Scene) return `${message.author.mention}, that GIF is already too fast!`;
     const numbers = (await util.promisify(exec)(`seq 0 2 ${value.Scene.length}`)).stdout.split("\n").join(",");
     const buffer = await gm().out("(").out(image.path).coalesce().out(")").out("-delete", numbers).bufferPromise(image.type, image.delay);
     return message.channel.createMessage("", {
