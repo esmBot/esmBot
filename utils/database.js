@@ -5,7 +5,8 @@ const guildSchema = new mongoose.Schema({
   id: String,
   tags: Map,
   prefix: String,
-  warns: Map
+  warns: Map,
+  disabledChannels: [String]
 });
 const Guild = mongoose.model("Guild", guildSchema);
 

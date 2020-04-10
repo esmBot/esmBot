@@ -14,33 +14,21 @@ module.exports = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   // prefix can be a mention or a set of special characters
+  const guildDB = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : (await database.guilds.find({ id: message.channel.guild.id }).exec())[0].prefix;
+  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.prefix;
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
-  // && message.channel.id !== "573553254575898626"
-
-  // funny stuff
-  /*if (message.channel.id === "573553254575898626" && message.channel.guild.id === "433408970955423765") {
-    const generalChannel = client.guilds.get("631290275456745502").channels.get("631290275888627713");
-    if (message.attachments.length !== 0) {
-      const attachments = [];
-      for (const attachment of message.attachments) {
-        const res = await require("node-fetch")(attachment.url);
-        attachments.push({ file: await res.buffer(), name: attachment.filename });
-      }
-      await client.createMessage(generalChannel.id, message.content, attachments);
-    } else {
-      await client.createMessage(generalChannel.id, message.content);
-    }
-  }*/
 
   // separate commands and args
   const prefixRegex = new RegExp(`^(${misc.regexEscape(prefix)})`);
   const content = message.content.replace(prefixRegex, "").trim();
   const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  // don't run if message is in a disabled channel
+  if (guildDB.disabledChannels.includes(message.channel.id) && command != "channel") return;
 
   // check if command exists
   const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));

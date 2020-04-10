@@ -10,7 +10,8 @@ module.exports = async (guild) => {
     id: guild.id,
     tags: misc.tagDefaults,
     prefix: "&",
-    warns: {}
+    warns: {},
+    disabledChannels: []
   });
   await guildDB.save();
 };
