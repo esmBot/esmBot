@@ -9,7 +9,7 @@ esmBot uses the following user-related info:
 + Permissions (for checking if a user has perms to run some commands)
 + Whether the user is a bot (needed to prevent other bots from running commands)
 
-Out of these, only user IDs are stored in the database, and they are only used for checking the owner of a tag.
+Out of these, only user IDs are stored in the database, and they are used for checking the owner of a tag as well as storing a user's warnings.
 
 ![Tags section in the database](https://projectlounge.pw/pictures/tags.png)
 
@@ -20,5 +20,7 @@ esmBot uses the following guild-related info:
 + Icons (embeds)
 
 Out of these, only guild IDs are stored in the database for configuration info and storing warns, disabled channels, prefixes, and tags.
+
+The stored info is stored in the database forever; however, I do intend to change this in the future. If you want this data removed, you can DM me on Discord (Essem#9261) or email me at [data@essem.space](mailto:data@essem.space).
 
 Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact me via the [esmBot Support](https://projectlounge.pw/support) server.
