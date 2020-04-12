@@ -1,6 +1,7 @@
 const db = require("../utils/database.js");
 
 exports.run = async (message, args) => {
+  if (!message.member.permission.has("administrator") && message.member.id !== process.env.OWNER) return `${message.author.mention}, you need to be an administrator to enable/disable me!`;
   if (args.length === 0) return `${message.author.mention}, you need to provide whether I should be enabled or disabled in this channel!`;
   if (args[0] !== "disable" && args[0] !== "enable") return `${message.author.mention}, that's not a valid option!`;
   const guildDB = (await db.guilds.find({id: message.channel.guild.id}).exec())[0];
