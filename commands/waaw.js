@@ -13,10 +13,10 @@ exports.run = async (message) => {
   await gm(data2).flop().writePromise(data);
   // const buffer = await gm(data2).extent("%[fx:u.w*2]", "%[fx:u.h]").out("null:").out(data).gravity("West").out("-layers", "Composite").bufferPromise(image.type, image.delay);
   const buffer = await gm(data2).extent(size.width, size.height).out("null:").out(data).geometry(`+${size.width / 2}+0`).out("-layers", "Composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `waaw.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["magik3", "mirror"];

@@ -14,10 +14,10 @@ exports.run = async (message, args, content) => {
     if (error) throw error;
   });
   writable.once("end", () => {
-    return message.channel.createMessage("", {
+    return {
       file: Buffer.concat(chunks),
       name: "qr.png"
-    });
+    };
   });
 };
 

@@ -16,7 +16,6 @@ const client = new Client(process.env.TOKEN, {
     TYPING_START: true,
     USER_UPDATE: true
   },
-  maxShards: "auto",
-  opusOnly: true
+  maxShards: "auto"
 });
 module.exports = client;

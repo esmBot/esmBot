@@ -8,10 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add New Funky Mode!`;
   const watermark = "./assets/images/funky.png";
   const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthEast").scale(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `funky.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["funkymode", "newfunkymode", "funkykong"];

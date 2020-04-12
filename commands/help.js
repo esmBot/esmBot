@@ -29,7 +29,7 @@ exports.run = async (message, args) => {
         }]
       }
     };
-    return message.channel.createMessage(embed);
+    return embed;
   } else {
     const categories = {
       general: [],

@@ -19,10 +19,10 @@ exports.run = async (message, args) => {
   await page.goto(url);
   const screenshot = await page.screenshot();
   await page.close();
-  return message.channel.createMessage("", {
+  return {
     file: screenshot,
     name: "screenshot.png"
-  });
+  };
 };
 
 exports.aliases = ["webshot", "ss", "shot", "page"];

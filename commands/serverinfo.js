@@ -39,7 +39,7 @@ exports.run = async (message) => {
       ]
     }
   };
-  return message.channel.createMessage(infoEmbed);
+  return infoEmbed;
 };
 
 exports.aliases = ["server"];

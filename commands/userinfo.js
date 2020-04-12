@@ -55,7 +55,7 @@ exports.run = async (message, args) => {
       ]
     }
   };
-  return message.channel.createMessage(infoEmbed);
+  return infoEmbed;
 };
 
 exports.aliases = ["user"];

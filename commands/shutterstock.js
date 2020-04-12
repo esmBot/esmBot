@@ -8,10 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Shutterstock watermark!`;
   const watermark = "./assets/images/shutterstock.png";
   const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("Center").scale(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `shutterstock.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["stock", "stockphoto"];

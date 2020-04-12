@@ -13,10 +13,10 @@ exports.run = async (message, args) => {
   } else {
     text = new RetroText().setLine(2, line1).setBackgroundStyle("outlineTri").setTextStyle("chrome");
   }
-  return message.channel.createMessage("", {
+  return {
     file: await text.fetchBuffer(),
     name: "retro.png"
-  });
+  };
 };
 
 exports.category = 4;

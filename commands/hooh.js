@@ -11,10 +11,10 @@ exports.run = async (message) => {
   await gm(image.path).coalesce().gravity("South").crop(0, "50%").out("+repage").writePromise(data);
   // const buffer = await gm(data2).extent("%[fx:u.w]", "%[fx:u.h*2]").out("null:").out(data).gravity("North").out("-layers", "Composite").bufferPromise(image.type, image.delay);
   const buffer = await gm(data).extent(size.width, size.height).out("null:").out("(").out(data).flip().out(")").geometry(`+0+${size.height / 2}`).out("-layers", "Composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `hooh.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["magik6", "mirror4"];

@@ -26,10 +26,10 @@ exports.run = async (message, args) => {
     resultBuffer = await command2.bufferPromise(image.type, image.delay);
   }
   processMessage.delete();
-  return message.channel.createMessage("", {
+  return {
     file: resultBuffer,
     name: `motivate.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster"];

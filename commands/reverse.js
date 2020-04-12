@@ -8,10 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide a GIF to reverse!`;
   if (image.type !== "gif") return `${message.author.mention}, that isn't a GIF!`;
   const buffer = await gm(image.path).coalesce().out("-reverse").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: "reverse.gif"
-  });
+  };
 };
 
 exports.aliases = ["backwards"];

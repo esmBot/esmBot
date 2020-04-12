@@ -15,10 +15,10 @@ exports.run = async (message, args) => {
   const outputFinal = await gm(output).in("(").gravity("Center").trim().out("+repage").extent(size.width, size2.height + (size.width / 10)).out(")").background("white").out("-alpha", "set").out("(").out(image.path).out("-coalesce").out(")").colorspace("sRGB").out("-set", "page", "%[fx:u.w]x%[fx:u.h+v.h]+%[fx:t?(u.w-v.w)/2:0]+%[fx:t?u.h:0]").out("-coalesce").out("null:").out("-insert", 1).out("-layers", "composite").bufferPromise(image.type, image.delay);
   await processMessage.delete();
   //return upload(message, outputFinal, `caption.${image.type}`);
-  return message.channel.createMessage("", {
+  return {
     file: outputFinal,
     name: `caption.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["gifc", "gcaption", "ifcaption", "ifunnycaption"];

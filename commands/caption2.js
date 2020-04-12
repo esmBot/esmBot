@@ -13,10 +13,10 @@ exports.run = async (message, args) => {
   const size2 = await gm(text).sizePromise();
   const outputFinal = await gm(image.path).gravity("North").extent(size.width, size2.height + size.height).out("null:", "(", text, "-set", "page", `+0+${size.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type, image.delay);
   await processMessage.delete();
-  return message.channel.createMessage("", {
+  return {
     file: outputFinal,
     name: `caption2.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["tags2", "meirl", "memecaption", "medotmecaption"];

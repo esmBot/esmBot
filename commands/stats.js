@@ -41,7 +41,7 @@ exports.run = async (message) => {
       ]
     }
   };
-  return message.channel.createMessage(embed);
+  return embed;
 };
 
 exports.aliases = ["status", "stat"];

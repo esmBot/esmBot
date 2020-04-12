@@ -11,10 +11,10 @@ exports.run = async (message) => {
   await gm(image.path).coalesce().gravity("North").crop(0, "50%").out("+repage").writePromise(data2);
   await gm(data2).flip().writePromise(data);
   const buffer = await gm(data2).extent("%[fx:u.w]", "%[fx:u.h*2]").out("null:").out(data).gravity("South").out("-layers", "Composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `woow.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["magik5", "mirror3"];

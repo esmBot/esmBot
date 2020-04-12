@@ -11,10 +11,10 @@ exports.run = async (message) => {
   const json = await request.json();
   const image = await fetch(json["1"]);
   const imageBuffer = await image.buffer();
-  return message.channel.createMessage("", {
+  return {
     file: imageBuffer,
     name: json["1"].split("/")[json["1"].split("/").length - 1]
-  });
+  };
 };
 
 exports.aliases = ["wiki"];

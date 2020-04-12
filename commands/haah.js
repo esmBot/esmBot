@@ -9,10 +9,10 @@ exports.run = async (message) => {
   const data = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   await gm(image.path).coalesce().gravity("West").crop("50%", 0).out("+repage").writePromise(data);
   const buffer = await gm(data).extent("%[fx:u.w*2]", "%[fx:u.h]").out("null:").out("(").out(data).flop().out(")").gravity("East").out("-layers", "Composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `haah.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["magik4", "mirror2"];

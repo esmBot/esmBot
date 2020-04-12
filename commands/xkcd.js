@@ -16,7 +16,7 @@ exports.run = async (message, args) => {
         }
       }
     };
-    return message.channel.createMessage(embed);
+    return embed;
   } catch (e) {
     return `${message.author.mention}, I couldn't get that XKCD!`;
   }

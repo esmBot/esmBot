@@ -7,10 +7,10 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to flop!`;
   const buffer = await gm(image.path).flop().bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `flop.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["flip2"];

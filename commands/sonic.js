@@ -11,10 +11,10 @@ exports.run = async (message, args) => {
   const cleanedMessage = args.join(" ").replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;");
   await gm(474, 332).out("+size").background("none").gravity("Center").out("-pointsize", 72).out("-font", "Bitstream Vera Sans").out(`pango:<span foreground="white">${wrap(cleanedMessage, {width: 15, indent: ""})}</span>`).writePromise(file);
   const buffer = await gm(template).composite(file).gravity("Center").geometry("474x332+160+10").bufferPromise("png", null, "sonic");
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: "sonic.png"
-  });
+  };
 };
 
 exports.category = 4;

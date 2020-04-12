@@ -7,10 +7,10 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to sharpen!`;
   const buffer = await gm(image.path).coalesce().sharpen(10).bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `sharpen.${image.type}`
-  });
+  };
 
 };
 

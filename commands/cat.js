@@ -8,14 +8,14 @@ exports.run = async (message) => {
     }
   });
   const json = await data.json();
-  return message.channel.createMessage({
+  return {
     embed: {
       color: 16711680,
       image: {
         url: json[0].url
       }
     }
-  });
+  };
 };
 
 exports.aliases = ["kitters", "kitties", "kitty", "cattos", "catto", "cats"];

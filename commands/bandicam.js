@@ -8,10 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Bandicam watermark!`;
   const watermark = "./assets/images/bandicam.png";
   const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("North").scale(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `bandicam.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["bandi"];

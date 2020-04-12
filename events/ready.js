@@ -72,7 +72,7 @@ module.exports = async () => {
           type !== "sonic" ? "-layers" : "",
           type !== "sonic" ? "OptimizeTransparency" : ""
         )
-        .out("-fuzz", "2%")
+        .out(type !== "sonic" ? "-fuzz" : "", type !== "sonic" ? "2%" : "")
         .out("-limit", "memory", "64MB")
         .out("-limit", "map", "128MB")
         .stream(format, (err, stdout, stderr) => {

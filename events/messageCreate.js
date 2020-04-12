@@ -38,8 +38,10 @@ module.exports = async (message) => {
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
-    if (typeof result === "string") {
+    if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);
+    } else if (typeof result === "object" && result.file) {
+      await client.createMessage(message.channel.id, result.text ? result.text : "", result);
     }
   } catch (error) {
     if (!error.toString().includes("Request entity too large")) {

@@ -7,10 +7,10 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to stretch!`;
   const buffer = await gm(image.path).coalesce().resize("%[fx:(u.w*19)/2]x%[fx:u.h/2]!").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `wide.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["w19", "wide19"];

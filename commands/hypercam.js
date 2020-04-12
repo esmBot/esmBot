@@ -8,10 +8,10 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a Hypercam watermark!`;
   const watermark = "./assets/images/hypercam.png";
   const buffer = await gm(image.path).coalesce().out("null:").out(watermark).gravity("NorthWest").scale(null, "%[fx:u.h]").out("-layers", "composite").bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `hypercam.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["hcam"];

@@ -8,10 +8,10 @@ exports.run = async (message, args) => {
   const template = "./assets/images/hbc.png";
   const cleanedMessage = args.join(" ").toLowerCase().replace(/\n/g, " ");
   const buffer = await gm(template).gravity("Center").font("./assets/hbc.ttf").out("-kerning", "-5").fill("white").pointSize(96).drawText(0, 0, cleanedMessage).bufferPromise("png");
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: "homebrew.png"
-  });
+  };
 };
 
 exports.aliases = ["hbc", "brew", "wiibrew"];

@@ -10,10 +10,10 @@ exports.run = async (message) => {
   const value = await gm(image.path).identifyPromise();
   const delay = value.Delay ? value.Delay[0].split("x") : [0, 100];
   const buffer = await gm().delay(`${parseInt(delay[0]) * 2}x${delay[1]}`).out(image.path).bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: "slow.gif"
-  });
+  };
 };
   
 exports.aliases = ["slowdown", "slower", "gifspeed2"];

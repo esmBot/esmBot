@@ -1,7 +1,7 @@
 const client = require("../utils/client.js");
 const { version } = require("../package.json");
 
-exports.run = async (message) => {
+exports.run = async () => {
   const dev = client.users.get(process.env.OWNER);
   const artist = client.users.get("401980971517214723");
   const infoEmbed = {
@@ -43,7 +43,7 @@ exports.run = async (message) => {
       ]
     }
   };
-  return message.channel.createMessage(infoEmbed);
+  return infoEmbed;
 };
 
 exports.aliases = ["botinfo", "credits"];

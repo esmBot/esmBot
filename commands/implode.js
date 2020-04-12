@@ -7,10 +7,10 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to implode!`;
   const buffer = await gm(image.path).implode([1]).bufferPromise(image.type, image.delay);
-  return message.channel.createMessage("", {
+  return {
     file: buffer,
     name: `implode.${image.type}`
-  });
+  };
 };
 
 exports.aliases = ["imp"];
