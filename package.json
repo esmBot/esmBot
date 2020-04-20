@@ -27,13 +27,13 @@
     "jsqr": "^1.2.0",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
-    "mongoose": "^5.9.3",
+    "mongoose": "^5.9.9",
     "node-fetch": "^2.6.0",
-    "node-tweet": "^0.1.2",
+    "node-tweet": "^0.1.4",
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
-    "sharp": "^0.25.1",
+    "sharp": "^0.25.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {

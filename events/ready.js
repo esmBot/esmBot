@@ -73,6 +73,7 @@ module.exports = async () => {
           type !== "sonic" ? "OptimizeTransparency" : ""
         )
         .out(type !== "sonic" ? "-fuzz" : "", type !== "sonic" ? "2%" : "")
+        .out("+profile", "xmp")
         .out("-limit", "memory", "64MB")
         .out("-limit", "map", "128MB")
         .stream(format, (err, stdout, stderr) => {

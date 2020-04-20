@@ -1,3 +1,5 @@
+const fs = require("fs");
+const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const misc = require("../utils/misc.js");
@@ -41,7 +43,22 @@ module.exports = async (message) => {
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);
     } else if (typeof result === "object" && result.file) {
-      await client.createMessage(message.channel.id, result.text ? result.text : "", result);
+      if (result.file.length > 8388119) {
+        const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
+        await promisify(fs.writeFile)(`/var/www/html/tmp/${filename}`, result.file);
+        await client.createMessage(message.channel.id, {
+          embed: {
+            color: 16711680,
+            title: "What's this?",
+            url: "https://projectlounge.pw/esmBot#faq-large",
+            image: {
+              url: `https://projectlounge.pw/tmp/${filename}`
+            }
+          }
+        });
+      } else {
+        await client.createMessage(message.channel.id, result.text ? result.text : "", result);
+      }
     }
   } catch (error) {
     if (!error.toString().includes("Request entity too large")) {
