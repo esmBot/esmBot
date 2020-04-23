@@ -6,7 +6,7 @@ const execPromise = promisify(require("child_process").exec);
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 
 // this checks if the file is, in fact, an image
-const typeCheck = async (image, gifv = false) => {
+const typeCheck = async (image, image2, gifv = false) => {
   // download the file to a buffer
   const imageRequest = await fetch(image);
   const imageBuffer = await imageRequest.buffer();
@@ -23,7 +23,8 @@ const typeCheck = async (image, gifv = false) => {
       const payload = {
         data: imageBuffer,
         type: imageType.ext !== "mp4" ? (imageType.ext === "jpg" ? "jpeg" : imageType.ext) : "gif",
-        path: path
+        path: path,
+        url: image2
       };
       if (gifv) payload.delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${path}`)).stdout.replace("\n", "");
       return payload;
@@ -46,22 +47,22 @@ module.exports = async (cmdMessage) => {
     if (message.embeds.length !== 0) {
       // embeds can have 2 possible entries with images, we check the thumbnail first
       if (message.embeds[0].type === "gifv") {
-        const type = await typeCheck(message.embeds[0].video.url, true);
+        const type = await typeCheck(message.embeds[0].video.url, message.embeds[0].video.url, true);
         if (type === false) continue;
         return type;
       } else if (message.embeds[0].thumbnail) {
-        const type = await typeCheck(message.embeds[0].thumbnail.proxy_url);
+        const type = await typeCheck(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
         if (type === false) continue;
         return type;
         // if there isn't a thumbnail check the image area
       } else if (message.embeds[0].image) {
-        const type = await typeCheck(message.embeds[0].image.proxy_url);
+        const type = await typeCheck(message.embeds[0].image.proxy_url, message.embeds[0].image.url);
         if (type === false) continue;
         return type;
       }
     } else if (message.attachments.length !== 0) {
       // get type of file
-      const type = await typeCheck(message.attachments[0].proxy_url);
+      const type = await typeCheck(message.attachments[0].proxy_url, message.attachments[0].url);
       // move to the next message if the file isn't an image
       if (type === false) continue;
       // if the file is an image then return it
@@ -71,7 +72,7 @@ module.exports = async (cmdMessage) => {
       // get url
       const url = message.content.match(urlRegex);
       // get type of file
-      const type = await typeCheck(url[0]);
+      const type = await typeCheck(url[0], url[0]);
       // move to the next message if the file isn't an image
       if (type === false) continue;
       // if the file is an image then return it

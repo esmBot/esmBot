@@ -6,8 +6,9 @@ exports.run = async (message, args) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to generate a meme!`;
+  const newArgs = args.filter(item => !item.includes(image.url) );
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a meme!`;
-  const [topText, bottomText] = args.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
+  const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
   const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
   const file2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const file3 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
