@@ -27,8 +27,6 @@ npm install
 
 Finally, fill in the info inside `.env.example`, rename it to `.env`, and run `app.js`.
 
-If you want to run this on Windows, I highly recommend using Windows Subsystem for Linux. I personally used the [Ubuntu](https://www.microsoft.com/store/productId/9NBLGGH4MSV6) distro for testing, however other distros might work as well.
-
 ## Credits
 Icon by [Stellio](https://twitter.com/SteelStellio).
 All images, sounds, and fonts are copyright of their respective owners.
