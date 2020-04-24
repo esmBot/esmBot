@@ -16,7 +16,7 @@ module.exports = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   // prefix can be a mention or a set of special characters
-  const guildDB = (await database.guilds.find({ id: message.channel.guild.id }).exec())[0];
+  const guildDB = (await database.guilds.find({ id: message.channel.guild.id }).lean().exec())[0];
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.prefix;
 

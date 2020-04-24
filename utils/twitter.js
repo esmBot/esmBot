@@ -8,7 +8,7 @@ const client = new Twitter({
 });
 exports.client = client;
 exports.active = false;
-database.tweets.find({ enabled: true }, (error, docs) => {
+database.tweets.find({ enabled: true }).lean().exec((error, docs) => {
   if (error) throw error;
   exports.tweets = docs[0];
 });
