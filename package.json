@@ -20,6 +20,7 @@
     "cowsay": "^1.4.0",
     "dblapi.js": "^2.4.0",
     "dotenv": "^8.2.0",
+    "duckduckgo-images-api": "github:benpbolton/duckduckgo-images-api",
     "emoji-regex": "^8.0.0",
     "eris": "^0.11.2",
     "file-type": "^13.1.2",

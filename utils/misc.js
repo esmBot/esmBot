@@ -20,7 +20,6 @@ exports.clean = async (text) => {
     .replace(process.env.MASHAPE, "<redacted>")
     .replace(process.env.CAT, "<redacted>")
     .replace(process.env.GOOGLE, "<redacted>")
-    .replace(process.env.CSE, "<redacted>")
     .replace(process.env.DBL, "<redacted>")
     .replace(process.env.MONGO, "<redacted>")
     .replace(process.env.TWITTER_KEY, "<redacted>")
