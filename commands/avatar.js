@@ -2,17 +2,17 @@ const client = require("../utils/client.js");
 
 exports.run = async (message, args) => {
   if (message.mentions[0] !== undefined) {
-    return message.mentions[0].avatarURL;
+    return message.mentions[0].dynamicAvatarURL(null, 1024);
   } else if (client.users.get(args[0]) !== undefined) {
-    return client.users.get(args[0]).avatarURL;
+    return client.users.get(args[0]).dynamicAvatarURL(null, 1024);
   } else if (args.join(" ") !== "") {
     const userRegex = new RegExp(args.join("|"), "i");
     const member = message.channel.guild.members.find(element => {
       return userRegex.test(element.nick) ? userRegex.test(element.nick) : userRegex.test(element.username);
     });
-    return member ? member.avatarURL : message.author.avatarURL;
+    return member ? member.dynamicAvatarURL(null, 1024) : message.author.dynamicAvatarURL(null, 1024);
   } else {
-    return message.author.avatarURL;
+    return message.author.dynamicAvatarURL(null, 1024);
   }
 };
 

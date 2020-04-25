@@ -33,6 +33,6 @@ exports.run = async (message, args) => {
   };
 };
 
-exports.aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster"];
+exports.aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation"];
 exports.category = 5;
 exports.help = "Creates a motivational poster";
