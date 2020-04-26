@@ -10,7 +10,6 @@ exports.run = async (message) => {
   const sortedValues = Object.entries(counts).sort((a, b) => {
     return b[1] - a[1];
   });
-  console.log(sortedValues);
   for (const [key, value] of sortedValues) {
     countArray.push(`**${key}**: ${value}`);
   }

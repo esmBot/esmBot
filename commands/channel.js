@@ -8,7 +8,6 @@ exports.run = async (message, args) => {
   if (args[0].toLowerCase() === "disable") {
     if (args[1] && args[1].match(/^<?[@#]?[&!]?\d+>?$/) && args[1] >= 21154535154122752) {
       const id = args[1].replace("@", "").replace("#", "").replace("!", "").replace("&", "").replace("<", "").replace(">", "");
-      console.log(id);
       if (guildDB.disabledChannels.includes(id)) return `${message.author.mention}, I'm already disabled in this channel!`;
       guildDB.disabledChannels.push(id);
     } else {
