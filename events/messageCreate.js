@@ -30,7 +30,7 @@ module.exports = async (message) => {
   const command = args.shift().toLowerCase();
 
   // don't run if message is in a disabled channel
-  if (guildDB.disabledChannels.includes(message.channel.id) && command != "channel") return;
+  if (guildDB.disabledChannels && guildDB.disabledChannels.includes(message.channel.id) && command != "channel") return;
 
   // check if command exists
   const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));
