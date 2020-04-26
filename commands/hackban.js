@@ -1,4 +1,8 @@
+const client = require("../utils/client.js");
+
 exports.run = async (message, args) => {
+  if (!message.member.permission.has("banMembers")) return `${message.author.mention}, you need to have the \`Ban Members\` permission on this server to ban people!`;
+  if (!message.channel.guild.members.get(client.user.id).permission.has("banMembers") && !message.channel.permissionsOf(client.user.id).has("banMembers")) return `${message.author.mention}, I don't have the \`Ban Members\` permission!`;
   if (!args[0].match(/^<?[@#]?[&!]?\d+>?$/) && args[0] < 21154535154122752) return `${message.author.mention}, that's not a valid snowflake!`;
   try {
     const id = args[0].replace("@", "").replace("#", "").replace("!", "").replace("&", "").replace("<", "").replace(">", "");

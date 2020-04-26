@@ -22,5 +22,11 @@ const tweetSchema = new mongoose.Schema({
 });
 const TweetCollection = mongoose.model("TweetCollection", tweetSchema);
 
+const globalSchema = new mongoose.Schema({
+  cmdCounts: Map
+});
+const Global = mongoose.model("Global", globalSchema);
+
 exports.guilds = Guild;
 exports.tweets = TweetCollection;
+exports.global = Global;

@@ -2,6 +2,7 @@ const gm = require("gm");
 const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
+const collections = require("../utils/collections.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
@@ -16,11 +17,11 @@ module.exports = async () => {
   for (const [id] of client.guilds) {
     const guildDB = (
       await database.guilds
-        .find({
+        .findOne({
           id: id,
         })
         .exec()
-    )[0];
+    );
     if (!guildDB) {
       logger.log(`Registering guild database entry for guild ${id}...`);
       const newGuild = new database.guilds({
@@ -40,6 +41,25 @@ module.exports = async () => {
         logger.log(`Creating disabled channels object for guild ${id}...`);
         guildDB.set("disabledChannels", []);
         await guildDB.save();
+      }
+    }
+  }
+
+  const global = (await database.global.findOne({}).exec());
+  if (!global) {
+    const countObject = {};
+    for (const command of collections.commands.keys()) {
+      countObject[command] = 0;
+    }
+    const newGlobal = new database.global({
+      cmdCounts: countObject
+    });
+    await newGlobal.save();
+  } else {
+    for (const command of collections.commands.keys()) {
+      if (!global.cmdCounts.has(command)) {
+        global.cmdCounts.set(command, 0);
+        await global.save();
       }
     }
   }
