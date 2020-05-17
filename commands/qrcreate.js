@@ -6,20 +6,27 @@ exports.run = async (message, args, content) => {
   message.channel.sendTyping();
   const writable = new stream.PassThrough();
   qrcode.toFileStream(writable, content, { margin: 1 });
-  const chunks = [];
-  writable.on("data", (chunk) => {
-    chunks.push(chunk);
-  });
-  writable.once("error", (error) => {
-    if (error) throw error;
-  });
-  writable.once("end", () => {
-    return {
-      file: Buffer.concat(chunks),
-      name: "qr.png"
-    };
-  });
+  const file = await streamToBuf(writable);
+  return {
+    file: file,
+    name: "qr.png"
+  };
 };
+
+function streamToBuf(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+    stream.once("error", (error) => {
+      reject(error);
+    });
+    stream.once("end", () => {
+      resolve(Buffer.concat(chunks));
+    });
+  });
+}
 
 exports.category = 1;
 exports.help = "Generates a QR code";

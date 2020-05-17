@@ -18,6 +18,7 @@ exports.run = async (message, args) => {
           "icon_url": client.user.avatarURL
         },
         "title": `${guild.prefix}${aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
+        "url": "https://projectlounge.pw/esmBot/help.html",
         "description": info.description,
         "color": 16711680,
         "fields": [{
