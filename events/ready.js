@@ -1,4 +1,5 @@
 const gm = require("gm");
+const cron = require("cron");
 const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
@@ -44,6 +45,19 @@ module.exports = async () => {
       }
     }
   }
+
+  const job = new cron.CronJob("0 0 * * 0", async () => {
+    logger.log("Deleting stale guild entries in database...");
+    const guildDB = (await database.guilds.find({}).exec());
+    for (const { id } of guildDB) {
+      if (!client.guilds.get(id)) {
+        await database.guilds.deleteMany({ id: id });
+        logger.log(`Deleted entry for guild ID ${id}.`);
+      }
+    }
+    logger.log("Finished deleting stale entries.");
+  });
+  job.start();
 
   const global = (await database.global.findOne({}).exec());
   if (!global) {

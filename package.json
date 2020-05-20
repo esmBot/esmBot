@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "cowsay": "^1.4.0",
+    "cron": "^1.8.2",
     "dblapi.js": "^2.4.0",
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "github:benpbolton/duckduckgo-images-api",
@@ -26,6 +27,7 @@
     "file-type": "^13.1.2",
     "gm": "github:TheEssem/gm",
     "jsqr": "^1.2.0",
+    "magick-ffi": "github:Terradice/magick-ffi",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.9.9",
