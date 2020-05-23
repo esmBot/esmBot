@@ -12,7 +12,7 @@ exports.run = async (message, args) => {
   const size = await gm(image.path).sizePromise();
   await gm().out("-size", `${size.width - ((size.width / 25) * 2)}x`).background("white").fill("black").font("Helvetica Neue").out("-pointsize", size.width / 17).out(`pango:${newArgs.length !== 0 ? newArgs.join(" ") : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" ")}`).gravity("Center").extent(size.width, `%[fx:h+${size.width / 25}]`).writePromise(text);
   const size2 = await gm(text).sizePromise();
-  const outputFinal = await gm(image.path).gravity("North").extent(size.width, size2.height + size.height).out("null:", "(", text, "-set", "page", `+0+${size.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type, image.delay);
+  const outputFinal = await gm(image.path).coalesce().gravity("North").extent(size.width, size2.height + size.height).out("null:", "(", text, "-set", "page", `+0+${size.height}`, ")", "-layers", "composite", "-layers", "optimize").bufferPromise(image.type, image.delay);
   await processMessage.delete();
   return {
     file: outputFinal,
