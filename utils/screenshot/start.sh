@@ -1,4 +1,4 @@
-sudo squid & chromium-browser \
+sudo squid -N & chromium-browser \
   --disable-background-networking \
   --disable-default-apps \
   --disable-extensions \

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
-    "docker:run": "docker run --rm headless-chrome-alpine"
+    "docker:run": "docker run --rm --shm-size=128m headless-chrome-alpine"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",

@@ -4,7 +4,7 @@
 
 FROM alpine:edge
 
-RUN apk --no-cache upgrade && apk add --no-cache chromium squid sudo
+RUN apk --no-cache upgrade && apk add --no-cache chromium squid sudo libstdc++ harfbuzz nss freetype ttf-freefont wqy-zenhei zlib-dev wait4ports dbus chromium-chromedriver grep
 
 ENV ALL_PROXY "http://localhost:3128"
 RUN echo -e "\nvisible_hostname esmBot\nforwarded_for delete\nvia off\nfollow_x_forwarded_for deny all \
@@ -13,7 +13,7 @@ COPY ./ERR_DNS_FAIL /usr/share/squid/errors/en/
 
 RUN adduser esmBot -s /bin/sh -D
 WORKDIR /home/esmBot/.internal
-COPY . .
+COPY ./start.sh .
 RUN chmod +x start.sh
 RUN echo -e "\nesmBot ALL=(ALL) NOPASSWD:ALL\n" >> /etc/sudoers
 USER esmBot
