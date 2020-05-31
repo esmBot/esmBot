@@ -16,7 +16,7 @@ module.exports = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   // prefix can be a mention or a set of special characters
-  const guildDB = (await database.guilds.find({ id: message.channel.guild.id }).lean().exec())[0];
+  const guildDB = await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec();
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.prefix;
 
@@ -40,7 +40,7 @@ module.exports = async (message) => {
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     const global = (await database.global.findOne({}).exec());
-    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, global.cmdCounts.get(command) + 1);
+    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, ((isNaN(global.cmdCounts.get(command)) ? 0 : parseFloat(global.cmdCounts.get(command))) + 1).toFixed());
     await global.save();
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
