@@ -2,9 +2,10 @@ const fetch = require("node-fetch");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
-  const request = await fetch("https://hargrimm-wikihow-v1.p.mashape.com/images?count=1", {
+  const request = await fetch("https://hargrimm-wikihow-v1.p.rapidapi.com/images?count=1", {
     headers: {
-      "X-Mashape-Key": process.env.MASHAPE,
+      "X-RapidAPI-Key": process.env.MASHAPE,
+      "X-RapidAPI-Host": "hargrimm-wikihow-v1.p.rapidapi.com",
       "Accept": "application/json"
     }
   });

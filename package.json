@@ -27,7 +27,6 @@
     "file-type": "^13.1.2",
     "gm": "github:TheEssem/gm",
     "jsqr": "^1.2.0",
-    "magick-ffi": "github:Terradice/magick-ffi",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.9.9",
