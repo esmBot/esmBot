@@ -6,7 +6,7 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to sharpen!`;
-  const buffer = await gm(image.path).coalesce().sharpen(10).bufferPromise(image.type, image.delay);
+  const buffer = await gm(image.path).coalesce().sharpen(10, 3).bufferPromise(image.type, image.delay);
   return {
     file: buffer,
     name: `sharpen.${image.type}`
