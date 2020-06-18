@@ -40,7 +40,8 @@ module.exports = async (message) => {
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     const global = (await database.global.findOne({}).exec());
-    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, ((isNaN(global.cmdCounts.get(command)) ? 0 : parseFloat(global.cmdCounts.get(command))) + 1).toFixed());
+    const count = global.cmdCounts.get(collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, parseInt(count) + 1);
     await global.save();
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
