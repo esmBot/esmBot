@@ -1,3 +1,3 @@
-[submodule "assets/images/country-flags"]
-	path = assets/images/country-flags
-	url = https://github.com/hjnilsson/country-flags.git
+[submodule "assets/images/region-flags"]
+	path = assets/images/region-flags
+	url = https://github.com/behdad/region-flags
