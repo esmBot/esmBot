@@ -12,8 +12,7 @@ exports.run = async (message, args) => {
   const flag = emoji.unemojify(args[0]).replace(/:/g, "").replace("flag-", "");
   let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
   if (flag === "🏴‍☠️") path = "./assets/images/pirateflag.png";
-  const size = await gm(image.path).sizePromise();
-  const buffer = await gm(image.path).coalesce().out("null:").out("(", path, "-alpha", "set", "-channel", "A", "-evaluate", "multiply", "0.5", "+channel", ")").gravity("North").scale(...(size.width < size.height ? ["%[fx:u.w]", null] : [null, "%[fx:u.h]"])).out("-layers", "composite").bufferPromise(image.type, image.delay);
+  const buffer = await gm(image.path).coalesce().out("null:").out("(", path, "-alpha", "set", "-channel", "A", "-evaluate", "multiply", "0.5", "+channel", ")").gravity("North").scale("%[fx:u.w]x%[fx:u.h]!").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return {
     file: buffer,
     name: `flag.${image.type}`

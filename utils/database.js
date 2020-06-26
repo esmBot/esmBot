@@ -1,6 +1,6 @@
 // database stuff
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO);
+mongoose.connect(process.env.MONGO, { poolSize: 10, bufferMaxEntries: 0, reconnectTries: 5000, useNewUrlParser: true, useUnifiedTopology: true });
 const guildSchema = new mongoose.Schema({
   id: String,
   tags: Map,
