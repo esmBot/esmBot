@@ -25,6 +25,8 @@ After that, you should install the rest of the dependencies using npm:
 npm install
 ```
 
+And set up Lavalink: https://github.com/Frederikam/Lavalink#server-configuration
+
 Finally, fill in the info inside `.env.example`, rename it to `.env`, and run `app.js`.
 
 ## Credits

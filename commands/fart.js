@@ -1,7 +1,7 @@
-const playSound = require("../utils/soundplayer.js");
+const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  return playSound("./assets/audio/fart.opus", message);
+  return soundPlayer.play("./assets/audio/fart.ogg", message);
 };
 
 exports.aliases = ["toot"];

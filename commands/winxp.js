@@ -1,7 +1,7 @@
-const playSound = require("../utils/soundplayer.js");
+const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  return playSound("./assets/audio/winxp.opus", message);
+  return soundPlayer.play("./assets/audio/winxp.ogg", message);
 };
 
 exports.aliases = ["windows", "xp"];

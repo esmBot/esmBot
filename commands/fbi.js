@@ -1,7 +1,7 @@
-const playSound = require("../utils/soundplayer.js");
+const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  return playSound("./assets/audio/fbi.opus", message);
+  return soundPlayer.play("./assets/audio/fbi.ogg", message);
 };
 
 exports.aliases = ["openup"];

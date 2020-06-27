@@ -7,6 +7,7 @@ const collections = require("../utils/collections.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
+const soundPlayer = require("../utils/soundplayer.js");
 const helpGenerator =
   process.env.OUTPUT !== "" ? require("../utils/help.js") : null;
 const twitter =
@@ -127,6 +128,8 @@ module.exports = async () => {
         });
     });
   };
+
+  await soundPlayer.connect();
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
