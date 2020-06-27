@@ -7,3 +7,4 @@ exports.run = async (message) => {
 exports.aliases = ["windows", "xp"];
 exports.category = 6;
 exports.help = "Plays the Windows XP startup sound";
+exports.requires = "sound";

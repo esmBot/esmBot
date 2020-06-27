@@ -129,7 +129,7 @@ module.exports = async () => {
     });
   };
 
-  await soundPlayer.connect();
+  if (!soundPlayer.status) await soundPlayer.connect();
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {

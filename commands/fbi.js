@@ -7,3 +7,4 @@ exports.run = async (message) => {
 exports.aliases = ["openup"];
 exports.category = 6;
 exports.help = "Plays the \"FBI OPEN UP\" sound effect";
+exports.requires = "sound";

@@ -9,16 +9,19 @@ const logger = require("./utils/logger.js");
 const client = require("./utils/client.js");
 // initialize command loader
 const handler = require("./utils/handler.js");
+const sound = require("./utils/soundplayer.js");
 
 // registers stuff and connects the bot
 async function init() {
+  logger.log("info", "Starting esmBot...");
   // register commands and their info
   const commands = await readdir("./commands/");
+  const soundStatus = await sound.checkStatus();
   logger.log("info", `Attempting to load ${commands.length} commands...`);
   for (const commandFile of commands) {
     logger.log("info", `Loading command ${commandFile}...`);
     try {
-      await handler.load(commandFile);
+      await handler.load(commandFile, soundStatus);
     } catch (e) {
       logger.error(`Failed to register command ${commandFile.split(".")[0]}: ${e}`);
     }

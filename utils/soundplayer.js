@@ -9,6 +9,23 @@ const nodes = [
 
 let manager;
 
+exports.status = false;
+
+exports.checkStatus = async () => {
+  const statuses = [];
+  for (const node of nodes) {
+    try {
+      const response = await fetch(`http://${node.host}:${node.port}/version`, { headers: { Authorization: node.password } }).then(res => res.text());
+      if (response) statuses.push(false);
+    } catch {
+      statuses.push(true);
+    }
+  }
+  const result = statuses.filter(Boolean);
+  this.status = result.length > 0 ? true : false;
+  return this.status;
+};
+
 exports.connect = async () => {
   manager = new Manager(client, nodes, {
     user: client.user.id

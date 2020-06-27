@@ -6,3 +6,4 @@ exports.run = async (message) => {
 
 exports.category = 6;
 exports.help = "Plays an explosion sound effect";
+exports.requires = "sound";

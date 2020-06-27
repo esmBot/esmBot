@@ -7,3 +7,4 @@ exports.run = async (message) => {
 exports.aliases = ["bro"];
 exports.category = 6;
 exports.help = "Plays the \"bruh\" sound effect";
+exports.requires = "sound";

@@ -7,3 +7,4 @@ exports.run = async (message) => {
 exports.aliases = ["roblox", "commitdie"];
 exports.category = 6;
 exports.help = "Plays the Roblox \"oof\" sound";
+exports.requires = "sound";
