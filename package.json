@@ -8,7 +8,8 @@
   },
   "scripts": {
     "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
-    "docker:run": "docker run --rm --shm-size=128m headless-chrome-alpine"
+    "docker:run-ss": "docker run --rm --shm-size=128m headless-chrome-alpine",
+    "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
