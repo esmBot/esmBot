@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  return soundPlayer.play("./assets/audio/mail.ogg", message);
+  return await soundPlayer.play("./assets/audio/mail.ogg", message);
 };
 
 exports.aliases = ["yougotmail", "youvegotmail", "aol"];

@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  soundPlayer.playing(message);
+  await soundPlayer.playing(message);
 };
 
 exports.aliases = ["playing", "np"];

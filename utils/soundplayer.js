@@ -51,14 +51,14 @@ exports.play = async (sound, message, music = false) => {
   if (!music && this.manager.voiceStates.has(message.channel.guild.id) && this.players.get(message.channel.guild.id).type === "music") return client.createMessage(message.channel.id, `${message.author.mention}, I can't play a sound effect while playing music!`);
   const node = this.manager.idealNodes[0];
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
+  const oldQueue = queues.get(voiceChannel.guild.id);
+  if (tracks.length === 0) return client.createMessage(message.channel.id, `${message.author.mention}, I couldn't find that song!`);
+  queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
   const connection = await this.manager.join({
     guild: voiceChannel.guild.id,
     channel: voiceChannel.id,
     node: node.id
   });
-  const oldQueue = queues.get(voiceChannel.guild.id);
-  console.log(tracks);
-  queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
 
   if (oldQueue) {
     client.createMessage(message.channel.id, `${message.author.mention}, your tune has been added to the queue!`);
@@ -113,7 +113,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel)
       this.manager.leave(voiceChannel.guild.id);
       this.players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
-      await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
+      if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
     } else {
       const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
       this.nextSong(message, connection, newQueue[0], track, music, voiceChannel);
@@ -209,6 +209,7 @@ exports.queue = async (message) => {
   const groups = trackList.map((item, index) => {
     return index % pageSize === 0 ? trackList.slice(index, index + pageSize) : null;
   }).filter(Boolean);
+  if (groups.length === 0) groups.push("del");
   for (const [i, value] of groups.entries()) {
     embeds.push({
       "embed": {
@@ -225,7 +226,7 @@ exports.queue = async (message) => {
           "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : moment.duration(firstTrack.info.length).format("m:ss", { trim: false })})`
         }, {
           "name": "🗒️ Queue",
-          "value": value.join("\n")
+          "value": value !== "del" ? value.join("\n") : "There's nothing in the queue!"
         }]
       }
     });

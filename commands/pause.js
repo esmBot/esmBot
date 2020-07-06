@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  soundPlayer.pause(message);
+  await soundPlayer.pause(message);
 };
 
 exports.aliases = ["resume"];

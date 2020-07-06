@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  soundPlayer.stop(message);
+  await soundPlayer.stop(message);
 };
 
 exports.aliases = ["disconnect"];

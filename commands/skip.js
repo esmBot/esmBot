@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  soundPlayer.skip(message);
+  await soundPlayer.skip(message);
 };
 
 exports.category = 7;

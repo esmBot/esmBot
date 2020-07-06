@@ -1,7 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message) => {
-  return soundPlayer.play("./assets/audio/ping.ogg", message);
+  return await soundPlayer.play("./assets/audio/ping.ogg", message);
 };
 
 exports.aliases = ["notification", "notif"];
