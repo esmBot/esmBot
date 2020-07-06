@@ -37,8 +37,9 @@ exports.run = async (message, args) => {
       moderation: [],
       tags: ["**Every command in this category is a subcommand of the tag command.**\n"],
       fun: [],
-      images: ["**These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is experimental)**\n"],
-      soundboard: []
+      images: ["**These commands support the PNG, JPEG, WEBP (static), and GIF (animated or static) formats.**\n"],
+      soundboard: [],
+      music: []
     };
     for (const [command] of commands) {
       const category = collections.info.get(command).category;
@@ -59,6 +60,8 @@ exports.run = async (message, args) => {
         categories.images.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       } else if (category === 6) {
         categories.soundboard.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
+      } else if (category === 7) {
+        categories.music.push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
       }
     }
     const pages = [];

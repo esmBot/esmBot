@@ -10,6 +10,6 @@ exports.run = async (message) => {
   process.exit(1);
 };
 
-exports.aliases = ["reboot", "stop"];
-exports.category = 7;
+exports.aliases = ["reboot"];
+exports.category = 8;
 exports.help = "Restarts me";

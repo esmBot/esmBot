@@ -4,6 +4,6 @@ exports.run = async (message, args) => {
   return args.join(" ").repeat(500).substring(0, 500);
 };
 
-exports.category = 8;
+exports.category = 9;
 exports.help = "placeholder";
 exports.params = "[text]";

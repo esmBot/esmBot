@@ -9,7 +9,7 @@ exports.run = async (message, args) => {
   // with status code ${info.resp.statusCode} ${info.resp.statusMessage}.
 };
 
-exports.category = 7;
+exports.category = 8;
 exports.help = "Tweets a message";
 exports.requires = "twitter";
 exports.params = "[message]";

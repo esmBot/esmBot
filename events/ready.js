@@ -120,9 +120,7 @@ module.exports = async () => {
   }
 
   // generate docs
-  if (helpGenerator) {
-    await helpGenerator(process.env.OUTPUT);
-  }
+  if (helpGenerator) await helpGenerator(process.env.OUTPUT);
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {

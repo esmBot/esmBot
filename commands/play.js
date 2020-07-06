@@ -1,10 +1,12 @@
 const soundPlayer = require("../utils/soundplayer.js");
 
 exports.run = async (message, args) => {
-  if (message.author.id !== process.env.OWNER) return `${message.author.mention}, this command is for testing and is restricted to owners.`;
-  return soundPlayer.play(encodeURIComponent(args.join(" ")), message);
+  if (!args[0]) return `${message.author.mention}, you need to provide what you want to play!`;
+  soundPlayer.play(encodeURIComponent(args.join(" ").trim()), message, true);
 };
 
+exports.aliases = ["p"];
 exports.category = 7;
-exports.help = "Plays an audio file";
+exports.help = "Plays a song or adds it to the queue";
 exports.requires = "sound";
+exports.params = "[url]";
