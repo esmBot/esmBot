@@ -99,6 +99,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel)
   connection.on("error", (error) => {
     playingMessage.delete();
     this.manager.leave(voiceChannel.guild.id);
+    connection.destroy();
     this.players.delete(voiceChannel.guild.id);
     queues.delete(voiceChannel.guild.id);
     throw error;
@@ -111,6 +112,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel)
     await playingMessage.delete();
     if (newQueue.length === 0) {
       this.manager.leave(voiceChannel.guild.id);
+      connection.destroy();
       this.players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
@@ -125,8 +127,11 @@ exports.stop = async (message) => {
   if (!message.member.voiceState.channelID) return client.createMessage(message.channel.id, `${message.author.mention}, you need to be in a voice channel first!`);
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return client.createMessage(message.channel.id, `${message.author.mention}, I'm not in a voice channel!`);
   if (this.players.get(message.channel.guild.id).host !== message.author.id) return client.createMessage(message.channel.id, `${message.author.mention}, only the current voice session host can stop the music!`);
-  this.players.delete(message.channel.guild.id);
   this.manager.leave(message.channel.guild.id);
+  const connection = this.players.get(message.channel.guild.id).player;
+  connection.destroy();
+  this.players.delete(message.channel.guild.id);
+  queues.delete(message.channel.guild.id);
   await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
 };
 

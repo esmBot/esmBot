@@ -158,40 +158,44 @@ module.exports = async () => {
     tweet();
     setInterval(tweet, 1800000);
     twitter.active = true;
-    const stream = twitter.client.statuses.filter(`@${process.env.HANDLE}`);
-    stream.on("data", async (tweet) => {
-      if (
-        tweet.user.screen_name !== "esmBot_" &&
-        !blocks.ids.includes(tweet.user.id_str)
-      ) {
-        const tweets = (
-          await database.tweets
-            .find({
-              enabled: true,
-            })
-            .exec()
-        )[0];
-        let tweetContent;
+    try {
+      const stream = twitter.client.statuses.filter(`@${process.env.HANDLE}`);
+      stream.on("data", async (tweet) => {
         if (
-          tweet.text.includes("@this_vid") ||
+          tweet.user.screen_name !== "esmBot_" &&
+        !blocks.ids.includes(tweet.user.id_str)
+        ) {
+          const tweets = (
+            await database.tweets
+              .find({
+                enabled: true,
+              })
+              .exec()
+          )[0];
+          let tweetContent;
+          if (
+            tweet.text.includes("@this_vid") ||
           tweet.text.includes("@DownloaderBot") ||
           tweet.text.includes("@GetVideoBot") ||
           tweet.text.includes("@DownloaderB0t") ||
           tweet.text.includes("@thisvid_")
-        ) {
-          tweetContent = await misc.getTweet(tweet, true, true);
-        } else {
-          tweetContent = await misc.getTweet(tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
-        }
-        const payload = {
-          status: `@${tweet.user.screen_name} ${tweetContent}`,
-          in_reply_to_status_id: tweet.id_str,
-        };
-        const info = await twitter.client.statuses.update(payload);
-        logger.log(`Reply with id ${info.id_str} has been posted.`);
+          ) {
+            tweetContent = await misc.getTweet(tweet, true, true);
+          } else {
+            tweetContent = await misc.getTweet(tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
+          }
+          const payload = {
+            status: `@${tweet.user.screen_name} ${tweetContent}`,
+            in_reply_to_status_id: tweet.id_str,
+          };
+          const info = await twitter.client.statuses.update(payload);
+          logger.log(`Reply with id ${info.id_str} has been posted.`);
         // with status code ${info.resp.statusCode} ${info.resp.statusMessage}
-      }
-    });
+        }
+      });
+    } catch (e) {
+      logger.error(`The Twitter streaming API ran into an error: ${e}`);
+    }
   }
 
   logger.log(
