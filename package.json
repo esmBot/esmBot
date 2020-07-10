@@ -25,22 +25,23 @@
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "github:benpbolton/duckduckgo-images-api",
     "emoji-regex": "^8.0.0",
-    "eris": "^0.11.2",
+    "eris": "^0.13.3",
     "file-type": "^13.1.2",
     "gm": "github:TheEssem/gm",
     "jsqr": "^1.3.1",
     "lavacord": "^1.1.9",
-    "moment": "^2.26.0",
+    "moment": "^2.27.0",
     "moment-duration-format": "^2.3.2",
-    "mongoose": "^5.9.19",
+    "node-addon-api": "^3.0.0",
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.0",
     "node-tweet": "^0.1.4",
+    "pg": "^8.3.0",
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
-    "sharp": "^0.25.4",
-    "winston": "^3.2.1"
+    "sharp": "github:deftomat/sharp",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^5.15.2",
@@ -49,9 +50,7 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
     "erlpack": "github:abalabahaha/erlpack",
-    "eventemitter3": "^3.1.2",
     "sodium-native": "^2.4.6",
-    "uws": "^10.148.1",
     "zlib-sync": "^0.1.6"
   }
 }

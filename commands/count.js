@@ -5,13 +5,13 @@ const database = require("../utils/database.js");
 exports.run = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
-  const counts = (await database.global.findOne({}).lean().exec()).cmdCounts;
+  const counts = await database.query("SELECT * FROM counts");
   const countArray = [];
-  const sortedValues = Object.entries(counts).sort((a, b) => {
-    return b[1] - a[1];
+  const sortedValues = counts.rows.sort((a, b) => {
+    return b.count - a.count;
   });
-  for (const [key, value] of sortedValues) {
-    countArray.push(`**${key}**: ${value}`);
+  for (const { command, count } of sortedValues) {
+    countArray.push(`**${command}**: ${count}`);
   }
   const embeds = [];
   const groups = countArray.map((item, index) => {

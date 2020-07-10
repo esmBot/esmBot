@@ -6,7 +6,7 @@ const paginator = require("../utils/pagination/pagination.js");
 const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://projectlounge.pw/esmBot/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional."];
 
 exports.run = async (message, args) => {
-  const guild = (await database.guilds.find({ id: message.channel.guild.id }).lean().exec())[0];
+  const guildDB = await database.query("SELECT * FROM guilds WHERE guild_id = $1", [message.channel.guild.id]);
   const commands = collections.commands;
   const aliases = collections.aliases;
   if (args.length !== 0 && (commands.has(args[0].toLowerCase()) || aliases.has(args[0].toLowerCase()))) {
@@ -17,7 +17,7 @@ exports.run = async (message, args) => {
           "name": "esmBot Help",
           "icon_url": client.user.avatarURL
         },
-        "title": `${guild.prefix}${aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
+        "title": `${guildDB.rows[0].prefix}${aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
         "url": "https://projectlounge.pw/esmBot/help.html",
         "description": info.description,
         "color": 16711680,
@@ -94,7 +94,7 @@ exports.run = async (message, args) => {
           },
           "fields": [{
             "name": "Prefix",
-            "value": guild.prefix
+            "value": guildDB.rows[0].prefix
           }, {
             "name": "Tip",
             "value": misc.random(tips)

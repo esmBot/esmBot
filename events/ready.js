@@ -57,64 +57,41 @@ module.exports = async () => {
 
   // make sure settings/tags exist
   for (const [id] of client.guilds) {
-    const guildDB = (
-      await database.guilds
-        .findOne({
-          id: id,
-        })
-        .exec()
-    );
-    if (!guildDB) {
+    const guildDB = await database.query("SELECT * FROM guilds WHERE guild_id = $1", [id]);
+    if (guildDB.rows.length === 0) {
       logger.log(`Registering guild database entry for guild ${id}...`);
-      const newGuild = new database.guilds({
-        id: id,
-        tags: misc.tagDefaults,
-        prefix: "&",
-        warns: {},
-        disabledChannels: []
-      });
-      await newGuild.save();
-    } else if (guildDB) {
-      if (!guildDB.warns) {
-        logger.log(`Creating warn object for guild ${id}...`);
-        guildDB.set("warns", {});
-        await guildDB.save();
-      } else if (!guildDB.disabledChannels) {
-        logger.log(`Creating disabled channels object for guild ${id}...`);
-        guildDB.set("disabledChannels", []);
-        await guildDB.save();
-      }
+      await database.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled) VALUES ($1, $2, $3, $4, $5)", [id, misc.tagDefaults, "&", {}, []]);
     }
   }
 
   const job = new cron.CronJob("0 0 * * 0", async () => {
     logger.log("Deleting stale guild entries in database...");
-    const guildDB = (await database.guilds.find({}).exec());
-    for (const { id } of guildDB) {
-      if (!client.guilds.get(id)) {
-        await database.guilds.deleteMany({ id: id });
-        logger.log(`Deleted entry for guild ID ${id}.`);
+    const guildDB = await database.query("SELECT * FROM guilds");
+    for (const { guild_id } of guildDB.rows) {
+      if (!client.guilds.get(guild_id)) {
+        await database.query("DELETE FROM guilds WHERE guild_id = $1", [guild_id]);
+        logger.log(`Deleted entry for guild ID ${guild_id}.`);
       }
     }
     logger.log("Finished deleting stale entries.");
   });
   job.start();
 
-  const global = (await database.global.findOne({}).exec());
-  if (!global) {
-    const countObject = {};
+  let counts;
+  try {
+    counts = await database.query("SELECT * FROM counts");
+  } catch {
+    counts = { rows: [] };
+  }
+  if (!counts.rows[0]) {
     for (const command of collections.commands.keys()) {
-      countObject[command] = 0;
+      await database.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
     }
-    const newGlobal = new database.global({
-      cmdCounts: countObject
-    });
-    await newGlobal.save();
   } else {
     for (const command of collections.commands.keys()) {
-      if (!global.cmdCounts.has(command)) {
-        global.cmdCounts.set(command, 0);
-        await global.save();
+      const count = await database.query("SELECT * FROM counts WHERE command = $1", [command]);
+      if (!count) {
+        await database.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
       }
     }
   }
@@ -134,14 +111,7 @@ module.exports = async () => {
   if (twitter !== null && twitter.active === false) {
     const blocks = await twitter.client.blocks.ids();
     const tweet = async () => {
-      const tweets = (
-        await database.tweets
-          .find({
-            enabled: true,
-          })
-          .exec()
-      )[0];
-      const tweetContent = await misc.getTweet(tweets);
+      const tweetContent = await misc.getTweet(twitter.tweets);
       try {
         const info = await twitter.client.statuses.update(tweetContent);
         logger.log(`Tweet with id ${info.id_str} has been posted.`);
@@ -165,24 +135,11 @@ module.exports = async () => {
           tweet.user.screen_name !== "esmBot_" &&
         !blocks.ids.includes(tweet.user.id_str)
         ) {
-          const tweets = (
-            await database.tweets
-              .find({
-                enabled: true,
-              })
-              .exec()
-          )[0];
           let tweetContent;
-          if (
-            tweet.text.includes("@this_vid") ||
-          tweet.text.includes("@DownloaderBot") ||
-          tweet.text.includes("@GetVideoBot") ||
-          tweet.text.includes("@DownloaderB0t") ||
-          tweet.text.includes("@thisvid_")
-          ) {
-            tweetContent = await misc.getTweet(tweet, true, true);
+          if (new RegExp(["@this_vid", "@DownloaderBot", "GetVideoBot", "@thisvid_"].join("|")).test(tweet.text)) {
+            tweetContent = await misc.getTweet(twitter.tweets, true, true);
           } else {
-            tweetContent = await misc.getTweet(tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
+            tweetContent = await misc.getTweet(twitter.tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
           }
           const payload = {
             status: `@${tweet.user.screen_name} ${tweetContent}`,
