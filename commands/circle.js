@@ -1,12 +1,11 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add radial blur!`;
-  const buffer = await gm(image.path).coalesce().out("-rotational-blur", 10).bufferPromise(image.type, image.delay);
+  const buffer = await promisify(magick.circle)(image.path, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
   return {
     file: buffer,
     name: `circle.${image.type}`

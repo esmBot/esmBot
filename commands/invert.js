@@ -1,12 +1,11 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to invert!`;
-  const buffer = await gm(image.path).coalesce().negative().bufferPromise(image.type, image.delay);
+  const buffer = await promisify(magick.invert)(image.path, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
   return {
     file: buffer,
     name: `invert.${image.type}`
