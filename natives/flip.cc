@@ -5,24 +5,22 @@
 using namespace std;
 using namespace Magick;
 
-class NineGagWorker : public Napi::AsyncWorker {
+class FlipWorker : public Napi::AsyncWorker {
  public:
-  NineGagWorker(Napi::Function& callback, string in_path, string type, int delay)
+  FlipWorker(Napi::Function& callback, string in_path, string type, int delay)
       : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
-  ~NineGagWorker() {}
+  ~FlipWorker() {}
 
   void Execute() {
     list<Image> frames;
     list<Image> coalesced;
     list<Image> mid;
     list<Image> result;
-    Image watermark;
     readImages(&frames, in_path);
-    watermark.read("./assets/images/9gag.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      image.composite(watermark, Magick::EastGravity, Magick::OverCompositeOp);
+      image.flip();
       image.magick(type);
       mid.push_back(image);
     }
@@ -43,7 +41,7 @@ class NineGagWorker : public Napi::AsyncWorker {
   Blob blob;
 };
 
-Napi::Value NineGag(const Napi::CallbackInfo &info)
+Napi::Value Flip(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
@@ -52,7 +50,7 @@ Napi::Value NineGag(const Napi::CallbackInfo &info)
   int delay = info[2].As<Napi::Number>().Int32Value();
   Napi::Function cb = info[3].As<Napi::Function>();
 
-  NineGagWorker* ninegagWorker = new NineGagWorker(cb, in_path, type, delay);
-  ninegagWorker->Queue();
+  FlipWorker* flipWorker = new FlipWorker(cb, in_path, type, delay);
+  flipWorker->Queue();
   return env.Undefined();
 }

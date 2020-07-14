@@ -5,11 +5,11 @@
 using namespace std;
 using namespace Magick;
 
-class BandicamWorker : public Napi::AsyncWorker {
+class FlagWorker : public Napi::AsyncWorker {
  public:
-  BandicamWorker(Napi::Function& callback, string in_path, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
-  ~BandicamWorker() {}
+  FlagWorker(Napi::Function& callback, string in_path, string overlay_path, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), overlay_path(overlay_path), type(type), delay(delay) {}
+  ~FlagWorker() {}
 
   void Execute() {
     list<Image> frames;
@@ -18,8 +18,10 @@ class BandicamWorker : public Napi::AsyncWorker {
     list<Image> result;
     Image watermark;
     readImages(&frames, in_path);
-    watermark.read("./assets/images/bandicam.png");
-    string query("x" + to_string(frames.front().baseRows()));
+    watermark.read(overlay_path);
+    watermark.alphaChannel(Magick::SetAlphaChannel);
+    watermark.evaluate(Magick::AlphaChannel, Magick::MultiplyEvaluateOperator, 0.5);
+    string query(to_string(frames.front().baseColumns()) + "x" + to_string(frames.front().baseRows()) + "!");
     watermark.scale(Geometry(query));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -39,22 +41,23 @@ class BandicamWorker : public Napi::AsyncWorker {
   }
 
  private:
-  string in_path, type;
+  string in_path, overlay_path, type;
   int delay, wordlength, i, n;
   size_t bytes, type_size;
   Blob blob;
 };
 
-Napi::Value Bandicam(const Napi::CallbackInfo &info)
+Napi::Value Flag(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
   string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  string overlay_path = info[1].As<Napi::String>().Utf8Value();
+  string type = info[2].As<Napi::String>().Utf8Value();
+  int delay = info[3].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[4].As<Napi::Function>();
 
-  BandicamWorker* bandicamWorker = new BandicamWorker(cb, in_path, type, delay);
-  bandicamWorker->Queue();
+  FlagWorker* flagWorker = new FlagWorker(cb, in_path, overlay_path, type, delay);
+  flagWorker->Queue();
   return env.Undefined();
 }

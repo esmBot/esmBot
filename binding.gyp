@@ -2,17 +2,7 @@
   "targets": [
     {
       "target_name": "image",
-      "sources": [
-        "./natives/9gag.cc",
-        "./natives/bandicam.cc",
-        "./natives/blur.cc",
-        "./natives/blurple.cc",
-        "./natives/circle.cc",
-        "./natives/deviantart.cc",
-        "./natives/explode.cc",
-        "./natives/image.cc",
-        "./natives/invert.cc"
-      ],
+      "sources": [ "<!@(node -p \"require('fs').readdirSync('./natives').map(f=>'natives/'+f).join(' ')\")" ],
       "cflags!": [ "-fno-exceptions", "<!(pkg-config --cflags Magick++)" ],
       "cflags_cc!": [ "-fno-exceptions", "<!(pkg-config --cflags Magick++)" ],
       "include_dirs": [

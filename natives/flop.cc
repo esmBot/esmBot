@@ -5,26 +5,22 @@
 using namespace std;
 using namespace Magick;
 
-class DeviantartWorker : public Napi::AsyncWorker {
+class FlopWorker : public Napi::AsyncWorker {
  public:
-  DeviantartWorker(Napi::Function& callback, string in_path, string type, int delay)
+  FlopWorker(Napi::Function& callback, string in_path, string type, int delay)
       : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
-  ~DeviantartWorker() {}
+  ~FlopWorker() {}
 
   void Execute() {
     list<Image> frames;
     list<Image> coalesced;
     list<Image> mid;
     list<Image> result;
-    Image watermark;
     readImages(&frames, in_path);
-    watermark.read("./assets/images/deviantart.png");
-    string query("x" + to_string(frames.front().baseRows()));
-    watermark.scale(Geometry(query));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      image.composite(watermark, Magick::CenterGravity, Magick::OverCompositeOp);
+      image.flop();
       image.magick(type);
       mid.push_back(image);
     }
@@ -45,7 +41,7 @@ class DeviantartWorker : public Napi::AsyncWorker {
   Blob blob;
 };
 
-Napi::Value Deviantart(const Napi::CallbackInfo &info)
+Napi::Value Flop(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
@@ -54,7 +50,7 @@ Napi::Value Deviantart(const Napi::CallbackInfo &info)
   int delay = info[2].As<Napi::Number>().Int32Value();
   Napi::Function cb = info[3].As<Napi::Function>();
 
-  DeviantartWorker* deviantartWorker = new DeviantartWorker(cb, in_path, type, delay);
-  deviantartWorker->Queue();
+  FlopWorker* flopWorker = new FlopWorker(cb, in_path, type, delay);
+  flopWorker->Queue();
   return env.Undefined();
 }
