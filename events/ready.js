@@ -12,6 +12,7 @@ const helpGenerator =
   process.env.OUTPUT !== "" ? require("../utils/help.js") : null;
 const twitter =
   process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
+let run = false;
 
 // run when ready
 module.exports = async () => {
@@ -53,7 +54,7 @@ module.exports = async () => {
   };
 
   // connect to lavalink
-  if (!soundPlayer.status) await soundPlayer.connect();
+  if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
 
   // make sure settings/tags exist
   for (const [id] of client.guilds) {
@@ -64,18 +65,20 @@ module.exports = async () => {
     }
   }
 
-  const job = new cron.CronJob("0 0 * * 0", async () => {
-    logger.log("Deleting stale guild entries in database...");
-    const guildDB = await database.query("SELECT * FROM guilds");
-    for (const { guild_id } of guildDB.rows) {
-      if (!client.guilds.get(guild_id)) {
-        await database.query("DELETE FROM guilds WHERE guild_id = $1", [guild_id]);
-        logger.log(`Deleted entry for guild ID ${guild_id}.`);
+  if (!run) {
+    const job = new cron.CronJob("0 0 * * 0", async () => {
+      logger.log("Deleting stale guild entries in database...");
+      const guildDB = await database.query("SELECT * FROM guilds");
+      for (const { guild_id } of guildDB.rows) {
+        if (!client.guilds.get(guild_id)) {
+          await database.query("DELETE FROM guilds WHERE guild_id = $1", [guild_id]);
+          logger.log(`Deleted entry for guild ID ${guild_id}.`);
+        }
       }
-    }
-    logger.log("Finished deleting stale entries.");
-  });
-  job.start();
+      logger.log("Finished deleting stale entries.");
+    });
+    job.start();
+  }
 
   let counts;
   try {
@@ -155,8 +158,6 @@ module.exports = async () => {
     }
   }
 
-  logger.log(
-    "info",
-    `Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`
-  );
+  logger.log(`Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
+  run = true;
 };

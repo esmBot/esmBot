@@ -17,6 +17,8 @@ exports.manager;
 
 exports.status = false;
 
+exports.connected = false;
+
 exports.checkStatus = async () => {
   const statuses = [];
   for (const node of nodes) {
@@ -38,6 +40,7 @@ exports.connect = async () => {
   });
   const { length } = await this.manager.connect();
   logger.log(`Successfully connected to ${length} Lavalink node(s).`);
+  exports.connected = true;
   this.manager.on("error", (error, node) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });

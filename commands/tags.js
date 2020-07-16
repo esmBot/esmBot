@@ -21,7 +21,7 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags[args[1].toLowerCase()]) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags[args[1].toLowerCase()].author !== message.author.id && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags[args[1].toLowerCase()].author !== message.author.id && !message.member.permission.has("administrator") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       delete tags[args[1].toLowerCase()];
       await database.query("UPDATE guilds SET tags = $1 WHERE guild_id = $2", [tags, message.channel.guild.id]);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
