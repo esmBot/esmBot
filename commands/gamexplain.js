@@ -1,13 +1,11 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a GameXplain thumbnail meme!`;
-  const template = "./assets/images/gamexplain.png";
-  const buffer = await gm(template).background("white").out("null:").out("(").out(image.path).coalesce().out("-virtual-pixel", "transparent").scale("1181x571!").out(")").compose("over").gravity("Center").out("-geometry", "+0+40").out("-layers", "composite").bufferPromise(image.type, image.delay);
+  const buffer = await promisify(magick.gamexplain)(image.path, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
   return {
     file: buffer,
     name: `gamexplain.${image.type}`

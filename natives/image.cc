@@ -9,6 +9,8 @@
 #include "flip.h"
 #include "flop.h"
 #include "freeze.h"
+#include "gamexplain.h"
+#include "globe.h"
 #include "invert.h"
 #include "watermark.h"
 
@@ -24,6 +26,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "flip"), Napi::Function::New(env, Flip));
   exports.Set(Napi::String::New(env, "flop"), Napi::Function::New(env, Flop));
   exports.Set(Napi::String::New(env, "freeze"), Napi::Function::New(env, Freeze));
+  exports.Set(Napi::String::New(env, "gamexplain"), Napi::Function::New(env, Gamexplain));
+  exports.Set(Napi::String::New(env, "globe"), Napi::Function::New(env, Globe));
   exports.Set(Napi::String::New(env, "invert"), Napi::Function::New(env, Invert));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
   return exports;
