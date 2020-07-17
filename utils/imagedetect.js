@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const AbortController = require("abort-controller");
 const fileType = require("file-type");
 const { promisify } = require("util");
 const writeFile = promisify(require("fs").writeFile);
@@ -8,9 +9,14 @@ const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 // this checks if the file is, in fact, an image
 const typeCheck = async (image, image2, gifv = false) => {
   // download the file to a buffer
-  const imageRequest = await fetch(image);
-  const imageBuffer = await imageRequest.buffer();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 15000);
   try {
+    const imageRequest = await fetch(image, { signal: controller.signal });
+    const imageBuffer = await imageRequest.buffer();
+    if (imageBuffer.size >= 25 * 1024 * 1024) return;
     // get the file type
     const imageType = await fileType.fromBuffer(imageBuffer);
     // check if the file is a jpeg, png, or webp
@@ -33,7 +39,13 @@ const typeCheck = async (image, image2, gifv = false) => {
       return false;
     }
   } catch (error) {
-    throw error;
+    if (error.name === "AbortError") {
+      throw Error("Timed out");
+    } else {
+      throw error;
+    }
+  } finally {
+    clearTimeout(timeout);
   }
 };
 

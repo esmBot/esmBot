@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@lavacord/eris": "0.0.3",
+    "abort-controller": "^3.0.0",
     "cowsay": "^1.4.0",
     "cron": "^1.8.2",
     "dblapi.js": "^2.4.0",
