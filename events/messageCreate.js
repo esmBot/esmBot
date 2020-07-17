@@ -63,14 +63,16 @@ module.exports = async (message) => {
       }
     }
   } catch (error) {
-    if (!error.toString().includes("Request entity too large")) {
+    if (error.toString().includes("Request entity too large")) {
+      await client.createMessage(message.channel.id, `${message.author.mention}, the resulting file was too large to upload. Try again with a smaller image if possible.`);
+    } else if (error.toString().includes("Timed out")) {
+      await client.createMessage(message.channel.id, `${message.author.mention}, the request timed out before I could download that image. Try uploading your image somewhere else.`);
+    } else {
       logger.error(error.toString());
       await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/TheEssem/esmBot/issues>", [{
         file: Buffer.from(`Message: ${error}\n\nStack Trace: ${error.stack}`),
         name: "error.txt"
       }]);
-    } else {
-      await client.createMessage(message.channel.id, `${message.author.mention}, the resulting file was too large to upload. Try again with a smaller image if possible.`);
     }
   }
 };
