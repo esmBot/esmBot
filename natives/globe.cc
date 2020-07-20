@@ -18,8 +18,10 @@ class GlobeWorker : public Napi::AsyncWorker {
     list<Image> mid;
     list<Image> result;
     Image distort;
+    Image overlay;
     readImages(&frames, in_path);
     distort.read("./assets/images/spheremap.png");
+    overlay.read("./assets/images/sphere_overlay.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     if (type != "GIF") {
@@ -30,12 +32,12 @@ class GlobeWorker : public Napi::AsyncWorker {
     }
 
     int i = 0;
-
     for (Image &image : coalesced) {
       image.scale(Geometry("500x500!"));
       image.alphaChannel(Magick::SetAlphaChannel);
       size_t width = image.columns();
       image.roll(Geometry("+" + to_string(width * i / coalesced.size())));
+      image.composite(overlay, Magick::CenterGravity, Magick::HardLightCompositeOp);
       image.composite(distort, Magick::CenterGravity, Magick::DistortCompositeOp);
       image.magick("GIF");
       mid.push_back(image);

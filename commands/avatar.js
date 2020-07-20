@@ -12,7 +12,7 @@ exports.run = async (message, args) => {
     });
     return member ? member.user.dynamicAvatarURL(null, 1024) : message.author.user.dynamicAvatarURL(null, 1024);
   } else {
-    return message.author.user.dynamicAvatarURL(null, 1024);
+    return message.author.dynamicAvatarURL(null, 1024);
   }
 };
 

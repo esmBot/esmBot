@@ -7,8 +7,8 @@ using namespace Magick;
 
 class WatermarkWorker : public Napi::AsyncWorker {
  public:
-  WatermarkWorker(Napi::Function& callback, string in_path, string water_path, int gravity, bool resize, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), water_path(water_path), gravity(gravity), resize(resize), type(type), delay(delay) {}
+  WatermarkWorker(Napi::Function& callback, string in_path, string water_path, int gravity, bool resize, bool append, bool mc, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), water_path(water_path), gravity(gravity), resize(resize), append(append), mc(mc), type(type), delay(delay) {}
   ~WatermarkWorker() {}
 
   void Execute() {
@@ -19,16 +19,33 @@ class WatermarkWorker : public Napi::AsyncWorker {
     Image watermark;
     readImages(&frames, in_path);
     watermark.read(water_path);
-    if (resize) {
+    if (resize && append) {
+      string query(to_string(frames.front().baseColumns()) + "x");
+      watermark.scale(Geometry(query));
+    } else if (resize) {
       string query("x" + to_string(frames.front().baseRows()));
       watermark.scale(Geometry(query));
     }
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      image.composite(watermark, Magick::GravityType(gravity), Magick::OverCompositeOp);
+      Image final;
+      if (append) {
+        list<Image> to_append;
+        to_append.push_back(image);
+        to_append.push_back(watermark);
+        appendImages(&final, to_append.begin(), to_append.end(), true);
+      } else if (mc) {
+        image.backgroundColor("white");
+        image.extent(Geometry(image.columns(), image.rows() + 15));
+        image.composite(watermark, Magick::GravityType(gravity), Magick::OverCompositeOp);
+        final = image;
+      } else {
+        image.composite(watermark, Magick::GravityType(gravity), Magick::OverCompositeOp);
+        final = image;
+      }
       image.magick(type);
-      mid.push_back(image);
+      mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
@@ -45,7 +62,7 @@ class WatermarkWorker : public Napi::AsyncWorker {
   int delay, wordlength, i, n, gravity;
   size_t bytes, type_size;
   Blob blob;
-  bool resize;
+  bool resize, append, mc;
 };
 
 Napi::Value Watermark(const Napi::CallbackInfo &info)
@@ -56,11 +73,13 @@ Napi::Value Watermark(const Napi::CallbackInfo &info)
   string water = info[1].As<Napi::String>().Utf8Value();
   int gravity = info[2].As<Napi::Number>().Int32Value();
   bool resize = info[3].As<Napi::Boolean>().Value();
-  string type = info[4].As<Napi::String>().Utf8Value();
-  int delay = info[5].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[6].As<Napi::Function>();
+  bool append = info[4].As<Napi::Boolean>().Value();
+  bool mc = info[5].As<Napi::Boolean>().Value();
+  string type = info[6].As<Napi::String>().Utf8Value();
+  int delay = info[7].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[8].As<Napi::Function>();
 
-  WatermarkWorker* watermarkWorker = new WatermarkWorker(cb, in_path, water, gravity, resize, type, delay);
+  WatermarkWorker* watermarkWorker = new WatermarkWorker(cb, in_path, water, gravity, resize, append, mc, type, delay);
   watermarkWorker->Queue();
   return env.Undefined();
 }

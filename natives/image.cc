@@ -12,6 +12,11 @@
 #include "gamexplain.h"
 #include "globe.h"
 #include "invert.h"
+#include "jpeg.h"
+#include "leak.h"
+#include "magik.h"
+#include "meme.h"
+#include "mirror.h"
 #include "watermark.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
@@ -29,6 +34,11 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "gamexplain"), Napi::Function::New(env, Gamexplain));
   exports.Set(Napi::String::New(env, "globe"), Napi::Function::New(env, Globe));
   exports.Set(Napi::String::New(env, "invert"), Napi::Function::New(env, Invert));
+  exports.Set(Napi::String::New(env, "jpeg"), Napi::Function::New(env, Jpeg));
+  exports.Set(Napi::String::New(env, "leak"), Napi::Function::New(env, Leak));
+  exports.Set(Napi::String::New(env, "magik"), Napi::Function::New(env, Magik));
+  exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
+  exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
   return exports;
 }

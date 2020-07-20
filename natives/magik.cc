@@ -5,11 +5,11 @@
 using namespace std;
 using namespace Magick;
 
-class ExplodeWorker : public Napi::AsyncWorker {
+class MagikWorker : public Napi::AsyncWorker {
  public:
-  ExplodeWorker(Napi::Function& callback, string in_path, int amount, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), amount(amount), type(type), delay(delay) {}
-  ~ExplodeWorker() {}
+  MagikWorker(Napi::Function& callback, string in_path, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
+  ~MagikWorker() {}
 
   void Execute() {
     list<Image> frames;
@@ -20,7 +20,9 @@ class ExplodeWorker : public Napi::AsyncWorker {
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      image.implode(amount);
+      image.scale(Geometry("350x350"));
+      image.liquidRescale(Geometry("175x175"));
+      image.liquidRescale(Geometry("350x350"));
       image.magick(type);
       blurred.push_back(image);
     }
@@ -41,17 +43,16 @@ class ExplodeWorker : public Napi::AsyncWorker {
   Blob blob;
 };
 
-Napi::Value Explode(const Napi::CallbackInfo &info)
+Napi::Value Magik(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
   string in_path = info[0].As<Napi::String>().Utf8Value();
-  int amount = info[1].As<Napi::Number>().Int32Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  string type = info[1].As<Napi::String>().Utf8Value();
+  int delay = info[2].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[3].As<Napi::Function>();
 
-  ExplodeWorker* explodeWorker = new ExplodeWorker(cb, in_path, amount, type, delay);
+  MagikWorker* explodeWorker = new MagikWorker(cb, in_path, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }
