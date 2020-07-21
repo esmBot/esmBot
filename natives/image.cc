@@ -11,6 +11,7 @@
 #include "freeze.h"
 #include "gamexplain.h"
 #include "globe.h"
+#include "homebrew.h"
 #include "invert.h"
 #include "jpeg.h"
 #include "leak.h"
@@ -33,6 +34,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "freeze"), Napi::Function::New(env, Freeze));
   exports.Set(Napi::String::New(env, "gamexplain"), Napi::Function::New(env, Gamexplain));
   exports.Set(Napi::String::New(env, "globe"), Napi::Function::New(env, Globe));
+  exports.Set(Napi::String::New(env, "homebrew"), Napi::Function::New(env, Homebrew));
   exports.Set(Napi::String::New(env, "invert"), Napi::Function::New(env, Invert));
   exports.Set(Napi::String::New(env, "jpeg"), Napi::Function::New(env, Jpeg));
   exports.Set(Napi::String::New(env, "leak"), Napi::Function::New(env, Leak));
