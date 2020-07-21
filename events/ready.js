@@ -13,85 +13,10 @@ const helpGenerator =
 const twitter =
   process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
 
+let run = false;
+
 // run when ready
 module.exports = async () => {
-  // make sure settings/tags exist
-  for (const [id] of client.guilds) {
-    const guildDB = (
-      await database.guilds
-        .findOne({
-          id: id,
-        })
-        .exec()
-    );
-    if (!guildDB) {
-      logger.log(`Registering guild database entry for guild ${id}...`);
-      const newGuild = new database.guilds({
-        id: id,
-        tags: misc.tagDefaults,
-        prefix: "&",
-        warns: {},
-        disabledChannels: []
-      });
-      await newGuild.save();
-    } else if (guildDB) {
-      if (!guildDB.warns) {
-        logger.log(`Creating warn object for guild ${id}...`);
-        guildDB.set("warns", {});
-        await guildDB.save();
-      } else if (!guildDB.disabledChannels) {
-        logger.log(`Creating disabled channels object for guild ${id}...`);
-        guildDB.set("disabledChannels", []);
-        await guildDB.save();
-      }
-    }
-  }
-
-  const job = new cron.CronJob("0 0 * * 0", async () => {
-    logger.log("Deleting stale guild entries in database...");
-    const guildDB = (await database.guilds.find({}).exec());
-    for (const { id } of guildDB) {
-      if (!client.guilds.get(id)) {
-        await database.guilds.deleteMany({ id: id });
-        logger.log(`Deleted entry for guild ID ${id}.`);
-      }
-    }
-    logger.log("Finished deleting stale entries.");
-  });
-  job.start();
-
-  const global = (await database.global.findOne({}).exec());
-  if (!global) {
-    const countObject = {};
-    for (const command of collections.commands.keys()) {
-      countObject[command] = 0;
-    }
-    const newGlobal = new database.global({
-      cmdCounts: countObject
-    });
-    await newGlobal.save();
-  } else {
-    for (const command of collections.commands.keys()) {
-      if (!global.cmdCounts.has(command)) {
-        global.cmdCounts.set(command, 0);
-        await global.save();
-      }
-    }
-  }
-
-  // generate docs
-  if (helpGenerator) {
-    await helpGenerator(process.env.OUTPUT);
-  }
-
-  // set activity (a.k.a. the gamer code)
-  (async function activityChanger() {
-    client.editStatus("dnd", {
-      name: `${misc.random(messages)} | @esmBot help`,
-    });
-    setTimeout(activityChanger, 900000);
-  })();
-
   // add gm extensions
   gm.prototype.writePromise = promisify(gm.prototype.write);
   gm.prototype.streamPromise = promisify(gm.prototype.stream);
@@ -129,7 +54,86 @@ module.exports = async () => {
     });
   };
 
-  if (!soundPlayer.status) await soundPlayer.connect();
+  if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
+
+  // make sure settings/tags exist
+  for (const [id] of client.guilds) {
+    const guildDB = (
+      await database.guilds
+        .findOne({
+          id: id,
+        })
+        .exec()
+    );
+    if (!guildDB) {
+      logger.log(`Registering guild database entry for guild ${id}...`);
+      const newGuild = new database.guilds({
+        id: id,
+        tags: misc.tagDefaults,
+        prefix: "&",
+        warns: {},
+        disabledChannels: []
+      });
+      await newGuild.save();
+    } else if (guildDB) {
+      if (!guildDB.warns) {
+        logger.log(`Creating warn object for guild ${id}...`);
+        guildDB.set("warns", {});
+        await guildDB.save();
+      } else if (!guildDB.disabledChannels) {
+        logger.log(`Creating disabled channels object for guild ${id}...`);
+        guildDB.set("disabledChannels", []);
+        await guildDB.save();
+      }
+    }
+  }
+
+  if (!run) {
+    const job = new cron.CronJob("0 0 * * 0", async () => {
+      logger.log("Deleting stale guild entries in database...");
+      const guildDB = (await database.guilds.find({}).exec());
+      for (const { id } of guildDB) {
+        if (!client.guilds.get(id)) {
+          await database.guilds.deleteMany({ id: id });
+          logger.log(`Deleted entry for guild ID ${id}.`);
+        }
+      }
+      logger.log("Finished deleting stale entries.");
+    });
+    job.start();
+  }
+
+  const global = (await database.global.findOne({}).exec());
+  if (!global) {
+    const countObject = {};
+    for (const command of collections.commands.keys()) {
+      countObject[command] = 0;
+    }
+    const newGlobal = new database.global({
+      cmdCounts: countObject
+    });
+    await newGlobal.save();
+  } else {
+    for (const command of collections.commands.keys()) {
+      if (!global.cmdCounts.has(command)) {
+        global.cmdCounts.set(command, 0);
+        await global.save();
+      }
+    }
+  }
+
+  // generate docs
+  if (helpGenerator) {
+    await helpGenerator(process.env.OUTPUT);
+  }
+
+  // set activity (a.k.a. the gamer code)
+  (async function activityChanger() {
+    client.editStatus("dnd", {
+      name: `${misc.random(messages)} | @esmBot help`,
+    });
+    setTimeout(activityChanger, 900000);
+  })();
 
   // tweet stuff
   if (twitter !== null && twitter.active === false) {
@@ -195,8 +199,6 @@ module.exports = async () => {
     });
   }
 
-  logger.log(
-    "info",
-    `Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`
-  );
+  logger.log(`Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
+  run = true;
 };

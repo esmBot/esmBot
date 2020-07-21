@@ -4,7 +4,7 @@ const moment = require("moment");
 require("moment-duration-format");
 const os = require("os");
 
-exports.run = async (message) => {
+exports.run = async () => {
   const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
   const embed = {
     embed: {

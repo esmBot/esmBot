@@ -20,7 +20,7 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && !message.member.permission.has("administrator") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       tags.set(args[1].toLowerCase(), undefined);
       await guild.save();
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;

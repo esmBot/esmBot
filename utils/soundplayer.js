@@ -10,6 +10,7 @@ const nodes = [
 let manager;
 
 exports.status = false;
+exports.connected = false;
 
 exports.checkStatus = async () => {
   const statuses = [];
@@ -32,6 +33,7 @@ exports.connect = async () => {
   });
   const { length } = await manager.connect();
   logger.log(`Successfully connected to ${length} Lavalink node(s).`);
+  exports.connected = true;
   manager.on("error", (error, node) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });
@@ -53,12 +55,14 @@ exports.play = async (sound, message) => {
     await connection.play(tracks[0].track);
     connection.on("error", (error) => {
       manager.leave(voiceChannel.guild.id);
+      connection.destroy();
       playingMessage.delete();
       logger.error(error);
     });
     connection.once("end", (data) => {
       if (data.reason === "REPLACED") return;
       manager.leave(voiceChannel.guild.id);
+      connection.destroy();
       playingMessage.delete();
     });
   } else {
