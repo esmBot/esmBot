@@ -12,6 +12,7 @@ const helpGenerator =
   process.env.OUTPUT !== "" ? require("../utils/help.js") : null;
 const twitter =
   process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
+const first = process.env.PMTWO === "true" ? process.env.NODE_APP_INSTANCE === "0" : true;
 let run = false;
 
 // run when ready
@@ -65,7 +66,7 @@ module.exports = async () => {
     }
   }
 
-  if (!run) {
+  if (!run && first) {
     const job = new cron.CronJob("0 0 * * 0", async () => {
       logger.log("Deleting stale guild entries in database...");
       const guildDB = await database.query("SELECT * FROM guilds");
@@ -100,7 +101,7 @@ module.exports = async () => {
   }
 
   // generate docs
-  if (helpGenerator) await helpGenerator(process.env.OUTPUT);
+  if (helpGenerator && first) await helpGenerator(process.env.OUTPUT);
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {
@@ -111,7 +112,7 @@ module.exports = async () => {
   })();
 
   // tweet stuff
-  if (twitter !== null && twitter.active === false) {
+  if (twitter !== null && twitter.active === false && first) {
     const blocks = await twitter.client.blocks.ids();
     const tweet = async () => {
       const tweetContent = await misc.getTweet(twitter.tweets);
@@ -158,6 +159,7 @@ module.exports = async () => {
     }
   }
 
+  if (process.env.PMTWO === "true") process.send("ready");
   logger.log(`Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
   run = true;
 };

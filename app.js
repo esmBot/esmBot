@@ -44,6 +44,20 @@ async function init() {
   if (process.env.NODE_ENV === "production") {
     require("./utils/dbl.js");
   }
+
+  // handle ctrl+c and pm2 stop
+  process.on("SIGINT", () => {
+    logger.log("info", "SIGINT detected, shutting down...");
+    client.editStatus("dnd", {
+      name: "Restarting/shutting down..."
+    });
+    for (const command of commands) {
+      handler.unload(command);
+    }
+    client.disconnect();
+    require("./utils/database.js").end();
+    process.exit(0);
+  });
 }
 
 // launch the bot
