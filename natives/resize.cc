@@ -5,11 +5,11 @@
 using namespace std;
 using namespace Magick;
 
-class BlurWorker : public Napi::AsyncWorker {
+class ResizeWorker : public Napi::AsyncWorker {
  public:
-  BlurWorker(Napi::Function& callback, string in_path, bool sharp, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), sharp(sharp), type(type), delay(delay) {}
-  ~BlurWorker() {}
+  ResizeWorker(Napi::Function& callback, string in_path, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
+  ~ResizeWorker() {}
 
   void Execute() {
     list<Image> frames;
@@ -20,11 +20,8 @@ class BlurWorker : public Napi::AsyncWorker {
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      if (sharp) {
-        image.sharpen(10, 3);
-      } else {
-        image.blur(15);
-      }
+      image.scale(Geometry("10%"));
+      image.scale(Geometry("1000%"));
       image.magick(type);
       blurred.push_back(image);
     }
@@ -40,23 +37,21 @@ class BlurWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n;
+  int delay, wordlength, i, n, amount;
   size_t bytes, type_size;
   Blob blob;
-  bool sharp;
 };
 
-Napi::Value Blur(const Napi::CallbackInfo &info)
+Napi::Value Resize(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
   string in_path = info[0].As<Napi::String>().Utf8Value();
-  bool sharp = info[1].As<Napi::Boolean>().Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  string type = info[1].As<Napi::String>().Utf8Value();
+  int delay = info[2].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[3].As<Napi::Function>();
 
-  BlurWorker* blurWorker = new BlurWorker(cb, in_path, sharp, type, delay);
-  blurWorker->Queue();
+  ResizeWorker* explodeWorker = new ResizeWorker(cb, in_path, type, delay);
+  explodeWorker->Queue();
   return env.Undefined();
 }

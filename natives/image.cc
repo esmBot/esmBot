@@ -18,6 +18,12 @@
 #include "magik.h"
 #include "meme.h"
 #include "mirror.h"
+#include "motivate.h"
+#include "resize.h"
+#include "reverse.h"
+#include "scott.h"
+#include "speed.h"
+#include "sonic.h"
 #include "watermark.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
@@ -41,6 +47,12 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "magik"), Napi::Function::New(env, Magik));
   exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
   exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
+  exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
+  exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
+  exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
+  exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
+  exports.Set(Napi::String::New(env, "speed"), Napi::Function::New(env, Speed));
+  exports.Set(Napi::String::New(env, "sonic"), Napi::Function::New(env, Sonic));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
   return exports;
 }

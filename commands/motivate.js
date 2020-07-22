@@ -1,6 +1,5 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 
 exports.run = async (message, args) => {
   const image = await require("../utils/imagedetect.js")(message);
@@ -9,26 +8,10 @@ exports.run = async (message, args) => {
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a motivational poster!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
-  const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.miff`;
-  const text = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
-  const text2 = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
-  const buffer = await gm().in("(").in(image.path).coalesce().scale(500, 500).borderColor("black").border(5, 5).out(")").borderColor("white").border(3, 3).bufferPromise("miff", image.delay);
-  await gm(buffer).coalesce().background("black").gravity("Center").extent(600, "%[fx:s.h+50]").writePromise(file);
-  const size2 = await gm(file).sizePromise();
-  await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(56).gravity("Center").out(`pango:${topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}`).gravity("South").out("-splice", bottomText ? "0x0" : "0x20").writePromise(text);
-  const size3 = await gm(text).sizePromise();
-  const command2 = gm(file).gravity("North").coalesce().extent(600, size2.height + size3.height).out("null:", "(", text, "-set", "page", `+0+${size2.height}`, ")", "-layers", "composite");
-  let resultBuffer;
-  if (bottomText) {
-    await gm().background("black").out("-size", "600").fill("white").font("Times").pointSize(28).gravity("Center").out(`pango:${bottomText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;")}`).gravity("South").out("-splice", "0x20").writePromise(text2);
-    const size4 = await gm(text2).sizePromise();
-    resultBuffer = await gm(await command2.bufferPromise(image.type, image.delay)).gravity("North").coalesce().extent(600, size2.height + size3.height + size4.height).out("null:", "(", text2, "-set", "page", `+0+${size2.height + size3.height}`, ")", "-layers", "composite").bufferPromise(image.type, image.delay);
-  } else {
-    resultBuffer = await command2.bufferPromise(image.type, image.delay);
-  }
+  const buffer = await promisify(magick.motivate)(image.path, topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;"), bottomText ? bottomText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;") : "", image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
   processMessage.delete();
   return {
-    file: resultBuffer,
+    file: buffer,
     name: `motivate.${image.type}`
   };
 };

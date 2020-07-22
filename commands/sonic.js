@@ -1,16 +1,14 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 const wrap = require("../utils/wrap.js");
 
 exports.run = async (message, args) => {
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a Sonic meme!`;
   message.channel.sendTyping();
-  const template = "./assets/images/sonic.jpg";
-  const file = `/tmp/${Math.random().toString(36).substring(2, 15)}.png`;
   const cleanedMessage = args.join(" ").replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;");
-  await gm(474, 332).out("+size").background("none").gravity("Center").out("-pointsize", 72).out("-font", "Bitstream Vera Sans").out(`pango:<span foreground="white">${wrap(cleanedMessage, {width: 15, indent: ""})}</span>`).writePromise(file);
-  const buffer = await gm(template).composite(file).gravity("Center").geometry("474x332+160+10").bufferPromise("png", null, "sonic");
+  /*await gm(474, 332).out("+size").background("none").gravity("Center").out("-pointsize", 72).out("-font", "Bitstream Vera Sans").out(`pango:<span foreground="white">${wrap(cleanedMessage, {width: 15, indent: ""})}</span>`).writePromise(file);
+  const buffer = await gm(template).composite(file).gravity("Center").geometry("474x332+160+10").bufferPromise("png", null, "sonic");*/
+  const buffer = await promisify(magick.sonic)(wrap(cleanedMessage, {width: 15, indent: ""}));
   return {
     file: buffer,
     name: "sonic.png"

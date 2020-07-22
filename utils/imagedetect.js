@@ -32,7 +32,7 @@ const typeCheck = async (image, image2, gifv = false) => {
         path: path,
         url: image2
       };
-      if (gifv) payload.delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${path}`)).stdout.replace("\n", "");
+      if (payload.type === "gif") payload.delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${path}`)).stdout.replace("\n", "");
       return payload;
     } else {
       // if not, then return false
