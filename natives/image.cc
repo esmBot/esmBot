@@ -4,6 +4,7 @@
 #include "caption.h"
 #include "caption2.h"
 #include "circle.h"
+#include "crop.h"
 #include "explode.h"
 #include "flag.h"
 #include "flip.h"
@@ -39,6 +40,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
   exports.Set(Napi::String::New(env, "captionTwo"), Napi::Function::New(env, CaptionTwo));
   exports.Set(Napi::String::New(env, "circle"), Napi::Function::New(env, Circle));
+  exports.Set(Napi::String::New(env, "crop"), Napi::Function::New(env, Crop));
   exports.Set(Napi::String::New(env, "explode"), Napi::Function::New(env, Explode));
   exports.Set(Napi::String::New(env, "flag"), Napi::Function::New(env, Flag));
   exports.Set(Napi::String::New(env, "flip"), Napi::Function::New(env, Flip));

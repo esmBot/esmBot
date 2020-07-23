@@ -1,4 +1,5 @@
 #include <napi.h>
+#include <iostream>
 #include <list>
 #include <Magick++.h>
 
@@ -7,20 +8,18 @@ using namespace Magick;
 
 class FreezeWorker : public Napi::AsyncWorker {
  public:
-  FreezeWorker(Napi::Function& callback, string in_path, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), type(type), delay(delay) {}
+  FreezeWorker(Napi::Function& callback, string in_path, bool loop, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), loop(loop), type(type), delay(delay) {}
   ~FreezeWorker() {}
 
   void Execute() {
     list<Image> frames;
-    list<Image> result;
     readImages(&frames, in_path);
 
-    for_each(frames.begin(), frames.end(), animationIterationsImage(1)); 
+    for_each(frames.begin(), frames.end(), animationIterationsImage(loop ? 0 : 1));
 
-    optimizeImageLayers(&result, frames.begin(), frames.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    if (delay != 0) for_each(frames.begin(), frames.end(), animationDelayImage(delay));
+    writeImages(frames.begin(), frames.end(), &blob);
   }
 
   void OnOK() {
@@ -32,6 +31,7 @@ class FreezeWorker : public Napi::AsyncWorker {
   int delay, wordlength, i, n;
   size_t bytes, type_size;
   Blob blob;
+  bool loop;
 };
 
 Napi::Value Freeze(const Napi::CallbackInfo &info)
@@ -39,11 +39,12 @@ Napi::Value Freeze(const Napi::CallbackInfo &info)
   Napi::Env env = info.Env();
 
   string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  bool loop = info[1].As<Napi::Boolean>().Value();
+  string type = info[2].As<Napi::String>().Utf8Value();
+  int delay = info[3].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[4].As<Napi::Function>();
 
-  FreezeWorker* blurWorker = new FreezeWorker(cb, in_path, type, delay);
+  FreezeWorker* blurWorker = new FreezeWorker(cb, in_path, loop, type, delay);
   blurWorker->Queue();
   return env.Undefined();
 }

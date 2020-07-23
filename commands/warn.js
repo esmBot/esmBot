@@ -25,7 +25,6 @@ exports.run = async (message, args) => {
       if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
       const warnArray = [];
       for (const [i, value] of array.entries()) {
-        console.log(value);
         warnArray.push(`**${i + 1}: Added by ${message.channel.guild.members.get(value.creator).username}#${message.channel.guild.members.get(value.creator).discriminator}**: ${value.message} (${new Date(value.time).toUTCString()})`);
       }
       const pageSize = 15;

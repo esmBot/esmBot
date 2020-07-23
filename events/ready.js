@@ -55,7 +55,7 @@ module.exports = async () => {
   } else {
     for (const command of collections.commands.keys()) {
       const count = await database.query("SELECT * FROM counts WHERE command = $1", [command]);
-      if (!count) {
+      if (!count.rows[0]) {
         await database.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
       }
     }
