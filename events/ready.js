@@ -1,6 +1,4 @@
-const gm = require("gm");
 const cron = require("cron");
-const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const collections = require("../utils/collections.js");
@@ -17,43 +15,6 @@ let run = false;
 
 // run when ready
 module.exports = async () => {
-  // add gm extensions
-  gm.prototype.writePromise = promisify(gm.prototype.write);
-  gm.prototype.streamPromise = promisify(gm.prototype.stream);
-  gm.prototype.sizePromise = promisify(gm.prototype.size);
-  gm.prototype.identifyPromise = promisify(gm.prototype.identify);
-  gm.prototype.bufferPromise = function(format, delay, type) {
-    return new Promise((resolve, reject) => {
-      this.in(
-        delay ? "-delay" : "",
-        delay ? delay.split("/").reverse().join("x") : ""
-      )
-        .out(
-          type !== "sonic" ? "-layers" : "",
-          type !== "sonic" ? "OptimizeTransparency" : ""
-        )
-        .out(type !== "sonic" ? "-fuzz" : "", type !== "sonic" ? "2%" : "")
-        .out("+profile", "xmp")
-        .out("-limit", "memory", "64MB")
-        .out("-limit", "map", "128MB")
-        .stream(format, (err, stdout, stderr) => {
-          if (err) return reject(err);
-          const chunks = [];
-          stdout.on("data", (chunk) => {
-            chunks.push(chunk);
-          });
-          // these are 'once' because they can and do fire multiple times for multiple errors,
-          // but this is a promise so you'll have to deal with them one at a time
-          stdout.once("end", () => {
-            resolve(Buffer.concat(chunks));
-          });
-          stderr.once("data", (data) => {
-            reject(data.toString());
-          });
-        });
-    });
-  };
-
   // connect to lavalink
   if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
 

@@ -1,8 +1,8 @@
 #include <napi.h>
 #include "blur.h"
 #include "blurple.h"
-//#include "caption.h"
-//#include "caption2.h"
+#include "caption.h"
+#include "caption2.h"
 #include "circle.h"
 #include "explode.h"
 #include "flag.h"
@@ -28,14 +28,16 @@
 #include "spin.h"
 #include "tile.h"
 #include "trump.h"
+#include "wall.h"
+#include "wdt.h"
 #include "watermark.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   exports.Set(Napi::String::New(env, "blur"), Napi::Function::New(env, Blur));
   exports.Set(Napi::String::New(env, "blurple"), Napi::Function::New(env, Blurple));
-  //exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
-  //exports.Set(Napi::String::New(env, "captionTwo"), Napi::Function::New(env, CaptionTwo));
+  exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
+  exports.Set(Napi::String::New(env, "captionTwo"), Napi::Function::New(env, CaptionTwo));
   exports.Set(Napi::String::New(env, "circle"), Napi::Function::New(env, Circle));
   exports.Set(Napi::String::New(env, "explode"), Napi::Function::New(env, Explode));
   exports.Set(Napi::String::New(env, "flag"), Napi::Function::New(env, Flag));
@@ -61,6 +63,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "swirl"), Napi::Function::New(env, Swirl));
   exports.Set(Napi::String::New(env, "tile"), Napi::Function::New(env, Tile));
   exports.Set(Napi::String::New(env, "trump"), Napi::Function::New(env, Trump));
+  exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
+  exports.Set(Napi::String::New(env, "wdt"), Napi::Function::New(env, Wdt));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
   return exports;
 }

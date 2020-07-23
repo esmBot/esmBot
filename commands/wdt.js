@@ -1,13 +1,11 @@
-const gm = require("gm").subClass({
-  imageMagick: true
-});
+const magick = require("../build/Release/image.node");
+const { promisify } = require("util");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a "who did this" meme!`;
-  const template = "./assets/images/whodidthis.png";
-  const buffer = await gm(template).out("null:").out("(").out(image.path).coalesce().out(")").gravity("Center").resize("374x374>").out("-layers", "composite").bufferPromise(image.type, image.delay);
+  const buffer = await promisify(magick.wdt)(image.path, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
   return {
     file: buffer,
     name: `wdt.${image.type}`

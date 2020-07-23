@@ -7,8 +7,8 @@ using namespace Magick;
 
 class ResizeWorker : public Napi::AsyncWorker {
  public:
-  ResizeWorker(Napi::Function& callback, string in_path, bool stretch, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), stretch(stretch), type(type), delay(delay) {}
+  ResizeWorker(Napi::Function& callback, string in_path, bool stretch, bool wide, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), stretch(stretch), wide(wide), type(type), delay(delay) {}
   ~ResizeWorker() {}
 
   void Execute() {
@@ -22,6 +22,8 @@ class ResizeWorker : public Napi::AsyncWorker {
     for (Image &image : coalesced) {
       if (stretch) {
         image.resize(Geometry("512x512!"));
+      } else if (wide) {
+        image.resize(Geometry(to_string((image.baseColumns() * 19) / 2) + "x" + to_string(image.baseRows() / 2) + "!"));
       } else {
         image.scale(Geometry("10%"));
         image.scale(Geometry("1000%"));
@@ -44,7 +46,7 @@ class ResizeWorker : public Napi::AsyncWorker {
   int delay, wordlength, i, n, amount;
   size_t bytes, type_size;
   Blob blob;
-  bool stretch;
+  bool stretch, wide;
 };
 
 Napi::Value Resize(const Napi::CallbackInfo &info)
@@ -53,11 +55,12 @@ Napi::Value Resize(const Napi::CallbackInfo &info)
 
   string in_path = info[0].As<Napi::String>().Utf8Value();
   bool stretch = info[1].As<Napi::Boolean>().Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  bool wide = info[2].As<Napi::Boolean>().Value();
+  string type = info[3].As<Napi::String>().Utf8Value();
+  int delay = info[4].As<Napi::Number>().Int32Value();
+  Napi::Function cb = info[5].As<Napi::Function>();
 
-  ResizeWorker* explodeWorker = new ResizeWorker(cb, in_path, stretch, type, delay);
+  ResizeWorker* explodeWorker = new ResizeWorker(cb, in_path, stretch, wide, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }
