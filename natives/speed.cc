@@ -1,5 +1,6 @@
 #include <napi.h>
 #include <list>
+#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -16,7 +17,14 @@ class SpeedWorker : public Napi::AsyncWorker {
     list<Image> blurred;
     readImages(&frames, in_path);
     
-    for_each(frames.begin(), frames.end(), animationDelayImage(slow ? delay * 2 : delay / 2));
+    int new_delay = slow ? delay * 2 : delay / 2;
+    if (new_delay <= 1) {
+      new_delay = delay;
+      auto it = frames.begin();
+      while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
+    } else {
+      for_each(frames.begin(), frames.end(), animationDelayImage(new_delay));
+    }
 
     writeImages(frames.begin(), frames.end(), &blob);
   }
