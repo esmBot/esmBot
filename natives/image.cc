@@ -21,6 +21,7 @@
 #include "mirror.h"
 #include "misc.h"
 #include "motivate.h"
+#include "qr.h"
 #include "resize.h"
 #include "reverse.h"
 #include "scott.h"
@@ -56,6 +57,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
   exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
   exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
+  exports.Set(Napi::String::New(env, "qrread"), Napi::Function::New(env, QrRead));
   exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
   exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
   exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
