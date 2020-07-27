@@ -20,21 +20,38 @@ module.exports = async () => {
 
   // make sure settings/tags exist
   for (const [id] of client.guilds) {
-    const guildDB = await database.query("SELECT * FROM guilds WHERE guild_id = $1", [id]);
-    if (guildDB.rows.length === 0) {
+    const guildDB = await database.guilds.findOne({id: id});
+    if (!guildDB) {
       logger.log(`Registering guild database entry for guild ${id}...`);
-      await database.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled) VALUES ($1, $2, $3, $4, $5)", [id, misc.tagDefaults, "&", {}, []]);
+      const newGuild = new database.guilds({
+        id: id,
+        tags: misc.tagDefaults,
+        prefix: "&",
+        warns: {},
+        disabledChannels: []
+      });
+      await newGuild.save();
+    } else if (guildDB) {
+      if (!guildDB.warns) {
+        logger.log(`Creating warn object for guild ${id}...`);
+        guildDB.set("warns", {});
+        await guildDB.save();
+      } else if (!guildDB.disabledChannels) {
+        logger.log(`Creating disabled channels object for guild ${id}...`);
+        guildDB.set("disabledChannels", []);
+        await guildDB.save();
+      }
     }
   }
 
   if (!run && first) {
     const job = new cron.CronJob("0 0 * * 0", async () => {
       logger.log("Deleting stale guild entries in database...");
-      const guildDB = await database.query("SELECT * FROM guilds");
-      for (const { guild_id } of guildDB.rows) {
-        if (!client.guilds.get(guild_id)) {
-          await database.query("DELETE FROM guilds WHERE guild_id = $1", [guild_id]);
-          logger.log(`Deleted entry for guild ID ${guild_id}.`);
+      const guildDB = await database.guilds.find({});
+      for (const { id } of guildDB) {
+        if (!client.guilds.get(id)) {
+          await database.guilds.deleteMany({ id: id });
+          logger.log(`Deleted entry for guild ID ${id}.`);
         }
       }
       logger.log("Finished deleting stale entries.");
@@ -42,21 +59,21 @@ module.exports = async () => {
     job.start();
   }
 
-  let counts;
-  try {
-    counts = await database.query("SELECT * FROM counts");
-  } catch {
-    counts = { rows: [] };
-  }
-  if (!counts.rows[0]) {
+  const global = await database.global.findOne({});
+  if (!global) {
+    const countObject = {};
     for (const command of collections.commands.keys()) {
-      await database.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+      countObject[command] = 0;
     }
+    const newGlobal = new database.global({
+      cmdCounts: countObject
+    });
+    await newGlobal.save();
   } else {
     for (const command of collections.commands.keys()) {
-      const count = await database.query("SELECT * FROM counts WHERE command = $1", [command]);
-      if (!count.rows[0]) {
-        await database.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+      if (!global.cmdCounts.has(command)) {
+        global.cmdCounts.set(command, 0);
+        await global.save();
       }
     }
   }

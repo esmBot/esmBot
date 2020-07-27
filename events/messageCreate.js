@@ -16,9 +16,9 @@ module.exports = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   // prefix can be a mention or a set of special characters
-  const guildDB = await database.query("SELECT * FROM guilds WHERE guild_id = $1", [message.channel.guild.id]);
+  const guildDB = await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec();
   const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.rows[0].prefix;
+  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.prefix;
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
@@ -30,7 +30,7 @@ module.exports = async (message) => {
   const command = args.shift().toLowerCase();
 
   // don't run if message is in a disabled channel
-  if (guildDB.rows[0].disabled && guildDB.rows[0].disabled.includes(message.channel.id) && command != "channel") return;
+  if (guildDB.disabledChannels && guildDB.disabledChannels.includes(message.channel.id) && command != "channel") return;
 
   // check if command exists
   const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));
@@ -39,8 +39,10 @@ module.exports = async (message) => {
   // actually run the command
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
-    const count = await database.query("SELECT * FROM counts WHERE command = $1", [collections.aliases.has(command) ? collections.aliases.get(command) : command]);
-    await database.query("UPDATE counts SET count = $1 WHERE command = $2", [count.rows[0].count + 1, collections.aliases.has(command) ? collections.aliases.get(command) : command]);
+    const global = (await database.global.findOne({}).exec());
+    const count = global.cmdCounts.get(collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, parseInt(count) + 1);
+    await global.save();
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);

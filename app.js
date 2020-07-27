@@ -55,8 +55,9 @@ async function init() {
       handler.unload(command);
     }
     client.disconnect();
-    require("./utils/database.js").end();
-    process.exit(0);
+    require("./utils/database.js").connection.close(() => {
+      process.exit(0);
+    });
   });
 }
 

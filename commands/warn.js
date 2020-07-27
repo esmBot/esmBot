@@ -7,8 +7,8 @@ exports.run = async (message, args) => {
   const memberCheck = message.mentions.length >= 1 ? message.mentions[0] : client.users.get(args[0]);
   const member = memberCheck ? memberCheck : client.users.get(args[0].replace(/\D/g, ""));
   if (member) {
-    const guildDB = await database.query("SELECT * FROM guilds WHERE guild_id = $1", [message.channel.guild.id]);
-    const array = guildDB.rows[0].warns[member.id] ? guildDB.rows[0].warns[member.id] : [];
+    const guild = await database.guilds.findOne({ id: message.channel.guild.id });
+    const array = guild.warns.get(member.id) ? guild.warns.get(member.id).warns : [];
     if (args[1].toLowerCase() !== "list") {
       args.shift();
       array.push({
@@ -16,8 +16,11 @@ exports.run = async (message, args) => {
         time: new Date(),
         creator: message.author.id
       });
-      guildDB.rows[0].warns[member.id] = array;
-      await database.query("UPDATE guilds SET warns = $1 WHERE guild_id = $2", [guildDB.rows[0].warns, message.channel.guild.id]);
+      guild.warns.set(member.id, {
+        count: (guild.warns.get(member.id) ? guild.warns.get(member.id).count : 0) + 1,
+        warns: array
+      });
+      await guild.save();
       //await message.channel.guild.banMember(member.id, 0, `ban command used by @${message.author.username}#${message.author.discriminator}`);
       return `Successfully warned ${member.mention} for \`${args.join(" ")}\`.`;
     } else {
@@ -25,7 +28,7 @@ exports.run = async (message, args) => {
       if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
       const warnArray = [];
       for (const [i, value] of array.entries()) {
-        warnArray.push(`**${i + 1}: Added by ${message.channel.guild.members.get(value.creator).username}#${message.channel.guild.members.get(value.creator).discriminator}**: ${value.message} (${new Date(value.time).toUTCString()})`);
+        warnArray.push(`**${i + 1}: Added by ${message.channel.guild.members.get(value.creator).username}#${message.channel.guild.members.get(value.creator).discriminator}**: ${value.message} (${value.time.toUTCString()})`);
       }
       const pageSize = 15;
       const embeds = [];
