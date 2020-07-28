@@ -55,8 +55,7 @@ class CaptionWorker : public Napi::AsyncWorker {
 
  private:
   string caption, in_path, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

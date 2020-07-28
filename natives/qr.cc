@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <iostream>
 #include <ZXing/ReadBarcode.h>
 #include <ZXing/TextUtfEncoding.h>
 

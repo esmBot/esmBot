@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <iostream>
 #include <list>
 #include <Magick++.h>
 
@@ -67,8 +66,7 @@ class MemeWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type, text_top, text_bottom;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

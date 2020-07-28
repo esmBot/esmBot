@@ -1,6 +1,5 @@
 #include <napi.h>
 #include <list>
-#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -70,8 +69,7 @@ class MotivateWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type, top_text, bottom_text;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

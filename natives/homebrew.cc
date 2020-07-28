@@ -1,6 +1,4 @@
 #include <napi.h>
-#include <list>
-#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -30,9 +28,7 @@ class HomebrewWorker : public Napi::AsyncWorker {
   }
 
  private:
-  string text, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  string text;
   Blob blob;
 };
 

@@ -33,8 +33,7 @@ class SonicWorker : public Napi::AsyncWorker {
 
  private:
   string text, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

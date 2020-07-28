@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <iostream>
 #include <list>
 #include <Magick++.h>
 
@@ -28,8 +27,7 @@ class FreezeWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
   bool loop;
 };

@@ -59,8 +59,7 @@ class WatermarkWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, water_path, type;
-  int delay, wordlength, i, n, gravity;
-  size_t bytes, type_size;
+  int delay, gravity;
   Blob blob;
   bool resize, append, mc;
 };

@@ -36,8 +36,7 @@ class InvertWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

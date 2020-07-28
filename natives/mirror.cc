@@ -62,8 +62,7 @@ class MirrorWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  int delay;
   bool vertical, first;
   Blob blob;
 };

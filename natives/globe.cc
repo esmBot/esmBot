@@ -1,6 +1,5 @@
 #include <napi.h>
 #include <list>
-#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -59,8 +58,7 @@ class GlobeWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, n;
-  size_t bytes, type_size;
+  int delay;
   Blob blob;
 };
 

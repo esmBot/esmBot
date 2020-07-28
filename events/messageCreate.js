@@ -2,7 +2,6 @@ const fs = require("fs");
 const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
-const misc = require("../utils/misc.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
 
@@ -24,8 +23,7 @@ module.exports = async (message) => {
   if (message.content.startsWith(prefix) === false) return;
 
   // separate commands and args
-  const prefixRegex = new RegExp(`^(${misc.regexEscape(prefix)})`);
-  const content = message.content.replace(prefixRegex, "").trim();
+  const content = message.content.substring(prefix.length).trim();
   const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
 

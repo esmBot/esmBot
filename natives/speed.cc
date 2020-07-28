@@ -1,6 +1,5 @@
 #include <napi.h>
 #include <list>
-#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -35,8 +34,7 @@ class SpeedWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n, amount;
-  size_t bytes, type_size;
+  int delay, amount;
   Blob blob;
   bool slow;
 };

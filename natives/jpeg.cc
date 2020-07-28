@@ -1,6 +1,4 @@
 #include <napi.h>
-#include <list>
-#include <iostream>
 #include <Magick++.h>
 
 using namespace std;
@@ -25,9 +23,7 @@ class JpegWorker : public Napi::AsyncWorker {
   }
 
  private:
-  string in_path, type;
-  int delay, wordlength, i, n;
-  size_t bytes, type_size;
+  string in_path;
   Blob blob;
 };
 

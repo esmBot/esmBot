@@ -43,8 +43,7 @@ class ResizeWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, i, n, amount;
-  size_t bytes, type_size;
+  int delay, amount;
   Blob blob;
   bool stretch, wide;
 };
