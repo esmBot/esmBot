@@ -52,7 +52,7 @@ class SpinWorker : public Napi::AsyncWorker {
 
  private:
   string in_path, type;
-  int delay, wordlength, n;
+  int delay;
   Blob blob;
 };
 

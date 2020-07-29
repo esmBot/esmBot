@@ -20,7 +20,6 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
     readImages(&frames, in_path);
 
     size_t width = frames.front().baseColumns();
-    size_t height = frames.front().baseRows();
     string query(to_string(width - ((width / 25) * 2)) + "x");
     Image caption_image(Geometry(query), Color("white"));
     caption_image.fillColor("black");
@@ -31,7 +30,6 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
     
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    int iterator = 0;
     for (Image &image : coalesced) {
       Image appended;
       list<Image> images;

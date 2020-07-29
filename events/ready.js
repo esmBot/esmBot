@@ -70,12 +70,19 @@ module.exports = async () => {
     });
     await newGlobal.save();
   } else {
+    const exists = [];
     for (const command of collections.commands.keys()) {
       if (!global.cmdCounts.has(command)) {
         global.cmdCounts.set(command, 0);
-        await global.save();
+      }
+      exists.push(command);
+    }
+    for (const command of global.cmdCounts.keys()) {
+      if (!exists.includes(command)) {
+        global.cmdCounts.set(command, undefined);
       }
     }
+    await global.save();
   }
 
   // generate docs

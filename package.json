@@ -4,9 +4,10 @@
   "description": "A Discord bot with miscellaneous features",
   "main": "app.js",
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "scripts": {
+    "build": "node-gyp configure build",
     "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
     "docker:run-ss": "docker run --rm --shm-size=128m headless-chrome-alpine",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev"

@@ -10,14 +10,16 @@ exports.run = async (message, args) => {
   const commands = collections.commands;
   const aliases = collections.aliases;
   if (args.length !== 0 && (commands.has(args[0].toLowerCase()) || aliases.has(args[0].toLowerCase()))) {
-    const info = aliases.has(args[0].toLowerCase()) ? collections.info.get(collections.aliases.get(args[0].toLowerCase())) : collections.info.get(args[0].toLowerCase());
+    const command = aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase();
+    const info = collections.info.get(command);
+    const counts = (await database.global.findOne({})).cmdCounts;
     const embed = {
       "embed": {
         "author": {
           "name": "esmBot Help",
           "icon_url": client.user.avatarURL
         },
-        "title": `${guild.prefix}${aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase()}`,
+        "title": `${guild.prefix}${command}`,
         "url": "https://projectlounge.pw/esmBot/help.html",
         "description": info.description,
         "color": 16711680,
@@ -25,8 +27,13 @@ exports.run = async (message, args) => {
           "name": "Aliases",
           "value": info.aliases ? info.aliases.join(", ") : "None"
         }, {
+          "name": "Times Used",
+          "value": counts.get(command),
+          "inline": true
+        }, {
           "name": "Parameters",
-          "value": info.params ? info.params : "None"
+          "value": info.params ? info.params : "None",
+          "inline": true
         }]
       }
     };
