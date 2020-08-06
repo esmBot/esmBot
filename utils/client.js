@@ -2,7 +2,6 @@
 const { Client } = require("eris");
 const client = new Client(process.env.TOKEN, {
   disableEvents: {
-    CHANNEL_CREATE: true,
     CHANNEL_DELETE: true,
     CHANNEL_UPDATE: true,
     GUILD_BAN_REMOVE: true,
