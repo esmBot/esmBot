@@ -1,5 +1,6 @@
 const magick = require("../build/Release/image.node");
 const { promisify } = require("util");
+const { clean } = require("../utils/misc.js");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
@@ -7,7 +8,7 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const {qrText, missing} = await promisify(magick.qrread)(image.path);
   if (missing) return `${message.author.mention}, I couldn't find a QR code!`;
-  return `\`\`\`\n${qrText}\n\`\`\``;
+  return `\`\`\`\n${await clean(qrText)}\n\`\`\``;
 };
 
 exports.category = 1;

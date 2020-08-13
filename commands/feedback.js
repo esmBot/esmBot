@@ -1,7 +1,9 @@
 const client = require("../utils/client.js");
+const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
 
 exports.run = async (message, args) => {
   if (args.length !== 0) {
+    if (regex.test(args.join(" "))) return `${message.author.mention}, you can't send a message containing a URL. If you want to report an issue, please join the esmBot Support server instead.`;
     const feedbackChannel = client.guilds.get("592399417676529688").channels.get("592429860769497098");
     feedbackChannel.createMessage({
       embed: {

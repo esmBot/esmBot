@@ -12,7 +12,7 @@ const typeCheck = async (image, image2, gifv = false) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
-  }, 15000);
+  }, 25000);
   try {
     const imageRequest = await fetch(image, { signal: controller.signal });
     const imageBuffer = await imageRequest.buffer();

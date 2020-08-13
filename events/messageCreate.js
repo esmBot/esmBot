@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
@@ -47,7 +46,7 @@ module.exports = async (message) => {
     } else if (typeof result === "object" && result.file) {
       if (result.file.length > 8388119 && process.env.TEMPDIR !== "") {
         const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-        await promisify(fs.writeFile)(`${process.env.TEMPDIR}/${filename}`, result.file);
+        await fs.promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
         await client.createMessage(message.channel.id, {
           embed: {
             color: 16711680,

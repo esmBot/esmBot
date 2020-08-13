@@ -9,6 +9,8 @@ ${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot D
 
 Default prefix is \`&\`.
 
+**Want to help support esmBot's development? Consider donating on Patreon!** https://patreon.com/TheEssem
+
 > Tip: You can get more info about a command by using \`help [command]\`.
 
 ## Table of Contents
