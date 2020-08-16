@@ -1,6 +1,7 @@
 const soundPlayer = require("../utils/soundplayer.js");
 const client = require("../utils/client.js");
 const AwaitRejoin = require("../utils/awaitrejoin.js");
+const { random } = require("../utils/misc.js");
 
 module.exports = async (member, oldChannel) => {
   const connection = soundPlayer.players.get(oldChannel.guild.id);
@@ -29,11 +30,10 @@ module.exports = async (member, oldChannel) => {
             waitMessage.delete();
             connection.player.stop(connection.originalChannel.guild.id);
           } else {
-            const randomMember = members.random();
+            const randomMember = random(members);
             soundPlayer.players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
             waitMessage.edit(`🔊 ${randomMember.mention} is the new voice channel host.`);
           }
-          
         }
       });
     }

@@ -1,4 +1,3 @@
-const cron = require("cron");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const collections = require("../utils/collections.js");
@@ -11,7 +10,6 @@ const helpGenerator =
 const twitter =
   process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
 const first = process.env.PMTWO === "true" ? process.env.NODE_APP_INSTANCE === "0" : true;
-let run = false;
 
 // run when ready
 module.exports = async () => {
@@ -42,21 +40,6 @@ module.exports = async () => {
         await guildDB.save();
       }
     }
-  }
-
-  if (!run && first) {
-    const job = new cron.CronJob("0 0 * * 0", async () => {
-      logger.log("Deleting stale guild entries in database...");
-      const guildDB = await database.guilds.find({});
-      for (const { id } of guildDB) {
-        if (!client.guilds.get(id)) {
-          await database.guilds.deleteMany({ id: id });
-          logger.log(`Deleted entry for guild ID ${id}.`);
-        }
-      }
-      logger.log("Finished deleting stale entries.");
-    });
-    job.start();
   }
 
   const global = await database.global.findOne({});
@@ -146,5 +129,4 @@ module.exports = async () => {
 
   if (process.env.PMTWO === "true") process.send("ready");
   logger.log(`Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
-  run = true;
 };

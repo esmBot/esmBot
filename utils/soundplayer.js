@@ -70,7 +70,7 @@ exports.play = async (sound, message, music = false) => {
   }
 };
 
-exports.nextSong = async (message, connection, track, info, music, voiceChannel) => {
+exports.nextSong = async (message, connection, track, info, music, voiceChannel, inQueue = false) => {
   const parts = Math.floor((0 / info.length) * 10);
   const playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
     "embed": {
@@ -99,14 +99,16 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel)
   });
   await connection.play(track);
   this.players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel });
-  connection.on("error", (error) => {
-    playingMessage.delete();
-    this.manager.leave(voiceChannel.guild.id);
-    connection.destroy();
-    this.players.delete(voiceChannel.guild.id);
-    queues.delete(voiceChannel.guild.id);
-    throw error;
-  });
+  if (inQueue) {
+    connection.on("error", (error) => {
+      playingMessage.delete();
+      this.manager.leave(voiceChannel.guild.id);
+      connection.destroy();
+      this.players.delete(voiceChannel.guild.id);
+      queues.delete(voiceChannel.guild.id);
+      logger.error(error);
+    });
+  }
   connection.once("end", async (data) => {
     if (data.reason === "REPLACED") return;
     const queue = queues.get(voiceChannel.guild.id);
@@ -121,7 +123,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel)
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
     } else {
       const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
-      this.nextSong(message, connection, newQueue[0], track, music, voiceChannel);
+      this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, true);
     }
   });
 };
@@ -143,13 +145,13 @@ exports.skip = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return client.createMessage(message.channel.id, `${message.author.mention}, I'm not in a voice channel!`);
   const player = this.players.get(message.channel.guild.id);
   if (player.host !== message.author.id) {
-    const voteCount = skipVotes.has(message.guild.id) ? skipVotes.get(message.guild.id) : 0;
+    const voteCount = skipVotes.has(message.channel.guild.id) ? skipVotes.get(message.channel.guild.id) : 0;
     if (voteCount + 1 === 3) {
       player.player.stop(message.channel.guild.id);
-      skipVotes.set(message.guild.id, 0);
+      skipVotes.set(message.channel.guild.id, 0);
     } else {
       await client.createMessage(message.channel.id, `🔊 Voted to skip song (${voteCount + 1}/3 people have voted).`);
-      skipVotes.set(message.guild.id, voteCount + 1);
+      skipVotes.set(message.channel.guild.id, voteCount + 1);
     }
   } else {
     player.player.stop(message.channel.guild.id);

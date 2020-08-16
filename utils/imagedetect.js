@@ -49,47 +49,48 @@ const typeCheck = async (image, image2, gifv = false) => {
   }
 };
 
+const checkImages = async (message) => {
+  let type;
+  // first check the embeds
+  if (message.embeds.length !== 0) {
+    // embeds can have 2 possible entries with images, we check the thumbnail first
+    if (message.embeds[0].type === "gifv") {
+      type = await typeCheck(message.embeds[0].video.url, message.embeds[0].video.url, true);
+    } else if (message.embeds[0].thumbnail) {
+      type = await typeCheck(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
+      // if there isn't a thumbnail check the image area
+    } else if (message.embeds[0].image) {
+      type = await typeCheck(message.embeds[0].image.proxy_url, message.embeds[0].image.url);
+    }
+  // then check the attachments
+  } else if (message.attachments.length !== 0) {
+    // get type of file
+    type = await typeCheck(message.attachments[0].proxy_url, message.attachments[0].url);
+    // if there's nothing in the attachments check the urls in the message if there are any
+  } else if (urlRegex.test(message.content)) {
+    // get url
+    const url = message.content.match(urlRegex);
+    // get type of file
+    type = await typeCheck(url[0], url[0]);
+  }
+  // if the file is an image then return it
+  return type ? type : false;
+};
+
 // this checks for the latest message containing an image and returns the url of the image
 module.exports = async (cmdMessage) => {
-  // we start by getting the messages
+  // we start by checking the current message for images
+  const result = await checkImages(cmdMessage);
+  if (result !== false) return result;
+  // if there aren't any then iterate over the last few messages in the channel
   const messages = await cmdMessage.channel.getMessages();
   // iterate over each message
   for (const message of messages) {
-    // check the attachments first
-    if (message.embeds.length !== 0) {
-      // embeds can have 2 possible entries with images, we check the thumbnail first
-      if (message.embeds[0].type === "gifv") {
-        const type = await typeCheck(message.embeds[0].video.url, message.embeds[0].video.url, true);
-        if (type === false) continue;
-        return type;
-      } else if (message.embeds[0].thumbnail) {
-        const type = await typeCheck(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
-        if (type === false) continue;
-        return type;
-        // if there isn't a thumbnail check the image area
-      } else if (message.embeds[0].image) {
-        const type = await typeCheck(message.embeds[0].image.proxy_url, message.embeds[0].image.url);
-        if (type === false) continue;
-        return type;
-      }
-    } else if (message.attachments.length !== 0) {
-      // get type of file
-      const type = await typeCheck(message.attachments[0].proxy_url, message.attachments[0].url);
-      // move to the next message if the file isn't an image
-      if (type === false) continue;
-      // if the file is an image then return it
-      return type;
-      // if there's nothing in the attachments check the urls in the message if there are any
-    } else if (urlRegex.test(message.content)) {
-      // get url
-      const url = message.content.match(urlRegex);
-      // get type of file
-      const type = await typeCheck(url[0], url[0]);
-      // move to the next message if the file isn't an image
-      if (type === false) continue;
-      // if the file is an image then return it
-      return type;
-      // if there's no urls then check the embeds
+    const result = await checkImages(message);
+    if (result === false) {
+      continue;
+    } else {
+      return result;
     }
   }
 };
