@@ -44,13 +44,14 @@ Napi::Value Explode(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  int amount = info[1].As<Napi::Number>().Int32Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  int amount = obj.Get("amount").As<Napi::Number>().Int32Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  ExplodeWorker* explodeWorker = new ExplodeWorker(cb, in_path, amount, type, delay);
+  ExplodeWorker* explodeWorker = new ExplodeWorker(cb, path, amount, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }

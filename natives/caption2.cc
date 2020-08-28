@@ -12,10 +12,10 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
   ~CaptionTwoWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> captioned;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> captioned;
+    list <Image> result;
     Blob caption_blob;
     readImages(&frames, in_path);
 
@@ -32,7 +32,7 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
 
     for (Image &image : coalesced) {
       Image appended;
-      list<Image> images;
+      list <Image> images;
       image.backgroundColor("white");
       images.push_back(image);
       images.push_back(caption_image);
@@ -60,13 +60,14 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string caption = info[0].As<Napi::String>().Utf8Value();
-  string in_path = info[1].As<Napi::String>().Utf8Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  CaptionTwoWorker* captionTwoWorker = new CaptionTwoWorker(cb, caption, in_path, type, delay);
+  CaptionTwoWorker* captionTwoWorker = new CaptionTwoWorker(cb, caption, path, type, delay);
   captionTwoWorker->Queue();
   return env.Undefined();
 }

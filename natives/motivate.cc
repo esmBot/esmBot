@@ -12,10 +12,10 @@ class MotivateWorker : public Napi::AsyncWorker {
   ~MotivateWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
+    list <Image> result;
     Image top;
     Image bottom;
     readImages(&frames, in_path);
@@ -49,7 +49,7 @@ class MotivateWorker : public Napi::AsyncWorker {
       image.backgroundColor("black");
       image.extent(Geometry(600, image.rows() + 50), Magick::CenterGravity);
 
-      list<Image> to_append;
+      list <Image> to_append;
       to_append.push_back(image);
       to_append.push_back(top);
       if (bottom_text != "") to_append.push_back(bottom);
@@ -77,14 +77,15 @@ Napi::Value Motivate(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string top_text = info[1].As<Napi::String>().Utf8Value();
-  string bottom_text = info[2].As<Napi::String>().Utf8Value();
-  string type = info[3].As<Napi::String>().Utf8Value();
-  int delay = info[4].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[5].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string top = obj.Get("top").As<Napi::String>().Utf8Value();
+  string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  MotivateWorker* blurWorker = new MotivateWorker(cb, in_path, top_text, bottom_text, type, delay);
+  MotivateWorker* blurWorker = new MotivateWorker(cb, path, top, bottom, type, delay);
   blurWorker->Queue();
   return env.Undefined();
 }

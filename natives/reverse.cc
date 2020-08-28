@@ -1,5 +1,6 @@
 #include <napi.h>
 #include <list>
+#include <list>
 #include <Magick++.h>
 
 using namespace std;
@@ -46,12 +47,13 @@ Napi::Value Reverse(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  bool soos = info[1].As<Napi::Boolean>().Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  bool soos = obj.Has("soos") ? obj.Get("soos").As<Napi::Boolean>().Value() : false;
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  ReverseWorker* explodeWorker = new ReverseWorker(cb, in_path, soos, delay);
+  ReverseWorker* explodeWorker = new ReverseWorker(cb, path, soos, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }

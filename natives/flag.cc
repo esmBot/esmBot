@@ -12,10 +12,10 @@ class FlagWorker : public Napi::AsyncWorker {
   ~FlagWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
+    list <Image> result;
     Image watermark;
     readImages(&frames, in_path);
     watermark.read(overlay_path);
@@ -50,13 +50,14 @@ Napi::Value Flag(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string overlay_path = info[1].As<Napi::String>().Utf8Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string overlay = obj.Get("overlay").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  FlagWorker* flagWorker = new FlagWorker(cb, in_path, overlay_path, type, delay);
+  FlagWorker* flagWorker = new FlagWorker(cb, path, overlay, type, delay);
   flagWorker->Queue();
   return env.Undefined();
 }

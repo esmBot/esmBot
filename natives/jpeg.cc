@@ -1,4 +1,5 @@
 #include <napi.h>
+#include <list>
 #include <Magick++.h>
 
 using namespace std;
@@ -31,10 +32,11 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
+  Napi::Object obj = info[0].As<Napi::Object>();
   Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
 
-  JpegWorker* explodeWorker = new JpegWorker(cb, in_path);
+  JpegWorker* explodeWorker = new JpegWorker(cb, path);
   explodeWorker->Queue();
   return env.Undefined();
 }

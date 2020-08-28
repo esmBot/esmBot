@@ -12,10 +12,10 @@ class WdtWorker : public Napi::AsyncWorker {
   ~WdtWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
+    list <Image> result;
     Image watermark;
     readImages(&frames, in_path);
     watermark.read("./assets/images/whodidthis.png");
@@ -48,12 +48,13 @@ Napi::Value Wdt(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  WdtWorker* blurWorker = new WdtWorker(cb, in_path, type, delay);
+  WdtWorker* blurWorker = new WdtWorker(cb, path, type, delay);
   blurWorker->Queue();
   return env.Undefined();
 }

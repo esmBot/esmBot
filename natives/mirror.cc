@@ -12,10 +12,10 @@ class MirrorWorker : public Napi::AsyncWorker {
   ~MirrorWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
+    list <Image> result;
     MagickCore::GravityType gravity;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
@@ -31,7 +31,7 @@ class MirrorWorker : public Napi::AsyncWorker {
     }
 
     for (Image &image : coalesced) {
-      list<Image> mirrored;
+      list <Image> mirrored;
       Image final;
       image.extent(Geometry(to_string(vertical ? image.baseColumns() : image.baseColumns() / 2) + "x" + to_string(vertical ? image.baseRows() / 2 : image.baseRows())), gravity);
       mirrored.push_back(image);
@@ -71,14 +71,15 @@ Napi::Value Mirror(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  bool vertical = info[1].As<Napi::Boolean>().Value();
-  bool first = info[2].As<Napi::Boolean>().Value();
-  string type = info[3].As<Napi::String>().Utf8Value();
-  int delay = info[4].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[5].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  bool vertical = obj.Has("vertical") ? obj.Get("vertical").As<Napi::Boolean>().Value() : false;
+  bool first = obj.Has("first") ? obj.Get("first").As<Napi::Boolean>().Value() : false;
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  MirrorWorker* mirrorWorker = new MirrorWorker(cb, in_path, vertical, first, type, delay);
+  MirrorWorker* mirrorWorker = new MirrorWorker(cb, path, vertical, first, type, delay);
   mirrorWorker->Queue();
   return env.Undefined();
 }

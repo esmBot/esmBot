@@ -1,11 +1,13 @@
-const magick = require("../build/Release/image.node");
-const { promisify } = require("util");
+const magick = require("../utils/image.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add more JPEG!`;
-  const buffer = await promisify(magick.jpeg)(image.path);
+  const buffer = await magick({
+    cmd: "jpeg",
+    path: image.path
+  });
   return {
     file: buffer,
     name: "jpeg.jpg"

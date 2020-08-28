@@ -1,4 +1,5 @@
 #include <napi.h>
+#include <list>
 #include <Magick++.h>
 
 using namespace std;
@@ -36,10 +37,11 @@ Napi::Value Homebrew(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string text = info[0].As<Napi::String>().Utf8Value();
+  Napi::Object obj = info[0].As<Napi::Object>();
   Napi::Function cb = info[1].As<Napi::Function>();
+  string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
 
-  HomebrewWorker* explodeWorker = new HomebrewWorker(cb, text);
+  HomebrewWorker* explodeWorker = new HomebrewWorker(cb, caption);
   explodeWorker->Queue();
   return env.Undefined();
 }

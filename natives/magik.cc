@@ -12,10 +12,10 @@ class MagikWorker : public Napi::AsyncWorker {
   ~MagikWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> blurred;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> blurred;
+    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -46,12 +46,14 @@ Napi::Value Magik(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  MagikWorker* explodeWorker = new MagikWorker(cb, in_path, type, delay);
+
+  MagikWorker* explodeWorker = new MagikWorker(cb, path, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }

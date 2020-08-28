@@ -12,9 +12,9 @@ class LeakWorker : public Napi::AsyncWorker {
   ~LeakWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
     Image watermark;
     readImages(&frames, in_path);
     watermark.read("./assets/images/leak.png");
@@ -48,12 +48,13 @@ Napi::Value Leak(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  LeakWorker* blurWorker = new LeakWorker(cb, in_path, type, delay);
+  LeakWorker* blurWorker = new LeakWorker(cb, path, type, delay);
   blurWorker->Queue();
   return env.Undefined();
 }

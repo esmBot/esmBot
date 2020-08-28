@@ -1,5 +1,4 @@
-const magick = require("../build/Release/image.node");
-const { promisify } = require("util");
+const magick = require("../utils/image.js");
 const fs = require("fs");
 const emojiRegex = require("emoji-regex");
 const emoji = require("node-emoji");
@@ -16,11 +15,17 @@ exports.run = async (message, args) => {
   if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
   if (flag === "🏳️‍⚧️") path = "./assets/images/transflag.png";
   try {
-    await promisify(fs.access)(path);
+    await fs.promises.access(path);
   } catch (e) {
     return `${message.author.mention}, that isn't a flag!`;
   }
-  const buffer = await promisify(magick.flag)(image.path, path, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
+  const buffer = await magick({
+    cmd: "flag",
+    path: image.path,
+    overlay: path,
+    type: image.type.toUpperCase(),
+    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
+  });
   return {
     file: buffer,
     name: `flag.${image.type}`

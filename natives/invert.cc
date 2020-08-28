@@ -12,20 +12,16 @@ class InvertWorker : public Napi::AsyncWorker {
   ~InvertWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> inverted;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    for (Image &image : coalesced) {
-      image.negateChannel(Magick::ChannelType(Magick::CompositeChannels ^ Magick::AlphaChannel));
-      image.magick(type);
-      inverted.push_back(image);
-    }
+    for_each(coalesced.begin(), coalesced.end(), negateImage(Magick::ChannelType(Magick::CompositeChannels ^ Magick::AlphaChannel)));
+    for_each(coalesced.begin(), coalesced.end(), magickImage(type));
 
-    optimizeImageLayers(&result, inverted.begin(), inverted.end());
+    optimizeImageLayers(&result, coalesced.begin(), coalesced.end());
     if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
@@ -44,12 +40,13 @@ Napi::Value Invert(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  InvertWorker* invertWorker = new InvertWorker(cb, in_path, type, delay);
+  InvertWorker* invertWorker = new InvertWorker(cb, path, type, delay);
   invertWorker->Queue();
   return env.Undefined();
 }

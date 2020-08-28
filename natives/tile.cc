@@ -12,17 +12,17 @@ class TileWorker : public Napi::AsyncWorker {
   ~TileWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> mid;
+    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      list<Image> duplicated;
+      list <Image> duplicated;
       Image appended;
-      list<Image> montage;
+      list <Image> montage;
       Image frame;
       image.magick(type);
       for (int i = 0; i < 5; ++i) {
@@ -56,12 +56,13 @@ Napi::Value Tile(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  string type = info[1].As<Napi::String>().Utf8Value();
-  int delay = info[2].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[3].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  TileWorker* flopWorker = new TileWorker(cb, in_path, type, delay);
+  TileWorker* flopWorker = new TileWorker(cb, path, type, delay);
   flopWorker->Queue();
   return env.Undefined();
 }

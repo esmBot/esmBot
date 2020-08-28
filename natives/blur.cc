@@ -12,24 +12,19 @@ class BlurWorker : public Napi::AsyncWorker {
   ~BlurWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> blurred;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    for (Image &image : coalesced) {
-      if (sharp) {
-        image.sharpen(10, 3);
-      } else {
-        image.blur(15);
-      }
-      image.magick(type);
-      blurred.push_back(image);
+    if (sharp) {
+      for_each(coalesced.begin(), coalesced.end(), sharpenImage(10, 3));
+    } else {
+      for_each(coalesced.begin(), coalesced.end(), blurImage(15));
     }
 
-    optimizeImageLayers(&result, blurred.begin(), blurred.end());
+    optimizeImageLayers(&result, coalesced.begin(), coalesced.end());
     if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
@@ -49,13 +44,14 @@ Napi::Value Blur(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  bool sharp = info[1].As<Napi::Boolean>().Value();
-  string type = info[2].As<Napi::String>().Utf8Value();
-  int delay = info[3].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[4].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  bool sharp = obj.Get("sharp").As<Napi::Boolean>().Value();
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  BlurWorker* blurWorker = new BlurWorker(cb, in_path, sharp, type, delay);
+  BlurWorker* blurWorker = new BlurWorker(cb, path, sharp, type, delay);
   blurWorker->Queue();
   return env.Undefined();
 }

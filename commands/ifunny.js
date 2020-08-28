@@ -1,11 +1,19 @@
-const magick = require("../build/Release/image.node");
-const { promisify } = require("util");
+const magick = require("../utils/image.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add a iFunny watermark!`;
-  const buffer = await promisify(magick.watermark)(image.path, "./assets/images/ifunny.png", 8, true, true, false, image.type.toUpperCase(), image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0);
+  const buffer = await magick({
+    cmd: "watermark",
+    path: image.path,
+    water: "./assets/images/ifunny.png",
+    gravity: 8,
+    resize: true,
+    append: true,
+    type: image.type.toUpperCase(),
+    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
+  });
   return {
     file: buffer,
     name: `ifunny.${image.type}`

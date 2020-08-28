@@ -1,4 +1,5 @@
 #include <napi.h>
+#include <list>
 #include <ZXing/ReadBarcode.h>
 #include <ZXing/TextUtfEncoding.h>
 
@@ -42,10 +43,11 @@ Napi::Value QrRead(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
+  Napi::Object obj = info[0].As<Napi::Object>();
   Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
 
-  QrReadWorker* qrReadWorker = new QrReadWorker(cb, in_path);
+  QrReadWorker* qrReadWorker = new QrReadWorker(cb, path);
   qrReadWorker->Queue();
   return env.Undefined();
 }

@@ -12,10 +12,10 @@ class ResizeWorker : public Napi::AsyncWorker {
   ~ResizeWorker() {}
 
   void Execute() {
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> blurred;
-    list<Image> result;
+    list <Image> frames;
+    list <Image> coalesced;
+    list <Image> blurred;
+    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -52,14 +52,15 @@ Napi::Value Resize(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
 
-  string in_path = info[0].As<Napi::String>().Utf8Value();
-  bool stretch = info[1].As<Napi::Boolean>().Value();
-  bool wide = info[2].As<Napi::Boolean>().Value();
-  string type = info[3].As<Napi::String>().Utf8Value();
-  int delay = info[4].As<Napi::Number>().Int32Value();
-  Napi::Function cb = info[5].As<Napi::Function>();
+  Napi::Object obj = info[0].As<Napi::Object>();
+  Napi::Function cb = info[1].As<Napi::Function>();
+  string path = obj.Get("path").As<Napi::String>().Utf8Value();
+  bool stretch = obj.Has("stretch") ? obj.Get("stretch").As<Napi::Boolean>().Value() : false;
+  bool wide = obj.Has("wide") ? obj.Get("wide").As<Napi::Boolean>().Value() : false;
+  string type = obj.Get("type").As<Napi::String>().Utf8Value();
+  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
 
-  ResizeWorker* explodeWorker = new ResizeWorker(cb, in_path, stretch, wide, type, delay);
+  ResizeWorker* explodeWorker = new ResizeWorker(cb, path, stretch, wide, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }
