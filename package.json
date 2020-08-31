@@ -22,7 +22,6 @@
     "@lavacord/eris": "0.0.3",
     "abort-controller": "^3.0.0",
     "cowsay": "^1.4.0",
-    "cron": "^1.8.2",
     "dblapi.js": "^2.4.0",
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "github:benpbolton/duckduckgo-images-api",
@@ -49,7 +48,8 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
     "erlpack": "github:abalabahaha/erlpack",
-    "sodium-native": "^2.4.6",
+    "express": "^4.17.1",
+    "multer": "^1.4.2",
     "zlib-sync": "^0.1.6"
   }
 }
