@@ -30,6 +30,8 @@ And set up Lavalink: https://github.com/Frederikam/Lavalink#server-configuration
 
 Finally, fill in the info inside `.env.example`, rename it to `.env`, and run `app.js`.
 
+If you need any help with setting up the bot locally, feel free to ask in the #self-hosting channel on the [esmBot Support server](https://discord.gg/vfFM7YT).
+
 ## Credits
 Icon by [Stellio](https://twitter.com/SteelStellio).
 All images, sounds, and fonts are copyright of their respective owners.
