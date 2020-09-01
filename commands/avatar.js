@@ -5,7 +5,7 @@ exports.run = async (message, args) => {
     return message.mentions[0].dynamicAvatarURL(null, 1024);
   } else if (client.users.get(args[0]) !== undefined) {
     return client.users.get(args[0]).dynamicAvatarURL(null, 1024);
-  } else if (args.join(" ") !== "") {
+  } else if (args.join(" ") !== "" && message.channel.guild) {
     const userRegex = new RegExp(args.join("|"), "i");
     const member = message.channel.guild.members.find(element => {
       return userRegex.test(element.nick) ? userRegex.test(element.nick) : userRegex.test(element.username);

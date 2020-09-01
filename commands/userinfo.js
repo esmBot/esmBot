@@ -15,7 +15,7 @@ exports.run = async (message, args) => {
     user = message.author;
   }
   //const user = getUser !== undefined ? getUser : (message.author);
-  const member = message.channel.guild.members.get(user.id);
+  const member = message.channel.guild ? message.channel.guild.members.get(user.id) : undefined;
   const infoEmbed = {
     "embed": {
       "title": `${user.username}#${user.discriminator}`,

@@ -3,6 +3,7 @@ const client = require("../utils/client.js");
 const paginator = require("../utils/pagination/pagination.js");
 
 exports.run = async (message, args) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.permission.has("manageMessages")) return `${message.author.mention}, you need to have the \`Manage Messages\` permission on this server to warn people!`;
   const memberCheck = message.mentions.length >= 1 ? message.mentions[0] : client.users.get(args[0]);
   const member = memberCheck ? memberCheck : client.users.get(args[0].replace(/\D/g, ""));

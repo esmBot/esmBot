@@ -1,5 +1,6 @@
 require("dotenv").config();
 const magick = require("../utils/image.js");
+const { version } = require("../package.json");
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
@@ -18,7 +19,7 @@ const port = 3000;
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send(`esmBot v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`);
 });
 
 app.post("/:method", upload.single("image"), async (req, res, next) => {

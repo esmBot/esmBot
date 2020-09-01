@@ -16,22 +16,23 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheEssem/esmBot.git"
+    "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
     "@lavacord/eris": "0.0.3",
     "abort-controller": "^3.0.0",
     "cowsay": "^1.4.0",
-    "dblapi.js": "^2.4.0",
+    "dblapi.js": "^2.4.1",
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "github:benpbolton/duckduckgo-images-api",
     "emoji-regex": "^8.0.0",
     "eris": "^0.13.3",
     "file-type": "^13.1.2",
+    "form-data": "^3.0.0",
     "lavacord": "^1.1.9",
     "moment": "^2.27.0",
     "moment-duration-format": "^2.3.2",
-    "mongoose": "^5.9.25",
+    "mongoose": "^5.10.2",
     "node-addon-api": "^3.0.1",
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.0",

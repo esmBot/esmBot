@@ -2,8 +2,8 @@ const ReactionCollector = require("./awaitreactions.js");
 const MessageCollector = require("./awaitmessages.js");
 const client = require("../client.js");
 
-const paginationEmbed = async (message, pages, timeout = 120000) => {
-  const manageMessages = message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
+module.exports = async (message, pages, timeout = 120000) => {
+  const manageMessages = message.channel.guild && (message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages")) ? true : false;
   let page = 0;
   let deleted = false;
   const currentPage = await message.channel.createMessage(pages[page]);
@@ -56,4 +56,3 @@ const paginationEmbed = async (message, pages, timeout = 120000) => {
   });
   return currentPage;
 };
-module.exports = paginationEmbed;

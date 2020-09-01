@@ -1,6 +1,7 @@
 const database = require("../utils/database.js");
 
 exports.run = async (message, args) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   const guild = await database.guilds.findOne({ id: message.channel.guild.id });
   if (args.length !== 0) {
     if (!message.member.permission.has("administrator") && message.member.id !== process.env.OWNER) return `${message.author.mention}, you need to be an administrator to change the bot prefix!`;

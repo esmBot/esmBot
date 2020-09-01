@@ -1,5 +1,7 @@
 // eris doesn't come with an awaitMessages method by default, so we make our own
 const EventEmitter = require("events").EventEmitter;
+const client = require("../client.js");
+
 class MessageCollector extends EventEmitter {
   constructor(channel, filter, options = {}) {
     super();
@@ -8,7 +10,7 @@ class MessageCollector extends EventEmitter {
     this.options = options;
     this.ended = false;
     this.collected = [];
-    this.bot = channel.guild ? channel.guild.shard.client : channel._client;
+    this.bot = client;
     this.listener = message => this.verify(message);
     this.bot.on("messageCreate", this.listener);
     if (options.time) setTimeout(() => this.stop("time"), options.time);

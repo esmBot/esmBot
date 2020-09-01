@@ -21,7 +21,7 @@ exports.run = async (message, args) => {
           value: `${message.author.username}#${message.author.discriminator}`
         }, {
           name: "👪 Server:",
-          value: message.channel.guild.name
+          value: message.channel.guild ? message.channel.guild.name : "N/A"
         }, {
           name: "💬 Message:",
           value: args.join(" ")

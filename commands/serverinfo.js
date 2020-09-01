@@ -1,4 +1,5 @@
 exports.run = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   const owner = await message.channel.guild.members.get(message.channel.guild.ownerID);
   const infoEmbed = {
     "embed": {

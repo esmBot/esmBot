@@ -1,6 +1,7 @@
 const client = require("../utils/client.js");
 
 exports.run = async (message, args) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.permission.has("banMembers")) return `${message.author.mention}, you need to have the \`Ban Members\` permission on this server to ban people!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("banMembers") && !message.channel.permissionsOf(client.user.id).has("banMembers")) return `${message.author.mention}, I don't have the \`Ban Members\` permission!`;
   const member = message.mentions[0];

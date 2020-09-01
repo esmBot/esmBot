@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 const fileType = require("file-type");
 const { promisify } = require("util");
-const writeFile = promisify(require("fs").writeFile);
+const { writeFile } = require("fs").promises;
 const execPromise = promisify(require("child_process").exec);
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 
@@ -27,7 +27,6 @@ const typeCheck = async (image, image2, gifv = false) => {
       const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${imageType.ext}`;
       await writeFile(path, imageBuffer);
       const payload = {
-        data: imageBuffer,
         type: imageType.ext !== "mp4" ? (imageType.ext === "jpg" ? "jpeg" : imageType.ext) : "gif",
         path: path,
         url: image2

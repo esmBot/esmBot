@@ -4,6 +4,7 @@ const paginator = require("../utils/pagination/pagination.js");
 const { random } = require("../utils/misc.js");
 
 exports.run = async (message, args) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
   const guild = await database.guilds.findOne({ id: message.channel.guild.id });
   const tags = guild.tags;

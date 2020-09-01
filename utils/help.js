@@ -3,8 +3,8 @@ const logger = require("./logger.js");
 const fs = require("fs");
 
 module.exports = async (output) => {
-  const template = `# <img src="https://raw.githubusercontent.com/TheEssem/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
-${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, [report it here](https://github.com/TheEssem/esmBot/issues) or in the esmBot Support server.**\n" : ""}
+  const template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
+${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, [report it here](https://github.com/esmBot/esmBot/issues) or in the esmBot Support server.**\n" : ""}
 \`[]\` means an argument is required, \`{}\` means an argument is optional.
 
 Default prefix is \`&\`.
