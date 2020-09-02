@@ -2,22 +2,22 @@ const magick = require("../build/Release/image.node");
 const fetch = require("node-fetch");
 const { promisify } = require("util");
 const FormData = require("form-data");
-const { readFile } = require("fs").promises;
+const fs = require("fs");
 
-module.exports = async (object) => {
-  if (process.env.API === "true") {
+module.exports = async (object, fromAPI = false) => {
+  if (process.env.API === "true" && !fromAPI) {
     const params = [];
     for (const element of Object.keys(object)) {
       params.push(`${element}=${object[element]}`);
     }
     const form = new FormData();
-    const data = await readFile(object.path);
-    form.append("image", data);
+    form.append("image", fs.createReadStream(object.path));
     const req = await fetch(`${process.env.API_URL}/${object.cmd}?${params.join("&")}`, {
       method: "POST",
-      body: form
+      body: form,
+      headers: form.getHeaders()
     });
-    return await req.buffer();
+    return object.cmd === "qrread" ? await req.json() : await req.buffer();
   } else {
     const data = await promisify(magick[object.cmd])(object);
     return data;

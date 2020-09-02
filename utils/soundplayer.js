@@ -10,7 +10,7 @@ const nodes = require("../lavanodes.json");
 
 exports.players = new Map();
 
-const queues = new Map();
+exports.queues = new Map();
 const skipVotes = new Map();
 
 exports.manager;
@@ -54,9 +54,9 @@ exports.play = async (sound, message, music = false) => {
   if (!music && this.manager.voiceStates.has(message.channel.guild.id) && this.players.get(message.channel.guild.id).type === "music") return client.createMessage(message.channel.id, `${message.author.mention}, I can't play a sound effect while playing music!`);
   const node = this.manager.idealNodes[0];
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
-  const oldQueue = queues.get(voiceChannel.guild.id);
+  const oldQueue = this.queues.get(voiceChannel.guild.id);
   if (tracks.length === 0) return client.createMessage(message.channel.id, `${message.author.mention}, I couldn't find that song!`);
-  queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
+  this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
   const connection = await this.manager.join({
     guild: voiceChannel.guild.id,
     channel: voiceChannel.id,
@@ -105,21 +105,21 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
       this.manager.leave(voiceChannel.guild.id);
       connection.destroy();
       this.players.delete(voiceChannel.guild.id);
-      queues.delete(voiceChannel.guild.id);
+      this.queues.delete(voiceChannel.guild.id);
       logger.error(error);
     });
   }
   connection.once("end", async (data) => {
     if (data.reason === "REPLACED") return;
-    const queue = queues.get(voiceChannel.guild.id);
+    const queue = this.queues.get(voiceChannel.guild.id);
     const newQueue = queue.slice(1);
-    queues.set(voiceChannel.guild.id, newQueue);
+    this.queues.set(voiceChannel.guild.id, newQueue);
     await playingMessage.delete();
     if (newQueue.length === 0) {
       this.manager.leave(voiceChannel.guild.id);
       connection.destroy();
       this.players.delete(voiceChannel.guild.id);
-      queues.delete(voiceChannel.guild.id);
+      this.queues.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
     } else {
       const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
@@ -136,7 +136,7 @@ exports.stop = async (message) => {
   const connection = this.players.get(message.channel.guild.id).player;
   connection.destroy();
   this.players.delete(message.channel.guild.id);
-  queues.delete(message.channel.guild.id);
+  this.queues.delete(message.channel.guild.id);
   await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
 };
 
@@ -206,7 +206,7 @@ exports.queue = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return client.createMessage(message.channel.id, `${message.author.mention}, I'm not in a voice channel!`);
   if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
-  const queue = queues.get(message.channel.guild.id);
+  const queue = this.queues.get(message.channel.guild.id);
   const player = this.players.get(message.channel.guild.id).player;
   const tracks = await fetch(`http://${player.node.host}:${player.node.port}/decodetracks`, { method: "POST", body: JSON.stringify(queue), headers: { Authorization: player.node.password, "Content-Type": "application/json" } }).then(res => res.json());
   const trackList = [];

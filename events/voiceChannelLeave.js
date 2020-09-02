@@ -16,6 +16,11 @@ module.exports = async (member, oldChannel) => {
         } else {
           waitMessage.delete();
           connection.player.stop(connection.originalChannel.guild.id);
+          soundPlayer.manager.leave(connection.originalChannel.guild.id);
+          connection.player.destroy();
+          soundPlayer.players.delete(connection.originalChannel.guild.id);
+          soundPlayer.queues.delete(connection.originalChannel.guild.id);
+          client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
         }
       });
     } else if (member.id === connection.host) {
@@ -29,6 +34,11 @@ module.exports = async (member, oldChannel) => {
           if (members.length === 0) {
             waitMessage.delete();
             connection.player.stop(connection.originalChannel.guild.id);
+            soundPlayer.manager.leave(connection.originalChannel.guild.id);
+            connection.player.destroy();
+            soundPlayer.players.delete(connection.originalChannel.guild.id);
+            soundPlayer.queues.delete(connection.originalChannel.guild.id);
+            client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
           } else {
             const randomMember = random(members);
             soundPlayer.players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
@@ -36,6 +46,13 @@ module.exports = async (member, oldChannel) => {
           }
         }
       });
+    } else if (member.id === client.user.id) {
+      connection.player.stop(connection.originalChannel.guild.id);
+      soundPlayer.manager.leave(connection.originalChannel.guild.id);
+      connection.player.destroy();
+      soundPlayer.players.delete(connection.originalChannel.guild.id);
+      soundPlayer.queues.delete(connection.originalChannel.guild.id);
+      await client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
     }
   }
 };

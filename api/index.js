@@ -9,12 +9,12 @@ const storage = multer.diskStorage({
     cb(null, "/tmp/");
   },
   filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 const upload = multer({ storage: storage });
 const app = express();
-const port = 3000;
+const port = process.env.API_PORT || 3000;
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -39,8 +39,8 @@ app.post("/:method", upload.single("image"), async (req, res, next) => {
   }
 
   try {
-    const data = await magick(object);
-    res.contentType(type).send(data);
+    const data = await magick(object, true);
+    res.send(data);
   } catch (e) {
     next(e);
   }
