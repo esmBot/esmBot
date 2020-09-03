@@ -11,7 +11,8 @@ module.exports = async (guild) => {
     tags: misc.tagDefaults,
     prefix: "&",
     warns: {},
-    disabledChannels: []
+    disabledChannels: [],
+    tagsDisabled: false
   });
   await guildDB.save();
 };

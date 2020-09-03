@@ -5,8 +5,9 @@ const { random } = require("../utils/misc.js");
 
 exports.run = async (message, args) => {
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
-  if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
   const guild = await database.guilds.findOne({ id: message.channel.guild.id });
+  if (guild.tagsDisabled && args[0].toLowerCase() !== ("enable" || "disable")) return;
+  if (args.length === 0) return `${message.author.mention}, you need to specify the name of the tag you want to view!`;
   const tags = guild.tags;
   const blacklist = ["add", "edit", "remove", "delete", "list", "random"];
   switch (args[0].toLowerCase()) {
@@ -21,14 +22,14 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && !message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       tags.set(args[1].toLowerCase(), undefined);
       await guild.save();
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
     case "edit":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to edit!`;
       if (!tags.has(args[1].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags.get(args[1].toLowerCase()).author !== message.author.id && tags.get(args[1].toLowerCase()).author !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags.get(args[1].toLowerCase()).author !== message.author.id && !message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been edited!`;
     case "own":
@@ -67,6 +68,18 @@ exports.run = async (message, args) => {
       return paginator(message, embeds);
     case "random":
       return random([...tags])[1].content;
+    case "enable":
+    case "disable":
+      if (!message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't have permission to disable tags!`;
+      var status;
+      if (guild.tagsDisabled) {
+        status = false;
+      } else {
+        status = true;
+      }
+      guild.set("tagsDisabled", status);
+      await guild.save();
+      return `${message.author.mention}, tags for this guild have been ${status ? "disabled" : "enabled"}. To ${status ? "enable" : "disable"} them again, run ${guild.prefix}tags ${status ? "enable" : "disable"}.`;
     default:
       if (!tags.has(args[0].toLowerCase())) return `${message.author.mention}, this tag doesn't exist!`;
       return tags.get(args[0].toLowerCase()).content;
@@ -96,11 +109,14 @@ exports.help = {
   delete: "Deletes a tag",
   edit: "Edits a tag",
   list: "Lists all tags in the server",
-  random: "Gets a random tag"
+  random: "Gets a random tag",
+  owner: "Gets the owner of a tag",
+  disable: "Disables/Enables the tag system"
 };
 exports.params = {
   default: "[name]",
   add: "[name] [content]",
   delete: "[name]",
-  edit: "[name] [content]"
+  edit: "[name] [content]",
+  owner: "[name]"
 };

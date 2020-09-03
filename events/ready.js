@@ -26,7 +26,8 @@ module.exports = async () => {
         tags: misc.tagDefaults,
         prefix: "&",
         warns: {},
-        disabledChannels: []
+        disabledChannels: [],
+        tagsDisabled: false
       });
       await newGuild.save();
     } else if (guildDB) {
