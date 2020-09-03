@@ -14,12 +14,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 const app = express();
-const port = process.env.API_PORT || 3000;
+const port = 3000;
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 app.get("/", (req, res) => {
-  res.send(`esmBot v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`);
+  res.send(`esmBot v${version}`);
 });
 
 app.post("/:method", upload.single("image"), async (req, res, next) => {

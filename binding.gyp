@@ -12,7 +12,7 @@
         "/usr/lib/glib-2.0/include"
       ],
       "libraries": [
-        "<!(pkg-config --libs Magick++ zxing)ZXing",
+        "<!(pkg-config --libs Magick++ zxing)",
       ],
       "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS"]
     }
