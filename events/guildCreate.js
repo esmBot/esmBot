@@ -9,7 +9,7 @@ module.exports = async (guild) => {
   const guildDB = new db.guilds({
     id: guild.id,
     tags: misc.tagDefaults,
-    prefix: "&",
+    prefix: process.env.PREFIX,
     warns: {},
     disabledChannels: [],
     tagsDisabled: false

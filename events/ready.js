@@ -24,7 +24,7 @@ module.exports = async () => {
       const newGuild = new database.guilds({
         id: id,
         tags: misc.tagDefaults,
-        prefix: "&",
+        prefix: process.env.PREFIX,
         warns: {},
         disabledChannels: [],
         tagsDisabled: false

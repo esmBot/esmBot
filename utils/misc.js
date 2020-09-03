@@ -85,7 +85,7 @@ exports.decodeEntities = (string) => {
 
 // define defaults for prefixes and tags
 exports.defaults = {
-  prefix: "&"
+  prefix: process.env.PREFIX
 };
 exports.tagDefaults = {
   help: {
