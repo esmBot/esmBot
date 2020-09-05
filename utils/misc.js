@@ -6,6 +6,10 @@ exports.random = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
+const optionalReplace = (token) => {
+  return token === "" ? "" : "<redacted>";
+};
+
 // clean(text) to clean message of any private info or mentions
 exports.clean = async (text) => {
   if (text && text.constructor.name == "Promise")
@@ -16,16 +20,16 @@ exports.clean = async (text) => {
   text = text
     .replace(/`/g, `\`${String.fromCharCode(8203)}`)
     .replace(/@/g, `@${String.fromCharCode(8203)}`)
-    .replace(process.env.TOKEN, "<redacted>")
-    .replace(process.env.MASHAPE, "<redacted>")
-    .replace(process.env.CAT, "<redacted>")
-    .replace(process.env.GOOGLE, "<redacted>")
-    .replace(process.env.DBL, "<redacted>")
-    .replace(process.env.MONGO, "<redacted>")
-    .replace(process.env.TWITTER_KEY, "<redacted>")
-    .replace(process.env.CONSUMER_SECRET, "<redacted>")
-    .replace(process.env.ACCESS_TOKEN, "<redacted>")
-    .replace(process.env.ACCESS_SECRET, "<redacted>");
+    .replace(process.env.TOKEN, optionalReplace(process.env.TOKEN))
+    .replace(process.env.MASHAPE, optionalReplace(process.env.MASHAPE))
+    .replace(process.env.CAT, optionalReplace(process.env.CAT))
+    .replace(process.env.GOOGLE, optionalReplace(process.env.GOOGLE))
+    .replace(process.env.DBL, optionalReplace(process.env.DBL))
+    .replace(process.env.MONGO, optionalReplace(process.env.MONGO))
+    .replace(process.env.TWITTER_KEY, optionalReplace(process.env.TWITTER_KEY))
+    .replace(process.env.CONSUMER_SECRET, optionalReplace(process.env.CONSUMER_SECRET))
+    .replace(process.env.ACCESS_TOKEN, optionalReplace(process.env.ACCESS_TOKEN))
+    .replace(process.env.ACCESS_SECRET, optionalReplace(process.env.ACCESS_SECRET));
 
   return text;
 };
