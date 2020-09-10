@@ -37,6 +37,7 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
       images.push_back(image);
       images.push_back(caption_image);
       appendImages(&appended, images.begin(), images.end(), true);
+      appended.repage();
       appended.magick(type);
       captioned.push_back(appended);
     }

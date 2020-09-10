@@ -8,7 +8,7 @@ module.exports = async (object, fromAPI = false) => {
   if (process.env.API === "true" && !fromAPI) {
     const params = [];
     for (const element of Object.keys(object)) {
-      params.push(`${element}=${object[element]}`);
+      params.push(`${element}=${encodeURIComponent(object[element])}`);
     }
     const form = new FormData();
     form.append("image", fs.createReadStream(object.path));

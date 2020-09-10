@@ -54,6 +54,7 @@ class MotivateWorker : public Napi::AsyncWorker {
       to_append.push_back(top);
       if (bottom_text != "") to_append.push_back(bottom);
       appendImages(&final, to_append.begin(), to_append.end(), true);
+      final.repage();
       final.magick(type);
       mid.push_back(final);
     }

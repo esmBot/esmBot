@@ -16,7 +16,6 @@ class CaptionWorker : public Napi::AsyncWorker {
     list <Image> coalesced;
     list <Image> captioned;
     list <Image> result;
-    Blob caption_blob;
     readImages(&frames, in_path);
 
     size_t width = frames.front().baseColumns();
@@ -39,6 +38,7 @@ class CaptionWorker : public Napi::AsyncWorker {
       images.push_back(caption_image);
       images.push_back(image);
       appendImages(&appended, images.begin(), images.end(), true);
+      appended.repage();
       appended.magick(type);
       captioned.push_back(appended);
     }

@@ -29,10 +29,12 @@ class TileWorker : public Napi::AsyncWorker {
         duplicated.push_back(image);
       }
       appendImages(&appended, duplicated.begin(), duplicated.end());
+      appended.repage();
       for (int i = 0; i < 5; ++i) {
         montage.push_back(appended);
       }
       appendImages(&frame, montage.begin(), montage.end(), true);
+      frame.repage();
       frame.scale(Geometry("800x800>"));
       mid.push_back(frame);
     }

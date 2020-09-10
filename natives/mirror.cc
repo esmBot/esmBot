@@ -47,6 +47,7 @@ class MirrorWorker : public Napi::AsyncWorker {
         mirrored.push_front(mirror);
       }
       appendImages(&final, mirrored.begin(), mirrored.end(), vertical);
+      final.repage();
       final.magick(type);
       mid.push_back(final);
     }

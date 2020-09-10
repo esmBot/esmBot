@@ -36,6 +36,7 @@ class WatermarkWorker : public Napi::AsyncWorker {
         to_append.push_back(image);
         to_append.push_back(watermark);
         appendImages(&final, to_append.begin(), to_append.end(), true);
+        final.repage();
       } else if (mc) {
         image.backgroundColor("white");
         image.extent(Geometry(image.columns(), image.rows() + 15));
