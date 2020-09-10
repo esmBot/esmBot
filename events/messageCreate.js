@@ -12,9 +12,20 @@ module.exports = async (message) => {
   // don't run command if bot can't send messages
   if (message.channel.guild && (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages"))) return;
 
+  // this is here to prevent reading the database if a message is unrelated
+  let valid = false;
+  for (const key of collections.aliases.keys()) {
+    const commandRegex = new RegExp(key, "i");
+    if (commandRegex.test(message.content)) {
+      valid = true;
+      break;
+    }
+  }
+  if (!valid) return;
+
   // prefix can be a mention or a set of special characters
   const guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
-  const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
+  const prefixMention = new RegExp(`^${client.user.mention} `);
   const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : (message.channel.guild ? guildDB.prefix : "");
 
   // ignore other stuff
