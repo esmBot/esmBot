@@ -3,6 +3,7 @@ const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
+const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
 module.exports = async (message) => {
@@ -14,7 +15,7 @@ module.exports = async (message) => {
 
   // this is here to prevent reading the database if a message is unrelated
   let valid = false;
-  for (const key of collections.aliases.keys()) {
+  for (const key of commands) {
     const commandRegex = new RegExp(key, "i");
     if (commandRegex.test(message.content)) {
       valid = true;
