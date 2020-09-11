@@ -13,7 +13,6 @@ class SpeedWorker : public Napi::AsyncWorker {
 
   void Execute() {
     list <Image> frames;
-    list <Image> blurred;
     readImages(&frames, in_path);
     
     int new_delay = slow ? delay * 2 : delay / 2;
@@ -24,6 +23,8 @@ class SpeedWorker : public Napi::AsyncWorker {
     } else {
       for_each(frames.begin(), frames.end(), animationDelayImage(new_delay));
     }
+
+    for_each(frames.begin(), frames.end(), magickImage(type));
 
     writeImages(frames.begin(), frames.end(), &blob);
   }
