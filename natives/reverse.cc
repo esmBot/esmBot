@@ -1,6 +1,5 @@
 #include <napi.h>
 #include <list>
-#include <list>
 #include <Magick++.h>
 
 using namespace std;
@@ -26,6 +25,8 @@ class ReverseWorker : public Napi::AsyncWorker {
     } else {
       coalesced.reverse();
     }
+
+    for_each(coalesced.begin(), coalesced.end(), magickImage(type));
 
     optimizeImageLayers(&result, coalesced.begin(), coalesced.end());
     if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));

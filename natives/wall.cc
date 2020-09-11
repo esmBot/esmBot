@@ -28,6 +28,7 @@ class WallWorker : public Napi::AsyncWorker {
       double arguments[16] = {0, 0, 57, 42, 0, 128, 63, 130, 128, 0, 140, 60, 128, 128, 140, 140};
       image.distort(Magick::PerspectiveDistortion, 16, arguments);
       image.scale(Geometry("800x800>"));
+      image.magick(type);
       mid.push_back(image);
     }
 

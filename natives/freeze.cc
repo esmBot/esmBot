@@ -16,6 +16,7 @@ class FreezeWorker : public Napi::AsyncWorker {
     readImages(&frames, in_path);
 
     for_each(frames.begin(), frames.end(), animationIterationsImage(loop ? 0 : 1));
+    for_each(frames.begin(), frames.end(), magickImage(type));
 
     if (delay != 0) for_each(frames.begin(), frames.end(), animationDelayImage(delay));
     writeImages(frames.begin(), frames.end(), &blob);
