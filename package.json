@@ -29,6 +29,7 @@
     "eris": "^0.13.3",
     "file-type": "^13.1.2",
     "form-data": "^3.0.0",
+    "jsqr": "^1.3.1",
     "lavacord": "^1.1.9",
     "moment": "^2.27.0",
     "moment-duration-format": "^2.3.2",
@@ -40,6 +41,7 @@
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
+    "sharp": "github:deftomat/sharp",
     "winston": "^3.3.3"
   },
   "devDependencies": {

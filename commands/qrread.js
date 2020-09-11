@@ -1,16 +1,14 @@
-const magick = require("../utils/image.js");
-const { clean } = require("../utils/misc.js");
+const jsqr = require("jsqr");
+const sharp = require("sharp");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image with a QR code to read!`;
   message.channel.sendTyping();
-  const {qrText, missing} = await magick({
-    cmd: "qrread",
-    path: image.path
-  });
-  if (missing) return `${message.author.mention}, I couldn't find a QR code!`;
-  return `\`\`\`\n${await clean(qrText)}\n\`\`\``;
+  const rawData = await sharp(image.path).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
+  if (!qrBuffer) return `${message.author.mention}, I couldn't find a QR code!`;
+  return `\`\`\`\n${qrBuffer.data}\n\`\`\``;
 };
 
 exports.category = 1;

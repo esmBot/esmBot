@@ -1,10 +1,10 @@
 const qrcode = require("qrcode");
-const { PassThrough } = require("stream");
+const stream = require("stream");
 
 exports.run = async (message, args, content) => {
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a QR code!`;
   message.channel.sendTyping();
-  const writable = new PassThrough();
+  const writable = new stream.PassThrough();
   qrcode.toFileStream(writable, content, { margin: 1 });
   const file = await streamToBuf(writable);
   return {
