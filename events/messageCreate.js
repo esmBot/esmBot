@@ -16,8 +16,7 @@ module.exports = async (message) => {
   // this is here to prevent reading the database if a message is unrelated
   let valid = false;
   for (const key of commands) {
-    const commandRegex = new RegExp(key, "i");
-    if (commandRegex.test(message.content)) {
+    if (message.content.toLowerCase().includes(key)) {
       valid = true;
       break;
     }
@@ -26,8 +25,7 @@ module.exports = async (message) => {
 
   // prefix can be a mention or a set of special characters
   const guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
-  const prefixMention = new RegExp(`^${client.user.mention} `);
-  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : (message.channel.guild ? guildDB.prefix : "");
+  const prefix = message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.channel.guild ? guildDB.prefix : "");
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;

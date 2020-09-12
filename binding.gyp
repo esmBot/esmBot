@@ -7,10 +7,7 @@
       "cflags_cc!": [ "-fno-exceptions", "<!(pkg-config --cflags Magick++)" ],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
-        "/usr/include/ImageMagick-7",
-        "/usr/include/vips",
-        "/usr/include/glib-2.0",
-        "/usr/lib/glib-2.0/include"
+        "<!@(pkg-config --cflags-only-I Magick++ | sed 's/^.\{2\}//')"
       ],
       "libraries": [
         "<!(pkg-config --libs Magick++)",

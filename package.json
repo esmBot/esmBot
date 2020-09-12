@@ -41,7 +41,7 @@
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",
     "retrotext": "github:TheEssem/retrotext",
-    "sharp": "github:deftomat/sharp",
+    "sharp": "^0.26.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
