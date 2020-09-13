@@ -25,7 +25,7 @@ module.exports = async (message) => {
 
   // prefix can be a mention or a set of special characters
   const guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
-  const prefix = message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.channel.guild ? guildDB.prefix : "");
+  const prefix = message.channel.guild ? (message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : guildDB.prefix) : "";
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
