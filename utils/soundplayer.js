@@ -145,13 +145,18 @@ exports.skip = async (message) => {
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return client.createMessage(message.channel.id, `${message.author.mention}, I'm not in a voice channel!`);
   const player = this.players.get(message.channel.guild.id);
   if (player.host !== message.author.id) {
-    const voteCount = skipVotes.has(message.channel.guild.id) ? skipVotes.get(message.channel.guild.id) : 0;
-    if (voteCount + 1 === 3) {
+    const votes = skipVotes.has(message.channel.guild.id) ? skipVotes.get(message.channel.guild.id) : { count: 0, ids: [] };
+    if (votes.ids.includes(message.author.id)) return client.createMessage(message.channel.id, `${message.author.mention}, you've already voted to skip!`);
+    const newObject = {
+      count: votes.count + 1,
+      ids: [...votes.ids, message.author.id].filter(item => !!item)
+    };
+    if (votes.count + 1 === 3) {
       player.player.stop(message.channel.guild.id);
-      skipVotes.set(message.channel.guild.id, 0);
+      skipVotes.set(message.channel.guild.id, { count: 0, ids: [] });
     } else {
-      await client.createMessage(message.channel.id, `🔊 Voted to skip song (${voteCount + 1}/3 people have voted).`);
-      skipVotes.set(message.channel.guild.id, voteCount + 1);
+      await client.createMessage(message.channel.id, `🔊 Voted to skip song (${votes.count + 1}/3 people have voted).`);
+      skipVotes.set(message.channel.guild.id, newObject);
     }
   } else {
     player.player.stop(message.channel.guild.id);

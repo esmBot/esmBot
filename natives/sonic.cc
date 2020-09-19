@@ -43,7 +43,7 @@ Napi::Value Sonic(const Napi::CallbackInfo &info)
 
   Napi::Object obj = info[0].As<Napi::Object>();
   Napi::Function cb = info[1].As<Napi::Function>();
-  string text = obj.Get("path").As<Napi::String>().Utf8Value();
+  string text = obj.Get("text").As<Napi::String>().Utf8Value();
 
   SonicWorker* explodeWorker = new SonicWorker(cb, text);
   explodeWorker->Queue();

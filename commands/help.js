@@ -21,7 +21,7 @@ exports.run = async (message, args) => {
         },
         "title": `${prefix}${command}`,
         "url": "https://projectlounge.pw/esmBot/help.html",
-        "description": info.description,
+        "description": command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
         "color": 16711680,
         "fields": [{
           "name": "Aliases",
@@ -32,7 +32,7 @@ exports.run = async (message, args) => {
           "inline": true
         }, {
           "name": "Parameters",
-          "value": info.params ? info.params : "None",
+          "value": command === "tags" ? "[name]" : info.params ? info.params : "None",
           "inline": true
         }]
       }

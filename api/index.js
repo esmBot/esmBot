@@ -23,19 +23,41 @@ app.get("/", (req, res) => {
 });
 
 app.post("/:method", upload.single("image"), async (req, res, next) => {
-  const type = req.file.mimetype === "video/mp4" ? "image/gif" : req.file.mimetype;
+  const type = req.file ? (req.file.mimetype === "video/mp4" ? "image/gif" : req.file.mimetype) : "image/png";
   if (!formats.includes(type)) {
     return res.sendStatus(400);
   }
   const object = {
     cmd: req.params.method,
-    path: req.file.path,
+    path: req.file ? req.file.path : null,
     type: type.split("/")[1],
-    delay: parseInt(req.params.delay)
+    delay: req.query.delay ? parseInt(req.query.delay) : 0
   };
   for (const param of Object.keys(req.query)) {
     if (param === "delay") continue;
-    object[param] = req.query[param];
+    switch (param) {
+      case "sharp":
+      case "flop":
+      case "loop":
+      case "vertical":
+      case "first":
+      case "stretch":
+      case "wide":
+      case "soos":
+      case "slow":
+      case "resize":
+      case "append":
+      case "mc":
+        if (req.query[param] === "true") {
+          object[param] = true;
+        } else {
+          object[param] = false;
+        }
+        break;
+      default:
+        object[param] = req.query[param];
+        break;
+    }
   }
 
   try {

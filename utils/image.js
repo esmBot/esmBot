@@ -11,7 +11,7 @@ module.exports = async (object, fromAPI = false) => {
       params.push(`${element}=${encodeURIComponent(object[element])}`);
     }
     const form = new FormData();
-    form.append("image", fs.createReadStream(object.path));
+    if (object.path) form.append("image", fs.createReadStream(object.path));
     const req = await fetch(`${process.env.API_URL}/${object.cmd}?${params.join("&")}`, {
       method: "POST",
       body: form,
