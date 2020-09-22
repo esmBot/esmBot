@@ -56,14 +56,16 @@ exports.play = async (sound, message, music = false) => {
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
   const oldQueue = this.queues.get(voiceChannel.guild.id);
   if (tracks.length === 0) return client.createMessage(message.channel.id, `${message.author.mention}, I couldn't find that song!`);
-  this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
+  if (music) {
+    this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]); 
+  }
   const connection = await this.manager.join({
     guild: voiceChannel.guild.id,
     channel: voiceChannel.id,
     node: node.id
   });
 
-  if (oldQueue) {
+  if (oldQueue && music) {
     client.createMessage(message.channel.id, `${message.author.mention}, your tune has been added to the queue!`);
   } else {
     this.nextSong(message, connection, tracks[0].track, tracks[0].info, music, voiceChannel);
@@ -109,21 +111,22 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
       logger.error(error);
     });
   }
-  connection.once("end", async (data) => {
+  connection.on("end", async (data) => {
     if (data.reason === "REPLACED") return;
     const queue = this.queues.get(voiceChannel.guild.id);
-    const newQueue = queue.slice(1);
+    const newQueue = queue ? queue.slice(1) : [];
     this.queues.set(voiceChannel.guild.id, newQueue);
-    await playingMessage.delete();
     if (newQueue.length === 0) {
       this.manager.leave(voiceChannel.guild.id);
       connection.destroy();
       this.players.delete(voiceChannel.guild.id);
       this.queues.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
+      await playingMessage.delete();
     } else {
       const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
       this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, true);
+      await playingMessage.delete();
     }
   });
 };
@@ -188,11 +191,11 @@ exports.playing = async (message) => {
       },
       "fields": [{
         "name": "ℹ️ Title:",
-        "value": track.title
+        "value": track.title ? track.title : "Unknown"
       },
       {
         "name": "🎤 Artist:",
-        "value": track.author
+        "value": track.author ? track.author : "Unknown"
       },
       {
         "name": "💬 Channel:",
