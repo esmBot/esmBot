@@ -103,7 +103,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
   this.players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel });
   if (inQueue) {
     connection.on("error", (error) => {
-      playingMessage.delete();
+      if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
       this.manager.leave(voiceChannel.guild.id);
       connection.destroy();
       this.players.delete(voiceChannel.guild.id);
@@ -122,11 +122,11 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
       this.players.delete(voiceChannel.guild.id);
       this.queues.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
-      await playingMessage.delete();
+      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
     } else {
       const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
       this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, true);
-      await playingMessage.delete();
+      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
     }
   });
 };

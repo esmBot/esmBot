@@ -13,7 +13,7 @@ exports.run = async (message, args) => {
     type: image.type.toUpperCase(),
     delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
   });
-  await processMessage.delete();
+  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
   return {
     file: outputFinal,
     name: `caption.${image.type}`

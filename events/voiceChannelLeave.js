@@ -14,7 +14,7 @@ module.exports = async (member, oldChannel) => {
           soundPlayer.players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
-          waitMessage.delete();
+          if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
           connection.player.stop(connection.originalChannel.guild.id);
           soundPlayer.manager.leave(connection.originalChannel.guild.id);
           connection.player.destroy();
@@ -28,11 +28,11 @@ module.exports = async (member, oldChannel) => {
       const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
       awaitRejoin.on("end", (rejoined) => {
         if (rejoined) {
-          waitMessage.delete();
+          if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
         } else {
           const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id);
           if (members.length === 0) {
-            waitMessage.delete();
+            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
             connection.player.stop(connection.originalChannel.guild.id);
             soundPlayer.manager.leave(connection.originalChannel.guild.id);
             connection.player.destroy();

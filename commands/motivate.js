@@ -15,7 +15,7 @@ exports.run = async (message, args) => {
     type: image.type.toUpperCase(),
     delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
   });
-  processMessage.delete();
+  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
   return {
     file: buffer,
     name: `motivate.${image.type}`

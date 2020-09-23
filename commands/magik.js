@@ -10,7 +10,7 @@ exports.run = async (message) => {
     type: image.type.toUpperCase(),
     delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
   });
-  await processMessage.delete();
+  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
   return {
     file: buffer,
     name: `magik.${image.type}`

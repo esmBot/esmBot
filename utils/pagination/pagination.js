@@ -27,7 +27,7 @@ module.exports = async (message, pages, timeout = 120000) => {
               maxMatches: 1
             });
             return messageCollector.on("message", response => {
-              askMessage.delete();
+              if (askMessage.channel.messages.get(askMessage.id)) askMessage.delete();
               page = Number(response.content) - 1;
               currentPage.edit(pages[page]);
               if (manageMessages) msg.removeReaction("🔢", userID);
@@ -44,7 +44,7 @@ module.exports = async (message, pages, timeout = 120000) => {
         case "🗑":
           deleted = true;
           reactionCollector.emit("end");
-          currentPage.delete();
+          if (currentPage.channel.messages.get(currentPage.id)) currentPage.delete();
           return;
         default:
           break;
