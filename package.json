@@ -8,9 +8,12 @@
   },
   "scripts": {
     "build": "node-gyp configure build",
-    "docker:build": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
+    "docker:build-api": "docker build -t esmbot-api --no-cache -f Dockerfile.api .",
+    "docker:build-ss": "docker build -t headless-chrome-alpine --no-cache ./utils/screenshot",
+    "docker:run-api": "docker run --rm --network=host esmbot-api",
     "docker:run-ss": "docker run --rm --network=host --shm-size=128m headless-chrome-alpine",
-    "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev"
+    "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev",
+    "start": "node app.js"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
