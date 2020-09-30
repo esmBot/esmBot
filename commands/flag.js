@@ -1,6 +1,8 @@
 const gm = require("gm").subClass({
   imageMagick: true
 });
+const { promisify } = require("util");
+const fs = require("fs");
 const emojiRegex = require("emoji-regex");
 const emoji = require("node-emoji");
 
@@ -12,6 +14,14 @@ exports.run = async (message, args) => {
   const flag = emoji.unemojify(args[0]).replace(/:/g, "").replace("flag-", "");
   let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
   if (flag === "🏴‍☠️") path = "./assets/images/pirateflag.png";
+  if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";
+  if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
+  if (flag === "🏳️‍⚧️") path = "./assets/images/transflag.png";
+  try {
+    await promisify(fs.access)(path);
+  } catch (e) {
+    return `${message.author.mention}, that isn't a flag!`;
+  }
   const buffer = await gm(image.path).coalesce().out("null:").out("(", path, "-alpha", "set", "-channel", "A", "-evaluate", "multiply", "0.5", "+channel", ")").gravity("North").scale("%[fx:u.w]x%[fx:u.h]!").out("-layers", "composite").bufferPromise(image.type, image.delay);
   return {
     file: buffer,

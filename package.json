@@ -35,7 +35,7 @@
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.9.19",
     "node-emoji": "^1.10.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-tweet": "^0.1.4",
     "puppeteer-core": "^2.1.1",
     "qrcode": "^1.4.4",

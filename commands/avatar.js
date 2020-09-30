@@ -10,7 +10,7 @@ exports.run = async (message, args) => {
     const member = message.channel.guild.members.find(element => {
       return userRegex.test(element.nick) ? userRegex.test(element.nick) : userRegex.test(element.username);
     });
-    return member ? member.dynamicAvatarURL(null, 1024) : message.author.dynamicAvatarURL(null, 1024);
+    return member ? member.user.dynamicAvatarURL(null, 1024) : message.author.dynamicAvatarURL(null, 1024);
   } else {
     return message.author.dynamicAvatarURL(null, 1024);
   }

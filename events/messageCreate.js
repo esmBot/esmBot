@@ -2,9 +2,9 @@ const fs = require("fs");
 const { promisify } = require("util");
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
-const misc = require("../utils/misc.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
+const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
 module.exports = async (message) => {
@@ -15,17 +15,25 @@ module.exports = async (message) => {
   // don't run command if bot can't send messages
   if (!message.channel.guild.members.get(client.user.id).permission.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
+  // this is here to prevent reading the database if a message is unrelated
+  let valid = false;
+  for (const key of commands) {
+    if (message.content.toLowerCase().includes(key)) {
+      valid = true;
+      break;
+    }
+  }
+  if (!valid) return;
+
   // prefix can be a mention or a set of special characters
   const guildDB = await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec();
-  const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  const prefix = prefixMention.test(message.content) ? message.content.match(prefixMention)[0] : guildDB.prefix;
+  const prefix = message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.channel.guild ? guildDB.prefix : "");
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
 
   // separate commands and args
-  const prefixRegex = new RegExp(`^(${misc.regexEscape(prefix)})`);
-  const content = message.content.replace(prefixRegex, "").trim();
+  const content = message.content.substring(prefix.length).trim();
   const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
 

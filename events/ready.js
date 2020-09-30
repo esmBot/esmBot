@@ -12,7 +12,7 @@ const helpGenerator =
   process.env.OUTPUT !== "" ? require("../utils/help.js") : null;
 const twitter =
   process.env.TWITTER === "true" ? require("../utils/twitter.js") : null;
-
+const first = process.env.PMTWO === "true" ? process.env.NODE_APP_INSTANCE === "0" : true;
 let run = false;
 
 // run when ready
@@ -72,7 +72,8 @@ module.exports = async () => {
         tags: misc.tagDefaults,
         prefix: "&",
         warns: {},
-        disabledChannels: []
+        disabledChannels: [],
+        tagsDisabled: false
       });
       await newGuild.save();
     } else if (guildDB) {
@@ -88,7 +89,7 @@ module.exports = async () => {
     }
   }
 
-  if (!run) {
+  if (!run && first) {
     const job = new cron.CronJob("0 0 * * 0", async () => {
       logger.log("Deleting stale guild entries in database...");
       const guildDB = (await database.guilds.find({}).exec());
@@ -114,16 +115,24 @@ module.exports = async () => {
     });
     await newGlobal.save();
   } else {
+    const exists = [];
     for (const command of collections.commands.keys()) {
       if (!global.cmdCounts.has(command)) {
         global.cmdCounts.set(command, 0);
         await global.save();
       }
+      exists.push(command);
     }
+    for (const command of global.cmdCounts.keys()) {
+      if (!exists.includes(command)) {
+        global.cmdCounts.set(command, undefined);
+      }
+    }
+    await global.save();
   }
 
   // generate docs
-  if (helpGenerator) {
+  if (helpGenerator && first) {
     await helpGenerator(process.env.OUTPUT);
   }
 
@@ -136,7 +145,7 @@ module.exports = async () => {
   })();
 
   // tweet stuff
-  if (twitter !== null && twitter.active === false) {
+  if (twitter !== null && twitter.active === false && first) {
     const blocks = await twitter.client.blocks.ids();
     const tweet = async () => {
       const tweets = (
@@ -199,6 +208,7 @@ module.exports = async () => {
     });
   }
 
+  if (process.env.PMTWO === "true") process.send("ready");
   logger.log(`Successfully started ${client.user.username}#${client.user.discriminator} with ${client.users.size} users in ${client.guilds.size} servers.`);
   run = true;
 };
