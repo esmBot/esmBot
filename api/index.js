@@ -39,7 +39,6 @@ app.post("/run", upload.single("image"), async (req, res, next) => {
   if (!isValidJSON(req.body.data)) return res.sendStatus(400);
 
   const object = JSON.parse(req.body.data);
-
   if (!magick.check(object.cmd)) return res.sendStatus(400);
 
   object.path = req.file ? req.file.path : null;
