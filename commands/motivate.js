@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a motivational poster!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
-  const buffer = await magick({
+  const buffer = await magick.run({
     cmd: "motivate",
     path: image.path,
     top: topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;"),

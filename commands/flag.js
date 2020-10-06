@@ -19,7 +19,7 @@ exports.run = async (message, args) => {
   } catch (e) {
     return `${message.author.mention}, that isn't a flag!`;
   }
-  const buffer = await magick({
+  const buffer = await magick.run({
     cmd: "flag",
     path: image.path,
     overlay: path,

@@ -6,7 +6,7 @@ exports.run = async (message, args) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to add a caption!`;
   const newArgs = args.filter(item => !item.includes(image.url) );
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
-  const outputFinal = await magick({
+  const outputFinal = await magick.run({
     cmd: "captionTwo",
     path: image.path,
     caption: newArgs.length !== 0 ? newArgs.join(" ") : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),

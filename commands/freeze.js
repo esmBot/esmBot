@@ -5,7 +5,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide a GIF to freeze!`;
   if (image.type !== "gif") return `${message.author.mention}, that isn't a GIF!`;
-  const buffer = await magick({
+  const buffer = await magick.run({
     cmd: "freeze",
     path: image.path,
     loop: false,

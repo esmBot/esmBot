@@ -6,7 +6,7 @@ exports.run = async (message, args) => {
   const newArgs = args.filter(item => !item.includes(image.url) );
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to add a caption!`;
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
-  const outputFinal = await magick({
+  const outputFinal = await magick.run({
     cmd: "caption",
     path: image.path,
     caption: newArgs.join(" "),

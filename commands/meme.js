@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
   const newArgs = args.filter(item => !item.includes(image.url) );
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to generate a meme!`;
   const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
-  const buffer = await magick({
+  const buffer = await magick.run({
     cmd: "meme",
     path: image.path,
     top: topText.toUpperCase().replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;"),
