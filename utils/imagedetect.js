@@ -1,50 +1,32 @@
 const fetch = require("node-fetch");
-const AbortController = require("abort-controller");
-const fileType = require("file-type");
-const { promisify } = require("util");
-const { writeFile } = require("fs").promises;
-const execPromise = promisify(require("child_process").exec);
-const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 
-// this checks if the file is, in fact, an image
-const typeCheck = async (image, image2, gifv = false) => {
-  // download the file to a buffer
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, 25000);
+// gets the proper image paths
+const getImage = async (image, image2, gifv = false) => {
   try {
-    const imageRequest = await fetch(image, { signal: controller.signal });
-    const imageBuffer = await imageRequest.buffer();
-    if (imageBuffer.size >= 25 * 1024 * 1024) return;
-    // get the file type
-    const imageType = await fileType.fromBuffer(imageBuffer);
-    // check if the file is a jpeg, png, or webp
-    const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (gifv) formats.push("video/mp4");
-    if (imageType && formats.includes(imageType.mime)) {
-      // if it is, then return the url with the file type
-      const path = `/tmp/${Math.random().toString(36).substring(2, 15)}.${imageType.ext}`;
-      await writeFile(path, imageBuffer);
-      const payload = {
-        type: imageType.ext !== "mp4" ? (imageType.ext === "jpg" ? "jpeg" : imageType.ext) : "gif",
-        path: path,
-        url: image2
-      };
-      if (payload.type === "gif") payload.delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${path}`)).stdout.replace("\n", "");
-      return payload;
-    } else {
-      // if not, then return false
-      return false;
+    let requestImage = image;
+    if (gifv) {
+      if (image2.includes("tenor.com") && process.env.TENOR !== "") {
+        const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
+        const json = await data.json();
+        console.log(json.results[0].media[0].gif.url);
+        requestImage = json.results[0].media[0].gif.url;
+      } else if (image2.includes("giphy.com")) {
+        requestImage = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
+      } else if (image2.includes("imgur.com")) {
+        requestImage = image.replace(".mp4", ".gif");
+      }
     }
+    const payload = {
+      url: image2,
+      path: requestImage
+    };
+    return payload;
   } catch (error) {
     if (error.name === "AbortError") {
       throw Error("Timed out");
     } else {
       throw error;
     }
-  } finally {
-    clearTimeout(timeout);
   }
 };
 
@@ -52,25 +34,23 @@ const checkImages = async (message) => {
   let type;
   // first check the embeds
   if (message.embeds.length !== 0) {
-    // embeds can have 2 possible entries with images, we check the thumbnail first
+    // embeds can vary in types, we check for tenor gifs first
     if (message.embeds[0].type === "gifv") {
-      type = await typeCheck(message.embeds[0].video.url, message.embeds[0].video.url, true);
-    } else if (message.embeds[0].thumbnail) {
-      type = await typeCheck(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
-      // if there isn't a thumbnail check the image area
-    } else if (message.embeds[0].image) {
-      type = await typeCheck(message.embeds[0].image.proxy_url, message.embeds[0].image.url);
+      type = await getImage(message.embeds[0].video.url, message.embeds[0].url, true);
+    // then we check for other image types
+    } else if (message.embeds[0].type === "video" || message.embeds[0].type === "image") {
+      type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
+    // finally we check both possible image fields for "generic" embeds
+    } else if (message.embeds[0].type === "rich") {
+      if (message.embeds[0].thumbnail) {
+        type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
+      } else if (message.embeds[0].image) {
+        type = await getImage(message.embeds[0].image.proxy_url, message.embeds[0].image.url);
+      }
     }
   // then check the attachments
-  } else if (message.attachments.length !== 0) {
-    // get type of file
-    type = await typeCheck(message.attachments[0].proxy_url, message.attachments[0].url);
-    // if there's nothing in the attachments check the urls in the message if there are any
-  } else if (urlRegex.test(message.content)) {
-    // get url
-    const url = message.content.match(urlRegex);
-    // get type of file
-    type = await typeCheck(url[0], url[0]);
+  } else if (message.attachments.length !== 0 && message.attachments[0].width) {
+    type = await getImage(message.attachments[0].proxy_url, message.attachments[0].url);
   }
   // if the file is an image then return it
   return type ? type : false;

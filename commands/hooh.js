@@ -4,16 +4,14 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to mirror!`;
-  const buffer = await magick.run({
+  const { buffer, type } = await magick.run({
     cmd: "mirror",
     path: image.path,
-    vertical: true,
-    type: image.type.toUpperCase(),
-    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
+    vertical: true
   });
   return {
     file: buffer,
-    name: `hooh.${image.type}`
+    name: `hooh.${type}`
   };
 };
 

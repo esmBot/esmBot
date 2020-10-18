@@ -5,7 +5,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide a GIF to reverse!`;
   if (image.type !== "gif") return `${message.author.mention}, that isn't a GIF!`;
-  const buffer = await magick.run({
+  const { buffer, type } = await magick.run({
     cmd: "reverse",
     path: image.path,
     delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0

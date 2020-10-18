@@ -19,16 +19,14 @@ exports.run = async (message, args) => {
   } catch (e) {
     return `${message.author.mention}, that isn't a flag!`;
   }
-  const buffer = await magick.run({
+  const { buffer, type } = await magick.run({
     cmd: "flag",
     path: image.path,
-    overlay: path,
-    type: image.type.toUpperCase(),
-    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
+    overlay: path
   });
   return {
     file: buffer,
-    name: `flag.${image.type}`
+    name: `flag.${type}`
   };
 };
 
