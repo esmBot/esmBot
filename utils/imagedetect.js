@@ -3,23 +3,22 @@ const fetch = require("node-fetch");
 // gets the proper image paths
 const getImage = async (image, image2, gifv = false) => {
   try {
-    let requestImage = image;
+    const payload = {
+      url: image2,
+      path: image
+    };
     if (gifv) {
       if (image2.includes("tenor.com") && process.env.TENOR !== "") {
         const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
         const json = await data.json();
-        console.log(json.results[0].media[0].gif.url);
-        requestImage = json.results[0].media[0].gif.url;
+        payload.path = json.results[0].media[0].gif.url;
       } else if (image2.includes("giphy.com")) {
-        requestImage = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
+        payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
       } else if (image2.includes("imgur.com")) {
-        requestImage = image.replace(".mp4", ".gif");
+        payload.path = image.replace(".mp4", ".gif");
       }
+      payload.type = "gif";
     }
-    const payload = {
-      url: image2,
-      path: requestImage
-    };
     return payload;
   } catch (error) {
     if (error.name === "AbortError") {
