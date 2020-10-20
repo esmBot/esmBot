@@ -17,6 +17,11 @@ exports.run = async (object, fromAPI = false) => {
       }
     });
     const buffer = await req.buffer();
+    console.log(buffer.toString());
+    if (buffer.toString() === "nogif") return {
+      buffer: "nogif",
+      type: null
+    };
     return {
       buffer: buffer,
       type: req.headers.get("content-type").split("/")[1]
@@ -24,7 +29,11 @@ exports.run = async (object, fromAPI = false) => {
   } else {
     let type;
     if (!fromAPI && object.path) {
-      type = (await this.getType(object.path)).split("/")[1];
+      type = (object.type ? object.type : await this.getType(object.path)).split("/")[1];
+      if (type !== "gif" && object.onlyGIF) return {
+        buffer: "nogif",
+        type: null
+      };
       object.type = type;
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];

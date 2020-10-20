@@ -4,15 +4,16 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide a GIF to reverse!`;
-  if (image.type !== "gif") return `${message.author.mention}, that isn't a GIF!`;
   const { buffer, type } = await magick.run({
     cmd: "reverse",
     path: image.path,
-    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0
+    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0,
+    onlyGIF: true
   });
+  if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {
     file: buffer,
-    name: "reverse.gif"
+    name: `reverse.${type}`
   };
 };
 

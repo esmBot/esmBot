@@ -4,12 +4,13 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide a GIF to freeze!`;
-  if (image.type !== "gif") return `${message.author.mention}, that isn't a GIF!`;
   const { buffer, type } = await magick.run({
     cmd: "freeze",
     path: image.path,
-    loop: false
+    loop: false,
+    onlyGIF: true
   });
+  if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {
     file: buffer,
     name: `freeze.${type}`

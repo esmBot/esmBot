@@ -17,7 +17,7 @@ const getImage = async (image, image2, gifv = false) => {
       } else if (image2.includes("imgur.com")) {
         payload.path = image.replace(".mp4", ".gif");
       }
-      payload.type = "gif";
+      payload.type = "image/gif";
     }
     return payload;
   } catch (error) {

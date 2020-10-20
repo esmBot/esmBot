@@ -17,11 +17,12 @@ app.post("/run", express.json(), async (req, res, next) => {
   try {
     let type;
     if (object.path) {
-      type = await magick.getType(object.path);
+      type = object.type ? object.type : await magick.getType(object.path);
       if (!type) {
         return res.sendStatus(400);
       }
       object.type = type.split("/")[1];
+      if (object.type !== "gif" && object.onlyGIF) return res.send("nogif");
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
     }
