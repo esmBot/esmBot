@@ -6,7 +6,7 @@ const moment = require("moment");
 require("moment-duration-format");
 const { Manager } = require("@lavacord/eris");
 
-const nodes = require("../lavanodes.json");
+const nodes = require("../servers.json").lava;
 
 exports.players = new Map();
 
@@ -51,7 +51,8 @@ exports.play = async (sound, message, music = false) => {
   if (!message.channel.guild.members.get(client.user.id).permission.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return client.createMessage(message.channel.id, `${message.author.mention}, I can't join this voice channel!`);
   const voiceChannel = message.channel.guild.channels.get(message.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return client.createMessage(message.channel.id, `${message.author.mention}, I don't have permission to join this voice channel!`);
-  if (!music && this.manager.voiceStates.has(message.channel.guild.id) && this.players.get(message.channel.guild.id).type === "music") return client.createMessage(message.channel.id, `${message.author.mention}, I can't play a sound effect while playing music!`);
+  const player = this.players.get(message.channel.guild.id);
+  if (!music && this.manager.voiceStates.has(message.channel.guild.id) && (player && player.type === "music")) return client.createMessage(message.channel.id, `${message.author.mention}, I can't play a sound effect while playing music!`);
   const node = this.manager.idealNodes[0];
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
   const oldQueue = this.queues.get(voiceChannel.guild.id);
@@ -59,11 +60,16 @@ exports.play = async (sound, message, music = false) => {
   if (music) {
     this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]); 
   }
-  const connection = await this.manager.join({
-    guild: voiceChannel.guild.id,
-    channel: voiceChannel.id,
-    node: node.id
-  });
+  let connection;
+  if (player) {
+    connection = player;
+  } else {
+    connection = await this.manager.join({
+      guild: voiceChannel.guild.id,
+      channel: voiceChannel.id,
+      node: node.id
+    });
+  }
 
   if (oldQueue && music) {
     client.createMessage(message.channel.id, `${message.author.mention}, your tune has been added to the queue!`);
@@ -101,7 +107,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
   });
   await connection.play(track);
   this.players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel });
-  if (inQueue) {
+  if (inQueue && connection.listeners("error").length === 0) {
     connection.on("error", (error) => {
       if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
       this.manager.leave(voiceChannel.guild.id);
@@ -111,24 +117,26 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
       logger.error(error);
     });
   }
-  connection.on("end", async (data) => {
-    if (data.reason === "REPLACED") return;
-    const queue = this.queues.get(voiceChannel.guild.id);
-    const newQueue = queue ? queue.slice(1) : [];
-    this.queues.set(voiceChannel.guild.id, newQueue);
-    if (newQueue.length === 0) {
-      this.manager.leave(voiceChannel.guild.id);
-      connection.destroy();
-      this.players.delete(voiceChannel.guild.id);
-      this.queues.delete(voiceChannel.guild.id);
-      if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
-      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-    } else {
-      const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
-      this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, true);
-      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-    }
-  });
+  if (connection.listeners("end").length === 0) {
+    connection.on("end", async (data) => {
+      if (data.reason === "REPLACED") return;
+      const queue = this.queues.get(voiceChannel.guild.id);
+      const newQueue = queue ? queue.slice(1) : [];
+      this.queues.set(voiceChannel.guild.id, newQueue);
+      if (newQueue.length === 0) {
+        this.manager.leave(voiceChannel.guild.id);
+        connection.destroy();
+        this.players.delete(voiceChannel.guild.id);
+        this.queues.delete(voiceChannel.guild.id);
+        if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
+        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+      } else {
+        const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
+        this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, true);
+        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+      }
+    });
+  }
 };
 
 exports.stop = async (message) => {

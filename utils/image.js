@@ -4,32 +4,45 @@ const { promisify } = require("util");
 const AbortController = require("abort-controller");
 const fileType = require("file-type");
 const execPromise = promisify(require("child_process").exec);
+const servers = require("../servers.json").image;
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 exports.run = async (object, fromAPI = false) => {
   if (process.env.API === "true" && !fromAPI) {
-    const req = await fetch(`${process.env.API_URL}/run`, {
+    const currentServer = servers[Math.floor(Math.random() * servers.length)];
+    const req = await fetch(`${currentServer}/run`, {
       method: "POST",
       body: JSON.stringify(object),
       headers: {
         "Content-Type": "application/json"
       }
     });
-    const buffer = await req.buffer();
-    console.log(buffer.toString());
-    if (buffer.toString() === "nogif") return {
+    const json = await req.json();
+    if (json.status === "nogif") return {
       buffer: "nogif",
       type: null
     };
-    return {
-      buffer: buffer,
-      type: req.headers.get("content-type").split("/")[1]
-    };
+    let data;
+    while (!data) {
+      const statusReq = await fetch(`${currentServer}/status?id=${json.id}`);
+      const statusJSON = await statusReq.json();
+      if (statusJSON.status === "success") {
+        const imageReq = await fetch(`${currentServer}/image?id=${json.id}`);
+        data = {
+          buffer: await imageReq.buffer(),
+          type: imageReq.headers.get("content-type").split("/")[1]
+        };
+      } else if (statusJSON.status === "error") {
+        throw new Error(statusJSON.error);
+      }
+    }
+    return data;
   } else {
     let type;
     if (!fromAPI && object.path) {
-      type = (object.type ? object.type : await this.getType(object.path)).split("/")[1];
+      const newType = (object.type ? object.type : await this.getType(object.path));
+      type = newType ? newType.split("/")[1] : "png";
       if (type !== "gif" && object.onlyGIF) return {
         buffer: "nogif",
         type: null

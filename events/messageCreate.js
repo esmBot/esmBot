@@ -3,6 +3,7 @@ const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
+const guildCreate = require("./guildCreate.js");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
@@ -24,7 +25,10 @@ module.exports = async (message) => {
   if (!valid) return;
 
   // prefix can be a mention or a set of special characters
-  const guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
+  let guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
+  if (message.channel.guild && !guildDB) {
+    guildDB = await guildCreate(message.channel.guild);
+  }
   // there's a bit of a workaround here due to member.mention not accounting for both mention types
   const prefix = message.channel.guild ? (message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.content.startsWith(`<@${client.user.id}>`) ? `<@${client.user.id}> ` : guildDB.prefix)) : "";
 

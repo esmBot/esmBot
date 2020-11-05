@@ -30,7 +30,7 @@ module.exports = async () => {
         tagsDisabled: false
       });
       await newGuild.save();
-    } else if (guildDB) {
+    } else {
       if (!guildDB.warns) {
         logger.log(`Creating warn object for guild ${id}...`);
         guildDB.set("warns", {});
