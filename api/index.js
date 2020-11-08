@@ -20,7 +20,10 @@ app.post("/run", express.json(), async (req, res, next) => {
   try {
     let type;
     if (object.path) {
-      type = object.type ? object.type : await magick.getType(object.path);
+      type = object.type;
+      if (!object.type) {
+        type = await magick.getType(object.path);
+      }
       if (!type) {
         return res.sendStatus(400);
       }
