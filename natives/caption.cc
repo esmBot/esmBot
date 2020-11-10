@@ -24,10 +24,10 @@ class CaptionWorker : public Napi::AsyncWorker {
     caption_image.fillColor("black");
     caption_image.alpha(true);
     caption_image.font("Futura");
-    caption_image.fontPointsize(width / 10);
+    caption_image.fontPointsize(width / 13);
     caption_image.textGravity(Magick::CenterGravity);
     caption_image.read("pango:" + caption);
-    caption_image.extent(Geometry(width, caption_image.rows() + (width / 10)), Magick::CenterGravity);
+    caption_image.extent(Geometry(width, caption_image.rows() + (width / 13)), Magick::CenterGravity);
     
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
