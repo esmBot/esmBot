@@ -64,6 +64,13 @@ exports.check = (cmd) => {
 };
 
 exports.getType = async (image) => {
+  if (!image.startsWith("http")) {
+    imageType = await fileType.fromFile(image)
+    if (imageType && formats.includes(imageType.mime)) {
+      return imageType.mime;
+    }
+    return undefined
+  }
   let type;
   const controller = new AbortController();
   const timeout = setTimeout(() => {
