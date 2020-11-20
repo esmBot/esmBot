@@ -1,5 +1,20 @@
 const fetch = require("node-fetch");
+const url = require("url");
 const execPromise = require("util").promisify(require("child_process").exec);
+
+const tenorURLs = [
+  "tenor.com",
+  "www.tenor.com"
+];
+const giphyURLs = [
+  "giphy.com",
+  "www.giphy.com"
+];
+const imgurURLs = [
+  "imgur.com",
+  "www.imgur.com",
+  "i.imgur.com"
+];
 
 // gets the proper image paths
 const getImage = async (image, image2, gifv = false) => {
@@ -9,7 +24,8 @@ const getImage = async (image, image2, gifv = false) => {
       path: image
     };
     if (gifv) {
-      if (image2.includes("tenor.com")) {
+      const host = url.parse(image2).host;
+      if (tenorURLs.includes(host)) {
         if (process.env.TENOR !== "") {
           const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
           const json = await data.json();
@@ -18,9 +34,9 @@ const getImage = async (image, image2, gifv = false) => {
           const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${image}`)).stdout.replace("\n", "");
           payload.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
         }
-      } else if (image2.includes("giphy.com")) {
+      } else if (giphyURLs.includes(host)) {
         payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
-      } else if (image2.includes("imgur.com")) {
+      } else if (imgurURLs.includes(host)) {
         payload.path = image.replace(".mp4", ".gif");
       }
       payload.type = "image/gif";

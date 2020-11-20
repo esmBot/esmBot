@@ -41,9 +41,9 @@ exports.run = (object, fromAPI = false) => {
           const array = [];
           client.on("data", (rawData) => {
             array.push(rawData);
-            if (rawData.length !== 32 * 1024) {
+            /*if (rawData.length < 32 * 1024) {
               client.end();
-            }
+            }*/
           });
           client.once("end", () => {
             const data = Buffer.concat(array);
@@ -52,9 +52,11 @@ exports.run = (object, fromAPI = false) => {
               buffer: data.slice(format.dataStart + 1),
               type: format.buffer.toString().split("/")[1]
             };
-            //console.log(payload);
             socket.close();
             resolve(payload);
+          });
+          client.on("error", (err) => {
+            throw err;
           });
         } else if (opcode === 0x2) {
           reject(req);

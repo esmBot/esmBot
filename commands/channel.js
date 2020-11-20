@@ -8,7 +8,7 @@ exports.run = async (message, args) => {
   const guildDB = await db.guilds.findOne({id: message.channel.guild.id});
   if (args[0].toLowerCase() === "disable") {
     if (args[1] && args[1].match(/^<?[@#]?[&!]?\d+>?$/) && args[1] >= 21154535154122752) {
-      const id = args[1].replace("@", "").replace("#", "").replace("!", "").replace("&", "").replace("<", "").replace(">", "");
+      const id = args[1].replace(/@/g, "").replace(/#/g, "").replace(/!/g, "").replace(/&/g, "").replace(/</g, "").replace(/>/g, "");
       if (guildDB.disabledChannels.includes(id)) return `${message.author.mention}, I'm already disabled in this channel!`;
       guildDB.disabledChannels.push(id);
     } else {
@@ -19,7 +19,7 @@ exports.run = async (message, args) => {
     return `${message.author.mention}, I have been disabled in this channel. To re-enable me, just run \`${guildDB.prefix}channel enable\`.`;
   } else if (args[0].toLowerCase() === "enable") {
     if (args[1] && args[1].match(/^<?[@#]?[&!]?\d+>?$/) && args[1] >= 21154535154122752) {
-      const id = args[1].replace("@", "").replace("#", "").replace("!", "").replace("&", "").replace("<", "").replace(">", "");
+      const id = args[1].replace(/@/g, "").replace(/#/g, "").replace(/!/g, "").replace(/&/g, "").replace(/</g, "").replace(/>/g, "");
       if (!guildDB.disabledChannels.includes(id)) return `${message.author.mention}, I'm not disabled in that channel!`;
       guildDB.disabledChannels = guildDB.disabledChannels.filter(item => item !== id);
     } else {

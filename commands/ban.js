@@ -14,7 +14,7 @@ exports.run = async (message, args) => {
     }
   } else if (args[0].match(/^<?[@#]?[&!]?\d+>?$/) && args[0] >= 21154535154122752) {
     try {
-      const id = args[0].replace("@", "").replace("#", "").replace("!", "").replace("&", "").replace("<", "").replace(">", "");
+      const id = args[0].replace(/@/g, "").replace(/#/g, "").replace(/!/g, "").replace(/&/g, "").replace(/</g, "").replace(/>/g, "");
       await message.channel.guild.banMember(id, 0, `Banned by ID, command used by @${message.author.username}#${message.author.discriminator}`);
       return `Successfully banned user with ID \`${id}\`.`;
     } catch (e) {

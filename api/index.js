@@ -1,4 +1,4 @@
-// code provided by terradice/tzlil
+// code provided by tzlil
 
 const os = require("os");
 const { Worker, isMainThread, parentPort } = require("worker_threads");
@@ -114,6 +114,7 @@ if (isMainThread) {
       log(`${job.uuid} is done`, job.threadNum);
       const server = net.createServer(function(socket) {
         socket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]));
+        socket.end();
       });
       server.listen(job.port, job.addr);
       // handle address in use errors
