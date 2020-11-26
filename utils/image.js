@@ -1,4 +1,5 @@
 const magick = require("../build/Release/image.node");
+const { Worker, isMainThread, parentPort, workerData } = require("worker_threads");
 const fetch = require("node-fetch");
 const { promisify } = require("util");
 const AbortController = require("abort-controller");
@@ -19,6 +20,42 @@ const getFormat = (buffer, delimiter) => {
       };
     }
   }
+};
+
+exports.check = (cmd) => {
+  return magick[cmd] ? true : false;
+};
+
+exports.getType = async (image) => {
+  if (!image.startsWith("http")) {
+    const imageType = await fileType.fromFile(image);
+    if (imageType && formats.includes(imageType.mime)) {
+      return imageType.mime;
+    }
+    return undefined;
+  }
+  let type;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 25000);
+  try {
+    const imageRequest = await fetch(image, { signal: controller.signal, highWaterMark: 512 });
+    const imageBuffer = await imageRequest.buffer();
+    const imageType = await fileType.fromBuffer(imageBuffer);
+    if (imageType && formats.includes(imageType.mime)) {
+      type = imageType.mime;
+    }
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw Error("Timed out");
+    } else {
+      throw error;
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+  return type;
 };
 
 exports.run = (object, fromAPI = false) => {
@@ -66,6 +103,17 @@ exports.run = (object, fromAPI = false) => {
       socket.send(data, 8080, currentServer, (err) => {
         if (err) reject(err);
       });
+    } else if (isMainThread && !fromAPI) {
+      const worker = new Worker(__filename, {
+        workerData: object
+      });
+      worker.on("message", (data) => {
+        resolve({
+          buffer: Buffer.from([...data.buffer]),
+          type: data.type
+        });
+      });
+      worker.on("error", reject);
     } else {
       let type;
       if (!fromAPI && object.path) {
@@ -80,46 +128,18 @@ exports.run = (object, fromAPI = false) => {
         object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
       }
       const data = await promisify(magick[object.cmd])(object);
-      resolve(fromAPI ? data : {
+      const returnObject = fromAPI ? data : {
         buffer: data,
         type: type
-      });
+      };
+      if (!isMainThread && !fromAPI) {
+        parentPort.postMessage(returnObject);
+        process.exit();
+      } else {
+        resolve(returnObject);
+      }
     }
   });
 };
 
-exports.check = (cmd) => {
-  return magick[cmd] ? true : false;
-};
-
-exports.getType = async (image) => {
-  if (!image.startsWith("http")) {
-    const imageType = await fileType.fromFile(image);
-    if (imageType && formats.includes(imageType.mime)) {
-      return imageType.mime;
-    }
-    return undefined;
-  }
-  let type;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, 25000);
-  try {
-    const imageRequest = await fetch(image, { signal: controller.signal, highWaterMark: 512 });
-    const imageBuffer = await imageRequest.buffer();
-    const imageType = await fileType.fromBuffer(imageBuffer);
-    if (imageType && formats.includes(imageType.mime)) {
-      type = imageType.mime;
-    }
-  } catch (error) {
-    if (error.name === "AbortError") {
-      throw Error("Timed out");
-    } else {
-      throw error;
-    }
-  } finally {
-    clearTimeout(timeout);
-  }
-  return type;
-};
+if (!isMainThread && process.env.API !== "true") this.run(workerData);
