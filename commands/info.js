@@ -2,8 +2,6 @@ const client = require("../utils/client.js");
 const { version } = require("../package.json");
 
 exports.run = async () => {
-  const dev = client.users.get(process.env.OWNER);
-  const artist = client.users.get("401980971517214723");
   const infoEmbed = {
     "embed": {
       "description": process.env.NODE_ENV === "development" ? "**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs.**" : "",
@@ -18,11 +16,7 @@ exports.run = async () => {
       },
       {
         "name": "📝 Credits:",
-        "value": `Bot by **${dev.username}#${dev.discriminator}**\nIcon by **${artist.username}#${artist.discriminator}**`
-      },
-      {
-        "name": "👪 Total Users:",
-        "value": client.users.size
+        "value": "Bot by **[Essem](https://essem.space)**\nIcon by **[MintBorrow](https://mintborrow.newgrounds.com)**"
       },
       {
         "name": "💬 Total Servers:",

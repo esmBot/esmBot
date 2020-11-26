@@ -115,6 +115,7 @@ if (isMainThread) {
       const server = net.createServer(function(socket) {
         socket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]));
         socket.end();
+        process.exit();
       });
       server.listen(job.port, job.addr);
       // handle address in use errors

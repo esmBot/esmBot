@@ -1,5 +1,7 @@
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
-const puppeteer = require("puppeteer-core");
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
 const fetch = require("node-fetch");
 
 exports.run = async (message, args) => {

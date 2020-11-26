@@ -1,3 +1,4 @@
+const client = require("./client.js");
 const fetch = require("node-fetch");
 const url = require("url");
 const execPromise = require("util").promisify(require("child_process").exec);
@@ -82,7 +83,21 @@ module.exports = async (cmdMessage) => {
   // we start by checking the current message for images
   const result = await checkImages(cmdMessage);
   if (result !== false) return result;
-  // if there aren't any then iterate over the last few messages in the channel
+  // if there aren't any in the current message then check if there's a reply
+  if (cmdMessage.messageReference) {
+    const replyGuild = client.guilds.get(cmdMessage.messageReference.guildID);
+    if (replyGuild) {
+      const replyChannel = replyGuild.channels.get(cmdMessage.messageReference.channelID);
+      if (replyChannel) {
+        const replyMessage = replyChannel.messages.get(cmdMessage.messageReference.messageID);
+        if (replyMessage) {
+          const replyResult = await checkImages(replyMessage);
+          if (replyResult !== false) return replyResult;
+        }
+      }
+    }
+  }
+  // if there aren't any replies then iterate over the last few messages in the channel
   const messages = await cmdMessage.channel.getMessages();
   // iterate over each message
   for (const message of messages) {

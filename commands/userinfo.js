@@ -47,10 +47,6 @@ exports.run = async (message, args) => {
         {
           "name": "ℹ️ **Status:**",
           "value": member && member.status ? member.status : "Unknown"
-        },
-        {
-          "name": "🎮 **Playing:**",
-          "value": member ? (member.game ? member.game.name : "Nothing") : "Unknown"
         }
       ]
     }
