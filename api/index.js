@@ -1,5 +1,6 @@
 // code provided by tzlil
 
+require("dotenv").config();
 const os = require("os");
 const { Worker, isMainThread, parentPort } = require("worker_threads");
 const magick = require("../utils/image.js");
