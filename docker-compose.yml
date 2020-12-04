@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    image: esmbot
+    restart: unless-stopped
+    volumes:
+    - ./logs:/home/esmBot/.internal/logs
+    env_file:
+      - .env
+    depends_on:
+      - api
+      - chrome
+      - lavalink
+      - mongo
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: esmbot-api
+    restart: unless-stopped
+
+  chrome:
+    build:
+      context: ./utils/screenshot
+    image: headless-chrome-alpine
+    restart: unless-stopped
+
+  lavalink:
+    container_name: lavalink
+    image: fredboat/lavalink:dev
+    restart: unless-stopped
+    volumes:
+      - ./application.yml:/opt/Lavalink/application.yml
+      - ./assets:/opt/Lavalink/assets
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - 8888:8081
+
+volumes:
+  mongo-data:

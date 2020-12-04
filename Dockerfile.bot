@@ -1,0 +1,18 @@
+# Docker/Kubernetes file for running the bot
+
+FROM node:alpine
+
+RUN apk --no-cache upgrade && apk add --no-cache imagemagick imagemagick-dev git msttcorefonts-installer python3 alpine-sdk
+
+RUN update-ms-fonts && fc-cache -f
+
+RUN adduser esmBot -s /bin/sh -D
+WORKDIR /home/esmBot/.internal
+COPY . .
+RUN npm install
+RUN npm run build
+USER esmBot
+
+# EXPOSE 3000
+
+ENTRYPOINT ["node", "app.js"]
