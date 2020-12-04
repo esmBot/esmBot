@@ -9,8 +9,15 @@ services:
     restart: unless-stopped
     volumes:
     - ./logs:/home/esmBot/.internal/logs
+    - bot-output:/home/esmBot/output
+    - bot-temp:/home/esmBot/temp
     env_file:
       - .env
+    environment:
+      OUTPUT: /home/esmBot/help
+      TEMPDIR: /home/esmBot/temp
+    links:
+      - lavalink
     depends_on:
       - api
       - chrome
@@ -54,4 +61,6 @@ services:
       - 8888:8081
 
 volumes:
+  bot-output:
+  bot-temp:
   mongo-data:
