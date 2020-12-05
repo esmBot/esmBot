@@ -2,7 +2,40 @@
 
 FROM node:alpine
 
-RUN apk --no-cache upgrade && apk add --no-cache imagemagick imagemagick-dev git msttcorefonts-installer python3 alpine-sdk ffmpeg
+RUN apk --no-cache upgrade
+RUN apk add --no-cache git msttcorefonts-installer python3 alpine-sdk ffmpeg \
+    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev perl-dev \
+    ghostscript-dev libtool tiff-dev lcms2-dev libwebp-dev libxml2-dev libx11-dev \
+    libxext-dev chrpath libheif-dev pango-dev freetype fontconfig ghostscript \
+    ghostscript-fonts lcms2 graphviz
+
+# install imagemagick from source rather than using the package
+# since the alpine package does not include pango support.
+RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
+    && cd ImageMagick \
+    && git checkout 7.0.10-45 \
+    && ./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--enable-static \
+		--disable-openmp \
+		--with-threads \
+		--with-x \
+		--with-tiff \
+		--with-png \
+		--with-webp \
+		--with-gslib \
+		--with-gs-font-dir=/usr/share/fonts/Type1 \
+		--with-heic \
+		--with-modules \
+		--with-xml \
+		--with-perl \
+		--with-perl-options="PREFIX=/usr INSTALLDIRS=vendor" \
+		--with-pango \
+    && make \
+    && sudo make install
 
 RUN update-ms-fonts && fc-cache -f
 
