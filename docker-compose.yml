@@ -8,34 +8,55 @@ services:
     image: esmbot
     restart: unless-stopped
     volumes:
-    - ./logs:/home/esmBot/.internal/logs
-    - bot-output:/home/esmBot/output
-    - bot-temp:/home/esmBot/temp
+      - ./logs:/home/esmBot/.internal/logs
+      - ./servers.docker-compose.json:/home/esmBot/.internal/servers.json
+      - bot-output:/home/esmBot/output
+      - bot-temp:/home/esmBot/temp
     env_file:
       - .env
     environment:
       OUTPUT: /home/esmBot/help
       TEMPDIR: /home/esmBot/temp
+
+      MONGO: mongodb://mongo:27017/esmBot
+      # chrome remote debugger can only be accessed over localhost or IP
+      CHROME: 172.20.0.4:9222
     links:
       - lavalink
+      - chrome
     depends_on:
       - api
       - chrome
       - lavalink
       - mongo
 
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.2
+
+
   api:
+    container_name: api
     build:
       context: .
       dockerfile: Dockerfile.api
     image: esmbot-api
     restart: unless-stopped
+    volumes:
+      - ./servers.docker-compose.json:/home/esmBot/.internal/servers.json
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.3
 
   chrome:
+    container_name: chrome
     build:
       context: ./utils/screenshot
     image: headless-chrome-alpine
     restart: unless-stopped
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.4
 
   lavalink:
     container_name: lavalink
@@ -44,6 +65,9 @@ services:
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
       - ./assets:/opt/Lavalink/assets
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.5
 
   mongo:
     container_name: mongo
@@ -51,6 +75,9 @@ services:
     restart: unless-stopped
     volumes:
       - mongo-data:/data/db
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.6
 
   mongo-express:
     image: mongo-express
@@ -59,8 +86,19 @@ services:
       - mongo
     ports:
       - 8888:8081
+    networks:
+      esmbot:
+        ipv4_address: 172.20.0.7
 
 volumes:
   bot-output:
   bot-temp:
   mongo-data:
+
+networks:
+  esmbot:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
