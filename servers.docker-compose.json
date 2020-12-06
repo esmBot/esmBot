@@ -1,8 +1,0 @@
-{
-  "lava": [
-    { "id": "1", "host": "lavalink", "port": 2333, "password": "youshallnotpass" }
-  ],
-  "image": [
-    "api"
-  ]
-}

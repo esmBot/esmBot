@@ -9,7 +9,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./logs:/home/esmBot/.internal/logs
-      - ./servers.docker-compose.json:/home/esmBot/.internal/servers.json
       - bot-output:/home/esmBot/output
       - bot-temp:/home/esmBot/temp
     env_file:
@@ -42,8 +41,6 @@ services:
       dockerfile: Dockerfile.api
     image: esmbot-api
     restart: unless-stopped
-    volumes:
-      - ./servers.docker-compose.json:/home/esmBot/.internal/servers.json
     networks:
       esmbot:
         ipv4_address: 172.20.0.3
