@@ -1,4 +1,4 @@
-# Docker/Kubernetes file for running the image API
+# Docker/Kubernetes file for running the bot
 
 FROM node:alpine
 
@@ -41,7 +41,6 @@ RUN update-ms-fonts && fc-cache -f
 
 RUN adduser esmBot -s /bin/sh -D
 WORKDIR /home/esmBot/.internal
-
 COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 RUN npm install
@@ -49,6 +48,4 @@ COPY . .
 RUN npm run build
 USER esmBot
 
-EXPOSE 3000
-
-ENTRYPOINT ["node", "api/index.js"]
+ENTRYPOINT ["node", "app.js"]
