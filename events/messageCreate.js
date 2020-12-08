@@ -64,11 +64,14 @@ module.exports = async (message) => {
         await client.createMessage(message.channel.id, {
           embed: {
             color: 16711680,
-            title: "What's this?",
-            url: "https://projectlounge.pw/esmBot#faq-large",
+            title: "Here's your image!",
+            url: `https://projectlounge.pw/tmp/${filename}`,
             image: {
               url: `https://projectlounge.pw/tmp/${filename}`
-            }
+            },
+            footer: {
+              text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
+            },
           }
         });
       } else {
