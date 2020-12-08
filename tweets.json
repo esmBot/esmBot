@@ -1,0 +1,29 @@
+{
+  "tweets": [
+    "{{media}}",
+    "This is an example tweet!",
+    "{{characters}}: {{phrases}}",
+    "I'm personally a pretty big fan of {{games}}.",
+    "This is another example tweet!"
+  ],
+  "replies": [
+    "This is an example reply!",
+    "Put some more replies in here!"
+  ],
+  "media": [
+    "<Put some media URLs in here!>",
+    "pic.twitter.com/v8NSW2mC95"
+  ],
+  "phrases": [
+    "Here is a phrase that I can say!"
+  ],
+  "games": [
+    "Discord"
+  ],
+  "characters": [
+    "esmBot"
+  ],
+  "download": [
+    "I really do not like downloader bots."
+  ]
+}

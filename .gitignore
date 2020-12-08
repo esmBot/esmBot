@@ -36,7 +36,6 @@ coverage.lcov
 bannedusers.json
 *.code-workspace
 todo.txt
-tweets.json
 .vscode/
 migratedb.js
 processed.txt
