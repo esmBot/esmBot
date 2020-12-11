@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./logs:/home/esmBot/.internal/logs
-      - bot-output:/home/esmBot/output
+      - bot-help:/home/esmBot/help
       - bot-temp:/home/esmBot/temp
     env_file:
       - .env
@@ -88,7 +88,7 @@ services:
         ipv4_address: 172.20.0.7
 
 volumes:
-  bot-output:
+  bot-help:
   bot-temp:
   mongo-data:
 
@@ -98,4 +98,3 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1

@@ -6,7 +6,7 @@ const moment = require("moment");
 require("moment-duration-format");
 const { Manager } = require("@lavacord/eris");
 
-const nodes = require("../servers.json").lava;
+let nodes = require("../servers.json").lava;
 
 exports.players = new Map();
 
@@ -20,17 +20,17 @@ exports.status = false;
 exports.connected = false;
 
 exports.checkStatus = async () => {
-  const statuses = [];
+  const newNodes = [];
   for (const node of nodes) {
     try {
       const response = await fetch(`http://${node.host}:${node.port}/version`, { headers: { Authorization: node.password } }).then(res => res.text());
-      if (response) statuses.push(false);
+      if (response) newNodes.push(node);
     } catch {
-      statuses.push(true);
+      logger.log(`Failed to get status of Lavalink node ${node.host}.`);
     }
   }
-  const result = statuses.filter(Boolean);
-  this.status = result.length > 0 ? true : false;
+  nodes = newNodes;
+  this.status = newNodes.length === 0 ? true : false;
   return this.status;
 };
 

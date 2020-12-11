@@ -41,11 +41,16 @@ RUN update-ms-fonts && fc-cache -f
 
 RUN adduser esmBot -s /bin/sh -D
 WORKDIR /home/esmBot/.internal
+
+COPY ./assets/caption.otf /home/esmBot/.font/caption.otf
+COPY ./assets/caption2.ttf /home/esmBot/.font/caption2.ttf
+COPY ./assets/hbc.ttf /home/esmBot/.font/hbc.ttf
+RUN fc-cache -f
+
 COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 RUN npm install
 COPY . .
-RUN npm run build
 USER esmBot
 
 ENTRYPOINT ["node", "app.js"]
