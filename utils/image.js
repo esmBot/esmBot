@@ -64,39 +64,45 @@ exports.run = (object, fromAPI = false) => {
       const currentServer = servers[Math.floor(Math.random() * servers.length)];
       const socket = dgram.createSocket("udp4");
       const data = Buffer.concat([Buffer.from([0x1]), Buffer.from(JSON.stringify(object))]);
-  
-      //let jobID;
+
+      let timeout = setTimeout(() => {
+        reject("Timed out");
+      }, 25000);
+      
+      let jobID;
       socket.on("message", (msg) => {
+        clearTimeout(timeout);
         const opcode = msg.readUint8(0);
-        const req = msg.slice(1, msg.length);
+        const req = msg.slice(37, msg.length);
+        const uuid = msg.slice(1, 36).toString();
         if (opcode === 0x0) {
-          //jobID = req;
-          //console.log(`Our job UUID is: ${jobID}`);
+          jobID = uuid;
+          timeout = setTimeout(() => {
+            reject("Timed out");
+          }, 300000);
         } else if (opcode === 0x1) {
-          //console.log(`Job ${jobID} is finished!`);
-          const client = net.createConnection(req.toString(), currentServer);
-          const array = [];
-          client.on("data", (rawData) => {
-            array.push(rawData);
-            /*if (rawData.length < 32 * 1024) {
-              client.end();
-            }*/
-          });
-          client.once("end", () => {
-            const data = Buffer.concat(array);
-            const format = getFormat(data, "\n");
-            const payload = {
-              buffer: data.slice(format.dataStart + 1),
-              type: format.buffer.toString().split("/")[1]
-            };
-            socket.close();
-            resolve(payload);
-          });
-          client.on("error", (err) => {
-            throw err;
-          });
+          if (jobID === uuid) {
+            const client = net.createConnection(req.toString(), currentServer);
+            const array = [];
+            client.on("data", (rawData) => {
+              array.push(rawData);
+            });
+            client.once("end", () => {
+              const data = Buffer.concat(array);
+              const format = getFormat(data, "\n");
+              const payload = {
+                buffer: data.slice(format.dataStart + 1),
+                type: format.buffer.toString().split("/")[1]
+              };
+              socket.close();
+              resolve(payload);
+            });
+            client.on("error", (err) => {
+              throw err;
+            });
+          }
         } else if (opcode === 0x2) {
-          reject(req);
+          if (jobID === uuid) reject(req);
         }
       });
   

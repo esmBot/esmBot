@@ -39,7 +39,7 @@ if (isMainThread) {
     });
     worker.on("error", err => {
       console.error("worker error:", err);
-      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
+      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
 
       workingWorkers--;
       if (queue.length > 0) {
@@ -143,10 +143,10 @@ if (isMainThread) {
           }, 500);
         }
       });
-      socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.port.toString())]), job.port, job.addr);
+      socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr);
       parentPort.postMessage(job.uuid); //Inform main thread about this worker freeing up
     } catch (e) {
-      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(e.toString())]), job.port, job.address);
+      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(job.uuid), Buffer.from(e.toString())]), job.port, job.address);
       parentPort.postMessage(job.uuid);
     }
   });
