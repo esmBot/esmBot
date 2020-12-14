@@ -5,7 +5,7 @@ exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to sharpen!`;
   const { buffer, type } = await magick.run({
-    cmd: "sharpen",
+    cmd: "blur",
     path: image.path,
     sharp: true
   });

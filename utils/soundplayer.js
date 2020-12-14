@@ -58,7 +58,7 @@ exports.play = async (sound, message, music = false) => {
   const oldQueue = this.queues.get(voiceChannel.guild.id);
   if (tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
   if (music) {
-    this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]); 
+    this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
   }
   let connection;
   if (player) {

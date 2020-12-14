@@ -37,10 +37,24 @@ if (isMainThread) {
         delete jobs[uuid];
       }
     });
-    worker.on("error", err => console.error("worker error:", err));
+    worker.on("error", err => {
+      console.error("worker error:", err);
+      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
+
+      workingWorkers--;
+      if (queue.length > 0) {
+        acceptJob(queue[0]);
+        delete jobs[uuid];
+      }
+    });
     worker.on("exit", (code) => {
-      if (code !== 0)
-        console.error(`Worker stopped with exit code ${code}`);
+      workingWorkers--;
+      if (queue.length > 0) {
+        acceptJob(queue[0]);
+        delete jobs[uuid];
+      }
+
+      if (code !== 0) console.error(`Worker stopped with exit code ${code}`);
     });
 
 

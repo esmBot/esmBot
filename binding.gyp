@@ -12,7 +12,7 @@
       "libraries": [
         "<!(pkg-config --libs Magick++)",
       ],
-      "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS", "MAGICKCORE_HDRI_ENABLE=false", "MAGICKCORE_QUANTUM_DEPTH=16"]
+      "defines": ["NAPI_CPP_EXCEPTIONS", "MAGICKCORE_HDRI_ENABLE=false", "MAGICKCORE_QUANTUM_DEPTH=16"]
     }
   ]
 }
