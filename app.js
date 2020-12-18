@@ -59,9 +59,15 @@ async function init() {
       handler.unload(command);
     }
     client.disconnect();
-    require("./utils/database.js").connection.close(() => {
+    const db = require("./utils/database.js");
+    if (process.env.DB === "mongo") {
+      db.connection.close(() => {
+        process.exit(0);
+      });
+    } else if (process.env.DB === "postgres") {
+      db.connection.end();
       process.exit(0);
-    });
+    }
   });
 }
 

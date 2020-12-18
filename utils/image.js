@@ -65,21 +65,18 @@ exports.run = (object, fromAPI = false) => {
       const socket = dgram.createSocket("udp4");
       const data = Buffer.concat([Buffer.from([0x1]), Buffer.from(JSON.stringify(object))]);
 
-      let timeout = setTimeout(() => {
+      const timeout = setTimeout(() => {
         reject("Timed out");
       }, 25000);
       
       let jobID;
       socket.on("message", (msg) => {
-        clearTimeout(timeout);
         const opcode = msg.readUint8(0);
         const req = msg.slice(37, msg.length);
         const uuid = msg.slice(1, 36).toString();
         if (opcode === 0x0) {
+          clearTimeout(timeout);
           jobID = uuid;
-          timeout = setTimeout(() => {
-            reject("Timed out");
-          }, 300000);
         } else if (opcode === 0x1) {
           if (jobID === uuid) {
             const client = net.createConnection(req.toString(), currentServer);

@@ -15,7 +15,6 @@ Default prefix is \`&\`.
 
 ## Table of Contents
 + [**General**](#💻-general)
-+ [**Moderation**](#🔨-moderation)
 + [**Tags**](#🏷️-tags)
 + [**Fun**](#👌-fun)
 + [**Image Editing**](#🖼️-image-editing)
@@ -25,7 +24,6 @@ Default prefix is \`&\`.
   const commands = collections.commands;
   const categories = {
     general: ["## 💻 General"],
-    moderation: ["## 🔨 Moderation"],
     tags: ["## 🏷️ Tags"],
     fun: ["## 👌 Fun"],
     images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)"],
@@ -55,7 +53,7 @@ Default prefix is \`&\`.
       categories.music.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
     }
   }
-  fs.writeFile(output, `${template}\n${categories.general.join("\n")}\n\n${categories.moderation.join("\n")}\n\n${categories.tags.join("\n")}\n\n${categories.fun.join("\n")}\n\n${categories.images.join("\n")}\n\n${categories.soundboard.join("\n")}\n\n${categories.music.join("\n")}`, () => {
+  fs.writeFile(output, `${template}\n${categories.general.join("\n")}\n\n${categories.tags.join("\n")}\n\n${categories.fun.join("\n")}\n\n${categories.images.join("\n")}\n\n${categories.soundboard.join("\n")}\n\n${categories.music.join("\n")}`, () => {
     logger.log("The help docs have been generated.");
   });
 };

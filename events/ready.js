@@ -1,6 +1,5 @@
 const client = require("../utils/client.js");
 const database = require("../utils/database.js");
-const collections = require("../utils/collections.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
 const misc = require("../utils/misc.js");
@@ -16,58 +15,7 @@ module.exports = async () => {
   // connect to lavalink
   if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
 
-  // make sure settings/tags exist
-  for (const [id] of client.guilds) {
-    const guildDB = await database.guilds.findOne({id: id});
-    if (!guildDB) {
-      logger.log(`Registering guild database entry for guild ${id}...`);
-      const newGuild = new database.guilds({
-        id: id,
-        tags: misc.tagDefaults,
-        prefix: process.env.PREFIX,
-        warns: {},
-        disabledChannels: [],
-        tagsDisabled: false
-      });
-      await newGuild.save();
-    } else {
-      if (!guildDB.warns) {
-        logger.log(`Creating warn object for guild ${id}...`);
-        guildDB.set("warns", {});
-        await guildDB.save();
-      } else if (!guildDB.disabledChannels) {
-        logger.log(`Creating disabled channels object for guild ${id}...`);
-        guildDB.set("disabledChannels", []);
-        await guildDB.save();
-      }
-    }
-  }
-
-  const global = await database.global.findOne({});
-  if (!global) {
-    const countObject = {};
-    for (const command of collections.commands.keys()) {
-      countObject[command] = 0;
-    }
-    const newGlobal = new database.global({
-      cmdCounts: countObject
-    });
-    await newGlobal.save();
-  } else {
-    const exists = [];
-    for (const command of collections.commands.keys()) {
-      if (!global.cmdCounts.has(command)) {
-        global.cmdCounts.set(command, 0);
-      }
-      exists.push(command);
-    }
-    for (const command of global.cmdCounts.keys()) {
-      if (!exists.includes(command)) {
-        global.cmdCounts.set(command, undefined);
-      }
-    }
-    await global.save();
-  }
+  await database.handleCounts();
 
   // generate docs
   if (helpGenerator && first) await helpGenerator(process.env.OUTPUT);
@@ -104,16 +52,8 @@ module.exports = async () => {
     try {
       const stream = twitter.client.statuses.filter(`@${process.env.HANDLE}`);
       stream.on("data", async (tweet) => {
-        if (
-          tweet.user.screen_name !== "esmBot_" &&
-        !blocks.ids.includes(tweet.user.id_str)
-        ) {
-          let tweetContent;
-          if (new RegExp(["@this_vid", "@DownloaderBot", "GetVideoBot", "@thisvid_"].join("|")).test(tweet.text)) {
-            tweetContent = await misc.getTweet(twitter.tweets, true, true);
-          } else {
-            tweetContent = await misc.getTweet(twitter.tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
-          }
+        if (tweet.user.screen_name !== "esmBot_" && !blocks.ids.includes(tweet.user.id_str)) {
+          const tweetContent = await misc.getTweet(twitter.tweets, true).replace(/{{user}}/gm, `@${tweet.user.screen_name}`);
           const payload = {
             status: `@${tweet.user.screen_name} ${tweetContent}`,
             in_reply_to_status_id: tweet.id_str,

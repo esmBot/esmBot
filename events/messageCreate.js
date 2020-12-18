@@ -3,7 +3,6 @@ const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
-const guildCreate = require("./guildCreate.js");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
@@ -24,13 +23,21 @@ module.exports = async (message) => {
   }
   if (!valid) return;
 
-  // prefix can be a mention or a set of special characters
-  let guildDB = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }).lean().exec() : null;
-  if (message.channel.guild && !guildDB) {
-    guildDB = await guildCreate(message.channel.guild);
+  let prefixCandidate;
+  if (collections.prefixCache.has(message.channel.guild.id)) {
+    prefixCandidate = collections.prefixCache.get(message.channel.guild.id);
+  } else {
+    let guildDB = message.channel.guild ? await database.getGuild(message.channel.guild.id) : null;
+    if (message.channel.guild && !(guildDB && guildDB.disabled)) {
+      guildDB = await database.fixGuild(message.channel.guild);
+    }
+    prefixCandidate = guildDB.prefix;
+    collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
   }
-  // there's a bit of a workaround here due to member.mention not accounting for both mention types
-  const prefix = message.channel.guild ? (message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.content.startsWith(`<@${client.user.id}>`) ? `<@${client.user.id}> ` : guildDB.prefix)) : "";
+
+  // this line be like Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain.
+  // there's also bit of a workaround here due to member.mention not accounting for both mention types
+  const prefix = message.channel.guild ? (message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.content.startsWith(`<@${client.user.id}>`) ? `<@${client.user.id}> ` : prefixCandidate)) : "";
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
@@ -41,7 +48,14 @@ module.exports = async (message) => {
   const command = args.shift().toLowerCase();
 
   // don't run if message is in a disabled channel
-  if (guildDB && guildDB.disabledChannels && guildDB.disabledChannels.includes(message.channel.id) && command != "channel") return;
+  if (collections.disabledCache.has(message.channel.guild.id)) {
+    const disabled = collections.disabledCache.get(message.channel.guild.id);
+    if (disabled.includes(message.channel.id) && command != "channel") return;
+  } else if (message.channel.guild) {
+    const guildDB = await database.getGuild(message.channel.guild.id);
+    collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
+    if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
+  }
 
   // check if command exists
   const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));
@@ -50,10 +64,7 @@ module.exports = async (message) => {
   // actually run the command
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
-    const global = (await database.global.findOne({}).exec());
-    const count = global.cmdCounts.get(collections.aliases.has(command) ? collections.aliases.get(command) : command);
-    global.cmdCounts.set(collections.aliases.has(command) ? collections.aliases.get(command) : command, parseInt(count) + 1);
-    await global.save();
+    await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);

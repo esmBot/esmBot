@@ -6,13 +6,18 @@ const paginator = require("../utils/pagination/pagination.js");
 const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://projectlounge.pw/esmBot/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional.", "esmBot is hosted and paid for completely out-of-pocket by the main developer. If you want to support development, please consider donating! https://patreon.com/TheEssem"];
 
 exports.run = async (message, args) => {
-  const { prefix } = message.channel.guild ? await database.guilds.findOne({ id: message.channel.guild.id }) : "N/A";
+  const { prefix } = message.channel.guild ? await database.getGuild(message.channel.guild.id) : "N/A";
   const commands = collections.commands;
   const aliases = collections.aliases;
   if (args.length !== 0 && (commands.has(args[0].toLowerCase()) || aliases.has(args[0].toLowerCase()))) {
     const command = aliases.has(args[0].toLowerCase()) ? collections.aliases.get(args[0].toLowerCase()) : args[0].toLowerCase();
     const info = collections.info.get(command);
-    const counts = (await database.global.findOne({})).cmdCounts;
+    const countDB = await database.getCounts();
+    const counts = countDB.reduce((acc, val) => {
+      const [key, value] = val;
+      acc[key] = value;
+      return acc;
+    }, {});
     const embed = {
       "embed": {
         "author": {
@@ -28,7 +33,7 @@ exports.run = async (message, args) => {
           "value": info.aliases ? info.aliases.join(", ") : "None"
         }, {
           "name": "Times Used",
-          "value": counts.get(command),
+          "value": counts[command],
           "inline": true
         }, {
           "name": "Parameters",
