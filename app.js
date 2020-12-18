@@ -60,11 +60,11 @@ async function init() {
     }
     client.disconnect();
     const db = require("./utils/database.js");
-    if (process.env.DB === "mongo") {
+    if (process.env.DB_DRIVER=== "mongo") {
       db.connection.close(() => {
         process.exit(0);
       });
-    } else if (process.env.DB === "postgres") {
+    } else if (process.env.DB_DRIVER=== "postgres") {
       db.connection.end();
       process.exit(0);
     }
