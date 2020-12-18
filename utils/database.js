@@ -31,10 +31,10 @@ if (process.env.DB === "mongo") {
 } else if (process.env.DB === "postgres") {
   const { Pool } = require("pg");
   const pool = new Pool({
-    user: "esmbot",
-    host: "localhost",
-    database: "esmbot",
-    port: 5432
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DB,
+    port: process.env.PG_PORT
   });
   exports.connection = pool;
 }
