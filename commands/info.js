@@ -24,14 +24,14 @@ exports.run = async () => {
       },
       {
         "name": "✅ Official Server:",
-        "value": "[Click here!](https://discord.gg/vfFM7YT)"
+        "value": "[Click here!](https://projectlounge.pw/support)"
       },
       {
         "name": "💻 Source Code:",
         "value": "[Click here!](https://github.com/esmBot/esmBot)"
       },
       {
-        "name": "<:twitter:652550515372064768> Twitter:",
+        "name": "🐦 Twitter:",
         "value": "[Click here!](https://twitter.com/esmBot_)"
       }
       ]
