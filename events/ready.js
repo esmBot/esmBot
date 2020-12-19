@@ -23,7 +23,7 @@ module.exports = async () => {
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {
     client.editStatus("dnd", {
-      name: `${misc.random(messages)} | @esmBot help`,
+      name: `${misc.random(messages)} | @${client.user.username} help`,
     });
     setTimeout(activityChanger, 900000);
   })();

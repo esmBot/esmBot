@@ -23,7 +23,7 @@ const globalSchema = new mongoose.Schema({
 });
 const Global = mongoose.model("Global", globalSchema);
 
-exports.connection = mongoose.connection;
+const connection = mongoose.connection;
 
 exports.getGuild = async (query) => {
   return await Guild.findOne({ id: query });
@@ -134,4 +134,8 @@ exports.setup = async () => {
     }
     await global.save();
   }
+};
+
+exports.stop = async () => {
+  await connection.disconnect();
 };

@@ -105,3 +105,7 @@ exports.setup = async () => {
     }
   }
 };
+
+exports.stop = async () => {
+  await connection.end();
+};
