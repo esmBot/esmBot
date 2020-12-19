@@ -1,10 +1,7 @@
 require("dotenv").config();
 const { Pool } = require("pg");
 const pool = new Pool({
-  user: "esmbot",
-  host: "localhost",
-  database: "esmbot",
-  port: 5432
+  connectionString: process.env.DB
 });
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO, { poolSize: 10, bufferMaxEntries: 0, useNewUrlParser: true, useUnifiedTopology: true });

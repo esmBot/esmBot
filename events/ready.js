@@ -15,7 +15,7 @@ module.exports = async () => {
   // connect to lavalink
   if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
 
-  await database.handleCounts();
+  await database.setup();
 
   // generate docs
   if (helpGenerator && first) await helpGenerator(process.env.OUTPUT);
