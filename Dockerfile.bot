@@ -47,8 +47,8 @@ COPY ./assets/caption2.ttf /home/esmBot/.font/caption2.ttf
 COPY ./assets/hbc.ttf /home/esmBot/.font/hbc.ttf
 RUN fc-cache -f
 
-COPY ./package.json package.json
-COPY ./package-lock.json package-lock.json
+COPY --chown=node:node ./package.json package.json
+COPY --chown=node:node ./package-lock.json package-lock.json
 RUN npm install
 COPY . .
 USER esmBot
