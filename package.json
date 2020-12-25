@@ -54,10 +54,8 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
     "erlpack": "github:abalabahaha/erlpack",
-    "express": "^4.17.1",
     "mongoose": "^5.11.8",
     "pg": "^8.5.1",
-    "pg-cursor": "^2.5.2",
     "uuid": "^8.3.1",
     "zlib-sync": "^0.1.6"
   }
