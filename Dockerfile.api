@@ -4,10 +4,8 @@ FROM node:alpine
 
 RUN apk --no-cache upgrade
 RUN apk add --no-cache git msttcorefonts-installer python3 alpine-sdk ffmpeg \
-    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev perl-dev \
-    ghostscript-dev libtool tiff-dev lcms2-dev libwebp-dev libxml2-dev libx11-dev \
-    libxext-dev chrpath libheif-dev pango-dev freetype fontconfig ghostscript \
-    ghostscript-fonts lcms2 graphviz
+    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
+    libtool libwebp-dev libxml2-dev pango-dev freetype fontconfig
 
 # install imagemagick from source rather than using the package
 # since the alpine package does not include pango support.
@@ -22,18 +20,11 @@ RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
 		--enable-static \
 		--disable-openmp \
 		--with-threads \
-		--with-x \
-		--with-tiff \
 		--with-png \
 		--with-webp \
-		--with-gslib \
-		--with-gs-font-dir=/usr/share/fonts/Type1 \
-		--with-heic \
 		--with-modules \
-		--with-xml \
-		--with-perl \
-		--with-perl-options="PREFIX=/usr INSTALLDIRS=vendor" \
 		--with-pango \
+		--without-hdri \
     && make \
     && sudo make install
 
@@ -42,13 +33,13 @@ RUN update-ms-fonts && fc-cache -f
 RUN adduser esmBot -s /bin/sh -D
 WORKDIR /home/esmBot/.internal
 
-COPY ./assets/caption.otf /home/esmBot/.font/caption.otf
-COPY ./assets/caption2.ttf /home/esmBot/.font/caption2.ttf
-COPY ./assets/hbc.ttf /home/esmBot/.font/hbc.ttf
-RUN fc-cache -f
+COPY ./assets/caption.otf /usr/share/fonts/caption.otf
+COPY ./assets/caption2.ttf /usr/share/fonts/caption2.ttf
+COPY ./assets/hbc.ttf /usr/share/fonts/hbc.ttf
+RUN fc-cache -fv
 
-COPY ./package.json package.json
-COPY ./package-lock.json package-lock.json
+COPY --chown=node:node ./package.json package.json
+COPY --chown=node:node ./package-lock.json package-lock.json
 RUN npm install
 COPY . .
 RUN npm run build
