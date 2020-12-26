@@ -24,7 +24,7 @@ exports.run = async (message, args) => {
           "name": "esmBot Help",
           "icon_url": client.user.avatarURL
         },
-        "title": `${prefix}${command}`,
+        "title": `${message.channel.guild ? prefix : ""}${command}`,
         "url": "https://projectlounge.pw/esmBot/help.html",
         "description": command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
         "color": 16711680,
@@ -106,7 +106,7 @@ exports.run = async (message, args) => {
           },
           "fields": [{
             "name": "Prefix",
-            "value": prefix
+            "value": message.channel.guild ? prefix : "N/A"
           }, {
             "name": "Tip",
             "value": misc.random(tips)

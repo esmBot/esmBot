@@ -157,9 +157,12 @@ if (isMainThread) {
 
       log(`${job.uuid} is done`, job.threadNum);
       const server = net.createServer(function(socket) {
-        socket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]));
-        socket.end();
-        process.exit();
+        socket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
+          if (err) console.error(err);
+          socket.end(() => {
+            process.exit();
+          });
+        });
       });
       server.listen(job.port, job.addr);
       // handle address in use errors

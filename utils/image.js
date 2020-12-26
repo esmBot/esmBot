@@ -45,12 +45,14 @@ const getIdeal = () => {
         });
         if (!serversLeft) {
           clearTimeout(timeout);
-          try {
-            const server = await chooseServer(idealServers);
-            resolve(server);
-          } catch (e) {
-            reject(e);
-          }
+          socket.close(async () => {
+            try {
+              const server = await chooseServer(idealServers);
+              resolve(server);
+            } catch (e) {
+              reject(e);
+            }
+          });
         }
       }
     });

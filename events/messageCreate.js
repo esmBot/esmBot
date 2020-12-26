@@ -24,15 +24,17 @@ module.exports = async (message) => {
   if (!valid) return;
 
   let prefixCandidate;
-  if (collections.prefixCache.has(message.channel.guild.id)) {
-    prefixCandidate = collections.prefixCache.get(message.channel.guild.id);
-  } else {
-    let guildDB = message.channel.guild ? await database.getGuild(message.channel.guild.id) : null;
-    if (message.channel.guild && !(guildDB && guildDB.disabled)) {
-      guildDB = await database.fixGuild(message.channel.guild);
+  if (message.channel.guild) {
+    if (collections.prefixCache.has(message.channel.guild.id)) {
+      prefixCandidate = collections.prefixCache.get(message.channel.guild.id);
+    } else {
+      let guildDB = message.channel.guild ? await database.getGuild(message.channel.guild.id) : null;
+      if (message.channel.guild && !(guildDB && guildDB.disabled)) {
+        guildDB = await database.fixGuild(message.channel.guild);
+      }
+      prefixCandidate = guildDB.prefix;
+      collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
     }
-    prefixCandidate = guildDB.prefix;
-    collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
   }
 
   // this line be like Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain.
@@ -48,13 +50,15 @@ module.exports = async (message) => {
   const command = args.shift().toLowerCase();
 
   // don't run if message is in a disabled channel
-  if (collections.disabledCache.has(message.channel.guild.id)) {
-    const disabled = collections.disabledCache.get(message.channel.guild.id);
-    if (disabled.includes(message.channel.id) && command != "channel") return;
-  } else if (message.channel.guild) {
-    const guildDB = await database.getGuild(message.channel.guild.id);
-    collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
-    if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
+  if (message.channel.guild) {
+    if (collections.disabledCache.has(message.channel.guild.id)) {
+      const disabled = collections.disabledCache.get(message.channel.guild.id);
+      if (disabled.includes(message.channel.id) && command != "channel") return;
+    } else if (message.channel.guild) {
+      const guildDB = await database.getGuild(message.channel.guild.id);
+      collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
+      if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
+    }
   }
 
   // check if command exists

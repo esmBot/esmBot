@@ -47,6 +47,7 @@ exports.connect = async () => {
 };
 
 exports.play = async (sound, message, music = false) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
   const voiceChannel = message.channel.guild.channels.get(message.member.voiceState.channelID);
@@ -148,6 +149,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
 };
 
 exports.stop = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   if (this.players.get(message.channel.guild.id).host !== message.author.id) return `${message.author.mention}, only the current voice session host can stop the music!`;
@@ -160,6 +162,7 @@ exports.stop = async (message) => {
 };
 
 exports.skip = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   const player = this.players.get(message.channel.guild.id);
@@ -184,6 +187,7 @@ exports.skip = async (message) => {
 };
 
 exports.pause = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   if (this.players.get(message.channel.guild.id).host !== message.author.id) return `${message.author.mention}, only the current voice session host can pause/resume the music!`;
@@ -193,6 +197,7 @@ exports.pause = async (message) => {
 };
 
 exports.playing = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   const player = this.players.get(message.channel.guild.id).player;
@@ -227,6 +232,7 @@ exports.playing = async (message) => {
 };
 
 exports.queue = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
@@ -274,6 +280,7 @@ exports.queue = async (message) => {
 };
 
 exports.loop = async (message) => {
+  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
   if (this.players.get(message.channel.guild.id).host !== message.author.id) return `${message.author.mention}, only the current voice session host can loop the music!`;

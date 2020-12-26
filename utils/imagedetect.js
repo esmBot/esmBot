@@ -85,16 +85,10 @@ module.exports = async (cmdMessage) => {
   if (result !== false) return result;
   // if there aren't any in the current message then check if there's a reply
   if (cmdMessage.messageReference) {
-    const replyGuild = client.guilds.get(cmdMessage.messageReference.guildID);
-    if (replyGuild) {
-      const replyChannel = replyGuild.channels.get(cmdMessage.messageReference.channelID);
-      if (replyChannel) {
-        const replyMessage = replyChannel.messages.get(cmdMessage.messageReference.messageID);
-        if (replyMessage) {
-          const replyResult = await checkImages(replyMessage);
-          if (replyResult !== false) return replyResult;
-        }
-      }
+    const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID);
+    if (replyMessage) {
+      const replyResult = await checkImages(replyMessage);
+      if (replyResult !== false) return replyResult;
     }
   }
   // if there aren't any replies then iterate over the last few messages in the channel

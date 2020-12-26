@@ -16,7 +16,7 @@ exports.run = async () => {
       },
       {
         "name": "📝 Credits:",
-        "value": "Bot by **[Essem](https://essem.space)**\nIcon by **[MintBorrow](https://mintborrow.newgrounds.com)**"
+        "value": "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nIcon by **[MintBorrow](https://mintborrow.newgrounds.com)**"
       },
       {
         "name": "💬 Total Servers:",
