@@ -45,6 +45,6 @@ COPY . .
 RUN npm run build
 USER esmBot
 
-EXPOSE 3000
+EXPOSE 8080
 
 ENTRYPOINT ["node", "api/index.js"]

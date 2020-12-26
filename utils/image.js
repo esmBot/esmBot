@@ -11,6 +11,57 @@ const servers = require("../servers.json").image;
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
+const chooseServer = async (ideal) => {
+  if (ideal.length === 0) throw "No available servers";
+  const sorted = ideal.sort((a, b) => {
+    return a.load - b.load;
+  });
+  return sorted[0];
+};
+
+const getIdeal = () => {
+  return new Promise((resolve, reject) => {
+    const socket = dgram.createSocket("udp4");
+    let serversLeft = servers.length;
+    const idealServers = [];
+    const timeout = setTimeout(() => {
+      socket.close(async () => {
+        try {
+          const server = await chooseServer(idealServers);
+          resolve(server);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }, 5000);
+    socket.on("message", async (msg, rinfo) => {
+      const opcode = msg.readUint8(0);
+      const res = parseInt(msg.slice(1, msg.length).toString());
+      if (opcode === 0x3) {
+        serversLeft--;
+        idealServers.push({
+          addr: rinfo.address,
+          load: res
+        });
+        if (!serversLeft) {
+          clearTimeout(timeout);
+          try {
+            const server = await chooseServer(idealServers);
+            resolve(server);
+          } catch (e) {
+            reject(e);
+          }
+        }
+      }
+    });
+    for (const server of servers) {
+      socket.send(Buffer.from([0x2]), 8080, server, (err) => {
+        if (err) reject(err);
+      });
+    }
+  });
+};
+
 const getFormat = (buffer, delimiter) => {
   for (var i = 0; i < buffer.length ; i++) {
     if (String.fromCharCode(buffer[i]) === delimiter) {
@@ -61,7 +112,7 @@ exports.getType = async (image) => {
 exports.run = (object, fromAPI = false) => {
   return new Promise(async (resolve, reject) => {
     if (process.env.API === "true" && !fromAPI) {
-      const currentServer = servers[Math.floor(Math.random() * servers.length)];
+      const currentServer = await getIdeal();
       const socket = dgram.createSocket("udp4");
       const data = Buffer.concat([Buffer.from([0x1]), Buffer.from(JSON.stringify(object))]);
 
@@ -79,7 +130,7 @@ exports.run = (object, fromAPI = false) => {
           jobID = uuid;
         } else if (opcode === 0x1) {
           if (jobID === uuid) {
-            const client = net.createConnection(req.toString(), currentServer);
+            const client = net.createConnection(req.toString(), currentServer.addr);
             const array = [];
             client.on("data", (rawData) => {
               array.push(rawData);
@@ -95,7 +146,7 @@ exports.run = (object, fromAPI = false) => {
               resolve(payload);
             });
             client.on("error", (err) => {
-              throw err;
+              reject(err);
             });
           }
         } else if (opcode === 0x2) {
@@ -103,7 +154,7 @@ exports.run = (object, fromAPI = false) => {
         }
       });
   
-      socket.send(data, 8080, currentServer, (err) => {
+      socket.send(data, 8080, currentServer.addr, (err) => {
         if (err) reject(err);
       });
     } else if (isMainThread && !fromAPI) {

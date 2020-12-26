@@ -9,7 +9,7 @@ const net = require("net");
 const dgram = require("dgram"); // for UDP servers
 const socket = dgram.createSocket("udp4"); // Our universal UDP socket, this might cause issues and we may have to use a seperate socket for each connection
 
-var start = process.hrtime();
+const start = process.hrtime();
 const log = (msg, thread) => {
   console.log(`[${process.hrtime(start)[1] / 1000000}${(thread)?`:${thread}`:""}]\t ${msg}`);
 };
@@ -21,6 +21,32 @@ const queue = [];
 
 if (isMainThread) {
   const { v4: uuidv4 } = require("uuid");
+  let cpuLoad;
+
+  const getAverage = () => {
+    const cpus = os.cpus();
+    let idle = 0;
+    let tick = 0;
+    for (const cpu of cpus) {
+      for (const type in cpu.times) {
+        tick += cpu.times[type];
+      }
+      idle += cpu.times.idle;
+    }
+    return {
+      idle: idle / cpus.length,
+      tick: tick / cpus.length
+    };
+  };
+
+  let measure = getAverage();
+  setInterval(() => {
+    const newMeasure = getAverage();
+    const idleDiff = newMeasure.idle - measure.idle;
+    const tickDiff = newMeasure.tick - measure.tick;
+    cpuLoad = 100 - ~~(100 * idleDiff / tickDiff);
+    measure = newMeasure;
+  }, 5000);
 
   const MAX_WORKERS = process.env.WORKERS === "" ? parseInt(process.env.WORKERS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
   let workingWorkers = 0;
@@ -73,6 +99,7 @@ if (isMainThread) {
     const req = msg.toString().slice(1,msg.length);
     // 0x0 == Cancel job
     // 0x1 == Queue job
+    // 0x2 == Get CPU usage
     if (opcode == 0x0) {
       queue.shift();
       delete jobs[req];
@@ -88,6 +115,8 @@ if (isMainThread) {
 
       const newBuffer = Buffer.concat([Buffer.from([0x0]), Buffer.from(uuid)]);
       socket.send(newBuffer, rinfo.port, rinfo.address);
+    } else if (opcode == 0x2) {
+      socket.send(Buffer.concat([Buffer.from([0x3]), Buffer.from(cpuLoad.toString())]), rinfo.port, rinfo.address);
     } else {
       log("Could not parse message");
     }
