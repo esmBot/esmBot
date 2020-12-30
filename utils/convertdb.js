@@ -30,9 +30,9 @@ const Global = mongoose.model("Global", globalSchema);
   for (const guild of guilds) {
     console.log(guild.tagsDisabled);
     if ((await pool.query("SELECT * FROM guilds WHERE guild_id = $1", [guild.id])).rows.length !== 0) {
-      await pool.query("UPDATE guilds SET tags = $1, prefix = $2, warns = $3, disabled = $4, tags_disabled = $5 WHERE guild_id = $6", [guild.tags, guild.prefix, {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled, guild.id]);
+      await pool.query("UPDATE guilds SET tags = $1, prefix = $2, warns = $3, disabled = $4, tags_disabled = $5 WHERE guild_id = $6", [guild.tags, guild.prefix.substring(0, 15), {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled, guild.id]);
     } else {
-      await pool.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5, $6)", [guild.id, guild.tags, guild.prefix, {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled]);
+      await pool.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5, $6)", [guild.id, guild.tags, guild.prefix.substring(0, 15), {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled]);
     }
     console.log(`Migrated guild with ID ${guild.id}`);
   }

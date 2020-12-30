@@ -16,8 +16,6 @@ services:
     environment:
       OUTPUT: /home/esmBot/help
       TEMPDIR: /home/esmBot/temp
-
-      MONGO: mongodb://mongo:27017/esmBot
       # chrome remote debugger can only be accessed over localhost or IP
       CHROME: 172.20.0.4:9222
     links:
