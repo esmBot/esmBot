@@ -63,7 +63,7 @@ if (isMainThread) {
         delete jobs[uuid];
       }
     });
-    worker.on("error", err => {
+    worker.once("error", err => {
       console.error("worker error:", err);
       socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
 
@@ -73,7 +73,7 @@ if (isMainThread) {
         delete jobs[uuid];
       }
     });
-    worker.on("exit", (code) => {
+    worker.once("exit", (code) => {
       workingWorkers--;
       if (queue.length > 0) {
         acceptJob(queue[0]);
@@ -91,6 +91,7 @@ if (isMainThread) {
       port: jobs[uuid].port,
       threadNum: workingWorkers
     });
+    return;
   };
 
   const server = dgram.createSocket("udp4"); //Create a UDP server for listening to requests, we dont need tcp
