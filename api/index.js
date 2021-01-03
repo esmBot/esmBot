@@ -54,6 +54,7 @@ if (isMainThread) {
   const acceptJob = (uuid) => {
     workingWorkers++;
     const worker = new Worker(__filename);
+    log(`Spawned worker ${uuid}`);
     queue.shift();
     worker.once("message", (uuid) => {
       // This means the worker is finished
@@ -74,7 +75,11 @@ if (isMainThread) {
         delete jobs[uuid];
       }
 
-      if (code !== 0) console.error(`Worker ${uuid} stopped with exit code ${code}`);
+      if (code === 0) {
+        log(`Worker ${uuid} successfully exited`);
+      } else {
+        console.error(`Worker ${uuid} stopped with exit code ${code}`);
+      }
     });
 
 
@@ -156,7 +161,7 @@ if (isMainThread) {
       tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
         if (err) console.error(err);
         tcpSocket.end(() => {
-          process.exit();
+          server.close();
         });
       });
     });
@@ -171,7 +176,9 @@ if (isMainThread) {
         }, 500);
       }
     });
-    socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr);
+    socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr, () => {
+      socket.close();
+    });
     parentPort.postMessage(job.uuid); //Inform main thread about this worker freeing up
   });
 }
