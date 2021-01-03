@@ -1,4 +1,4 @@
-// code provided by tzlil
+// code originally provided by tzlil
 
 require("dotenv").config();
 const os = require("os");
@@ -91,7 +91,6 @@ if (isMainThread) {
       port: jobs[uuid].port,
       threadNum: workingWorkers
     });
-    return;
   };
 
   const server = dgram.createSocket("udp4"); //Create a UDP server for listening to requests, we dont need tcp
@@ -111,7 +110,10 @@ if (isMainThread) {
       queue.push(uuid);
 
       if (workingWorkers < MAX_WORKERS) {
+        log(`Got request for job ${job.msg} with id ${uuid}`, job.threadNum);
         acceptJob(uuid);
+      } else {
+        log(`Got request for job ${job.msg} with id ${uuid}, queued in position ${queue.indexOf(uuid) - 1}`, job.threadNum);
       }
 
       const newBuffer = Buffer.concat([Buffer.from([0x0]), Buffer.from(uuid)]);
@@ -131,7 +133,7 @@ if (isMainThread) {
   server.bind(8080); // ATTENTION: Always going to be bound to 0.0.0.0 !!!
 } else {
   parentPort.once("message", async (job) => {
-    log(`${job.uuid} worker got: ${job.msg}`, job.threadNum);
+    log(`${job.uuid} worker started`, job.threadNum);
 
     try {
       const object = JSON.parse(job.msg);
@@ -157,10 +159,10 @@ if (isMainThread) {
       const data = await magick.run(object, true);
 
       log(`${job.uuid} is done`, job.threadNum);
-      const server = net.createServer(function(socket) {
-        socket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
+      const server = net.createServer(function(tcpSocket) {
+        tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
           if (err) console.error(err);
-          socket.end(() => {
+          tcpSocket.end(() => {
             process.exit();
           });
         });
