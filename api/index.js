@@ -21,7 +21,7 @@ const queue = [];
 
 if (isMainThread) {
   const { v4: uuidv4 } = require("uuid");
-  let cpuLoad;
+  let cpuLoad = 0;
 
   const getAverage = () => {
     const cpus = os.cpus();
