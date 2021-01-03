@@ -64,14 +64,8 @@ if (isMainThread) {
       }
     });
     worker.once("error", err => {
-      console.error("worker error:", err);
+      console.error(`Error on worker ${uuid}:`, err);
       socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
-
-      workingWorkers--;
-      if (queue.length > 0) {
-        acceptJob(queue[0]);
-        delete jobs[uuid];
-      }
     });
     worker.once("exit", (code) => {
       workingWorkers--;
@@ -80,7 +74,7 @@ if (isMainThread) {
         delete jobs[uuid];
       }
 
-      if (code !== 0) console.error(`Worker stopped with exit code ${code}`);
+      if (code !== 0) console.error(`Worker ${uuid} stopped with exit code ${code}`);
     });
 
 
@@ -135,54 +129,49 @@ if (isMainThread) {
   parentPort.once("message", async (job) => {
     log(`${job.uuid} worker started`, job.threadNum);
 
-    try {
-      const object = JSON.parse(job.msg);
-      let type;
-      if (object.path) {
-        type = object.type;
-        if (!object.type) {
-          type = await magick.getType(object.path);
-        }
-        if (!type) {
-          throw new TypeError("Unknown image type");
-        }
-        object.type = type.split("/")[1];
-        if (object.type !== "gif" && object.onlyGIF) throw new TypeError(`Expected a GIF, got ${object.type}`);
-        object.delay = object.delay ? object.delay : 0;
+    const object = JSON.parse(job.msg);
+    let type;
+    if (object.path) {
+      type = object.type;
+      if (!object.type) {
+        type = await magick.getType(object.path);
       }
+      if (!type) {
+        throw new TypeError("Unknown image type");
+      }
+      object.type = type.split("/")[1];
+      if (object.type !== "gif" && object.onlyGIF) throw new TypeError(`Expected a GIF, got ${object.type}`);
+      object.delay = object.delay ? object.delay : 0;
+    }
       
-      if (object.type === "gif" && !object.delay) {
-        const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
-        object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
-      }
+    if (object.type === "gif" && !object.delay) {
+      const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
+      object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
+    }
 
-      const data = await magick.run(object, true);
+    const data = await magick.run(object, true);
 
-      log(`${job.uuid} is done`, job.threadNum);
-      const server = net.createServer(function(tcpSocket) {
-        tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
-          if (err) console.error(err);
-          tcpSocket.end(() => {
-            process.exit();
-          });
+    log(`${job.uuid} is done`, job.threadNum);
+    const server = net.createServer(function(tcpSocket) {
+      tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
+        if (err) console.error(err);
+        tcpSocket.end(() => {
+          process.exit();
         });
       });
-      server.listen(job.port, job.addr);
-      // handle address in use errors
-      server.on("error", (e) => {
-        if (e.code === "EADDRINUSE") {
-          console.log("Address in use, retrying...");
-          setTimeout(() => {
-            server.close();
-            server.listen(job.port, job.addr);
-          }, 500);
-        }
-      });
-      socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr);
-      parentPort.postMessage(job.uuid); //Inform main thread about this worker freeing up
-    } catch (e) {
-      socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(job.uuid), Buffer.from(e.toString())]), job.port, job.address);
-      parentPort.postMessage(job.uuid);
-    }
+    });
+    server.listen(job.port, job.addr);
+    // handle address in use errors
+    server.on("error", (e) => {
+      if (e.code === "EADDRINUSE") {
+        console.log("Address in use, retrying...");
+        setTimeout(() => {
+          server.close();
+          server.listen(job.port, job.addr);
+        }, 500);
+      }
+    });
+    socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr);
+    parentPort.postMessage(job.uuid); //Inform main thread about this worker freeing up
   });
 }
