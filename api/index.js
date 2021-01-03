@@ -96,7 +96,7 @@ if (isMainThread) {
 
   const server = dgram.createSocket("udp4"); //Create a UDP server for listening to requests, we dont need tcp
   server.on("message", (msg, rinfo) => {
-    const opcode = msg.readUint8(0);
+    const opcode = msg.readUInt8(0);
     const req = msg.toString().slice(1,msg.length);
     // 0x0 == Cancel job
     // 0x1 == Queue job

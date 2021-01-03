@@ -35,7 +35,7 @@ const getIdeal = () => {
       });
     }, 5000);
     socket.on("message", async (msg, rinfo) => {
-      const opcode = msg.readUint8(0);
+      const opcode = msg.readUInt8(0);
       const res = parseInt(msg.slice(1, msg.length).toString());
       if (opcode === 0x3) {
         serversLeft--;
@@ -124,7 +124,7 @@ exports.run = (object, fromAPI = false) => {
       
       let jobID;
       socket.on("message", (msg) => {
-        const opcode = msg.readUint8(0);
+        const opcode = msg.readUInt8(0);
         const req = msg.slice(37, msg.length);
         const uuid = msg.slice(1, 36).toString();
         if (opcode === 0x0) {
@@ -155,7 +155,7 @@ exports.run = (object, fromAPI = false) => {
           if (jobID === uuid) reject(req);
         }
       });
-  
+
       socket.send(data, 8080, currentServer.addr, (err) => {
         if (err) reject(err);
       });
