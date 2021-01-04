@@ -94,6 +94,7 @@ exports.getType = async (image) => {
   }, 25000);
   try {
     const imageRequest = await fetch(image, { signal: controller.signal, highWaterMark: 512 });
+    clearTimeout(timeout);
     const imageBuffer = await imageRequest.buffer();
     const imageType = await fileType.fromBuffer(imageBuffer);
     if (imageType && formats.includes(imageType.mime)) {
@@ -119,7 +120,7 @@ exports.run = (object, fromAPI = false) => {
       const data = Buffer.concat([Buffer.from([0x1]), Buffer.from(JSON.stringify(object))]);
 
       const timeout = setTimeout(() => {
-        reject("Timed out");
+        reject("UDP timed out");
       }, 25000);
       
       let jobID;

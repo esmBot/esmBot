@@ -1,6 +1,6 @@
 {
   "lava": [
-    { "id": "1", "host": "localhost", "port": 2333, "password": "youshallnotpass" }
+    { "id": "1", "host": "localhost", "port": 2333, "password": "youshallnotpass", "local": true }
   ],
   "image": [
     "localhost"

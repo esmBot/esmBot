@@ -96,6 +96,8 @@ module.exports = async (message) => {
   } catch (error) {
     if (error.toString().includes("Request entity too large")) {
       await client.createMessage(message.channel.id, `${message.author.mention}, the resulting file was too large to upload. Try again with a smaller image if possible.`);
+    } else if (error.toString().includes("UDP timed out")) {
+      await client.createMessage(message.channel.id, `${message.author.mention}, I couldn't contact the image API in time (most likely due to it being overloaded). Try running your command again.`);
     } else if (error.toString().includes("Timed out")) {
       await client.createMessage(message.channel.id, `${message.author.mention}, the request timed out before I could download that image. Try uploading your image somewhere else.`);
     } else {

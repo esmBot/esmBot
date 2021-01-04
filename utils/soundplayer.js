@@ -55,6 +55,9 @@ exports.play = async (sound, message, music = false) => {
   const player = this.players.get(message.channel.guild.id);
   if (!music && this.manager.voiceStates.has(message.channel.guild.id) && (player && player.type === "music")) return `${message.author.mention}, I can't play a sound effect while playing music!`;
   const node = this.manager.idealNodes[0];
+  if (!music && !nodes.filter(obj => obj.host === node.host)[0].local) {
+    sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
+  }
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
   const oldQueue = this.queues.get(voiceChannel.guild.id);
   if (tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
