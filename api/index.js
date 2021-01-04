@@ -56,14 +56,6 @@ if (isMainThread) {
     const worker = new Worker(__filename);
     log(`Spawned worker ${uuid}`);
     queue.shift();
-    worker.once("message", (uuid) => {
-      // This means the worker is finished
-      workingWorkers--;
-      if (queue.length > 0) {
-        acceptJob(queue[0]); // Get the next job UUID in queue and remove it from the original queue
-        delete jobs[uuid];
-      }
-    });
     worker.once("error", err => {
       console.error(`Error on worker ${uuid}:`, err);
       socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
@@ -179,6 +171,5 @@ if (isMainThread) {
     socket.send(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid), Buffer.from(job.port.toString())]), job.port, job.addr, () => {
       socket.close();
     });
-    parentPort.postMessage(job.uuid); //Inform main thread about this worker freeing up
   });
 }
