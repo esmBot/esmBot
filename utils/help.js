@@ -36,8 +36,6 @@ Default prefix is \`&\`.
     const params = collections.info.get(command).params;
     if (category === 1) {
       categories.general.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
-    } else if (category === 2) {
-      categories.moderation.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
     } else if (category === 3) {
       const subCommands = [...Object.keys(description)];
       for (const subCommand of subCommands) {
