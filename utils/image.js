@@ -93,7 +93,9 @@ exports.getType = async (image) => {
     controller.abort();
   }, 25000);
   try {
-    const imageRequest = await fetch(image, { signal: controller.signal, highWaterMark: 512 });
+    const imageRequest = await fetch(image, { signal: controller.signal, headers: {
+      "Range": "bytes=0-1023"
+    }});
     clearTimeout(timeout);
     const imageBuffer = await imageRequest.buffer();
     const imageType = await fileType.fromBuffer(imageBuffer);
