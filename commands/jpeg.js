@@ -4,9 +4,10 @@ exports.run = async (message) => {
   message.channel.sendTyping();
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to add more JPEG!`;
-  const { buffer, type } = await magick.run({
+  const { buffer } = await magick.run({
     cmd: "jpeg",
-    path: image.path
+    path: image.path,
+    type: image.type
   });
   return {
     file: buffer,

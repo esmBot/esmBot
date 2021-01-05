@@ -9,7 +9,8 @@ exports.run = async (message) => {
     path: image.path,
     water: "./assets/images/bandicam.png",
     gravity: 2,
-    resize: true
+    resize: true,
+    type: image.type
   });
   return {
     file: buffer,

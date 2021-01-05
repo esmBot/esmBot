@@ -6,7 +6,8 @@ exports.run = async (message) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image to make a GameXplain thumbnail meme!`;
   const { buffer, type } = await magick.run({
     cmd: "gamexplain",
-    path: image.path
+    path: image.path,
+    type: image.type
   });
   return {
     file: buffer,

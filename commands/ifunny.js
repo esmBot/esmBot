@@ -10,7 +10,8 @@ exports.run = async (message) => {
     water: "./assets/images/ifunny.png",
     gravity: 8,
     resize: true,
-    append: true
+    append: true,
+    type: image.type
   });
   return {
     file: buffer,

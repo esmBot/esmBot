@@ -9,7 +9,8 @@ exports.run = async (message) => {
     path: image.path,
     water: "./assets/images/memecenter.png",
     gravity: 9,
-    mc: true
+    mc: true,
+    type: image.type
   });
   return {
     file: buffer,

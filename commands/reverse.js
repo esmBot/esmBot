@@ -8,7 +8,8 @@ exports.run = async (message) => {
     cmd: "reverse",
     path: image.path,
     delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0,
-    onlyGIF: true
+    onlyGIF: true,
+    type: image.type
   });
   if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {

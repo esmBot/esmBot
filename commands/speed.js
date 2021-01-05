@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "speed",
     path: image.path,
-    onlyGIF: true
+    onlyGIF: true,
+    type: image.type
   });
   if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {

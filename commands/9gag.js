@@ -8,7 +8,8 @@ exports.run = async (message) => {
     cmd: "watermark",
     path: image.path,
     water: "./assets/images/9gag.png",
-    gravity: 6
+    gravity: 6,
+    type: image.type
   });
   return {
     file: buffer,

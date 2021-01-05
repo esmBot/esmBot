@@ -6,7 +6,8 @@ exports.run = async (message) => {
   const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
   const { buffer } = await magick.run({
     cmd: "globe",
-    path: image.path
+    path: image.path,
+    type: image.type
   });
   if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
   return {

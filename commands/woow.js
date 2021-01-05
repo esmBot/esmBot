@@ -8,7 +8,8 @@ exports.run = async (message) => {
     cmd: "mirror",
     path: image.path,
     vertical: true,
-    first: true
+    first: true,
+    type: image.type
   });
   return {
     file: buffer,

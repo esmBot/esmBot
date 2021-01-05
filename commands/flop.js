@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "flip",
     path: image.path,
-    flop: true
+    flop: true,
+    type: image.type
   });
   return {
     file: buffer,

@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "blur",
     path: image.path,
-    sharp: true
+    sharp: true,
+    type: image.type
   });
   return {
     file: buffer,

@@ -73,8 +73,7 @@ if (isMainThread) {
         console.error(`Worker ${uuid} stopped with exit code ${code}`);
       }
     });
-
-
+      
     worker.postMessage({
       uuid: uuid,
       msg: jobs[uuid].msg,

@@ -10,8 +10,9 @@ exports.run = async (message, args) => {
   const { buffer, type } = await magick.run({
     cmd: "motivate",
     path: image.path,
-    top: topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;"),
-    bottom: bottomText ? bottomText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;") : ""
+    top: topText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;").replace(/%/g, "\\%"),
+    bottom: bottomText ? bottomText.replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;").replace(/%/g, "\\%") : "",
+    type: image.type
   });
   if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
   return {

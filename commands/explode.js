@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "explode",
     path: image.path,
-    amount: -1
+    amount: -1,
+    type: image.type
   });
   return {
     file: buffer,

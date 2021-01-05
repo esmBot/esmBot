@@ -8,7 +8,8 @@ exports.run = async (message) => {
     cmd: "speed",
     path: image.path,
     slow: true,
-    onlyGIF: true
+    onlyGIF: true,
+    type: image.type
   });
   if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {

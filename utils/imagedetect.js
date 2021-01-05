@@ -1,6 +1,7 @@
 const client = require("./client.js");
 const fetch = require("node-fetch");
 const url = require("url");
+const { getType } = require("./image.js");
 const execPromise = require("util").promisify(require("child_process").exec);
 
 const tenorURLs = [
@@ -16,6 +17,8 @@ const imgurURLs = [
   "www.imgur.com",
   "i.imgur.com"
 ];
+
+const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 // gets the proper image paths
 const getImage = async (image, image2, gifv = false) => {
@@ -41,6 +44,9 @@ const getImage = async (image, image2, gifv = false) => {
         payload.path = image.replace(".mp4", ".gif");
       }
       payload.type = "image/gif";
+    } else {
+      payload.type = await getType(payload.path);
+      if (!payload.type || !formats.includes(payload.type)) return;
     }
     return payload;
   } catch (error) {

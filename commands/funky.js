@@ -9,7 +9,8 @@ exports.run = async (message) => {
     path: image.path,
     water: "./assets/images/funky.png",
     gravity: 3,
-    resize: true
+    resize: true,
+    type: image.type
   });
   return {
     file: buffer,

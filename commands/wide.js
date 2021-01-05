@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "resize",
     path: image.path,
-    wide: true
+    wide: true,
+    type: image.type
   });
   return {
     file: buffer,

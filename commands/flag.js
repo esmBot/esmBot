@@ -22,7 +22,8 @@ exports.run = async (message, args) => {
   const { buffer, type } = await magick.run({
     cmd: "flag",
     path: image.path,
-    overlay: path
+    overlay: path,
+    type: image.type
   });
   return {
     file: buffer,

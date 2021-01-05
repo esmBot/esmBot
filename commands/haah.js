@@ -7,7 +7,8 @@ exports.run = async (message) => {
   const { buffer, type } = await magick.run({
     cmd: "mirror",
     path: image.path,
-    first: true
+    first: true,
+    type: image.type
   });
   return {
     file: buffer,
