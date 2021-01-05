@@ -48,14 +48,14 @@ if (isMainThread) {
     measure = newMeasure;
   }, 5000);
 
-  const MAX_WORKERS = process.env.WORKERS === "" ? parseInt(process.env.WORKERS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+  const MAX_WORKERS = process.env.WORKERS !== "" ? parseInt(process.env.WORKERS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
   let workingWorkers = 0;
 
   const acceptJob = (uuid) => {
     workingWorkers++;
+    queue.shift();
     const worker = new Worker(__filename);
     log(`Spawned worker ${uuid}`);
-    queue.shift();
     worker.once("error", err => {
       console.error(`Error on worker ${uuid}:`, err);
       socket.send(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]), jobs[uuid].port, jobs[uuid].addr);
@@ -103,7 +103,7 @@ if (isMainThread) {
         log(`Got request for job ${job.msg} with id ${uuid}`, job.threadNum);
         acceptJob(uuid);
       } else {
-        log(`Got request for job ${job.msg} with id ${uuid}, queued in position ${queue.indexOf(uuid) - 1}`, job.threadNum);
+        log(`Got request for job ${job.msg} with id ${uuid}, queued in position ${queue.indexOf(uuid)}`, job.threadNum);
       }
 
       const newBuffer = Buffer.concat([Buffer.from([0x0]), Buffer.from(uuid)]);
