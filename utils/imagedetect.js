@@ -66,7 +66,7 @@ const checkImages = async (message) => {
     if (message.embeds[0].type === "gifv") {
       type = await getImage(message.embeds[0].video.url, message.embeds[0].url, true);
     // then we check for other image types
-    } else if (message.embeds[0].type === "video" || message.embeds[0].type === "image") {
+    } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
       type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url);
     // finally we check both possible image fields for "generic" embeds
     } else if (message.embeds[0].type === "rich") {
