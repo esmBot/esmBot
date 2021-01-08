@@ -14,7 +14,7 @@ const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const chooseServer = async (ideal) => {
   if (ideal.length === 0) throw "No available servers";
   const sorted = ideal.sort((a, b) => {
-    return a.load - b.load;
+    return b.load - a.load;
   });
   return sorted[0];
 };

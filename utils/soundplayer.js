@@ -44,6 +44,7 @@ exports.connect = async () => {
   this.manager.on("error", (error, node) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });
+  return length;
 };
 
 exports.play = async (sound, message, music = false) => {
