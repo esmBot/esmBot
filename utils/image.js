@@ -65,7 +65,7 @@ const getIdeal = () => {
 };
 
 const getFormat = (buffer, delimiter) => {
-  for (var i = 0; i < buffer.length ; i++) {
+  for (var i = 0; i < buffer.length; i++) {
     if (String.fromCharCode(buffer[i]) === delimiter) {
       return {
         buffer: buffer.slice(0, i),
@@ -117,23 +117,27 @@ exports.getType = async (image) => {
 exports.run = (object, fromAPI = false) => {
   return new Promise(async (resolve, reject) => {
     if (process.env.API === "true" && !fromAPI) {
+      // Called from command, using image API
+
+      // Connect to best image server
       const currentServer = await getIdeal();
       const socket = dgram.createSocket("udp4");
-      const data = Buffer.concat([Buffer.from([0x1]), Buffer.from(JSON.stringify(object))]);
+      const data = Buffer.concat([Buffer.from([0x1 /* queue job */]), Buffer.from(JSON.stringify(object))]);
 
       const timeout = setTimeout(() => {
         reject("UDP timed out");
       }, 25000);
-      
+
       let jobID;
       socket.on("message", (msg) => {
         const opcode = msg.readUint8(0);
         const req = msg.slice(37, msg.length);
         const uuid = msg.slice(1, 36).toString();
-        if (opcode === 0x0) {
+        if (opcode === 0x0) { // Job queued
           clearTimeout(timeout);
           jobID = uuid;
-        } else if (opcode === 0x1) {
+        } else if (opcode === 0x1) { // Job completed successfully
+          // the image API sends all job responses over the same socket; make sure this is ours
           if (jobID === uuid) {
             const client = net.createConnection(req.toString(), currentServer.addr);
             const array = [];
@@ -154,15 +158,16 @@ exports.run = (object, fromAPI = false) => {
               reject(err);
             });
           }
-        } else if (opcode === 0x2) {
+        } else if (opcode === 0x2) { // Job errored
           if (jobID === uuid) reject(req);
         }
       });
-  
+
       socket.send(data, 8080, currentServer.addr, (err) => {
         if (err) reject(err);
       });
     } else if (isMainThread && !fromAPI) {
+      // Called from command (not using image API)
       const worker = new Worker(__filename, {
         workerData: object
       });
@@ -174,6 +179,7 @@ exports.run = (object, fromAPI = false) => {
       });
       worker.on("error", reject);
     } else {
+      // Called into from the image API or the above branch
       let type;
       if (!fromAPI && object.path) {
         const newType = (object.type ? object.type : await this.getType(object.path));
