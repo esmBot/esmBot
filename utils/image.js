@@ -125,6 +125,7 @@ exports.run = (object, fromAPI = false) => {
       const data = Buffer.concat([Buffer.from([0x1 /* queue job */]), Buffer.from(JSON.stringify(object))]);
 
       const timeout = setTimeout(() => {
+        socket.close();
         reject("UDP timed out");
       }, 25000);
 
@@ -155,16 +156,23 @@ exports.run = (object, fromAPI = false) => {
               resolve(payload);
             });
             client.on("error", (err) => {
+              socket.close();
               reject(err);
             });
           }
         } else if (opcode === 0x2) { // Job errored
-          if (jobID === uuid) reject(req);
+          if (jobID === uuid) {
+            socket.close();
+            reject(req);
+          }
         }
       });
 
       socket.send(data, 8080, currentServer.addr, (err) => {
-        if (err) reject(err);
+        if (err) {
+          socket.close();
+          reject(err);
+        }
       });
     } else if (isMainThread && !fromAPI) {
       // Called from command (not using image API)
