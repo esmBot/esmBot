@@ -2,7 +2,6 @@
 
 require("dotenv").config();
 const os = require("os");
-const { getType } = require("../utils/image.js");
 const { run } = require("../utils/image-runner.js");
 const execPromise = require("util").promisify(require("child_process").exec);
 const net = require("net");
@@ -96,21 +95,16 @@ const runJob = (job) => {
     log(`Job ${job.uuid} starting...`, job.num);
 
     const object = JSON.parse(job.msg);
-    let type;
+    // If the image has a path, it must also have a type
     if (object.path) {
-      type = object.type;
       if (!object.type) {
-        type = await getType(object.path);
-      }
-      if (!type) {
         reject(new TypeError("Unknown image type"));
       }
-      object.type = type.split("/")[1];
-      if (object.type !== "gif" && object.onlyGIF) reject(new TypeError(`Expected a GIF, got ${object.type}`));
+      if (object.type !== "image/gif" && object.onlyGIF) reject(new TypeError(`Expected a GIF, got ${object.type}`));
       object.delay = object.delay ? object.delay : 0;
     }
 
-    if (object.type === "gif" && !object.delay) {
+    if (object.type === "image/gif" && !object.delay) {
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
     }
@@ -120,7 +114,7 @@ const runJob = (job) => {
 
     log(`Sending result of job ${job.uuid} back to the bot`, job.num);
     const server = net.createServer(function(tcpSocket) {
-      tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
+      tcpSocket.write(Buffer.concat([Buffer.from(object.type || "image/png"), Buffer.from("\n"), data]), (err) => {
         if (err) console.error(err);
         tcpSocket.end(() => {
           server.close();
