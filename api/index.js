@@ -2,7 +2,8 @@
 
 require("dotenv").config();
 const os = require("os");
-const magick = require("../utils/image.js");
+const { getType } = require("../utils/image.js");
+const { run } = require("../utils/image-runner.js");
 const execPromise = require("util").promisify(require("child_process").exec);
 const net = require("net");
 const dgram = require("dgram"); // for UDP servers
@@ -99,7 +100,7 @@ const runJob = (job) => {
     if (object.path) {
       type = object.type;
       if (!object.type) {
-        type = await magick.getType(object.path);
+        type = await getType(object.path);
       }
       if (!type) {
         reject(new TypeError("Unknown image type"));
@@ -108,14 +109,14 @@ const runJob = (job) => {
       if (object.type !== "gif" && object.onlyGIF) reject(new TypeError(`Expected a GIF, got ${object.type}`));
       object.delay = object.delay ? object.delay : 0;
     }
-      
+
     if (object.type === "gif" && !object.delay) {
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
     }
 
     log(`Job ${job.uuid} started`, job.num);
-    const data = await magick.run(object, true);
+    const data = await run(object, true);
 
     log(`Sending result of job ${job.uuid} back to the bot`, job.num);
     const server = net.createServer(function(tcpSocket) {

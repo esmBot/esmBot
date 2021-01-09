@@ -1,13 +1,12 @@
 const magick = require("../build/Release/image.node");
-const { Worker, isMainThread, parentPort, workerData } = require("worker_threads");
+const { Worker } = require("worker_threads");
 const fetch = require("node-fetch");
-const { promisify } = require("util");
 const AbortController = require("abort-controller");
 const net = require("net");
 const dgram = require("dgram");
 const fileType = require("file-type");
-const execPromise = promisify(require("child_process").exec);
 const servers = require("../servers.json").image;
+const path = require("path");
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -103,114 +102,81 @@ exports.getType = async (image) => {
   return type;
 };
 
-exports.run = (object, fromAPI = false) => {
+exports.run = object => {
   return new Promise(async (resolve, reject) => {
-    // Called direcly from a command
-    const fromCommand = isMainThread && !fromAPI;
-    if (fromCommand) {
-      if (process.env.API === "true") {
-        // Connect to best image server
-        const currentServer = await getIdeal();
-        const socket = dgram.createSocket("udp4");
-        const data = Buffer.concat([Buffer.from([0x1 /* queue job */]), Buffer.from(JSON.stringify(object))]);
+    if (process.env.API === "true") {
+      // Connect to best image server
+      const currentServer = await getIdeal();
+      const socket = dgram.createSocket("udp4");
+      const data = Buffer.concat([Buffer.from([0x1 /* queue job */]), Buffer.from(JSON.stringify(object))]);
 
-        const timeout = setTimeout(() => {
-          socket.close();
-          reject("UDP timed out");
-        }, 25000);
+      const timeout = setTimeout(() => {
+        socket.close();
+        reject("UDP timed out");
+      }, 25000);
 
-        let jobID;
-        socket.on("message", (msg) => {
-          const opcode = msg.readUint8(0);
-          const req = msg.slice(37, msg.length);
-          const uuid = msg.slice(1, 36).toString();
-          if (opcode === 0x0) { // Job queued
-            clearTimeout(timeout);
-            jobID = uuid;
-          } else if (opcode === 0x1) { // Job completed successfully
-            // the image API sends all job responses over the same socket; make sure this is ours
-            if (jobID === uuid) {
-              const client = net.createConnection(req.toString(), currentServer.addr);
-              const array = [];
-              client.on("data", (rawData) => {
-                array.push(rawData);
-              });
-              client.once("end", () => {
-                const data = Buffer.concat(array);
-                // The response data is given as the MIME type of the image, followed by a newline, followed by the image
-                // data.
-                const delimIndex = data.indexOf("\n");
-                socket.close();
-                if (delimIndex === -1) reject("Could not parse response");
-                const payload = {
-                  // Take just the image data
-                  buffer: data.slice(delimIndex + 1),
-                  // Convert MIME type (e.g. 'image/png') to image type (e.g. 'png'), later also used as a file extension
-                  type: data.slice(0, delimIndex).toString().split("/")[1]
-                };
-                resolve(payload);
-              });
-              client.on("error", (err) => {
-                socket.close();
-                reject(err);
-              });
-            }
-          } else if (opcode === 0x2) { // Job errored
-            if (jobID === uuid) {
+      let jobID;
+      socket.on("message", (msg) => {
+        const opcode = msg.readUint8(0);
+        const req = msg.slice(37, msg.length);
+        const uuid = msg.slice(1, 36).toString();
+        if (opcode === 0x0) { // Job queued
+          clearTimeout(timeout);
+          jobID = uuid;
+        } else if (opcode === 0x1) { // Job completed successfully
+          // the image API sends all job responses over the same socket; make sure this is ours
+          if (jobID === uuid) {
+            const client = net.createConnection(req.toString(), currentServer.addr);
+            const array = [];
+            client.on("data", (rawData) => {
+              array.push(rawData);
+            });
+            client.once("end", () => {
+              const data = Buffer.concat(array);
+              // The response data is given as the MIME type of the image, followed by a newline, followed by the image
+              // data.
+              const delimIndex = data.indexOf("\n");
               socket.close();
-              reject(req);
-            }
+              if (delimIndex === -1) reject("Could not parse response");
+              const payload = {
+                // Take just the image data
+                buffer: data.slice(delimIndex + 1),
+                // Convert MIME type (e.g. 'image/png') to image type (e.g. 'png'), later also used as a file extension
+                type: data.slice(0, delimIndex).toString().split("/")[1]
+              };
+              resolve(payload);
+            });
+            client.on("error", (err) => {
+              socket.close();
+              reject(err);
+            });
           }
-        });
-
-        socket.send(data, 8080, currentServer.addr, (err) => {
-          if (err) {
+        } else if (opcode === 0x2) { // Job errored
+          if (jobID === uuid) {
             socket.close();
-            reject(err);
+            reject(req);
           }
-        });
-      } else {
-        // Called from command (not using image API)
-        const worker = new Worker(__filename, {
-          workerData: object
-        });
-        worker.on("message", (data) => {
-          resolve({
-            buffer: Buffer.from([...data.buffer]),
-            type: data.type
-          });
-        });
-        worker.on("error", reject);
-      }
+        }
+      });
+
+      socket.send(data, 8080, currentServer.addr, (err) => {
+        if (err) {
+          socket.close();
+          reject(err);
+        }
+      });
     } else {
-      // Called into from the image API or the above branch
-      let type;
-      if (!fromAPI && object.path) {
-        const newType = (object.type ? object.type : await this.getType(object.path));
-        type = newType ? newType.split("/")[1] : "png";
-        if (type !== "gif" && object.onlyGIF) resolve({
-          buffer: "nogif",
-          type: null
+      // Called from command (not using image API)
+      const worker = new Worker(path.join(__dirname, "image-runner.js"), {
+        workerData: object
+      });
+      worker.on("message", (data) => {
+        resolve({
+          buffer: Buffer.from([...data.buffer]),
+          type: data.type
         });
-        object.type = type;
-        const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
-        object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
-      }
-      const data = await promisify(magick[object.cmd])(object);
-      const returnObject = fromAPI ? data : {
-        buffer: data,
-        type: type
-      };
-      if (!isMainThread && !fromAPI) {
-        // Spawned as a worker from above--post message and exit
-        parentPort.postMessage(returnObject);
-        process.exit();
-      } else {
-        // Called by the image API process--return the promise
-        resolve(returnObject);
-      }
+      });
+      worker.on("error", reject);
     }
   });
 };
-
-if (!isMainThread && process.env.API !== "true") this.run(workerData);
