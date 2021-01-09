@@ -64,17 +64,6 @@ const getIdeal = () => {
   });
 };
 
-const getFormat = (buffer, delimiter) => {
-  for (var i = 0; i < buffer.length; i++) {
-    if (String.fromCharCode(buffer[i]) === delimiter) {
-      return {
-        buffer: buffer.slice(0, i),
-        dataStart: i
-      };
-    }
-  }
-};
-
 exports.check = (cmd) => {
   return magick[cmd] ? true : false;
 };
@@ -147,12 +136,17 @@ exports.run = (object, fromAPI = false) => {
             });
             client.once("end", () => {
               const data = Buffer.concat(array);
-              const format = getFormat(data, "\n");
-              const payload = {
-                buffer: data.slice(format.dataStart + 1),
-                type: format.buffer.toString().split("/")[1]
-              };
+              // The response data is given as the MIME type of the image, followed by a newline, followed by the image
+              // data.
+              const delimIndex = data.indexOf("\n");
               socket.close();
+              if (delimIndex === -1) reject("Could not parse response");
+              const payload = {
+                // Take just the image data
+                buffer: data.slice(delimIndex + 1),
+                // Convert MIME type (e.g. 'image/png') to image type (e.g. 'png'), later also used as a file extension
+                type: data.slice(0, delimIndex).toString().split("/")[1]
+              };
               resolve(payload);
             });
             client.on("error", (err) => {
