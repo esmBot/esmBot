@@ -8,8 +8,8 @@ exports.run = async object => {
     // If the image has a path, it must also have a type
     if (object.path) {
       if (object.type !== "image/gif" && object.onlyGIF) resolve({
-        buffer: "nogif",
-        type: null
+        buffer: Buffer.alloc(0),
+        fileExtension: "nogif"
       });
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];

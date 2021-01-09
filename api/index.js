@@ -3,7 +3,6 @@
 require("dotenv").config();
 const os = require("os");
 const { run } = require("../utils/image-runner.js");
-const execPromise = require("util").promisify(require("child_process").exec);
 const net = require("net");
 const dgram = require("dgram"); // for UDP servers
 const socket = dgram.createSocket("udp4"); // Our universal UDP socket, this might cause issues and we may have to use a seperate socket for each connection
@@ -96,17 +95,8 @@ const runJob = (job) => {
 
     const object = JSON.parse(job.msg);
     // If the image has a path, it must also have a type
-    if (object.path) {
-      if (!object.type) {
-        reject(new TypeError("Unknown image type"));
-      }
-      if (object.type !== "image/gif" && object.onlyGIF) reject(new TypeError(`Expected a GIF, got ${object.type}`));
-      object.delay = object.delay ? object.delay : 0;
-    }
-
-    if (object.type === "image/gif" && !object.delay) {
-      const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
-      object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
+    if (object.path && !object.type) {
+      reject(new TypeError("Unknown image type"));
     }
 
     log(`Job ${job.uuid} started`, job.num);
