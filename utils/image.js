@@ -133,16 +133,15 @@ exports.run = object => {
             });
             client.once("end", () => {
               const data = Buffer.concat(array);
-              // The response data is given as the MIME type of the image, followed by a newline, followed by the image
-              // data.
+              // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
+              // by a newline, followed by the image data.
               const delimIndex = data.indexOf("\n");
               socket.close();
               if (delimIndex === -1) reject("Could not parse response");
               const payload = {
                 // Take just the image data
                 buffer: data.slice(delimIndex + 1),
-                // Convert MIME type (e.g. 'image/png') to image type (e.g. 'png'), later also used as a file extension
-                type: data.slice(0, delimIndex).toString().split("/")[1]
+                type: data.slice(0, delimIndex).toString()
               };
               resolve(payload);
             });
@@ -173,7 +172,7 @@ exports.run = object => {
       worker.on("message", (data) => {
         resolve({
           buffer: Buffer.from([...data.buffer]),
-          type: data.type
+          type: data.fileExtension
         });
       });
       worker.on("error", reject);

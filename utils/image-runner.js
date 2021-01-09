@@ -3,7 +3,7 @@ const { promisify } = require("util");
 const execPromise = promisify(require("child_process").exec);
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 
-exports.run = async (object, fromAPI = false) => {
+exports.run = async object => {
   return new Promise(async resolve => {
     // If the image has a path, it must also have a type
     if (object.path) {
@@ -14,13 +14,15 @@ exports.run = async (object, fromAPI = false) => {
       const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
       object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
     }
-    // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png")
-    // Don't set `type` directly on the object we are passed as it will be read afterwards
-    const objectWithFixedType = Object.assign({}, object, {type: object.type.split("/")[1]});
+    // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
+    // Don't set `type` directly on the object we are passed as it will be read afterwards.
+    // If no image type is given (say, the command generates its own image), make it a PNG.
+    const fileExtension = object.type ? object.type.split("/")[1] : "png";
+    const objectWithFixedType = Object.assign({}, object, {type: fileExtension});
     const data = await promisify(magick[object.cmd])(objectWithFixedType);
-    const returnObject = fromAPI ? data : {
+    const returnObject = {
       buffer: data,
-      type: object.type
+      fileExtension
     };
     resolve(returnObject);
   });

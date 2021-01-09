@@ -110,11 +110,11 @@ const runJob = (job) => {
     }
 
     log(`Job ${job.uuid} started`, job.num);
-    const data = await run(object, true);
+    const {buffer, fileExtension} = await run(object);
 
     log(`Sending result of job ${job.uuid} back to the bot`, job.num);
     const server = net.createServer(function(tcpSocket) {
-      tcpSocket.write(Buffer.concat([Buffer.from(object.type || "image/png"), Buffer.from("\n"), data]), (err) => {
+      tcpSocket.write(Buffer.concat([Buffer.from(fileExtension), Buffer.from("\n"), buffer]), (err) => {
         if (err) console.error(err);
         tcpSocket.end(() => {
           server.close();
