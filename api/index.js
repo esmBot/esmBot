@@ -2,8 +2,7 @@
 
 require("dotenv").config();
 const os = require("os");
-const magick = require("../utils/image.js");
-const execPromise = require("util").promisify(require("child_process").exec);
+const { run } = require("../utils/image-runner.js");
 const net = require("net");
 const dgram = require("dgram"); // for UDP servers
 const socket = dgram.createSocket("udp4"); // Our universal UDP socket, this might cause issues and we may have to use a seperate socket for each connection
@@ -95,31 +94,17 @@ const runJob = (job) => {
     log(`Job ${job.uuid} starting...`, job.num);
 
     const object = JSON.parse(job.msg);
-    let type;
-    if (object.path) {
-      type = object.type;
-      if (!object.type) {
-        type = await magick.getType(object.path);
-      }
-      if (!type) {
-        reject(new TypeError("Unknown image type"));
-      }
-      object.type = type.split("/")[1];
-      if (object.type !== "gif" && object.onlyGIF) reject(new TypeError(`Expected a GIF, got ${object.type}`));
-      object.delay = object.delay ? object.delay : 0;
-    }
-      
-    if (object.type === "gif" && !object.delay) {
-      const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
-      object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
+    // If the image has a path, it must also have a type
+    if (object.path && !object.type) {
+      reject(new TypeError("Unknown image type"));
     }
 
     log(`Job ${job.uuid} started`, job.num);
-    const data = await magick.run(object, true);
+    const {buffer, fileExtension} = await run(object);
 
     log(`Sending result of job ${job.uuid} back to the bot`, job.num);
     const server = net.createServer(function(tcpSocket) {
-      tcpSocket.write(Buffer.concat([Buffer.from(type ? type : "image/png"), Buffer.from("\n"), data]), (err) => {
+      tcpSocket.write(Buffer.concat([Buffer.from(fileExtension), Buffer.from("\n"), buffer]), (err) => {
         if (err) console.error(err);
         tcpSocket.end(() => {
           server.close();

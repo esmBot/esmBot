@@ -12,7 +12,7 @@ exports.run = async (message) => {
     onlyGIF: true,
     type: image.type
   });
-  if (buffer === "nogif") return `${message.author.mention}, that isn't a GIF!`;
+  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
   return {
     file: buffer,
     name: `soos.${type}`
