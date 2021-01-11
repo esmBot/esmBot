@@ -65,6 +65,16 @@ module.exports = async (message) => {
   const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));
   if (!cmd) return;
 
+  // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
+  // if so, don't re-run it
+  const commandHash = `${message.channel.id}\n${content}\n${command}`;
+  if (collections.runningCommands.has(commandHash)) {
+    await client.createMessage(message.channel.id, `${message.author.mention}, please slow down!`);
+    return;
+  }
+  // before awaiting the command result, add this command to the set of running commands
+  collections.runningCommands.add(commandHash);
+
   // actually run the command
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
@@ -107,5 +117,7 @@ module.exports = async (message) => {
         name: "error.txt"
       }]);
     }
+  } finally {
+    collections.runningCommands.delete(commandHash);
   }
 };
