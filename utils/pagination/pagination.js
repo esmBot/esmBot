@@ -5,7 +5,6 @@ const client = require("../client.js");
 module.exports = async (message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && (message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages")) ? true : false;
   let page = 0;
-  let deleted = false;
   const currentPage = await message.channel.createMessage(pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
@@ -42,7 +41,6 @@ module.exports = async (message, pages, timeout = 120000) => {
           if (manageMessages) msg.removeReaction("▶", userID);
           break;
         case "🗑":
-          deleted = true;
           reactionCollector.emit("end");
           if (currentPage.channel.messages.get(currentPage.id)) currentPage.delete();
           return;
@@ -52,7 +50,9 @@ module.exports = async (message, pages, timeout = 120000) => {
     }
   });
   reactionCollector.once("end", () => {
-    if (!deleted && manageMessages) currentPage.removeReactions();
+    if (message.channel.messages.get(currentPage.id) && manageMessages) {
+      currentPage.removeReactions();
+    }
   });
   return currentPage;
 };
