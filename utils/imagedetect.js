@@ -17,6 +17,12 @@ const imgurURLs = [
   "www.imgur.com",
   "i.imgur.com"
 ];
+const gfycatURLs = [
+  "gfycat.com",
+  "www.gfycat.com",
+  "thumbs.gfycat.com",
+  "giant.gfycat.com"
+];
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -42,6 +48,8 @@ const getImage = async (image, image2, gifv = false) => {
         payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
       } else if (imgurURLs.includes(host)) {
         payload.path = image.replace(".mp4", ".gif");
+      } else if (gfycatURLs.includes(host)) {
+        payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
       }
       payload.type = "image/gif";
     } else {

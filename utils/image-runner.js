@@ -4,7 +4,7 @@ const execPromise = promisify(require("child_process").exec);
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 
 exports.run = async object => {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve, reject) => {
     // If the image has a path, it must also have a type
     if (object.path) {
       if (object.type !== "image/gif" && object.onlyGIF) resolve({
@@ -19,12 +19,16 @@ exports.run = async object => {
     // If no image type is given (say, the command generates its own image), make it a PNG.
     const fileExtension = object.type ? object.type.split("/")[1] : "png";
     const objectWithFixedType = Object.assign({}, object, {type: fileExtension});
-    const data = await promisify(magick[object.cmd])(objectWithFixedType);
-    const returnObject = {
-      buffer: data,
-      fileExtension
-    };
-    resolve(returnObject);
+    try {
+      const data = await promisify(magick[object.cmd])(objectWithFixedType);
+      const returnObject = {
+        buffer: data,
+        fileExtension
+      };
+      resolve(returnObject);
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 
