@@ -8,7 +8,7 @@ exports.run = async (message, args) => {
   const image = await require("../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to overlay a flag onto!`;
   if (!args[0].match(emojiRegex)) return `${message.author.mention}, you need to provide an emoji of a flag to overlay!`;
-  const flag = emoji.unemojify(args[0]).replace(/:/g, "").replace("flag-", "");
+  const flag = emoji.unemojify(args[0]).replaceAll(":", "").replace("flag-", "");
   let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
   if (flag === "🏴‍☠️") path = "./assets/images/pirateflag.png";
   if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";

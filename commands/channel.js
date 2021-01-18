@@ -11,7 +11,7 @@ exports.run = async (message, args) => {
   if (args[0].toLowerCase() === "disable") {
     let channel;
     if (args[1] && args[1].match(/^<?[@#]?[&!]?\d+>?$/) && args[1] >= 21154535154122752) {
-      const id = args[1].replace(/@/g, "").replace(/#/g, "").replace(/!/g, "").replace(/&/g, "").replace(/</g, "").replace(/>/g, "");
+      const id = args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
       if (guildDB.disabled.includes(id)) return `${message.author.mention}, I'm already disabled in this channel!`;
       channel = message.channel.guild.channels.get(id);
     } else {
@@ -24,7 +24,7 @@ exports.run = async (message, args) => {
   } else if (args[0].toLowerCase() === "enable") {
     let channel;
     if (args[1] && args[1].match(/^<?[@#]?[&!]?\d+>?$/) && args[1] >= 21154535154122752) {
-      const id = args[1].replace(/@/g, "").replace(/#/g, "").replace(/!/g, "").replace(/&/g, "").replace(/</g, "").replace(/>/g, "");
+      const id = args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
       if (!guildDB.disabled.includes(id)) return `${message.author.mention}, I'm not disabled in that channel!`;
       channel = message.channel.guild.channels.get(id);
     } else {

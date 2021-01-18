@@ -5,7 +5,7 @@ exports.run = async (message, args) => {
   message.channel.sendTyping();
   const { buffer } = await magick.run({
     cmd: "homebrew",
-    caption: args.join(" ").toLowerCase().replace(/\n/g, " ")
+    caption: args.join(" ").toLowerCase().replaceAll("\n", " ")
   });
   return {
     file: buffer,

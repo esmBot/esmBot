@@ -10,11 +10,11 @@ exports.run = async (message, args) => {
   const result = await request.json();
   for (const [i, value] of result.items.entries()) {
     if (value.id.kind === "youtube#channel") {
-      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replace(/\*/g, "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}`);
+      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}`);
     } else if (value.id.kind === "youtube#playlist") {
-      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replace(/\*/g, "\\*")}**\nCreated by **${decodeEntities(value.snippet.channelTitle).replace(/\*/g, "\\*")}**\nhttps://youtube.com/playlist?list=${value.id.playlistId}`);
+      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nCreated by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}**\nhttps://youtube.com/playlist?list=${value.id.playlistId}`);
     } else {
-      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replace(/\*/g, "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replace(/\*/g, "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}`);
+      messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}`);
     }
   }
   return paginator(message, messages);

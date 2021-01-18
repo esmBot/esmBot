@@ -18,18 +18,18 @@ exports.clean = async (text) => {
     text = util.inspect(text, { depth: 1 });
 
   text = text
-    .replace(/`/g, `\`${String.fromCharCode(8203)}`)
-    .replace(/@/g, `@${String.fromCharCode(8203)}`)
-    .replace(process.env.TOKEN, optionalReplace(process.env.TOKEN))
-    .replace(process.env.MASHAPE, optionalReplace(process.env.MASHAPE))
-    .replace(process.env.CAT, optionalReplace(process.env.CAT))
-    .replace(process.env.GOOGLE, optionalReplace(process.env.GOOGLE))
-    .replace(process.env.DBL, optionalReplace(process.env.DBL))
-    .replace(process.env.MONGO, optionalReplace(process.env.MONGO))
-    .replace(process.env.TWITTER_KEY, optionalReplace(process.env.TWITTER_KEY))
-    .replace(process.env.CONSUMER_SECRET, optionalReplace(process.env.CONSUMER_SECRET))
-    .replace(process.env.ACCESS_TOKEN, optionalReplace(process.env.ACCESS_TOKEN))
-    .replace(process.env.ACCESS_SECRET, optionalReplace(process.env.ACCESS_SECRET));
+    .replaceAll("`", `\`${String.fromCharCode(8203)}`)
+    .replaceAll("@", `@${String.fromCharCode(8203)}`)
+    .replaceAll(process.env.TOKEN, optionalReplace(process.env.TOKEN))
+    .replaceAll(process.env.MASHAPE, optionalReplace(process.env.MASHAPE))
+    .replaceAll(process.env.CAT, optionalReplace(process.env.CAT))
+    .replaceAll(process.env.GOOGLE, optionalReplace(process.env.GOOGLE))
+    .replaceAll(process.env.DBL, optionalReplace(process.env.DBL))
+    .replaceAll(process.env.MONGO, optionalReplace(process.env.MONGO))
+    .replaceAll(process.env.TWITTER_KEY, optionalReplace(process.env.TWITTER_KEY))
+    .replaceAll(process.env.CONSUMER_SECRET, optionalReplace(process.env.CONSUMER_SECRET))
+    .replaceAll(process.env.ACCESS_TOKEN, optionalReplace(process.env.ACCESS_TOKEN))
+    .replaceAll(process.env.ACCESS_SECRET, optionalReplace(process.env.ACCESS_SECRET));
 
   return text;
 };
@@ -38,19 +38,19 @@ exports.clean = async (text) => {
 exports.getTweet = async (tweets, reply = false, isDownload = false) => {
   const randomTweet = this.random(reply ? (isDownload ? tweets.download : tweets.replies) : tweets.tweets);
   if (randomTweet.match("{{message}}")) {
-    return randomTweet.replace(/{{message}}/gm, await this.getRandomMessage());
+    return randomTweet.replaceAll("{{message}}", await this.getRandomMessage());
   } else {
     return randomTweet
-      .replace(/{{media}}/gm, () => {
+      .replaceAll("{{media}}", () => {
         return this.random(tweets.media);
       })
-      .replace(/{{games}}/gm, () => {
+      .replaceAll("{{games}}", () => {
         return this.random(tweets.games);
       })
-      .replace(/{{phrases}}/gm, () => {
+      .replaceAll("{{phrases}}", () => {
         return this.random(tweets.phrases);
       })
-      .replace(/{{characters}}/gm, () => {
+      .replaceAll("{{characters}}", () => {
         return this.random(tweets.characters);
       });
   }

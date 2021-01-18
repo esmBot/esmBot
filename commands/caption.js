@@ -9,7 +9,7 @@ exports.run = async (message, args) => {
   const { buffer, type } = await magick.run({
     cmd: "caption",
     path: image.path,
-    caption: newArgs.join(" ").replace(/&/g, "\\&amp;").replace(/>/g, "\\&gt;").replace(/</g, "\\&lt;").replace(/"/g, "\\&quot;").replace(/'/g, "\\&apos;").replace(/%/g, "\\%"),
+    caption: newArgs.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
     type: image.type
   });
   if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();

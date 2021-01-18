@@ -14,6 +14,7 @@ const client = require("./utils/client.js");
 // initialize command loader
 const handler = require("./utils/handler.js");
 const sound = require("./utils/soundplayer.js");
+const image = require("./utils/image.js");
 
 // registers stuff and connects the bot
 async function init() {
@@ -39,6 +40,17 @@ async function init() {
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     client.on(eventName, event);
+  }
+
+  // connect to image api if enabled
+  if (process.env.API === "true") {
+    for (const server of image.servers) {
+      try {
+        await image.connect(server);
+      } catch (e) {
+        logger.error(e);
+      }
+    }
   }
 
   // login
