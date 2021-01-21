@@ -7,6 +7,14 @@ RUN apk add --no-cache git msttcorefonts-installer python3 alpine-sdk ffmpeg \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
     libtool libwebp-dev libxml2-dev pango-dev freetype fontconfig
 
+# liblqr needs to be built manually for magik to work
+# and because alpine doesn't have it in their repos
+RUN git clone https://github.com/carlobaldassi/liblqr \
+		&& cd liblqr \
+		&& ./configure \
+		&& make \
+		&& make install
+
 # install imagemagick from source rather than using the package
 # since the alpine package does not include pango support.
 RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
@@ -25,8 +33,9 @@ RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
 		--with-modules \
 		--with-pango \
 		--without-hdri \
+		--with-lqr \
     && make \
-    && sudo make install
+    && make install
 
 RUN update-ms-fonts && fc-cache -f
 
