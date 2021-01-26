@@ -14,10 +14,23 @@ class SpeedWorker : public Napi::AsyncWorker {
   void Execute() {
     list <Image> frames;
     readImages(&frames, in_path);
-    
-    int new_delay = slow ? delay * 2 : delay / 2;
+
+    int old_delay = 0;
+    // if passed a delay, use that. otherwise use the average frame delay.
+    // GIFs can have a variable framerate, and the frameskipping logic here doesn't handle that.
+    // TODO: revisit?
+    if (delay == 0) {
+      for (Image &image : frames) {
+        old_delay += image.animationDelay();
+      }
+      old_delay /= frames.size();
+    } else {
+      old_delay = delay;
+    }
+
+    int new_delay = slow ? old_delay * 2 : old_delay / 2;
     if (new_delay <= 1) {
-      new_delay = delay;
+      new_delay = old_delay;
       auto it = frames.begin();
       while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
     } else {

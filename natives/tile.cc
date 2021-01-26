@@ -36,11 +36,11 @@ class TileWorker : public Napi::AsyncWorker {
       appendImages(&frame, montage.begin(), montage.end(), true);
       frame.repage();
       frame.scale(Geometry("800x800>"));
+      frame.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(frame);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 

@@ -47,11 +47,11 @@ class WatermarkWorker : public Napi::AsyncWorker {
         final = image;
       }
       image.magick(type);
+      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 

@@ -1,6 +1,5 @@
 const magick = require("../build/Release/image.node");
 const { promisify } = require("util");
-const execPromise = promisify(require("child_process").exec);
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 
 exports.run = async object => {
@@ -11,8 +10,7 @@ exports.run = async object => {
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${object.path}`)).stdout.replace("\n", "");
-      object.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
+      object.delay = 0;
     }
     // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.

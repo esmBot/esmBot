@@ -56,11 +56,11 @@ class MotivateWorker : public Napi::AsyncWorker {
       appendImages(&final, to_append.begin(), to_append.end(), true);
       final.repage();
       final.magick(type);
+      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 

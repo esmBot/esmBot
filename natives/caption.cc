@@ -40,11 +40,11 @@ class CaptionWorker : public Napi::AsyncWorker {
       appendImages(&appended, images.begin(), images.end(), true);
       appended.repage();
       appended.magick(type);
+      appended.animationDelay(delay == 0 ? image.animationDelay() : delay);
       captioned.push_back(appended);
     }
 
     optimizeImageLayers(&result, captioned.begin(), captioned.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 

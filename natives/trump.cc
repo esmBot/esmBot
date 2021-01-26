@@ -31,11 +31,11 @@ class TrumpWorker : public Napi::AsyncWorker {
       image.extent(Geometry("800x450"), Magick::CenterGravity);
       watermark_new.composite(image, Geometry("-25+134"), Magick::DstOverCompositeOp);
       watermark_new.magick(type);
+      watermark_new.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(watermark_new);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
