@@ -55,7 +55,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info)
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   string overlay = obj.Get("overlay").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   FlagWorker* flagWorker = new FlagWorker(cb, path, overlay, type, delay);
   flagWorker->Queue();

@@ -62,7 +62,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info)
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   bool slow = obj.Has("slow") ? obj.Get("slow").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   SpeedWorker* explodeWorker = new SpeedWorker(cb, path, slow, type, delay);
   explodeWorker->Queue();

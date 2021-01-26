@@ -62,7 +62,7 @@ Napi::Value Tile(const Napi::CallbackInfo &info)
   Napi::Function cb = info[1].As<Napi::Function>();
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   TileWorker* flopWorker = new TileWorker(cb, path, type, delay);
   flopWorker->Queue();

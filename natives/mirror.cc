@@ -78,7 +78,7 @@ Napi::Value Mirror(const Napi::CallbackInfo &info)
   bool vertical = obj.Has("vertical") ? obj.Get("vertical").As<Napi::Boolean>().Value() : false;
   bool first = obj.Has("first") ? obj.Get("first").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   MirrorWorker* mirrorWorker = new MirrorWorker(cb, path, vertical, first, type, delay);
   mirrorWorker->Queue();

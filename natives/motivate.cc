@@ -84,7 +84,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info)
   string top = obj.Get("top").As<Napi::String>().Utf8Value();
   string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   MotivateWorker* blurWorker = new MotivateWorker(cb, path, top, bottom, type, delay);
   blurWorker->Queue();
