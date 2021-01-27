@@ -47,11 +47,11 @@ class WatermarkWorker : public Napi::AsyncWorker {
         final = image;
       }
       image.magick(type);
+      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -79,7 +79,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info)
   bool append = obj.Has("append") ? obj.Get("append").As<Napi::Boolean>().Value() : false;
   bool mc = obj.Has("mc") ? obj.Get("mc").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   WatermarkWorker* watermarkWorker = new WatermarkWorker(cb, path, water, gravity, type, delay, resize, append, mc);
   watermarkWorker->Queue();

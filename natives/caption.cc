@@ -40,11 +40,11 @@ class CaptionWorker : public Napi::AsyncWorker {
       appendImages(&appended, images.begin(), images.end(), true);
       appended.repage();
       appended.magick(type);
+      appended.animationDelay(delay == 0 ? image.animationDelay() : delay);
       captioned.push_back(appended);
     }
 
     optimizeImageLayers(&result, captioned.begin(), captioned.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -67,7 +67,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info)
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   CaptionWorker* captionWorker = new CaptionWorker(cb, caption, path, type, delay);
   captionWorker->Queue();

@@ -49,11 +49,11 @@ class MirrorWorker : public Napi::AsyncWorker {
       appendImages(&final, mirrored.begin(), mirrored.end(), vertical);
       final.repage();
       final.magick(type);
+      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -78,7 +78,7 @@ Napi::Value Mirror(const Napi::CallbackInfo &info)
   bool vertical = obj.Has("vertical") ? obj.Get("vertical").As<Napi::Boolean>().Value() : false;
   bool first = obj.Has("first") ? obj.Get("first").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   MirrorWorker* mirrorWorker = new MirrorWorker(cb, path, vertical, first, type, delay);
   mirrorWorker->Queue();

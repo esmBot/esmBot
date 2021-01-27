@@ -56,11 +56,11 @@ class MotivateWorker : public Napi::AsyncWorker {
       appendImages(&final, to_append.begin(), to_append.end(), true);
       final.repage();
       final.magick(type);
+      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(final);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -84,7 +84,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info)
   string top = obj.Get("top").As<Napi::String>().Utf8Value();
   string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   MotivateWorker* blurWorker = new MotivateWorker(cb, path, top, bottom, type, delay);
   blurWorker->Queue();

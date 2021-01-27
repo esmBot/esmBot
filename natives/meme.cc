@@ -80,7 +80,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info)
   string top = obj.Get("top").As<Napi::String>().Utf8Value();
   string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   MemeWorker* blurWorker = new MemeWorker(cb, path, top, bottom, type, delay);
   blurWorker->Queue();

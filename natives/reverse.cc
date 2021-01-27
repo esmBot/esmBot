@@ -52,7 +52,7 @@ Napi::Value Reverse(const Napi::CallbackInfo &info)
   Napi::Function cb = info[1].As<Napi::Function>();
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   bool soos = obj.Has("soos") ? obj.Get("soos").As<Napi::Boolean>().Value() : false;
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   ReverseWorker* explodeWorker = new ReverseWorker(cb, path, soos, delay);
   explodeWorker->Queue();

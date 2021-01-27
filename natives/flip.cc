@@ -50,7 +50,7 @@ Napi::Value Flip(const Napi::CallbackInfo &info)
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   bool flop = obj.Has("flop") ? obj.Get("flop").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   FlipWorker* flipWorker = new FlipWorker(cb, path, flop, type, delay);
   flipWorker->Queue();

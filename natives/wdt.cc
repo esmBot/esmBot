@@ -26,11 +26,11 @@ class WdtWorker : public Napi::AsyncWorker {
       image.scale(Geometry("374x374>"));
       watermark_new.composite(image, Magick::CenterGravity, Magick::OverCompositeOp);
       watermark_new.magick(type);
+      watermark_new.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(watermark_new);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -52,7 +52,7 @@ Napi::Value Wdt(const Napi::CallbackInfo &info)
   Napi::Function cb = info[1].As<Napi::Function>();
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   WdtWorker* blurWorker = new WdtWorker(cb, path, type, delay);
   blurWorker->Queue();

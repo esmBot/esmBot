@@ -58,7 +58,7 @@ Napi::Value Resize(const Napi::CallbackInfo &info)
   bool stretch = obj.Has("stretch") ? obj.Get("stretch").As<Napi::Boolean>().Value() : false;
   bool wide = obj.Has("wide") ? obj.Get("wide").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   ResizeWorker* explodeWorker = new ResizeWorker(cb, path, stretch, wide, type, delay);
   explodeWorker->Queue();

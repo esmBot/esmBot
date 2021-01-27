@@ -31,11 +31,11 @@ class TrumpWorker : public Napi::AsyncWorker {
       image.extent(Geometry("800x450"), Magick::CenterGravity);
       watermark_new.composite(image, Geometry("-25+134"), Magick::DstOverCompositeOp);
       watermark_new.magick(type);
+      watermark_new.animationDelay(delay == 0 ? image.animationDelay() : delay);
       mid.push_back(watermark_new);
     }
 
     optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
     writeImages(result.begin(), result.end(), &blob);
   }
 
@@ -57,7 +57,7 @@ Napi::Value Trump(const Napi::CallbackInfo &info)
   Napi::Function cb = info[1].As<Napi::Function>();
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   TrumpWorker* blurWorker = new TrumpWorker(cb, path, type, delay);
   blurWorker->Queue();

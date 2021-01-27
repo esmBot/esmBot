@@ -42,7 +42,7 @@ Napi::Value Freeze(const Napi::CallbackInfo &info)
   string path = obj.Get("path").As<Napi::String>().Utf8Value();
   bool loop = obj.Has("loop") ? obj.Get("loop").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay = obj.Get("delay").As<Napi::Number>().Int32Value();
+  int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
   FreezeWorker* blurWorker = new FreezeWorker(cb, path, loop, type, delay);
   blurWorker->Queue();
