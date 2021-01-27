@@ -8,6 +8,7 @@ exports.run = async (message, args) => {
   const messages = [];
   const request = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(args.join(" "))}&key=${process.env.GOOGLE}&maxResults=50`);
   const result = await request.json();
+  if (result.error && result.error.code === 403) return `${message.author.mention}, I've exceeded my YouTube API search quota for the day. Check back later.`;
   for (const [i, value] of result.items.entries()) {
     if (value.id.kind === "youtube#channel") {
       messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}`);
