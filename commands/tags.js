@@ -23,13 +23,13 @@ exports.run = async (message, args) => {
     case "remove":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to delete!`;
       if (!tags[args[1].toLowerCase()]) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags[args[1].toLowerCase()].author !== message.author.id && !message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags[args[1].toLowerCase()].author !== message.author.id && !message.member.permissions.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       await database.removeTag(args[1].toLowerCase(), message.channel.guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been deleted!`;
     case "edit":
       if (args[1] === undefined) return `${message.author.mention}, you need to provide the name of the tag you want to edit!`;
       if (!tags[args[1].toLowerCase()]) return `${message.author.mention}, this tag doesn't exist!`;
-      if (tags[args[1].toLowerCase()].author !== message.author.id && !message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
+      if (tags[args[1].toLowerCase()].author !== message.author.id && !message.member.permissions.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't own this tag!`;
       await setTag(args.slice(2).join(" "), args[1].toLowerCase(), message, guild);
       return `${message.author.mention}, the tag \`${args[1].toLowerCase()}\` has been edited!`;
     case "own":
@@ -38,8 +38,8 @@ exports.run = async (message, args) => {
       if (!tags[args[1].toLowerCase()]) return `${message.author.mention}, this tag doesn't exist!`;
       return `${message.author.mention}, this tag is owned by **${client.users.get(tags[args[1].toLowerCase()].author).username}#${client.users.get(tags[args[1].toLowerCase()].author).discriminator}** (\`${tags[args[1].toLowerCase()].author}\`).`;
     case "list":
-      if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-      if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
+      if (!message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+      if (!message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
       var pageSize = 15;
       var embeds = [];
       var groups = Object.keys(tags).map((item, index) => {
@@ -70,7 +70,7 @@ exports.run = async (message, args) => {
       return tags[random(Object.keys(tags))].content;
     case "enable":
     case "disable":
-      if (!message.member.permission.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't have permission to disable tags!`;
+      if (!message.member.permissions.has("manageMessages") && message.author.id !== process.env.OWNER) return `${message.author.mention}, you don't have permission to disable tags!`;
       var toggleResult = await database.toggleTags(message.channel.guild);
       return `${message.author.mention}, tags for this guild have been ${toggleResult ? "disabled" : "enabled"}. To ${toggleResult ? "enable" : "disable"} them again, run ${guild.prefix}tags ${toggleResult ? "enable" : "disable"}.`;
     default:

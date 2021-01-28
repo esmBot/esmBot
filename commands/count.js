@@ -3,8 +3,8 @@ const paginator = require("../utils/pagination/pagination.js");
 const database = require("../utils/database.js");
 
 exports.run = async (message) => {
-  if (message.channel.guild && !message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-  if (message.channel.guild && !message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
+  if (message.channel.guild && !message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+  if (message.channel.guild && !message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
   const counts = await database.getCounts();
   const countArray = [];
   const sortedValues = counts.sort((a, b) => {
