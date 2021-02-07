@@ -50,7 +50,7 @@ exports.connect = async () => {
 exports.play = async (sound, message, music = false) => {
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
-  if (!message.channel.guild.members.get(client.user.id).permission.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
+  if (!message.channel.guild.members.get(client.user.id).permissions.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
   const voiceChannel = message.channel.guild.channels.get(message.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I don't have permission to join this voice channel!`;
   const player = this.players.get(message.channel.guild.id);
@@ -239,8 +239,8 @@ exports.queue = async (message) => {
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${message.author.mention}, I'm not in a voice channel!`;
-  if (!message.channel.guild.members.get(client.user.id).permission.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-  if (!message.channel.guild.members.get(client.user.id).permission.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
+  if (!message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !message.channel.permissionsOf(client.user.id).has("addReactions")) return `${message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+  if (!message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${message.author.mention}, I don't have the \`Embed Links\` permission!`;
   const queue = this.queues.get(message.channel.guild.id);
   const player = this.players.get(message.channel.guild.id);
   const tracks = await fetch(`http://${player.player.node.host}:${player.player.node.port}/decodetracks`, { method: "POST", body: JSON.stringify(queue), headers: { Authorization: player.player.node.password, "Content-Type": "application/json" } }).then(res => res.json());

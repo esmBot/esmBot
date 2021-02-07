@@ -60,12 +60,11 @@ exports.getCounts = async () => {
 
 exports.addCount = async (command) => {
   const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-  if (count.rows[0].count) await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
   await connection.query("UPDATE counts SET count = $1 WHERE command = $2", [count.rows[0].count ? count.rows[0].count + 1 : 1, command]);
 };
 
 exports.addGuild = async (guild) => {
-  await connection.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5, $6)", [guild.id, misc.tagDefaults, process.env.PREFIX, {}, [], false]);
+  await connection.query("INSERT INTO guilds (guild_id, tags, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5)", [guild.id, misc.tagDefaults, process.env.PREFIX, [], false]);
   return await this.getGuild(guild.id);
 };
 

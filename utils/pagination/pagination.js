@@ -3,21 +3,21 @@ const MessageCollector = require("./awaitmessages.js");
 const client = require("../client.js");
 
 module.exports = async (message, pages, timeout = 120000) => {
-  const manageMessages = message.channel.guild && (message.channel.guild.members.get(client.user.id).permission.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages")) ? true : false;
+  const manageMessages = message.channel.guild && (message.channel.guild.members.get(client.user.id).permissions.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages")) ? true : false;
   let page = 0;
-  const currentPage = await message.channel.createMessage(pages[page]);
+  let currentPage = await message.channel.createMessage(pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
     await currentPage.addReaction(emoji);
   }
-  const reactionCollector = new ReactionCollector(currentPage, (message, reaction, user) => emojiList.includes(reaction.name) && !client.users.get(user).bot, { time: timeout });
-  reactionCollector.on("reaction", (msg, reaction, userID) => {
-    if (userID === message.author.id) {
+  const reactionCollector = new ReactionCollector(currentPage, (message, reaction, member) => emojiList.includes(reaction.name) && !member.bot, { time: timeout });
+  reactionCollector.on("reaction", async (msg, reaction, member) => {
+    if (member.id === message.author.id) {
       switch (reaction.name) {
         case "◀":
           page = page > 0 ? --page : pages.length - 1;
-          currentPage.edit(pages[page]);
-          if (manageMessages) msg.removeReaction("◀", userID);
+          currentPage = await currentPage.edit(pages[page]);
+          if (manageMessages) msg.removeReaction("◀", member.id);
           break;
         case "🔢":
           message.channel.createMessage(`${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
@@ -25,11 +25,11 @@ module.exports = async (message, pages, timeout = 120000) => {
               time: timeout,
               maxMatches: 1
             });
-            return messageCollector.on("message", response => {
+            return messageCollector.on("message", async response => {
               if (askMessage.channel.messages.get(askMessage.id)) askMessage.delete();
               page = Number(response.content) - 1;
-              currentPage.edit(pages[page]);
-              if (manageMessages) msg.removeReaction("🔢", userID);
+              currentPage = await currentPage.edit(pages[page]);
+              if (manageMessages) msg.removeReaction("🔢", member.id);
             });
           }).catch(error => {
             throw error;
@@ -37,21 +37,21 @@ module.exports = async (message, pages, timeout = 120000) => {
           break;
         case "▶":
           page = page + 1 < pages.length ? ++page : 0;
-          currentPage.edit(pages[page]);
-          if (manageMessages) msg.removeReaction("▶", userID);
+          currentPage = await currentPage.edit(pages[page]);
+          if (manageMessages) msg.removeReaction("▶", member.id);
           break;
         case "🗑":
           reactionCollector.emit("end");
-          if (currentPage.channel.messages.get(currentPage.id)) currentPage.delete();
+          if (currentPage.channel.messages.get(currentPage.id)) await currentPage.delete();
           return;
         default:
           break;
       }
     }
   });
-  reactionCollector.once("end", () => {
-    if (message.channel.messages.get(currentPage.id) && manageMessages) {
-      currentPage.removeReactions();
+  reactionCollector.once("end", async () => {
+    if (currentPage.channel.messages.get(currentPage.id) && manageMessages) {
+      await currentPage.removeReactions();
     }
   });
   return currentPage;
