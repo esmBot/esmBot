@@ -15,7 +15,6 @@ class BlurpleWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> blurpled;
-    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -23,12 +22,12 @@ class BlurpleWorker : public Napi::AsyncWorker {
       image.threshold(49151.25);
       image.levelColors("#7289DA", "white");
       image.magick(type);
+      image.animationDelay(delay == 0 ? image.animationDelay() : delay);
       blurpled.push_back(image);
     }
 
-    optimizeImageLayers(&result, blurpled.begin(), blurpled.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(blurpled.begin(), blurpled.end());
+    writeImages(blurpled.begin(), blurpled.end(), &blob);
   }
 
   void OnOK() {

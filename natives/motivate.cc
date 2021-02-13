@@ -15,7 +15,6 @@ class MotivateWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> mid;
-    list <Image> result;
     Image top;
     Image bottom;
     readImages(&frames, in_path);
@@ -60,8 +59,8 @@ class MotivateWorker : public Napi::AsyncWorker {
       mid.push_back(final);
     }
 
-    optimizeImageLayers(&result, mid.begin(), mid.end());
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(mid.begin(), mid.end());
+    writeImages(mid.begin(), mid.end(), &blob);
   }
 
   void OnOK() {

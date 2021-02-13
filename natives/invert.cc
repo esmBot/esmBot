@@ -15,7 +15,6 @@ class InvertWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> mid;
-    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -27,9 +26,9 @@ class InvertWorker : public Napi::AsyncWorker {
     // Magick::ChannelType(Magick::CompositeChannels ^ Magick::AlphaChannel)
     for_each(mid.begin(), mid.end(), magickImage(type));
 
-    optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(mid.begin(), mid.end());
+    if (delay != 0) for_each(mid.begin(), mid.end(), animationDelayImage(delay));
+    writeImages(mid.begin(), mid.end(), &blob);
   }
 
   void OnOK() {

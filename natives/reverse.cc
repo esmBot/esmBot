@@ -14,7 +14,6 @@ class ReverseWorker : public Napi::AsyncWorker {
   void Execute() {
     list<Image> frames;
     list<Image> coalesced;
-    list<Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -28,9 +27,9 @@ class ReverseWorker : public Napi::AsyncWorker {
 
     for_each(coalesced.begin(), coalesced.end(), magickImage("GIF"));
 
-    optimizeImageLayers(&result, coalesced.begin(), coalesced.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(coalesced.begin(), coalesced.end());
+    if (delay != 0) for_each(coalesced.begin(), coalesced.end(), animationDelayImage(delay));
+    writeImages(coalesced.begin(), coalesced.end(), &blob);
   }
 
   void OnOK() {

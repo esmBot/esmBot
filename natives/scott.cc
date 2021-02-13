@@ -15,7 +15,6 @@ class ScottWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> mid;
-    list <Image> result;
     Image watermark;
     readImages(&frames, in_path);
     watermark.read("./assets/images/scott.png");
@@ -35,8 +34,8 @@ class ScottWorker : public Napi::AsyncWorker {
       mid.push_back(watermark_new);
     }
 
-    optimizeImageLayers(&result, mid.begin(), mid.end());
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(mid.begin(), mid.end());
+    writeImages(mid.begin(), mid.end(), &blob);
   }
 
   void OnOK() {

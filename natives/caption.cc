@@ -44,8 +44,8 @@ class CaptionWorker : public Napi::AsyncWorker {
       captioned.push_back(appended);
     }
 
-    optimizeImageLayers(&result, captioned.begin(), captioned.end());
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(captioned.begin(), captioned.end());
+    writeImages(captioned.begin(), captioned.end(), &blob);
   }
 
   void OnOK() {

@@ -30,6 +30,7 @@ class LeakWorker : public Napi::AsyncWorker {
       mid.push_back(image);
     }
 
+    optimizeTransparency(mid.begin(), mid.end());
     if (delay != 0) for_each(mid.begin(), mid.end(), animationDelayImage(delay));
     writeImages(mid.begin(), mid.end(), &blob);
   }

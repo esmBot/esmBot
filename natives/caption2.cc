@@ -15,7 +15,6 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> captioned;
-    list <Image> result;
     Blob caption_blob;
     readImages(&frames, in_path);
 
@@ -43,8 +42,8 @@ class CaptionTwoWorker : public Napi::AsyncWorker {
       captioned.push_back(appended);
     }
 
-    optimizeImageLayers(&result, captioned.begin(), captioned.end());
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(captioned.begin(), captioned.end());
+    writeImages(captioned.begin(), captioned.end(), &blob);
   }
 
   void OnOK() {

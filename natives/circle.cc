@@ -15,7 +15,6 @@ class CircleWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> blurred;
-    list <Image> result;
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
@@ -25,9 +24,9 @@ class CircleWorker : public Napi::AsyncWorker {
       blurred.push_back(image);
     }
 
-    optimizeImageLayers(&result, blurred.begin(), blurred.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(blurred.begin(), blurred.end());
+    if (delay != 0) for_each(blurred.begin(), blurred.end(), animationDelayImage(delay));
+    writeImages(blurred.begin(), blurred.end(), &blob);
   }
 
   void OnOK() {

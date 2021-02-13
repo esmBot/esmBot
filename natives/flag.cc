@@ -15,7 +15,6 @@ class FlagWorker : public Napi::AsyncWorker {
     list <Image> frames;
     list <Image> coalesced;
     list <Image> mid;
-    list <Image> result;
     Image watermark;
     readImages(&frames, in_path);
     watermark.read(overlay_path);
@@ -31,9 +30,9 @@ class FlagWorker : public Napi::AsyncWorker {
       mid.push_back(image);
     }
 
-    optimizeImageLayers(&result, mid.begin(), mid.end());
-    if (delay != 0) for_each(result.begin(), result.end(), animationDelayImage(delay));
-    writeImages(result.begin(), result.end(), &blob);
+    optimizeTransparency(mid.begin(), mid.end());
+    if (delay != 0) for_each(mid.begin(), mid.end(), animationDelayImage(delay));
+    writeImages(mid.begin(), mid.end(), &blob);
   }
 
   void OnOK() {
