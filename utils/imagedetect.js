@@ -2,7 +2,6 @@ const client = require("./client.js");
 const fetch = require("node-fetch");
 const url = require("url");
 const { getType } = require("./image.js");
-const execPromise = require("util").promisify(require("child_process").exec);
 
 const tenorURLs = [
   "tenor.com",
@@ -37,12 +36,22 @@ const getImage = async (image, image2, gifv = false) => {
       const host = url.parse(image2).host;
       if (tenorURLs.includes(host)) {
         if (process.env.TENOR !== "") {
+          // find the URL of the original .gif with the Tenor API
           const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
+          if (!data.ok) throw Error(`${data.status} ${data.statusText}`);
           const json = await data.json();
+          if (json.error) throw Error(json.error);
           payload.path = json.results[0].media[0].gif.url;
         } else {
-          const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${image}`)).stdout.replace("\n", "");
-          payload.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
+          // find the URL of the original .gif by requesting the HTML page and pulling it out from there
+          const data = await fetch(image2);
+          if (!data.ok) throw Error(`${data.status} ${data.statusText}`);
+          const text = await data.text();
+          // a little bit of parsing html with regex is good for the soul
+          const ogImageMatch = /<meta[^<>]+property="og:image"\s+content="([^"]+)">/.exec(text);
+          if (ogImageMatch) {
+            payload.path = ogImageMatch[1];
+          }
         }
       } else if (giphyURLs.includes(host)) {
         payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
