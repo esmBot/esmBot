@@ -32,14 +32,14 @@ const acceptJob = async (uuid, sock) => {
     }, sock);
     jobAmount--;
     if (queue.length > 0) {
-      acceptJob(queue[0]);
+      acceptJob(queue[0], sock);
     }
     log(`Job ${uuid} has finished`);
   } catch (err) {
     console.error(`Error on job ${uuid}:`, err);
     jobAmount--;
     if (queue.length > 0) {
-      acceptJob(queue[0]);
+      acceptJob(queue[0], sock);
     }
     delete jobs[uuid];
     sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]));
