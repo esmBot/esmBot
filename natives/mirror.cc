@@ -58,7 +58,6 @@ class MirrorWorker : public Napi::AsyncWorker {
       for (Image &image : mid) {
         image.quantizeDither(false);
         image.quantize();
-        if (delay != 0) image.animationDelay(delay);
       }
     }
 
