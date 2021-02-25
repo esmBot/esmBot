@@ -30,7 +30,15 @@ class GamexplainWorker : public Napi::AsyncWorker {
     }
 
     optimizeTransparency(mid.begin(), mid.end());
-    if (delay != 0) for_each(mid.begin(), mid.end(), animationDelayImage(delay));
+
+    if (type == "gif") {
+      for (Image &image : mid) {
+        image.quantizeDither(false);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
     writeImages(mid.begin(), mid.end(), &blob);
   }
 

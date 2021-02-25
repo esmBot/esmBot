@@ -28,7 +28,15 @@ class ReverseWorker : public Napi::AsyncWorker {
     for_each(coalesced.begin(), coalesced.end(), magickImage("GIF"));
 
     optimizeTransparency(coalesced.begin(), coalesced.end());
-    if (delay != 0) for_each(coalesced.begin(), coalesced.end(), animationDelayImage(delay));
+
+    if (type == "gif") {
+      for (Image &image : coalesced) {
+        image.quantizeDither(false);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
     writeImages(coalesced.begin(), coalesced.end(), &blob);
   }
 

@@ -25,7 +25,15 @@ class ExplodeWorker : public Napi::AsyncWorker {
     }
 
     optimizeTransparency(blurred.begin(), blurred.end());
-    if (delay != 0) for_each(blurred.begin(), blurred.end(), animationDelayImage(delay));
+
+    if (type == "gif") {
+      for (Image &image : blurred) {
+        image.quantizeDither(false);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
     writeImages(blurred.begin(), blurred.end(), &blob);
   }
 

@@ -60,6 +60,15 @@ class MotivateWorker : public Napi::AsyncWorker {
     }
 
     optimizeTransparency(mid.begin(), mid.end());
+
+    if (type == "gif") {
+      for (Image &image : mid) {
+        image.quantizeDither(false);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
     writeImages(mid.begin(), mid.end(), &blob);
   }
 

@@ -27,6 +27,15 @@ class BlurpleWorker : public Napi::AsyncWorker {
     }
 
     optimizeTransparency(blurpled.begin(), blurpled.end());
+
+    if (type == "gif") {
+      for (Image &image : blurpled) {
+        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
+        image.quantize();
+      }
+    }
+    
+
     writeImages(blurpled.begin(), blurpled.end(), &blob);
   }
 
