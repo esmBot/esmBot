@@ -48,6 +48,12 @@ class GlobeWorker : public Napi::AsyncWorker {
     } else if (type != "GIF") {
       for_each(mid.begin(), mid.end(), animationDelayImage(5));
     }
+
+    for (Image &image : mid) {
+      image.quantizeDitherMethod(FloydSteinbergDitherMethod);
+      image.quantize();
+    }
+
     writeImages(mid.begin(), mid.end(), &blob);
   }
 

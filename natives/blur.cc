@@ -26,7 +26,15 @@ class BlurWorker : public Napi::AsyncWorker {
     for_each(coalesced.begin(), coalesced.end(), magickImage(type));
 
     optimizeTransparency(coalesced.begin(), coalesced.end());
-    if (delay != 0) for_each(coalesced.begin(), coalesced.end(), animationDelayImage(delay));
+
+    if (type == "gif") {
+      for (Image &image : coalesced) {
+        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
     writeImages(coalesced.begin(), coalesced.end(), &blob);
   }
 

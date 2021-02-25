@@ -45,6 +45,15 @@ class CaptionWorker : public Napi::AsyncWorker {
     }
 
     optimizeTransparency(captioned.begin(), captioned.end());
+
+    if (type == "gif") {
+      for (Image &image : captioned) {
+        image.quantizeDither(false);
+        image.quantize();
+      }
+    }
+    
+
     writeImages(captioned.begin(), captioned.end(), &blob);
   }
 
