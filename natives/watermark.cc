@@ -56,7 +56,6 @@ class WatermarkWorker : public Napi::AsyncWorker {
       for (Image &image : mid) {
         image.quantizeDitherMethod(FloydSteinbergDitherMethod);
         image.quantize();
-        if (delay != 0) image.animationDelay(delay);
       }
     }
 
