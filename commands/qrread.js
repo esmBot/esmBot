@@ -1,6 +1,7 @@
 const jsqr = require("jsqr");
 const fetch = require("node-fetch");
 const sharp = require("sharp");
+const { clean } = require("../utils/misc.js");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);
@@ -10,7 +11,7 @@ exports.run = async (message) => {
   const rawData = await sharp(data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
   if (!qrBuffer) return `${message.author.mention}, I couldn't find a QR code!`;
-  return `\`\`\`\n${qrBuffer.data}\n\`\`\``;
+  return `\`\`\`\n${await clean(qrBuffer.data)}\n\`\`\``;
 };
 
 exports.category = 1;
