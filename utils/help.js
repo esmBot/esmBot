@@ -5,6 +5,8 @@ const fs = require("fs");
 module.exports = async (output) => {
   const template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 ${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, [report it here](https://github.com/esmBot/esmBot/issues) or in the esmBot Support server.**\n" : ""}
+This page was last generated on \`${new Date().toString()}\`.
+
 \`[]\` means an argument is required, \`{}\` means an argument is optional.
 
 Default prefix is \`&\`.
@@ -26,7 +28,7 @@ Default prefix is \`&\`.
     general: ["## 💻 General"],
     tags: ["## 🏷️ Tags"],
     fun: ["## 👌 Fun"],
-    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)"],
+    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)\n"],
     soundboard: ["## 🔊 Soundboard"],
     music: ["## 🎤 Music"]
   };
