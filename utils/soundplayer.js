@@ -4,7 +4,7 @@ const paginator = require("./pagination/pagination.js");
 const fetch = require("node-fetch");
 const moment = require("moment");
 require("moment-duration-format");
-const { Manager } = require("@lavacord/eris");
+const { Manager } = require("lavacord");
 
 let nodes = require("../servers.json").lava;
 
@@ -35,8 +35,14 @@ exports.checkStatus = async () => {
 };
 
 exports.connect = async () => {
-  this.manager = new Manager(client, nodes, {
-    user: client.user.id
+  this.manager = new Manager(nodes, {
+    user: client.user.id,
+    shards: client.shards.size || 1,
+    send: (packet) => {
+      const guild = client.guilds.get(packet.d.guild_id);
+      if (!guild) return;
+      return guild.shard.sendWS(packet.op, packet.d);
+    }
   });
   const { length } = await this.manager.connect();
   logger.log(`Successfully connected to ${length} Lavalink node(s).`);

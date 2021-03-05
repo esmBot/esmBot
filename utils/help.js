@@ -28,7 +28,7 @@ Default prefix is \`&\`.
     general: ["## 💻 General"],
     tags: ["## 🏷️ Tags"],
     fun: ["## 👌 Fun"],
-    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats. (GIF support is currently experimental)\n"],
+    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats.\n"],
     soundboard: ["## 🔊 Soundboard"],
     music: ["## 🎤 Music"]
   };
