@@ -57,6 +57,7 @@ exports.connect = async () => {
 };
 
 exports.play = async (sound, message, music = false) => {
+  if (!this.manager) return `${message.author.mention}, the sound commands are still starting up!`;
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
   if (!message.channel.guild.members.get(client.user.id).permissions.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
