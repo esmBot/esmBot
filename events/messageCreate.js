@@ -69,7 +69,9 @@ module.exports = async (message) => {
   logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    const startTime = new Date();
     const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);
     } else if (typeof result === "object" && result.file) {
@@ -80,17 +82,18 @@ module.exports = async (message) => {
           embed: {
             color: 16711680,
             title: "Here's your image!",
-            url: `https://projectlounge.pw/tmp/${filename}`,
+            url: `${process.env.TMP_DOMAIN == "" ? "https://projectlounge.pw/tmp" : process.env.TMP_DOMAIN}/${filename}`,
             image: {
-              url: `https://projectlounge.pw/tmp/${filename}`
+              url: `${process.env.TMP_DOMAIN == "" ? "https://projectlounge.pw/tmp" : process.env.TMP_DOMAIN}/${filename}`
             },
             footer: {
               text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
             },
-          }
+          },
+          content: (endTime - startTime) >= 180000 ? message.author.mention : undefined
         });
       } else {
-        await client.createMessage(message.channel.id, result.text ? result.text : "", result);
+        await client.createMessage(message.channel.id, result.text ? result.text : ((endTime - startTime) >= 180000 ? message.author.mention : undefined), result);
       }
     }
   } catch (error) {
