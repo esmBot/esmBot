@@ -2,6 +2,7 @@ const player = require("../utils/soundplayer.js");
 
 // run when a raw packet is sent, used for sending data to lavalink
 module.exports = async (packet) => {
+  if (!player.manager) return;
   switch (packet.t) {
     case "VOICE_SERVER_UPDATE":
       await player.manager.voiceServerUpdate(packet.d);

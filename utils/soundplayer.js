@@ -2,11 +2,12 @@ const client = require("./client.js");
 const logger = require("./logger.js");
 const paginator = require("./pagination/pagination.js");
 const fetch = require("node-fetch");
+const fs = require("fs");
 const moment = require("moment");
 require("moment-duration-format");
 const { Manager } = require("lavacord");
 
-let nodes = require("../servers.json").lava;
+let nodes;
 
 exports.players = new Map();
 
@@ -20,6 +21,8 @@ exports.status = false;
 exports.connected = false;
 
 exports.checkStatus = async () => {
+  const json = await fs.promises.readFile("./servers.json", { encoding: "utf8" });
+  nodes = JSON.parse(json).lava;
   const newNodes = [];
   for (const node of nodes) {
     try {
