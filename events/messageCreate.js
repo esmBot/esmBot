@@ -45,7 +45,7 @@ module.exports = async (message) => {
   if (message.content.startsWith(prefix) === false) return;
 
   // separate commands and args
-  const content = message.content.substring(prefix.length).trim();
+  const content = message.cleanContent.substring(prefix.length).trim();
   const args = content.split(/ +/g);
   const command = args.shift().toLowerCase();
 
