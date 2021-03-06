@@ -27,6 +27,7 @@ class SpinWorker : public Napi::AsyncWorker {
 
     int i = 0;
     for (Image &image : coalesced) {
+      image.virtualPixelMethod(Magick::TransparentVirtualPixelMethod);
       image.scale(Geometry("256x256"));
       image.alphaChannel(Magick::SetAlphaChannel);
       double rotation[1] = {360 * i / coalesced.size()};
@@ -35,6 +36,8 @@ class SpinWorker : public Napi::AsyncWorker {
       mid.push_back(image);
       i++;
     }
+
+    for_each(mid.begin(), mid.end(), gifDisposeMethodImage(Magick::BackgroundDispose));
 
     optimizeTransparency(mid.begin(), mid.end());
     if (delay != 0) {

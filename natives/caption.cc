@@ -41,6 +41,7 @@ class CaptionWorker : public Napi::AsyncWorker {
       appended.repage();
       appended.magick(type);
       appended.animationDelay(delay == 0 ? image.animationDelay() : delay);
+      appended.gifDisposeMethod(Magick::BackgroundDispose);
       captioned.push_back(appended);
     }
 
