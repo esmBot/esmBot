@@ -18,7 +18,7 @@ class SpinWorker : public Napi::AsyncWorker {
     readImages(&frames, in_path);
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    if (type != "GIF") {
+    if (type != "gif") {
       list <Image>::iterator it = coalesced.begin();
       for (int i = 0; i < 29; ++i) {
         coalesced.push_back(*it);
@@ -39,7 +39,7 @@ class SpinWorker : public Napi::AsyncWorker {
     optimizeTransparency(mid.begin(), mid.end());
     if (delay != 0) {
       for_each(mid.begin(), mid.end(), animationDelayImage(delay));
-    } else if (type != "GIF") {
+    } else if (type != "gif") {
       for_each(mid.begin(), mid.end(), animationDelayImage(5));
     }
 
