@@ -71,7 +71,7 @@ exports.play = async (sound, message, music = false) => {
   }
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
   const oldQueue = this.queues.get(voiceChannel.guild.id);
-  if (tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
+  if (!tracks || tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
   if (music) {
     this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
   }
