@@ -34,28 +34,6 @@ exports.clean = async (text) => {
   return text;
 };
 
-// get random tweet to post
-exports.getTweet = async (tweets, reply = false, isDownload = false) => {
-  const randomTweet = this.random(reply ? (isDownload ? tweets.download : tweets.replies) : tweets.tweets);
-  if (randomTweet.match("{{message}}")) {
-    return randomTweet.replaceAll("{{message}}", await this.getRandomMessage());
-  } else {
-    return randomTweet
-      .replaceAll("{{media}}", () => {
-        return this.random(tweets.media);
-      })
-      .replaceAll("{{games}}", () => {
-        return this.random(tweets.games);
-      })
-      .replaceAll("{{phrases}}", () => {
-        return this.random(tweets.phrases);
-      })
-      .replaceAll("{{characters}}", () => {
-        return this.random(tweets.characters);
-      });
-  }
-};
-
 exports.getRandomMessage = async () => {
   const messages = await client.guilds.get("631290275456745502").channels.get("631290275888627713").getMessages(50);
   const randomMessage = this.random(messages);
