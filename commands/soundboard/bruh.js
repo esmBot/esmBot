@@ -1,4 +1,4 @@
-const soundPlayer = require("../utils/soundplayer.js");
+const soundPlayer = require("../../utils/soundplayer.js");
 
 exports.run = async (message) => {
   return await soundPlayer.play("./assets/audio/bruh.ogg", message);

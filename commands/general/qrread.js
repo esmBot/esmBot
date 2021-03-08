@@ -1,7 +1,7 @@
 const jsqr = require("jsqr");
 const fetch = require("node-fetch");
 const sharp = require("sharp");
-const { clean } = require("../utils/misc.js");
+const { clean } = require("../../utils/misc.js");
 
 exports.run = async (message) => {
   const image = await require("../utils/imagedetect.js")(message);

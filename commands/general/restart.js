@@ -1,5 +1,5 @@
-const handler = require("../utils/handler.js");
-const collections = require("../utils/collections.js");
+const handler = require("../../utils/handler.js");
+const collections = require("../../utils/collections.js");
 
 exports.run = async (message) => {
   if (message.author.id !== process.env.OWNER) return `${message.author.mention}, only the bot owner can restart me!`;

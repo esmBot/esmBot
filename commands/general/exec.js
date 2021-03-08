@@ -1,4 +1,4 @@
-const { clean } = require("../utils/misc.js");
+const { clean } = require("../../utils/misc.js");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 

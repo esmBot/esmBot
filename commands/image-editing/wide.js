@@ -1,4 +1,4 @@
-const magick = require("../utils/image.js");
+const magick = require("../../utils/image.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
