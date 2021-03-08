@@ -5,30 +5,42 @@ The bot will continue to run past this message, but keep in mind that it could b
 // load config from .env file
 require("dotenv").config();
 
-// turn fs.readdir into a promise
-const readdir = require("util").promisify(require("fs").readdir);
+// path stuff
+const { readdir } = require("fs").promises;
 // fancy loggings
 const logger = require("./utils/logger.js");
 // start the client
 const client = require("./utils/client.js");
 // initialize command loader
 const handler = require("./utils/handler.js");
+const collections = require("./utils/collections.js");
 const sound = require("./utils/soundplayer.js");
 const image = require("./utils/image.js");
+
+// util for reading a directory recursively
+async function* getFiles(dir) {
+  const dirents = await readdir(dir, { withFileTypes: true });
+  for (const dirent of dirents) {
+    if (dirent.isDirectory()) {
+      yield* getFiles(dir + dirent.name);
+    } else {
+      yield dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
+    }
+  }
+}
 
 // registers stuff and connects the bot
 async function init() {
   logger.log("info", "Starting esmBot...");
   // register commands and their info
-  const commands = await readdir("./commands/");
   const soundStatus = await sound.checkStatus();
-  logger.log("info", `Attempting to load ${commands.length} commands...`);
-  for (const commandFile of commands) {
-    logger.log("info", `Loading command ${commandFile}...`);
+  logger.log("info", "Attempting to load commands...");
+  for await (const commandFile of getFiles("./commands/")) {
+    logger.log("info", `Loading command from ${commandFile}...`);
     try {
       await handler.load(commandFile, soundStatus);
     } catch (e) {
-      logger.error(`Failed to register command ${commandFile.split(".")[0]}: ${e}`);
+      logger.error(`Failed to register command from ${commandFile}: ${e}`);
     }
   }
 
@@ -36,7 +48,7 @@ async function init() {
   const events = await readdir("./events/");
   logger.log("info", `Attempting to load ${events.length} events...`);
   for (const file of events) {
-    logger.log("info", `Loading event ${file}...`);
+    logger.log("info", `Loading event from ${file}...`);
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     client.on(eventName, event);
@@ -67,7 +79,7 @@ async function init() {
     client.editStatus("dnd", {
       name: "Restarting/shutting down..."
     });
-    for (const command of commands) {
+    for (const command in collections.commands) {
       handler.unload(command);
     }
     client.disconnect();

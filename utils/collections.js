@@ -1,4 +1,5 @@
 exports.commands = new Map();
+exports.paths = new Map();
 exports.aliases = new Map();
 exports.info = new Map();
 
