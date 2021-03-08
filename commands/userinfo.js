@@ -43,10 +43,6 @@ exports.run = async (message, args) => {
         {
           "name": "💬 **Joined this server on:**",
           "value": member ? new Date(member.joinedAt).toString() : "N/A"
-        },
-        {
-          "name": "ℹ️ **Status:**",
-          "value": member && member.status ? member.status : "Unknown"
         }
       ]
     }
