@@ -4,7 +4,7 @@ const sharp = require("sharp");
 const { clean } = require("../../utils/misc.js");
 
 exports.run = async (message) => {
-  const image = await require("../utils/imagedetect.js")(message);
+  const image = await require("../../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image with a QR code to read!`;
   message.channel.sendTyping();
   const data = await (await fetch(image.path)).buffer();

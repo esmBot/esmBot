@@ -2,7 +2,7 @@ const magick = require("../../utils/image.js");
 
 exports.run = async (message) => {
   message.channel.sendTyping();
-  const image = await require("../utils/imagedetect.js")(message);
+  const image = await require("../../utils/imagedetect.js")(message);
   if (image === undefined) return `${message.author.mention}, you need to provide an image to stretch!`;
   const { buffer, type } = await magick.run({
     cmd: "resize",
