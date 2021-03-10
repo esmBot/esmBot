@@ -37,7 +37,7 @@ exports.run = async (message, args) => {
           "inline": true
         }, {
           "name": "Parameters",
-          "value": command === "tags" ? "[name]" : info.params ? info.params : "None",
+          "value": command === "tags" ? "[name]" : (info.params ? (typeof info.params === "object" ? info.params.join(" ") : info.params) : "None"),
           "inline": true
         }]
       }

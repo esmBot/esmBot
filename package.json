@@ -46,8 +46,10 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^5.15.2",
-    "eslint-plugin-promise": "^4.2.1"
+    "@babel/eslint-parser": "^7.13.8",
+    "@babel/eslint-plugin": "^7.13.0",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "eslint": "^7.21.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",

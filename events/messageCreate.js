@@ -3,6 +3,7 @@ const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
+const Command = require("../classes/command.js");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
@@ -70,7 +71,13 @@ module.exports = async (message) => {
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const result = await cmd(message, args, content.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    let result;
+    if (cmd.prototype instanceof Command) {
+      const commandClass = new cmd(message, args, content.replace(command, "").trim());
+      result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
+    } else {
+      result = await cmd(message, args, content.replace(command, "").trim());
+    }
     const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);

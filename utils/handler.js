@@ -1,3 +1,4 @@
+const Command = require("../classes/command.js");
 const collections = require("./collections.js");
 const logger = require("./logger.js");
 
@@ -10,14 +11,26 @@ exports.load = async (command, soundStatus) => {
   if (props.requires === "sound" && soundStatus) return logger.log("info", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
-  collections.commands.set(commandName, props.run);
+  
   collections.paths.set(commandName, command);
-  collections.info.set(commandName, {
-    category: props.category,
-    description: props.help,
-    aliases: props.aliases,
-    params: props.params
-  });
+  if (props.prototype instanceof Command) {
+    collections.commands.set(commandName, props);
+    collections.info.set(commandName, {
+      category: 1,
+      description: props.description,
+      aliases: props.aliases,
+      params: props.arguments
+    });
+  } else {
+    collections.commands.set(commandName, props.run);
+    collections.info.set(commandName, {
+      category: props.category,
+      description: props.help,
+      aliases: props.aliases,
+      params: props.params
+    });
+  }
+  
   if (props.aliases) {
     for (const alias of props.aliases) {
       collections.aliases.set(alias, commandName);
