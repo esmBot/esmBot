@@ -1,9 +1,9 @@
 const emojiRegex = require("emoji-regex");
 
-exports.run = async (message, args) => {
+exports.run = async (message, args, content) => {
   if (args.length === 0) return `${message.author.mention}, you need to provide an emoji!`;
-  if (args[0].match(/^<a?:.+:\d+>$/)) {
-    return `https://cdn.discordapp.com/emojis/${args[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${args[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
+  if (content.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
+    return `https://cdn.discordapp.com/emojis/${content.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${content.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
   } else if (args[0].match(emojiRegex)) {
     const codePoints = [];
     for (const codePoint of args[0]) {

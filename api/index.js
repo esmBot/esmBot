@@ -138,7 +138,7 @@ server.listen(8080, () => {
 });
 
 const runJob = (job, sock) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     log(`Job ${job.uuid} starting...`, job.num);
 
     const object = JSON.parse(job.msg);
@@ -148,17 +148,16 @@ const runJob = (job, sock) => {
     }
 
     log(`Job ${job.uuid} started`, job.num);
-    try {
-      const { buffer, fileExtension } = await run(object);
+    run(object).then((data) => {
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
-      jobs[job.uuid].data = buffer;
-      jobs[job.uuid].ext = fileExtension;
+      jobs[job.uuid].data = data.buffer;
+      jobs[job.uuid].ext = data.fileExtension;
       sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
         if (e) return reject(e);
         return resolve();
       });
-    } catch (e) {
+    }).catch(e => {
       reject(e);
-    }
+    });
   });
 };
