@@ -12,7 +12,7 @@ module.exports = async (message) => {
   if (message.author.bot) return;
 
   // don't run command if bot can't send messages
-  if (message.channel.guild && (!message.channel.guild.members.get(client.user.id).permissions.has("sendMessages") || !message.channel.permissionsOf(client.user.id).has("sendMessages"))) return;
+  if (message.channel.guild && !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   // this is here to prevent reading the database if a message is unrelated
   let valid = false;
