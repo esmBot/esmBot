@@ -72,7 +72,7 @@ exports.connect = (server) => {
 };
 
 const getIdeal = () => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let serversLeft = connections.length;
     const idealServers = [];
     const timeout = setTimeout(async () => {
@@ -85,9 +85,7 @@ const getIdeal = () => {
     }, 5000);
     for (const connection of connections) {
       if (!connection.remoteAddress) continue;
-      try {
-        const statusRequest = await fetch(`http://${connection.remoteAddress}:8081/status`);
-        const status = await statusRequest.text();
+      fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then(async (status) => {
         serversLeft--;
         idealServers.push({
           addr: connection.remoteAddress,
@@ -98,41 +96,43 @@ const getIdeal = () => {
           const server = await chooseServer(idealServers);
           resolve(connections.find(val => val.remoteAddress === server.addr));
         }
-      } catch (e) {
-        reject(e);
-      }
+      }).catch(e => reject(e));
     }
   });
 };
 
 const start = (object, num) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const currentServer = await getIdeal();
-      const data = Buffer.concat([Buffer.from([0x01 /* queue job */]), Buffer.from(num.length.toString()), Buffer.from(num), Buffer.from(JSON.stringify(object))]);
+  return getIdeal().then(async (currentServer) => {
+    const data = Buffer.concat([Buffer.from([0x01 /* queue job */]), Buffer.from(num.length.toString()), Buffer.from(num), Buffer.from(JSON.stringify(object))]);
+    return new Promise((resolve, reject) => {
       currentServer.write(data, (err) => {
         if (err) {
           if (err.code === "EPIPE") {
             logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
-            currentServer.connect(8080, currentServer.remoteAddress, async () => {
+            currentServer.connect(8080, currentServer.remoteAddress, () => {
               const res = start(object, num);
-              resolve(res);
+              reject(res); // this is done to differentiate the result from a step
             });
           } else {
             reject(err);
           }
+        } else {
+          resolve();
         }
       });
-      const event = new EventEmitter();
-      event.once("uuid", (uuid) => {
-        delete jobs[num];
-        jobs[uuid] = event;
-        resolve({ uuid, event });
-      });
+    });
+  }).then(() => {
+    const event = new EventEmitter();
+    return new Promise((resolve) => {
+      event.once("uuid", (uuid) => resolve({ event, uuid }));
       jobs[num] = event;
-    } catch (e) {
-      reject(e);
-    }
+    });
+  }, (result) => {
+    return Promise.reject(result);
+  }).then(data => {
+    delete jobs[num];
+    jobs[data.uuid] = data.event;
+    return { uuid: data.uuid, event: data.event };
   });
 };
 
@@ -176,32 +176,32 @@ exports.getType = async (image) => {
 };
 
 exports.run = object => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (process.env.API === "true") {
-      try {
-        // Connect to best image server
-        const num = Math.floor(Math.random() * 100000).toString().slice(0, 5);
-        const timeout = setTimeout(() => {
-          if (jobs[num]) delete jobs[num];
-          reject("Request timed out");
-        }, 25000);
-        const { uuid, event } = await start(object, num);
+      // Connect to best image server
+      const num = Math.floor(Math.random() * 100000).toString().slice(0, 5);
+      const timeout = setTimeout(() => {
+        if (jobs[num]) delete jobs[num];
+        reject("Request timed out");
+      }, 25000);
+      start(object, num).catch(err => { // incredibly hacky code incoming
+        if (err instanceof Error) return reject(err);
+        return err;
+      }).then((data) => {
         clearTimeout(timeout);
-        event.once("image", (image, type) => {
-          delete jobs[uuid];
+        data.event.once("image", (image, type) => {
+          delete jobs[data.uuid];
           const payload = {
-            // Take just the image data
+          // Take just the image data
             buffer: image,
             type: type
           };
           resolve(payload);
         });
-        event.once("error", (err) => {
+        data.event.once("error", (err) => {
           reject(err);
         });
-      } catch (e) {
-        reject(e);
-      }
+      }).catch(err => reject(err));
     } else {
       // Called from command (not using image API)
       const worker = new Worker(path.join(__dirname, "image-runner.js"), {
