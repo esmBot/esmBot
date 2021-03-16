@@ -48,6 +48,7 @@ module.exports = async (message) => {
   const content = message.cleanContent.substring(prefix.length).trim();
   const rawContent = message.content.substring(prefix.length).trim();
   const args = content.split(/ +/g);
+  args.shift();
   const command = rawContent.split(/ +/g).shift().toLowerCase();
 
   // don't run if message is in a disabled channel
