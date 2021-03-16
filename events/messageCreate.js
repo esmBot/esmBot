@@ -46,8 +46,9 @@ module.exports = async (message) => {
 
   // separate commands and args
   const content = message.cleanContent.substring(prefix.length).trim();
+  const rawContent = message.content.substring(prefix.length).trim();
   const args = content.split(/ +/g);
-  const command = args.shift().toLowerCase();
+  const command = rawContent.split(/ +/g).shift().toLowerCase();
 
   // don't run if message is in a disabled channel
   if (message.channel.guild) {
@@ -70,7 +71,7 @@ module.exports = async (message) => {
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const result = await cmd(message, args, message.content.substring(prefix.length).trim().replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    const result = await cmd(message, args, rawContent.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
     const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);
