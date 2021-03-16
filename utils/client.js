@@ -13,6 +13,10 @@ const client = new Client(process.env.TOKEN, {
     GUILD_ROLE_UPDATE: true,
     TYPING_START: true
   },
-  maxShards: "auto"
+  maxShards: "auto",
+  allowedMentions: {
+    everyone: false,
+    roles: false
+  }
 });
 module.exports = client;
