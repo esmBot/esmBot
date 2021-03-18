@@ -37,15 +37,29 @@ module.exports = async (message) => {
     }
   }
 
-  // this line be like Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain. Pain.
-  // there's also bit of a workaround here due to member.mention not accounting for both mention types
-  const prefix = message.channel.guild ? (message.content.startsWith(message.channel.guild.members.get(client.user.id).mention) ? `${message.channel.guild.members.get(client.user.id).mention} ` : (message.content.startsWith(`<@${client.user.id}>`) ? `<@${client.user.id}> ` : prefixCandidate)) : "";
+  let prefix;
+  let isMention = false;
+  if (message.channel.guild) {
+    const user = message.channel.guild.members.get(client.user.id);
+    if (message.content.startsWith(user.mention)) {
+      prefix = `${user.mention} `;
+      isMention = true;
+    } else if (message.content.startsWith(`<@${client.user.id}>`)) { // workaround for member.mention not accounting for both mention types
+      prefix = `<@${client.user.id}> `;
+      isMention = true;
+    } else {
+      prefix = prefixCandidate;
+    }
+  } else {
+    prefix = "";
+  }
 
   // ignore other stuff
   if (message.content.startsWith(prefix) === false) return;
 
   // separate commands and args
-  const content = message.cleanContent.substring(prefix.length).trim();
+  const replace = isMention ? `@${client.user.username} ` : prefix;
+  const content = message.cleanContent.substring(replace.length).trim();
   const rawContent = message.content.substring(prefix.length).trim();
   const args = content.split(/ +/g);
   args.shift();

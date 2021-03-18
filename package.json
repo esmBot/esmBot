@@ -24,7 +24,6 @@
   "dependencies": {
     "abort-controller": "^3.0.0",
     "cowsay2": "^2.0.4",
-    "dblapi.js": "^2.4.1",
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "^1.0.5",
     "emoji-regex": "^9.2.2",
@@ -41,8 +40,9 @@
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.5",
     "qrcode": "^1.4.4",
-    "retrotext": "github:TheEssem/retrotext",
+    "retrotext": "^4.0.1",
     "sharp": "^0.26.3",
+    "topgg-autoposter": "^1.1.9",
     "winston": "^3.3.3"
   },
   "devDependencies": {

@@ -156,6 +156,7 @@ const runJob = (job, sock) => {
         if (e) return reject(e);
         return resolve();
       });
+      return;
     }).catch(e => {
       reject(e);
     });
