@@ -1,4 +1,4 @@
-require("dotenv").config();
+//require("dotenv").config();
 const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.DB
@@ -24,15 +24,14 @@ const Global = mongoose.model("Global", globalSchema);
   const guilds = await Guild.find();
   try {
     await pool.query("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL, tags json NOT NULL, prefix VARCHAR(15) NOT NULL, warns json NOT NULL, disabled text ARRAY NOT NULL, tags_disabled boolean NOT NULL )");
-  } catch {
-    console.log("Skipping table creation due to error...");
+  } catch (e) {
+    console.error(`Skipping table creation due to error: ${e}`);
   }
   for (const guild of guilds) {
-    console.log(guild.tagsDisabled);
     if ((await pool.query("SELECT * FROM guilds WHERE guild_id = $1", [guild.id])).rows.length !== 0) {
-      await pool.query("UPDATE guilds SET tags = $1, prefix = $2, warns = $3, disabled = $4, tags_disabled = $5 WHERE guild_id = $6", [guild.tags, guild.prefix.substring(0, 15), {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled, guild.id]);
+      await pool.query("UPDATE guilds SET tags = $1, prefix = $2, disabled = $3, tags_disabled = $4 WHERE guild_id = $5", [guild.tags, guild.prefix.substring(0, 15), guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled, guild.id]);
     } else {
-      await pool.query("INSERT INTO guilds (guild_id, tags, prefix, warns, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5, $6)", [guild.id, guild.tags, guild.prefix.substring(0, 15), {}, guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled]);
+      await pool.query("INSERT INTO guilds (guild_id, tags, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5)", [guild.id, guild.tags, guild.prefix.substring(0, 15), guild.disabled ? guild.disabled : guild.disabledChannels, guild.tagsDisabled === undefined ? false : guild.tagsDisabled]);
     }
     console.log(`Migrated guild with ID ${guild.id}`);
   }
@@ -40,8 +39,8 @@ const Global = mongoose.model("Global", globalSchema);
   const global = await Global.findOne();
   try {
     await pool.query("CREATE TABLE counts ( command VARCHAR NOT NULL, count integer NOT NULL )");
-  } catch {
-    console.log("Skipping table creation due to error...");
+  } catch (e) {
+    console.error(`Skipping table creation due to error: ${e}`);
   }
   console.log(global);
   for (const [key, value] of global.cmdCounts) {
@@ -53,5 +52,5 @@ const Global = mongoose.model("Global", globalSchema);
     console.log(`Migrated counts for command ${key}`);
   }
   console.log("Done!");
-  return;
+  return process.exit(0);
 })();
