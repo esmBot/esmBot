@@ -16,7 +16,9 @@ const client = new Client(process.env.TOKEN, {
   maxShards: "auto",
   allowedMentions: {
     everyone: false,
-    roles: false
+    roles: false,
+    users: true,
+    repliedUser: true
   }
 });
 module.exports = client;
