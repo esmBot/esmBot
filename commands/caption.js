@@ -5,7 +5,7 @@ exports.run = async (message, args) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to add a caption!`;
   const newArgs = args.filter(item => !item.includes(image.url) );
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to add a caption!`;
-  const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
+  const processMessage = await message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
   const { buffer, type } = await magick.run({
     cmd: "caption",
     path: image.path,
