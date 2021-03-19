@@ -3,7 +3,7 @@ const MessageCollector = require("./awaitmessages.js");
 const client = require("../client.js");
 
 module.exports = async (message, pages, timeout = 120000) => {
-  const manageMessages = message.channel.guild && (message.channel.guild.members.get(client.user.id).permissions.has("manageMessages") || message.channel.permissionsOf(client.user.id).has("manageMessages")) ? true : false;
+  const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
   let currentPage = await message.channel.createMessage(pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
