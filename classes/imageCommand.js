@@ -52,7 +52,6 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        console.log("hi");
         Object.assign(magickParams, this.params(this.args));
         break;
       case "object":
@@ -77,7 +76,7 @@ class ImageCommand extends Command {
   }
 
   processMessage(message) {
-    return message.channel.createMessage("<a:processing:818243325891051581> Processing... this might take a while");
+    return message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
   }
 
   static requiresImage = true;
