@@ -1,18 +1,26 @@
 const urlCheck = require("../../utils/urlcheck.js");
 const fetch = require("node-fetch");
+const Command = require("../../classes/command.js");
 
-exports.run = async (message, args) => {
-  message.channel.sendTyping();
-  if (args.length === 0 || !urlCheck(args[0])) return `${message.author.mention}, you need to provide a short URL to lengthen!`;
-  if (urlCheck(args[0])) {
-    const url = await fetch(encodeURI(args[0]), { redirect: "manual" });
-    return url.headers.get("location") || args[0];
-  } else {
-    return `${message.author.mention}, that isn't a URL!`;
+class LengthenCommand extends Command {
+  constructor(message, args, content) {
+    super(message, args, content);
   }
-};
 
-exports.aliases = ["longurl", "lengthenurl", "longuri", "lengthenuri", "unshorten"];
-exports.category = 1;
-exports.help = "Lengthens a short URL";
-exports.params = "[url]";
+  async run() {
+    this.message.channel.sendTyping();
+    if (this.args.length === 0 || !urlCheck(this.args[0])) return `${this.message.author.mention}, you need to provide a short URL to lengthen!`;
+    if (urlCheck(this.args[0])) {
+      const url = await fetch(encodeURI(this.args[0]), { redirect: "manual" });
+      return url.headers.get("location") || this.args[0];
+    } else {
+      return `${this.message.author.mention}, that isn't a URL!`;
+    }
+  }
+
+  static description = "Lengthens a short URL";
+  static aliases = ["longurl", "lengthenurl", "longuri", "lengthenuri", "unshorten"];
+  static arguments = ["[url]"];
+}
+
+module.exports = LengthenCommand;

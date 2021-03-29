@@ -1,48 +1,56 @@
-exports.run = async (message) => {
-  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
-  const owner = await message.channel.guild.members.get(message.channel.guild.ownerID);
-  const infoEmbed = {
-    "embed": {
-      "title": message.channel.guild.name,
-      "thumbnail": {
-        "url": message.channel.guild.iconURL
-      },
-      "color": 16711680,
-      "fields": [
-        {
-          "name": "🔢 **ID:**",
-          "value": message.channel.guild.id
-        },
-        {
-          "name": "👤 **Owner:**",
-          "value": `${owner.user.username}#${owner.user.discriminator}`
-        },
-        {
-          "name": "🗺 **Region:**",
-          "value": message.channel.guild.region
-        },
-        {
-          "name": "🗓 **Created on:**",
-          "value": new Date(message.channel.guild.createdAt).toString()
-        },
-        {
-          "name": "👥 **Users:**",
-          "value": message.channel.guild.memberCount
-        },
-        {
-          "name": "💬 **Channels:**",
-          "value": message.channel.guild.channels.size
-        },
-        {
-          "name": "😃 **Emojis:**",
-          "value": message.channel.guild.emojis.length
-        }
-      ]
-    }
-  };
-  return infoEmbed;
-};
+const Command = require("../../classes/command.js");
 
-exports.aliases = ["server"];
-exports.category = 1;
-exports.help = "Gets some info about the server";
+class ServerInfoCommand extends Command {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  async run() {
+    if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
+    const owner = await this.message.channel.guild.members.get(this.message.channel.guild.ownerID);
+    return {
+      "embed": {
+        "title": this.message.channel.guild.name,
+        "thumbnail": {
+          "url": this.message.channel.guild.iconURL
+        },
+        "color": 16711680,
+        "fields": [
+          {
+            "name": "🔢 **ID:**",
+            "value": this.message.channel.guild.id
+          },
+          {
+            "name": "👤 **Owner:**",
+            "value": owner ? `${owner.user.username}#${owner.user.discriminator}` : this.message.channel.guild.ownerID
+          },
+          {
+            "name": "🗺 **Region:**",
+            "value": this.message.channel.guild.region
+          },
+          {
+            "name": "🗓 **Created on:**",
+            "value": new Date(this.message.channel.guild.createdAt).toString()
+          },
+          {
+            "name": "👥 **Users:**",
+            "value": this.message.channel.guild.memberCount
+          },
+          {
+            "name": "💬 **Channels:**",
+            "value": this.message.channel.guild.channels.size
+          },
+          {
+            "name": "😃 **Emojis:**",
+            "value": this.message.channel.guild.emojis.length
+          }
+        ]
+      }
+    };
+  }
+
+  static description = "Gets some info about the server";
+  static aliases = ["server"];
+}
+
+module.exports = ServerInfoCommand;

@@ -3,8 +3,9 @@ const logger = require("./logger.js");
 const paginator = require("./pagination/pagination.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
-const moment = require("moment");
-require("moment-duration-format");
+const day = require("dayjs");
+const duration = require("dayjs/plugin/duration");
+day.extend(duration);
 const { Manager } = require("lavacord");
 
 let nodes;
@@ -117,7 +118,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
       },
       {
         "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-        "value": `${moment.duration(0).format("m:ss", { trim: false })}/${info.isStream ? "∞" : moment.duration(info.length).format("m:ss", { trim: false })}`
+        "value": `${day.duration(0).format("m:ss", { trim: false })}/${info.isStream ? "∞" : day.duration(info.length).format("m:ss", { trim: false })}`
       }]
     }
   });
@@ -239,7 +240,7 @@ exports.playing = async (message) => {
       },
       {
         "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-        "value": `${moment.duration(player.state.position).format("m:ss", { trim: false })}/${track.isStream ? "∞" : moment.duration(track.length).format("m:ss", { trim: false })}`
+        "value": `${day.duration(player.state.position).format("m:ss", { trim: false })}/${track.isStream ? "∞" : day.duration(track.length).format("m:ss", { trim: false })}`
       }]
     }
   };
@@ -257,7 +258,7 @@ exports.queue = async (message) => {
   const trackList = [];
   const firstTrack = tracks.shift();
   for (const [i, track] of tracks.entries()) {
-    trackList.push(`${i + 1}. ${track.info.author} - **${track.info.title}** (${track.info.isStream ? "∞" : moment.duration(track.info.length).format("m:ss", { trim: false })})`);
+    trackList.push(`${i + 1}. ${track.info.author} - **${track.info.title}** (${track.info.isStream ? "∞" : day.duration(track.info.length).format("m:ss", { trim: false })})`);
   }
   const pageSize = 5;
   const embeds = [];
@@ -278,7 +279,7 @@ exports.queue = async (message) => {
         },
         "fields": [{
           "name": "🎶 Now Playing",
-          "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : moment.duration(firstTrack.info.length).format("m:ss", { trim: false })})`
+          "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : day.duration(firstTrack.info.length).format("m:ss", { trim: false })})`
         }, {
           "name": "🔁 Looping?",
           "value": player.loop ? "Yes" : "No"

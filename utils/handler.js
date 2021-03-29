@@ -16,7 +16,7 @@ exports.load = async (command, soundStatus) => {
   if (props.prototype instanceof Command) {
     collections.commands.set(commandName, props);
     collections.info.set(commandName, {
-      category: 1,
+      category: commandArray[2],
       description: props.description,
       aliases: props.aliases,
       params: props.arguments
@@ -24,7 +24,7 @@ exports.load = async (command, soundStatus) => {
   } else {
     collections.commands.set(commandName, props.run);
     collections.info.set(commandName, {
-      category: props.category,
+      category: commandArray[2],
       description: props.help,
       aliases: props.aliases,
       params: props.params

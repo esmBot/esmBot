@@ -2,9 +2,34 @@ const collections = require("./collections.js");
 const logger = require("./logger.js");
 const fs = require("fs");
 
-module.exports = async (output) => {
-  const template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
-${process.env.NODE_ENV === "development" ? "\n**You are currently using esmBot Dev! Things may change at any time without warning and there will be bugs. Many bugs. If you find one, [report it here](https://github.com/esmBot/esmBot/issues) or in the esmBot Support server.**\n" : ""}
+const categoryTemplate = {
+  general: [],
+  tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
+  "image-editing": ["> **These commands support the PNG, JPEG, WEBP (static), and GIF (animated or static) formats.**\n"]
+};
+exports.categories = categoryTemplate;
+
+exports.generateList = async () => {
+  this.categories = categoryTemplate;
+  for (const [command] of collections.commands) {
+    const category = collections.info.get(command).category;
+    const description = collections.info.get(command).description;
+    const params = collections.info.get(command).params;
+    if (category === "tags") {
+      const subCommands = [...Object.keys(description)];
+      for (const subCommand of subCommands) {
+        this.categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+      }
+    } else {
+      if (!this.categories[category]) this.categories[category] = [];
+      this.categories[category].push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
+    }
+  }
+};
+
+exports.createPage = async (output) => {
+  let template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
+
 This page was last generated on \`${new Date().toString()}\`.
 
 \`[]\` means an argument is required, \`{}\` means an argument is optional.
@@ -13,47 +38,35 @@ Default prefix is \`&\`.
 
 **Want to help support esmBot's development? Consider donating on Patreon!** https://patreon.com/TheEssem
 
-> Tip: You can get more info about a command by using \`help [command]\`.
-
-## Table of Contents
-+ [**General**](#💻-general)
-+ [**Tags**](#🏷️-tags)
-+ [**Fun**](#👌-fun)
-+ [**Image Editing**](#🖼️-image-editing)
-+ [**Soundboard**](#🔊-soundboard)
-+ [**Music**](#🎤-music)
+> Tip: You can get more info about a command by using \`help [command]\` in the bot itself.
 `;
-  const commands = collections.commands;
-  const categories = {
-    general: ["## 💻 General"],
-    tags: ["## 🏷️ Tags"],
-    fun: ["## 👌 Fun"],
-    images: ["## 🖼️ Image Editing", "> These commands support the PNG, JPEG, WEBP, and GIF formats.\n"],
-    soundboard: ["## 🔊 Soundboard"],
-    music: ["## 🎤 Music"]
-  };
-  for (const [command] of commands) {
-    const category = collections.info.get(command).category;
-    const description = collections.info.get(command).description;
-    const params = collections.info.get(command).params;
-    if (category === 1) {
-      categories.general.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
-    } else if (category === 3) {
-      const subCommands = [...Object.keys(description)];
-      for (const subCommand of subCommands) {
-        categories.tags.push(`+ **tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+
+  template += "\n## Table of Contents\n";
+  for (const category of Object.keys(this.categories)) {
+    const categoryStringArray = category.split("-");
+    for (const index of categoryStringArray.keys()) {
+      categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
+    }
+    template += `+ [**${categoryStringArray.join(" ")}**](#${category})\n`;
+  }
+
+  // hell
+  for (const category of Object.keys(this.categories)) {
+    const categoryStringArray = category.split("-");
+    for (const index of categoryStringArray.keys()) {
+      categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
+    }
+    template += `\n## ${categoryStringArray.join(" ")}\n`;
+    for (const command of this.categories[category]) {
+      if (command.startsWith(">")) {
+        template += `${command}\n`;
+      } else {
+        template += `+ ${command}\n`;
       }
-    } else if (category === 4) {
-      categories.fun.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
-    } else if (category === 5) {
-      categories.images.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
-    } else if (category === 6) {
-      categories.soundboard.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
-    } else if (category === 7) {
-      categories.music.push(`+ **${command}**${params ? ` ${params}` : ""} - ${description}`);
     }
   }
-  fs.writeFile(output, `${template}\n${categories.general.join("\n")}\n\n${categories.tags.join("\n")}\n\n${categories.fun.join("\n")}\n\n${categories.images.join("\n")}\n\n${categories.soundboard.join("\n")}\n\n${categories.music.join("\n")}`, () => {
+
+  fs.writeFile(output, template, () => {
     logger.log("The help docs have been generated.");
   });
 };

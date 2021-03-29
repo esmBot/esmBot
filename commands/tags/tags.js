@@ -1,7 +1,7 @@
-const database = require("../utils/database.js");
-const client = require("../utils/client.js");
-const paginator = require("../utils/pagination/pagination.js");
-const { random } = require("../utils/misc.js");
+const database = require("../../utils/database.js");
+const client = require("../../utils/client.js");
+const paginator = require("../../utils/pagination/pagination.js");
+const { random } = require("../../utils/misc.js");
 
 exports.run = async (message, args) => {
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;

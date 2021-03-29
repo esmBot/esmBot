@@ -1,4 +1,4 @@
-const moment = require("moment");
+const day = require("dayjs");
 const winston = require("winston");
 const logger = winston.createLogger({
   transports: [
@@ -6,7 +6,7 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: "logs/error.log", level: "error" }),
     new winston.transports.File({ filename: "logs/main.log" }),
   ],
-  format: winston.format.printf(log => `[${moment().format("YYYY-MM-DD HH:mm:ss")}]: [${log.level.toUpperCase()}] - ${log.message}`)
+  format: winston.format.printf(log => `[${day().format("YYYY-MM-DD HH:mm:ss")}]: [${log.level.toUpperCase()}] - ${log.message}`)
 });
 
 exports.log = (type, content) => content ? logger.log(type, content) : logger.log("info", type);

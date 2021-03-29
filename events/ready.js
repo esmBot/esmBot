@@ -16,7 +16,10 @@ module.exports = async () => {
   await database.setup();
 
   // generate docs
-  if (helpGenerator && first) await helpGenerator(process.env.OUTPUT);
+  if (helpGenerator && first) {
+    await helpGenerator.generateList();
+    await helpGenerator.createPage(process.env.OUTPUT);
+  }
 
   // set activity (a.k.a. the gamer code)
   (async function activityChanger() {

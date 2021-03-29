@@ -73,10 +73,10 @@ module.exports = async (message) => {
     const startTime = new Date();
     let result;
     if (cmd.prototype instanceof Command) {
-      const commandClass = new cmd(message, args, content.replace(command, "").trim());
+      const commandClass = new cmd(message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
       result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
     } else {
-      result = await cmd(message, args, content.replace(command, "").trim());
+      result = await cmd(message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
     }
     const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
