@@ -1,8 +1,11 @@
 // dbl api client
-const DBL = require("dblapi.js");
+const poster = require("topgg-autoposter");
 const logger = require("./logger.js");
 const client = require("./client.js");
-const dbl = new DBL(process.env.DBL, client);
+const dbl = poster(process.env.DBL, client);
+dbl.on("posted", () => {
+  logger.log("Posted stats to top.gg");
+});
 dbl.on("error", e => {
   logger.error(e);
 });

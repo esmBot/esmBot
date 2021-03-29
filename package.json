@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "A Discord bot with miscellaneous features",
   "main": "app.js",
   "engines": {
@@ -25,7 +25,6 @@
     "abort-controller": "^3.0.0",
     "cowsay2": "^2.0.4",
     "dayjs": "^1.10.4",
-    "dblapi.js": "^2.4.1",
     "dotenv": "^8.2.0",
     "duckduckgo-images-api": "^1.0.5",
     "emoji-regex": "^9.2.2",
@@ -37,8 +36,9 @@
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
-    "retrotext": "github:TheEssem/retrotext",
+    "retrotext": "^4.0.1",
     "sharp": "^0.26.3",
+    "topgg-autoposter": "^1.1.9",
     "winston": "^3.3.3"
   },
   "devDependencies": {

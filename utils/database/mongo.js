@@ -7,7 +7,7 @@ mongoose.connect(process.env.DB, {
   poolSize: 10,
   bufferMaxEntries: 0,
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 });
 const guildSchema = new mongoose.Schema({
   id: String,

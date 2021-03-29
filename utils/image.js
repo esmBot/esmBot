@@ -96,6 +96,7 @@ const getIdeal = () => {
           const server = await chooseServer(idealServers);
           resolve(connections.find(val => val.remoteAddress === server.addr));
         }
+        return;
       }).catch(e => reject(e));
     }
   });
@@ -128,7 +129,7 @@ const start = (object, num) => {
       jobs[num] = event;
     });
   }, (result) => {
-    return Promise.reject(result);
+    throw result;
   }).then(data => {
     delete jobs[num];
     jobs[data.uuid] = data.event;
@@ -201,6 +202,7 @@ exports.run = object => {
         data.event.once("error", (err) => {
           reject(err);
         });
+        return;
       }).catch(err => reject(err));
     } else {
       // Called from command (not using image API)

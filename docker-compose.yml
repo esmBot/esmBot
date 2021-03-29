@@ -25,7 +25,7 @@ services:
       - api
       - chrome
       - lavalink
-      - mongo
+      - postgres
 
     networks:
       esmbot:
@@ -64,23 +64,28 @@ services:
       esmbot:
         ipv4_address: 172.20.0.5
 
-  mongo:
-    container_name: mongo
-    image: mongo:latest
+  postgres:
+    container_name: postgres
+    image: postgres:13-alpine
     restart: unless-stopped
     volumes:
-      - mongo-data:/data/db
+      - pg-data:/var/lib/postgresql/data
+      - ./utils/psqlinit.sh:/docker-entrypoint-initdb.d/psqlinit.sh
+    environment:
+      POSTGRES_PASSWORD: verycoolpass100
+      POSTGRES_USER: esmbot
+      POSTGRES_DB: esmbot
     networks:
       esmbot:
         ipv4_address: 172.20.0.6
 
-  mongo-express:
-    image: mongo-express
+  adminer:
+    image: adminer
     restart: unless-stopped
     depends_on:
-      - mongo
+      - postgres
     ports:
-      - 8888:8081
+      - 8888:8080
     networks:
       esmbot:
         ipv4_address: 172.20.0.7
@@ -88,7 +93,8 @@ services:
 volumes:
   bot-help:
   bot-temp:
-  mongo-data:
+  #mongo-data:
+  pg-data:
 
 networks:
   esmbot:

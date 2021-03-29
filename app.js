@@ -69,7 +69,7 @@ async function init() {
   client.connect();
 
   // post to DBL
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
     require("./utils/dbl.js");
   }
 

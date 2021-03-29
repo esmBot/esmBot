@@ -1,4 +1,5 @@
 const RetroText = require("retrotext");
+const { TextStyle, BackgroundStyle } = RetroText;
 const Command = require("../../classes/command.js");
 
 class RetroCommand extends Command {
@@ -13,14 +14,15 @@ class RetroCommand extends Command {
     if (/^[\w ]+$/i.test(line1) === false || /^[\w ]+$/i.test(line2) === false || /^[\w ]+$/i.test(line3) === false) return `${this.message.author.mention}, only alphanumeric characters, spaces, and underscores are allowed!`;
     let text;
     if (line3) {
-      text = new RetroText().setLine(1, line1).setLine(2, line2).setLine(3, line3).setBackgroundStyle("outlineTri").setTextStyle("chrome");
+      text = new RetroText.default().setLine1(line1).setLine2(line2).setLine3(line3).setBackgroundStyle(BackgroundStyle.OUTLINE_TRIANGLE).setTextStyle(TextStyle.CHROME);
     } else if (line2) {
-      text = new RetroText().setLine(1, line1).setLine(2, line2).setBackgroundStyle("outlineTri").setTextStyle("chrome");
+      text = new RetroText.default().setLine1(line1).setLine2(line2).setBackgroundStyle(BackgroundStyle.OUTLINE_TRIANGLE).setTextStyle(TextStyle.CHROME);
     } else {
-      text = new RetroText().setLine(2, line1).setBackgroundStyle("outlineTri").setTextStyle("chrome");
+      text = new RetroText.default().setLine2(line1).setBackgroundStyle(BackgroundStyle.OUTLINE_TRIANGLE).setTextStyle(TextStyle.CHROME);
     }
+    const buffer = await text.fetchBuffer();
     return {
-      file: await text.fetchBuffer(),
+      file: Buffer.from(buffer),
       name: "retro.png"
     };
   }

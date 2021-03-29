@@ -5,7 +5,7 @@ exports.run = async (message, args) => {
   if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to make a motivational poster!`;
   const newArgs = args.filter(item => !item.includes(image.url) );
   if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a motivational poster!`;
-  const processMessage = await message.channel.createMessage("<a:processing:479351417102925854> Processing... This might take a while");
+  const processMessage = await message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
   const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
   const { buffer, type } = await magick.run({
     cmd: "motivate",
