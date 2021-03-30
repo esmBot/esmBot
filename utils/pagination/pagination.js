@@ -21,12 +21,13 @@ module.exports = async (message, pages, timeout = 120000) => {
           break;
         case "🔢":
           message.channel.createMessage(`${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
-            const messageCollector = new MessageCollector(askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length, {
+            const messageCollector = new MessageCollector(askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length && Number(response.content) > 0, {
               time: timeout,
               maxMatches: 1
             });
-            return messageCollector.on("message", async response => {
+            return messageCollector.on("message", async (response) => {
               if (askMessage.channel.messages.get(askMessage.id)) askMessage.delete();
+              if (manageMessages) await response.delete();
               page = Number(response.content) - 1;
               currentPage = await currentPage.edit(pages[page]);
               if (manageMessages) msg.removeReaction("🔢", member.id);
