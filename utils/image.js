@@ -1,7 +1,6 @@
 const magick = require("../build/Release/image.node");
 const { Worker } = require("worker_threads");
 const fetch = require("node-fetch");
-const AbortController = require("abort-controller");
 const net = require("net");
 const fileType = require("file-type");
 exports.servers = require("../servers.json").image;
@@ -150,7 +149,7 @@ exports.getType = async (image) => {
     return undefined;
   }
   let type;
-  const controller = new AbortController();
+  const controller = new AbortController(); // eslint-disable-line no-undef
   const timeout = setTimeout(() => {
     controller.abort();
   }, 25000);
