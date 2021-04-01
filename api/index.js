@@ -134,7 +134,7 @@ const server = net.createServer((sock) => { // Create a TCP socket/server to lis
     for (const job of Object.keys(jobs)) {
       if (jobs[job].addr === sock.remoteAddress && jobs[job].port === sock.remotePort) {
         delete jobs[job];
-        sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(job), Buffer.from("Job ended prematurely")]));
+        sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(job), Buffer.from("Job ended prematurely (not really an error; just run your image job again)")]));
       }
     }
     process.exit(0);

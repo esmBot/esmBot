@@ -1,9 +1,9 @@
 const magick = require("../build/Release/image.node");
 const { Worker } = require("worker_threads");
 const fetch = require("node-fetch");
+const fs = require("fs");
 const net = require("net");
 const fileType = require("file-type");
-exports.servers = require("../servers.json").image;
 const path = require("path");
 const { EventEmitter } = require("events");
 const logger = require("./logger.js");
@@ -12,9 +12,11 @@ const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 const jobs = {};
 
-const connections = [];
+let connections = [];
 
 const statuses = {};
+
+exports.servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
 const chooseServer = async (ideal) => {
   if (ideal.length === 0) throw "No available servers";
@@ -22,6 +24,12 @@ const chooseServer = async (ideal) => {
     return b.load - a.load;
   });
   return sorted[0];
+};
+
+exports.repopulate = async () => {
+  const data = await fs.promises.readFile("./servers.json", { encoding: "utf8" });
+  this.servers = JSON.parse(data).image;
+  return;
 };
 
 exports.connect = (server) => {
@@ -68,6 +76,17 @@ exports.connect = (server) => {
     connections.push(connection);
     resolve();
   });
+};
+
+exports.disconnect = async () => {
+  for (const connection of connections) {
+    connection.destroy();
+  }
+  for (const uuid of Object.keys(jobs)) {
+    jobs[uuid].emit("error", new Error("Job ended prematurely (not really an error; just run your image job again)"));
+  }
+  connections = [];
+  return;
 };
 
 const getIdeal = () => {
