@@ -59,8 +59,11 @@ exports.getCounts = async () => {
 };
 
 exports.addCount = async (command) => {
-  const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-  if (!count.rows[0]) await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+  let count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
+  if (!count.rows[0]) {
+    await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+    count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
+  }
   await connection.query("UPDATE counts SET count = $1 WHERE command = $2", [count.rows[0].count ? count.rows[0].count + 1 : 1, command]);
 };
 
