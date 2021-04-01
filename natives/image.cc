@@ -22,6 +22,7 @@
 #include "misc.h"
 #include "motivate.h"
 #include "resize.h"
+#include "retro.h"
 #include "reverse.h"
 #include "scott.h"
 #include "speed.h"
@@ -56,6 +57,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
   exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
   exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
+  exports.Set(Napi::String::New(env, "retro"), Napi::Function::New(env, Retro));
   exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
   exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
   exports.Set(Napi::String::New(env, "speed"), Napi::Function::New(env, Speed));

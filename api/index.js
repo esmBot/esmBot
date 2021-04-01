@@ -12,7 +12,7 @@ const log = (msg, jobNum) => {
 };
 
 const jobs = {};
-// Should look like UUID : { addr : "someaddr", port: someport msg: "request" }
+// Should look like UUID : { addr : "someaddr", port: someport, msg: "request" }
 const queue = [];
 // Array of UUIDs
 
@@ -126,6 +126,18 @@ const server = net.createServer((sock) => { // Create a TCP socket/server to lis
 
   sock.on("end", () => {
     log(`TCP client ${sock.remoteAddress}:${sock.remotePort} has disconnected`);
+  });
+
+  // handle ctrl+c and pm2 stop
+  process.on("SIGINT", () => {
+    console.log("SIGINT detected, shutting down...");
+    for (const job of Object.keys(jobs)) {
+      if (jobs[job].addr === sock.remoteAddress && jobs[job].port === sock.remotePort) {
+        delete jobs[job];
+        sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(job), Buffer.from("Job ended prematurely")]));
+      }
+    }
+    process.exit(0);
   });
 });
 
