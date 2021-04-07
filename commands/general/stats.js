@@ -12,6 +12,7 @@ class StatsCommand extends Command {
 
   async run() {
     const duration = day.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
+    const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
     return {
       embed: {
         "author": {
@@ -29,6 +30,10 @@ class StatsCommand extends Command {
         },
         {
           "name": "Uptime",
+          "value": uptime
+        },
+        {
+          "name": "Connection Uptime",
           "value": duration
         },
         {

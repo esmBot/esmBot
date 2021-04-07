@@ -201,13 +201,15 @@ exports.run = object => {
       const num = Math.floor(Math.random() * 100000).toString().slice(0, 5);
       const timeout = setTimeout(() => {
         if (jobs[num]) delete jobs[num];
-        reject("Request timed out");
+        reject("the image request timed out after 25 seconds. Try uploading your image elsewhere.");
       }, 25000);
       start(object, num).catch(err => { // incredibly hacky code incoming
+        clearTimeout(timeout);
         if (err instanceof Error) return reject(err);
         return err;
       }).then((data) => {
         clearTimeout(timeout);
+        if (!data.event) reject("Not connected to image server");
         data.event.once("image", (image, type) => {
           delete jobs[data.uuid];
           const payload = {

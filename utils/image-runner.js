@@ -31,10 +31,10 @@ exports.run = async object => {
 
 if (!isMainThread) {
   this.run(workerData)
-    // eslint-disable-next-line promise/always-return
     .then(returnObject => {
       parentPort.postMessage(returnObject);
       process.exit();
+      return;
     })
     .catch(err => {
       // turn promise rejection into normal error

@@ -95,33 +95,38 @@ exports.play = async (sound, message, music = false) => {
   }
 };
 
-exports.nextSong = async (message, connection, track, info, music, voiceChannel, loop = false, inQueue = false) => {
+exports.nextSong = async (message, connection, track, info, music, voiceChannel, loop = false, inQueue = false, lastTrack = null, oldPlaying = null) => {
   const parts = Math.floor((0 / info.length) * 10);
-  const playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
-    "embed": {
-      "color": 16711680,
-      "author": {
-        "name": "Now Playing",
-        "icon_url": client.user.avatarURL
-      },
-      "fields": [{
-        "name": "ℹ️ Title:",
-        "value": info.title
-      },
-      {
-        "name": "🎤 Artist:",
-        "value": info.author
-      },
-      {
-        "name": "💬 Channel:",
-        "value": voiceChannel.name
-      },
-      {
-        "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-        "value": `${day.duration(0).format("m:ss", { trim: false })}/${info.isStream ? "∞" : day.duration(info.length).format("m:ss", { trim: false })}`
-      }]
-    }
-  });
+  let playingMessage;
+  if (lastTrack === track) {
+    playingMessage = oldPlaying;
+  } else {
+    playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
+      "embed": {
+        "color": 16711680,
+        "author": {
+          "name": "Now Playing",
+          "icon_url": client.user.avatarURL
+        },
+        "fields": [{
+          "name": "ℹ️ Title:",
+          "value": info.title
+        },
+        {
+          "name": "🎤 Artist:",
+          "value": info.author
+        },
+        {
+          "name": "💬 Channel:",
+          "value": voiceChannel.name
+        },
+        {
+          "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+          "value": `${day.duration(0).format("m:ss", { trim: false })}/${info.isStream ? "∞" : day.duration(info.length).format("m:ss", { trim: false })}`
+        }]
+      }
+    });
+  }
   await connection.play(track);
   this.players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop });
   if (inQueue && connection.listeners("error").length === 0) {
@@ -155,9 +160,9 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
         if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
         if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
       } else {
-        const track = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
-        this.nextSong(message, connection, newQueue[0], track, music, voiceChannel, isLooping, true);
-        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
+        this.nextSong(message, connection, newQueue[0], newTrack, music, voiceChannel, isLooping, true, track, playingMessage);
+        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
       }
     });
   }

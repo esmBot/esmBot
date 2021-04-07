@@ -44,6 +44,7 @@ class ImageCommand extends Command {
       if (image === undefined) return `${this.message.author.mention}, ${this.constructor.noImage}`;
       magickParams.path = image.path;
       magickParams.type = image.type;
+      magickParams.url = image.url; // technically not required but can be useful for text filtering
     }
 
     if (this.constructor.requiresText) {
@@ -52,7 +53,7 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        Object.assign(magickParams, this.params(this.args));
+        Object.assign(magickParams, this.params(this.args, magickParams.url));
         break;
       case "object":
         Object.assign(magickParams, this.params);
@@ -62,7 +63,9 @@ class ImageCommand extends Command {
     const status = await this.processMessage(this.message);
 
     try {
-      const { buffer, type } = await magick.run(magickParams);
+      const { buffer, type } = await magick.run(magickParams).catch(e => {
+        console.log(e);
+      });
       if (status.channel.messages.get(status.id)) await status.delete();
       return {
         file: buffer,
@@ -70,6 +73,7 @@ class ImageCommand extends Command {
       };
     } catch (e) {
       if (status.channel.messages.get(status.id)) await status.delete();
+      if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I've just started up and am still trying to connect to the image servers. Please wait a little bit.`;
       throw e;
     }
     
