@@ -1,10 +1,17 @@
 const soundPlayer = require("../../utils/soundplayer.js");
+const MusicCommand = require("../../classes/musicCommand.js");
 
-exports.run = async (message) => {
-  return await soundPlayer.play("./assets/audio/ping.ogg", message);
-};
+class FakePingCommand extends MusicCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["notification", "notif"];
-exports.category = 6;
-exports.help = "Plays a Discord ping sound effect";
-exports.requires = "sound";
+  async run() {
+    return await soundPlayer.play("./assets/audio/ping.ogg", this.message);
+  }
+
+  static description = "Plays a Discord ping sound effect";
+  static aliases = ["notification", "notif"];
+}
+
+module.exports = FakePingCommand;

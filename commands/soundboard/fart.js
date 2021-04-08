@@ -1,10 +1,17 @@
 const soundPlayer = require("../../utils/soundplayer.js");
+const MusicCommand = require("../../classes/musicCommand.js");
 
-exports.run = async (message) => {
-  return await soundPlayer.play("./assets/audio/fart.ogg", message);
-};
+class FartCommand extends MusicCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["toot"];
-exports.category = 6;
-exports.help = "Plays a fart sound effect";
-exports.requires = "sound";
+  async run() {
+    return await soundPlayer.play("./assets/audio/fart.ogg", this.message);
+  }
+
+  static description = "Plays a fart sound effect";
+  static aliases = ["toot"];
+}
+
+module.exports = FartCommand;

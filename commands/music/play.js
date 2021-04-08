@@ -1,17 +1,25 @@
 const soundPlayer = require("../../utils/soundplayer.js");
+const MusicCommand = require("../../classes/musicCommand.js");
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
-const searchRegex = /^(sc|yt)search:/;
+const searchRegex = /^ytsearch:/;
 
-exports.run = async (message, args) => {
-  if (process.env.NODE_ENV === "production") return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
-  if (!args[0]) return `${message.author.mention}, you need to provide what you want to play!`;
-  const query = args.join(" ").trim();
-  const search = urlRegex.test(query) ? query : (searchRegex.test(query) ? query : `ytsearch:${query}`);
-  return await soundPlayer.play(encodeURIComponent(search), message, true);
-};
+class PlayCommand extends MusicCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["p"];
-exports.category = 7;
-exports.help = "Plays a song or adds it to the queue";
-exports.requires = "sound";
-exports.params = "[url]";
+  async run() {
+    if (process.env.NODE_ENV === "production") return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
+
+    if (!this.args[0]) return `${this.message.author.mention}, you need to provide what you want to play!`;
+    const query = this.args.join(" ").trim();
+    const search = urlRegex.test(query) ? query : (searchRegex.test(query) ? query : `ytsearch:${query}`);
+    return await soundPlayer.play(encodeURIComponent(search), this.message, true);
+  }
+
+  static description = "Plays a song or adds it to the queue";
+  static aliases = ["p"];
+  static arguments = ["[url]"];
+}
+
+module.exports = PlayCommand;

@@ -1,4 +1,4 @@
-const { ReactionCollector } = require("./awaitreactions.js");
+const ReactionCollector = require("./awaitreactions.js");
 const MessageCollector = require("./awaitmessages.js");
 const client = require("../client.js");
 

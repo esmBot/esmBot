@@ -1,10 +1,17 @@
 const soundPlayer = require("../../utils/soundplayer.js");
+const MusicCommand = require("../../classes/musicCommand.js");
 
-exports.run = async (message) => {
-  return await soundPlayer.play("./assets/audio/winxp.ogg", message);
-};
+class WinXPCommand extends MusicCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["windows", "xp"];
-exports.category = 6;
-exports.help = "Plays the Windows XP startup sound";
-exports.requires = "sound";
+  async run() {
+    return await soundPlayer.play("./assets/audio/winxp.ogg", this.message);
+  }
+
+  static description = "Plays the Windows XP startup sound";
+  static aliases = ["windows", "xp"];
+}
+
+module.exports = WinXPCommand;
