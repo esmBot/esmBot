@@ -67,7 +67,6 @@ exports.play = async (sound, message, music = false) => {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
-  console.log(tracks[0]);
   const oldQueue = this.queues.get(voiceChannel.guild.id);
   if (!tracks || tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
   if (music) {

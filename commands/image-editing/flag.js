@@ -19,7 +19,6 @@ class FlagCommand extends ImageCommand {
     if (flag === "🏳️‍⚧️") path = "./assets/images/transflag.png";
     try {
       fs.promises.access(path);
-      console.log(path);
       this.flagPath = path;
       return true;
     } catch (e) {
