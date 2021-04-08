@@ -1,23 +1,20 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide a GIF to freeze!`;
-  const { buffer, type } = await magick.run({
-    cmd: "freeze",
-    path: image.path,
-    loop: false,
-    onlyGIF: true,
-    type: image.type
-  });
-  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
-  return {
-    file: buffer,
-    name: `freeze.${type}`
+class FreezeCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
+    loop: false
   };
-};
 
-exports.aliases = ["noloop", "once"];
-exports.category = 5;
-exports.help = "Makes a GIF only play once";
+  static description = "Makes an image sequence only play once";
+  static aliases = ["noloop", "once"];
+
+  static requiresGIF = true;
+  static noImage = "you need to provide an image to freeze!";
+  static command = "freeze";
+}
+
+module.exports = FreezeCommand;

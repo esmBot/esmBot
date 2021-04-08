@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add more JPEG!`;
-  const { buffer } = await magick.run({
-    cmd: "jpeg",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: "jpeg.jpg"
-  };
-};
+class JPEGCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg"];
-exports.category = 5;
-exports.help = "Adds max JPEG compression to an image";
+  static description = "Adds max JPEG compression to an image";
+  static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg"];
+
+  static noImage = "you need to provide an image to add more JPEG!";
+  static command = "jpeg";
+}
+
+module.exports = JPEGCommand;

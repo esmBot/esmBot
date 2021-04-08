@@ -1,9 +1,8 @@
 const magick = require("../build/Release/image.node");
-const { promisify } = require("util");
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 
-exports.run = async object => {
-  return new Promise(async (resolve, reject) => {
+exports.run = object => {
+  return new Promise((resolve, reject) => {
     // If the image has a path, it must also have a type
     if (object.path) {
       if (object.type !== "image/gif" && object.onlyGIF) resolve({
@@ -16,16 +15,14 @@ exports.run = async object => {
     // If no image type is given (say, the command generates its own image), make it a PNG.
     const fileExtension = object.type ? object.type.split("/")[1] : "png";
     const objectWithFixedType = Object.assign({}, object, {type: fileExtension});
-    try {
-      const data = await promisify(magick[object.cmd])(objectWithFixedType);
+    magick[object.cmd](objectWithFixedType, (error, data) => {
+      if (error) reject(error);
       const returnObject = {
         buffer: data,
         fileExtension
       };
       resolve(returnObject);
-    } catch (e) {
-      reject(e);
-    }
+    });
   });
 };
 

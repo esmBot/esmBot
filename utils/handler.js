@@ -13,27 +13,24 @@ exports.load = async (command, soundStatus) => {
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
   
   collections.paths.set(commandName, command);
-  if (props.prototype instanceof Command) {
+  const isClass = props.prototype instanceof Command;
+  if (isClass) {
     collections.commands.set(commandName, props);
-    collections.info.set(commandName, {
-      category: commandArray[2],
-      description: props.description,
-      aliases: props.aliases,
-      params: props.arguments
-    });
   } else {
     collections.commands.set(commandName, props.run);
-    collections.info.set(commandName, {
-      category: commandArray[2],
-      description: props.help,
-      aliases: props.aliases,
-      params: props.params
-    });
   }
+
+  collections.info.set(commandName, {
+    category: commandArray[2],
+    description: isClass ? props.description : props.help,
+    aliases: props.aliases,
+    params: isClass ? props.arguments : props.params
+  });
   
   if (props.aliases) {
     for (const alias of props.aliases) {
       collections.aliases.set(alias, commandName);
+      collections.paths.set(alias, command);
     }
   }
   return false;
@@ -51,9 +48,9 @@ exports.unload = async (command) => {
   const path = collections.paths.get(command);
   const mod = require.cache[require.resolve(`../${path}`)];
   delete require.cache[require.resolve(`../${path}`)];
-  for (let i = 0; i < mod.parent.children.length; i++) {
-    if (mod.parent.children[i] === mod) {
-      mod.parent.children.splice(i, 1);
+  for (let i = 0; i < module.children.length; i++) {
+    if (module.children[i] === mod) {
+      module.children.splice(i, 1);
       break;
     }
   }

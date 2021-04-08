@@ -1,19 +1,14 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to crop!`;
-  const { buffer, type } = await magick.run({
-    cmd: "crop",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `crop.${type}`
-  };
-};
+class CropCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.category = 5;
-exports.help = "Crops an image to 1:1";
+  static description = "Crops an image to 1:1";
+
+  static noImage = "you need to provide an image to crop!";
+  static command = "crop";
+}
+
+module.exports = CropCommand;

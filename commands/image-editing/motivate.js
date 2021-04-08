@@ -1,26 +1,27 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message, args) => {
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image/GIF to make a motivational poster!`;
-  const newArgs = args.filter(item => !item.includes(image.url) );
-  if (args.length === 0) return `${message.author.mention}, you need to provide some text to make a motivational poster!`;
-  const processMessage = await message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
-  const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
-  const { buffer, type } = await magick.run({
-    cmd: "motivate",
-    path: image.path,
-    top: topText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
-    bottom: bottomText ? bottomText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : "",
-    type: image.type
-  });
-  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
-  return {
-    file: buffer,
-    name: `motivate.${type}`
-  };
-};
+class MotivateCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation"];
-exports.category = 5;
-exports.help = "Creates a motivational poster";
+  params(args, url) {
+    const newArgs = args.filter(item => !item.includes(url));
+    const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
+    return {
+      top: topText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
+      bottom: bottomText ? bottomText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : ""
+    };
+  }
+
+  static description = "Generates a motivational poster";
+  static aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation", "demotivate"];
+  static arguments = ["[top text]", "{bottom text}"];
+
+  static requiresText = true;
+  static noText = "you need to provide some text to generate a motivational poster!";
+  static noImage = "you need to provide an image to generate a motivational poster!";
+  static command = "motivate";
+}
+
+module.exports = MotivateCommand;

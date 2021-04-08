@@ -1,23 +1,20 @@
-const magick = require("../../utils/image.js");
-  
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide a GIF to slow down!`;
-  const { buffer, type } = await magick.run({
-    cmd: "speed",
-    path: image.path,
-    slow: true,
-    onlyGIF: true,
-    type: image.type
-  });
-  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
-  return {
-    file: buffer,
-    name: `slow.${type}`
+const ImageCommand = require("../../classes/imageCommand.js");
+
+class SlowCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
+    slow: true
   };
-};
-  
-exports.aliases = ["slowdown", "slower", "gifspeed2"];
-exports.category = 5;
-exports.help = "Makes a GIF slower";
+
+  static description = "Makes an image sequence slower";
+  static aliases = ["slowdown", "slower", "gifspeed2"];
+
+  static requiresGIF = true;
+  static noImage = "you need to provide an image to slow down!";
+  static command = "speed";
+}
+
+module.exports = SlowCommand;

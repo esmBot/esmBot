@@ -1,22 +1,16 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide a GIF to speed up!`;
-  const { buffer, type } = await magick.run({
-    cmd: "speed",
-    path: image.path,
-    onlyGIF: true,
-    type: image.type
-  });
-  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
-  return {
-    file: buffer,
-    name: `speed.${type}`
-  };
-};
+class SpeedCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["speedup", "fast", "gifspeed"];
-exports.category = 5;
-exports.help = "Makes a GIF faster";
+  static description = "Makes an image sequence faster";
+  static aliases = ["speedup", "fast", "gifspeed", "faster"];
+
+  static requiresGIF = true;
+  static noImage = "you need to provide an image to speed up!";
+  static command = "speed";
+}
+
+module.exports = SpeedCommand;

@@ -1,21 +1,19 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to implode!`;
-  const { buffer, type } = await magick.run({
-    cmd: "explode",
-    path: image.path,
-    amount: 1,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `implode.${type}`
+class ImplodeCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
+    amount: 1
   };
-};
 
-exports.aliases = ["imp"];
-exports.category = 5;
-exports.help = "Implodes an image";
+  static description = "Implodes an image";
+  static aliases = ["imp"];
+
+  static noImage = "you need to provide an image to implode!";
+  static command = "explode";
+}
+
+module.exports = ImplodeCommand;

@@ -1,24 +1,23 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide a GIF to loop!`;
-  const { buffer, type } = await magick.run({
-    cmd: "reverse",
-    path: image.path,
-    soos: true,
-    delay: image.delay ? (100 / image.delay.split("/")[0]) * image.delay.split("/")[1] : 0,
-    onlyGIF: true,
-    type: image.type
-  });
-  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
-  return {
-    file: buffer,
-    name: `soos.${type}`
-  };
-};
+class SooSCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["bounce"];
-exports.category = 5;
-exports.help = "\"Loops\" a GIF by reversing it when it's finished";
+  params(args, url, delay) {
+    return {
+      delay: delay ? (100 / delay.split("/")[0]) * delay.split("/")[1] : 0,
+      soos: true
+    };
+  }
+
+  static description = "\"Loops\" an image sequence by reversing it when it's finished";
+  static aliases = ["bounce"];
+
+  static requiresGIF = true;
+  static noImage = "you need to provide an image to loop!";
+  static command = "reverse";
+}
+
+module.exports = SooSCommand;

@@ -1,23 +1,21 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add a iFunny watermark!`;
-  const { buffer, type } = await magick.run({
-    cmd: "watermark",
-    path: image.path,
+class iFunnyCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
     water: "./assets/images/ifunny.png",
     gravity: 8,
     resize: true,
-    append: true,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `ifunny.${type}`
+    append: true
   };
-};
 
-exports.category = 5;
-exports.help = "Adds the iFunny watermark to an image";
+  static description = "Adds the iFunny watermark to an image";
+
+  static noImage = "you need to provide an image to add an iFunny watermark!";
+  static command = "watermark";
+}
+
+module.exports = iFunnyCommand;

@@ -1,19 +1,14 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to flip!`;
-  const { buffer, type } = await magick.run({
-    cmd: "flip",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `flip.${type}`
-  };
-};
+class FlipCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.category = 5;
-exports.help = "Flips an image";
+  static description = "Flips an image";
+
+  static noImage = "you need to provide an image to flip!";
+  static command = "flip";
+}
+
+module.exports = FlipCommand;

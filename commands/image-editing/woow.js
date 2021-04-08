@@ -1,22 +1,20 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to mirror!`;
-  const { buffer, type } = await magick.run({
-    cmd: "mirror",
-    path: image.path,
+class WooWCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
     vertical: true,
-    first: true,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `woow.${type}`
+    first: true
   };
-};
 
-exports.aliases = ["magik5", "mirror3"];
-exports.category = 5;
-exports.help = "Mirrors the top of an image onto the bottom";
+  static description = "Mirrors the top of an image onto the bottom";
+  static aliases = ["magik5", "mirror3"];
+
+  static noImage = "you need to provide an image to mirror!";
+  static command = "mirror";
+}
+
+module.exports = WooWCommand;

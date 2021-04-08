@@ -1,22 +1,19 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide a GIF to unfreeze!`;
-  const { buffer, type } = await magick.run({
-    cmd: "freeze",
-    path: image.path,
-    loop: true,
-    onlyGIF: true,
-    type: image.type
-  });
-  if (type === "nogif") return `${message.author.mention}, that isn't a GIF!`;
-  return {
-    file: buffer,
-    name: `unfreeze.${type}`
+class UnfreezeCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
+    loop: true
   };
-};
 
-exports.category = 5;
-exports.help = "Unfreezes a GIF";
+  static description = "Unfreezes an image sequence";
+
+  static requiresGIF = true;
+  static noImage = "you need to provide an image to unfreeze!";
+  static command = "freeze";
+}
+
+module.exports = UnfreezeCommand;

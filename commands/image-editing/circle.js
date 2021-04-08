@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add radial blur!`;
-  const { buffer, type} = await magick.run({
-    cmd: "circle",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `circle.${type}`
-  };
-};
+class CircleCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["cblur", "radial", "radialblur"];
-exports.category = 5;
-exports.help = "Applies a radial blur effect on an image";
+  static description = "Applies a radial blur effect on an image";
+  static aliases = ["cblur", "radial", "radialblur"];
+
+  static noImage = "you need to provide an image to add radial blur!";
+  static command = "circle";
+}
+
+module.exports = CircleCommand;

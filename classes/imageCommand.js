@@ -34,6 +34,10 @@ class ImageCommand extends Command {
     };*/
   }
 
+  criteria() {
+    return true;
+  }
+
   async run() {
     const magickParams = {
       cmd: this.constructor.command
@@ -45,10 +49,12 @@ class ImageCommand extends Command {
       magickParams.path = image.path;
       magickParams.type = image.type;
       magickParams.url = image.url; // technically not required but can be useful for text filtering
+      magickParams.delay = image.delay;
+      if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
     }
 
     if (this.constructor.requiresText) {
-      if (this.args.length === 0) return `${this.message.author.mention}, ${this.constructor.noText}`;
+      if (this.args.length === 0 || !this.criteria(this.args)) return `${this.message.author.mention}, ${this.constructor.noText}`;
     }
 
     switch (typeof this.params) {
@@ -60,19 +66,25 @@ class ImageCommand extends Command {
         break;
     }
 
-    const status = await this.processMessage(this.message);
+    let status;
+    if (magickParams.type === "image/gif") {
+      status = await this.processMessage(this.message);
+    } else {
+      this.message.channel.sendTyping();
+    }
 
     try {
       const { buffer, type } = await magick.run(magickParams).catch(e => {
-        console.log(e);
+        console.error(e);
       });
-      if (status.channel.messages.get(status.id)) await status.delete();
+      if (status && status.channel.messages.get(status.id)) await status.delete();
+      if (type === "nogif" && this.constructor.requiresGIF) return `${this.message.author.mention}, that isn't a GIF!`;
       return {
         file: buffer,
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
-      if (status.channel.messages.get(status.id)) await status.delete();
+      if (status && status.channel.messages.get(status.id)) await status.delete();
       if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I've just started up and am still trying to connect to the image servers. Please wait a little bit.`;
       throw e;
     }
@@ -85,6 +97,7 @@ class ImageCommand extends Command {
 
   static requiresImage = true;
   static requiresText = false;
+  static requiresGIF = false;
   static noImage = "you need to provide an image!";
   static noText = "you need to provide some text!";
   static command = "";

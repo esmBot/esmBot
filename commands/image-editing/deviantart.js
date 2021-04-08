@@ -1,23 +1,21 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add a DeviantArt watermark!`;
-  const { buffer, type } = await magick.run({
-    cmd: "watermark",
-    path: image.path,
+class DeviantArtCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
     water: "./assets/images/deviantart.png",
     gravity: 5,
-    resize: true,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `deviantart.${type}`
+    resize: true
   };
-};
 
-exports.aliases = ["da", "deviant"];
-exports.category = 5;
-exports.help = "Adds a DeviantArt watermark to an image";
+  static description = "Adds a DeviantArt watermark to an image";
+  static aliases = ["da", "deviant"];
+
+  static noImage = "you need to provide an image to add a DeviantArt watermark!";
+  static command = "watermark";
+}
+
+module.exports = DeviantArtCommand;

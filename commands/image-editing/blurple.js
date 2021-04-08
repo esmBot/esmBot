@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to make blurple!`;
-  const { buffer, type } = await magick.run({
-    cmd: "blurple",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `blurple.${type}`
-  };
-};
+class BlurpleCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["blurp"];
-exports.category = 5;
-exports.help = "Turns an image blurple";
+  static description = "Turns an image blurple";
+
+  static noImage = "you need to provide an image to make blurple!";
+  static command = "blurple";
+  static aliases = ["blurp"];
+}
+
+module.exports = BlurpleCommand;

@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to invert!`;
-  const { buffer, type } = await magick.run({
-    cmd: "invert",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `invert.${type}`
-  };
-};
+class InvertCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["inverse", "negate", "negative"];
-exports.category = 5;
-exports.help = "Inverts an image's colors";
+  static description = "Inverts an image";
+  static aliases = ["inverse", "negate", "negative"];
+
+  static noImage = "you need to provide an image to invert!";
+  static command = "invert";
+}
+
+module.exports = InvertCommand;

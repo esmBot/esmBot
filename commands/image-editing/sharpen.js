@@ -1,22 +1,19 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to sharpen!`;
-  const { buffer, type } = await magick.run({
-    cmd: "blur",
-    path: image.path,
-    sharp: true,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `sharpen.${type}`
+class SharpenCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
+    sharp: true
   };
 
-};
+  static description = "Sharpens an image";
+  static aliases = ["sharp"];
 
-exports.aliases = ["sharp"];
-exports.category = 5;
-exports.help = "Sharpens an image";
+  static noImage = "you need to provide an image to sharpen!";
+  static command = "blur";
+}
+
+module.exports = SharpenCommand;

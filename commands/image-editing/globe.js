@@ -1,21 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to spin!`;
-  const processMessage = await message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
-  const { buffer } = await magick.run({
-    cmd: "globe",
-    path: image.path,
-    type: image.type
-  });
-  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
-  return {
-    file: buffer,
-    name: "globe.gif"
-  };
-};
+class GlobeCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["rotate", "sphere"];
-exports.category = 5;
-exports.help = "Spins an image";
+  static description = "Spins an image";
+  static aliases = ["sphere"];
+
+  static noImage = "you need to provide an image to spin!";
+  static command = "globe";
+}
+
+module.exports = GlobeCommand;

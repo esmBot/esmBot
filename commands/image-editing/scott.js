@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to make a Scott the Woz TV meme!`;
-  const { buffer, type } = await magick.run({
-    cmd: "scott",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `scott.${type}`
-  };
-};
+class ScottCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["woz", "tv", "porn"];
-exports.category = 5;
-exports.help = "Creates a Scott the Woz TV image";
+  static description = "Makes Scott the Woz show off an image";
+  static aliases = ["woz", "tv", "porn"];
+
+  static noImage = "you need to provide an image for Scott to show off!";
+  static command = "scott";
+}
+
+module.exports = ScottCommand;

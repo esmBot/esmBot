@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to make a "who did this" meme!`;
-  const { buffer, type } = await magick.run({
-    cmd: "wdt",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `wdt.${type}`
-  };
-};
+class WhoDidThisCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["whodidthis"];
-exports.category = 5;
-exports.help = "Creates a \"WHO DID THIS\" meme from an image";
+  static description = "Creates a \"WHO DID THIS\" meme from an image";
+  static aliases = ["whodidthis"];
+
+  static noImage = "you need to provide an image to make a \"who did this\" meme!";
+  static command = "wdt";
+}
+
+module.exports = WhoDidThisCommand;

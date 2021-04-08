@@ -1,22 +1,20 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add a 9GAG watermark!`;
-  const { buffer, type } = await magick.run({
-    cmd: "watermark",
-    path: image.path,
+class NineGagCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
     water: "./assets/images/9gag.png",
-    gravity: 6,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `9gag.${type}`
+    gravity: 6
   };
-};
 
-exports.aliases = ["ninegag", "gag"];
-exports.category = 5;
-exports.help = "Adds the 9gag watermark to an image";
+  static description = "Adds the 9GAG watermark to an image";
+  static aliases = ["ninegag", "gag"];
+
+  static noImage = "you need to provide an image to add a 9GAG watermark!";
+  static command = "watermark";
+}
+
+module.exports = NineGagCommand;

@@ -1,23 +1,21 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add New Funky Mode!`;
-  const { buffer, type } = await magick.run({
-    cmd: "watermark",
-    path: image.path,
+class FunkyCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
+
+  params = {
     water: "./assets/images/funky.png",
     gravity: 3,
-    resize: true,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `funky.${type}`
+    resize: true
   };
-};
 
-exports.aliases = ["funkymode", "newfunkymode", "funkykong"];
-exports.category = 5;
-exports.help = "Adds the New Funky Mode banner to an image";
+  static description = "Adds the New Funky Mode banner to an image";
+  static aliases = ["funkymode", "newfunkymode", "funkykong"];
+
+  static noImage = "you need to provide an image to add a New Funky Mode banner!";
+  static command = "watermark";
+}
+
+module.exports = FunkyCommand;

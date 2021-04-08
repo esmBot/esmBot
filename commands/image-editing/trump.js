@@ -1,19 +1,14 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to make a Trump meme!`;
-  const { buffer, type } = await magick.run({
-    cmd: "trump",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `trump.${type}`
-  };
-};
+class TrumpCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.category = 5;
-exports.help = "Makes Trump display an image";
+  static description = "Makes Trump display an image";
+
+  static noImage = "you need to provide an image for Trump to display!";
+  static command = "trump";
+}
+
+module.exports = TrumpCommand;

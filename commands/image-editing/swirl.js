@@ -1,20 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  message.channel.sendTyping();
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to swirl!`;
-  const { buffer, type } = await magick.run({
-    cmd: "swirl",
-    path: image.path,
-    type: image.type
-  });
-  return {
-    file: buffer,
-    name: `swirl.${type}`
-  };
-};
+class SwirlCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["whirlpool"];
-exports.category = 5;
-exports.help = "Swirls an image";
+  static description = "Swirls an image";
+  static aliases = ["whirlpool"];
+
+  static noImage = "you need to provide an image to swirl!";
+  static command = "swirl";
+}
+
+module.exports = SwirlCommand;

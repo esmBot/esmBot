@@ -11,7 +11,8 @@ const client = new Client(process.env.TOKEN, {
     GUILD_ROLE_CREATE: true,
     GUILD_ROLE_DELETE: true,
     GUILD_ROLE_UPDATE: true,
-    TYPING_START: true
+    TYPING_START: true,
+    MESSAGE_DELETE_BULK: true
   },
   maxShards: "auto",
   allowedMentions: {

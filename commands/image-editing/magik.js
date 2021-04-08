@@ -1,21 +1,15 @@
-const magick = require("../../utils/image.js");
+const ImageCommand = require("../../classes/imageCommand.js");
 
-exports.run = async (message) => {
-  const image = await require("../../utils/imagedetect.js")(message);
-  if (image === undefined) return `${message.author.mention}, you need to provide an image to add some magik!`;
-  const processMessage = await message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
-  const { buffer, type } = await magick.run({
-    cmd: "magik",
-    path: image.path,
-    type: image.type
-  });
-  if (processMessage.channel.messages.get(processMessage.id)) await processMessage.delete();
-  return {
-    file: buffer,
-    name: `magik.${type}`
-  };
-};
+class MagikCommand extends ImageCommand {
+  constructor(message, args, content) {
+    super(message, args, content);
+  }
 
-exports.aliases = ["imagemagic", "imagemagick", "imagemagik", "magic", "magick", "cas", "liquid"];
-exports.category = 5;
-exports.help = "Adds a content aware scale effect to an image";
+  static description = "Adds a content aware scale effect to an image";
+  static aliases = ["imagemagic", "imagemagick", "imagemagik", "magic", "magick", "cas", "liquid"];
+
+  static noImage = "you need to provide an image to add some magik!";
+  static command = "magik";
+}
+
+module.exports = MagikCommand;
