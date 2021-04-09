@@ -71,7 +71,7 @@ class ImageCommand extends Command {
 
     try {
       const { buffer, type } = await magick.run(magickParams).catch(e => {
-        console.error(e);
+        throw e;
       });
       if (status && status.channel.messages.get(status.id)) await status.delete();
       if (type === "nogif" && this.constructor.requiresGIF) return `${this.message.author.mention}, that isn't a GIF!`;

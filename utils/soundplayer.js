@@ -25,7 +25,7 @@ exports.checkStatus = async () => {
       const response = await fetch(`http://${node.host}:${node.port}/version`, { headers: { Authorization: node.password } }).then(res => res.text());
       if (response) newNodes.push(node);
     } catch {
-      logger.log(`Failed to get status of Lavalink node ${node.host}.`);
+      logger.error(`Failed to get status of Lavalink node ${node.host}.`);
     }
   }
   nodes = newNodes;
@@ -56,7 +56,7 @@ exports.play = async (client, sound, message, music = false) => {
   if (!this.manager) return `${message.author.mention}, the sound commands are still starting up!`;
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
-  if (!message.channel.guild.members.get(client.user.id).permissions.has("voiceConnect") || !message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
+  if (!message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
   const voiceChannel = message.channel.guild.channels.get(message.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I don't have permission to join this voice channel!`;
   const player = this.players.get(message.channel.guild.id);

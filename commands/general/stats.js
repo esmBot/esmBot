@@ -24,6 +24,10 @@ class StatsCommand extends Command {
           "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`
         },
         {
+          "name": "Shard",
+          "value": this.client.guildShardMap[this.message.channel.guild.id]
+        },
+        {
           "name": "Uptime",
           "value": uptime
         },

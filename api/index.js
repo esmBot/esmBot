@@ -42,7 +42,7 @@ const acceptJob = async (uuid, sock) => {
       acceptJob(queue[0], sock);
     }
     delete jobs[uuid];
-    sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.toString())]));
+    sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.message)]));
   }
 };
 

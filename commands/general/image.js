@@ -4,8 +4,8 @@ const Command = require("../../classes/command.js");
 
 class ImageSearchCommand extends Command {
   async run() {
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide something to search for!`;
     const embeds = [];
     const images = await image_search({ query: this.args.join(" "), moderate: true });

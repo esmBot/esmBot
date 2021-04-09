@@ -40,8 +40,8 @@ class TagsCommand extends Command {
         if (!tags[this.args[1].toLowerCase()]) return `${this.message.author.mention}, this tag doesn't exist!`;
         return `${this.message.author.mention}, this tag is owned by **${this.client.users.get(tags[this.args[1].toLowerCase()].author).username}#${this.client.users.get(tags[this.args[1].toLowerCase()].author).discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
       case "list":
-        if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-        if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+        if (!this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+        if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
         var pageSize = 15;
         var embeds = [];
         var groups = Object.keys(tags).map((item, index) => {

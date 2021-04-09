@@ -1,5 +1,4 @@
 const collections = require("./collections.js");
-const logger = require("./logger.js");
 const fs = require("fs");
 
 const categoryTemplate = {
@@ -66,7 +65,5 @@ Default prefix is \`&\`.
     }
   }
 
-  fs.writeFile(output, template, () => {
-    logger.log("The help docs have been generated.");
-  });
+  await fs.promises.writeFile(output, template);
 };

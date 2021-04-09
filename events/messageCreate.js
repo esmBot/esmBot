@@ -81,7 +81,7 @@ module.exports = async (client, message) => {
   if (!cmd) return;
 
   // actually run the command
-  logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
+  logger.log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
