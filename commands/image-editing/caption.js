@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class CaptionCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   params(args, url) {
     const newArgs = args.filter(item => !item.includes(url));
     let newCaption = newArgs.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%");

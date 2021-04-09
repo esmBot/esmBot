@@ -3,10 +3,6 @@ const stream = require("stream");
 const Command = require("../../classes/command.js");
 
 class QrCreateCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide some text to generate a QR code!`;
     this.message.channel.sendTyping();

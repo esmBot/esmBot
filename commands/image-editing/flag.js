@@ -4,10 +4,7 @@ const emoji = require("node-emoji");
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class FlagCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-    this.flagPath = "";
-  }
+  flagPath = "";
 
   criteria(args) {
     if (!args[0].match(emojiRegex)) return false;

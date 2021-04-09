@@ -3,10 +3,6 @@ const { version } = require("../../package.json");
 const Command = require("../../classes/command.js");
 
 class InfoCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     return {
       "embed": {

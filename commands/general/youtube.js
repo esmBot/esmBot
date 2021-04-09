@@ -4,10 +4,6 @@ const paginator = require("../../utils/pagination/pagination.js");
 const Command = require("../../classes/command.js");
 
 class YouTubeCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide something to search for!`;
     this.message.channel.sendTyping();

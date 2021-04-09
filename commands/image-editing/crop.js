@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class CropCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   static description = "Crops an image to 1:1";
 
   static noImage = "you need to provide an image to crop!";

@@ -2,10 +2,6 @@ const wrap = require("../../utils/wrap.js");
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class SonicCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   params(args) {
     const cleanedMessage = args.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%");
     return {

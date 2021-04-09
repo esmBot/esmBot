@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class WooWCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   params = {
     vertical: true,
     first: true

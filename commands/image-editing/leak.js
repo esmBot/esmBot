@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class LeakCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   static description = "Creates a fake Smash leak thumbnail";
   static aliases = ["smash", "laxchris", "ssbu", "smashleak"];
 

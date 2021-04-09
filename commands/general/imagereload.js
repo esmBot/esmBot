@@ -3,10 +3,6 @@ const logger = require("../../utils/logger.js");
 const Command = require("../../classes/command.js");
 
 class ImageReloadCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can reload the image servers!`;
     await image.disconnect();

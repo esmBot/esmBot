@@ -2,10 +2,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class DonateCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     let prefix = "";
     const patrons = await fetch("https://projectlounge.pw/patrons").then(data => data.json());

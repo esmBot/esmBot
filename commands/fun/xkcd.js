@@ -2,10 +2,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class XKCDCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     const url = this.args.length > 0 && this.args[0].match(/^\d+$/) ? `http://xkcd.com/${this.args[0]}/info.0.json` : "http://xkcd.com/info.0.json";
     try {

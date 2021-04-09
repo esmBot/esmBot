@@ -3,10 +3,6 @@ const collections = require("../../utils/collections.js");
 const Command = require("../../classes/command.js");
 
 class ReloadCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can reload commands!`;
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide a command to reload!`;

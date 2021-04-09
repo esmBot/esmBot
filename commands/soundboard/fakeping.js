@@ -2,10 +2,6 @@ const soundPlayer = require("../../utils/soundplayer.js");
 const MusicCommand = require("../../classes/musicCommand.js");
 
 class FakePingCommand extends MusicCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     return await soundPlayer.play("./assets/audio/ping.ogg", this.message);
   }

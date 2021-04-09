@@ -1,10 +1,6 @@
 const Command = require("../../classes/command.js");
 
 class DiceCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.args.length === 0 || !this.args[0].match(/^\d+$/)) {
       return `🎲 The dice landed on ${Math.floor(Math.random() * 6) + 1}.`;

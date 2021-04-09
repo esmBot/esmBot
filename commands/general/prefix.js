@@ -2,10 +2,6 @@ const database = require("../../utils/database.js");
 const Command = require("../../classes/command.js");
 
 class PrefixCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     const guild = await database.getGuild(this.message.channel.guild.id);

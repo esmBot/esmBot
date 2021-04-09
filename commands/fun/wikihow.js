@@ -2,10 +2,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class WikihowCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     this.message.channel.sendTyping();
     const request = await fetch("https://hargrimm-wikihow-v1.p.rapidapi.com/images?count=1", {

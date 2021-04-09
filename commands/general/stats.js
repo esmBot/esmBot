@@ -6,10 +6,6 @@ const os = require("os");
 const Command = require("../../classes/command.js");
 
 class StatsCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     const duration = day.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");

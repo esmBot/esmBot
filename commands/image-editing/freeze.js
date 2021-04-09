@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class FreezeCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   params = {
     loop: false
   };

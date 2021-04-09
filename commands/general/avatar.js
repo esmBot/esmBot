@@ -2,10 +2,6 @@ const client = require("../../utils/client.js");
 const Command = require("../../classes/command.js");
 
 class AvatarCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.message.mentions[0] !== undefined) {
       return this.message.mentions[0].dynamicAvatarURL(null, 1024);

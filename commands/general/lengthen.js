@@ -3,10 +3,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class LengthenCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     this.message.channel.sendTyping();
     if (this.args.length === 0 || !urlCheck(this.args[0])) return `${this.message.author.mention}, you need to provide a short URL to lengthen!`;

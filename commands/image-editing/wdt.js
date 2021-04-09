@@ -1,10 +1,6 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class WhoDidThisCommand extends ImageCommand {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   static description = "Creates a \"WHO DID THIS\" meme from an image";
   static aliases = ["whodidthis"];
 

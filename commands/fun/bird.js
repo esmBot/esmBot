@@ -2,10 +2,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class BirdCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     this.message.channel.sendTyping();
     const imageData = await fetch("http://shibe.online/api/birds");

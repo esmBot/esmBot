@@ -4,10 +4,6 @@ const database = require("../../utils/database.js");
 const Command = require("../../classes/command.js");
 
 class CountCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
     if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;

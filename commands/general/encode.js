@@ -1,10 +1,6 @@
 const Command = require("../../classes/command.js");
 
 class EncodeCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide a string to encode!`;
     const b64Encoded = Buffer.from(this.args.join(" ")).toString("base64");

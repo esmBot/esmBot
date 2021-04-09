@@ -2,10 +2,6 @@ const db = require("../../utils/database.js");
 const Command = require("../../classes/command.js");
 
 class ChannelCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     if (!this.message.member.permissions.has("administrator") && this.message.member.id !== process.env.OWNER) return `${this.message.author.mention}, you need to be an administrator to enable/disable me!`;

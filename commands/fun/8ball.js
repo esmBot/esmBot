@@ -2,10 +2,6 @@ const Command = require("../../classes/command.js");
 const { random } = require("../../utils/misc.js");
 
 class EightBallCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   static responses = [
     "It is certain",
     "It is decidedly so",

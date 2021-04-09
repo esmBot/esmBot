@@ -5,10 +5,6 @@ const { random } = require("../../utils/misc.js");
 const Command = require("../../classes/command.js");
 
 class TagsCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   // todo: find a way to split this into subcommands
   async run() {
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;

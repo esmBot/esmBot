@@ -3,10 +3,6 @@ const wrap = require("../../utils/wrap.js");
 const Command = require("../../classes/command.js");
 
 class RetroCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide some text to generate some retro text!`;
     this.message.channel.sendTyping();

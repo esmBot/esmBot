@@ -2,10 +2,6 @@ const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class CatCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     this.message.channel.sendTyping();
     const data = await fetch("https://api.thecatapi.com/v1/images/search?format=json", {

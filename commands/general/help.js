@@ -8,10 +8,6 @@ const tips = ["You can change the bot's prefix using the prefix command.", "Imag
 const Command = require("../../classes/command.js");
 
 class HelpCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-  }
-
   async run() {
     const { prefix } = this.message.channel.guild ? await database.getGuild(this.message.channel.guild.id) : "N/A";
     const commands = collections.commands;
