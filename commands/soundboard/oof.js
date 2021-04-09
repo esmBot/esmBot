@@ -3,7 +3,7 @@ const MusicCommand = require("../../classes/musicCommand.js");
 
 class OofCommand extends MusicCommand {
   async run() {
-    return await soundPlayer.play("./assets/audio/oof.ogg", this.message);
+    return await soundPlayer.play(this.client, "./assets/audio/oof.ogg", this.message);
   }
 
   static description = "Plays the Roblox \"oof\" sound";

@@ -1,8 +1,7 @@
 const ReactionCollector = require("./awaitreactions.js");
 const MessageCollector = require("./awaitmessages.js");
-const client = require("../client.js");
 
-module.exports = async (message, pages, timeout = 120000) => {
+module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
   let currentPage = await message.channel.createMessage(pages[page]);
@@ -21,7 +20,7 @@ module.exports = async (message, pages, timeout = 120000) => {
           break;
         case "🔢":
           message.channel.createMessage(`${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
-            const messageCollector = new MessageCollector(askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length && Number(response.content) > 0, {
+            const messageCollector = new MessageCollector(client, askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length && Number(response.content) > 0, {
               time: timeout,
               maxMatches: 1
             });

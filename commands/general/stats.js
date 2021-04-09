@@ -1,4 +1,3 @@
-const client = require("../../utils/client.js");
 const { version } = require("../../package.json");
 const day = require("dayjs");
 day.extend(require("dayjs/plugin/duration"));
@@ -7,13 +6,13 @@ const Command = require("../../classes/command.js");
 
 class StatsCommand extends Command {
   async run() {
-    const duration = day.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
+    const duration = day.duration(this.client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
     return {
       embed: {
         "author": {
           "name": "esmBot Statistics",
-          "icon_url": client.user.avatarURL
+          "icon_url": this.client.user.avatarURL
         },
         "color": 16711680,
         "fields": [{

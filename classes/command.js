@@ -1,5 +1,6 @@
 class Command {
-  constructor(message, args, content) {
+  constructor(client, message, args, content) {
+    this.client = client;
     this.message = message;
     this.args = args;
     this.content = content;

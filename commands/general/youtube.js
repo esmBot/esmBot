@@ -20,7 +20,7 @@ class YouTubeCommand extends Command {
         messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}`);
       }
     }
-    return paginator(this.message, messages);
+    return paginator(this.client, this.message, messages);
   }
 
   static description = "Searches YouTube";

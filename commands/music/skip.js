@@ -1,5 +1,4 @@
 const soundPlayer = require("../../utils/soundplayer.js");
-const client = require("../../utils/client.js");
 const MusicCommand = require("../../classes/musicCommand.js");
 
 class SkipCommand extends MusicCommand {
@@ -8,7 +7,7 @@ class SkipCommand extends MusicCommand {
 
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     if (!this.message.member.voiceState.channelID) return `${this.message.author.mention}, you need to be in a voice channel first!`;
-    if (!this.message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
     const player = this.connection;
     if (player.host !== this.message.author.id) {
       const votes = soundPlayer.skipVotes.has(this.message.channel.guild.id) ? soundPlayer.skipVotes.get(this.message.channel.guild.id) : { count: 0, ids: [] };

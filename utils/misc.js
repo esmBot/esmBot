@@ -1,5 +1,4 @@
 const util = require("util");
-const client = require("./client.js");
 
 // random(array) to select a random entry in array
 exports.random = (array) => {
@@ -32,14 +31,6 @@ exports.clean = async (text) => {
     .replaceAll(process.env.ACCESS_SECRET, optionalReplace(process.env.ACCESS_SECRET));
 
   return text;
-};
-
-exports.getRandomMessage = async () => {
-  const messages = await client.guilds.get("631290275456745502").channels.get("631290275888627713").getMessages(50);
-  const randomMessage = this.random(messages);
-  if (randomMessage.content.length > 144) return await this.getRandomMessage();
-  if (randomMessage.content.match(/<@!?\d+>/g)) return await this.getRandomMessage();
-  return randomMessage.content;
 };
 
 // regexEscape(string) to escape characters in a string for use in a regex

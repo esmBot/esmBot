@@ -1,12 +1,11 @@
-const client = require("../../utils/client.js");
 const paginator = require("../../utils/pagination/pagination.js");
 const database = require("../../utils/database.js");
 const Command = require("../../classes/command.js");
 
 class CountCommand extends Command {
   async run() {
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
     const counts = await database.getCounts();
     const countArray = [];
     const sortedValues = counts.sort((a, b) => {
@@ -37,7 +36,7 @@ class CountCommand extends Command {
         }
       });
     }
-    return paginator(this.message, embeds);
+    return paginator(this.client, this.message, embeds);
   }
 
   static description = "Gets how many times every command was used";

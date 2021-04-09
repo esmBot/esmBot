@@ -1,5 +1,4 @@
 const soundPlayer = require("../../utils/soundplayer.js");
-const client = require("../../utils/client.js");
 const fetch = require("node-fetch");
 const day = require("dayjs");
 const duration = require("dayjs/plugin/duration");
@@ -13,9 +12,9 @@ class QueueCommand extends MusicCommand {
 
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     if (!this.message.member.voiceState.channelID) return `${this.message.author.mention}, you need to be in a voice channel first!`;
-    if (!this.message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
-    if (!this.message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-    if (!this.message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
     const queue = soundPlayer.queues.get(this.message.channel.guild.id);
     const player = this.connection;
     const tracks = await fetch(`http://${player.player.node.host}:${player.player.node.port}/decodetracks`, { method: "POST", body: JSON.stringify(queue), headers: { Authorization: player.player.node.password, "Content-Type": "application/json" } }).then(res => res.json());
@@ -35,7 +34,7 @@ class QueueCommand extends MusicCommand {
         "embed": {
           "author": {
             "name": "Queue",
-            "icon_url": client.user.avatarURL
+            "icon_url": this.client.user.avatarURL
           },
           "color": 16711680,
           "footer": {
@@ -55,7 +54,7 @@ class QueueCommand extends MusicCommand {
       });
     }
     if (embeds.length === 0) return `${this.message.author.mention}, there's nothing in the queue!`;
-    return paginator(this.message, embeds);
+    return paginator(this.client, this.message, embeds);
   }
 
   static description = "Shows the current queue";

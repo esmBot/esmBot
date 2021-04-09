@@ -1,6 +1,5 @@
 const database = require("../../utils/database.js");
 const collections = require("../../utils/collections.js");
-const client = require("../../utils/client.js");
 const misc = require("../../utils/misc.js");
 const paginator = require("../../utils/pagination/pagination.js");
 const help = require("../../utils/help.js");
@@ -25,7 +24,7 @@ class HelpCommand extends Command {
         "embed": {
           "author": {
             "name": "esmBot Help",
-            "icon_url": client.user.avatarURL
+            "icon_url": this.client.user.avatarURL
           },
           "title": `${this.message.channel.guild ? prefix : ""}${command}`,
           "url": "https://projectlounge.pw/esmBot/help.html",
@@ -71,7 +70,7 @@ class HelpCommand extends Command {
           "embed": {
             "author": {
               "name": "esmBot Help",
-              "icon_url": client.user.avatarURL
+              "icon_url": this.client.user.avatarURL
             },
             "title": value.title,
             "description": value.page.join("\n"),
@@ -89,7 +88,7 @@ class HelpCommand extends Command {
           }
         });
       }
-      return paginator(this.message, embeds);
+      return paginator(this.client, this.message, embeds);
     }
   }
 

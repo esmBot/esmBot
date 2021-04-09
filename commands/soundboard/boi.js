@@ -3,7 +3,7 @@ const MusicCommand = require("../../classes/musicCommand.js");
 
 class BoiCommand extends MusicCommand {
   async run() {
-    return await soundPlayer.play("./assets/audio/boi.ogg", this.message);
+    return await soundPlayer.play(this.client, "./assets/audio/boi.ogg", this.message);
   }
 
   static description = "Plays the \"boi\" sound effect";

@@ -51,7 +51,7 @@ async function init() {
     logger.log("info", `Loading event from ${file}...`);
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
-    client.on(eventName, event);
+    client.on(eventName, event.bind(null, client));
   }
 
   // connect to image api if enabled

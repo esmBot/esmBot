@@ -1,5 +1,4 @@
 const soundPlayer = require("../../utils/soundplayer.js");
-const client = require("../../utils/client.js");
 const MusicCommand = require("../../classes/musicCommand.js");
 
 class LoopCommand extends MusicCommand {
@@ -8,7 +7,7 @@ class LoopCommand extends MusicCommand {
 
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     if (!this.message.member.voiceState.channelID) return `${this.message.author.mention}, you need to be in a voice channel first!`;
-    if (!this.message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
     if (this.connection.host !== this.message.author.id) return `${this.message.author.mention}, only the current voice session host can loop the music!`;
     const object = this.connection;
     object.loop = !object.loop;

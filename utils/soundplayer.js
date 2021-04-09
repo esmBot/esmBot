@@ -1,4 +1,3 @@
-const client = require("./client.js");
 const logger = require("./logger.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
@@ -34,7 +33,7 @@ exports.checkStatus = async () => {
   return this.status;
 };
 
-exports.connect = async () => {
+exports.connect = async (client) => {
   this.manager = new Manager(nodes, {
     user: client.user.id,
     shards: client.shards.size || 1,
@@ -53,7 +52,7 @@ exports.connect = async () => {
   return length;
 };
 
-exports.play = async (sound, message, music = false) => {
+exports.play = async (client, sound, message, music = false) => {
   if (!this.manager) return `${message.author.mention}, the sound commands are still starting up!`;
   if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
   if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
@@ -86,12 +85,12 @@ exports.play = async (sound, message, music = false) => {
   if (oldQueue && music) {
     return `${message.author.mention}, your tune \`${tracks[0].info.title}\` has been added to the queue!`;
   } else {
-    this.nextSong(message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
+    this.nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
     return;
   }
 };
 
-exports.nextSong = async (message, connection, track, info, music, voiceChannel, loop = false, inQueue = false, lastTrack = null, oldPlaying = null) => {
+exports.nextSong = async (client, message, connection, track, info, music, voiceChannel, loop = false, inQueue = false, lastTrack = null, oldPlaying = null) => {
   const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
   if (lastTrack === track) {
@@ -157,7 +156,7 @@ exports.nextSong = async (message, connection, track, info, music, voiceChannel,
         if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
       } else {
         const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
-        this.nextSong(message, connection, newQueue[0], newTrack, music, voiceChannel, isLooping, true, track, playingMessage);
+        this.nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, isLooping, true, track, playingMessage);
         if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
       }
     });

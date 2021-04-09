@@ -3,7 +3,7 @@ const MusicCommand = require("../../classes/musicCommand.js");
 
 class WinXPCommand extends MusicCommand {
   async run() {
-    return await soundPlayer.play("./assets/audio/winxp.ogg", this.message);
+    return await soundPlayer.play(this.client, "./assets/audio/winxp.ogg", this.message);
   }
 
   static description = "Plays the Windows XP startup sound";

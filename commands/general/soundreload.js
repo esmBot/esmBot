@@ -6,7 +6,7 @@ class SoundReloadCommand extends Command {
     if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can reload Lavalink!`;
     const soundStatus = await soundPlayer.checkStatus();
     if (!soundStatus) {
-      const length = await soundPlayer.connect();
+      const length = await soundPlayer.connect(this.client);
       return `Successfully connected to ${length} Lavalink node(s).`;
     } else {
       return `${this.message.author.mention}, I couldn't connect to any Lavalink nodes!`;

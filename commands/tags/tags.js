@@ -1,5 +1,4 @@
 const database = require("../../utils/database.js");
-const client = require("../../utils/client.js");
 const paginator = require("../../utils/pagination/pagination.js");
 const { random } = require("../../utils/misc.js");
 const Command = require("../../classes/command.js");
@@ -39,10 +38,10 @@ class TagsCommand extends Command {
       case "owner":
         if (this.args[1] === undefined) return `${this.message.author.mention}, you need to provide the name of the tag you want to check the owner of!`;
         if (!tags[this.args[1].toLowerCase()]) return `${this.message.author.mention}, this tag doesn't exist!`;
-        return `${this.message.author.mention}, this tag is owned by **${client.users.get(tags[this.args[1].toLowerCase()].author).username}#${client.users.get(tags[this.args[1].toLowerCase()].author).discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
+        return `${this.message.author.mention}, this tag is owned by **${this.client.users.get(tags[this.args[1].toLowerCase()].author).username}#${this.client.users.get(tags[this.args[1].toLowerCase()].author).discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
       case "list":
-        if (!this.message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-        if (!this.message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+        if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+        if (!this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
         var pageSize = 15;
         var embeds = [];
         var groups = Object.keys(tags).map((item, index) => {
@@ -68,7 +67,7 @@ class TagsCommand extends Command {
           });
         }
         if (embeds.length === 0) return `${this.message.author.mention}, I couldn't find any tags!`;
-        return paginator(this.message, embeds);
+        return paginator(this.client, this.message, embeds);
       case "random":
         return tags[random(Object.keys(tags))].content;
       case "enable":

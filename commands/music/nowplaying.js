@@ -1,4 +1,3 @@
-const client = require("../../utils/client.js");
 const fetch = require("node-fetch");
 const day = require("dayjs");
 const duration = require("dayjs/plugin/duration");
@@ -11,7 +10,7 @@ class NowPlayingCommand extends MusicCommand {
 
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
     if (!this.message.member.voiceState.channelID) return `${this.message.author.mention}, you need to be in a voice channel first!`;
-    if (!this.message.channel.guild.members.get(client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
+    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return `${this.message.author.mention}, I'm not in a voice channel!`;
     const player = this.connection.player;
     if (!player) return `${this.message.author.mention}, I'm not playing anything!`;
     const track = await fetch(`http://${player.node.host}:${player.node.port}/decodetrack?track=${encodeURIComponent(player.track)}`, { headers: { Authorization: player.node.password } }).then(res => res.json());
@@ -21,7 +20,7 @@ class NowPlayingCommand extends MusicCommand {
         "color": 16711680,
         "author": {
           "name": "Now Playing",
-          "icon_url": client.user.avatarURL
+          "icon_url": this.client.user.avatarURL
         },
         "fields": [{
           "name": "ℹ️ Title:",

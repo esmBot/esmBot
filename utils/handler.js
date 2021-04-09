@@ -1,30 +1,24 @@
-const Command = require("../classes/command.js");
 const collections = require("./collections.js");
 const logger = require("./logger.js");
 
 // load command into memory
 exports.load = async (command, soundStatus) => {
   const props = require(`../${command}`);
-  if (props.requires === "google" && process.env.GOOGLE === "") return logger.log("info", `Google info not provided in config, skipped loading command ${command}...`);
-  if (props.requires === "cat" && process.env.CAT === "") return logger.log("info", `Cat API info not provided in config, skipped loading command ${command}...`);
-  if (props.requires === "mashape" && process.env.MASHAPE === "") return logger.log("info", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
-  if (props.requires === "sound" && soundStatus) return logger.log("info", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
+  if (props.requires.includes("google") && process.env.GOOGLE === "") return logger.log("info", `Google info not provided in config, skipped loading command ${command}...`);
+  if (props.requires.includes("cat") && process.env.CAT === "") return logger.log("info", `Cat API info not provided in config, skipped loading command ${command}...`);
+  if (props.requires.includes("mashape") && process.env.MASHAPE === "") return logger.log("info", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
+  if (props.requires.includes("sound") && soundStatus) return logger.log("info", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
   
   collections.paths.set(commandName, command);
-  const isClass = props.prototype instanceof Command;
-  if (isClass) {
-    collections.commands.set(commandName, props);
-  } else {
-    collections.commands.set(commandName, props.run);
-  }
+  collections.commands.set(commandName, props);
 
   collections.info.set(commandName, {
     category: commandArray[2],
-    description: isClass ? props.description : props.help,
+    description: props.description,
     aliases: props.aliases,
-    params: isClass ? props.arguments : props.params
+    params: props.arguments
   });
   
   if (props.aliases) {

@@ -1,4 +1,3 @@
-const client = require("../../utils/client.js");
 const { version } = require("../../package.json");
 const Command = require("../../classes/command.js");
 
@@ -9,7 +8,7 @@ class InfoCommand extends Command {
         "color": 16711680,
         "author": {
           "name": "esmBot Info/Credits",
-          "icon_url": client.user.avatarURL
+          "icon_url": this.client.user.avatarURL
         },
         "fields": [{
           "name": "ℹ️ Version:",
@@ -21,7 +20,7 @@ class InfoCommand extends Command {
         },
         {
           "name": "💬 Total Servers:",
-          "value": client.guilds.size
+          "value": this.client.guilds.size
         },
         {
           "name": "✅ Official Server:",

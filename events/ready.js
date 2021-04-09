@@ -1,4 +1,3 @@
-const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const messages = require("../messages.json");
@@ -9,9 +8,9 @@ const helpGenerator =
 const first = process.env.PMTWO === "true" ? process.env.NODE_APP_INSTANCE === "0" : true;
 
 // run when ready
-module.exports = async () => {
+module.exports = async (client) => {
   // connect to lavalink
-  if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect();
+  if (!soundPlayer.status && !soundPlayer.connected) await soundPlayer.connect(client);
 
   await database.setup();
 

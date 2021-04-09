@@ -1,12 +1,11 @@
-const client = require("../../utils/client.js");
 const paginator = require("../../utils/pagination/pagination.js");
 const { image_search } = require("duckduckgo-images-api");
 const Command = require("../../classes/command.js");
 
 class ImageSearchCommand extends Command {
   async run() {
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
-    if (this.message.channel.guild && !this.message.channel.guild.members.get(client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("addReactions") && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return `${this.message.author.mention}, I don't have the \`Add Reactions\` permission!`;
+    if (this.message.channel.guild && !this.message.channel.guild.members.get(this.client.user.id).permissions.has("embedLinks") && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide something to search for!`;
     const embeds = [];
     const images = await image_search({ query: this.args.join(" "), moderate: true });
@@ -30,7 +29,7 @@ class ImageSearchCommand extends Command {
         }
       });
     }
-    return paginator(this.message, embeds);
+    return paginator(this.client, this.message, embeds);
   }
 
   static description = "Searches for images on DuckDuckGo";

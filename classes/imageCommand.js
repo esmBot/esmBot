@@ -3,10 +3,7 @@ const magick = require("../utils/image.js");
 const imageDetect = require("../utils/imagedetect.js");
 
 class ImageCommand extends Command {
-  constructor(message, args, content) {
-    super(message, args, content);
-
-    /*this.embed = {
+  /*this.embed = {
       "title": "Your image is being generated! (PRELIMINARY EMBED)",
       "description": "The current progress is outlined below:",
       "color": 16711680,
@@ -32,7 +29,6 @@ class ImageCommand extends Command {
         }
       ]
     };*/
-  }
 
   criteria() {
     return true;
@@ -44,7 +40,7 @@ class ImageCommand extends Command {
     };
 
     if (this.constructor.requiresImage) {
-      const image = await imageDetect(this.message);
+      const image = await imageDetect(this.client, this.message);
       if (image === undefined) return `${this.message.author.mention}, ${this.constructor.noImage}`;
       magickParams.path = image.path;
       magickParams.type = image.type;
