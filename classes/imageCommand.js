@@ -1,6 +1,7 @@
 const Command = require("./command.js");
 const magick = require("../utils/image.js");
 const imageDetect = require("../utils/imagedetect.js");
+const collections = require("../utils/collections.js");
 
 class ImageCommand extends Command {
   /*this.embed = {
@@ -35,22 +36,42 @@ class ImageCommand extends Command {
   }
 
   async run() {
+    // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
+    // if so, don't re-run it
+    if (collections.runningCommands.has(this.message.author.id) && (new Date(collections.runningCommands.get(this.message.author.id)) - new Date(this.message.createdAt)) < 5000) {
+      return `${this.message.author.mention}, please slow down a bit.`;
+    }
+    // before awaiting the command result, add this command to the set of running commands
+    collections.runningCommands.set(this.message.author.id, this.message.createdAt);
+  
     const magickParams = {
       cmd: this.constructor.command
     };
 
     if (this.constructor.requiresImage) {
-      const image = await imageDetect(this.client, this.message);
-      if (image === undefined) return `${this.message.author.mention}, ${this.constructor.noImage}`;
-      magickParams.path = image.path;
-      magickParams.type = image.type;
-      magickParams.url = image.url; // technically not required but can be useful for text filtering
-      magickParams.delay = image.delay;
-      if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
+      try {
+        const image = await imageDetect(this.client, this.message);
+        if (image === undefined) {
+          collections.runningCommands.delete(this.message.author.id);
+          return `${this.message.author.mention}, ${this.constructor.noImage}`;
+        }
+        magickParams.path = image.path;
+        magickParams.type = image.type;
+        magickParams.url = image.url; // technically not required but can be useful for text filtering
+        magickParams.delay = image.delay;
+        if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
+      } catch (e) {
+        collections.runningCommands.delete(this.message.author.id);
+        throw e;
+      }
+      
     }
 
     if (this.constructor.requiresText) {
-      if (this.args.length === 0 || !this.criteria(this.args)) return `${this.message.author.mention}, ${this.constructor.noText}`;
+      if (this.args.length === 0 || !this.criteria(this.args)) {
+        collections.runningCommands.delete(this.message.author.id);
+        return `${this.message.author.mention}, ${this.constructor.noText}`;
+      }
     }
 
     switch (typeof this.params) {
@@ -83,6 +104,8 @@ class ImageCommand extends Command {
       if (status && status.channel.messages.get(status.id)) await status.delete();
       if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I've just started up and am still trying to connect to the image servers. Please wait a little bit.`;
       throw e;
+    } finally {
+      collections.runningCommands.delete(this.message.author.id);
     }
     
   }
