@@ -47,10 +47,10 @@ class SpeedWorker : public Napi::AsyncWorker {
   }
 
  private:
+  bool slow;
   string in_path, type;
   int delay, amount;
   Blob blob;
-  bool slow;
 };
 
 Napi::Value Speed(const Napi::CallbackInfo &info)

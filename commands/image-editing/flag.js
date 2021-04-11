@@ -18,7 +18,7 @@ class FlagCommand extends ImageCommand {
       fs.promises.access(path);
       this.flagPath = path;
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

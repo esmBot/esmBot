@@ -19,7 +19,7 @@ class XKCDCommand extends Command {
         }
       };
       return embed;
-    } catch (e) {
+    } catch {
       return `${this.message.author.mention}, I couldn't get that XKCD!`;
     }
   }
