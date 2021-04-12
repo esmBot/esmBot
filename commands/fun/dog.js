@@ -18,7 +18,6 @@ class DogCommand extends Command {
 
   static description = "Gets a random dog picture";
   static aliases = ["doggos", "doggo", "pupper", "puppers", "dogs", "puppy", "puppies", "pups", "pup"];
-  static arguments = ["{number}"];
 }
 
 module.exports = DogCommand;

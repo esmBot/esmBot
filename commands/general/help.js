@@ -39,7 +39,7 @@ class HelpCommand extends Command {
             "inline": true
           }, {
             "name": "Parameters",
-            "value": command === "tags" ? "[name]" : (info.params ? (typeof info.params === "object" ? info.params.join(" ") : info.params) : "None"),
+            "value": command === "tags" ? "[name]" : (info.params ? (info.params.length !== 0 ? info.params.join(" ") : "None") : "None"),
             "inline": true
           }]
         }
