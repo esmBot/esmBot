@@ -1,9 +1,8 @@
 // eris doesn't come with an awaitReactions method by default, so we make our own
 const EventEmitter = require("events").EventEmitter;
-const client = require("../client.js");
 
 class ReactionCollector extends EventEmitter {
-  constructor(message, filter, options = {}) {
+  constructor(client, message, filter, options = {}) {
     super();
     this.filter = filter;
     this.message = message;
@@ -20,7 +19,7 @@ class ReactionCollector extends EventEmitter {
     if (this.message.id !== message.id) return false;
     if (this.filter(message, emoji, member)) {
       this.collected.push({ message: message, emoji: emoji, member: member });
-      this.emit("reaction", await client.getMessage(message.channel.id, message.id), emoji, member);
+      this.emit("reaction", await this.bot.getMessage(message.channel.id, message.id), emoji, member);
       if (this.collected.length >= this.options.maxMatches) this.stop("maxMatches");
       return true;
     }

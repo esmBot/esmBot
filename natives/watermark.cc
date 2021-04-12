@@ -63,7 +63,7 @@ class WatermarkWorker : public Napi::AsyncWorker {
   }
 
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length())});
+    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length()), Napi::String::From(Env(), type)});
   }
 
  private:

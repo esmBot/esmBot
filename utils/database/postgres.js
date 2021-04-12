@@ -68,6 +68,8 @@ exports.addCount = async (command) => {
 };
 
 exports.addGuild = async (guild) => {
+  const query = await this.getGuild(guild);
+  if (query) return query;
   await connection.query("INSERT INTO guilds (guild_id, tags, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5)", [guild.id, misc.tagDefaults, process.env.PREFIX, [], false]);
   return await this.getGuild(guild.id);
 };

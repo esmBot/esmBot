@@ -1,4 +1,3 @@
-const client = require("./client.js");
 const fetch = require("node-fetch");
 const url = require("url");
 const { getType } = require("./image.js");
@@ -93,7 +92,7 @@ const checkImages = async (message) => {
 };
 
 // this checks for the latest message containing an image and returns the url of the image
-module.exports = async (cmdMessage) => {
+module.exports = async (client, cmdMessage) => {
   // we start by checking the current message for images
   const result = await checkImages(cmdMessage);
   if (result !== false) return result;

@@ -9,8 +9,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./logs:/home/esmBot/.internal/logs
-      - bot-help:/home/esmBot/help
-      - bot-temp:/home/esmBot/temp
+      - ./bot-help:/home/esmBot/help
+      - ./bot-temp:/home/esmBot/temp
     env_file:
       - .env
     environment:

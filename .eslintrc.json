@@ -3,12 +3,19 @@
     "es6": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "plugin:promise/recommended"],
+  "extends": ["eslint:recommended"],
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2019
+    "ecmaVersion": 12,
+    "requireConfigFile": false,
+    "babelOptions": {
+      "plugins": [
+        "@babel/plugin-proposal-class-properties"
+      ]
+    }
   },
-  "plugins": ["promise"],
+  "plugins": ["@babel"],
   "rules": {
     "no-console": "off",
     "indent": [

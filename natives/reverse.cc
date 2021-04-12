@@ -29,24 +29,22 @@ class ReverseWorker : public Napi::AsyncWorker {
 
     optimizeTransparency(coalesced.begin(), coalesced.end());
 
-    if (type == "gif") {
-      for (Image &image : coalesced) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
+    for (Image &image : coalesced) {
+      image.quantizeDither(false);
+      image.quantize();
+      if (delay != 0) image.animationDelay(delay);
     }
 
     writeImages(coalesced.begin(), coalesced.end(), &blob);
   }
 
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length())});
+    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length()), Napi::String::From(Env(), "gif")});
   }
 
  private:
-  string in_path, type;
-  int delay, amount;
+  string in_path;
+  int delay;
   Blob blob;
   bool soos;
 };

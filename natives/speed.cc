@@ -43,14 +43,14 @@ class SpeedWorker : public Napi::AsyncWorker {
   }
 
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length())});
+    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length()), Napi::String::From(Env(), type)});
   }
 
  private:
+  bool slow;
   string in_path, type;
   int delay, amount;
   Blob blob;
-  bool slow;
 };
 
 Napi::Value Speed(const Napi::CallbackInfo &info)

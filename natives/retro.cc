@@ -70,12 +70,11 @@ class RetroWorker : public Napi::AsyncWorker {
   }
 
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length())});
+    Callback().Call({Env().Undefined(), Napi::Buffer<char>::Copy(Env(), (char *)blob.data(), blob.length()), Napi::String::From(Env(), "png")});
   }
 
  private:
-  string line1, line2, line3, type;
-  int delay;
+  string line1, line2, line3;
   Blob blob;
 };
 

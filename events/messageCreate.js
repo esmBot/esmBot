@@ -1,12 +1,11 @@
 const fs = require("fs");
-const client = require("../utils/client.js");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
-module.exports = async (message) => {
+module.exports = async (client, message) => {
   // ignore dms and other bots
   if (message.author.bot) return;
 
@@ -82,11 +81,12 @@ module.exports = async (message) => {
   if (!cmd) return;
 
   // actually run the command
-  logger.log("info", `${message.author.username} (${message.author.id}) ran command ${command}`);
+  logger.log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const result = await cmd(message, args, rawContent.replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
+    const result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
     const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {
       await client.createMessage(message.channel.id, result);
