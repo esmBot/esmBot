@@ -102,7 +102,7 @@ class ImageCommand extends Command {
       };
     } catch (e) {
       if (status && status.channel.messages.get(status.id)) await status.delete();
-      if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I've just started up and am still trying to connect to the image servers. Please wait a little bit.`;
+      if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I'm still trying to connect to the image servers. Please wait a little bit.`;
       throw e;
     } finally {
       collections.runningCommands.delete(this.message.author.id);

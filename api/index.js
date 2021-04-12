@@ -52,6 +52,22 @@ const httpServer = http.createServer((req, res) => {
   if (reqUrl.pathname === "/status") {
     log(`Sending server status to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     return res.end(Buffer.from((MAX_JOBS - jobAmount).toString()));
+  } else if (reqUrl.pathname === "/running") {
+    log(`Sending currently running jobs to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
+    const keys = Object.keys(jobs);
+    const newObject = { queued: queue.length, runningJobs: jobAmount, max: MAX_JOBS };
+    for (const key of keys) {
+      const validKeys = Object.keys(jobs[key]).filter((value) => value !== "addr" && value !== "port" && value !== "data" && value !== "ext");
+      newObject[key] = {};
+      for (const validKey of validKeys) {
+        if (validKey === "msg") {
+          newObject[key][validKey] = JSON.parse(jobs[key][validKey]);
+        } else {
+          newObject[key][validKey] = jobs[key][validKey];
+        }
+      }
+    }
+    return res.end(JSON.stringify(newObject));
   } else if (reqUrl.pathname === "/image") {
     if (!reqUrl.searchParams.has("id")) {
       res.statusCode = 400;
@@ -146,28 +162,22 @@ server.listen(8080, () => {
   log("TCP listening on port 8080");
 });
 
-const runJob = (job, sock) => {
-  return new Promise((resolve, reject) => {
-    log(`Job ${job.uuid} starting...`, job.num);
+const runJob = async (job, sock) => {
+  log(`Job ${job.uuid} starting...`, job.num);
 
-    const object = JSON.parse(job.msg);
-    // If the image has a path, it must also have a type
-    if (object.path && !object.type) {
-      reject(new TypeError("Unknown image type"));
-    }
+  const object = JSON.parse(job.msg);
+  // If the image has a path, it must also have a type
+  if (object.path && !object.type) {
+    throw new TypeError("Unknown image type");
+  }
 
-    log(`Job ${job.uuid} started`, job.num);
-    run(object).then((data) => {
-      log(`Sending result of job ${job.uuid} back to the bot`, job.num);
-      jobs[job.uuid].data = data.buffer;
-      jobs[job.uuid].ext = data.fileExtension;
-      sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
-        if (e) return reject(e);
-        return resolve();
-      });
-      return;
-    }).catch(e => {
-      reject(e);
-    });
+  log(`Job ${job.uuid} started`, job.num);
+  const data = await run(object).catch(e => { throw e; });
+  log(`Sending result of job ${job.uuid} back to the bot`, job.num);
+  jobs[job.uuid].data = data.buffer;
+  jobs[job.uuid].ext = data.fileExtension;
+  sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
+    if (e) throw e;
   });
+  return;
 };

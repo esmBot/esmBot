@@ -12,7 +12,7 @@ const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 const jobs = {};
 
-let connections = [];
+exports.connections = [];
 
 const statuses = {};
 
@@ -32,12 +32,34 @@ exports.repopulate = async () => {
   return;
 };
 
+exports.getStatus = () => {
+  return new Promise((resolve, reject) => {
+    let serversLeft = this.connections.length;
+    const statuses = [];
+    const timeout = setTimeout(() => {
+      resolve(statuses);
+    }, 5000);
+    for (const connection of this.connections) {
+      if (!connection.remoteAddress) continue;
+      fetch(`http://${connection.remoteAddress}:8081/running`).then(statusRequest => statusRequest.json()).then((status) => {
+        serversLeft--;
+        statuses.push(status);
+        if (!serversLeft) {
+          clearTimeout(timeout);
+          resolve(statuses);
+        }
+        return;
+      }).catch(e => reject(e));
+    }
+  });
+};
+
 exports.connect = (server) => {
   return new Promise((resolve, reject) => {
     const connection = net.createConnection(8080, server);
     const timeout = setTimeout(() => {
-      const connectionIndex = connections.indexOf(connection);
-      if (connectionIndex < 0) delete connections[connectionIndex];
+      const connectionIndex = this.connections.indexOf(connection);
+      if (connectionIndex < 0) delete this.connections[connectionIndex];
       reject(`Failed to connect to ${server}`);
     }, 5000);
     connection.once("connect", () => {
@@ -73,35 +95,35 @@ exports.connect = (server) => {
     connection.on("error", (e) => {
       console.error(e);
     });
-    connections.push(connection);
+    this.connections.push(connection);
     resolve();
   });
 };
 
 exports.disconnect = async () => {
-  for (const connection of connections) {
+  for (const connection of this.connections) {
     connection.destroy();
   }
   for (const uuid of Object.keys(jobs)) {
     jobs[uuid].emit("error", new Error("Job ended prematurely (not really an error; just run your image job again)"));
   }
-  connections = [];
+  this.connections = [];
   return;
 };
 
 const getIdeal = () => {
   return new Promise((resolve, reject) => {
-    let serversLeft = connections.length;
+    let serversLeft = this.connections.length;
     const idealServers = [];
     const timeout = setTimeout(async () => {
       try {
         const server = await chooseServer(idealServers);
-        resolve(connections.find(val => val.remoteAddress === server.addr));
+        resolve(this.connections.find(val => val.remoteAddress === server.addr));
       } catch (e) {
         reject(e);
       }
     }, 5000);
-    for (const connection of connections) {
+    for (const connection of this.connections) {
       if (!connection.remoteAddress) continue;
       fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then(async (status) => {
         serversLeft--;
@@ -112,7 +134,7 @@ const getIdeal = () => {
         if (!serversLeft) {
           clearTimeout(timeout);
           const server = await chooseServer(idealServers);
-          resolve(connections.find(val => val.remoteAddress === server.addr));
+          resolve(this.connections.find(val => val.remoteAddress === server.addr));
         }
         return;
       }).catch(e => reject(e));

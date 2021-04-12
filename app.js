@@ -7,9 +7,7 @@ require("dotenv").config();
 
 const { Master } = require("eris-sharder");
 
-new Master(process.env.TOKEN, "/shard.js", {
-  stats: true,
-  debug: true,
+new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   name: "esmBot",
   clientOptions: {
     disableEvents: {
@@ -30,6 +28,7 @@ new Master(process.env.TOKEN, "/shard.js", {
       roles: false,
       users: true,
       repliedUser: true
-    }
+    },
+    guildSubscriptions: false
   }
 });
