@@ -16,14 +16,10 @@ services:
     environment:
       OUTPUT: /home/esmBot/help
       TEMPDIR: /home/esmBot/temp
-      # chrome remote debugger can only be accessed over localhost or IP
-      CHROME: 172.20.0.4:9222
     links:
       - lavalink
-      - chrome
     depends_on:
       - api
-      - chrome
       - lavalink
       - postgres
 
@@ -43,16 +39,6 @@ services:
       esmbot:
         ipv4_address: 172.20.0.3
 
-  chrome:
-    container_name: chrome
-    build:
-      context: ./utils/screenshot
-    image: headless-chrome-alpine
-    restart: unless-stopped
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.4
-
   lavalink:
     container_name: lavalink
     image: fredboat/lavalink:dev
@@ -62,7 +48,7 @@ services:
       - ./assets:/opt/Lavalink/assets
     networks:
       esmbot:
-        ipv4_address: 172.20.0.5
+        ipv4_address: 172.20.0.4
 
   postgres:
     container_name: postgres
@@ -77,7 +63,7 @@ services:
       POSTGRES_DB: esmbot
     networks:
       esmbot:
-        ipv4_address: 172.20.0.6
+        ipv4_address: 172.20.0.5
 
   adminer:
     image: adminer
@@ -88,12 +74,11 @@ services:
       - 8888:8080
     networks:
       esmbot:
-        ipv4_address: 172.20.0.7
+        ipv4_address: 172.20.0.6
 
 volumes:
   bot-help:
   bot-temp:
-  #mongo-data:
   pg-data:
 
 networks:
