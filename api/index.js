@@ -11,7 +11,16 @@ const log = (msg, jobNum) => {
   console.log(`[${process.hrtime(start)[1] / 1000000}${jobNum !== undefined ? `:${jobNum}` : ""}]\t ${msg}`);
 };
 
-const jobs = {};
+class JobCache extends Map {
+  set(key, value) {
+    super.set(key, value);
+    setTimeout(() => {
+      if (super.has(key) && this.get(key) === value) super.delete(key);
+    }, 300000); // delete jobs if not requested after 5 minutes
+  }
+}
+
+const jobs = new JobCache();
 // Should look like UUID : { addr : "someaddr", port: someport, msg: "request" }
 const queue = [];
 // Array of UUIDs
@@ -25,15 +34,16 @@ const acceptJob = async (uuid, sock) => {
   jobAmount++;
   queue.shift();
   try {
+    const job = jobs.get(uuid);
     await runJob({
       uuid: uuid,
-      msg: jobs[uuid].msg,
-      num: jobs[uuid].num
+      msg: job.msg,
+      num: job.num
     }, sock);
     log(`Job ${uuid} has finished`);
   } catch (err) {
     console.error(`Error on job ${uuid}:`, err);
-    delete jobs[uuid];
+    jobs.delete(uuid);
     sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.message)]));
   } finally {
     jobAmount--;
@@ -54,16 +64,16 @@ const httpServer = http.createServer((req, res) => {
     return res.end(Buffer.from((MAX_JOBS - jobAmount).toString()));
   } else if (reqUrl.pathname === "/running") {
     log(`Sending currently running jobs to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    const keys = Object.keys(jobs);
+    const keys = jobs.keys();
     const newObject = { queued: queue.length, runningJobs: jobAmount, max: MAX_JOBS };
     for (const key of keys) {
-      const validKeys = Object.keys(jobs[key]).filter((value) => value !== "addr" && value !== "port" && value !== "data" && value !== "ext");
+      const validKeys = Object.keys(jobs.get(key)).filter((value) => value !== "addr" && value !== "port" && value !== "data" && value !== "ext");
       newObject[key] = {};
       for (const validKey of validKeys) {
         if (validKey === "msg") {
-          newObject[key][validKey] = JSON.parse(jobs[key][validKey]);
+          newObject[key][validKey] = JSON.parse(jobs.get(key)[validKey]);
         } else {
-          newObject[key][validKey] = jobs[key][validKey];
+          newObject[key][validKey] = jobs.get(key)[validKey];
         }
       }
     }
@@ -74,15 +84,15 @@ const httpServer = http.createServer((req, res) => {
       return res.end("400 Bad Request");
     }
     const id = reqUrl.searchParams.get("id");
-    if (!jobs[id]) {
+    if (!jobs.has(id)) {
       res.statusCode = 410;
       return res.end("410 Gone");
     }
     log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    res.setHeader("ext", jobs[id].ext);
-    return res.end(jobs[id].data, (err) => {
+    res.setHeader("ext", jobs.get(id).ext);
+    return res.end(jobs.get(id).data, (err) => {
       if (err) console.error(err);
-      delete jobs[id];
+      jobs.delete(id);
     });
   } else {
     res.statusCode = 404;
@@ -113,14 +123,14 @@ const server = net.createServer((sock) => { // Create a TCP socket/server to lis
     // 0x01 == Queue job
     if (opcode == 0x00) {
       delete queue[queue.indexOf(req) - 1];
-      delete jobs[req];
+      jobs.delete(req);
     } else if (opcode == 0x01) {
       const length = parseInt(req.slice(0, 1));
       const num = req.slice(1, length + 1);
       const obj = req.slice(length + 1);
       const job = { addr: sock.remoteAddress, port: sock.remotePort, msg: obj, num: jobAmount };
       const uuid = uuidv4();
-      jobs[uuid] = job;
+      jobs.set(uuid, job);
       queue.push(uuid);
 
       const newBuffer = Buffer.concat([Buffer.from([0x00]), Buffer.from(uuid), Buffer.from(num)]);
@@ -144,9 +154,10 @@ const server = net.createServer((sock) => { // Create a TCP socket/server to lis
   // handle ctrl+c and pm2 stop
   process.on("SIGINT", () => {
     console.log("SIGINT detected, shutting down...");
-    for (const job of Object.keys(jobs)) {
-      if (jobs[job].addr === sock.remoteAddress && jobs[job].port === sock.remotePort) {
-        delete jobs[job];
+    for (const job of jobs.keys()) {
+      const jobObject = jobs.get(job);
+      if (jobObject.addr === sock.remoteAddress && jobObject.port === sock.remotePort) {
+        jobs.delete(job);
         sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(job), Buffer.from("Job ended prematurely (not really an error; just run your image job again)")]));
       }
     }
@@ -174,8 +185,10 @@ const runJob = async (job, sock) => {
   log(`Job ${job.uuid} started`, job.num);
   const data = await run(object).catch(e => { throw e; });
   log(`Sending result of job ${job.uuid} back to the bot`, job.num);
-  jobs[job.uuid].data = data.buffer;
-  jobs[job.uuid].ext = data.fileExtension;
+  const jobObject = jobs.get(job.uuid);
+  jobObject.data = data.buffer;
+  jobObject.ext = data.fileExtension;
+  jobs.set(job.uuid, jobObject);
   sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
     if (e) throw e;
   });
