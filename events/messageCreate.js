@@ -60,9 +60,9 @@ module.exports = async (client, message) => {
   const replace = isMention ? `@${client.user.username} ` : prefix;
   const content = message.cleanContent.substring(replace.length).trim();
   const rawContent = message.content.substring(prefix.length).trim();
-  const args = content.split(/ +/g);
+  const args = content.split(/\s+/g);
   args.shift();
-  const command = rawContent.split(/ +/g).shift().toLowerCase();
+  const command = rawContent.split(/\s+/g).shift().toLowerCase();
 
   // don't run if message is in a disabled channel
   if (message.channel.guild) {
