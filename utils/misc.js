@@ -6,7 +6,7 @@ exports.random = (array) => {
 };
 
 const optionalReplace = (token) => {
-  return token === "" ? "" : "<redacted>";
+  return token === undefined || token === "" ? "" : "<redacted>";
 };
 
 // clean(text) to clean message of any private info or mentions
@@ -18,17 +18,13 @@ exports.clean = async (text) => {
 
   text = text
     .replaceAll("`", `\`${String.fromCharCode(8203)}`)
-    .replaceAll("@", `@${String.fromCharCode(8203)}`)
-    .replaceAll(process.env.TOKEN, optionalReplace(process.env.TOKEN))
-    .replaceAll(process.env.MASHAPE, optionalReplace(process.env.MASHAPE))
-    .replaceAll(process.env.CAT, optionalReplace(process.env.CAT))
-    .replaceAll(process.env.GOOGLE, optionalReplace(process.env.GOOGLE))
-    .replaceAll(process.env.DBL, optionalReplace(process.env.DBL))
-    .replaceAll(process.env.MONGO, optionalReplace(process.env.MONGO))
-    .replaceAll(process.env.TWITTER_KEY, optionalReplace(process.env.TWITTER_KEY))
-    .replaceAll(process.env.CONSUMER_SECRET, optionalReplace(process.env.CONSUMER_SECRET))
-    .replaceAll(process.env.ACCESS_TOKEN, optionalReplace(process.env.ACCESS_TOKEN))
-    .replaceAll(process.env.ACCESS_SECRET, optionalReplace(process.env.ACCESS_SECRET));
+    .replaceAll("@", `@${String.fromCharCode(8203)}`);
+
+  const { parsed } = require("dotenv").config();
+
+  for (const env of Object.keys(parsed)) {
+    text = text.replaceAll(parsed[env], optionalReplace(parsed[env]));
+  }
 
   return text;
 };

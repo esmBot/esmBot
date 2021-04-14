@@ -29,7 +29,7 @@ class SpeedWorker : public Napi::AsyncWorker {
     }
 
     int new_delay = slow ? old_delay * 2 : old_delay / 2;
-    if (new_delay <= 1) {
+    if (!slow && new_delay <= 1) {
       new_delay = old_delay;
       auto it = frames.begin();
       while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
