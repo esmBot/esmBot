@@ -29,6 +29,14 @@ new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
       users: true,
       repliedUser: true
     },
-    guildSubscriptions: false
+    guildSubscriptions: false,
+    intents: [
+      "guilds",
+      "guildVoiceStates",
+      "guildMessages",
+      "guildMessageReactions",
+      "directMessages",
+      "directMessageReactions"
+    ]
   }
 });

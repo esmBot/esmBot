@@ -111,6 +111,8 @@ class Shard extends Base {
     // connect to lavalink
     if (!sound.status && !sound.connected) await sound.connect(this.bot);
 
+    this.bot.privateChannels.limit = 0;
+
     await database.setup();
 
     // set activity (a.k.a. the gamer code)
