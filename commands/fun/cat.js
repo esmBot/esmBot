@@ -4,17 +4,12 @@ const Command = require("../../classes/command.js");
 class CatCommand extends Command {
   async run() {
     this.message.channel.sendTyping();
-    const data = await fetch("https://api.thecatapi.com/v1/images/search?format=json", {
-      headers: {
-        "x-api-key": process.env.CAT
-      }
-    });
-    const json = await data.json();
+    const data = await fetch("https://projectlounge.pw/cta/", { redirect: "manual" });
     return {
       embed: {
         color: 16711680,
         image: {
-          url: json[0].url
+          url: data.headers.get("location")
         }
       }
     };
