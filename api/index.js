@@ -173,24 +173,30 @@ server.listen(8080, () => {
   log("TCP listening on port 8080");
 });
 
-const runJob = async (job, sock) => {
-  log(`Job ${job.uuid} starting...`, job.num);
+const runJob = (job, sock) => {
+  return new Promise((resolve, reject) => {
+    log(`Job ${job.uuid} starting...`, job.num);
 
-  const object = JSON.parse(job.msg);
-  // If the image has a path, it must also have a type
-  if (object.path && !object.type) {
-    throw new TypeError("Unknown image type");
-  }
+    const object = JSON.parse(job.msg);
+    // If the image has a path, it must also have a type
+    if (object.path && !object.type) {
+      reject(new TypeError("Unknown image type"));
+    }
 
-  log(`Job ${job.uuid} started`, job.num);
-  const data = await run(object).catch(e => { throw e; });
-  log(`Sending result of job ${job.uuid} back to the bot`, job.num);
-  const jobObject = jobs.get(job.uuid);
-  jobObject.data = data.buffer;
-  jobObject.ext = data.fileExtension;
-  jobs.set(job.uuid, jobObject);
-  sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
-    if (e) throw e;
+    log(`Job ${job.uuid} started`, job.num);
+    run(object).then((data) => {
+      log(`Sending result of job ${job.uuid} back to the bot`, job.num);
+      const jobObject = jobs.get(job.uuid);
+      jobObject.data = data.buffer;
+      jobObject.ext = data.fileExtension;
+      jobs.set(job.uuid, jobObject);
+      sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
+        if (e) return reject(e);
+        return resolve();
+      });
+      return;
+    }).catch(e => {
+      reject(e);
+    });
   });
-  return;
 };
