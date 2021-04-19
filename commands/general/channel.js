@@ -4,7 +4,8 @@ const Command = require("../../classes/command.js");
 class ChannelCommand extends Command {
   async run() {
     if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
-    if (!this.message.member.permissions.has("administrator") && this.message.member.id !== process.env.OWNER) return `${this.message.author.mention}, you need to be an administrator to enable/disable me!`;
+    console.log(this.message.member.permission);
+    if (!this.message.member.permission.has("administrator") && this.message.member.id !== process.env.OWNER) return `${this.message.author.mention}, you need to be an administrator to enable/disable me!`;
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide whether I should be enabled or disabled in this channel!`;
     if (this.args[0] !== "disable" && this.args[0] !== "enable") return `${this.message.author.mention}, that's not a valid option!`;
 

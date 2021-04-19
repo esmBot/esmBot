@@ -4,7 +4,7 @@ const { random } = require("../utils/misc.js");
 
 module.exports = async (client, member, oldChannel) => {
   const connection = soundPlayer.players.get(oldChannel.guild.id);
-  if (connection && oldChannel.id === connection.voiceChannel.id) {
+  if (connection && connection.type === "music" && oldChannel.id === connection.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id).length === 0) {
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);

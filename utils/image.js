@@ -8,7 +8,7 @@ const path = require("path");
 const { EventEmitter } = require("events");
 const logger = require("./logger.js");
 
-const formats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/mov"];
 
 const jobs = {};
 
