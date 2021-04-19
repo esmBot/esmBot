@@ -35,6 +35,9 @@ const getImage = async (image, image2, video, gifv = false) => {
     if (gifv) {
       const host = new URL(image2).host;
       if (tenorURLs.includes(host)) {
+        // Tenor doesn't let us access a raw GIF without going through their API,
+        // so we use that if there's a key in the config and fall back to using the MP4 if there isn't
+        // Note that MP4 conversion requires an ImageMagick build that supports MPEG decoding
         if (process.env.TENOR !== "") {
           const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
           const json = await data.json();
@@ -44,10 +47,13 @@ const getImage = async (image, image2, video, gifv = false) => {
           payload.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
         }
       } else if (giphyURLs.includes(host)) {
+        // Can result in an HTML page instead of a GIF
         payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
       } else if (imgurURLs.includes(host)) {
+        // Seems that Tenor has a possibility of making GIFs static
         payload.path = image.replace(".mp4", ".gif");
       } else if (gfycatURLs.includes(host)) {
+        // iirc Gfycat also seems to sometimes make GIFs static
         payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
       }
       payload.type = "image/gif";

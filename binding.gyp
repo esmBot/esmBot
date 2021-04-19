@@ -4,6 +4,7 @@
       "target_name": "image",
       "sources": [ "<!@(node -p \"require('fs').readdirSync('./natives').map(f=>'natives/'+f).join(' ')\")" ],
       "cflags!": [ "-fno-exceptions", "<!(pkg-config --cflags Magick++)" ],
+      "cflags_cc": [ "-std=c++17" ],
       "cflags_cc!": [ "-fno-exceptions", "<!(pkg-config --cflags Magick++)" ],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
