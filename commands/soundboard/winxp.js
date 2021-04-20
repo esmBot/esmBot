@@ -1,10 +1,7 @@
-const soundPlayer = require("../../utils/soundplayer");
-const MusicCommand = require("../../classes/musicCommand");
+const SoundCommand = require("../../classes/soundCommand");
 
-class WinXPCommand extends MusicCommand {
-  async run() {
-    return await soundPlayer.play(this.client, "./assets/audio/winxp.ogg", this.message);
-  }
+class WinXPCommand extends SoundCommand {
+  sound = "winxp.ogg";
 
   static description = "Plays the Windows XP startup sound";
   static aliases = ["windows", "xp"];

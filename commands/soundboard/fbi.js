@@ -1,10 +1,7 @@
-const soundPlayer = require("../../utils/soundplayer");
-const MusicCommand = require("../../classes/musicCommand");
+const SoundCommand = require("../../classes/soundCommand");
 
-class FBICommand extends MusicCommand {
-  async run() {
-    return await soundPlayer.play(this.client, "./assets/audio/fbi.ogg", this.message);
-  }
+class FBICommand extends SoundCommand {
+  sound = "fbi.ogg";
 
   static description = "Plays the \"FBI OPEN UP\" sound effect";
   static aliases = ["openup"];

@@ -1,10 +1,7 @@
-const soundPlayer = require("../../utils/soundplayer");
-const MusicCommand = require("../../classes/musicCommand");
+const SoundCommand = require("../../classes/soundCommand");
 
-class ExplosionCommand extends MusicCommand {
-  async run() {
-    return await soundPlayer.play(this.client, "./assets/audio/explosion.ogg", this.message);
-  }
+class ExplosionCommand extends SoundCommand {
+  sound = "explosion.ogg";
 
   static description = "Plays an explosion sound effect";
 }

@@ -1,11 +1,7 @@
-const soundPlayer = require("../../utils/soundplayer");
-const MusicCommand = require("../../classes/musicCommand");
+const SoundCommand = require("../../classes/soundCommand");
 
-class BruhCommand extends MusicCommand {
-  async run() {
-    return await soundPlayer.play(this.client, "./assets/audio/bruh.ogg", this.message);
-  }
-
+class BruhCommand extends SoundCommand {
+  sound = "bruh.ogg";
   static description = "Plays the \"bruh\" sound effect";
   static aliases = ["bro"];
 }
