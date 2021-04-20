@@ -248,7 +248,7 @@ exports.run = object => {
       }).catch(err => reject(err));
     } else {
       // Called from command (not using image API)
-      const worker = new Worker(path.join(__dirname, "image-runner"), {
+      const worker = new Worker(path.join(__dirname, "image-runner.js"), {
         workerData: object
       });
       worker.on("message", (data) => {
