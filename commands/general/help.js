@@ -1,10 +1,10 @@
-const database = require("../../utils/database.js");
-const collections = require("../../utils/collections.js");
-const misc = require("../../utils/misc.js");
-const paginator = require("../../utils/pagination/pagination.js");
-const help = require("../../utils/help.js");
+const database = require("../../utils/database");
+const collections = require("../../utils/collections");
+const misc = require("../../utils/misc");
+const paginator = require("../../utils/pagination/pagination");
+const help = require("../../utils/help");
 const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://projectlounge.pw/esmBot/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional.", "esmBot is hosted and paid for completely out-of-pocket by the main developer. If you want to support development, please consider donating! https://patreon.com/TheEssem"];
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class HelpCommand extends Command {
   async run() {

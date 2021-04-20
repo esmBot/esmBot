@@ -1,7 +1,7 @@
-const Command = require("./command.js");
-const magick = require("../utils/image.js");
-const imageDetect = require("../utils/imagedetect.js");
-const collections = require("../utils/collections.js");
+const Command = require("./command");
+const magick = require("../utils/image");
+const imageDetect = require("../utils/imagedetect");
+const collections = require("../utils/collections");
 
 class ImageCommand extends Command {
   /*this.embed = {

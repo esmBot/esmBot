@@ -1,4 +1,4 @@
-const player = require("../utils/soundplayer.js");
+const player = require("../utils/soundplayer");
 
 // run when a raw packet is sent, used for sending data to lavalink
 module.exports = async (client, packet) => {

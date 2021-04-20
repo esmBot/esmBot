@@ -1,6 +1,6 @@
-const soundPlayer = require("../utils/soundplayer.js");
-const AwaitRejoin = require("../utils/awaitrejoin.js");
-const { random } = require("../utils/misc.js");
+const soundPlayer = require("../utils/soundplayer");
+const AwaitRejoin = require("../utils/awaitrejoin");
+const { random } = require("../utils/misc");
 
 module.exports = async (client, member, oldChannel) => {
   const connection = soundPlayer.players.get(oldChannel.guild.id);

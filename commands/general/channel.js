@@ -1,5 +1,5 @@
-const db = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+const db = require("../../utils/database");
+const Command = require("../../classes/command");
 
 class ChannelCommand extends Command {
   async run() {

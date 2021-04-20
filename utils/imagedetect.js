@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const { getType } = require("./image.js");
+const { getType } = require("./image");
 const execPromise = require("util").promisify(require("child_process").exec);
 
 const tenorURLs = [

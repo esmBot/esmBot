@@ -1,5 +1,5 @@
-const misc = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+const misc = require("../../utils/misc");
+const Command = require("../../classes/command");
 
 class RPSCommand extends Command {
   async run() {

@@ -1,5 +1,5 @@
 const { version } = require("../../package.json");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class InfoCommand extends Command {
   async run() {

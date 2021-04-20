@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class MotivateCommand extends ImageCommand {
   params(args, url) {

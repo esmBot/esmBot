@@ -1,6 +1,6 @@
-const paginator = require("../../utils/pagination/pagination.js");
+const paginator = require("../../utils/pagination/pagination");
 const { image_search } = require("duckduckgo-images-api");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class ImageSearchCommand extends Command {
   async run() {

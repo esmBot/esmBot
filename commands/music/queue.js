@@ -1,10 +1,10 @@
-const soundPlayer = require("../../utils/soundplayer.js");
+const soundPlayer = require("../../utils/soundplayer");
 const fetch = require("node-fetch");
 const day = require("dayjs");
 const duration = require("dayjs/plugin/duration");
 day.extend(duration);
-const paginator = require("../../utils/pagination/pagination.js");
-const MusicCommand = require("../../classes/musicCommand.js");
+const paginator = require("../../utils/pagination/pagination");
+const MusicCommand = require("../../classes/musicCommand");
 
 class QueueCommand extends MusicCommand {
   async run() {

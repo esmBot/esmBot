@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class WaaWCommand extends ImageCommand {
   static description = "Mirrors the right side of an image onto the left";

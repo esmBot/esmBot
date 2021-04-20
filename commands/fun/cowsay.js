@@ -1,6 +1,6 @@
 const cowsay = require("cowsay2");
 const cows = require("cowsay2/cows");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class CowsayCommand extends Command {
   async run() {

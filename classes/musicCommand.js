@@ -1,5 +1,5 @@
-const Command = require("./command.js");
-const soundPlayer = require("../utils/soundplayer.js");
+const Command = require("./command");
+const soundPlayer = require("../utils/soundplayer");
 
 class MusicCommand extends Command {
   constructor(client, message, args, content) {

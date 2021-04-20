@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class PixelateCommand extends ImageCommand {
   static description = "Pixelates an image";

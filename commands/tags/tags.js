@@ -1,7 +1,7 @@
-const database = require("../../utils/database.js");
-const paginator = require("../../utils/pagination/pagination.js");
-const { random } = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+const database = require("../../utils/database");
+const paginator = require("../../utils/pagination/pagination");
+const { random } = require("../../utils/misc");
+const Command = require("../../classes/command");
 
 class TagsCommand extends Command {
   // todo: find a way to split this into subcommands

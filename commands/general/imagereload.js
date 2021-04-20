@@ -1,6 +1,6 @@
-const image = require("../../utils/image.js");
-const logger = require("../../utils/logger.js");
-const Command = require("../../classes/command.js");
+const image = require("../../utils/image");
+const logger = require("../../utils/logger");
+const Command = require("../../classes/command");
 
 class ImageReloadCommand extends Command {
   async run() {

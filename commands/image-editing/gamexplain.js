@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class GameXplainCommand extends ImageCommand {
   static description = "Makes a GameXplain thumbnail from an image";

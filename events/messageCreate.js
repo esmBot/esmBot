@@ -1,7 +1,7 @@
 const fs = require("fs");
-const database = require("../utils/database.js");
-const logger = require("../utils/logger.js");
-const collections = require("../utils/collections.js");
+const database = require("../utils/database");
+const logger = require("../utils/logger");
+const collections = require("../utils/collections");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message

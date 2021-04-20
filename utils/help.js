@@ -1,4 +1,4 @@
-const collections = require("./collections.js");
+const collections = require("./collections");
 const fs = require("fs");
 
 const categoryTemplate = {

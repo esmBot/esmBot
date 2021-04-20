@@ -1,4 +1,4 @@
-const logger = require("./logger.js");
+const logger = require("./logger");
 const fetch = require("node-fetch");
 const fs = require("fs");
 const day = require("dayjs");

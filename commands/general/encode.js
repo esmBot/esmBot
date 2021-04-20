@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class EncodeCommand extends Command {
   async run() {

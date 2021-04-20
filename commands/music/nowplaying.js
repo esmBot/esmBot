@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const day = require("dayjs");
 const duration = require("dayjs/plugin/duration");
 day.extend(duration);
-const MusicCommand = require("../../classes/musicCommand.js");
+const MusicCommand = require("../../classes/musicCommand");
 
 class NowPlayingCommand extends MusicCommand {
   async run() {

@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class AvatarCommand extends Command {
   async run() {

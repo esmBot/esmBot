@@ -1,5 +1,5 @@
-const image = require("../../utils/image.js");
-const Command = require("../../classes/command.js");
+const image = require("../../utils/image");
+const Command = require("../../classes/command");
 
 class ImageStatsCommand extends Command {
   async run() {

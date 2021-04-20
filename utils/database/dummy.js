@@ -1,5 +1,5 @@
 // dummy (no-op) database handler
-const misc = require("../misc.js");
+const misc = require("../misc");
 
 exports.setup = async () => {};
 exports.stop = async () => {};

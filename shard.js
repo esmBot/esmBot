@@ -3,26 +3,26 @@ const { Base } = require("eris-sharder");
 // path stuff
 const { readdir } = require("fs").promises;
 // fancy loggings
-const logger = require("./utils/logger.js");
+const logger = require("./utils/logger");
 // initialize command loader
-const handler = require("./utils/handler.js");
+const handler = require("./utils/handler");
 // lavalink stuff
-const sound = require("./utils/soundplayer.js");
+const sound = require("./utils/soundplayer");
 // image processing stuff
-const image = require("./utils/image.js");
+const image = require("./utils/image");
 // database stuff
-const database = require("./utils/database.js");
+const database = require("./utils/database");
 // dbl posting
 const poster = require("topgg-autoposter");
 // command collections
-const collections = require("./utils/collections.js");
+const collections = require("./utils/collections");
 // playing messages
 const messages = require("./messages.json");
 // other stuff
-const misc = require("./utils/misc.js");
+const misc = require("./utils/misc");
 // generate help page
 const helpGenerator =
-  process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
+  process.env.OUTPUT !== "" ? require("./utils/help") : null;
 
 class Shard extends Base {
   constructor(bot) {
@@ -89,7 +89,7 @@ class Shard extends Base {
         handler.unload(command);
       }
       this.bot.disconnect();
-      require("./utils/database.js").stop();
+      require("./utils/database").stop();
       process.exit(0);
     });
     return;

@@ -1,6 +1,6 @@
-const handler = require("../../utils/handler.js");
-const collections = require("../../utils/collections.js");
-const Command = require("../../classes/command.js");
+const handler = require("../../utils/handler");
+const collections = require("../../utils/collections");
+const Command = require("../../classes/command");
 
 class RestartCommand extends Command {
   async run() {

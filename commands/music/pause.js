@@ -1,4 +1,4 @@
-const MusicCommand = require("../../classes/musicCommand.js");
+const MusicCommand = require("../../classes/musicCommand");
 
 class PauseCommand extends MusicCommand {
   async run() {

@@ -1,7 +1,7 @@
-const { clean } = require("../../utils/misc.js");
+const { clean } = require("../../utils/misc");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class ExecCommand extends Command {
   async run() {

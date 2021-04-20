@@ -1,5 +1,5 @@
 const emojiRegex = require("emoji-regex");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class EmoteCommand extends Command {
   async run() {

@@ -1,5 +1,5 @@
-const collections = require("./collections.js");
-const logger = require("./logger.js");
+const collections = require("./collections");
+const logger = require("./logger");
 
 // load command into memory
 exports.load = async (command, soundStatus) => {

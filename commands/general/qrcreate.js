@@ -1,6 +1,6 @@
 const qrcode = require("qrcode");
 const stream = require("stream");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class QrCreateCommand extends Command {
   async run() {

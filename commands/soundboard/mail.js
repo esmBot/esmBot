@@ -1,5 +1,5 @@
-const soundPlayer = require("../../utils/soundplayer.js");
-const MusicCommand = require("../../classes/musicCommand.js");
+const soundPlayer = require("../../utils/soundplayer");
+const MusicCommand = require("../../classes/musicCommand");
 
 class MailCommand extends MusicCommand {
   async run() {

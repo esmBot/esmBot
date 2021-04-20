@@ -1,5 +1,5 @@
-const database = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+const database = require("../../utils/database");
+const Command = require("../../classes/command");
 
 class PrefixCommand extends Command {
   async run() {

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class TrumpCommand extends ImageCommand {
   static description = "Makes Trump display an image";

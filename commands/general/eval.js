@@ -1,5 +1,5 @@
-const { clean } = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+const { clean } = require("../../utils/misc");
+const Command = require("../../classes/command");
 
 class EvalCommand extends Command {
   async run() {

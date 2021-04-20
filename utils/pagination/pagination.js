@@ -1,5 +1,5 @@
-const ReactionCollector = require("./awaitreactions.js");
-const MessageCollector = require("./awaitmessages.js");
+const ReactionCollector = require("./awaitreactions");
+const MessageCollector = require("./awaitmessages");
 
 module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;

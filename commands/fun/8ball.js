@@ -1,5 +1,5 @@
-const Command = require("../../classes/command.js");
-const { random } = require("../../utils/misc.js");
+const Command = require("../../classes/command");
+const { random } = require("../../utils/misc");
 
 class EightBallCommand extends Command {
   static responses = [

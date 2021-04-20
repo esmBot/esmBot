@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class WallCommand extends ImageCommand {
   static description = "Creates a wall from an image";

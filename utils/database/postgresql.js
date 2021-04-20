@@ -1,6 +1,6 @@
-const collections = require("../collections.js");
-const logger = require("../logger.js");
-const misc = require("../misc.js");
+const collections = require("../collections");
+const logger = require("../logger");
+const misc = require("../misc");
 
 const { Pool } = require("pg");
 const pool = new Pool({

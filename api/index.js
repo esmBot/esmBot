@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 const os = require("os");
-const { run } = require("../utils/image-runner.js");
+const { run } = require("../utils/image-runner");
 const net = require("net");
 const http = require("http");
 

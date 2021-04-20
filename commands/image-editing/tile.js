@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class TileCommand extends ImageCommand {
   static description = "Creates a tile pattern from an image";

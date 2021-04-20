@@ -1,4 +1,4 @@
-const logger = require("../utils/logger.js");
+const logger = require("../utils/logger");
 
 // run when the bot is removed from a guild
 module.exports = async (client, guild) => {

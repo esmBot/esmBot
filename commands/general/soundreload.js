@@ -1,5 +1,5 @@
-const soundPlayer = require("../../utils/soundplayer.js");
-const Command = require("../../classes/command.js");
+const soundPlayer = require("../../utils/soundplayer");
+const Command = require("../../classes/command");
 
 class SoundReloadCommand extends Command {
   async run() {

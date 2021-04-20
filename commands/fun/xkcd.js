@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class XKCDCommand extends Command {
   async run() {

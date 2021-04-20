@@ -1,7 +1,7 @@
 const fs = require("fs");
 const emojiRegex = require("emoji-regex");
 const emoji = require("node-emoji");
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class FlagCommand extends ImageCommand {
   flagPath = "";

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class BlurpleCommand extends ImageCommand {
   static description = "Turns an image blurple";

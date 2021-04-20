@@ -1,6 +1,6 @@
-const magick = require("../../utils/image.js");
-const wrap = require("../../utils/wrap.js");
-const Command = require("../../classes/command.js");
+const magick = require("../../utils/image");
+const wrap = require("../../utils/wrap");
+const Command = require("../../classes/command");
 
 class RetroCommand extends Command {
   async run() {

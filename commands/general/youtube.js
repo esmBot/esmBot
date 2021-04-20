@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
-const { decodeEntities } = require("../../utils/misc.js");
-const paginator = require("../../utils/pagination/pagination.js");
-const Command = require("../../classes/command.js");
+const { decodeEntities } = require("../../utils/misc");
+const paginator = require("../../utils/pagination/pagination");
+const Command = require("../../classes/command");
 
 class YouTubeCommand extends Command {
   async run() {

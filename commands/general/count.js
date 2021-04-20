@@ -1,6 +1,6 @@
-const paginator = require("../../utils/pagination/pagination.js");
-const database = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+const paginator = require("../../utils/pagination/pagination");
+const database = require("../../utils/database");
+const Command = require("../../classes/command");
 
 class CountCommand extends Command {
   async run() {

@@ -2,7 +2,7 @@ const { version } = require("../../package.json");
 const day = require("dayjs");
 day.extend(require("dayjs/plugin/duration"));
 const os = require("os");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class StatsCommand extends Command {
   async run() {

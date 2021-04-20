@@ -1,6 +1,6 @@
-const urlCheck = require("../../utils/urlcheck.js");
+const urlCheck = require("../../utils/urlcheck");
 const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+const Command = require("../../classes/command");
 
 class LengthenCommand extends Command {
   async run() {

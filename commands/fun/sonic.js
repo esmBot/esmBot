@@ -1,5 +1,5 @@
-const wrap = require("../../utils/wrap.js");
-const ImageCommand = require("../../classes/imageCommand.js");
+const wrap = require("../../utils/wrap");
+const ImageCommand = require("../../classes/imageCommand");
 
 class SonicCommand extends ImageCommand {
   params(args) {

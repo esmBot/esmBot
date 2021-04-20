@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class CircleCommand extends ImageCommand {
   static description = "Applies a radial blur effect on an image";

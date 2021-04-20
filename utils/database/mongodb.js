@@ -1,6 +1,6 @@
-const collections = require("../collections.js");
-const logger = require("../logger.js");
-const misc = require("../misc.js");
+const collections = require("../collections");
+const logger = require("../logger");
+const misc = require("../misc");
 
 logger.warn("\x1b[1m\x1b[31m\x1b[40m" + "The MongoDB database driver has been deprecated and will be removed in a future release. Please migrate your database to PostgreSQL as soon as possible." + "\x1b[0m");
 

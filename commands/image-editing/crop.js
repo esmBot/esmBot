@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+const ImageCommand = require("../../classes/imageCommand");
 
 class CropCommand extends ImageCommand {
   static description = "Crops an image to 1:1";
