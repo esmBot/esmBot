@@ -102,10 +102,7 @@ const checkImages = async (message, video) => {
 
 // this checks for the latest message containing an image and returns the url of the image
 module.exports = async (client, cmdMessage, video = false) => {
-  // we start by checking the current message for images
-  const result = await checkImages(cmdMessage, video);
-  if (result !== false) return result;
-  // if there aren't any in the current message then check if there's a reply
+  // we start by checking if the message is a reply to another message
   if (cmdMessage.messageReference) {
     const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID);
     if (replyMessage) {
@@ -113,6 +110,9 @@ module.exports = async (client, cmdMessage, video = false) => {
       if (replyResult !== false) return replyResult;
     }
   }
+  // then we check the current message
+  const result = await checkImages(cmdMessage, video);
+  if (result !== false) return result;
   // if there aren't any replies then iterate over the last few messages in the channel
   const messages = await cmdMessage.channel.getMessages();
   // iterate over each message
