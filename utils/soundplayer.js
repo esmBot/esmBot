@@ -148,12 +148,14 @@ exports.nextSong = async (client, message, connection, track, info, music, voice
       }
       this.queues.set(voiceChannel.guild.id, newQueue);
       if (newQueue.length === 0) {
-        this.manager.leave(voiceChannel.guild.id);
-        connection.destroy();
-        this.players.delete(voiceChannel.guild.id);
-        this.queues.delete(voiceChannel.guild.id);
-        if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
-        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        setTimeout(async () => {
+          this.manager.leave(voiceChannel.guild.id);
+          connection.destroy();
+          this.players.delete(voiceChannel.guild.id);
+          this.queues.delete(voiceChannel.guild.id);
+          if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
+          if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        }, 1000); // Fix disconnect issue
       } else {
         const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
         this.nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, isLooping, true, track, playingMessage);
