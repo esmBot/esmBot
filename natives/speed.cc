@@ -7,8 +7,8 @@ using namespace Magick;
 
 class SpeedWorker : public Napi::AsyncWorker {
  public:
-  SpeedWorker(Napi::Function& callback, string in_path, bool slow, string type, int delay)
-      : Napi::AsyncWorker(callback), in_path(in_path), slow(slow), type(type), delay(delay) {}
+  SpeedWorker(Napi::Function& callback, string in_path, bool slow, int speed, string type, int delay)
+      : Napi::AsyncWorker(callback), in_path(in_path), slow(slow), speed(speed), type(type), delay(delay) {}
   ~SpeedWorker() {}
 
   void Execute() {
@@ -17,23 +17,43 @@ class SpeedWorker : public Napi::AsyncWorker {
 
     // if passed a delay, use that. otherwise use the average frame delay.
     if (delay == 0) {
+      vector<int> old_delays;
+      bool removeFrames = false;
+      for (Image &image : frames) {
+        int animation_delay = image.animationDelay();
+        old_delays.push_back(animation_delay);
+      }
+
       for (Image &image : frames) {
         int old_delay = image.animationDelay();
-        int new_delay = slow ? old_delay * 2 : old_delay / 2;
+        int new_delay = slow ? old_delay * speed : old_delay / speed;
         if (!slow && new_delay <= 1) {
-          new_delay = delay;
-          auto it = frames.begin();
-          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
-        } else {
-          image.animationDelay(new_delay);
+          removeFrames = true;
+          break;
+        }
+        image.animationDelay(new_delay);
+      }
+
+      if (removeFrames) {
+        for (list <Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
+          int index = distance(frames.begin(), i);
+          i->animationDelay(old_delays[index]);
+        }
+
+        for (int i = 0; i < speed - 1; ++i) {
+          frames.remove_if([counter = 0](const auto x) mutable {
+            return ++counter % 2 == 0;
+          });
         }
       }
     } else {
-      int new_delay = slow ? delay * 2 : delay / 2;
+      int new_delay = slow ? delay * speed : delay / speed;
       if (!slow && new_delay <= 1) {
-        new_delay = delay;
-        auto it = frames.begin();
-        while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
+        for (int i = 0; i < speed - 1; ++i) {
+          frames.remove_if([counter = 0](const auto x) mutable {
+            return ++counter % 2 == 0;
+          });
+        }
       } else {
         for_each(frames.begin(), frames.end(), animationDelayImage(new_delay));
       }
@@ -51,7 +71,7 @@ class SpeedWorker : public Napi::AsyncWorker {
  private:
   bool slow;
   string in_path, type;
-  int delay, amount;
+  int speed, delay;
   Blob blob;
 };
 
@@ -65,8 +85,9 @@ Napi::Value Speed(const Napi::CallbackInfo &info)
   bool slow = obj.Has("slow") ? obj.Get("slow").As<Napi::Boolean>().Value() : false;
   string type = obj.Get("type").As<Napi::String>().Utf8Value();
   int delay = obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
+  int speed = obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().Int32Value() : 2;
 
-  SpeedWorker* explodeWorker = new SpeedWorker(cb, path, slow, type, delay);
+  SpeedWorker* explodeWorker = new SpeedWorker(cb, path, slow, speed, type, delay);
   explodeWorker->Queue();
   return env.Undefined();
 }

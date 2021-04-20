@@ -59,7 +59,7 @@ const getImage = async (image, image2, video, gifv = false) => {
       payload.type = "image/gif";
     } else if (video) {
       payload.type = await getType(payload.path);
-      if (!payload.type || !videoFormats.includes(payload.type)) return;
+      if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
     } else {
       payload.type = await getType(payload.path);
       if (!payload.type || !imageFormats.includes(payload.type)) return;
