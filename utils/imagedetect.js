@@ -10,6 +10,13 @@ const giphyURLs = [
   "giphy.com",
   "www.giphy.com"
 ];
+const giphyMediaURLs = [ // there could be more of these
+  "media0.giphy.com",
+  "media1.giphy.com",
+  "media2.giphy.com",
+  "media3.giphy.com",
+  "media4.giphy.com"
+];
 const imgurURLs = [
   "imgur.com",
   "www.imgur.com",
@@ -49,6 +56,8 @@ const getImage = async (image, image2, video, gifv = false) => {
       } else if (giphyURLs.includes(host)) {
         // Can result in an HTML page instead of a GIF
         payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
+      } else if (giphyMediaURLs.includes(host)) {
+        payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
       } else if (imgurURLs.includes(host)) {
         // Seems that Tenor has a possibility of making GIFs static
         payload.path = image.replace(".mp4", ".gif");
