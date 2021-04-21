@@ -68,17 +68,6 @@ class Shard extends Base {
       }
     }
 
-    // dbl posting
-    if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
-      const dbl = poster(process.env.DBL, this.bot);
-      dbl.on("posted", () => {
-        logger.log("Posted stats to top.gg");
-      });
-      dbl.on("error", e => {
-        logger.error(e);
-      });
-    }
-
     // handle process stop
     process.on("SIGINT", () => {
       logger.log("warn", "SIGINT detected, shutting down...");
@@ -92,6 +81,17 @@ class Shard extends Base {
       require("./utils/database.js").stop();
       process.exit(0);
     });
+
+    // dbl posting
+    if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
+      const dbl = poster(process.env.DBL, this.bot);
+      dbl.on("posted", () => {
+        logger.log("Posted stats to top.gg");
+      });
+      dbl.on("error", e => {
+        logger.error(e);
+      });
+    }
     return;
   }
 
@@ -107,7 +107,12 @@ class Shard extends Base {
   }
 
   async launch() {
-    await this.init();
+    try {
+      await this.init();
+    } catch {
+      logger.error("Might have failed to register some things");
+    }
+    
     // connect to lavalink
     if (!sound.status && !sound.connected) await sound.connect(this.bot);
 
