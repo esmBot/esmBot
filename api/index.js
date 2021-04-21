@@ -15,7 +15,7 @@ class JobCache extends Map {
   set(key, value) {
     super.set(key, value);
     setTimeout(() => {
-      if (super.has(key) && this.get(key) === value) super.delete(key);
+      if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
     }, 300000); // delete jobs if not requested after 5 minutes
   }
 }
