@@ -12,8 +12,6 @@ const sound = require("./utils/soundplayer.js");
 const image = require("./utils/image.js");
 // database stuff
 const database = require("./utils/database.js");
-// dbl posting
-const poster = require("topgg-autoposter");
 // command collections
 const collections = require("./utils/collections.js");
 // playing messages
@@ -81,17 +79,6 @@ class Shard extends Base {
       require("./utils/database.js").stop();
       process.exit(0);
     });
-
-    // dbl posting
-    if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
-      const dbl = poster(process.env.DBL, this.bot);
-      dbl.on("posted", () => {
-        logger.log("Posted stats to top.gg");
-      });
-      dbl.on("error", e => {
-        logger.error(e);
-      });
-    }
     return;
   }
 

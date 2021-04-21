@@ -5,10 +5,14 @@ The bot will continue to run past this message, but keep in mind that it could b
 // load config from .env file
 require("dotenv").config();
 
+// main sharding manager
 const { Master } = require("eris-sharder");
+// dbl posting
+const TopGG = require("@top-gg/sdk");
 
-new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
+const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   name: "esmBot",
+  stats: "true",
   clientOptions: {
     disableEvents: {
       CHANNEL_DELETE: true,
@@ -38,5 +42,19 @@ new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
       "directMessages",
       "directMessageReactions"
     ]
+  }
+});
+
+master.on("stats", (stats) => {
+  // dbl posting
+  if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
+    const dbl = new TopGG.Api(process.env.DBL);
+    
+    setInterval(() => {
+      dbl.postStats({
+        serverCount: stats.guilds,
+        shardCount: stats.shards
+      });
+    }, 1800000);
   }
 });
