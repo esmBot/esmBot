@@ -59,11 +59,13 @@ class Shard extends Base {
           logger.error(e);
         }
       }
+    }
 
-      // generate docs
-      if (this.clusterID === 0 && helpGenerator) {
-        helpGenerator.generateList().then(() => helpGenerator.createPage(process.env.OUTPUT)).then(() => logger.log("info", "The help docs have been generated."));
-      }
+    // generate docs
+    await helpGenerator.generateList();
+    if (this.clusterID === 0 && helpGenerator) {
+      await helpGenerator.createPage(process.env.OUTPUT);
+      logger.log("info", "The help docs have been generated.");
     }
 
     // handle process stop
