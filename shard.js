@@ -15,7 +15,7 @@ const database = require("./utils/database.js");
 // command collections
 const collections = require("./utils/collections.js");
 // playing messages
-const messages = require("./messages.json");
+const { messages } = require("./messages.json");
 // other stuff
 const misc = require("./utils/misc.js");
 // generate help page

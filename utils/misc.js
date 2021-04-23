@@ -2,6 +2,7 @@ const util = require("util");
 
 // random(array) to select a random entry in array
 exports.random = (array) => {
+  if (!array || array.length < 1) return null;
   return array[Math.floor(Math.random() * array.length)];
 };
 

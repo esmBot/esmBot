@@ -2,6 +2,8 @@ const Command = require("./command.js");
 const magick = require("../utils/image.js");
 const imageDetect = require("../utils/imagedetect.js");
 const collections = require("../utils/collections.js");
+const { emotes } = require("../messages.json");
+const { random } = require("../utils/misc.js");
 
 class ImageCommand extends Command {
   /*this.embed = {
@@ -58,7 +60,7 @@ class ImageCommand extends Command {
         magickParams.path = image.path;
         magickParams.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
-        magickParams.delay = image.delay;
+        magickParams.delay = image.delay ? image.delay : 0;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
         collections.runningCommands.delete(this.message.author.id);
@@ -111,7 +113,7 @@ class ImageCommand extends Command {
   }
 
   processMessage(message) {
-    return message.channel.createMessage(`${process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
+    return message.channel.createMessage(`${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
   }
 
   static requiresImage = true;
