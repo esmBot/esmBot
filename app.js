@@ -12,7 +12,7 @@ const TopGG = require("@top-gg/sdk");
 
 const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   name: "esmBot",
-  stats: "true",
+  stats: true,
   clientOptions: {
     disableEvents: {
       CHANNEL_DELETE: true,
