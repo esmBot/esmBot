@@ -19,7 +19,7 @@
 #include "magik.h"
 #include "meme.h"
 #include "mirror.h"
-#include "misc.h"
+#include "swirl.h"
 #include "motivate.h"
 #include "resize.h"
 #include "retro.h"

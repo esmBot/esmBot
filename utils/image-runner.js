@@ -15,14 +15,16 @@ exports.run = object => {
     // If no image type is given (say, the command generates its own image), make it a PNG.
     const fileExtension = object.type ? object.type.split("/")[1] : "png";
     const objectWithFixedType = Object.assign({}, object, {type: fileExtension});
-    magick[object.cmd](objectWithFixedType, (error, data, type) => {
-      if (error) reject(error);
+    try {
+      const result = magick[object.cmd](objectWithFixedType);
       const returnObject = {
-        buffer: data,
-        fileExtension: type
+        buffer: result.data,
+        fileExtension: result.type
       };
       resolve(returnObject);
-    });
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 

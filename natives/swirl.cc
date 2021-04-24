@@ -6,7 +6,7 @@
 using namespace std;
 using namespace Magick;
 
-Napi::Value Leak(const Napi::CallbackInfo &info) {
+Napi::Value Swirl(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   Napi::Object obj = info[0].As<Napi::Object>();
@@ -20,17 +20,11 @@ Napi::Value Leak(const Napi::CallbackInfo &info) {
   list<Image> frames;
   list<Image> coalesced;
   list<Image> mid;
-  Image watermark;
   readImages(&frames, path);
-  watermark.read("./assets/images/leak.png");
   coalesceImages(&coalesced, frames.begin(), frames.end());
 
   for (Image &image : coalesced) {
-    image.backgroundColor("white");
-    image.scale(Geometry("640x360!"));
-    image.rotate(15);
-    image.extent(Geometry("1280x720-700+100"));
-    image.composite(watermark, Geometry("+0+0"), Magick::OverCompositeOp);
+    image.swirl(180);
     image.magick(type);
     mid.push_back(image);
   }

@@ -1,5 +1,5 @@
-#ifndef ESMBOT_NATIVES_MISC_H_
-#define ESMBOT_NATIVES_MISC_H_
+#ifndef ESMBOT_NATIVES_SWIRL_H_
+#define ESMBOT_NATIVES_SWIRL_H_
 
 #include <napi.h>
 

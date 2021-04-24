@@ -105,7 +105,7 @@ exports.disconnect = async () => {
     connection.destroy();
   }
   for (const uuid of Object.keys(jobs)) {
-    jobs[uuid].emit("error", new Error("Job ended prematurely (not really an error; just run your image job again)"));
+    jobs[uuid].emit("error", "Job ended prematurely (not really an error; just run your image job again)");
   }
   this.connections = [];
   return;
