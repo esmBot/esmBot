@@ -21,6 +21,7 @@
 #include "mirror.h"
 #include "swirl.h"
 #include "motivate.h"
+#include "reddit.h"
 #include "resize.h"
 #include "retro.h"
 #include "reverse.h"
@@ -56,6 +57,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
   exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
   exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
+  exports.Set(Napi::String::New(env, "reddit"), Napi::Function::New(env, Reddit));
   exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
   exports.Set(Napi::String::New(env, "retro"), Napi::Function::New(env, Retro));
   exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));

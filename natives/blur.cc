@@ -9,43 +9,47 @@ using namespace Magick;
 Napi::Value Blur(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
-  Napi::Object obj = info[0].As<Napi::Object>();
-  string path = obj.Get("path").As<Napi::String>().Utf8Value();
-  bool sharp = obj.Get("sharp").As<Napi::Boolean>().Value();
-  string type = obj.Get("type").As<Napi::String>().Utf8Value();
-  int delay =
-      obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
+  try {
+    Napi::Object obj = info[0].As<Napi::Object>();
+    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    bool sharp = obj.Get("sharp").As<Napi::Boolean>().Value();
+    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    int delay =
+        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-  Blob blob;
+    Blob blob;
 
-  list<Image> frames;
-  list<Image> coalesced;
-  readImages(&frames, path);
-  coalesceImages(&coalesced, frames.begin(), frames.end());
+    list<Image> frames;
+    list<Image> coalesced;
+    readImages(&frames, path);
+    coalesceImages(&coalesced, frames.begin(), frames.end());
 
-  if (sharp) {
-    for_each(coalesced.begin(), coalesced.end(), sharpenImage(10, 3));
-  } else {
-    for_each(coalesced.begin(), coalesced.end(), blurImage(15));
-  }
-
-  for_each(coalesced.begin(), coalesced.end(), magickImage(type));
-
-  optimizeTransparency(coalesced.begin(), coalesced.end());
-
-  if (type == "gif") {
-    for (Image &image : coalesced) {
-      image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-      image.quantize();
-      if (delay != 0) image.animationDelay(delay);
+    if (sharp) {
+      for_each(coalesced.begin(), coalesced.end(), sharpenImage(10, 3));
+    } else {
+      for_each(coalesced.begin(), coalesced.end(), blurImage(15));
     }
+
+    for_each(coalesced.begin(), coalesced.end(), magickImage(type));
+
+    optimizeTransparency(coalesced.begin(), coalesced.end());
+
+    if (type == "gif") {
+      for (Image &image : coalesced) {
+        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
+        image.quantize();
+        if (delay != 0) image.animationDelay(delay);
+      }
+    }
+
+    writeImages(coalesced.begin(), coalesced.end(), &blob);
+
+    Napi::Object result = Napi::Object::New(env);
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
+                                                blob.length()));
+    result.Set("type", type);
+    return result;
+  } catch (std::exception const &err) {
+    throw Napi::Error::New(env, err.what());
   }
-
-  writeImages(coalesced.begin(), coalesced.end(), &blob);
-
-  Napi::Object result = Napi::Object::New(env);
-  result.Set("data",
-          Napi::Buffer<char>::Copy(env, (char *)blob.data(), blob.length()));
-  result.Set("type", type);
-  return result;
 }
