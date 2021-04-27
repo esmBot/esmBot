@@ -9,6 +9,7 @@ require("dotenv").config();
 const { Master } = require("eris-sharder");
 // dbl posting
 const TopGG = require("@top-gg/sdk");
+const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new TopGG.Api(process.env.DBL) : null;
 
 const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   name: "esmBot",
@@ -45,16 +46,12 @@ const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   }
 });
 
-master.on("stats", (stats) => {
+master.on("stats", async (stats) => {
   // dbl posting
-  if (process.env.NODE_ENV === "production" && process.env.DBL !== "") {
-    const dbl = new TopGG.Api(process.env.DBL);
-    
-    setInterval(() => {
-      dbl.postStats({
-        serverCount: stats.guilds,
-        shardCount: stats.shards
-      });
-    }, 1800000);
+  if (dbl) {
+    await dbl.postStats({
+      serverCount: stats.guilds,
+      shardCount: await master.calculateShards()
+    });
   }
 });
