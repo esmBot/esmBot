@@ -47,6 +47,7 @@ const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
 });
 
 master.on("stats", async (stats) => {
+  master.broadcast(0, Object.assign(stats, { _eventName: "stat" }));
   // dbl posting
   if (dbl) {
     await dbl.postStats({

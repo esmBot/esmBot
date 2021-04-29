@@ -47,7 +47,7 @@ class Shard extends Base {
       logger.log("log", `Loading event from ${file}...`);
       const eventName = file.split(".")[0];
       const event = require(`./events/${file}`);
-      this.bot.on(eventName, event.bind(null, this.bot));
+      this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.ipc));
     }
   
     // connect to image api if enabled
@@ -101,6 +101,10 @@ class Shard extends Base {
     } catch {
       logger.error("Might have failed to register some things");
     }
+
+    this.ipc.register("stat", (message) => {
+      collections.stats = message;
+    });
     
     // connect to lavalink
     if (!sound.status && !sound.connected) await sound.connect(this.bot);
@@ -117,7 +121,6 @@ class Shard extends Base {
       setTimeout(activityChanger.bind(this), 900000);
     }).bind(this)();
 
-    if (process.env.PMTWO === "true") process.send("ready");
     logger.log("info", `Started cluster ${this.clusterID}.`);
   }
 

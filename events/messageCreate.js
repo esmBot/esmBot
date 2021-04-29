@@ -5,7 +5,7 @@ const collections = require("../utils/collections.js");
 const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
-module.exports = async (client, message) => {
+module.exports = async (client, cluster, ipc, message) => {
   // ignore dms and other bots
   if (message.author.bot) return;
 
@@ -85,7 +85,7 @@ module.exports = async (client, message) => {
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const commandClass = new cmd(client, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
+    const commandClass = new cmd(client, cluster, ipc, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
     const result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
     const endTime = new Date();
     if (typeof result === "string" || (typeof result === "object" && result.embed)) {

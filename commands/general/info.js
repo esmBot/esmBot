@@ -1,4 +1,5 @@
 const { version } = require("../../package.json");
+const collections = require("../../utils/collections.js");
 const Command = require("../../classes/command.js");
 
 class InfoCommand extends Command {
@@ -20,7 +21,7 @@ class InfoCommand extends Command {
         },
         {
           "name": "💬 Total Servers:",
-          "value": this.client.guilds.size
+          "value": collections.stats.guilds ? collections.stats.guilds : `${this.client.guilds.size} (for this cluster only)`
         },
         {
           "name": "✅ Official Server:",

@@ -1,4 +1,5 @@
 const { version } = require("../../package.json");
+const collections = require("../../utils/collections.js");
 const day = require("dayjs");
 day.extend(require("dayjs/plugin/duration"));
 const os = require("os");
@@ -20,15 +21,17 @@ class StatsCommand extends Command {
           "value": `v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`
         },
         {
-          "name": "Memory Usage",
-          "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`
+          "name": "Cluster Memory Usage",
+          "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+          "inline": true
         },
         {
-          "name": "Shard",
-          "value": this.client.guildShardMap[this.message.channel.guild.id]
+          "name": "Total Memory Usage",
+          "value": collections.stats.totalRam ? `${collections.stats.totalRam.toFixed(2)} MB` : "Unknown",
+          "inline": true
         },
         {
-          "name": "Uptime",
+          "name": "Bot Uptime",
           "value": uptime
         },
         {
@@ -41,11 +44,18 @@ class StatsCommand extends Command {
         },
         {
           "name": "Library",
-          "value": `Eris ${require("eris").VERSION}`
+          "value": `Eris ${require("eris").VERSION}`,
+          "inline": true
         },
         {
           "name": "Node.js Version",
-          "value": process.version
+          "value": process.version,
+          "inline": true
+        },
+        {
+          "name": "Shard",
+          "value": this.client.guildShardMap[this.message.channel.guild.id],
+          "inline": true
         }
         ]
       }

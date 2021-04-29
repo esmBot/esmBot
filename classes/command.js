@@ -1,6 +1,8 @@
 class Command {
-  constructor(client, message, args, content) {
+  constructor(client, cluster, ipc, message, args, content) {
     this.client = client;
+    this.cluster = cluster;
+    this.ipc = ipc;
     this.message = message;
     this.args = args;
     this.content = content;

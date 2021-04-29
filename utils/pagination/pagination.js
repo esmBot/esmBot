@@ -11,12 +11,12 @@ module.exports = async (client, message, pages, timeout = 120000) => {
   }
   const reactionCollector = new ReactionCollector(client, currentPage, (message, reaction, member) => emojiList.includes(reaction.name) && !member.bot, { time: timeout });
   reactionCollector.on("reaction", async (msg, reaction, member) => {
-    if (member === message.author.id) {
+    if (member.id === message.author.id) {
       switch (reaction.name) {
         case "◀":
           page = page > 0 ? --page : pages.length - 1;
           currentPage = await currentPage.edit(pages[page]);
-          if (manageMessages) msg.removeReaction("◀", member);
+          if (manageMessages) msg.removeReaction("◀", member.id);
           break;
         case "🔢":
           message.channel.createMessage(`${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
@@ -29,7 +29,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
               if (manageMessages) await response.delete();
               page = Number(response.content) - 1;
               currentPage = await currentPage.edit(pages[page]);
-              if (manageMessages) msg.removeReaction("🔢", member);
+              if (manageMessages) msg.removeReaction("🔢", member.id);
             });
           }).catch(error => {
             throw error;
@@ -38,7 +38,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
         case "▶":
           page = page + 1 < pages.length ? ++page : 0;
           currentPage = await currentPage.edit(pages[page]);
-          if (manageMessages) msg.removeReaction("▶", member);
+          if (manageMessages) msg.removeReaction("▶", member.id);
           break;
         case "🗑":
           reactionCollector.emit("end");
