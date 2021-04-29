@@ -2,7 +2,9 @@
 
 require("dotenv").config();
 const os = require("os");
-const { run } = require("../utils/image-runner.js");
+//const { run } = require("../utils/image-runner.js");
+const { Worker } = require("worker_threads");
+const path = require("path");
 const net = require("net");
 const http = require("http");
 
@@ -184,7 +186,10 @@ const runJob = (job, sock) => {
     }
 
     log(`Job ${job.uuid} started`, job.num);
-    run(object).then((data) => {
+    const worker = new Worker(path.join(__dirname, "../utils/image-runner.js"), {
+      workerData: object
+    });
+    worker.on("message", (data) => {
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
       const jobObject = jobs.get(job.uuid);
       jobObject.data = data.buffer;
@@ -194,9 +199,20 @@ const runJob = (job, sock) => {
         if (e) return reject(e);
         return resolve();
       });
-      return;
+    });
+    worker.on("error", reject);
+    /*run(object).then((data) => {
+      log(`Sending result of job ${job.uuid} back to the bot`, job.num);
+      const jobObject = jobs.get(job.uuid);
+      jobObject.data = data.buffer;
+      jobObject.ext = data.fileExtension;
+      jobs.set(job.uuid, jobObject);
+      sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
+        if (e) return reject(e);
+        return resolve();
+      });
     }).catch(e => {
       reject(e);
-    });
+    });*/
   });
 };
