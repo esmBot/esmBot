@@ -54,7 +54,7 @@ class StatsCommand extends Command {
         },
         {
           "name": "Shard",
-          "value": this.client.guildShardMap[this.message.channel.guild.id],
+          "value": this.message.channel.guild ? this.client.guildShardMap[this.message.channel.guild.id] : "N/A",
           "inline": true
         }
         ]

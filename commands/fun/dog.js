@@ -3,7 +3,7 @@ const Command = require("../../classes/command.js");
 
 class DogCommand extends Command {
   async run() {
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const imageData = await fetch("https://dog.ceo/api/breeds/image/random");
     const json = await imageData.json();
     return {

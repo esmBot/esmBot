@@ -89,31 +89,30 @@ class ImageCommand extends Command {
     if (magickParams.type === "image/gif") {
       status = await this.processMessage(this.message);
     } else {
-      this.message.channel.sendTyping();
+      this.client.sendChannelTyping(this.message.channel.id);
     }
 
     try {
       const { buffer, type } = await magick.run(magickParams).catch(e => {
         throw e;
       });
-      if (status && status.channel.messages.get(status.id)) await status.delete();
       if (type === "nogif" && this.constructor.requiresGIF) return `${this.message.author.mention}, that isn't a GIF!`;
       return {
         file: buffer,
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
-      if (status && status.channel.messages.get(status.id)) await status.delete();
       if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I'm still trying to connect to the image servers. Please wait a little bit.`;
       throw e;
     } finally {
+      if (status && await this.client.getMessage(status.channel.id, status.id).catch(() => undefined)) await status.delete();
       collections.runningCommands.delete(this.message.author.id);
     }
     
   }
 
   processMessage(message) {
-    return message.channel.createMessage(`${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
+    return this.client.createMessage(message.channel.id, `${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
   }
 
   static requiresImage = true;

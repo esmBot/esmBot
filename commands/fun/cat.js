@@ -3,7 +3,7 @@ const Command = require("../../classes/command.js");
 
 class CatCommand extends Command {
   async run() {
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const data = await fetch("https://projectlounge.pw/cta/", { redirect: "manual" });
     return {
       embed: {

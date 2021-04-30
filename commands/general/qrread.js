@@ -8,7 +8,7 @@ class QrReadCommand extends Command {
   async run() {
     const image = await require("../../utils/imagedetect.js")(this.client, this.message);
     if (image === undefined) return `${this.message.author.mention}, you need to provide an image with a QR code to read!`;
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const data = await (await fetch(image.path)).buffer();
     const rawData = await sharp(data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);

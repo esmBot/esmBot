@@ -105,6 +105,19 @@ class Shard extends Base {
     this.ipc.register("stat", (message) => {
       collections.stats = message;
     });
+
+    this.ipc.register("restart", () => {
+      process.exit(1);
+    });
+
+    this.ipc.register("reload", async (message) => {
+      const result = await handler.unload(message.cmd);
+      if (result) return this.ipc.broadcast("reloadFail", { result: result });
+      const result2 = await handler.load(collections.paths.get(message.cmd));
+      if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
+      //return this.ipc.broadcast("reloadSuccess", this.clusterID);
+      return this.ipc.broadcast("reloadSuccess");
+    });
     
     // connect to lavalink
     if (!sound.status && !sound.connected) await sound.connect(this.bot);

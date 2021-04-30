@@ -4,7 +4,7 @@ const Command = require("../../classes/command.js");
 
 class LengthenCommand extends Command {
   async run() {
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     if (this.args.length === 0 || !urlCheck(this.args[0])) return `${this.message.author.mention}, you need to provide a short URL to lengthen!`;
     if (urlCheck(this.args[0])) {
       const url = await fetch(encodeURI(this.args[0]), { redirect: "manual" });

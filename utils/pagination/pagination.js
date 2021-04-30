@@ -4,7 +4,7 @@ const MessageCollector = require("./awaitmessages.js");
 module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
-  let currentPage = await message.channel.createMessage(pages[page]);
+  let currentPage = await client.createMessage(message.channel.id, pages[page]);
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
     await currentPage.addReaction(emoji);
@@ -19,13 +19,13 @@ module.exports = async (client, message, pages, timeout = 120000) => {
           if (manageMessages) msg.removeReaction("◀", member.id);
           break;
         case "🔢":
-          message.channel.createMessage(`${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
+          client.createMessage(message.channel.id, `${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
             const messageCollector = new MessageCollector(client, askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length && Number(response.content) > 0, {
               time: timeout,
               maxMatches: 1
             });
             return messageCollector.on("message", async (response) => {
-              if (askMessage.channel.messages.get(askMessage.id)) askMessage.delete();
+              if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) askMessage.delete();
               if (manageMessages) await response.delete();
               page = Number(response.content) - 1;
               currentPage = await currentPage.edit(pages[page]);
@@ -42,7 +42,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
           break;
         case "🗑":
           reactionCollector.emit("end");
-          if (currentPage.channel.messages.get(currentPage.id)) await currentPage.delete();
+          if (await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) await currentPage.delete();
           return;
         default:
           break;
@@ -51,7 +51,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
   });
   reactionCollector.once("end", async () => {
     try {
-      await currentPage.channel.getMessage(currentPage.id);
+      await client.getMessage(currentPage.channel, currentPage.id);
       if (manageMessages) {
         await currentPage.removeReactions();
       }

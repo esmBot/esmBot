@@ -113,7 +113,7 @@ const checkImages = async (message, video) => {
 module.exports = async (client, cmdMessage, video = false) => {
   // we start by checking if the message is a reply to another message
   if (cmdMessage.messageReference) {
-    const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID);
+    const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
     if (replyMessage) {
       const replyResult = await checkImages(replyMessage, video);
       if (replyResult !== false) return replyResult;
@@ -123,7 +123,7 @@ module.exports = async (client, cmdMessage, video = false) => {
   const result = await checkImages(cmdMessage, video);
   if (result !== false) return result;
   // if there aren't any replies then iterate over the last few messages in the channel
-  const messages = await cmdMessage.channel.getMessages();
+  const messages = await client.getMessages(cmdMessage.channel.id);
   // iterate over each message
   for (const message of messages) {
     const result = await checkImages(message, video);

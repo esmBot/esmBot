@@ -6,7 +6,7 @@ const Command = require("../../classes/command.js");
 class YouTubeCommand extends Command {
   async run() {
     if (this.args.length === 0) return `${this.message.author.mention}, you need to provide something to search for!`;
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const messages = [];
     const request = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(this.args.join(" "))}&key=${process.env.GOOGLE}&maxResults=50`);
     const result = await request.json();

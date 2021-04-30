@@ -3,7 +3,7 @@ const Command = require("../../classes/command.js");
 
 class BirdCommand extends Command {
   async run() {
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const imageData = await fetch("http://shibe.online/api/birds");
     const json = await imageData.json();
     return {

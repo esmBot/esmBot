@@ -3,7 +3,7 @@ const Command = require("../../classes/command.js");
 
 class WikihowCommand extends Command {
   async run() {
-    this.message.channel.sendTyping();
+    this.client.sendChannelTyping(this.message.channel.id);
     const request = await fetch("https://hargrimm-wikihow-v1.p.rapidapi.com/images?count=1", {
       headers: {
         "X-RapidAPI-Key": process.env.MASHAPE,
