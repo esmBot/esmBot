@@ -123,7 +123,7 @@ module.exports = async (client, cluster, ipc, message) => {
       logger.error(error.toString());
       try {
         await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>", [{
-          file: Buffer.from(`Message: ${error}\n\nStack Trace: ${error.stack}`),
+          file: `Message: ${error}\n\nStack Trace: ${error.stack}`,
           name: "error.txt"
         }]);
       } catch { /* silently ignore */ }

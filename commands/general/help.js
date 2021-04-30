@@ -32,7 +32,7 @@ class HelpCommand extends Command {
           "color": 16711680,
           "fields": [{
             "name": "Aliases",
-            "value": info.aliases ? info.aliases.join(", ") : "None"
+            "value": info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
           }, {
             "name": "Times Used",
             "value": counts[command],
