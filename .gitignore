@@ -29,7 +29,6 @@ typings/
 .node_repl_history
 *.tgz
 .yarn-integrity
-.env
 .next
 .ftpconfig
 coverage.lcov

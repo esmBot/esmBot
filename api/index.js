@@ -92,9 +92,10 @@ const httpServer = http.createServer((req, res) => {
     }
     log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     res.setHeader("ext", jobs.get(id).ext);
-    return res.end(jobs.get(id).data, (err) => {
+    const data = jobs.get(id).data;
+    jobs.delete(id);
+    return res.end(data, (err) => {
       if (err) console.error(err);
-      jobs.delete(id);
     });
   } else {
     res.statusCode = 404;
