@@ -71,32 +71,28 @@ class Shard extends Base {
 
     if (process.env.METRICS !== "") {
       logger.log("YES");
-      const httpServer = http.createServer((req, res) => {
+      const httpServer = http.createServer(async (req, res) => {
         if (req.method !== "GET") {
           res.statusCode = 405;
           return res.end("GET only");
         }
         res.write(`# HELP connected_workers Number of workers connected
-# TYPE connected_workers guage
+# TYPE connected_workers gauge
 connected_workers ${image.connections.length}
 # HELP running_jobs Number of running jobs on this worker
-# TYPE running_jobs guage
+# TYPE running_jobs gauge
 # HELP queued_jobs Number of queued jobs on this worker
-# TYPE queued_jobs guage
+# TYPE queued_jobs gauge
 # HELP max_jobs Number of max allowed jobs on this worker
-# TYPE max_jobs guage
+# TYPE max_jobs gauge
 `);
-        image.getStatus().then((servers) => {
-          for (const [i, w] of servers.entries()) {
-            res.write(`running_jobs{worker="${i}} ${w.runningJobs}\n`);
-            res.write(`queued_jobs{worker="${i}} ${w.queued}\n`);
-            res.write(`max_jobs{worker="${i}} ${w.max}\n`);
-          }
-          res.end();
-        }).catch(e => {
-          res.statusCode = 500;
-          return res.end(e);
-        });
+        const servers = await image.getStatus();
+        for (const [i, w] of servers.entries()) {
+          res.write(`running_jobs{worker="${i}"} ${w.runningJobs}\n`);
+          res.write(`queued_jobs{worker="${i}"} ${w.queued}\n`);
+          res.write(`max_jobs{worker="${i}"} ${w.max}\n`);
+        }
+        res.end();
       });
       httpServer.listen(process.env.METRICS, () => {
         logger.log("info", `Serving metrics at ${process.env.METRICS}`);
