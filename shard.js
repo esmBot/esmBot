@@ -21,6 +21,7 @@ const misc = require("./utils/misc.js");
 // generate help page
 const helpGenerator =
   process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
+const http = require("http");
 
 class Shard extends Base {
   constructor(bot) {
@@ -39,7 +40,7 @@ class Shard extends Base {
         logger.error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
-  
+
     // register events
     const events = await readdir("./events/");
     logger.log("info", `Attempting to load ${events.length} events...`);
@@ -49,7 +50,7 @@ class Shard extends Base {
       const event = require(`./events/${file}`);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.ipc));
     }
-  
+
     // connect to image api if enabled
     if (process.env.API === "true") {
       for (const server of image.servers) {
@@ -66,6 +67,36 @@ class Shard extends Base {
     if (this.clusterID === 0 && helpGenerator) {
       await helpGenerator.createPage(process.env.OUTPUT);
       logger.log("info", "The help docs have been generated.");
+    }
+
+    if (process.env.METRICS !== "") {
+      logger.log("YES");
+      const httpServer = http.createServer(async (req, res) => {
+        if (req.method !== "GET") {
+          res.statusCode = 405;
+          return res.end("GET only");
+        }
+        res.write(`# HELP connected_workers Number of workers connected
+# TYPE connected_workers gauge
+connected_workers ${image.connections.length}
+# HELP running_jobs Number of running jobs on this worker
+# TYPE running_jobs gauge
+# HELP queued_jobs Number of queued jobs on this worker
+# TYPE queued_jobs gauge
+# HELP max_jobs Number of max allowed jobs on this worker
+# TYPE max_jobs gauge
+`);
+        const servers = await image.getStatus();
+        for (const [i, w] of servers.entries()) {
+          res.write(`running_jobs{worker="${i}"} ${w.runningJobs}\n`);
+          res.write(`queued_jobs{worker="${i}"} ${w.queued}\n`);
+          res.write(`max_jobs{worker="${i}"} ${w.max}\n`);
+        }
+        res.end();
+      });
+      httpServer.listen(process.env.METRICS, () => {
+        logger.log("info", `Serving metrics at ${process.env.METRICS}`);
+      });
     }
 
     // handle process stop
