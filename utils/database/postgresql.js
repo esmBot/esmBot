@@ -51,11 +51,12 @@ exports.enableChannel = async (channel) => {
 
 exports.getCounts = async () => {
   const counts = await connection.query("SELECT * FROM counts");
-  const countArray = [];
+  //const countArray = [];
+  const countObject = {};
   for (const { command, count } of counts.rows) {
-    countArray.push([command, count]);
+    countObject[command] = count;
   }
-  return countArray;
+  return countObject;
 };
 
 exports.addCount = async (command) => {

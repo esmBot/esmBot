@@ -8,15 +8,19 @@ class CountCommand extends Command {
     if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return `${this.message.author.mention}, I don't have the \`Embed Links\` permission!`;
     const counts = await database.getCounts();
     const countArray = [];
-    const sortedValues = counts.sort((a, b) => {
+    for (const entry of Object.entries(counts)) {
+      countArray.push(entry);
+    }
+    const sortedValues = countArray.sort((a, b) => {
       return b[1] - a[1];
     });
+    const countArray2 = [];
     for (const [key, value] of sortedValues) {
-      countArray.push(`**${key}**: ${value}`);
+      countArray2.push(`**${key}**: ${value}`);
     }
     const embeds = [];
-    const groups = countArray.map((item, index) => {
-      return index % 15 === 0 ? countArray.slice(index, index + 15) : null;
+    const groups = countArray2.map((item, index) => {
+      return index % 15 === 0 ? countArray2.slice(index, index + 15) : null;
     }).filter((item) => {
       return item;
     });

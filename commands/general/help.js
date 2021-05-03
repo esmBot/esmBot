@@ -14,12 +14,12 @@ class HelpCommand extends Command {
     if (this.args.length !== 0 && (commands.has(this.args[0].toLowerCase()) || aliases.has(this.args[0].toLowerCase()))) {
       const command = aliases.has(this.args[0].toLowerCase()) ? collections.aliases.get(this.args[0].toLowerCase()) : this.args[0].toLowerCase();
       const info = collections.info.get(command);
-      const countDB = await database.getCounts();
-      const counts = countDB.reduce((acc, val) => {
+      const counts = await database.getCounts();
+      /*const counts = countDB.reduce((acc, val) => {
         const [key, value] = val;
         acc[key] = value;
         return acc;
-      }, {});
+      }, {});*/
       const embed = {
         "embed": {
           "author": {

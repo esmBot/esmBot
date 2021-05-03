@@ -85,12 +85,18 @@ connected_workers ${image.connections.length}
 # TYPE queued_jobs gauge
 # HELP max_jobs Number of max allowed jobs on this worker
 # TYPE max_jobs gauge
+# HELP command_count Number of times a command has been run
+# TYPE command_count counter
 `);
         const servers = await image.getStatus();
         for (const [i, w] of servers.entries()) {
           res.write(`running_jobs{worker="${i}"} ${w.runningJobs}\n`);
           res.write(`queued_jobs{worker="${i}"} ${w.queued}\n`);
           res.write(`max_jobs{worker="${i}"} ${w.max}\n`);
+        }
+        const counts = await database.getCounts();
+        for (const [i, w] of Object.entries(counts)) {
+          res.write(`command_count{command="${i}"} ${w}\n`);
         }
         res.end();
       });
@@ -146,7 +152,6 @@ connected_workers ${image.connections.length}
       if (result) return this.ipc.broadcast("reloadFail", { result: result });
       const result2 = await handler.load(collections.paths.get(message.cmd));
       if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
-      //return this.ipc.broadcast("reloadSuccess", this.clusterID);
       return this.ipc.broadcast("reloadSuccess");
     });
     
