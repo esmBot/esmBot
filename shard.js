@@ -69,8 +69,7 @@ class Shard extends Base {
       logger.log("info", "The help docs have been generated.");
     }
 
-    if (process.env.METRICS !== "") {
-      logger.log("YES");
+    if (process.env.METRICS !== "" && process.env.METRICS !== undefined) {
       const httpServer = http.createServer(async (req, res) => {
         if (req.method !== "GET") {
           res.statusCode = 405;
