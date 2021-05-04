@@ -67,7 +67,7 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
     Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
                                                 blob.length()));
-    result.Set("type", type);
+    result.Set("type", "gif");
     return result;
   } catch (Napi::Error const &err) {
     throw err;
