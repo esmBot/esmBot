@@ -71,7 +71,7 @@ exports.connect = (server) => {
       const uuid = msg.slice(1, 37).toString();
       if (opcode === 0x00) { // Job queued
         if (jobs[req]) {
-          jobs[req].emit("uuid", uuid);
+          jobs[req].event.emit("uuid", uuid);
         }
       } else if (opcode === 0x01) { // Job completed successfully
       // the image API sends all job responses over the same socket; make sure this is ours
@@ -81,11 +81,11 @@ exports.connect = (server) => {
           // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
           // by a newline, followed by the image data.
 
-          jobs[uuid].emit("image", image, imageReq.headers.get("ext"));
+          jobs[uuid].event.emit("image", image, imageReq.headers.get("ext"));
         }
       } else if (opcode === 0x02) { // Job errored
         if (jobs[uuid]) {
-          jobs[uuid].emit("error", new Error(req));
+          jobs[uuid].event.emit("error", new Error(req));
         }
       } else if (opcode === 0x03) {
       // we use the uuid part here because queue info requests don't respond with one
@@ -97,7 +97,7 @@ exports.connect = (server) => {
     });
     connection.once("close", () => {
       for (const uuid of Object.keys(jobs)) {
-        jobs[uuid].emit("error", new Error("Job ended prematurely due to a closed connection; please run your image job again"));
+        if (jobs[uuid].addr === connection.remoteAddress) jobs[uuid].event.emit("error", new Error("Job ended prematurely due to a closed connection; please run your image job again"));
       }
       this.connections.filter((val) => val !== connection);
     });
@@ -111,7 +111,7 @@ exports.disconnect = async () => {
     connection.destroy();
   }
   for (const uuid of Object.keys(jobs)) {
-    jobs[uuid].emit("error", "Job ended prematurely (not really an error; just run your image job again)");
+    jobs[uuid].event.emit("error", "Job ended prematurely (not really an error; just run your image job again)");
   }
   this.connections = [];
   return;
@@ -164,21 +164,21 @@ const start = (object, num) => {
             reject(err);
           }
         } else {
-          resolve();
+          resolve(currentServer.remoteAddress);
         }
       });
     });
-  }).then(() => {
+  }).then((addr) => {
     const event = new EventEmitter();
     return new Promise((resolve) => {
-      event.once("uuid", (uuid) => resolve({ event, uuid }));
-      jobs[num] = event;
+      event.once("uuid", (uuid) => resolve({ event, uuid, addr }));
+      jobs[num] = { event, addr };
     });
   }, (result) => {
     throw result;
   }).then(data => {
     delete jobs[num];
-    jobs[data.uuid] = data.event;
+    jobs[data.uuid] = { event: data.event, addr: data.addr };
     return { uuid: data.uuid, event: data.event };
   });
 };
