@@ -93,7 +93,13 @@ exports.connect = (server) => {
       }
     });
     connection.on("error", (e) => {
-      console.error(e);
+      logger.error(e);
+    });
+    connection.once("close", () => {
+      for (const uuid of Object.keys(jobs)) {
+        jobs[uuid].emit("error", new Error("Job ended prematurely due to a closed connection; please run your image job again"));
+      }
+      this.connections.filter((val) => val !== connection);
     });
     this.connections.push(connection);
     resolve();
@@ -251,13 +257,13 @@ exports.run = object => {
       const worker = new Worker(path.join(__dirname, "image-runner.js"), {
         workerData: object
       });
-      worker.on("message", (data) => {
+      worker.once("message", (data) => {
         resolve({
           buffer: Buffer.from([...data.buffer]),
           type: data.fileExtension
         });
       });
-      worker.on("error", reject);
+      worker.once("error", reject);
     }
   });
 };

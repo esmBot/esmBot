@@ -185,11 +185,11 @@ const runJob = (job, sock) => {
       reject(new TypeError("Unknown image type"));
     }
 
-    log(`Job ${job.uuid} started`, job.num);
     const worker = new Worker(path.join(__dirname, "../utils/image-runner.js"), {
       workerData: object
     });
-    worker.on("message", (data) => {
+    log(`Job ${job.uuid} started`, job.num);
+    worker.once("message", (data) => {
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
       const jobObject = jobs.get(job.uuid);
       jobObject.data = data.buffer;
@@ -200,7 +200,7 @@ const runJob = (job, sock) => {
         return resolve();
       });
     });
-    worker.on("error", reject);
+    worker.once("error", reject);
     /*run(object).then((data) => {
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
       const jobObject = jobs.get(job.uuid);
