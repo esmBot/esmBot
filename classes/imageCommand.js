@@ -33,7 +33,7 @@ class ImageCommand extends Command {
       ]
     };*/
 
-  criteria() {
+  async criteria() {
     return true;
   }
 
@@ -70,7 +70,7 @@ class ImageCommand extends Command {
     }
 
     if (this.constructor.requiresText) {
-      if (this.args.length === 0 || !this.criteria(this.args)) {
+      if (this.args.length === 0 || !await this.criteria(this.args)) {
         collections.runningCommands.delete(this.message.author.id);
         return `${this.message.author.mention}, ${this.constructor.noText}`;
       }

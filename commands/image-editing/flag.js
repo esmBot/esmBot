@@ -6,7 +6,7 @@ const ImageCommand = require("../../classes/imageCommand.js");
 class FlagCommand extends ImageCommand {
   flagPath = "";
 
-  criteria(args) {
+  async criteria(args) {
     if (!args[0].match(emojiRegex)) return false;
     const flag = emoji.unemojify(args[0]).replaceAll(":", "").replace("flag-", "");
     let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
@@ -15,7 +15,7 @@ class FlagCommand extends ImageCommand {
     if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
     if (flag === "🏳️‍⚧️") path = "./assets/images/transflag.png";
     try {
-      fs.promises.access(path);
+      await fs.promises.access(path);
       this.flagPath = path;
       return true;
     } catch {
