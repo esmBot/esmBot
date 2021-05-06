@@ -32,11 +32,11 @@ const { v4: uuidv4 } = require("uuid");
 const MAX_JOBS = process.env.JOBS !== "" && process.env.JOBS !== undefined ? parseInt(process.env.JOBS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
 let jobAmount = 0;
 
-const acceptJob = async (uuid, sock) => {
+const acceptJob = (uuid, sock) => {
   jobAmount++;
   queue.shift();
   const job = jobs.get(uuid);
-  runJob({
+  return runJob({
     uuid: uuid,
     msg: job.msg,
     num: job.num
