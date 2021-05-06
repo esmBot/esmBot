@@ -35,24 +35,23 @@ let jobAmount = 0;
 const acceptJob = async (uuid, sock) => {
   jobAmount++;
   queue.shift();
-  try {
-    const job = jobs.get(uuid);
-    await runJob({
-      uuid: uuid,
-      msg: job.msg,
-      num: job.num
-    }, sock);
+  const job = jobs.get(uuid);
+  runJob({
+    uuid: uuid,
+    msg: job.msg,
+    num: job.num
+  }, sock).then(() => {
     log(`Job ${uuid} has finished`);
-  } catch (err) {
+  }).catch((err) => {
     console.error(`Error on job ${uuid}:`, err);
     jobs.delete(uuid);
     sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(uuid), Buffer.from(err.message)]));
-  } finally {
+  }).finally(() => {
     jobAmount--;
     if (queue.length > 0) {
       acceptJob(queue[0], sock);
     }
-  }
+  });
 };
 
 const httpServer = http.createServer((req, res) => {
