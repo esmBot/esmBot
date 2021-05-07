@@ -152,19 +152,6 @@ const server = net.createServer((sock) => { // Create a TCP socket/server to lis
   sock.on("end", () => {
     log(`TCP client ${sock.remoteAddress}:${sock.remotePort} has disconnected`);
   });
-
-  // handle ctrl+c and pm2 stop
-  process.on("SIGINT", () => {
-    console.log("SIGINT detected, shutting down...");
-    for (const job of jobs.keys()) {
-      const jobObject = jobs.get(job);
-      if (jobObject.addr === sock.remoteAddress && jobObject.port === sock.remotePort) {
-        jobs.delete(job);
-        sock.write(Buffer.concat([Buffer.from([0x2]), Buffer.from(job), Buffer.from("Job ended prematurely (not really an error; just run your image job again)")]));
-      }
-    }
-    process.exit(0);
-  });
 });
 
 server.on("error", (e) => {
