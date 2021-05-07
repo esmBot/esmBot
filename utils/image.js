@@ -210,6 +210,10 @@ exports.getType = async (image) => {
       "Range": "bytes=0-1023"
     }});
     clearTimeout(timeout);
+    if (parseInt(imageRequest.headers.get("Content-Range").split("/")[1]) > 20971520) {
+      type = "large";
+      return type;
+    }
     const imageBuffer = await imageRequest.buffer();
     const imageType = await fileType.fromBuffer(imageBuffer);
     if (imageType && formats.includes(imageType.mime)) {

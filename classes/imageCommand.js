@@ -57,6 +57,10 @@ class ImageCommand extends Command {
           collections.runningCommands.delete(this.message.author.id);
           return this.constructor.noImage;
         }
+        if (image.type === "large") {
+          collections.runningCommands.delete(this.message.author.id);
+          return `${this.message.author.mention}, that image is too large!`;
+        }
         magickParams.path = image.path;
         magickParams.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
