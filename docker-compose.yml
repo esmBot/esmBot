@@ -19,25 +19,12 @@ services:
     links:
       - lavalink
     depends_on:
-      - api
       - lavalink
       - postgres
 
     networks:
       esmbot:
         ipv4_address: 172.20.0.2
-
-
-  api:
-    container_name: api
-    build:
-      context: .
-      dockerfile: Dockerfile.api
-    image: esmbot-api
-    restart: unless-stopped
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.3
 
   lavalink:
     container_name: lavalink
@@ -48,7 +35,7 @@ services:
       - ./assets:/opt/Lavalink/assets
     networks:
       esmbot:
-        ipv4_address: 172.20.0.4
+        ipv4_address: 172.20.0.3
 
   postgres:
     container_name: postgres
@@ -63,7 +50,7 @@ services:
       POSTGRES_DB: esmbot
     networks:
       esmbot:
-        ipv4_address: 172.20.0.5
+        ipv4_address: 172.20.0.4
 
   adminer:
     image: adminer
@@ -74,7 +61,7 @@ services:
       - 8888:8080
     networks:
       esmbot:
-        ipv4_address: 172.20.0.6
+        ipv4_address: 172.20.0.5
 
 volumes:
   bot-help:

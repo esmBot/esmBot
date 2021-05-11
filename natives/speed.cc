@@ -42,6 +42,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
           break;
         }
         image.animationDelay(new_delay);
+        image.gifDisposeMethod(Magick::BackgroundDispose);
       }
 
       if (removeFrames) {

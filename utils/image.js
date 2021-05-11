@@ -99,7 +99,7 @@ exports.connect = (server) => {
       for (const uuid of Object.keys(jobs)) {
         if (jobs[uuid].addr === connection.remoteAddress) jobs[uuid].event.emit("error", new Error("Job ended prematurely due to a closed connection; please run your image job again"));
       }
-      this.connections.filter((val) => val !== connection);
+      this.connections = this.connections.filter((val) => val.remoteAddress !== connection.remoteAddress);
     });
     this.connections.push(connection);
     resolve();
@@ -131,7 +131,12 @@ const getIdeal = () => {
     }, 5000);
     for (const connection of this.connections) {
       if (!connection.remoteAddress) continue;
-      fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then(async (status) => {
+      let promise = new Promise((resolveTest) => { resolveTest(); });
+      if (connection.destroyed) {
+        this.connections = this.connections.filter((val) => val.remoteAddress !== connection.remoteAddress);
+        promise = this.connect(connection.remoteAddress);
+      }
+      promise.then(() => fetch(`http://${connection.remoteAddress}:8081/status`)).then(statusRequest => statusRequest.text()).then(async (status) => {
         serversLeft--;
         idealServers.push({
           addr: connection.remoteAddress,

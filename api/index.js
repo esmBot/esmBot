@@ -188,8 +188,13 @@ const runJob = (job, sock) => {
     const worker = new Worker(path.join(__dirname, "../utils/image-runner.js"), {
       workerData: object
     });
+    const timeout = setTimeout(() => {
+      worker.terminate();
+      reject(new Error("Job timed out"));
+    }, 900000);
     log(`Job ${job.uuid} started`, job.num);
     worker.once("message", (data) => {
+      clearTimeout(timeout);
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
       const jobObject = jobs.get(job.uuid);
       jobObject.data = data.buffer;
@@ -200,7 +205,10 @@ const runJob = (job, sock) => {
         return resolve();
       });
     });
-    worker.once("error", reject);
+    worker.once("error", (e) => {
+      clearTimeout(timeout);
+      reject(e);
+    });
     /*run(object).then((data) => {
       log(`Sending result of job ${job.uuid} back to the bot`, job.num);
       const jobObject = jobs.get(job.uuid);

@@ -39,6 +39,7 @@ Napi::Value Trump(const Napi::CallbackInfo &info) {
                               Magick::DstOverCompositeOp);
       watermark_new.magick(type);
       watermark_new.animationDelay(delay == 0 ? image.animationDelay() : delay);
+      watermark_new.gifDisposeMethod(Magick::BackgroundDispose);
       mid.push_back(watermark_new);
     }
 
