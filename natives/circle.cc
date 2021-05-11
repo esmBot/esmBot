@@ -11,7 +11,7 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -21,7 +21,7 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
     list<Image> frames;
     list<Image> coalesced;
     list<Image> blurred;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {

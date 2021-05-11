@@ -10,7 +10,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string text = obj.Get("caption").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
@@ -23,7 +23,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     list<Image> mid;
     Image watermark;
     Image text_image;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
 
     watermark.read("./assets/images/reddit.png");
     text_image.textGravity(Magick::WestGravity);

@@ -11,7 +11,7 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool loop =
         obj.Has("loop") ? obj.Get("loop").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
@@ -24,7 +24,7 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     Blob blob;
 
     list<Image> frames;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
 
     if (frame >= 0 && !loop) {
       size_t frameSize = frames.size();

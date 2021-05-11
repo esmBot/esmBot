@@ -11,7 +11,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
@@ -22,7 +22,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     list<Image> frames;
     list<Image> coalesced;
     list<Image> captioned;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
 
     size_t width = frames.front().baseColumns();
     string query(to_string(width - ((width / 25) * 2)) + "x");

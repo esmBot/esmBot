@@ -11,12 +11,12 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
 
     Blob blob;
 
     Image image;
-    image.read(path);
+    image.read(Blob(data.Data(), data.Length()));
     image.quality(1);
     image.magick("JPEG");
     image.write(&blob);

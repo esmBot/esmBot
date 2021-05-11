@@ -11,7 +11,7 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool sharp = obj.Get("sharp").As<Napi::Boolean>().Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
@@ -21,7 +21,7 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
 
     list<Image> frames;
     list<Image> coalesced;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     if (sharp) {

@@ -12,7 +12,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string water = obj.Get("water").As<Napi::String>().Utf8Value();
     int gravity = obj.Get("gravity").As<Napi::Number>().Int32Value();
     bool resize = obj.Has("resize")
@@ -32,7 +32,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> mid;
     Image watermark;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
     watermark.read(water);
     if (resize && append) {
       string query(to_string(frames.front().baseColumns()) + "x");

@@ -11,7 +11,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string top_text = obj.Get("top").As<Napi::String>().Utf8Value();
     string bottom_text = obj.Get("bottom").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
@@ -25,7 +25,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     list<Image> mid;
     Image top;
     Image bottom;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     top.size(Geometry("600"));

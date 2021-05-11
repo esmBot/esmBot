@@ -11,7 +11,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
-    string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string overlay = obj.Get("overlay").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
@@ -23,7 +23,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> mid;
     Image watermark;
-    readImages(&frames, path);
+    readImages(&frames, Blob(data.Data(), data.Length()));
     watermark.read(overlay);
     watermark.alphaChannel(Magick::SetAlphaChannel);
     watermark.evaluate(Magick::AlphaChannel, Magick::MultiplyEvaluateOperator,
