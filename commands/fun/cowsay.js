@@ -5,7 +5,7 @@ const Command = require("../../classes/command.js");
 class CowsayCommand extends Command {
   async run() {
     if (this.args.length === 0) {
-      return `${this.message.author.mention}, you need to provide some text for the cow to say!`;
+      return "You need to provide some text for the cow to say!";
     } else if (cows[this.args[0].toLowerCase()] != undefined) {
       const cow = cows[this.args.shift().toLowerCase()];
       return `\`\`\`\n${cowsay.say(this.args.join(" "), { cow })}\n\`\`\``;

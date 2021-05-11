@@ -132,17 +132,16 @@ connected_workers ${image.connections.length}
   }
 
   async launch() {
-    try {
-      await this.init();
-    } catch {
-      logger.error("Might have failed to register some things");
-    }
+    await this.init();
 
     this.ipc.register("stat", (message) => {
       collections.stats = message;
     });
 
-    this.ipc.register("restart", () => {
+    this.ipc.register("restart", async () => {
+      await this.bot.editStatus("dnd", {
+        name: "Restarting/shutting down..."
+      });
       process.exit(1);
     });
 

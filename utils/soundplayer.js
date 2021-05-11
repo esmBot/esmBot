@@ -53,21 +53,21 @@ exports.connect = async (client) => {
 };
 
 exports.play = async (client, sound, message, music = false) => {
-  if (!this.manager) return `${message.author.mention}, the sound commands are still starting up!`;
-  if (!message.channel.guild) return `${message.author.mention}, this command only works in servers!`;
-  if (!message.member.voiceState.channelID) return `${message.author.mention}, you need to be in a voice channel first!`;
-  if (!message.channel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I can't join this voice channel!`;
+  if (!this.manager) return "The sound commands are still starting up!";
+  if (!message.channel.guild) return "This command only works in servers!";
+  if (!message.member.voiceState.channelID) return "You need to be in a voice channel first!";
+  if (!message.channel.permissionsOf(client.user.id).has("voiceConnect")) return "I can't join this voice channel!";
   const voiceChannel = message.channel.guild.channels.get(message.member.voiceState.channelID);
-  if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return `${message.author.mention}, I don't have permission to join this voice channel!`;
+  if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
   const player = this.players.get(message.channel.guild.id);
-  if (!music && this.manager.voiceStates.has(message.channel.guild.id) && (player && player.type === "music")) return `${message.author.mention}, I can't play a sound effect while playing music!`;
+  if (!music && this.manager.voiceStates.has(message.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
   const node = this.manager.idealNodes[0];
   if (!music && !nodes.filter(obj => obj.host === node.host)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }
   const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
   const oldQueue = this.queues.get(voiceChannel.guild.id);
-  if (!tracks || tracks.length === 0) return `${message.author.mention}, I couldn't find that song!`;
+  if (!tracks || tracks.length === 0) return "I couldn't find that song!";
   if (music) {
     this.queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
   }
@@ -83,7 +83,7 @@ exports.play = async (client, sound, message, music = false) => {
   }
 
   if (oldQueue && music) {
-    return `${message.author.mention}, your tune \`${tracks[0].info.title}\` has been added to the queue!`;
+    return `Your tune \`${tracks[0].info.title}\` has been added to the queue!`;
   } else {
     this.nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
     return;

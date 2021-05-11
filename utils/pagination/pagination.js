@@ -4,7 +4,17 @@ const MessageCollector = require("./awaitmessages.js");
 module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   let page = 0;
-  let currentPage = await client.createMessage(message.channel.id, pages[page]);
+  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], {
+    messageReference: {
+      channelID: message.channel.id,
+      messageID: message.id,
+      guildID: message.channel.guild ? message.channel.guild.id : undefined,
+      failIfNotExists: false
+    },
+    allowedMentions: {
+      repliedUser: false
+    }
+  }));
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
     await currentPage.addReaction(emoji);
@@ -19,7 +29,17 @@ module.exports = async (client, message, pages, timeout = 120000) => {
           if (manageMessages) msg.removeReaction("◀", member.id);
           break;
         case "🔢":
-          client.createMessage(message.channel.id, `${message.author.mention}, what page do you want to jump to?`).then(askMessage => {
+          client.createMessage(message.channel.id, Object.assign({ content: "What page do you want to jump to?" }, {
+            messageReference: {
+              channelID: currentPage.channel.id,
+              messageID: currentPage.id,
+              guildID: currentPage.channel.guild ? currentPage.channel.guild.id : undefined,
+              failIfNotExists: false
+            },
+            allowedMentions: {
+              repliedUser: false
+            }
+          })).then(askMessage => {
             const messageCollector = new MessageCollector(client, askMessage.channel, (response) => response.author.id === message.author.id && !isNaN(response.content) && Number(response.content) <= pages.length && Number(response.content) > 0, {
               time: timeout,
               maxMatches: 1

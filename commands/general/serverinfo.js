@@ -2,7 +2,7 @@ const Command = require("../../classes/command.js");
 
 class ServerInfoCommand extends Command {
   async run() {
-    if (!this.message.channel.guild) return `${this.message.author.mention}, this command only works in servers!`;
+    if (!this.message.channel.guild) return "This command only works in servers!";
     const owner = await this.message.channel.guild.members.get(this.message.channel.guild.ownerID);
     return {
       "embed": {

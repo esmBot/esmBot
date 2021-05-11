@@ -82,19 +82,36 @@ module.exports = async (client, cluster, ipc, message) => {
 
   // actually run the command
   logger.log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
+  const reference = {
+    messageReference: {
+      channelID: message.channel.id,
+      messageID: message.id,
+      guildID: message.channel.guild ? message.channel.guild.id : undefined,
+      failIfNotExists: false
+    },
+    allowedMentions: {
+      repliedUser: false
+    }
+  };
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
     const commandClass = new cmd(client, cluster, ipc, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
     const result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
     const endTime = new Date();
-    if (typeof result === "string" || (typeof result === "object" && result.embed)) {
-      await client.createMessage(message.channel.id, result);
+    if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
+    if (typeof result === "string") {
+      reference.allowedMentions.repliedUser = true;
+      await client.createMessage(message.channel.id, Object.assign({
+        content: result
+      }, reference));
+    } else if (typeof result === "object" && result.embed) {
+      await client.createMessage(message.channel.id, Object.assign(result, reference));
     } else if (typeof result === "object" && result.file) {
       if (result.file.length > 8388119 && process.env.TEMPDIR !== "") {
         const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
         await fs.promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-        await client.createMessage(message.channel.id, {
+        await client.createMessage(message.channel.id, Object.assign({
           embed: {
             color: 16711680,
             title: "Here's your image!",
@@ -105,24 +122,33 @@ module.exports = async (client, cluster, ipc, message) => {
             footer: {
               text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
             },
-          },
-          content: (endTime - startTime) >= 180000 ? message.author.mention : undefined
-        });
+          }
+        }, reference));
       } else {
-        await client.createMessage(message.channel.id, result.text ? result.text : ((endTime - startTime) >= 180000 ? message.author.mention : undefined), result);
+        await client.createMessage(message.channel.id, Object.assign({
+          content: result.text ? result.text : undefined
+        }, reference), result);
       }
     }
   } catch (error) {
     if (error.toString().includes("Request entity too large")) {
-      await client.createMessage(message.channel.id, `${message.author.mention}, the resulting file was too large to upload. Try again with a smaller image if possible.`);
-    } else if (error.toString().includes("UDP timed out")) {
-      await client.createMessage(message.channel.id, `${message.author.mention}, I couldn't contact the image API in time (most likely due to it being overloaded). Try running your command again.`);
+      await client.createMessage(message.channel.id, Object.assign({
+        content: "The resulting file was too large to upload. Try again with a smaller image if possible."
+      }, reference));
+    } else if (error.toString().includes("Job ended prematurely")) {
+      await client.createMessage(message.channel.id, Object.assign({
+        content: "Something happened to the image servers before I could receive the image. Try running your command again."
+      }, reference));
     } else if (error.toString().includes("Timed out")) {
-      await client.createMessage(message.channel.id, `${message.author.mention}, the request timed out before I could download that image. Try uploading your image somewhere else.`);
+      await client.createMessage(message.channel.id, Object.assign({
+        content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size."
+      }, reference));
     } else {
       logger.error(error.toString());
       try {
-        await client.createMessage(message.channel.id, "Uh oh! I ran into an error while running this command. Please report the content of the attached file here or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>", [{
+        await client.createMessage(message.channel.id, Object.assign({
+          content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"
+        }, reference), [{
           file: `Message: ${error}\n\nStack Trace: ${error.stack}`,
           name: "error.txt"
         }]);

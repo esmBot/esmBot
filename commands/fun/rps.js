@@ -3,22 +3,22 @@ const Command = require("../../classes/command.js");
 
 class RPSCommand extends Command {
   async run() {
-    if (this.args.length === 0 || (this.args[0] !== "rock" && this.args[0] !== "paper" && this.args[0] !== "scissors")) return `${this.message.author.mention}, you need to choose whether you want to be rock, paper, or scissors!`;
+    if (this.args.length === 0 || (this.args[0] !== "rock" && this.args[0] !== "paper" && this.args[0] !== "scissors")) return "You need to choose whether you want to be rock, paper, or scissors!";
     let emoji;
     let winOrLose;
     const result = misc.random(["rock", "paper", "scissors"]);
     switch (result) {
       case "rock":
         emoji = "✊";
-        if (this.args[0].toLowerCase() === "paper") winOrLose = 1;
+        if (this.args[0].toLowerCase() === "paper") winOrLose = true;
         break;
       case "paper":
         emoji = "✋";
-        if (this.args[0].toLowerCase() === "scissors") winOrLose = 1;
+        if (this.args[0].toLowerCase() === "scissors") winOrLose = true;
         break;
       case "scissors":
         emoji = "✌";
-        if (this.args[0].toLowerCase() === "rock") winOrLose = 1;
+        if (this.args[0].toLowerCase() === "rock") winOrLose = true;
         break;
       default:
         break;

@@ -4,7 +4,7 @@ const Command = require("../../classes/command.js");
 
 class ImageReloadCommand extends Command {
   async run() {
-    if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can reload the image servers!`;
+    if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can reload the image servers!";
     await image.disconnect();
     await image.repopulate();
     let amount = 0;
@@ -19,7 +19,7 @@ class ImageReloadCommand extends Command {
     if (amount > 0) {
       return `Successfully connected to ${amount} image servers.`;
     } else {
-      return `${this.message.author.mention}, I couldn't connect to any image servers!`;
+      return "I couldn't connect to any image servers!";
     }
   }
 

@@ -5,7 +5,7 @@ const Command = require("../../classes/command.js");
 
 class ExecCommand extends Command {
   async run() {
-    if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can use exec!`;
+    if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can use exec!";
     const code = this.args.join(" ");
     try {
       const execed = await exec(code);

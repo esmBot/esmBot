@@ -41,7 +41,7 @@ class ImageCommand extends Command {
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
     if (collections.runningCommands.has(this.message.author.id) && (new Date(collections.runningCommands.get(this.message.author.id)) - new Date(this.message.createdAt)) < 5000) {
-      return `${this.message.author.mention}, please slow down a bit.`;
+      return "Please slow down a bit.";
     }
     // before awaiting the command result, add this command to the set of running commands
     collections.runningCommands.set(this.message.author.id, this.message.createdAt);
@@ -55,7 +55,7 @@ class ImageCommand extends Command {
         const image = await imageDetect(this.client, this.message);
         if (image === undefined) {
           collections.runningCommands.delete(this.message.author.id);
-          return `${this.message.author.mention}, ${this.constructor.noImage}`;
+          return this.constructor.noImage;
         }
         magickParams.path = image.path;
         magickParams.type = image.type;
@@ -72,7 +72,7 @@ class ImageCommand extends Command {
     if (this.constructor.requiresText) {
       if (this.args.length === 0 || !await this.criteria(this.args)) {
         collections.runningCommands.delete(this.message.author.id);
-        return `${this.message.author.mention}, ${this.constructor.noText}`;
+        return this.constructor.noText;
       }
     }
 
@@ -96,13 +96,13 @@ class ImageCommand extends Command {
       const { buffer, type } = await magick.run(magickParams).catch(e => {
         throw e;
       });
-      if (type === "nogif" && this.constructor.requiresGIF) return `${this.message.author.mention}, that isn't a GIF!`;
+      if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
       return {
         file: buffer,
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
-      if (e.toString().includes("Not connected to image server")) return `${this.message.author.mention}, I'm still trying to connect to the image servers. Please wait a little bit.`;
+      if (e.toString().includes("Not connected to image server")) return "I'm still trying to connect to the image servers. Please wait a little bit.";
       throw e;
     } finally {
       if (status && await this.client.getMessage(status.channel.id, status.id).catch(() => undefined)) await status.delete();

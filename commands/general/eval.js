@@ -3,7 +3,7 @@ const Command = require("../../classes/command.js");
 
 class EvalCommand extends Command {
   async run() {
-    if (this.message.author.id !== process.env.OWNER) return `${this.message.author.mention}, only the bot owner can use eval!`;
+    if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can use eval!";
     const code = this.args.join(" ");
     try {
       const evaled = eval(code);

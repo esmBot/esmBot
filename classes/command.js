@@ -6,6 +6,17 @@ class Command {
     this.message = message;
     this.args = args;
     this.content = content;
+    this.reference = {
+      messageReference: {
+        channelID: this.message.channel.id,
+        messageID: this.message.id,
+        guildID: this.message.channel.guild ? this.message.channel.guild.id : undefined,
+        failIfNotExists: false
+      },
+      allowedMentions: {
+        repliedUser: false
+      }
+    };
   }
 
   async run() {
