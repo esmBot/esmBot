@@ -5,9 +5,6 @@ FROM node:alpine
 
 INCLUDE+ Dockerfile.base
 
-RUN apk add --no-cache redis
-RUN service redis start
-
 USER esmBot
 
 EXPOSE 8080 8081
