@@ -6,6 +6,13 @@
 using namespace std;
 using namespace Magick;
 
+void *memset16(void *m, uint16_t val, size_t count) {
+  uint16_t *buf = (uint16_t *)m;
+
+  while (count--) *buf++ = val;
+  return m;
+}
+
 Napi::Value Speed(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
@@ -20,32 +27,64 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
     int speed =
         obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().Int32Value() : 2;
 
-    Blob blob;
+    Napi::Object result = Napi::Object::New(env);
 
-    list<Image> frames;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    char *fileData = data.Data();
 
-    // if passed a delay, use that. otherwise use the average frame delay.
+    char *match = "\x21\xF9\x04";
+
+    // if passed a delay, use that. otherwise iterate over every frame.
     if (delay == 0) {
-      vector<int> old_delays;
+      vector<uint16_t> old_delays;
       bool removeFrames = false;
-      for (Image &image : frames) {
-        int animation_delay = image.animationDelay();
-        old_delays.push_back(animation_delay);
+      char *lastPos;
+
+      int amount = 0;
+
+      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 3) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                   (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        ++amount;
+        uint16_t old_delay;
+        memcpy(&old_delay, lastPos + 4, 2);
+        old_delays.push_back(old_delay);
+        lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                 (data.Length() - (lastPos - fileData)) - 1);
       }
 
-      for (Image &image : frames) {
-        int old_delay = image.animationDelay();
-        int new_delay = slow ? old_delay * speed : old_delay / speed;
+      int currentFrame = 0;
+      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 3) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                   (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        uint16_t new_delay = slow ? old_delays[currentFrame] * speed
+                                  : old_delays[currentFrame] / speed;
         if (!slow && new_delay <= 1) {
           removeFrames = true;
           break;
         }
-        image.animationDelay(new_delay);
-        image.gifDisposeMethod(Magick::BackgroundDispose);
+        memset16(lastPos + 4, new_delay, 1);
+        lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                 (data.Length() - (lastPos - fileData)) - 1);
+        ++currentFrame;
       }
 
+      result.Set("data",
+                 Napi::Buffer<char>::Copy(env, fileData, data.Length()));
+
       if (removeFrames) {
+        Blob blob;
+
+        list<Image> frames;
+        readImages(&frames, Blob(data.Data(), data.Length()));
+
         for (list<Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
           int index = distance(frames.begin(), i);
           i->animationDelay(old_delays[index]);
@@ -56,27 +95,67 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
             return ++counter % 2 == 0;
           });
         }
+
+        for_each(frames.begin(), frames.end(), magickImage(type));
+        writeImages(frames.begin(), frames.end(), &blob);
+        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
+                                                    blob.length()));
       }
     } else {
-      int new_delay = slow ? delay * speed : delay / speed;
-      if (!slow && new_delay <= 1) {
+      char *lastPos;
+
+      bool removeFrames = false;
+
+      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 3) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                   (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        uint16_t old_delay;
+        memcpy(&old_delay, lastPos + 4, 2);
+        int new_delay = slow ? delay * speed : delay / speed;
+        if (!slow && new_delay <= 1) {
+          removeFrames = true;
+        }
+        break;
+      }
+
+      if (removeFrames) {
+        Blob blob;
+
+        list<Image> frames;
+        readImages(&frames, Blob(data.Data(), data.Length()));
+
         for (int i = 0; i < speed - 1; ++i) {
           frames.remove_if([counter = 0](const auto x) mutable {
             return ++counter % 2 == 0;
           });
         }
+
+        for_each(frames.begin(), frames.end(), magickImage(type));
+        writeImages(frames.begin(), frames.end(), &blob);
+        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
+                                                    blob.length()));
       } else {
-        for_each(frames.begin(), frames.end(), animationDelayImage(new_delay));
+        while (lastPos != NULL) {
+          if (memcmp(lastPos, match, 3) != 0) {
+            lastPos =
+                (char *)memchr(lastPos + 1, '\x21',
+                               (data.Length() - (lastPos - fileData)) - 1);
+            continue;
+          }
+          uint16_t old_delay;
+          memcpy(&old_delay, lastPos + 4, 2);
+          int new_delay = slow ? delay * speed : delay / speed;
+          memset16(lastPos + 4, new_delay, 1);
+          lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                   (data.Length() - (lastPos - fileData)) - 1);
+        }
       }
     }
 
-    for_each(frames.begin(), frames.end(), magickImage(type));
-
-    writeImages(frames.begin(), frames.end(), &blob);
-
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
     result.Set("type", type);
     return result;
   } catch (Napi::Error const &err) {
