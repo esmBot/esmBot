@@ -21,27 +21,75 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
                     ? obj.Get("frame").As<Napi::Number>().Int32Value()
                     : -1;
 
-    Blob blob;
+    Napi::Object result = Napi::Object::New(env);
 
-    list<Image> frames;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    char *fileData = data.Data();
+    char *match = "\x21\xFF\x0BNETSCAPE2.0\x03\x01";
+    char *descriptor = "\x2C\x00\x00\x00\x00";
+    char *lastPos;
 
-    if (frame >= 0 && !loop) {
+    bool none = true;
+
+    if (loop) {
+      char *newData = (char *)malloc(data.Length() + 19);
+      memcpy(newData, fileData, data.Length());
+      lastPos = (char *)memchr(newData, '\x2C', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, descriptor, 5) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x2C',
+                                   (data.Length() - (lastPos - newData)) - 1);
+          continue;
+        }
+
+        memcpy(lastPos + 19, lastPos, (data.Length() - (lastPos - newData)));
+        memcpy(lastPos, match, 16);
+        memcpy(lastPos + 16, "\x00\x00\x00", 3);
+        result.Set("data",
+                   Napi::Buffer<char>::Copy(env, newData, data.Length() + 19));
+        none = false;
+        break;
+      }
+      if (none)
+        result.Set("data",
+                   Napi::Buffer<char>::Copy(env, newData, data.Length()));
+    } else if (frame >= 0 && !loop) {
+      Blob blob;
+
+      list<Image> frames;
+      readImages(&frames, Blob(data.Data(), data.Length()));
       size_t frameSize = frames.size();
       int framePos = clamp(frame, 0, (int)frameSize);
       frames.resize(framePos + 1);
+
+      for_each(frames.begin(), frames.end(),
+               animationIterationsImage(loop ? 0 : 1));
+      for_each(frames.begin(), frames.end(), magickImage(type));
+
+      if (delay != 0)
+        for_each(frames.begin(), frames.end(), animationDelayImage(delay));
+      writeImages(frames.begin(), frames.end(), &blob);
+      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
+                                                  blob.length()));
+    } else {
+      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 16) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x21',
+                                   (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        memcpy(lastPos, lastPos + 19,
+               (data.Length() - (lastPos - fileData)) - 19);
+        result.Set("data",
+                   Napi::Buffer<char>::Copy(env, fileData, data.Length() - 19));
+        none = false;
+        break;
+      }
+      if (none)
+        result.Set("data",
+                   Napi::Buffer<char>::Copy(env, fileData, data.Length()));
     }
-    for_each(frames.begin(), frames.end(),
-             animationIterationsImage(loop ? 0 : 1));
-    for_each(frames.begin(), frames.end(), magickImage(type));
 
-    if (delay != 0)
-      for_each(frames.begin(), frames.end(), animationDelayImage(delay));
-    writeImages(frames.begin(), frames.end(), &blob);
-
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
     result.Set("type", type);
     return result;
   } catch (Napi::Error const &err) {

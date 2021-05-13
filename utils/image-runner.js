@@ -1,4 +1,4 @@
-const magick = require("../build/Release/image.node");
+const magick = require(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const fetch = require("node-fetch");
 
