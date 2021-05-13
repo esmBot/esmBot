@@ -12,6 +12,8 @@ Napi::Value Blurple(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
+    bool old =
+        obj.Has("old") ? obj.Get("old").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -26,7 +28,7 @@ Napi::Value Blurple(const Napi::CallbackInfo &info) {
 
     for (Image &image : coalesced) {
       image.threshold(49151.25);
-      image.levelColors("#7289DA", "white");
+      image.levelColors(old ? "#7289DA" : "#5865F2", "white");
       image.magick(type);
       image.animationDelay(delay == 0 ? image.animationDelay() : delay);
       blurpled.push_back(image);
