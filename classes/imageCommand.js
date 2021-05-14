@@ -56,10 +56,12 @@ class ImageCommand extends Command {
         if (image === undefined) {
           collections.runningCommands.delete(this.message.author.id);
           return this.constructor.noImage;
-        }
-        if (image.type === "large") {
+        } else if (image.type === "large") {
           collections.runningCommands.delete(this.message.author.id);
-          return `${this.message.author.mention}, that image is too large!`;
+          return "That image is too large!";
+        } else if (image.type === "tenorlimit") {
+          collections.runningCommands.delete(this.message.author.id);
+          return "I've been rate-limited by Tenor. Please try uploading the GIF elsewhere.";
         }
         magickParams.path = image.path;
         magickParams.type = image.type;

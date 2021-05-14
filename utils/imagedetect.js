@@ -47,7 +47,8 @@ const getImage = async (image, image2, video, gifv = false) => {
         // so we use that if there's a key in the config and fall back to using the MP4 if there isn't
         // Note that MP4 conversion requires an ImageMagick build that supports MPEG decoding
         if (process.env.TENOR !== "") {
-          const data = await fetch(`https://api.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&key=${process.env.TENOR}`);
+          const data = await fetch(`https://g.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&media_filter=minimal&limit=1&key=${process.env.TENOR}`);
+          if (data.status === 429) return "tenorlimit";
           const json = await data.json();
           payload.path = json.results[0].media[0].gif.url;
         } else {
@@ -106,7 +107,7 @@ const checkImages = async (message, video) => {
   } else if (message.attachments.length !== 0 && message.attachments[0].width) {
     type = await getImage(message.attachments[0].proxy_url, message.attachments[0].url, video);
   }
-  // if the file is an image then return it
+  // if the return value exists then return it
   return type ? type : false;
 };
 

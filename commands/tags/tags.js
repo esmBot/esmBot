@@ -25,13 +25,13 @@ class TagsCommand extends Command {
       case "remove":
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
         if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permission.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
         await database.removeTag(this.args[1].toLowerCase(), this.message.channel.guild);
         return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
       case "edit":
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
         if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permission.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
         await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, guild);
         return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
       case "own":
@@ -72,7 +72,7 @@ class TagsCommand extends Command {
         return tags[random(Object.keys(tags))].content;
       case "enable":
       case "disable":
-        if (!this.message.member.permission.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't have permission to disable tags!";
+        if (!this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't have permission to disable tags!";
         var toggleResult = await database.toggleTags(this.message.channel.guild);
         return `Tags for this guild have been ${toggleResult ? "disabled" : "enabled"}. To ${toggleResult ? "enable" : "disable"} them again, run ${guild.prefix}tags ${toggleResult ? "enable" : "disable"}.`;
       default:
