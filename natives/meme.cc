@@ -27,13 +27,13 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     Image bottom_text;
     readImages(&frames, Blob(data.Data(), data.Length()));
     coalesceImages(&coalesced, frames.begin(), frames.end());
-    for_each(coalesced.begin(), coalesced.end(),
-             scaleImage(Geometry(600, 600)));
 
-    top_text.size(Geometry(to_string(coalesced.front().columns())));
+    int width = coalesced.front().columns();
+
+    top_text.size(Geometry(to_string(width)));
     top_text.backgroundColor("none");
     top_text.font("Impact");
-    top_text.fontPointsize(40);
+    top_text.fontPointsize(width / 12);
     top_text.textGravity(Magick::CenterGravity);
     top_text.read("pango:<span foreground='white'>" + top + "</span>");
     Image top_text_fill = top_text;
@@ -48,7 +48,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       bottom_text.size(Geometry(to_string(coalesced.front().columns())));
       bottom_text.backgroundColor("none");
       bottom_text.font("Impact");
-      bottom_text.fontPointsize(40);
+      bottom_text.fontPointsize(width / 12);
       bottom_text.textGravity(Magick::CenterGravity);
       bottom_text.read("pango:<span foreground='white'>" + bottom + "</span>");
       Image bottom_text_fill = bottom_text;

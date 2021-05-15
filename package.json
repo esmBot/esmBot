@@ -27,7 +27,7 @@
     "@top-gg/sdk": "^3.1.1",
     "cowsay2": "^2.0.4",
     "dayjs": "^1.10.4",
-    "dotenv": "^8.2.0",
+    "dotenv": "^9.0.2",
     "duckduckgo-images-api": "^1.0.5",
     "emoji-regex": "^9.2.2",
     "eris": "^0.15.0",
@@ -39,7 +39,7 @@
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
-    "sharp": "^0.26.3"
+    "sharp": "^0.28.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.8",
