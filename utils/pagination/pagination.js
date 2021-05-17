@@ -3,8 +3,7 @@ const MessageCollector = require("./awaitmessages.js");
 
 module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
-  let page = 0;
-  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], {
+  const options = {
     messageReference: {
       channelID: message.channel.id,
       messageID: message.id,
@@ -14,7 +13,9 @@ module.exports = async (client, message, pages, timeout = 120000) => {
     allowedMentions: {
       repliedUser: false
     }
-  }));
+  };
+  let page = 0;
+  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options));
   const emojiList = ["◀", "🔢", "▶", "🗑"];
   for (const emoji of emojiList) {
     await currentPage.addReaction(emoji);
@@ -25,7 +26,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
       switch (reaction.name) {
         case "◀":
           page = page > 0 ? --page : pages.length - 1;
-          currentPage = await currentPage.edit(pages[page]);
+          currentPage = await currentPage.edit(Object.assign(pages[page], options));
           if (manageMessages) msg.removeReaction("◀", member.id);
           break;
         case "🔢":
@@ -48,7 +49,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
               if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) askMessage.delete();
               if (manageMessages) await response.delete();
               page = Number(response.content) - 1;
-              currentPage = await currentPage.edit(pages[page]);
+              currentPage = await currentPage.edit(Object.assign(pages[page], options));
               if (manageMessages) msg.removeReaction("🔢", member.id);
             });
           }).catch(error => {
@@ -57,7 +58,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
           break;
         case "▶":
           page = page + 1 < pages.length ? ++page : 0;
-          currentPage = await currentPage.edit(pages[page]);
+          currentPage = await currentPage.edit(Object.assign(pages[page], options));
           if (manageMessages) msg.removeReaction("▶", member.id);
           break;
         case "🗑":
