@@ -97,7 +97,7 @@ exports.connect = (server) => {
     });
     connection.once("close", () => {
       for (const uuid of Object.keys(jobs)) {
-        if (jobs[uuid].addr === connection.remoteAddress) jobs[uuid].event.emit("error", new Error("Job ended prematurely due to a closed connection; please run your image job again"));
+        if (jobs[uuid].addr === connection.remoteAddress) jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
       }
     });
     this.connections.push(connection);
@@ -111,6 +111,7 @@ exports.disconnect = async () => {
   }
   for (const uuid of Object.keys(jobs)) {
     jobs[uuid].event.emit("error", "Job ended prematurely (not really an error; just run your image job again)");
+    delete jobs[uuid];
   }
   this.connections = [];
   return;
