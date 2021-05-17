@@ -93,7 +93,7 @@ exports.connect = (server) => {
       }
     });
     connection.on("error", (e) => {
-      logger.error(e);
+      logger.error(e.toString());
     });
     connection.once("close", () => {
       for (const uuid of Object.keys(jobs)) {
@@ -129,19 +129,29 @@ const getIdeal = () => {
       }
     }, 5000);
     for (const connection of this.connections) {
-      if (!connection.remoteAddress) continue;
-      fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then(async (status) => {
+      if (!connection.remoteAddress || connection.destroyed) {
+        serversLeft--;
+        continue;
+      }
+      fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then((status) => {
         serversLeft--;
         idealServers.push({
           addr: connection.remoteAddress,
           load: parseInt(status)
         });
+        return;
+      }).then(async () => {
         if (!serversLeft) {
           clearTimeout(timeout);
           const server = await chooseServer(idealServers);
           resolve(this.connections.find(val => val.remoteAddress === server.addr));
         }
-        return;
+      }).catch(e => reject(e));
+    }
+    if (!serversLeft) {
+      clearTimeout(timeout);
+      chooseServer(idealServers).then(server => {
+        resolve(this.connections.find(val => val.remoteAddress === server.addr));
       }).catch(e => reject(e));
     }
   });
