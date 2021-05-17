@@ -13,11 +13,11 @@ class YouTubeCommand extends Command {
     if (result.error && result.error.code === 403) return "I've exceeded my YouTube API search quota for the day. Check back later.";
     for (const [i, value] of result.items.entries()) {
       if (value.id.kind === "youtube#channel") {
-        messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}`);
+        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}` });
       } else if (value.id.kind === "youtube#playlist") {
-        messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nCreated by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}**\nhttps://youtube.com/playlist?list=${value.id.playlistId}`);
+        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nCreated by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}**\nhttps://youtube.com/playlist?list=${value.id.playlistId}` });
       } else {
-        messages.push(`Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}`);
+        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}` });
       }
     }
     return paginator(this.client, this.message, messages);
