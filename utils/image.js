@@ -40,7 +40,10 @@ exports.getStatus = () => {
       resolve(statuses);
     }, 5000);
     for (const connection of this.connections) {
-      if (!connection.remoteAddress) continue;
+      if (!connection.remoteAddress) {
+        serversLeft--;
+        continue;
+      }
       fetch(`http://${connection.remoteAddress}:8081/running`).then(statusRequest => statusRequest.json()).then((status) => {
         serversLeft--;
         statuses.push(status);
@@ -49,7 +52,17 @@ exports.getStatus = () => {
           resolve(statuses);
         }
         return;
-      }).catch(e => reject(e));
+      }).catch(e => {
+        if (e.code === "ECONNREFUSED") {
+          serversLeft--;
+          return;
+        }
+        reject(e);
+      });
+    }
+    if (!serversLeft) {
+      clearTimeout(timeout);
+      resolve(statuses);
     }
   });
 };
@@ -130,7 +143,7 @@ const getIdeal = () => {
       }
     }, 5000);
     for (const connection of this.connections) {
-      if (!connection.remoteAddress || connection.destroyed) {
+      if (!connection.remoteAddress) {
         serversLeft--;
         continue;
       }
@@ -147,7 +160,13 @@ const getIdeal = () => {
           const server = await chooseServer(idealServers);
           resolve(this.connections.find(val => val.remoteAddress === server.addr));
         }
-      }).catch(e => reject(e));
+      }).catch(e => {
+        if (e.code === "ECONNREFUSED") {
+          serversLeft--;
+          return;
+        }
+        reject(e);
+      });
     }
     if (!serversLeft) {
       clearTimeout(timeout);
@@ -162,6 +181,13 @@ const start = (object, num) => {
   return getIdeal().then(async (currentServer) => {
     const data = Buffer.concat([Buffer.from([0x01 /* queue job */]), Buffer.from(num.length.toString()), Buffer.from(num), Buffer.from(JSON.stringify(object))]);
     return new Promise((resolve, reject) => {
+      if (currentServer.destroyed) {
+        logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
+        currentServer.connect(8080, currentServer.remoteAddress, () => {
+          const res = start(object, num);
+          reject(res); // this is done to differentiate the result from a step
+        });
+      }
       currentServer.write(data, (err) => {
         if (err) {
           if (err.code === "EPIPE") {
