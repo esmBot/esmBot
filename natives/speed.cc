@@ -31,7 +31,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
     char *fileData = data.Data();
 
-    char *match = "\x21\xF9\x04";
+    char *match = "\x00\x21\xF9\x04";
 
     // if passed a delay, use that. otherwise iterate over every frame.
     if (delay == 0) {
@@ -41,26 +41,26 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
       int amount = 0;
 
-      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      lastPos = (char *)memchr(fileData, '\x00', data.Length());
       while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 3) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x21',
+        if (memcmp(lastPos, match, 4) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
                                    (data.Length() - (lastPos - fileData)) - 1);
           continue;
         }
         ++amount;
         uint16_t old_delay;
-        memcpy(&old_delay, lastPos + 4, 2);
+        memcpy(&old_delay, lastPos + 5, 2);
         old_delays.push_back(old_delay);
-        lastPos = (char *)memchr(lastPos + 1, '\x21',
+        lastPos = (char *)memchr(lastPos + 1, '\x00',
                                  (data.Length() - (lastPos - fileData)) - 1);
       }
 
       int currentFrame = 0;
-      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      lastPos = (char *)memchr(fileData, '\x00', data.Length());
       while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 3) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x21',
+        if (memcmp(lastPos, match, 4) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
                                    (data.Length() - (lastPos - fileData)) - 1);
           continue;
         }
@@ -70,8 +70,8 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
           removeFrames = true;
           break;
         }
-        memset16(lastPos + 4, new_delay, 1);
-        lastPos = (char *)memchr(lastPos + 1, '\x21',
+        memset16(lastPos + 5, new_delay, 1);
+        lastPos = (char *)memchr(lastPos + 1, '\x00',
                                  (data.Length() - (lastPos - fileData)) - 1);
         ++currentFrame;
       }
@@ -106,15 +106,15 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
       bool removeFrames = false;
 
-      lastPos = (char *)memchr(fileData, '\x21', data.Length());
+      lastPos = (char *)memchr(fileData, '\x00', data.Length());
       while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 3) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x21',
+        if (memcmp(lastPos, match, 4) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
                                    (data.Length() - (lastPos - fileData)) - 1);
           continue;
         }
         uint16_t old_delay;
-        memcpy(&old_delay, lastPos + 4, 2);
+        memcpy(&old_delay, lastPos + 5, 2);
         int new_delay = slow ? delay * speed : delay / speed;
         if (!slow && new_delay <= 1) {
           removeFrames = true;
@@ -140,17 +140,17 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
                                                     blob.length()));
       } else {
         while (lastPos != NULL) {
-          if (memcmp(lastPos, match, 3) != 0) {
+          if (memcmp(lastPos, match, 4) != 0) {
             lastPos =
-                (char *)memchr(lastPos + 1, '\x21',
+                (char *)memchr(lastPos + 1, '\x00',
                                (data.Length() - (lastPos - fileData)) - 1);
             continue;
           }
           uint16_t old_delay;
-          memcpy(&old_delay, lastPos + 4, 2);
+          memcpy(&old_delay, lastPos + 5, 2);
           int new_delay = slow ? delay * speed : delay / speed;
-          memset16(lastPos + 4, new_delay, 1);
-          lastPos = (char *)memchr(lastPos + 1, '\x21',
+          memset16(lastPos + 5, new_delay, 1);
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
                                    (data.Length() - (lastPos - fileData)) - 1);
         }
       }
