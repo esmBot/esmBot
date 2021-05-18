@@ -7,7 +7,7 @@ exports.random = (array) => {
 };
 
 const optionalReplace = (token) => {
-  return token === undefined || token === "" ? "" : "<redacted>";
+  return token === undefined || token === "" ? "" : (token === "true" || token === "false" ? token : "<redacted>");
 };
 
 // clean(text) to clean message of any private info or mentions
