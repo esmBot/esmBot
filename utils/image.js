@@ -10,11 +10,9 @@ const logger = require("./logger.js");
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/mov"];
 
-const jobs = {};
+exports.jobs = {};
 
 exports.connections = [];
-
-const statuses = {};
 
 exports.servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
@@ -83,34 +81,31 @@ exports.connect = (server) => {
       const req = msg.slice(37, msg.length);
       const uuid = msg.slice(1, 37).toString();
       if (opcode === 0x00) { // Job queued
-        if (jobs[req]) {
-          jobs[req].event.emit("uuid", uuid);
+        if (this.jobs[req]) {
+          this.jobs[req].event.emit("uuid", uuid);
         }
       } else if (opcode === 0x01) { // Job completed successfully
       // the image API sends all job responses over the same socket; make sure this is ours
-        if (jobs[uuid]) {
+        if (this.jobs[uuid]) {
           const imageReq = await fetch(`http://${connection.remoteAddress}:8081/image?id=${uuid}`);
           const image = await imageReq.buffer();
           // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
           // by a newline, followed by the image data.
 
-          jobs[uuid].event.emit("image", image, imageReq.headers.get("ext"));
+          this.jobs[uuid].event.emit("image", image, imageReq.headers.get("ext"));
         }
       } else if (opcode === 0x02) { // Job errored
-        if (jobs[uuid]) {
-          jobs[uuid].event.emit("error", new Error(req));
+        if (this.jobs[uuid]) {
+          this.jobs[uuid].event.emit("error", new Error(req));
         }
-      } else if (opcode === 0x03) {
-      // we use the uuid part here because queue info requests don't respond with one
-        statuses[`${connection.remoteAddress}:${connection.remotePort}`] = parseInt(uuid);
       }
     });
     connection.on("error", (e) => {
       logger.error(e.toString());
     });
     connection.once("close", () => {
-      for (const uuid of Object.keys(jobs)) {
-        if (jobs[uuid].addr === connection.remoteAddress) jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
+      for (const uuid of Object.keys(this.jobs)) {
+        if (this.jobs[uuid].addr === connection.remoteAddress) this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
       }
     });
     this.connections.push(connection);
@@ -122,9 +117,9 @@ exports.disconnect = async () => {
   for (const connection of this.connections) {
     connection.destroy();
   }
-  for (const uuid of Object.keys(jobs)) {
-    jobs[uuid].event.emit("error", "Job ended prematurely (not really an error; just run your image job again)");
-    delete jobs[uuid];
+  for (const uuid of Object.keys(this.jobs)) {
+    this.jobs[uuid].event.emit("error", "Job ended prematurely (not really an error; just run your image job again)");
+    delete this.jobs[uuid];
   }
   this.connections = [];
   return;
@@ -208,13 +203,13 @@ const start = (object, num) => {
     const event = new EventEmitter();
     return new Promise((resolve) => {
       event.once("uuid", (uuid) => resolve({ event, uuid, addr }));
-      jobs[num] = { event, addr };
+      this.jobs[num] = { event, addr };
     });
   }, (result) => {
     throw result;
   }).then(data => {
-    delete jobs[num];
-    jobs[data.uuid] = { event: data.event, addr: data.addr };
+    delete this.jobs[num];
+    this.jobs[data.uuid] = { event: data.event, addr: data.addr };
     return { uuid: data.uuid, event: data.event };
   });
 };
@@ -269,7 +264,7 @@ exports.run = object => {
       // Connect to best image server
       const num = Math.floor(Math.random() * 100000).toString().slice(0, 5);
       const timeout = setTimeout(() => {
-        if (jobs[num]) delete jobs[num];
+        if (this.jobs[num]) delete this.jobs[num];
         reject("the image request timed out after 25 seconds. Try uploading your image elsewhere.");
       }, 25000);
       start(object, num).catch(err => { // incredibly hacky code incoming
@@ -280,7 +275,7 @@ exports.run = object => {
         clearTimeout(timeout);
         if (!data.event) reject("Not connected to image server");
         data.event.once("image", (image, type) => {
-          delete jobs[data.uuid];
+          delete this.jobs[data.uuid];
           const payload = {
           // Take just the image data
             buffer: image,
