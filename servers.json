@@ -4,5 +4,8 @@
   ],
   "image": [
     "localhost"
+  ],
+  "searx": [
+    "https://searx.xyz"
   ]
 }

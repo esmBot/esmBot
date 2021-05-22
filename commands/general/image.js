@@ -1,5 +1,7 @@
 const paginator = require("../../utils/pagination/pagination.js");
-const { image_search } = require("duckduckgo-images-api");
+const { searx } = require("../../servers.json");
+const { random } = require("../../utils/misc.js");
+const fetch = require("node-fetch");
 const Command = require("../../classes/command.js");
 
 class ImageSearchCommand extends Command {
@@ -8,19 +10,20 @@ class ImageSearchCommand extends Command {
     if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     if (this.args.length === 0) return "You need to provide something to search for!";
     const embeds = [];
-    const images = await image_search({ query: this.args.join(" "), moderate: true });
-    if (images.error && images.error.code === 403) return "The daily search quota has been exceeded. Check back later.";
-    if (images.length === 0) return "I couldn't find any results!";
-    for (const [i, value] of images.entries()) {
+    const images = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=images&disabled_engines=flickr__images,ccengine__images,library of congress__images,deviantart__images,bing images__images&q=${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
+    //if (images.error && images.error.code === 403) return "The daily search quota has been exceeded. Check back later.";
+    if (images.results.length === 0) return "I couldn't find any results!";
+    for (const [i, value] of images.results.entries()) {
       embeds.push({
         "embed": {
           "title": "Search Results",
           "color": 16711680,
           "footer": {
-            "text": `Page ${i + 1} of ${images.length}`
+            "text": `Page ${i + 1} of ${images.results.length}`
           },
+          "description": `[${value.title}](${encodeURI(value.img_src)})`,
           "image": {
-            "url": value.image
+            "url": encodeURI(value.img_src)
           },
           "author": {
             "name": this.message.author.username,
@@ -32,7 +35,7 @@ class ImageSearchCommand extends Command {
     return paginator(this.client, this.message, embeds);
   }
 
-  static description = "Searches for images on DuckDuckGo";
+  static description = "Searches for images across the web";
   static aliases = ["im", "photo", "img"];
   static arguments = ["[query]"];
 }

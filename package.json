@@ -28,7 +28,6 @@
     "cowsay2": "^2.0.4",
     "dayjs": "^1.10.4",
     "dotenv": "^9.0.2",
-    "duckduckgo-images-api": "^1.0.5",
     "emoji-regex": "^9.2.2",
     "eris": "^0.15.0",
     "eris-sharder": "github:esmBot/eris-sharder#eris-dev",
