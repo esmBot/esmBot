@@ -152,6 +152,16 @@ connected_workers ${image.connections.length}
       if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
       return this.ipc.broadcast("reloadSuccess");
     });
+
+    this.ipc.register("soundreload", async () => {
+      const soundStatus = await sound.checkStatus();
+      if (!soundStatus) {
+        const length = await sound.connect(this.bot);
+        return this.ipc.broadcast("soundReloadSuccess", { length });
+      } else {
+        return this.ipc.broadcast("soundReloadFail");
+      }
+    });
     
     // connect to lavalink
     if (!sound.status && !sound.connected) await sound.connect(this.bot);

@@ -1,16 +1,23 @@
-const soundPlayer = require("../../utils/soundplayer.js");
 const Command = require("../../classes/command.js");
 
 class SoundReloadCommand extends Command {
-  async run() {
-    if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can reload Lavalink!";
-    const soundStatus = await soundPlayer.checkStatus();
-    if (!soundStatus) {
-      const length = await soundPlayer.connect(this.client);
-      return `Successfully connected to ${length} Lavalink node(s).`;
-    } else {
-      return "I couldn't connect to any Lavalink nodes!";
-    }
+  // another very hacky command
+  run() {
+    return new Promise((resolve) => {
+      if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can reload Lavalink!";
+      this.message.channel.sendTyping();
+      this.ipc.broadcast("soundreload");
+      this.ipc.register("soundReloadSuccess", (msg) => {
+        this.ipc.unregister("soundReloadSuccess");
+        this.ipc.unregister("soundReloadFail");
+        resolve(`Successfully connected to ${msg.length} Lavalink node(s).`);
+      });
+      this.ipc.register("soundReloadFail", () => {
+        this.ipc.unregister("soundReloadSuccess");
+        this.ipc.unregister("soundReloadFail");
+        resolve("I couldn't connect to any Lavalink nodes!");
+      });
+    });
   }
 
   static description = "Attempts to reconnect to all available Lavalink nodes";

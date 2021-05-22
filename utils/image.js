@@ -85,7 +85,7 @@ exports.connect = (server) => {
           this.jobs[req].event.emit("uuid", uuid);
         }
       } else if (opcode === 0x01) { // Job completed successfully
-      // the image API sends all job responses over the same socket; make sure this is ours
+        // the image API sends all job responses over the same socket; make sure this is ours
         if (this.jobs[uuid]) {
           const imageReq = await fetch(`http://${connection.remoteAddress}:8081/image?id=${uuid}`);
           const image = await imageReq.buffer();
@@ -232,9 +232,11 @@ exports.getType = async (image) => {
     controller.abort();
   }, 25000);
   try {
-    const imageRequest = await fetch(image, { signal: controller.signal, headers: {
-      "Range": "bytes=0-1023"
-    }});
+    const imageRequest = await fetch(image, {
+      signal: controller.signal, headers: {
+        "Range": "bytes=0-1023"
+      }
+    });
     clearTimeout(timeout);
     const size = imageRequest.headers.has("Content-Range") ? imageRequest.headers.get("Content-Range").split("/")[1] : imageRequest.headers.get("Content-Length");
     if (parseInt(size) > 20971520) {
@@ -277,7 +279,7 @@ exports.run = object => {
         data.event.once("image", (image, type) => {
           delete this.jobs[data.uuid];
           const payload = {
-          // Take just the image data
+            // Take just the image data
             buffer: image,
             type: type
           };
