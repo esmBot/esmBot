@@ -29,6 +29,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     int width = coalesced.front().columns();
+    int dividedWidth = width / 1000;
 
     top_text.size(Geometry(to_string(width)));
     top_text.backgroundColor("none");
@@ -41,6 +42,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     top_text_fill.morphology(Magick::EdgeOutMorphology, "Octagon");
     top_text_fill.backgroundColor("black");
     top_text_fill.alphaChannel(Magick::ShapeAlphaChannel);
+    if (dividedWidth > 1) top_text_fill.morphology(Magick::DilateMorphology, "Octagon", dividedWidth);
     top_text.composite(top_text_fill, Magick::CenterGravity,
                        Magick::DstOverCompositeOp);
 
@@ -56,6 +58,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       bottom_text_fill.morphology(Magick::EdgeOutMorphology, "Octagon");
       bottom_text_fill.backgroundColor("black");
       bottom_text_fill.alphaChannel(Magick::ShapeAlphaChannel);
+      if (dividedWidth > 1) bottom_text_fill.morphology(Magick::DilateMorphology, "Octagon", dividedWidth);
       bottom_text.composite(bottom_text_fill, Magick::CenterGravity,
                             Magick::DstOverCompositeOp);
     }
