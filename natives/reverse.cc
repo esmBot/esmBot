@@ -49,8 +49,6 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
                                                 blob.length()));
     result.Set("type", "gif");
     return result;
-  } catch (Napi::Error const &err) {
-    throw err;
   } catch (std::exception const &err) {
     throw Napi::Error::New(env, err.what());
   } catch (...) {
