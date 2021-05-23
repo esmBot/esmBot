@@ -103,7 +103,7 @@ exports.connect = (server) => {
     connection.on("error", (e) => {
       logger.error(e.toString());
     });
-    connection.once("close", () => {
+    connection.once("end", () => {
       for (const uuid of Object.keys(this.jobs)) {
         if (this.jobs[uuid].addr === connection.remoteAddress) this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
       }
