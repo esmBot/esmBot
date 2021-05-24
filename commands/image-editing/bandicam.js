@@ -10,7 +10,7 @@ class BandicamCommand extends ImageCommand {
   static description = "Adds the Bandicam watermark to an image";
   static aliases = ["bandi"];
 
-  static noImage = "you need to provide an image to add a Bandicam watermark!";
+  static noImage = "You need to provide an image to add a Bandicam watermark!";
   static command = "watermark";
 }
 

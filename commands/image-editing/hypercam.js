@@ -10,7 +10,7 @@ class HypercamCommand extends ImageCommand {
   static description = "Adds the Hypercam watermark to an image";
   static aliases = ["hcam"];
 
-  static noImage = "you need to provide an image to add a Hypercam watermark!";
+  static noImage = "You need to provide an image to add a Hypercam watermark!";
   static command = "watermark";
 }
 

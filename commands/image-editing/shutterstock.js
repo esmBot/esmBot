@@ -10,7 +10,7 @@ class ShutterstockCommand extends ImageCommand {
   static description = "Adds the Shutterstock watermark to an image";
   static aliases = ["stock", "stockphoto"];
 
-  static noImage = "you need to provide an image to add a Shutterstock watermark!";
+  static noImage = "You need to provide an image to add a Shutterstock watermark!";
   static command = "watermark";
 }
 

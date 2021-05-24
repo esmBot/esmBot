@@ -14,7 +14,7 @@ class SonicCommand extends ImageCommand {
 
   static requiresImage = false;
   static requiresText = true;
-  static noText = "you need to provide some text to make a Sonic meme!";
+  static noText = "You need to provide some text to make a Sonic meme!";
   static command = "sonic";
 }
 

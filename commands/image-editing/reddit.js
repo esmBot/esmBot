@@ -12,7 +12,7 @@ class RedditCommand extends ImageCommand {
   static description = "Adds a Reddit watermark to an image";
   static arguments = ["{text}"];
 
-  static noText = "you need to provide some text to add a Reddit watermark!";
+  static noText = "You need to provide some text to add a Reddit watermark!";
   static command = "reddit";
 }
 

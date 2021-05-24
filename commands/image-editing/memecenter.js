@@ -10,7 +10,7 @@ class MemeCenterCommand extends ImageCommand {
   static description = "Adds the MemeCenter watermark to an image";
   static aliases = ["memec", "mcenter"];
 
-  static noImage = "you need to provide an image to add a MemeCenter watermark!";
+  static noImage = "You need to provide an image to add a MemeCenter watermark!";
   static command = "watermark";
 }
 

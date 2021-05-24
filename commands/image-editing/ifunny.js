@@ -10,7 +10,7 @@ class iFunnyCommand extends ImageCommand {
 
   static description = "Adds the iFunny watermark to an image";
 
-  static noImage = "you need to provide an image to add an iFunny watermark!";
+  static noImage = "You need to provide an image to add an iFunny watermark!";
   static command = "watermark";
 }
 

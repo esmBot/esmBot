@@ -8,7 +8,7 @@ class ImplodeCommand extends ImageCommand {
   static description = "Implodes an image";
   static aliases = ["imp"];
 
-  static noImage = "you need to provide an image to implode!";
+  static noImage = "You need to provide an image to implode!";
   static command = "explode";
 }
 

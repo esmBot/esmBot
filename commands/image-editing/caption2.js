@@ -13,8 +13,8 @@ class CaptionTwoCommand extends ImageCommand {
   static aliases = ["tags2", "meirl", "memecaption", "medotmecaption"];
   static arguments = ["{text}"];
 
-  static noText = "you need to provide some text to add a caption!";
-  static noImage = "you need to provide an image to add a caption!";
+  static noText = "You need to provide some text to add a caption!";
+  static noImage = "You need to provide an image to add a caption!";
   static command = "captionTwo";
 }
 

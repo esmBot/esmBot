@@ -13,7 +13,7 @@ class HomebrewCommand extends ImageCommand {
 
   static requiresImage = false;
   static requiresText = true;
-  static noText = "you need to provide some text to make a Homebrew Channel edit!";
+  static noText = "You need to provide some text to make a Homebrew Channel edit!";
   static command = "homebrew";
 }
 

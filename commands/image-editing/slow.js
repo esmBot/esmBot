@@ -14,7 +14,7 @@ class SlowCommand extends ImageCommand {
   static arguments = ["{multiplier}"];
 
   static requiresGIF = true;
-  static noImage = "you need to provide an image to slow down!";
+  static noImage = "You need to provide an image to slow down!";
   static command = "speed";
 }
 
