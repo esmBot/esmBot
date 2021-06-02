@@ -199,14 +199,15 @@ const start = (object, num) => {
         }
       });
     });
+  }).catch((result) => {
+    throw result;
   }).then((addr) => {
     const event = new EventEmitter();
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       event.once("uuid", (uuid) => resolve({ event, uuid, addr }));
+      event.once("error", reject);
       this.jobs[num] = { event, addr };
     });
-  }, (result) => {
-    throw result;
   }).then(data => {
     delete this.jobs[num];
     this.jobs[data.uuid] = { event: data.event, addr: data.addr };
@@ -286,6 +287,7 @@ exports.run = object => {
           resolve(payload);
         });
         data.event.once("error", (err) => {
+          delete this.jobs[data.uuid];
           reject(err);
         });
         return;
