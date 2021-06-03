@@ -33,7 +33,7 @@ This page was last generated on \`${new Date().toString()}\`.
 
 \`[]\` means an argument is required, \`{}\` means an argument is optional.
 
-Default prefix is \`&\`.
+The default prefix is \`&\`.
 
 **Want to help support esmBot's development? Consider donating on Patreon!** https://patreon.com/TheEssem
 
