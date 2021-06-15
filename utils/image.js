@@ -182,22 +182,23 @@ const start = (object, num) => {
           const res = start(object, num);
           reject(res); // this is done to differentiate the result from a step
         });
-      }
-      currentServer.write(data, (err) => {
-        if (err) {
-          if (err.code === "EPIPE") {
-            logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
-            currentServer.connect(8080, currentServer.remoteAddress, () => {
-              const res = start(object, num);
-              reject(res); // this is done to differentiate the result from a step
-            });
+      } else {
+        currentServer.write(data, (err) => {
+          if (err) {
+            if (err.code === "EPIPE") {
+              logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
+              currentServer.connect(8080, currentServer.remoteAddress, () => {
+                const res = start(object, num);
+                reject(res); // this is done to differentiate the result from a step
+              });
+            } else {
+              reject(err);
+            }
           } else {
-            reject(err);
+            resolve(currentServer.remoteAddress);
           }
-        } else {
-          resolve(currentServer.remoteAddress);
-        }
-      });
+        });
+      }
     });
   }).catch((result) => {
     throw result;
