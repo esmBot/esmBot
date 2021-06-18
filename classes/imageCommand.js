@@ -108,7 +108,7 @@ class ImageCommand extends Command {
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
-      if (e.toString().includes("Not connected to image server")) return "I'm still trying to connect to the image servers. Please wait a little bit.";
+      if (e.toString().includes("Not connected to image server")) return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
       throw e;
     } finally {
       if (status && await this.client.getMessage(status.channel.id, status.id).catch(() => undefined)) await status.delete();

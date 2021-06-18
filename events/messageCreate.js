@@ -2,7 +2,7 @@ const fs = require("fs");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
-const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
+//const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
 
 // run when someone sends a message
 module.exports = async (client, cluster, ipc, message) => {
@@ -11,16 +11,6 @@ module.exports = async (client, cluster, ipc, message) => {
 
   // don't run command if bot can't send messages
   if (message.channel.guild && !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
-
-  // this is here to prevent reading the database if a message is unrelated
-  let valid = false;
-  for (const key of commands) {
-    if (message.content.toLowerCase().includes(key)) {
-      valid = true;
-      break;
-    }
-  }
-  if (!valid) return;
 
   let prefixCandidate;
   if (message.channel.guild) {
@@ -96,8 +86,8 @@ module.exports = async (client, cluster, ipc, message) => {
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const commandClass = new cmd(client, cluster, ipc, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim());
-    const result = await commandClass.run(); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, cluster, ipc, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
     if (typeof result === "string") {

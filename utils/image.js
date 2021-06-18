@@ -2,7 +2,7 @@ const magick = require("../build/Release/image.node");
 const { Worker } = require("worker_threads");
 const fetch = require("node-fetch");
 const fs = require("fs");
-const net = require("net");
+const WebSocket = require("ws");
 const fileType = require("file-type");
 const path = require("path");
 const { EventEmitter } = require("events");
@@ -12,7 +12,7 @@ const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp
 
 exports.jobs = {};
 
-exports.connections = [];
+exports.connections = new Map();
 
 exports.servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
@@ -32,17 +32,18 @@ exports.repopulate = async () => {
 
 exports.getStatus = () => {
   return new Promise((resolve, reject) => {
-    let serversLeft = this.connections.length;
+    let serversLeft = this.connections.size;
     const statuses = [];
     const timeout = setTimeout(() => {
       resolve(statuses);
     }, 5000);
-    for (const connection of this.connections) {
-      if (!connection.remoteAddress) {
+    for (const address of this.connections.keys()) {
+      const connection = this.connections.get(address);
+      if (connection.readyState !== 1) {
         serversLeft--;
         continue;
       }
-      fetch(`http://${connection.remoteAddress}:8081/running`).then(statusRequest => statusRequest.json()).then((status) => {
+      fetch(`http://${address}:8080/running`).then(statusRequest => statusRequest.json()).then((status) => {
         serversLeft--;
         statuses.push(status);
         if (!serversLeft) {
@@ -67,16 +68,15 @@ exports.getStatus = () => {
 
 exports.connect = (server) => {
   return new Promise((resolve, reject) => {
-    const connection = net.createConnection(8080, server);
+    const connection = new WebSocket(`ws://${server}:8080/sock`);
     const timeout = setTimeout(() => {
-      const connectionIndex = this.connections.indexOf(connection);
-      if (connectionIndex < 0) delete this.connections[connectionIndex];
+      this.connections.delete(server);
       reject(`Failed to connect to ${server}`);
     }, 5000);
-    connection.once("connect", () => {
+    connection.once("open", () => {
       clearTimeout(timeout);
     });
-    connection.on("data", async (msg) => {
+    connection.on("message", async (msg) => {
       const opcode = msg.readUint8(0);
       const req = msg.slice(37, msg.length);
       const uuid = msg.slice(1, 37).toString();
@@ -87,7 +87,7 @@ exports.connect = (server) => {
       } else if (opcode === 0x01) { // Job completed successfully
         // the image API sends all job responses over the same socket; make sure this is ours
         if (this.jobs[uuid]) {
-          const imageReq = await fetch(`http://${connection.remoteAddress}:8081/image?id=${uuid}`);
+          const imageReq = await fetch(`http://${server}:8080/image?id=${uuid}`);
           const image = await imageReq.buffer();
           // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
           // by a newline, followed by the image data.
@@ -103,49 +103,61 @@ exports.connect = (server) => {
     connection.on("error", (e) => {
       logger.error(e.toString());
     });
-    connection.once("end", () => {
+    connection.once("close", () => {
       for (const uuid of Object.keys(this.jobs)) {
-        if (this.jobs[uuid].addr === connection.remoteAddress) this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
+        if (this.jobs[uuid].addr === server) this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
       }
+      logger.log(`Lost connection to ${server}, attempting to reconnect...`);
+      this.connections.delete(server);
+      //this.connect(server);
     });
-    this.connections.push(connection);
+    this.connections.set(server, connection);
     resolve();
   });
 };
 
 exports.disconnect = async () => {
-  for (const connection of this.connections) {
-    connection.destroy();
+  for (const connection of this.connections.values()) {
+    connection.close();
   }
   for (const uuid of Object.keys(this.jobs)) {
     this.jobs[uuid].event.emit("error", "Job ended prematurely (not really an error; just run your image job again)");
     delete this.jobs[uuid];
   }
-  this.connections = [];
+  this.connections.clear();
   return;
 };
 
 const getIdeal = () => {
   return new Promise((resolve, reject) => {
-    let serversLeft = this.connections.length;
+    let serversLeft = this.connections.size;
+    if (serversLeft === 0) {
+      for (const server of this.servers) {
+        this.connect(server).catch(e => {
+          logger.error(e);
+        });
+      }
+      serversLeft = this.connections.size;
+    }
     const idealServers = [];
     const timeout = setTimeout(async () => {
       try {
         const server = await chooseServer(idealServers);
-        resolve(this.connections.find(val => val.remoteAddress === server.addr));
+        resolve({ addr: server.addr, sock: this.connections.get(server.addr) });
       } catch (e) {
         reject(e);
       }
     }, 5000);
-    for (const connection of this.connections) {
-      if (!connection.remoteAddress) {
+    for (const address of this.connections.keys()) {
+      const connection = this.connections.get(address);
+      if (connection.readyState !== 1) {
         serversLeft--;
         continue;
       }
-      fetch(`http://${connection.remoteAddress}:8081/status`).then(statusRequest => statusRequest.text()).then((status) => {
+      fetch(`http://${address}:8080/status`).then(statusRequest => statusRequest.text()).then((status) => {
         serversLeft--;
         idealServers.push({
-          addr: connection.remoteAddress,
+          addr: address,
           load: parseInt(status)
         });
         return;
@@ -153,7 +165,7 @@ const getIdeal = () => {
         if (!serversLeft) {
           clearTimeout(timeout);
           const server = await chooseServer(idealServers);
-          resolve(this.connections.find(val => val.remoteAddress === server.addr));
+          resolve({ addr: server.addr, sock: this.connections.get(server.addr) });
         }
       }).catch(e => {
         if (e.code === "ECONNREFUSED") {
@@ -166,7 +178,7 @@ const getIdeal = () => {
     if (!serversLeft) {
       clearTimeout(timeout);
       chooseServer(idealServers).then(server => {
-        resolve(this.connections.find(val => val.remoteAddress === server.addr));
+        resolve({ addr: server.addr, sock: this.connections.get(server.addr) });
       }).catch(e => reject(e));
     }
   });
@@ -175,30 +187,10 @@ const getIdeal = () => {
 const start = (object, num) => {
   return getIdeal().then(async (currentServer) => {
     const data = Buffer.concat([Buffer.from([0x01 /* queue job */]), Buffer.from(num.length.toString()), Buffer.from(num), Buffer.from(JSON.stringify(object))]);
-    return new Promise((resolve, reject) => {
-      if (currentServer.destroyed) {
-        logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
-        currentServer.connect(8080, currentServer.remoteAddress, () => {
-          const res = start(object, num);
-          reject(res); // this is done to differentiate the result from a step
-        });
-      } else {
-        currentServer.write(data, (err) => {
-          if (err) {
-            if (err.code === "EPIPE") {
-              logger.log(`Lost connection to ${currentServer.remoteAddress}, attempting to reconnect...`);
-              currentServer.connect(8080, currentServer.remoteAddress, () => {
-                const res = start(object, num);
-                reject(res); // this is done to differentiate the result from a step
-              });
-            } else {
-              reject(err);
-            }
-          } else {
-            resolve(currentServer.remoteAddress);
-          }
-        });
-      }
+    return new Promise((resolve) => {
+      currentServer.sock.send(data, () => {
+        resolve(currentServer.addr);
+      });
     });
   }).catch((result) => {
     throw result;
