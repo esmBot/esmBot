@@ -79,7 +79,7 @@ class Shard extends Base {
         }
         res.write(`# HELP connected_workers Number of workers connected
 # TYPE connected_workers gauge
-connected_workers ${image.connections.length}
+connected_workers ${image.connections.size}
 # HELP running_jobs Number of running jobs on this worker
 # TYPE running_jobs gauge
 # HELP queued_jobs Number of queued jobs on this worker
@@ -89,7 +89,7 @@ connected_workers ${image.connections.length}
 # HELP command_count Number of times a command has been run
 # TYPE command_count counter
 `);
-        const servers = await image.getStatus();
+        const servers = await image.getRunning();
         for (const [i, w] of servers.entries()) {
           res.write(`running_jobs{worker="${i}"} ${w.runningJobs}\n`);
           res.write(`queued_jobs{worker="${i}"} ${w.queued}\n`);

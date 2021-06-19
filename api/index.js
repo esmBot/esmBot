@@ -169,7 +169,7 @@ httpServer.on("error", (e) => {
 });
 
 httpServer.listen(8080, () => {
-  log("HTTP listening on port 8080");
+  log("HTTP and WS listening on port 8080");
 });
 
 const runJob = (job, sock) => {

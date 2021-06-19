@@ -7,7 +7,7 @@ module.exports = (input, allowed) => {
     const a = input[i];
     if (a.startsWith("--") && !curr && isAllowed(a.slice(2).split("=")[0], allowed)) {
       if (a.includes("=")) {
-        const [ arg, value ] = a.slice(2).split("=");
+        const [arg, value] = a.slice(2).split("=");
         let ended = true;
         if (value.startsWith("\"")) {
           if (!value.endsWith("\"")) {

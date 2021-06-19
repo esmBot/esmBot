@@ -10,11 +10,11 @@ class ImageStatsCommand extends Command {
           "icon_url": this.client.user.avatarURL
         },
         "color": 16711680,
-        "description": `The bot is currently connected to ${image.connections.length} image server(s).`,
+        "description": `The bot is currently connected to ${image.connections.size} image server(s).`,
         "fields": []
       }
     };
-    const servers = await image.getStatus();
+    const servers = await image.getRunning();
     for (let i = 0; i < servers.length; i++) {
       embed.embed.fields.push({
         name: `Server ${i + 1}`,
