@@ -211,7 +211,7 @@ exports.getType = async (image) => {
     });
     clearTimeout(timeout);
     const size = imageRequest.headers.has("Content-Range") ? imageRequest.headers.get("Content-Range").split("/")[1] : imageRequest.headers.get("Content-Length");
-    if (parseInt(size) > 20971520) {
+    if (parseInt(size) > 26214400) { // 25 MB
       type = "large";
       return type;
     }
