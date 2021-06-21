@@ -4,6 +4,7 @@ const Command = require("../../classes/command.js");
 
 class InfoCommand extends Command {
   async run() {
+    const owner = this.client.users.get(process.env.OWNER);
     return {
       "embed": {
         "color": 16711680,
@@ -11,6 +12,7 @@ class InfoCommand extends Command {
           "name": "esmBot Info/Credits",
           "icon_url": this.client.user.avatarURL
         },
+        "description": `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
         "fields": [{
           "name": "ℹ️ Version:",
           "value": `v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`

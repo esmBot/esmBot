@@ -9,12 +9,14 @@ class StatsCommand extends Command {
   async run() {
     const duration = day.duration(this.client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
+    const owner = this.client.users.get(process.env.OWNER);
     return {
       embed: {
         "author": {
           "name": "esmBot Statistics",
           "icon_url": this.client.user.avatarURL
         },
+        "description": `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
         "color": 16711680,
         "fields": [{
           "name": "Version",
