@@ -17,7 +17,6 @@ const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   clientOptions: {
     disableEvents: {
       CHANNEL_DELETE: true,
-      CHANNEL_UPDATE: true,
       GUILD_BAN_REMOVE: true,
       GUILD_MEMBER_ADD: true,
       GUILD_MEMBER_REMOVE: true,
