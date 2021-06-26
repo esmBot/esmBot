@@ -4,8 +4,6 @@ const logger = require("./logger.js");
 // load command into memory
 exports.load = async (command, soundStatus) => {
   const props = require(`../${command}`);
-  if (props.requires.includes("google") && process.env.GOOGLE === "") return logger.log("warn", `Google info not provided in config, skipped loading command ${command}...`);
-  if (props.requires.includes("cat") && process.env.CAT === "") return logger.log("warn", `Cat API info not provided in config, skipped loading command ${command}...`);
   if (props.requires.includes("mashape") && process.env.MASHAPE === "") return logger.log("warn", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
   if (props.requires.includes("sound") && soundStatus) return logger.log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");

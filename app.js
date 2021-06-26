@@ -42,7 +42,10 @@ const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
       "guildMessageReactions",
       "directMessages",
       "directMessageReactions"
-    ]
+    ],
+    stats: {
+      requestTimeout: 30000
+    }
   }
 });
 

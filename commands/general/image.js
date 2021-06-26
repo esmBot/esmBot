@@ -11,8 +11,7 @@ class ImageSearchCommand extends Command {
     if (this.args.length === 0) return "You need to provide something to search for!";
     await this.message.channel.sendTyping();
     const embeds = [];
-    const images = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=images&disabled_engines=flickr__images,ccengine__images,library of congress__images,deviantart__images,bing images__images&q=${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
-    //if (images.error && images.error.code === 403) return "The daily search quota has been exceeded. Check back later.";
+    const images = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=images&q=!goi%20!bii%20!ddi%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
     if (images.results.length === 0) return "I couldn't find any results!";
     for (const [i, value] of images.results.entries()) {
       embeds.push({

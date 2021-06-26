@@ -17,7 +17,6 @@ class CatCommand extends Command {
 
   static description = "Gets a random cat picture";
   static aliases = ["kitters", "kitties", "kitty", "cattos", "catto", "cats", "cta"];
-  static requires = ["cat"];
 }
 
 module.exports = CatCommand;

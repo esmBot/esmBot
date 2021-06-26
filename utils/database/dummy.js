@@ -1,5 +1,8 @@
 // dummy (no-op) database handler
 const misc = require("../misc.js");
+const logger = require("../logger.js");
+
+logger.warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
 
 exports.setup = async () => {};
 exports.stop = async () => {};

@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
-const { decodeEntities } = require("../../utils/misc.js");
+const { searx } = require("../../servers.json");
+const { random } = require("../../utils/misc.js");
 const paginator = require("../../utils/pagination/pagination.js");
 const Command = require("../../classes/command.js");
 
@@ -8,17 +9,10 @@ class YouTubeCommand extends Command {
     if (this.args.length === 0) return "You need to provide something to search for!";
     this.client.sendChannelTyping(this.message.channel.id);
     const messages = [];
-    const request = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(this.args.join(" "))}&key=${process.env.GOOGLE}&maxResults=50`);
-    const result = await request.json();
-    if (result.error && result.error.code === 403) return "I've exceeded my YouTube API search quota for the day. Check back later.";
-    for (const [i, value] of result.items.entries()) {
-      if (value.id.kind === "youtube#channel") {
-        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nhttps://youtube.com/channel/${value.id.channelId}` });
-      } else if (value.id.kind === "youtube#playlist") {
-        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nCreated by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}**\nhttps://youtube.com/playlist?list=${value.id.playlistId}` });
-      } else {
-        messages.push({ content: `Page ${i + 1} of ${result.items.length}\n<:youtube:637020823005167626> **${decodeEntities(value.snippet.title).replaceAll("*", "\\*")}**\nUploaded by **${decodeEntities(value.snippet.channelTitle).replaceAll("*", "\\*")}** on **${value.snippet.publishedAt.split("T")[0]}**\nhttps://youtube.com/watch?v=${value.id.videoId}` });
-      }
+    const videos = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
+    if (videos.results.length === 0) return "I couldn't find any results!";
+    for (const [i, value] of videos.results.entries()) {
+      messages.push({ content: `Page ${i + 1} of ${videos.results.length}\n<:youtube:637020823005167626> **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
     return paginator(this.client, this.message, messages);
   }
@@ -26,7 +20,6 @@ class YouTubeCommand extends Command {
   static description = "Searches YouTube";
   static aliases = ["yt", "video", "ytsearch"];
   static arguments = ["[query]"];
-  static requires = "google";
 }
 
 module.exports = YouTubeCommand;
