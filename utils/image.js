@@ -98,7 +98,10 @@ exports.connect = async (server) => {
   });
   connection.once("close", () => {
     for (const uuid of Object.keys(this.jobs)) {
-      if (this.jobs[uuid].addr === server) this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
+      if (this.jobs[uuid].addr === server) {
+        this.jobs[uuid].event.emit("error", "Job ended prematurely due to a closed connection; please run your image job again");
+        delete this.jobs[uuid];
+      }
     }
     //logger.log(`Lost connection to ${server}, attempting to reconnect...`);
     this.connections.delete(server);

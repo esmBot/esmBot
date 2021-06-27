@@ -105,9 +105,9 @@ module.exports = async (client, cluster, ipc, message) => {
           embed: {
             color: 16711680,
             title: "Here's your image!",
-            url: `${process.env.TMP_DOMAIN == "" ? "https://projectlounge.pw/tmp" : process.env.TMP_DOMAIN}/${filename}`,
+            url: `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`,
             image: {
-              url: `${process.env.TMP_DOMAIN == "" ? "https://projectlounge.pw/tmp" : process.env.TMP_DOMAIN}/${filename}`
+              url: `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`
             },
             footer: {
               text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
