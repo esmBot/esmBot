@@ -67,7 +67,7 @@ exports.getRunning = async () => {
   }
 };
 
-exports.connect = (server) => {
+exports.connect = async (server) => {
   const connection = new WebSocket(`ws://${server}:8080/sock`);
   connection.on("message", async (msg) => {
     const opcode = msg.readUint8(0);
