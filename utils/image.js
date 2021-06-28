@@ -123,10 +123,10 @@ exports.disconnect = async () => {
 
 const getIdeal = async () => {
   let serversLeft = this.connections.size;
-  if (serversLeft === 0) {
+  if (serversLeft < this.servers.length) {
     for (const server of this.servers) {
       try {
-        await this.connect(server);
+        if (!this.connections.has(server)) await this.connect(server);
       } catch (e) {
         logger.error(e);
       }
@@ -193,7 +193,7 @@ exports.check = (cmd) => {
   return magick[cmd] ? true : false;
 };
 
-exports.getType = async (image) => {
+exports.getType = async (image, extraReturnTypes) => {
   if (!image.startsWith("http")) {
     const imageType = await fileType.fromFile(image);
     if (imageType && formats.includes(imageType.mime)) {
@@ -214,7 +214,7 @@ exports.getType = async (image) => {
     });
     clearTimeout(timeout);
     const size = imageRequest.headers.has("Content-Range") ? imageRequest.headers.get("Content-Range").split("/")[1] : imageRequest.headers.get("Content-Length");
-    if (parseInt(size) > 26214400) { // 25 MB
+    if (parseInt(size) > 26214400 && extraReturnTypes) { // 25 MB
       type = "large";
       return type;
     }

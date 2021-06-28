@@ -52,7 +52,7 @@ class ImageCommand extends Command {
 
     if (this.constructor.requiresImage) {
       try {
-        const image = await imageDetect(this.client, this.message);
+        const image = await imageDetect(this.client, this.message, true);
         if (image === undefined) {
           collections.runningCommands.delete(this.message.author.id);
           return this.constructor.noImage;
@@ -61,7 +61,7 @@ class ImageCommand extends Command {
           return "That image is too large!";
         } else if (image.type === "tenorlimit") {
           collections.runningCommands.delete(this.message.author.id);
-          return "I've been rate-limited by Tenor. Please try uploading the GIF elsewhere.";
+          return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
         }
         magickParams.path = image.path;
         magickParams.type = image.type;

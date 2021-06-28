@@ -13,6 +13,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
+    float pos = obj.Has("pos") ? obj.Get("pos").As<Napi::Number>().FloatValue() : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -26,6 +27,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     readImages(&frames, Blob(data.Data(), data.Length()));
 
     size_t width = frames.front().baseColumns();
+    size_t height = frames.front().baseRows();
     string query(to_string(width - ((width / 25) * 2)) + "x");
     Image caption_image(Geometry(query), Color("none"));
     caption_image.backgroundColor(Color("none"));
@@ -42,7 +44,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
 
     for (Image &image : coalesced) {
       list<Image> images;
-      image.composite(caption_image, Magick::CenterGravity,
+      image.composite(caption_image, 0, height * pos,
                       Magick::OverCompositeOp);
       image.magick(type);
       image.animationDelay(delay == 0 ? image.animationDelay() : delay);
