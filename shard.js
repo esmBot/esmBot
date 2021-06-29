@@ -141,7 +141,7 @@ connected_workers ${image.connections.size}
     });
 
     this.ipc.register("restart", async () => {
-      await this.bot.editStatus("dnd", {
+      this.bot.editStatus("dnd", {
         name: "esmBot is restarting, please stand by."
       });
       process.exit(1);

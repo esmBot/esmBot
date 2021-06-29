@@ -30,7 +30,7 @@ const gfycatURLs = [
   "giant.gfycat.com"
 ];
 
-const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 // gets the proper image paths
@@ -48,7 +48,14 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
         // Note that MP4 conversion requires an ImageMagick build that supports MPEG decoding
         if (process.env.TENOR !== "") {
           const data = await fetch(`https://g.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&media_filter=minimal&limit=1&key=${process.env.TENOR}`);
-          if (data.status === 429) return extraReturnTypes ? "tenorlimit" : null;
+          if (data.status === 429) {
+            if (extraReturnTypes) {
+              payload.type = "tenorlimit";
+              return payload;
+            } else {
+              return;
+            }
+          }
           const json = await data.json();
           payload.path = json.results[0].media[0].gif.url;
         } else {

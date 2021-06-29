@@ -57,10 +57,21 @@ class StatsCommand extends Command {
         {
           "name": "Shard",
           "value": this.message.channel.guild ? this.client.guildShardMap[this.message.channel.guild.id] : "N/A",
+          "inline": true
         },
         {
           "name": "Cluster",
           "value": this.cluster,
+          "inline": true
+        },
+        {
+          "name": "Servers",
+          "value": collections.stats.guilds ? collections.stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
+          "inline": true
+        },
+        {
+          "name": "Users (approximation)",
+          "value": collections.stats.users ? collections.stats.users : `${this.client.users.size} (for this cluster only)`,
           "inline": true
         }
         ]

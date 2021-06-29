@@ -3,10 +3,9 @@ const logger = require("../logger.js");
 const misc = require("../misc.js");
 
 const { Pool } = require("pg");
-const pool = new Pool({
+const connection = new Pool({
   connectionString: process.env.DB
 });
-const connection = pool;
 
 exports.getGuild = async (query) => {
   return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];

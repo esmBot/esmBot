@@ -58,7 +58,7 @@ class ImageCommand extends Command {
           return this.constructor.noImage;
         } else if (image.type === "large") {
           collections.runningCommands.delete(this.message.author.id);
-          return "That image is too large!";
+          return "That image is too large (>= 25MB)! Try using a smaller image.";
         } else if (image.type === "tenorlimit") {
           collections.runningCommands.delete(this.message.author.id);
           return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
