@@ -25,7 +25,7 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     if (sharp) {
-      for_each(coalesced.begin(), coalesced.end(), sharpenImage(10, 3));
+      for_each(coalesced.begin(), coalesced.end(), sharpenImage(0, 3));
     } else {
       for_each(coalesced.begin(), coalesced.end(), blurImage(15));
     }

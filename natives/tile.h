@@ -1,8 +1,5 @@
-#ifndef ESMBOT_NATIVES_TILE_H_
-#define ESMBOT_NATIVES_TILE_H_
+#pragma once
 
 #include <napi.h>
 
 Napi::Value Tile(const Napi::CallbackInfo& info);
-
-#endif

@@ -1,8 +1,5 @@
-#ifndef ESMBOT_NATIVES_BLURPLE_H_
-#define ESMBOT_NATIVES_BLURPLE_H_
+#pragma once
 
 #include <napi.h>
 
 Napi::Value Blurple(const Napi::CallbackInfo& info);
-
-#endif

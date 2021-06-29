@@ -2,11 +2,12 @@
 #include <napi.h>
 
 #include <list>
+#include <iostream>
 
 using namespace std;
 using namespace Magick;
 
-Napi::Value Uncaption(const Napi::CallbackInfo &info) {
+Napi::Value Deepfry(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   try {
@@ -20,42 +21,32 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
 
     list<Image> frames;
     list<Image> coalesced;
-    list<Image> mid;
+    list<Image> blurred;
     readImages(&frames, Blob(data.Data(), data.Length()));
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    Image firstImage = coalesced.front();
-    ssize_t columns = firstImage.columns();
-    ssize_t rows = firstImage.rows();
-    ssize_t row;
-    for (row = 0; row < rows; ++row) {
-      ColorGray color = firstImage.pixelColor(0, row);
-      if (color.shade() < 0.95) {
-        break;
-      }
-    }
-    Geometry geom = Geometry(columns, row == rows ? rows : rows - row, 0,
-                             row == rows ? 0 : row);
-
     for (Image &image : coalesced) {
-      image.virtualPixelMethod(Magick::TransparentVirtualPixelMethod);
-      image.backgroundColor("none");
-      image.extent(geom);
-      image.magick(type);
-      mid.push_back(image);
+      Blob temp;
+      image.level(QuantumRange / 2, QuantumRange / 2);
+      image.quality(1);
+      image.magick("JPEG");
+      image.write(&temp);
+      Image newImage(temp);
+      newImage.magick(type);
+      newImage.animationDelay(delay == 0 ? image.animationDelay() : delay);
+      blurred.push_back(newImage);
     }
 
-    optimizeTransparency(mid.begin(), mid.end());
+    optimizeTransparency(blurred.begin(), blurred.end());
 
     if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
+      for (Image &image : blurred) {
+        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
         image.quantize();
-        if (delay != 0) image.animationDelay(delay);
       }
     }
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    writeImages(blurred.begin(), blurred.end(), &blob);
 
     Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),

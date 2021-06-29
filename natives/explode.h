@@ -1,8 +1,5 @@
-#ifndef ESMBOT_NATIVES_EXPLODE_H_
-#define ESMBOT_NATIVES_EXPLODE_H_
+#pragma once
 
 #include <napi.h>
 
 Napi::Value Explode(const Napi::CallbackInfo& info);
-
-#endif
