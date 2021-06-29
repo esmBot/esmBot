@@ -8,27 +8,6 @@
 using namespace std;
 using namespace Magick;
 
-template <typename T>
-constexpr auto type_name() noexcept {
-  std::string_view name = "Error: unsupported compiler", prefix, suffix;
-#ifdef __clang__
-  name = __PRETTY_FUNCTION__;
-  prefix = "auto type_name() [T = ";
-  suffix = "]";
-#elif defined(__GNUC__)
-  name = __PRETTY_FUNCTION__;
-  prefix = "constexpr auto type_name() [with T = ";
-  suffix = "]";
-#elif defined(_MSC_VER)
-  name = __FUNCSIG__;
-  prefix = "auto __cdecl type_name<";
-  suffix = ">(void) noexcept";
-#endif
-  name.remove_prefix(prefix.size());
-  name.remove_suffix(suffix.size());
-  return name;
-}
-
 Napi::Value Uncaption(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
@@ -50,18 +29,13 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     Image firstImage = coalesced.front();
     ssize_t columns = firstImage.columns();
     ssize_t rows = firstImage.rows();
-    //ssize_t column;
     ssize_t row;
-    //bool found = false;
     for (row = 0; row < rows; ++row) {
-        //for (column = 0; column < columns; ++column) {
-            ColorGray color = firstImage.pixelColor(0, row);
-            if (color.shade() < 0.9765625) {
-                //found = true;
-                break;
-            }
-        //}
-        //if (found) break;
+      ColorGray color = firstImage.pixelColor(0, row);
+      cout << color.shade() << "\n";
+      if (color.shade() < 0.95) {
+        break;
+      }
     }
     Geometry geom = Geometry(columns, row == rows ? rows : rows - row, 0,
                              row == rows ? 0 : row);
