@@ -72,7 +72,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
   });
   reactionCollector.once("end", async () => {
     try {
-      await client.getMessage(currentPage.channel, currentPage.id);
+      await client.getMessage(currentPage.channel.id, currentPage.id);
       if (manageMessages) {
         await currentPage.removeReactions();
       }
