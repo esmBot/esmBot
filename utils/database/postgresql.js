@@ -38,14 +38,14 @@ exports.toggleTags = async (guild) => {
 exports.disableChannel = async (channel) => {
   const guildDB = await this.getGuild(channel.guild.id);
   await connection.query("UPDATE guilds SET disabled = $1 WHERE guild_id = $2", [[...guildDB.disabled, channel.id], channel.guild.id]);
-  collections.disabledCache.set(channel.guild.id, guildDB.disabled);
+  collections.disabledCache.set(channel.guild.id, [...guildDB.disabled, channel.id]);
 };
 
 exports.enableChannel = async (channel) => {
   const guildDB = await this.getGuild(channel.guild.id);
   const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
   await connection.query("UPDATE guilds SET disabled = $1 WHERE guild_id = $2", [newDisabled, channel.guild.id]);
-  collections.disabledCache.set(channel.guild.id, guildDB.disabled);
+  collections.disabledCache.set(channel.guild.id, newDisabled);
 };
 
 exports.getCounts = async () => {
