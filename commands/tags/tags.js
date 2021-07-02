@@ -11,7 +11,7 @@ class TagsCommand extends Command {
 
     if ((guild.tagsDisabled || guild.tags_disabled) && this.args[0].toLowerCase() !== ("enable" || "disable")) return;
     if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
-    const tags = guild.tags instanceof Map ? Object.fromEntries(guild.tags) : guild.tags;
+    const tags = guild.tags instanceof Map ? Object.fromEntries(guild.tags) : typeof guild.tags === "string" ? JSON.parse(guild.tags) : guild.tags;
     const blacklist = ["add", "edit", "remove", "delete", "list", "random", "own", "owner", "enable", "disable"];
     switch (this.args[0].toLowerCase()) {
       case "add":
@@ -58,7 +58,6 @@ class TagsCommand extends Command {
                 "text": `Page ${i + 1} of ${groups.length}`
               },
               "description": value.join("\n"),
-              "fields": process.env.NODE_ENV === "development" ? [{"name": "Note", "value": "Tags created in this version of esmBot will not carry over to the final release."}] : null,
               "author": {
                 "name": this.message.author.username,
                 "icon_url": this.message.author.avatarURL

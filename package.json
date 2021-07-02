@@ -46,6 +46,7 @@
     "eslint": "^7.23.0"
   },
   "optionalDependencies": {
+    "better-sqlite3": "^7.4.1",
     "bufferutil": "^4.0.1",
     "erlpack": "github:abalabahaha/erlpack",
     "mongoose": "^5.11.8",

@@ -1,11 +1,12 @@
 class Command {
-  constructor(client, cluster, ipc, message, args, content) {
+  constructor(client, cluster, ipc, message, args, content, specialArgs) {
     this.client = client;
     this.cluster = cluster;
     this.ipc = ipc;
     this.message = message;
     this.args = args;
     this.content = content;
+    this.specialArgs = specialArgs;
     this.reference = {
       messageReference: {
         channelID: this.message.channel.id,

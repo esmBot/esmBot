@@ -2,7 +2,7 @@ const fs = require("fs");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
-//const commands = [...collections.aliases.keys(), ...collections.commands.keys()];
+const parseCommand = require("../utils/parseCommand.js");
 
 // run when someone sends a message
 module.exports = async (client, cluster, ipc, message) => {
@@ -50,9 +50,10 @@ module.exports = async (client, cluster, ipc, message) => {
   const replace = isMention ? `@${client.user.username} ` : prefix;
   const content = message.cleanContent.substring(replace.length).trim();
   const rawContent = message.content.substring(prefix.length).trim();
-  const args = content.split(/\s+/g);
-  args.shift();
+  const preArgs = content.split(/\s+/g);
+  preArgs.shift();
   const command = rawContent.split(/\s+/g).shift().toLowerCase();
+  const parsed = parseCommand(preArgs);
 
   // don't run if message is in a disabled channel
   if (message.channel.guild) {
@@ -86,7 +87,8 @@ module.exports = async (client, cluster, ipc, message) => {
   try {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
-    const commandClass = new cmd(client, cluster, ipc, message, args, message.content.substring(prefix.length).trim().replace(command, "").trim()); // we also provide the message content as a parameter for cases where we need more accuracy
+    // eslint-disable-next-line no-unused-vars
+    const commandClass = new cmd(client, cluster, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;

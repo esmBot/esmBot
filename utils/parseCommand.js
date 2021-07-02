@@ -1,5 +1,5 @@
 module.exports = (input, allowed) => {
-  input = input.split(" ");
+  if (typeof input === "string") input = input.split(/\s+/g);
   const args = { _: [] };
   let curr = null;
   let concated = "";
@@ -18,6 +18,10 @@ module.exports = (input, allowed) => {
           }
         } else if (value.endsWith("\"")) {
           args[arg] += a.slice(0, -1);
+        } else if (value === "true") {
+          args[arg] = true;
+        } else if (value === "false") {
+          args[arg] = false;
         } else if (value !== "") {
           args[arg] = value;
         } else {

@@ -143,7 +143,7 @@ const getIdeal = async () => {
     const controller = new AbortController(); // eslint-disable-line no-undef
     const timeout = setTimeout(() => {
       controller.abort();
-    }, 2000);
+    }, 5000);
     try {
       const statusRequest = await fetch(`http://${address}:8080/status`, { signal: controller.signal });
       clearTimeout(timeout);
@@ -235,7 +235,7 @@ exports.getType = async (image, extraReturnTypes) => {
   return type;
 };
 
-exports.run = object => {
+exports.run = (object) => {
   return new Promise((resolve, reject) => {
     if (process.env.API === "true") {
       // Connect to best image server
