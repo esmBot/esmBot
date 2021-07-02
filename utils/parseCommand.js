@@ -1,16 +1,16 @@
-module.exports = (input, allowed) => {
+module.exports = (input) => {
   if (typeof input === "string") input = input.split(/\s+/g);
   const args = { _: [] };
   let curr = null;
   let concated = "";
   for (let i = 0; i < input.length; i++) {
     const a = input[i];
-    if (a.startsWith("--") && !curr && isAllowed(a.slice(2).split("=")[0], allowed)) {
+    if (a.startsWith("--") && !curr) {
       if (a.includes("=")) {
         const [arg, value] = a.slice(2).split("=");
         let ended = true;
         if (value.startsWith("\"")) {
-          if (!value.endsWith("\"")) {
+          if (value.endsWith("\"")) {
             args[arg] = value.slice(1).slice(0, -1);
           } else {
             args[arg] = `${value.slice(1)} `;
@@ -18,14 +18,15 @@ module.exports = (input, allowed) => {
           }
         } else if (value.endsWith("\"")) {
           args[arg] += a.slice(0, -1);
-        } else if (value === "true") {
-          args[arg] = true;
-        } else if (value === "false") {
-          args[arg] = false;
         } else if (value !== "") {
           args[arg] = value;
         } else {
           args[arg] = true;
+        }
+        if (args[arg] === "true") {
+          args[arg] = true;
+        } else if (args[arg] === "false") {
+          args[arg] = false;
         }
         if (!ended) curr = arg;
       } else {
@@ -62,11 +63,6 @@ module.exports = (input, allowed) => {
   }
 
   return args;
-};
-
-const isAllowed = (input, allowed) => {
-  if (!allowed) return true;
-  return allowed.includes(input);
 };
 
 // /*
