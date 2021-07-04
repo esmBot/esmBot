@@ -4,7 +4,7 @@ const Command = require("../../classes/command.js");
 
 class InfoCommand extends Command {
   async run() {
-    const owner = this.client.users.get(process.env.OWNER);
+    const owner = await this.ipc.fetchUser(process.env.OWNER);
     return {
       "embed": {
         "color": 16711680,

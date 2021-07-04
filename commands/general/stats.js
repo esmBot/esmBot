@@ -9,7 +9,7 @@ class StatsCommand extends Command {
   async run() {
     const duration = day.duration(this.client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
-    const owner = this.client.users.get(process.env.OWNER);
+    const owner = await this.ipc.fetchUser(process.env.OWNER);
     return {
       embed: {
         "author": {
