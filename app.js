@@ -8,11 +8,39 @@ require("dotenv").config();
 // main sharding manager
 const { Fleet } = require("eris-fleet");
 const { isMaster } = require("cluster");
+// some utils
 const path = require("path");
-const { inspect } = require("util");
+const winston = require("winston");
 // dbl posting
 const TopGG = require("@top-gg/sdk");
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new TopGG.Api(process.env.DBL) : null;
+
+if (isMaster) {
+  console.log(`
+     ,*\`$                    z\`"v       
+    F zBw\`%                 A ,W "W     
+  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T    
+  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1   
+ F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E  
+ F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k  
+ #  BFBBBBBBBBBBBBF"      "RBBBW    F  
+  V ' 4BBBBBBBBBBM            TBBL  F   
+   F  BBBBBBBBBBF              JBB  L   
+   F  FBBBBBBBEB                BBL 4   
+   E  [BB4BBBBEBL               BBL 4   
+   I   #BBBBBBBEB              4BBH  *w 
+   A   4BBBBBBBBBEW,         ,BBBB  W  [
+.A  ,k  4BBBBBBBBBBBEBW####BBBBBBM BF  F
+k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  # 
+ 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F  
+   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"    
+      *+,   " F'"'*^~~~^"^\`  V+*^       
+          \`"""                          
+          
+esmBot ${require("./package.json").version}, powered by eris-fleet ${require("./node_modules/eris-fleet/package.json").version}
+`);
+// a bit of a hacky way to get the eris-fleet version
+}
 
 const Admiral = new Fleet({
   path: path.join(__dirname, "./shard.js"),
@@ -58,10 +86,48 @@ const Admiral = new Fleet({
 });
 
 if (isMaster) {
-  Admiral.on("log", (m) => console.log(m));
-  Admiral.on("debug", (m) => console.debug(m));
-  Admiral.on("warn", (m) => console.warn(m));
-  Admiral.on("error", (m) => console.error(inspect(m)));
+  const logger = winston.createLogger({
+    levels: { 
+      error: 0,
+      warn: 1,
+      info: 2,
+      main: 3,
+      debug: 4
+    },
+    transports: [
+      new winston.transports.Console({ format: winston.format.colorize({ all: true }) }),
+      new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+      new winston.transports.File({ filename: "logs/main.log" })
+    ],
+    level: "main",
+    format: winston.format.combine(
+      winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+      winston.format.printf((info) => {
+        const {
+          timestamp, level, message, ...args
+        } = info;
+    
+        return `[${timestamp}]: [${level.toUpperCase()}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+      }),
+    )
+  });
+  
+  winston.addColors({
+    info: "green",
+    main: "gray",
+    debug: "purple",
+    warn: "yellow",
+    error: "red"
+  });
+  
+  Admiral.on("log", (m) => logger.main(m));
+  Admiral.on("info", (m) => {
+    console.log("hi");
+    logger.info(m);
+  });
+  Admiral.on("debug", (m) => logger.debug(m));
+  Admiral.on("warn", (m) => logger.warn(m));
+  Admiral.on("error", (m) => logger.error(m));
 
   if (dbl) {
     Admiral.on("stats", async (m) => {
