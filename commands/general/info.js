@@ -1,10 +1,10 @@
 const { version } = require("../../package.json");
-const collections = require("../../utils/collections.js");
 const Command = require("../../classes/command.js");
 
 class InfoCommand extends Command {
   async run() {
     const owner = await this.ipc.fetchUser(process.env.OWNER);
+    const stats = await this.ipc.getStats();
     return {
       "embed": {
         "color": 16711680,
@@ -23,7 +23,7 @@ class InfoCommand extends Command {
         },
         {
           "name": "💬 Total Servers:",
-          "value": collections.stats.guilds ? collections.stats.guilds : `${this.client.guilds.size} (for this cluster only)`
+          "value": stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`
         },
         {
           "name": "✅ Official Server:",

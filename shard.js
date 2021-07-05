@@ -1,5 +1,5 @@
 // shard base
-const { Base } = require("eris-sharder");
+const { BaseClusterWorker } = require("eris-fleet");
 // path stuff
 const { readdir } = require("fs").promises;
 // fancy loggings
@@ -23,9 +23,11 @@ const helpGenerator =
   process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
 const http = require("http");
 
-class Shard extends Base {
+class Shard extends BaseClusterWorker {
   constructor(bot) {
     super(bot);
+
+    this.init();
   }
 
   async init() {
@@ -48,7 +50,7 @@ class Shard extends Base {
       logger.log("log", `Loading event from ${file}...`);
       const eventName = file.split(".")[0];
       const event = require(`./events/${file}`);
-      this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.ipc));
+      this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
 
     // connect to image api if enabled
@@ -106,20 +108,40 @@ connected_workers ${image.connections.size}
       });
     }
 
-    // handle process stop
-    process.on("SIGINT", () => {
-      logger.log("warn", "SIGINT detected, shutting down...");
-      this.bot.editStatus("dnd", {
-        name: "Restarting/shutting down..."
-      });
-      for (const command in collections.commands) {
-        handler.unload(command);
-      }
-      this.bot.disconnect();
-      require("./utils/database.js").stop();
-      process.exit(0);
+    this.ipc.register("reload", async (message) => {
+      const result = await handler.unload(message.cmd);
+      if (result) return this.ipc.broadcast("reloadFail", { result: result });
+      const result2 = await handler.load(collections.paths.get(message.cmd));
+      if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
+      return this.ipc.broadcast("reloadSuccess");
     });
-    return;
+
+    this.bot.privateChannels.limit = 0;
+
+    this.ipc.register("soundreload", async () => {
+      const soundStatus = await sound.checkStatus();
+      if (!soundStatus) {
+        const length = await sound.connect(this.bot);
+        return this.ipc.broadcast("soundReloadSuccess", { length });
+      } else {
+        return this.ipc.broadcast("soundReloadFail");
+      }
+    });
+    
+    // connect to lavalink
+    if (!sound.status && !sound.connected) sound.connect(this.bot);
+
+    database.setup();
+
+    // set activity (a.k.a. the gamer code)
+    (async function activityChanger() {
+      this.bot.editStatus("dnd", {
+        name: `${misc.random(messages)} | @${this.bot.user.username} help`,
+      });
+      setTimeout(activityChanger.bind(this), 900000);
+    }).bind(this)();
+
+    logger.log("info", `Started worker ${this.workerID}.`);
   }
 
   async* getFiles(dir) {
@@ -133,54 +155,16 @@ connected_workers ${image.connections.size}
     }
   }
 
-  async launch() {
-    await this.init();
-
-    this.ipc.register("stat", (message) => {
-      collections.stats = message;
+  shutdown(done) {
+    logger.log("warn", "SIGINT detected, shutting down...");
+    this.bot.editStatus("dnd", {
+      name: "Restarting/shutting down..."
     });
-
-    this.ipc.register("restart", async () => {
-      this.bot.editStatus("dnd", {
-        name: "esmBot is restarting, please stand by."
-      });
-      process.exit(1);
-    });
-
-    this.ipc.register("reload", async (message) => {
-      const result = await handler.unload(message.cmd);
-      if (result) return this.ipc.broadcast("reloadFail", { result: result });
-      const result2 = await handler.load(collections.paths.get(message.cmd));
-      if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
-      return this.ipc.broadcast("reloadSuccess");
-    });
-
-    this.ipc.register("soundreload", async () => {
-      const soundStatus = await sound.checkStatus();
-      if (!soundStatus) {
-        const length = await sound.connect(this.bot);
-        return this.ipc.broadcast("soundReloadSuccess", { length });
-      } else {
-        return this.ipc.broadcast("soundReloadFail");
-      }
-    });
-    
-    // connect to lavalink
-    if (!sound.status && !sound.connected) await sound.connect(this.bot);
-
-    this.bot.privateChannels.limit = 0;
-
-    await database.setup();
-
-    // set activity (a.k.a. the gamer code)
-    (async function activityChanger() {
-      this.bot.editStatus("dnd", {
-        name: `${misc.random(messages)} | @${this.bot.user.username} help`,
-      });
-      setTimeout(activityChanger.bind(this), 900000);
-    }).bind(this)();
-
-    logger.log("info", `Started cluster ${this.clusterID}.`);
+    for (const command in collections.commands) {
+      handler.unload(command);
+    }
+    require("./utils/database.js").stop();
+    done();
   }
 
 }

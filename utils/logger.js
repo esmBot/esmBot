@@ -1,4 +1,4 @@
-exports.log = (type, content) => content ? process.send({ name: type, msg: content }) : process.send({ name: "info", msg: type });
+exports.log = (type, content) => content ? process.send({ op: type, msg: content }) : process.send({ op: "info", msg: type });
 
 exports.error = (...args) => this.log("error", ...args);
 

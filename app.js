@@ -6,14 +6,23 @@ The bot will continue to run past this message, but keep in mind that it could b
 require("dotenv").config();
 
 // main sharding manager
-const { Master } = require("eris-sharder");
+const { Fleet } = require("eris-fleet");
+const { isMaster } = require("cluster");
+const path = require("path");
+const { inspect } = require("util");
 // dbl posting
 const TopGG = require("@top-gg/sdk");
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new TopGG.Api(process.env.DBL) : null;
 
-const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
-  name: "esmBot",
-  stats: true,
+const Admiral = new Fleet({
+  path: path.join(__dirname, "./shard.js"),
+  token: `Bot ${process.env.TOKEN}`,
+  startingStatus: {
+    status: "idle",
+    game: {
+      name: "Starting esmBot..."
+    }
+  },
   clientOptions: {
     disableEvents: {
       CHANNEL_DELETE: true,
@@ -48,13 +57,18 @@ const master = new Master(`Bot ${process.env.TOKEN}`, "/shard.js", {
   }
 });
 
-master.on("stats", async (stats) => {
-  master.broadcast(0, Object.assign(stats, { _eventName: "stat" }));
-  // dbl posting
+if (isMaster) {
+  Admiral.on("log", (m) => console.log(m));
+  Admiral.on("debug", (m) => console.debug(m));
+  Admiral.on("warn", (m) => console.warn(m));
+  Admiral.on("error", (m) => console.error(inspect(m)));
+
   if (dbl) {
-    await dbl.postStats({
-      serverCount: stats.guilds,
-      shardCount: await master.calculateShards()
+    Admiral.on("stats", async (m) => {
+      await dbl.postStats({
+        serverCount: m.guilds,
+        shardCount: m.shardCount
+      });
     });
   }
-});
+}

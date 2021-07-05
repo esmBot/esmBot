@@ -2,7 +2,7 @@ const soundPlayer = require("../utils/soundplayer.js");
 const AwaitRejoin = require("../utils/awaitrejoin.js");
 const { random } = require("../utils/misc.js");
 
-module.exports = async (client, cluster, ipc, member, oldChannel) => {
+module.exports = async (client, cluster, worker, ipc, member, oldChannel) => {
   const connection = soundPlayer.players.get(oldChannel.guild.id);
   if (connection && connection.type === "music" && oldChannel.id === connection.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id).length === 0) {

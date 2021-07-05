@@ -28,5 +28,3 @@ class Cache extends Map {
 
 exports.prefixCache = new Cache();
 exports.disabledCache = new Cache();
-
-exports.stats = {};
