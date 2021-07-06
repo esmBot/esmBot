@@ -142,9 +142,9 @@ exports.nextSong = async (client, message, connection, track, info, music, voice
   }
   if (connection.listeners("end").length === 0) {
     connection.on("end", async (data) => {
-      const player = this.players.get(voiceChannel.guild.id);
       if (data.reason === "REPLACED") return;
       const queue = this.queues.get(voiceChannel.guild.id);
+      const player = this.players.get(voiceChannel.guild.id);
       let newQueue;
       if (player.loop) {
         queue.push(queue.shift());
@@ -159,13 +159,21 @@ exports.nextSong = async (client, message, connection, track, info, music, voice
         this.players.delete(voiceChannel.guild.id);
         this.queues.delete(voiceChannel.guild.id);
         if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
-        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        try {
+          if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+          if (player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        } catch {
+          // no-op
+        }
       } else {
         const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
         this.nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, true, track);
-        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        try {
+          if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+          if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        } catch {
+          // no-op
+        }
       }
     });
   }
