@@ -1,21 +1,9 @@
-const image = require("../../utils/image.js");
-const logger = require("../../utils/logger.js");
 const Command = require("../../classes/command.js");
 
 class ImageReloadCommand extends Command {
   async run() {
     if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can reload the image servers!";
-    await image.disconnect();
-    await image.repopulate();
-    let amount = 0;
-    for (const server of image.servers) {
-      try {
-        await image.connect(server);
-        amount += 1;
-      } catch (e) {
-        logger.error(e);
-      }
-    }
+    const amount = await this.ipc.command("image", { type: "reload" }, true);
     if (amount > 0) {
       return `Successfully connected to ${amount} image servers.`;
     } else {

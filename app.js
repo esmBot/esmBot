@@ -51,6 +51,9 @@ const Admiral = new Fleet({
       name: "Starting esmBot..."
     }
   },
+  whatToLog: {
+    blacklist: ["stats_update"]
+  },
   clientOptions: {
     disableEvents: {
       CHANNEL_DELETE: true,
@@ -82,7 +85,11 @@ const Admiral = new Fleet({
     stats: {
       requestTimeout: 30000
     }
-  }
+  },
+  services: [
+    //{ name: "prometheus", path: path.join(__dirname, "./utils/services/prometheus.js") },
+    { name: "image", path: path.join(__dirname, "./utils/services/image.js")}
+  ]
 });
 
 if (isMaster) {
@@ -119,12 +126,9 @@ if (isMaster) {
     warn: "yellow",
     error: "red"
   });
-  
+
   Admiral.on("log", (m) => logger.main(m));
-  Admiral.on("info", (m) => {
-    console.log("hi");
-    logger.info(m);
-  });
+  Admiral.on("info", (m) => logger.info(m));
   Admiral.on("debug", (m) => logger.debug(m));
   Admiral.on("warn", (m) => logger.warn(m));
   Admiral.on("error", (m) => logger.error(m));

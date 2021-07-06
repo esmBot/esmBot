@@ -8,8 +8,6 @@ const logger = require("./utils/logger.js");
 const handler = require("./utils/handler.js");
 // lavalink stuff
 const sound = require("./utils/soundplayer.js");
-// image processing stuff
-const image = require("./utils/image.js");
 // database stuff
 const database = require("./utils/database.js");
 // command collections
@@ -21,7 +19,6 @@ const misc = require("./utils/misc.js");
 // generate help page
 const helpGenerator =
   process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
-const http = require("http");
 
 class Shard extends BaseClusterWorker {
   constructor(bot) {
@@ -53,17 +50,6 @@ class Shard extends BaseClusterWorker {
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
 
-    // connect to image api if enabled
-    if (process.env.API === "true") {
-      for (const server of image.servers) {
-        try {
-          await image.connect(server);
-        } catch (e) {
-          logger.error(e);
-        }
-      }
-    }
-
     // generate docs
     if (helpGenerator) {
       await helpGenerator.generateList();
@@ -71,41 +57,6 @@ class Shard extends BaseClusterWorker {
         await helpGenerator.createPage(process.env.OUTPUT);
         logger.log("info", "The help docs have been generated.");
       }
-    }
-
-    if (process.env.METRICS !== "" && process.env.METRICS !== undefined) {
-      const httpServer = http.createServer(async (req, res) => {
-        if (req.method !== "GET") {
-          res.statusCode = 405;
-          return res.end("GET only");
-        }
-        res.write(`# HELP connected_workers Number of workers connected
-# TYPE connected_workers gauge
-connected_workers ${image.connections.size}
-# HELP running_jobs Number of running jobs on this worker
-# TYPE running_jobs gauge
-# HELP queued_jobs Number of queued jobs on this worker
-# TYPE queued_jobs gauge
-# HELP max_jobs Number of max allowed jobs on this worker
-# TYPE max_jobs gauge
-# HELP command_count Number of times a command has been run
-# TYPE command_count counter
-`);
-        const servers = await image.getRunning();
-        for (const [i, w] of servers.entries()) {
-          res.write(`running_jobs{worker="${i}"} ${w.runningJobs}\n`);
-          res.write(`queued_jobs{worker="${i}"} ${w.queued}\n`);
-          res.write(`max_jobs{worker="${i}"} ${w.max}\n`);
-        }
-        const counts = await database.getCounts();
-        for (const [i, w] of Object.entries(counts)) {
-          res.write(`command_count{command="${i}"} ${w}\n`);
-        }
-        res.end();
-      });
-      httpServer.listen(process.env.METRICS, () => {
-        logger.log("info", `Serving metrics at ${process.env.METRICS}`);
-      });
     }
 
     this.ipc.register("reload", async (message) => {
@@ -156,7 +107,7 @@ connected_workers ${image.connections.size}
   }
 
   shutdown(done) {
-    logger.log("warn", "SIGINT detected, shutting down...");
+    logger.log("warn", "Shutting down...");
     this.bot.editStatus("dnd", {
       name: "Restarting/shutting down..."
     });

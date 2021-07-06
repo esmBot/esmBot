@@ -1,5 +1,4 @@
 const Command = require("./command.js");
-const magick = require("../utils/image.js");
 const imageDetect = require("../utils/imagedetect.js");
 const collections = require("../utils/collections.js");
 const { emotes } = require("../messages.json");
@@ -99,12 +98,12 @@ class ImageCommand extends Command {
     }
 
     try {
-      const { buffer, type } = await magick.run(magickParams).catch(e => {
+      const { buffer, type } = await this.ipc.command("image", { type: "run", obj: magickParams }, true).catch(e => {
         throw e;
       });
       if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
       return {
-        file: buffer,
+        file: Buffer.from(buffer.data),
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {

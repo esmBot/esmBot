@@ -1,8 +1,8 @@
-const image = require("../../utils/image.js");
 const Command = require("../../classes/command.js");
 
 class ImageStatsCommand extends Command {
   async run() {
+    const servers = await this.ipc.command("image", { type: "stats" }, true);
     const embed = {
       embed: {
         "author": {
@@ -10,11 +10,10 @@ class ImageStatsCommand extends Command {
           "icon_url": this.client.user.avatarURL
         },
         "color": 16711680,
-        "description": `The bot is currently connected to ${image.connections.size} image server(s).`,
+        "description": `The bot is currently connected to ${servers.length} image server(s).`,
         "fields": []
       }
     };
-    const servers = await image.getRunning();
     for (let i = 0; i < servers.length; i++) {
       embed.embed.fields.push({
         name: `Server ${i + 1}`,

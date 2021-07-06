@@ -1,6 +1,5 @@
 require("dotenv").config();
 const os = require("os");
-//const { run } = require("../utils/image-runner.js");
 const { Worker } = require("worker_threads");
 const path = require("path");
 const http = require("http");
