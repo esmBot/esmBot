@@ -10,7 +10,7 @@ class SoundReloadCommand extends Command {
       this.ipc.register("soundReloadSuccess", (msg) => {
         this.ipc.unregister("soundReloadSuccess");
         this.ipc.unregister("soundReloadFail");
-        resolve(`Successfully connected to ${msg.length} Lavalink node(s).`);
+        resolve(`Successfully connected to ${msg.msg.length} Lavalink node(s).`);
       });
       this.ipc.register("soundReloadFail", () => {
         this.ipc.unregister("soundReloadSuccess");
