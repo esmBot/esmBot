@@ -12,8 +12,9 @@ class TagsCommand extends Command {
     if ((guild.tagsDisabled || guild.tags_disabled) && this.args[0].toLowerCase() !== ("enable" || "disable")) return;
     if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
     const tags = guild.tags instanceof Map ? Object.fromEntries(guild.tags) : typeof guild.tags === "string" ? JSON.parse(guild.tags) : guild.tags;
-    const blacklist = ["add", "edit", "remove", "delete", "list", "random", "own", "owner", "enable", "disable"];
+    const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner", "enable", "disable"];
     switch (this.args[0].toLowerCase()) {
+      case "create":
       case "add":
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to add!";
         if (blacklist.includes(this.args[1].toLowerCase())) return "You can't make a tag with that name!";
