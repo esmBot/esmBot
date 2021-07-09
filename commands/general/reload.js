@@ -6,7 +6,7 @@ class ReloadCommand extends Command {
     return new Promise((resolve) => {
       if (this.message.author.id !== process.env.OWNER) resolve("Only the bot owner can reload commands!");
       if (this.args.length === 0) resolve("You need to provide a command to reload!");
-      this.ipc.broadcast("reload", { cmd: this.args[0] });
+      this.ipc.broadcast("reload", this.args[0]);
       this.ipc.register("reloadSuccess", () => {
         this.ipc.unregister("reloadSuccess");
         this.ipc.unregister("reloadFail");

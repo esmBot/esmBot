@@ -1,5 +1,4 @@
 const { version } = require("../../package.json");
-const collections = require("../../utils/collections.js");
 const day = require("dayjs");
 day.extend(require("dayjs/plugin/duration"));
 const os = require("os");
@@ -10,6 +9,7 @@ class StatsCommand extends Command {
     const duration = day.duration(this.client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
     const owner = await this.ipc.fetchUser(process.env.OWNER);
+    const stats = await this.ipc.getStats();
     return {
       embed: {
         "author": {
@@ -24,12 +24,12 @@ class StatsCommand extends Command {
         },
         {
           "name": "Cluster Memory Usage",
-          "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+          "value": `${stats.clusters[this.cluster].ram.toFixed(2)} MB`,
           "inline": true
         },
         {
           "name": "Total Memory Usage",
-          "value": collections.stats.totalRam ? `${collections.stats.totalRam.toFixed(2)} MB` : "Unknown",
+          "value": stats.totalRam ? `${stats.totalRam.toFixed(2)} MB` : "Unknown",
           "inline": true
         },
         {
@@ -66,12 +66,12 @@ class StatsCommand extends Command {
         },
         {
           "name": "Servers",
-          "value": collections.stats.guilds ? collections.stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
+          "value": stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
           "inline": true
         },
         {
           "name": "Users (approximation)",
-          "value": collections.stats.users ? collections.stats.users : `${this.client.users.size} (for this cluster only)`,
+          "value": stats.users ? stats.users : `${this.client.users.size} (for this cluster only)`,
           "inline": true
         }
         ]

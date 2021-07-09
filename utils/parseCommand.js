@@ -39,16 +39,6 @@ module.exports = (input) => {
       } else {
         args[curr] += `${a} `;
       }
-    } else if (a.startsWith("\"")) {
-      if (a.endsWith("\"")) {
-        args.push(a.slice(1).slice(0, -1));
-      } else {
-        concated += `${a.slice(1)} `;
-      }
-    } else if (a.endsWith("\"")) {
-      concated += a.slice(0, -1);
-      args._.push(concated);
-      concated = "";
     } else {
       if (concated !== "") {
         concated += `${a} `;

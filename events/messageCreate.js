@@ -5,7 +5,7 @@ const collections = require("../utils/collections.js");
 const parseCommand = require("../utils/parseCommand.js");
 
 // run when someone sends a message
-module.exports = async (client, cluster, ipc, message) => {
+module.exports = async (client, cluster, worker, ipc, message) => {
   // ignore dms and other bots
   if (message.author.bot) return;
 
@@ -88,7 +88,7 @@ module.exports = async (client, cluster, ipc, message) => {
     await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, cluster, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
