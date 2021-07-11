@@ -9,28 +9,30 @@ module.exports = (input) => {
       if (a.includes("=")) {
         const [arg, value] = a.slice(2).split("=");
         let ended = true;
-        if (value.startsWith("\"")) {
-          if (value.endsWith("\"")) {
-            args[arg] = value.slice(1).slice(0, -1);
+        if (arg !== "_") {
+          if (value.startsWith("\"")) {
+            if (value.endsWith("\"")) {
+              args[arg] = value.slice(1).slice(0, -1);
+            } else {
+              args[arg] = `${value.slice(1)} `;
+              ended = false;
+            }
+          } else if (value.endsWith("\"")) {
+            args[arg] += a.slice(0, -1);
+          } else if (value !== "") {
+            args[arg] = value;
           } else {
-            args[arg] = `${value.slice(1)} `;
-            ended = false;
+            args[arg] = true;
           }
-        } else if (value.endsWith("\"")) {
-          args[arg] += a.slice(0, -1);
-        } else if (value !== "") {
-          args[arg] = value;
+          if (args[arg] === "true") {
+            args[arg] = true;
+          } else if (args[arg] === "false") {
+            args[arg] = false;
+          }
+          if (!ended) curr = arg;
         } else {
-          args[arg] = true;
+          args[a.slice(2)] = true;
         }
-        if (args[arg] === "true") {
-          args[arg] = true;
-        } else if (args[arg] === "false") {
-          args[arg] = false;
-        }
-        if (!ended) curr = arg;
-      } else {
-        args[a.slice(2)] = true;
       }
     } else if (curr) {
       if (a.endsWith("\"")) {
