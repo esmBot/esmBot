@@ -28,14 +28,14 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     size_t width = frames.front().baseColumns();
     size_t height = frames.front().baseRows();
 
-    int dividedWidth = width / 150;
+    int dividedWidth = width / 175;
 
     Image caption_image;
     caption_image.size(Geometry(to_string(width) + "x" + to_string(height)));
     caption_image.backgroundColor("none");
     caption_image.fillColor("white");
     caption_image.font("Upright");
-    caption_image.fontPointsize(width / 6);
+    caption_image.fontPointsize(width / 8);
     caption_image.textGravity(Magick::CenterGravity);
     caption_image.read("pango:" + caption);
     caption_image.trim();
