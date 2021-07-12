@@ -35,8 +35,9 @@
 #include "trump.h"
 #include "uncaption.h"
 #include "wall.h"
-#include "wdt.h"
 #include "watermark.h"
+#include "wdt.h"
+#include "whisper.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -75,8 +76,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "trump"), Napi::Function::New(env, Trump));
   exports.Set(Napi::String::New(env, "uncaption"), Napi::Function::New(env, Uncaption));
   exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
-  exports.Set(Napi::String::New(env, "wdt"), Napi::Function::New(env, Wdt));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
+  exports.Set(Napi::String::New(env, "wdt"), Napi::Function::New(env, Wdt));
+  exports.Set(Napi::String::New(env, "whisper"), Napi::Function::New(env, Whisper));
   return exports;
 }
 
