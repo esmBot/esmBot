@@ -30,9 +30,9 @@ module.exports = (input) => {
             args[arg] = false;
           }
           if (!ended) curr = arg;
-        } else {
-          args[a.slice(2)] = true;
         }
+      } else {
+        args[a.slice(2)] = true;
       }
     } else if (curr) {
       if (a.endsWith("\"")) {
