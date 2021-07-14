@@ -2,8 +2,8 @@ const wrap = require("../../utils/wrap.js");
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class RetroCommand extends ImageCommand {
-  params(args) {
-    let [line1, line2, line3] = args.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%").split(",").map(elem => elem.trim());
+  params() {
+    let [line1, line2, line3] = this.args.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%").split(",").map(elem => elem.trim());
     if (!line2 && line1.length > 15) {
       const [split1, split2, split3] = wrap(line1, { width: 15, indent: "" }).split("\n");
       line1 = split1;

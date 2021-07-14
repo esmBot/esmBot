@@ -1,7 +1,7 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class SooSCommand extends ImageCommand {
-  params(args, url, delay) {
+  params(url, delay) {
     return {
       delay: delay ? (100 / delay.split("/")[0]) * delay.split("/")[1] : 0,
       soos: true

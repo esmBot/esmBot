@@ -28,6 +28,7 @@ class Command {
   static description = "No description found";
   static aliases = [];
   static arguments = [];
+  static flags = [];
   static requires = [];
 }
 

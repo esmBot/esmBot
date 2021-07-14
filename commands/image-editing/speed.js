@@ -1,8 +1,8 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class SpeedCommand extends ImageCommand {
-  params(args) {
-    const speed = parseInt(args[0]);
+  params() {
+    const speed = parseInt(this.args[0]);
     return {
       speed: isNaN(speed) || speed < 1 ? 2 : speed
     };

@@ -13,6 +13,7 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
+    bool top = obj.Get("top").As<Napi::Boolean>().Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -41,12 +42,18 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
       Image appended;
       list<Image> images;
       image.backgroundColor("white");
-      images.push_back(image);
-      images.push_back(caption_image);
+      if (top) {
+        images.push_back(caption_image);
+        images.push_back(image);
+      } else {
+        images.push_back(image);
+        images.push_back(caption_image);
+      }
       appendImages(&appended, images.begin(), images.end(), true);
       appended.repage();
       appended.magick(type);
       appended.animationDelay(delay == 0 ? image.animationDelay() : delay);
+      appended.gifDisposeMethod(Magick::BackgroundDispose);
       captioned.push_back(appended);
     }
 

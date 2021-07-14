@@ -1,14 +1,17 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class BlurpleCommand extends ImageCommand {
-  params(args) {
+  params() {
     return {
-      old: args.length !== 0 && args[0].toLowerCase() === "old" ? true : false
+      old: !!this.specialArgs.old
     };
   }
   
   static description = "Turns an image blurple";
-  static arguments = ["{old}"];
+  static flags = [{
+    name: "old",
+    description: "Use the old blurple color"
+  }];
 
   static noImage = "You need to provide an image to make blurple!";
   static command = "blurple";

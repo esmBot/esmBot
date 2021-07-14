@@ -2,7 +2,7 @@ name: Error Report
 description: Report an error that the bot posted in chat
 labels: [bug]
 body:
-  - type: textarea
+  - type: input
     id: command
     attributes:
       label: Command that caused the error

@@ -1,9 +1,9 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class HomebrewCommand extends ImageCommand {
-  params(args) {
+  params() {
     return {
-      caption: args.join(" ").toLowerCase().replaceAll("\n", " ")
+      caption: this.args.join(" ").toLowerCase().replaceAll("\n", " ")
     };
   }
 

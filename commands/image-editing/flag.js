@@ -6,9 +6,9 @@ const ImageCommand = require("../../classes/imageCommand.js");
 class FlagCommand extends ImageCommand {
   flagPath = "";
 
-  async criteria(args) {
-    if (!args[0].match(emojiRegex)) return false;
-    const flag = emoji.unemojify(args[0]).replaceAll(":", "").replace("flag-", "");
+  async criteria() {
+    if (!this.args[0].match(emojiRegex)) return false;
+    const flag = emoji.unemojify(this.args[0]).replaceAll(":", "").replace("flag-", "");
     let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
     if (flag === "🏴‍☠️") path = "./assets/images/pirateflag.png";
     if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";

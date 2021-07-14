@@ -3,9 +3,9 @@ const { random } = require("../../utils/misc.js");
 const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "chonkers", "memes", "funny", "pcmasterrace", "bellybros"];
 
 class RedditCommand extends ImageCommand {
-  params(args) {
+  params() {
     return {
-      caption: args.length === 0 ? random(names) : args.join(" ").replaceAll("\n", "").replaceAll(" ", "")
+      caption: this.args.length === 0 ? random(names) : this.args.join(" ").replaceAll("\n", "").replaceAll(" ", "")
     };
   }
 

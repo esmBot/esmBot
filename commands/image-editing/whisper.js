@@ -1,8 +1,8 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class WhisperCommand extends ImageCommand {
-  params(args, url) {
-    const newArgs = args.filter(item => !item.includes(url));
+  params(url) {
+    const newArgs = this.args.filter(item => !item.includes(url));
     return {
       caption: newArgs.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%")
     };

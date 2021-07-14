@@ -19,7 +19,8 @@ class ReactionCollector extends EventEmitter {
     if (this.message.id !== message.id) return false;
     if (this.filter(message, emoji, member)) {
       this.collected.push({ message: message, emoji: emoji, member: member });
-      this.emit("reaction", await this.bot.getMessage(message.channel.id, message.id), emoji, member);
+      const msg = await this.bot.getMessage(message.channel.id, message.id);
+      this.emit("reaction", msg, emoji, member);
       if (this.collected.length >= this.options.maxMatches) this.stop("maxMatches");
       return true;
     }

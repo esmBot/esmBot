@@ -83,7 +83,7 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        Object.assign(magickParams, this.params(this.args, magickParams.url));
+        Object.assign(magickParams, this.params(magickParams.url, magickParams.delay));
         break;
       case "object":
         Object.assign(magickParams, this.params);

@@ -1,8 +1,8 @@
 const ImageCommand = require("../../classes/imageCommand.js");
 
 class FreezeCommand extends ImageCommand {
-  params(args) {
-    const frameCount = parseInt(args[0]);
+  params() {
+    const frameCount = parseInt(this.args[0]);
     return {
       loop: false,
       frame: isNaN(frameCount) ? -1 : frameCount
