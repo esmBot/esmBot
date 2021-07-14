@@ -1,0 +1,58 @@
+name: Error Report
+description: Report an error that the bot posted in chat
+labels: [bug]
+body:
+  - type: textarea
+    id: command
+    attributes:
+      label: Command that caused the error
+      description: Post the exact command that caused the error.
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Image that caused the error
+      description: If the error is regarding an image command, please post a direct link to the image here.
+    validations:
+      required: false
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior.
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: false
+  - type: dropdown
+    id: self-hosted
+    attributes:
+      label: Self-hosted instance?
+      description: Did the error occur on a self-hosted instance (e.g. not the main esmBot or esmBot Dev instances)?
+      options:
+        - Yes
+        - No
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error file
+      description: Post the contents of the error file in between the backticks.
+      value: |
+        ```
+
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
