@@ -34,8 +34,8 @@ body:
       label: Self-hosted instance?
       description: Did the error occur on a self-hosted instance (e.g. not the main esmBot or esmBot Dev instances)?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
     validations:
       required: true
   - type: textarea
