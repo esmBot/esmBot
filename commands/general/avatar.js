@@ -4,8 +4,8 @@ class AvatarCommand extends Command {
   async run() {
     if (this.message.mentions[0] !== undefined) {
       return this.message.mentions[0].dynamicAvatarURL(null, 1024);
-    } else if (this.client.users.get(this.args[0]) !== undefined) {
-      return this.client.users.get(this.args[0]).dynamicAvatarURL(null, 1024);
+    } else if (await this.ipc.fetchUser(this.args[0]) !== undefined) {
+      return await this.ipc.fetchUser(this.args[0]).dynamicAvatarURL(null, 1024);
     } else if (this.args.join(" ") !== "" && this.message.channel.guild) {
       const userRegex = new RegExp(this.args.join("|"), "i");
       const member = this.message.channel.guild.members.find(element => {

@@ -39,7 +39,9 @@ class TagsCommand extends Command {
       case "owner":
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to check the owner of!";
         if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        return `This tag is owned by **${this.client.users.get(tags[this.args[1].toLowerCase()].author).username}#${this.client.users.get(tags[this.args[1].toLowerCase()].author).discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
+        var user = await this.ipc.fetchUser(tags[this.args[1].toLowerCase()].author);
+        if (!user) return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${tags[this.args[1].toLowerCase()].author}\``;
+        return `This tag is owned by **${user.username}#${user.discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
       case "list":
         if (!this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return "I don't have the `Add Reactions` permission!";
         if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
