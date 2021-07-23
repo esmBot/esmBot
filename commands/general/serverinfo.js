@@ -26,7 +26,7 @@ class ServerInfoCommand extends Command {
           },
           {
             "name": "🗓 **Created on:**",
-            "value": new Date(this.message.channel.guild.createdAt).toString()
+            "value": `<t:${this.message.channel.guild.createdAt}:F>`
           },
           {
             "name": "👥 **Users:**",

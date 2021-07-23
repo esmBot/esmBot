@@ -14,5 +14,5 @@ A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 If you want to self-host the bot, a guide can be found [here](https://github.com/esmBot/esmBot/wiki/Setup).
 
 ## Credits
-Icon by [Stellio](https://twitter.com/SteelStellio).
+Icon by [Steel](https://twitter.com/SteelStellio).
 All images, sounds, and fonts are copyright of their respective owners.

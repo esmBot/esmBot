@@ -16,7 +16,8 @@ exports.load = async (command, soundStatus) => {
     category: commandArray[2],
     description: props.description,
     aliases: props.aliases,
-    params: props.arguments
+    params: props.arguments,
+    flags: props.flags
   });
   
   if (props.aliases) {

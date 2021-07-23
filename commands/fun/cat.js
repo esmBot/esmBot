@@ -8,6 +8,7 @@ class CatCommand extends Command {
     return {
       embed: {
         color: 16711680,
+        description: "Cat images are sourced from a subset of the [dm4catbot](https://twitter.com/dm4catbot) database.",
         image: {
           url: data.headers.get("location")
         }

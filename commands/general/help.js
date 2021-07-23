@@ -15,11 +15,6 @@ class HelpCommand extends Command {
       const command = aliases.has(this.args[0].toLowerCase()) ? collections.aliases.get(this.args[0].toLowerCase()) : this.args[0].toLowerCase();
       const info = collections.info.get(command);
       const counts = await database.getCounts();
-      /*const counts = countDB.reduce((acc, val) => {
-        const [key, value] = val;
-        acc[key] = value;
-        return acc;
-      }, {});*/
       const embed = {
         "embed": {
           "author": {
@@ -44,6 +39,16 @@ class HelpCommand extends Command {
           }]
         }
       };
+      if (info.flags.length !== 0) {
+        const flagInfo = [];
+        for (const flag of info.flags) {
+          flagInfo.push(`\`--${flag.name}${flag.type ? `=[${flag.type}]` : ""}\` - ${flag.description}`);
+        }
+        embed.embed.fields.push({
+          "name": "Flags",
+          "value": flagInfo.join("\n")
+        });
+      }
       return embed;
     } else {
       const pages = [];
