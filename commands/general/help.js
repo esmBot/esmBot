@@ -51,6 +51,8 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
+      if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return "I don't have the `Add Reactions` permission!";
+      if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
       const pages = [];
       for (const category of Object.keys(help.categories)) {
         const splitPages = help.categories[category].map((item, index) => {
