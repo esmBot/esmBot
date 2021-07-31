@@ -1,0 +1,27 @@
+const Command = require("../../classes/command.js");
+
+class BroadcastCommand extends Command {
+  // yet another very hacky command
+  run() {
+    return new Promise((resolve) => {
+      if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can broadcast messages!";
+      if (this.args.length !== 0) {
+        this.ipc.broadcast("playbroadcast", this.args.join(" "));
+        this.ipc.register("broadcastSuccess", () => {
+          this.ipc.unregister("broadcastSuccess");
+          resolve("Successfully broadcasted message.");
+        });
+      } else {
+        this.ipc.broadcast("broadcastend");
+        this.ipc.register("broadcastEnd", () => {
+          this.ipc.unregister("broadcastEnd");
+          resolve("Successfully ended broadcast.");
+        });
+      }
+    });
+  }
+
+  static description = "Broadcasts a playing message until the command is run again or the bot restarts";
+}
+
+module.exports = BroadcastCommand;

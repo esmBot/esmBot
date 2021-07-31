@@ -19,6 +19,8 @@ const misc = require("./utils/misc.js");
 // generate help page
 const helpGenerator =
   process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
+// whether a broadcast is currently in effect
+let broadcast = false;
 
 class Shard extends BaseClusterWorker {
   constructor(bot) {
@@ -78,21 +80,41 @@ class Shard extends BaseClusterWorker {
         return this.ipc.broadcast("soundReloadFail");
       }
     });
+
+    this.ipc.register("playbroadcast", async (message) => {
+      this.bot.editStatus("dnd", {
+        name: `${message.msg} | @${this.bot.user.username} help`,
+      });
+      broadcast = true;
+      return this.ipc.broadcast("broadcastSuccess");
+    });
+
+    this.ipc.register("broadcastend", async () => {
+      this.bot.editStatus("dnd", {
+        name: `${misc.random(messages)} | @${this.bot.user.username} help`,
+      });
+      broadcast = false;
+      return this.ipc.broadcast("broadcastEnd");
+    });
     
     // connect to lavalink
     if (!sound.status && !sound.connected) sound.connect(this.bot);
 
     database.setup();
 
-    // set activity (a.k.a. the gamer code)
-    (async function activityChanger() {
+    this.activityChanger();
+
+    logger.log("info", `Started worker ${this.workerID}.`);
+  }
+
+  // set activity (a.k.a. the gamer code)
+  activityChanger() {
+    if (!broadcast) {
       this.bot.editStatus("dnd", {
         name: `${misc.random(messages)} | @${this.bot.user.username} help`,
       });
-      setTimeout(activityChanger.bind(this), 900000);
-    }).bind(this)();
-
-    logger.log("info", `Started worker ${this.workerID}.`);
+    }
+    setTimeout(this.activityChanger, 900000);
   }
 
   async* getFiles(dir) {
