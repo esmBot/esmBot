@@ -1,4 +1,5 @@
 const util = require("util");
+const fs = require("fs");
 
 // random(array) to select a random entry in array
 exports.random = (array) => {
@@ -22,6 +23,11 @@ exports.clean = async (text) => {
     .replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   const { parsed } = require("dotenv").config();
+  const imageServers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
+
+  for (const server of imageServers) {
+    text = text.replaceAll(server, "<redacted>");
+  }
 
   for (const env of Object.keys(parsed)) {
     text = text.replaceAll(parsed[env], optionalReplace(parsed[env]));

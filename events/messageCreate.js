@@ -3,6 +3,7 @@ const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
 const parseCommand = require("../utils/parseCommand.js");
+const { clean } = require("../utils/misc.js");
 
 // run when someone sends a message
 module.exports = async (client, cluster, worker, ipc, message) => {
@@ -141,7 +142,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
         await client.createMessage(message.channel.id, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"
         }, reference), [{
-          file: `Message: ${error}\n\nStack Trace: ${error.stack}`,
+          file: `Message: ${await clean(error)}\n\nStack Trace: ${await clean(error.stack)}`,
           name: "error.txt"
         }]);
       } catch { /* silently ignore */ }

@@ -213,13 +213,9 @@ class ImageWorker extends BaseServiceWorker {
         const num = Math.floor(Math.random() * 100000).toString().slice(0, 5);
         const timeout = setTimeout(() => {
           if (this.jobs[num]) delete this.jobs[num];
-          reject("the image request timed out after 25 seconds. Try uploading your image elsewhere.");
+          reject("The image request timed out after 25 seconds. Try uploading your image elsewhere.");
         }, 25000);
-        this.start(object, num).catch(err => { // incredibly hacky code incoming
-          clearTimeout(timeout);
-          if (err instanceof Error) return reject(err);
-          return err;
-        }).then((data) => {
+        this.start(object, num).then((data) => {
           clearTimeout(timeout);
           if (!data.event) reject("Not connected to image server");
           data.event.once("image", (image, type) => {
@@ -256,7 +252,8 @@ class ImageWorker extends BaseServiceWorker {
   async handleCommand(data) {
     try {
       if (data.type === "run") {
-        return await this.run(data.obj);
+        const result = await this.run(data.obj);
+        return result;
       } else if (data.type === "reload") {
         await this.disconnect();
         await this.repopulate();
@@ -274,7 +271,7 @@ class ImageWorker extends BaseServiceWorker {
         return await this.getRunning();
       }
     } catch (err) {
-      return { err: err.message };
+      return { err: typeof err === "string" ? err : err.message };
     }
   }
 
