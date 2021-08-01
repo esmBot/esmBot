@@ -42,7 +42,7 @@ class UserInfoCommand extends Command {
           },
           {
             "name": "💬 **Joined this server on:**",
-            "value": member ? `<t:${member.joinedAt}:F>` : "N/A"
+            "value": member ? `<t:${Math.floor(member.joinedAt / 1000)}:F>` : "N/A"
           }
         ]
       }
