@@ -38,11 +38,11 @@ class UserInfoCommand extends Command {
           },
           {
             "name": "🗓️ **Joined Discord on:**",
-            "value": new Date(user.createdAt).toString()
+            "value": `<t:${Math.floor(user.createdAt / 1000)}:F>`
           },
           {
             "name": "💬 **Joined this server on:**",
-            "value": member ? new Date(member.joinedAt).toString() : "N/A"
+            "value": member ? `<t:${member.joinedAt}:F>` : "N/A"
           }
         ]
       }
