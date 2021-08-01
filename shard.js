@@ -114,7 +114,7 @@ class Shard extends BaseClusterWorker {
         name: `${misc.random(messages)} | @${this.bot.user.username} help`,
       });
     }
-    setTimeout(this.activityChanger, 900000);
+    setTimeout(this.activityChanger.bind(this), 900000);
   }
 
   async* getFiles(dir) {
