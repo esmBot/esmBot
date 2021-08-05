@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.5.7",
+  "version": "1.6.0",
   "description": "A Discord bot with miscellaneous features",
   "main": "app.js",
   "engines": {
