@@ -1,4 +1,5 @@
 const fs = require("fs");
+const fetch = require("node-fetch");
 const database = require("../utils/database.js");
 const logger = require("../utils/logger.js");
 const collections = require("../utils/collections.js");
@@ -104,13 +105,19 @@ module.exports = async (client, cluster, worker, ipc, message) => {
       if (result.file.length > 8388119 && process.env.TEMPDIR !== "") {
         const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
         await fs.promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
+        const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
+        try {
+          await fetch(imageURL);
+        } catch {
+          // this is here to make sure the image is properly cached by discord
+        }
         await client.createMessage(message.channel.id, Object.assign({
           embed: {
             color: 16711680,
             title: "Here's your image!",
-            url: `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`,
+            url: imageURL,
             image: {
-              url: `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`
+              url: imageURL
             },
             footer: {
               text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
