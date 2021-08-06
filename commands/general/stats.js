@@ -4,7 +4,7 @@ const Command = require("../../classes/command.js");
 
 class StatsCommand extends Command {
   async run() {
-    const uptime = process.uptime();
+    const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
     const owner = await this.ipc.fetchUser(process.env.OWNER);
     const stats = await this.ipc.getStats();
