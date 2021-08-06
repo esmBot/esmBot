@@ -107,6 +107,7 @@ class ImageCommand extends Command {
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
+      if (e === "Job timed out") return "The image is taking too long to process (>=15 minutes), so the job was cancelled. Try using a smaller image.";
       if (e.toString().includes("Not connected to image server") || e === "No available servers") return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
       throw e;
     } finally {

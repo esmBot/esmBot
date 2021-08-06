@@ -2,6 +2,7 @@ const Command = require("../../classes/command.js");
 
 class ImageStatsCommand extends Command {
   async run() {
+    await this.message.channel.sendTyping();
     const servers = await this.ipc.command("image", { type: "stats" }, true);
     const embed = {
       embed: {
