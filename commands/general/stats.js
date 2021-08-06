@@ -1,13 +1,11 @@
 const { version } = require("../../package.json");
-const day = require("dayjs");
-day.extend(require("dayjs/plugin/duration"));
 const os = require("os");
 const Command = require("../../classes/command.js");
 
 class StatsCommand extends Command {
   async run() {
-    const duration = day.duration(this.client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-    const uptime = day.duration(process.uptime(), "seconds").format(" D [days], H [hrs], m [mins], s [secs]");
+    const uptime = process.uptime();
+    const connUptime = this.client.uptime;
     const owner = await this.ipc.fetchUser(process.env.OWNER);
     const stats = await this.ipc.getStats();
     return {
@@ -34,11 +32,11 @@ class StatsCommand extends Command {
         },
         {
           "name": "Bot Uptime",
-          "value": uptime
+          "value": `${Math.trunc(uptime / 86400000)} days, ${Math.trunc(uptime / 3600000) % 24} hrs, ${Math.trunc(uptime / 60000) % 60} mins, ${Math.trunc(uptime / 1000) % 60} secs`
         },
         {
           "name": "Connection Uptime",
-          "value": duration
+          "value": `${Math.trunc(connUptime / 86400000)} days, ${Math.trunc(connUptime / 3600000) % 24} hrs, ${Math.trunc(connUptime / 60000) % 60} mins, ${Math.trunc(connUptime / 1000) % 60} secs`
         },
         {
           "name": "Host",

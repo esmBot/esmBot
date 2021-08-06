@@ -1,9 +1,7 @@
 const logger = require("./logger.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
-const day = require("dayjs");
-const duration = require("dayjs/plugin/duration");
-day.extend(duration);
+const format = require("format-duration");
 const { Manager } = require("lavacord");
 
 let nodes;
@@ -121,7 +119,7 @@ exports.nextSong = async (client, message, connection, track, info, music, voice
         },
         {
           "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          "value": `${day.duration(0).format("m:ss", { trim: false })}/${info.isStream ? "∞" : day.duration(info.length).format("m:ss", { trim: false })}`
+          "value": `0:00/${info.isStream ? "∞" : format(info.length)}`
         }]
       }
     });

@@ -1,7 +1,5 @@
 const fetch = require("node-fetch");
-const day = require("dayjs");
-const duration = require("dayjs/plugin/duration");
-day.extend(duration);
+const format = require("format-duration");
 const MusicCommand = require("../../classes/musicCommand.js");
 
 class NowPlayingCommand extends MusicCommand {
@@ -36,7 +34,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          "value": `${day.duration(player.state.position).format("m:ss", { trim: false })}/${track.isStream ? "∞" : day.duration(track.length).format("m:ss", { trim: false })}`
+          "value": `${format(player.state.position)}/${track.isStream ? "∞" : format(track.length)}`
         }]
       }
     };

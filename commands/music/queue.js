@@ -1,8 +1,6 @@
 const soundPlayer = require("../../utils/soundplayer.js");
 const fetch = require("node-fetch");
-const day = require("dayjs");
-const duration = require("dayjs/plugin/duration");
-day.extend(duration);
+const format = require("format-duration");
 const paginator = require("../../utils/pagination/pagination.js");
 const MusicCommand = require("../../classes/musicCommand.js");
 
@@ -21,7 +19,7 @@ class QueueCommand extends MusicCommand {
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {
-      trackList.push(`${i + 1}. ${track.info.author} - **${track.info.title}** (${track.info.isStream ? "∞" : day.duration(track.info.length).format("m:ss", { trim: false })})`);
+      trackList.push(`${i + 1}. ${track.info.author} - **${track.info.title}** (${track.info.isStream ? "∞" : format(track.info.length)})`);
     }
     const pageSize = 5;
     const embeds = [];
@@ -42,7 +40,7 @@ class QueueCommand extends MusicCommand {
           },
           "fields": [{
             "name": "🎶 Now Playing",
-            "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : day.duration(firstTrack.info.length).format("m:ss", { trim: false })})`
+            "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
           }, {
             "name": "🔁 Looping?",
             "value": player.loop ? "Yes" : "No"
