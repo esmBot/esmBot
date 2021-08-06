@@ -3,7 +3,7 @@
     { "id": "1", "host": "localhost", "port": 2333, "password": "youshallnotpass", "local": true }
   ],
   "image": [
-    "localhost"
+    { "server": "localhost", "auth": "verycoolpass100" }
   ],
   "searx": [
     "https://searx.xyz"

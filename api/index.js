@@ -27,6 +27,7 @@ const queue = [];
 const { v4: uuidv4 } = require("uuid");
 
 const MAX_JOBS = process.env.JOBS !== "" && process.env.JOBS !== undefined ? parseInt(process.env.JOBS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+const PASS = process.env.PASS !== "" && process.env.PASS !== undefined ? process.env.PASS : undefined;
 let jobAmount = 0;
 
 const acceptJob = (uuid, sock) => {
@@ -108,6 +109,10 @@ httpServer.on("request", async (req, res) => {
     res.statusCode = 405;
     return res.end("405 Method Not Allowed");
   }
+  if (PASS && req.headers.authentication !== PASS) {
+    res.statusCode = 401;
+    return res.end("401 Unauthorized");
+  }
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   if (reqUrl.pathname === "/status" && req.method === "GET") {
     log(`Sending server status to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
@@ -153,6 +158,12 @@ httpServer.on("request", async (req, res) => {
 
 httpServer.on("upgrade", (req, sock, head) => {
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
+
+  if (PASS && req.headers.authentication !== PASS) {
+    sock.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+    sock.destroy();
+    return;
+  }
 
   if (reqUrl.pathname === "/sock") {
     wss.handleUpgrade(req, sock, head, (ws) => {

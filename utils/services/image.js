@@ -25,7 +25,7 @@ class ImageWorker extends BaseServiceWorker {
     if (process.env.API === "true") {
       for (const server of this.servers) {
         try {
-          await this.connect(server);
+          await this.connect(server.server, server.auth);
         } catch (e) {
           logger.error(e);
         }
@@ -53,7 +53,13 @@ class ImageWorker extends BaseServiceWorker {
         controller.abort();
       }, 2000);
       try {
-        const statusRequest = await fetch(`http://${address}:8080/running`, { signal: controller.signal });
+        const auth = this.servers.filter((val) => val.server === address)[0].auth;
+        const statusRequest = await fetch(`http://${address}:8080/running`, {
+          signal: controller.signal,
+          headers: {
+            "Authentication": auth && auth !== "" ? auth : undefined
+          }
+        });
         clearTimeout(timeout);
         const status = await statusRequest.json();
         serversLeft--;
@@ -89,7 +95,7 @@ class ImageWorker extends BaseServiceWorker {
     if (serversLeft < this.servers.length) {
       for (const server of this.servers) {
         try {
-          if (!this.connections.has(server)) await this.connect(server);
+          if (!this.connections.has(server.server)) await this.connect(server.server, server.auth);
         } catch (e) {
           logger.error(e);
         }
@@ -108,7 +114,13 @@ class ImageWorker extends BaseServiceWorker {
         controller.abort();
       }, 5000);
       try {
-        const statusRequest = await fetch(`http://${address}:8080/status`, { signal: controller.signal });
+        const auth = this.servers.filter((val) => val.server === address)[0].auth;
+        const statusRequest = await fetch(`http://${address}:8080/status`, {
+          signal: controller.signal,
+          headers: {
+            "Authentication": auth && auth !== "" ? auth : undefined
+          }
+        });
         clearTimeout(timeout);
         const status = await statusRequest.text();
         serversLeft--;
@@ -137,8 +149,12 @@ class ImageWorker extends BaseServiceWorker {
     }
   }
 
-  async connect(server) {
-    const connection = new WebSocket(`ws://${server}:8080/sock`);
+  async connect(server, auth) {
+    const connection = new WebSocket(`ws://${server}:8080/sock`, {
+      headers: {
+        "Authentication": auth && auth !== "" ? auth : undefined
+      }
+    });
     connection.on("message", async (msg) => {
       const opcode = msg.readUint8(0);
       const req = msg.slice(37, msg.length);
@@ -150,11 +166,15 @@ class ImageWorker extends BaseServiceWorker {
       } else if (opcode === 0x01) { // Job completed successfully
         // the image API sends all job responses over the same socket; make sure this is ours
         if (this.jobs[uuid]) {
-          const imageReq = await fetch(`http://${server}:8080/image?id=${uuid}`);
+          const imageReq = await fetch(`http://${server}:8080/image?id=${uuid}`, {
+            headers: {
+              "Authentication": auth && auth !== "" ? auth : undefined
+            }
+          });
           const image = await imageReq.buffer();
           // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
           // by a newline, followed by the image data.
-  
+
           this.jobs[uuid].event.emit("image", image, imageReq.headers.get("ext"));
         }
       } else if (opcode === 0x02) { // Job errored
@@ -260,7 +280,7 @@ class ImageWorker extends BaseServiceWorker {
         let amount = 0;
         for (const server of this.servers) {
           try {
-            await this.connect(server);
+            await this.connect(server.server, server.auth);
             amount += 1;
           } catch (e) {
             logger.error(e);
