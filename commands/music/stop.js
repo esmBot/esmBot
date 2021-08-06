@@ -3,7 +3,7 @@ const MusicCommand = require("../../classes/musicCommand.js");
 
 class StopCommand extends MusicCommand {
   async run() {
-    if (process.env.NODE_ENV === "production" && this.message.author.id !== process.env.OWNER) return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
+    if (process.env.NODE_ENV === "production" && this.message.author.id === process.env.OWNER) return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
 
     if (!this.message.channel.guild) return "This command only works in servers!";
     if (!this.message.member.voiceState.channelID) return "You need to be in a voice channel first!";

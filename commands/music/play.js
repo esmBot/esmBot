@@ -5,7 +5,7 @@ const searchRegex = /^ytsearch:/;
 
 class PlayCommand extends MusicCommand {
   async run() {
-    if (process.env.NODE_ENV === "production" && this.message.author.id !== process.env.OWNER) return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
+    if (process.env.NODE_ENV === "production" && this.message.author.id === process.env.OWNER) return "Music commands are coming soon, but they aren't ready yet. Stay tuned to @esmBot_ on Twitter for updates!";
 
     if (!this.args[0]) return "You need to provide what you want to play!";
     const query = this.args.join(" ").trim();
