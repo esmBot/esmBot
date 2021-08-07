@@ -11,7 +11,7 @@ class RestartCommand extends Command {
     for (const command of collections.commands) {
       await handler.unload(command);
     }
-    this.ipc.restartAllClusters();
+    this.ipc.restartAllClusters(true);
     //this.ipc.broadcast("restart");
   }
 
