@@ -16,8 +16,9 @@ module.exports = async (client, cluster, worker, ipc, message) => {
 
   let prefixCandidate;
   if (message.channel.guild) {
-    if (collections.prefixCache.has(message.channel.guild.id)) {
-      prefixCandidate = collections.prefixCache.get(message.channel.guild.id);
+    const cachedPrefix = collections.prefixCache.get(message.channel.guild.id);
+    if (cachedPrefix) {
+      prefixCandidate = cachedPrefix;
     } else {
       let guildDB = message.channel.guild ? await database.getGuild(message.channel.guild.id) : null;
       if (message.channel.guild && !(guildDB && guildDB.disabled)) {
