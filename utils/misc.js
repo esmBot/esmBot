@@ -25,8 +25,9 @@ exports.clean = async (text) => {
   const { parsed } = require("dotenv").config();
   const imageServers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
-  for (const server of imageServers) {
+  for (const { server, auth } of imageServers) {
     text = text.replaceAll(server, "<redacted>");
+    text = text.replaceAll(auth, "<redacted>");
   }
 
   for (const env of Object.keys(parsed)) {
