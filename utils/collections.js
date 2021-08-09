@@ -17,7 +17,7 @@ exports.runningCommands = new TimedMap();
 class Cache extends Map {
   constructor(values) {
     super(values);
-    this.maxValues = 512;
+    this.maxValues = 2048;
   }
 
   set(key, value) {

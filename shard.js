@@ -81,7 +81,7 @@ class Shard extends BaseClusterWorker {
       }
     });
 
-    this.ipc.register("playbroadcast", async (message) => {
+    this.ipc.register("playbroadcast", (message) => {
       this.bot.editStatus("dnd", {
         name: `${message.msg} | @${this.bot.user.username} help`,
       });
@@ -89,7 +89,7 @@ class Shard extends BaseClusterWorker {
       return this.ipc.broadcast("broadcastSuccess");
     });
 
-    this.ipc.register("broadcastend", async () => {
+    this.ipc.register("broadcastend", () => {
       this.bot.editStatus("dnd", {
         name: `${misc.random(messages)} | @${this.bot.user.username} help`,
       });
