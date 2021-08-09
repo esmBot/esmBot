@@ -102,7 +102,7 @@ if (isMaster) {
       debug: 4
     },
     transports: [
-      new winston.transports.Console({ format: winston.format.colorize({ all: true }) }),
+      new winston.transports.Console({ format: winston.format.colorize({ all: true }), stderrLevels: ["error", "warn"] }),
       new winston.transports.File({ filename: "logs/error.log", level: "error" }),
       new winston.transports.File({ filename: "logs/main.log" })
     ],
