@@ -21,7 +21,7 @@ class ImageSearchCommand extends Command {
           "footer": {
             "text": `Page ${i + 1} of ${images.results.length}`
           },
-          "description": `[${value.title}](${encodeURI(value.img_src)})`,
+          "description": value.title,
           "image": {
             "url": encodeURI(value.img_src)
           },
