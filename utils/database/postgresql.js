@@ -76,7 +76,7 @@ exports.addGuild = async (guild) => {
 
 exports.fixGuild = async (guild) => {
   const guildDB = await connection.query("SELECT exists(SELECT 1 FROM guilds WHERE guild_id = $1)", [guild.id]);
-  if (guildDB.rows.length === 0) {
+  if (!guildDB.rows[0]) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);
     return await this.addGuild(guild);
   }
