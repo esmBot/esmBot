@@ -27,7 +27,8 @@ Napi::Value Deepfry(const Napi::CallbackInfo &info) {
 
     for (Image &image : coalesced) {
       Blob temp;
-      image.level(QuantumRange / 2, QuantumRange / 2);
+      image.colorSpace(Magick::sRGBColorspace);
+      image.level(QuantumRange * 0.25, QuantumRange * 0.60);
       image.quality(1);
       image.magick("JPEG");
       image.write(&temp);
