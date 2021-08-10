@@ -4,7 +4,8 @@ const misc = require("../misc.js");
 
 const { Pool } = require("pg");
 const connection = new Pool({
-  connectionString: process.env.DB
+  connectionString: process.env.DB,
+  statement_timeout: 10000
 });
 
 exports.getGuild = async (query) => {
