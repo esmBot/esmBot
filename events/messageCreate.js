@@ -20,10 +20,9 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     if (cachedPrefix) {
       prefixCandidate = cachedPrefix;
     } else {
-      let guildDB = message.channel.guild ? await database.getGuild(message.channel.guild.id) : null;
-      if (message.channel.guild && !(guildDB && guildDB.disabled)) {
-        const fixedDB = await database.fixGuild(message.channel.guild);
-        guildDB = fixedDB ? fixedDB : guildDB;
+      let guildDB = await database.getGuild(message.channel.guild.id);
+      if (!guildDB) {
+        guildDB = await database.fixGuild(message.channel.guild);
       }
       prefixCandidate = guildDB.prefix;
       collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
