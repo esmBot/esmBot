@@ -20,9 +20,9 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     if (cachedPrefix) {
       prefixCandidate = cachedPrefix;
     } else {
-      let guildDB = await database.getGuild(message.channel.guild.id);
+      let guildDB = await database(ipc, "getGuild", message.channel.guild.id);
       if (!guildDB) {
-        guildDB = await database.fixGuild(message.channel.guild);
+        guildDB = await database(ipc, "fixGuild", message.channel.guild);
       }
       prefixCandidate = guildDB.prefix;
       collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
@@ -64,7 +64,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
       const disabled = collections.disabledCache.get(message.channel.guild.id);
       if (disabled.includes(message.channel.id) && command != "channel") return;
     } else if (message.channel.guild) {
-      const guildDB = await database.getGuild(message.channel.guild.id);
+      const guildDB = await database(ipc, "getGuild", message.channel.guild.id);
       collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
       if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
     }
@@ -88,7 +88,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     }
   };
   try {
-    await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    await database(ipc, "addCount", collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy

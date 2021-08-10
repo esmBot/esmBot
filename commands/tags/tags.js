@@ -7,7 +7,7 @@ class TagsCommand extends Command {
   // todo: find a way to split this into subcommands
   async run() {
     if (!this.message.channel.guild) return "This command only works in servers!";
-    const guild = await database.getGuild(this.message.channel.guild.id);
+    const guild = await database(this.ipc, "getGuild", this.message.channel.guild.id);
 
     if ((guild.tagsDisabled || guild.tags_disabled) && this.args[0].toLowerCase() !== ("enable" || "disable")) return;
     if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
@@ -27,7 +27,7 @@ class TagsCommand extends Command {
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
         if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
         if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
-        await database.removeTag(this.args[1].toLowerCase(), this.message.channel.guild);
+        await database(this.ipc, "removeTag", this.args[1].toLowerCase(), this.message.channel.guild);
         return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
       case "edit":
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
@@ -75,7 +75,7 @@ class TagsCommand extends Command {
       case "enable":
       case "disable":
         if (!this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't have permission to disable tags!";
-        var toggleResult = await database.toggleTags(this.message.channel.guild);
+        var toggleResult = await database(this.ipc, "toggleTags", this.message.channel.guild);
         return `Tags for this guild have been ${toggleResult ? "disabled" : "enabled"}. To ${toggleResult ? "enable" : "disable"} them again, run ${guild.prefix}tags ${toggleResult ? "enable" : "disable"}.`;
       default:
         if (!tags[this.args[0].toLowerCase()]) return "This tag doesn't exist!";
@@ -86,11 +86,11 @@ class TagsCommand extends Command {
   async setTag(content, name, message) {
     if ((!content || content.length === 0) && message.attachments.length === 0) return "You need to provide the content of the tag!";
     if (message.attachments.length !== 0 && content) {
-      await database.setTag(name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, "setTag", name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
     } else if (message.attachments.length !== 0) {
-      await database.setTag(name, { content: message.attachments[0].url, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, "setTag", name, { content: message.attachments[0].url, author: message.author.id }, message.channel.guild);
     } else {
-      await database.setTag(name, { content: content, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, "setTag", name, { content: content, author: message.author.id }, message.channel.guild);
     }
     return;
   }

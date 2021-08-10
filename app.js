@@ -88,7 +88,8 @@ const Admiral = new Fleet({
   },
   services: [
     { name: "prometheus", path: path.join(__dirname, "./utils/services/prometheus.js") },
-    { name: "image", path: path.join(__dirname, "./utils/services/image.js")}
+    { name: "image", path: path.join(__dirname, "./utils/services/image.js")},
+    { name: "database", path: path.join(__dirname, "./utils/services/database.js")}
   ]
 });
 

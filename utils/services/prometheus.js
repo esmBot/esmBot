@@ -34,7 +34,7 @@ esmbot_connected_workers ${servers.length}
             res.write(`esmbot_max_jobs{worker="${i}"} ${w.max}\n`);
           }
         }
-        const counts = await database.getCounts();
+        const counts = await database(this.ipc, "getCounts");
         for (const [i, w] of Object.entries(counts)) {
           res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
         }

@@ -100,7 +100,7 @@ class Shard extends BaseClusterWorker {
     // connect to lavalink
     if (!sound.status && !sound.connected) sound.connect(this.bot);
 
-    database.setup();
+    database(this.ipc, "setup");
 
     this.activityChanger();
 
@@ -136,7 +136,7 @@ class Shard extends BaseClusterWorker {
     for (const command in collections.commands) {
       handler.unload(command);
     }
-    require("./utils/database.js").stop();
+    database(this.ipc, "stop");
     done();
   }
 
