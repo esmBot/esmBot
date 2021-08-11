@@ -14,8 +14,10 @@ exports.getCounts = async () => {
 exports.disableChannel = async () => {};
 exports.enableChannel = async () => {};
 exports.toggleTags = async () => {};
+exports.getTags = async () => {};
 exports.setTag = async () => {};
 exports.removeTag = async () => {};
+exports.editTag = async () => {};
 exports.setPrefix = async () => {};
 exports.addGuild = async (guild) => {
   return {

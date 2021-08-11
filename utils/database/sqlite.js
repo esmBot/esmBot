@@ -85,6 +85,11 @@ exports.toggleTags = async (guild) => {
   connection.prepare("UPDATE guilds SET tags_disabled = ? WHERE guild_id = ?").run(guildDB.tags_disabled, guild.id);
 };
 
+exports.getTags = async (name, content, guild) => {
+  const guildDB = await this.getGuild(guild.id);
+  return JSON.parse(guildDB.tags);
+};
+
 exports.setTag = async (name, content, guild) => {
   const guildDB = await this.getGuild(guild.id);
   const tags = JSON.parse(guildDB.tags);
@@ -98,6 +103,8 @@ exports.removeTag = async (name, guild) => {
   delete tags[name];
   connection.prepare("UPDATE guilds SET tags = ? WHERE guild_id = ?").run(JSON.stringify(tags), guild.id);
 };
+
+exports.editTag = this.setTag;
 
 exports.setPrefix = async (prefix, guild) => {
   connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild.id);

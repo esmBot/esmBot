@@ -1,6 +1,5 @@
 const collections = require("../collections.js");
 const logger = require("../logger.js");
-const misc = require("../misc.js");
 
 const { Pool } = require("pg");
 const connection = new Pool({
@@ -17,16 +16,25 @@ exports.setPrefix = async (prefix, guild) => {
   collections.prefixCache.set(guild.id, prefix);
 };
 
+exports.getTags = async (guild) => {
+  const tagArray = (await connection.query("SELECT * FROM tags WHERE guild_id = $1", [guild])).rows;
+  const tags = {};
+  for (const tag of tagArray) {
+    tags[tag.name] = { content: tag.content, author: tag.author };
+  }
+  return tags;
+};
+
 exports.setTag = async (name, content, guild) => {
-  const guildDB = await this.getGuild(guild.id);
-  guildDB.tags[name] = content;
-  await connection.query("UPDATE guilds SET tags = $1 WHERE guild_id = $2", [guildDB.tags, guild.id]);
+  await connection.query("INSERT INTO tags (guild_id, name, content, author) VALUES ($1, $2, $3, $4)", [guild.id, name, content.content, content.author]);
+};
+
+exports.editTag = async (name, content, guild) => {
+  await connection.query("UPDATE tags SET content = $1, author = $2 WHERE guild_id = $3 AND name = $4", [content.content, content.author, guild.id, name]);
 };
 
 exports.removeTag = async (name, guild) => {
-  const guildDB = await this.getGuild(guild.id);
-  delete guildDB.tags[name];
-  await connection.query("UPDATE guilds SET tags = $1 WHERE guild_id = $2", [guildDB.tags, guild.id]);
+  await connection.query("DELETE FROM tags WHERE guild_id = $1 AND name = $2", [guild.id, name]);
 };
 
 exports.toggleTags = async (guild) => {
@@ -71,7 +79,7 @@ exports.addCount = async (command) => {
 exports.addGuild = async (guild) => {
   const query = await this.getGuild(guild);
   if (query) return query;
-  await connection.query("INSERT INTO guilds (guild_id, tags, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4, $5)", [guild.id, misc.tagDefaults, process.env.PREFIX, [], false]);
+  await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], false]);
   return await this.getGuild(guild.id);
 };
 

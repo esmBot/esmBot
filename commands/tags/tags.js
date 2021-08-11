@@ -11,7 +11,7 @@ class TagsCommand extends Command {
 
     if ((guild.tagsDisabled || guild.tags_disabled) && this.args[0].toLowerCase() !== ("enable" || "disable")) return;
     if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
-    const tags = guild.tags instanceof Map ? Object.fromEntries(guild.tags) : typeof guild.tags === "string" ? JSON.parse(guild.tags) : guild.tags;
+    const tags = await database(this.ipc, "getTags", this.message.channel.guild.id);
     const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner", "enable", "disable"];
     switch (this.args[0].toLowerCase()) {
       case "create":
@@ -19,7 +19,7 @@ class TagsCommand extends Command {
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to add!";
         if (blacklist.includes(this.args[1].toLowerCase())) return "You can't make a tag with that name!";
         if (tags[this.args[1].toLowerCase()]) return "This tag already exists!";
-        var result = await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, guild);
+        var result = await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message);
         if (result) return result;
         return `The tag \`${this.args[1].toLowerCase()}\` has been added!`;
       case "delete":
@@ -33,7 +33,7 @@ class TagsCommand extends Command {
         if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
         if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
         if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
-        await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, guild);
+        await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, true);
         return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
       case "own":
       case "owner":
@@ -83,14 +83,14 @@ class TagsCommand extends Command {
     }
   }
 
-  async setTag(content, name, message) {
+  async setTag(content, name, message, edit = false) {
     if ((!content || content.length === 0) && message.attachments.length === 0) return "You need to provide the content of the tag!";
     if (message.attachments.length !== 0 && content) {
-      await database(this.ipc, "setTag", name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, edit ? "editTag" : "setTag", name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
     } else if (message.attachments.length !== 0) {
-      await database(this.ipc, "setTag", name, { content: message.attachments[0].url, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, edit ? "editTag" : "setTag", name, { content: message.attachments[0].url, author: message.author.id }, message.channel.guild);
     } else {
-      await database(this.ipc, "setTag", name, { content: content, author: message.author.id }, message.channel.guild);
+      await database(this.ipc, edit ? "editTag" : "setTag", name, { content: content, author: message.author.id }, message.channel.guild);
     }
     return;
   }
