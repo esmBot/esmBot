@@ -9,7 +9,7 @@ exports.setup = async () => {
   try {
     counts = connection.prepare("SELECT * FROM counts").all();
   } catch {
-    connection.prepare("CREATE TABLE counts ( command VARCHAR NOT NULL, count integer NOT NULL )").run();
+    connection.prepare("CREATE TABLE counts ( command VARCHAR NOT NULL PRIMARY KEY, count integer NOT NULL )").run();
     counts = [];
   }
 
@@ -50,7 +50,7 @@ exports.fixGuild = async (guild) => {
   try {
     guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild.id);
   } catch {
-    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, tags_disabled integer NOT NULL DEFAULT 0 CHECK(tags_disabled IN (0,1)) )").run();
+    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, tags_disabled integer NOT NULL DEFAULT 0 CHECK(tags_disabled IN (0,1)) )").run();
   }
   if (!guildDB) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);

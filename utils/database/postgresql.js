@@ -8,7 +8,7 @@ const connection = new Pool({
 });
 
 exports.getGuild = async (query) => {
-  return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1 limit 1", [query])).rows[0];
+  return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];
 };
 
 exports.setPrefix = async (prefix, guild) => {
@@ -68,10 +68,10 @@ exports.getCounts = async () => {
 };
 
 exports.addCount = async (command) => {
-  let count = await connection.query("SELECT * FROM counts WHERE command = $1 limit 1", [command]);
+  let count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
   if (!count.rows[0]) {
     await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
-    count = await connection.query("SELECT * FROM counts WHERE command = $1 limit 1", [command]);
+    count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
   }
   await connection.query("UPDATE counts SET count = $1 WHERE command = $2", [count.rows[0].count ? count.rows[0].count + 1 : 1, command]);
 };
