@@ -8,7 +8,7 @@ const { clean } = require("../utils/misc.js");
 
 // run when someone sends a message
 module.exports = async (client, cluster, worker, ipc, message) => {
-  // ignore dms and other bots
+  // ignore other bots
   if (message.author.bot) return;
 
   // don't run command if bot can't send messages
@@ -47,7 +47,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
   }
 
   // ignore other stuff
-  if (message.content.startsWith(prefix) === false) return;
+  if (!message.content.startsWith(prefix)) return;
 
   // separate commands and args
   const replace = isMention ? `@${client.user.username} ` : prefix;

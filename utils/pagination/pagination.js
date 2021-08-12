@@ -1,9 +1,10 @@
-const ReactionCollector = require("./awaitreactions.js");
 const MessageCollector = require("./awaitmessages.js");
+const InteractionCollector = require("./awaitinteractions.js");
+const fetch = require("node-fetch");
 
 module.exports = async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
-  /*const options = {
+  const options = {
     messageReference: {
       channelID: message.channel.id,
       messageID: message.id,
@@ -13,25 +14,80 @@ module.exports = async (client, message, pages, timeout = 120000) => {
     allowedMentions: {
       repliedUser: false
     }
-  };*/
+  };
   let page = 0;
-  //let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options));
-  let currentPage = await client.createMessage(message.channel.id, pages[page]);
-  if (pages.length > 1) {
-    const emojiList = ["◀", "🔢", "▶", "🗑"];
-    for (const emoji of emojiList) {
-      await currentPage.addReaction(emoji);
+  const components = {
+    components: [{
+      type: 1,
+      components: [
+        {
+          type: 2,
+          label: "Back",
+          emoji: {
+            id: null,
+            name: "◀"
+          },
+          style: 1,
+          custom_id: "back"
+        },
+        {
+          type: 2,
+          label: "Forward",
+          emoji: {
+            id: null,
+            name: "▶"
+          },
+          style: 1,
+          custom_id: "forward"
+        },
+        {
+          type: 2,
+          label: "Jump",
+          emoji: {
+            id: null,
+            name: "🔢"
+          },
+          style: 1,
+          custom_id: "jump"
+        },
+        {
+          type: 2,
+          label: "Delete",
+          emoji: {
+            id: null,
+            name: "🗑"
+          },
+          style: 4,
+          custom_id: "delete"
+        }
+      ]
+    }]
+  };
+  const ackOptions = {
+    method: "POST",
+    body: "{\"type\":6}",
+    headers: {
+      "Content-Type": "application/json"
     }
-    const reactionCollector = new ReactionCollector(client, currentPage, (message, reaction, member) => emojiList.includes(reaction.name) && !member.bot, { time: timeout });
-    reactionCollector.on("reaction", async (msg, reaction, member) => {
-      if (member.id === message.author.id) {
-        switch (reaction.name) {
-          case "◀":
+  };
+  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options, components));
+  if (pages.length > 1) {
+    const interactionCollector = new InteractionCollector(client, currentPage, { time: timeout });
+    interactionCollector.on("interaction", async (msg, interaction, id, token, member) => {
+      if (member.user.id === message.author.id) {
+        switch (interaction) {
+          case "back":
+            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
             page = page > 0 ? --page : pages.length - 1;
             currentPage = await currentPage.edit(pages[page]);
-            if (manageMessages) msg.removeReaction("◀", member.id);
             break;
-          case "🔢":
+          case "forward":
+            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            page = page + 1 < pages.length ? ++page : 0;
+            currentPage = await currentPage.edit(pages[page]);
+            break;
+          case "jump":
+            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
             client.createMessage(message.channel.id, Object.assign({ content: "What page do you want to jump to?" }, {
               messageReference: {
                 channelID: currentPage.channel.id,
@@ -52,19 +108,14 @@ module.exports = async (client, message, pages, timeout = 120000) => {
                 if (manageMessages) await response.delete();
                 page = Number(response.content) - 1;
                 currentPage = await currentPage.edit(pages[page]);
-                if (manageMessages) msg.removeReaction("🔢", member.id);
               });
             }).catch(error => {
               throw error;
             });
             break;
-          case "▶":
-            page = page + 1 < pages.length ? ++page : 0;
-            currentPage = await currentPage.edit(pages[page]);
-            if (manageMessages) msg.removeReaction("▶", member.id);
-            break;
-          case "🗑":
-            reactionCollector.emit("end");
+          case "delete":
+            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            interactionCollector.emit("end");
             if (await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) await currentPage.delete();
             return;
           default:
@@ -72,15 +123,8 @@ module.exports = async (client, message, pages, timeout = 120000) => {
         }
       }
     });
-    reactionCollector.once("end", async () => {
-      try {
-        await client.getMessage(currentPage.channel.id, currentPage.id);
-        if (manageMessages) {
-          await currentPage.removeReactions();
-        }
-      } catch {
-        return;
-      }
+    interactionCollector.once("end", () => {
+      interactionCollector.removeAllListeners("interaction");
     });
   }
   return currentPage;

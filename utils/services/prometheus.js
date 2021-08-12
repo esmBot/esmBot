@@ -49,7 +49,7 @@ esmbot_connected_workers ${servers.length}
   }
 
   shutdown(done) {
-    this.httpServer.close();
+    if (this.httpServer) this.httpServer.close();
     done();
   }
 }

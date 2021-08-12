@@ -11,15 +11,16 @@ class ImageSearchCommand extends Command {
     if (this.args.length === 0) return "You need to provide something to search for!";
     await this.message.channel.sendTyping();
     const embeds = [];
-    const images = await fetch(`${random(searx)}/search?format=json&safesearch=2&categories=images&q=!goi%20!bii%20!ddi%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
-    if (images.results.length === 0) return "I couldn't find any results!";
-    for (const [i, value] of images.results.entries()) {
+    const rawImages = await fetch(`${random(searx)}/search?format=json&safesearch=2&categories=images&q=!goi%20!bii%20!ddi%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
+    if (rawImages.results.length === 0) return "I couldn't find any results!";
+    const images = rawImages.results.filter((val) => !val.img_src.startsWith("data:image"));
+    for (const [i, value] of images.entries()) {
       embeds.push({
         "embed": {
           "title": "Search Results",
           "color": 16711680,
           "footer": {
-            "text": `Page ${i + 1} of ${images.results.length}`
+            "text": `Page ${i + 1} of ${images.length}`
           },
           "description": value.title,
           "image": {
