@@ -1,5 +1,3 @@
-// wrapper for the database service
+// wrapper for the database drivers in ./database/
 
-module.exports = async (ipc, name, ...args) => {
-  return ipc.command("database", { name, args }, true);
-};
+module.exports = require(`./database/${process.env.DB ? process.env.DB.split("://")[0] : "dummy"}.js`);

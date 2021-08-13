@@ -8,7 +8,7 @@ class ChannelCommand extends Command {
     if (this.args.length === 0) return "You need to provide whether I should be enabled or disabled in this channel!";
     if (this.args[0] !== "disable" && this.args[0] !== "enable") return "That's not a valid option!";
 
-    const guildDB = await db(this.ipc, "getGuild", this.message.channel.guild.id);
+    const guildDB = await db.getGuild(this.message.channel.guild.id);
 
     if (this.args[0].toLowerCase() === "disable") {
       let channel;
@@ -21,7 +21,7 @@ class ChannelCommand extends Command {
         channel = this.message.channel;
       }
 
-      await db(this.ipc, "disableChannel", channel);
+      await db.disableChannel(channel);
       return `I have been disabled in this channel. To re-enable me, just run \`${guildDB.prefix}channel enable\`.`;
     } else if (this.args[0].toLowerCase() === "enable") {
       let channel;
@@ -34,7 +34,7 @@ class ChannelCommand extends Command {
         channel = this.message.channel;
       }
 
-      await db(this.ipc, "enableChannel", channel);
+      await db.enableChannel(channel);
       return "I have been re-enabled in this channel.";
     }
   }

@@ -11,9 +11,10 @@ exports.addCount = async () => {};
 exports.getCounts = async () => {
   return {};
 };
+exports.disableCommand = async () => {};
+exports.enableCommand = async () => {};
 exports.disableChannel = async () => {};
 exports.enableChannel = async () => {};
-exports.toggleTags = async () => {};
 exports.getTags = async () => {};
 exports.setTag = async () => {};
 exports.removeTag = async () => {};

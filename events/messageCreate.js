@@ -15,14 +15,15 @@ module.exports = async (client, cluster, worker, ipc, message) => {
   if (message.channel.guild && !message.channel.permissionsOf(client.user.id).has("sendMessages")) return;
 
   let prefixCandidate;
+  let guildDB;
   if (message.channel.guild) {
     const cachedPrefix = collections.prefixCache.get(message.channel.guild.id);
     if (cachedPrefix) {
       prefixCandidate = cachedPrefix;
     } else {
-      let guildDB = await database(ipc, "getGuild", message.channel.guild.id);
+      guildDB = await database.getGuild(message.channel.guild.id);
       if (!guildDB) {
-        guildDB = await database(ipc, "fixGuild", message.channel.guild);
+        guildDB = await database.fixGuild(message.channel.guild);
       }
       prefixCandidate = guildDB.prefix;
       collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
@@ -57,21 +58,31 @@ module.exports = async (client, cluster, worker, ipc, message) => {
   preArgs.shift();
   const command = rawContent.split(/\s+/g).shift().toLowerCase();
   const parsed = parseCommand(preArgs);
+  const aliased = collections.aliases.get(command);
 
   // don't run if message is in a disabled channel
   if (message.channel.guild) {
-    if (collections.disabledCache.has(message.channel.guild.id)) {
-      const disabled = collections.disabledCache.get(message.channel.guild.id);
+    const disabled = collections.disabledCache.get(message.channel.guild.id);
+    if (disabled) {
       if (disabled.includes(message.channel.id) && command != "channel") return;
-    } else if (message.channel.guild) {
-      const guildDB = await database(ipc, "getGuild", message.channel.guild.id);
+    } else {
+      guildDB = await database.getGuild(message.channel.guild.id);
       collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
       if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
     }
+
+    const disabledCmds = collections.disabledCmdCache.get(message.channel.guild.id);
+    if (disabledCmds) {
+      if (disabledCmds.includes(aliased ? aliased : command)) return;
+    } else {
+      guildDB = await database.getGuild(message.channel.guild.id);
+      collections.disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands);
+      if (guildDB.disabled_commands.includes(aliased ? aliased : command)) return;
+    }
   }
 
-  // check if command exists
-  const cmd = collections.commands.get(command) || collections.commands.get(collections.aliases.get(command));
+  // check if command exists and if it's enabled
+  const cmd = aliased ? collections.commands.get(aliased) : collections.commands.get(command);
   if (!cmd) return;
 
   // actually run the command
@@ -88,7 +99,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     }
   };
   try {
-    await database(ipc, "addCount", collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy

@@ -8,13 +8,13 @@ const Command = require("../../classes/command.js");
 
 class HelpCommand extends Command {
   async run() {
-    const { prefix } = this.message.channel.guild ? await database(this.ipc, "getGuild", this.message.channel.guild.id) : "N/A";
+    const { prefix } = this.message.channel.guild ? await database.getGuild(this.message.channel.guild.id) : "N/A";
     const commands = collections.commands;
     const aliases = collections.aliases;
     if (this.args.length !== 0 && (commands.has(this.args[0].toLowerCase()) || aliases.has(this.args[0].toLowerCase()))) {
       const command = aliases.has(this.args[0].toLowerCase()) ? collections.aliases.get(this.args[0].toLowerCase()) : this.args[0].toLowerCase();
       const info = collections.info.get(command);
-      const counts = await database(this.ipc, "getCounts");
+      const counts = await database.getCounts();
       const embed = {
         "embed": {
           "author": {

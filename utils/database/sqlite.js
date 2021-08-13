@@ -50,7 +50,7 @@ exports.fixGuild = async (guild) => {
   try {
     guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild.id);
   } catch {
-    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, tags_disabled integer NOT NULL DEFAULT 0 CHECK(tags_disabled IN (0,1)) )").run();
+    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
   }
   if (!guildDB) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);
@@ -71,6 +71,19 @@ exports.getCounts = async () => {
   return countObject;
 };
 
+exports.disableCommand = async (guild, command) => {
+  const guildDB = await this.getGuild(guild);
+  connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify((guildDB.disabledCommands ? [...JSON.parse(guildDB.disabledCommands), command] : [command]).filter((v) => v !== undefined)), guild);
+  collections.disabledCmdCache.set(guild, guildDB.disabled_commands ? [...JSON.parse(guildDB.disabledCommands), command] : [command].filter((v) => v !== undefined));
+};
+
+exports.enableCommand = async (guild, command) => {
+  const guildDB = await this.getGuild(guild);
+  const newDisabled = guildDB.disabledCommands ? JSON.parse(guildDB.disabledCommands).filter(item => item !== command) : [];
+  connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), guild);
+  collections.disabledCmdCache.set(guild, newDisabled);
+};
+
 exports.disableChannel = async (channel) => {
   const guildDB = await this.getGuild(channel.guild.id);
   connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify([...JSON.parse(guildDB.disabled), channel.id]), channel.guild.id);
@@ -82,12 +95,6 @@ exports.enableChannel = async (channel) => {
   const newDisabled = JSON.parse(guildDB.disabled).filter(item => item !== channel.id);
   connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), channel.guild.id);
   collections.disabledCache.set(channel.guild.id, newDisabled);
-};
-
-exports.toggleTags = async (guild) => {
-  const guildDB = await this.getGuild(guild.id);
-  guildDB.tags_disabled = guildDB.tags_disabled ? 0 : 1;
-  connection.prepare("UPDATE guilds SET tags_disabled = ? WHERE guild_id = ?").run(guildDB.tags_disabled, guild.id);
 };
 
 exports.getTags = async (guild) => {
@@ -130,9 +137,9 @@ exports.addGuild = async (guild) => {
     id: guild.id,
     prefix: process.env.PREFIX,
     disabled: "[]",
-    tagsDisabled: 0
+    disabledCommands: "[]"
   };
-  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, tags_disabled) VALUES (@id, @prefix, @disabled, @tagsDisabled)").run(guildObject);
+  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @tagsDisabled)").run(guildObject);
   return guildObject;
 };
 

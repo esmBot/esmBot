@@ -28,3 +28,4 @@ exports.runningCommands = new TimedMap();
 
 exports.prefixCache = new Map();
 exports.disabledCache = new Map();
+exports.disabledCmdCache = new Map();

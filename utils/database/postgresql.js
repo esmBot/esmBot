@@ -37,11 +37,17 @@ exports.removeTag = async (name, guild) => {
   await connection.query("DELETE FROM tags WHERE guild_id = $1 AND name = $2", [guild.id, name]);
 };
 
-exports.toggleTags = async (guild) => {
-  const guildDB = await this.getGuild(guild.id);
-  guildDB.tags_disabled = !guildDB.tags_disabled;
-  await connection.query("UPDATE guilds SET tags_disabled = $1 WHERE guild_id = $2", [guildDB.tags_disabled, guild.id]);
-  return guildDB.tags_disabled;
+exports.disableCommand = async (guild, command) => {
+  const guildDB = await this.getGuild(guild);
+  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => v !== undefined), guild]);
+  collections.disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => v !== undefined));
+};
+
+exports.enableCommand = async (guild, command) => {
+  const guildDB = await this.getGuild(guild);
+  const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
+  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [newDisabled, guild]);
+  collections.disabledCmdCache.set(guild, newDisabled);
 };
 
 exports.disableChannel = async (channel) => {
@@ -79,7 +85,7 @@ exports.addCount = async (command) => {
 exports.addGuild = async (guild) => {
   const query = await this.getGuild(guild);
   if (query) return query;
-  await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, tags_disabled) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], false]);
+  await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], []]);
   return await this.getGuild(guild.id);
 };
 

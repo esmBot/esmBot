@@ -5,8 +5,8 @@ const pool = new Pool({
 });
 
 (async () => {
-  console.log("Migrating tags...");
   const guilds = (await pool.query("SELECT * FROM guilds")).rows;
+  console.log("Migrating tags...");
   try {
     await pool.query("CREATE TABLE tags ( guild_id VARCHAR(30) NOT NULL, name text NOT NULL, content text NOT NULL, author VARCHAR(30) NOT NULL, UNIQUE(guild_id, name) )");
   } catch (e) {
@@ -21,6 +21,11 @@ const pool = new Pool({
       }
       console.log(`Migrated tag ${name} in guild ${guild.guild_id}`);
     }
+  }
+  console.log("Migrating disabled commands...");
+  for (const guild of guilds) {
+    await pool.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [guild.tags_disabled ? ["tags"] : [], guild.guild_id]);
+    console.log(`Migrated disabled commands in guild ${guild.guild_id}`);
   }
   console.log("Done!");
   return process.exit(0);
