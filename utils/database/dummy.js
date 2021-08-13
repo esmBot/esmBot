@@ -26,7 +26,7 @@ exports.addGuild = async (guild) => {
     tags: misc.tagDefaults,
     prefix: process.env.PREFIX,
     disabled: [],
-    tagsDisabled: false,
+    disabled_commands: []
   };
 };
 exports.getGuild = exports.addGuild;
