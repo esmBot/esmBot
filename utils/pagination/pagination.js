@@ -70,7 +70,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
       "Content-Type": "application/json"
     }
   };
-  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options, components));
+  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
   if (pages.length > 1) {
     const interactionCollector = new InteractionCollector(client, currentPage, { time: timeout });
     interactionCollector.on("interaction", async (msg, interaction, id, token, member) => {

@@ -78,6 +78,7 @@ class TagsCommand extends Command {
 
   async setTag(content, name, message, edit = false) {
     if ((!content || content.length === 0) && message.attachments.length === 0) return "You need to provide the content of the tag!";
+    if (content && content.length >= 2000) return "Your tag content is too long!";
     if (message.attachments.length !== 0 && content) {
       await database[edit ? "editTag" : "setTag"](name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
     } else if (message.attachments.length !== 0) {
