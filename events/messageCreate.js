@@ -76,8 +76,8 @@ module.exports = async (client, cluster, worker, ipc, message) => {
       if (disabledCmds.includes(aliased ? aliased : command)) return;
     } else {
       guildDB = await database.getGuild(message.channel.guild.id);
-      collections.disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands);
-      if (guildDB.disabled_commands.includes(aliased ? aliased : command)) return;
+      collections.disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands);
+      if ((guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands).includes(aliased ? aliased : command)) return;
     }
   }
 
