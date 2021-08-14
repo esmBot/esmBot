@@ -6,7 +6,6 @@ const Command = require("../../classes/command.js");
 
 class ImageSearchCommand extends Command {
   async run() {
-    if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return "I don't have the `Add Reactions` permission!";
     if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     if (this.args.length === 0) return "You need to provide something to search for!";
     this.client.sendChannelTyping(this.message.channel.id);

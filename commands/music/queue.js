@@ -11,7 +11,6 @@ class QueueCommand extends MusicCommand {
     if (!this.message.channel.guild) return "This command only works in servers!";
     if (!this.message.member.voiceState.channelID) return "You need to be in a voice channel first!";
     if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
-    if (!this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return "I don't have the `Add Reactions` permission!";
     if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     const queue = soundPlayer.queues.get(this.message.channel.guild.id);
     const player = this.connection;

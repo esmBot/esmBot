@@ -41,7 +41,6 @@ class TagsCommand extends Command {
         if (!user) return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${tags[this.args[1].toLowerCase()].author}\``;
         return `This tag is owned by **${user.username}#${user.discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
       case "list":
-        if (!this.message.channel.permissionsOf(this.client.user.id).has("addReactions")) return "I don't have the `Add Reactions` permission!";
         if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
         var pageSize = 15;
         var embeds = [];
