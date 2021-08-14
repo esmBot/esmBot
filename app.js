@@ -39,7 +39,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
           
 esmBot ${require("./package.json").version}, powered by eris-fleet ${require("./node_modules/eris-fleet/package.json").version}
 `);
-// a bit of a hacky way to get the eris-fleet version
+  // a bit of a hacky way to get the eris-fleet version
 }
 
 const Admiral = new Fleet({
@@ -100,13 +100,13 @@ const Admiral = new Fleet({
   },
   services: [
     { name: "prometheus", path: path.join(__dirname, "./utils/services/prometheus.js") },
-    { name: "image", path: path.join(__dirname, "./utils/services/image.js")}
+    { name: "image", path: path.join(__dirname, "./utils/services/image.js") }
   ]
 });
 
 if (isMaster) {
   const logger = winston.createLogger({
-    levels: { 
+    levels: {
       error: 0,
       warn: 1,
       info: 2,
@@ -125,12 +125,12 @@ if (isMaster) {
         const {
           timestamp, level, message, ...args
         } = info;
-    
+
         return `[${timestamp}]: [${level.toUpperCase()}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
       }),
     )
   });
-  
+
   winston.addColors({
     info: "green",
     main: "gray",

@@ -127,7 +127,7 @@ exports.setup = async () => {
       }
       exists.push(command);
     }
-      
+
     for (const { command } of counts.rows) {
       if (!exists.includes(command)) {
         await connection.query("DELETE FROM counts WHERE command = $1", [command]);

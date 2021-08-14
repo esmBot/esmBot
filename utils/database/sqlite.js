@@ -32,7 +32,7 @@ exports.setup = async () => {
       }
       exists.push(command);
     }
-      
+
     for (const { command } of counts) {
       if (!exists.includes(command)) {
         connection.prepare("DELETE FROM counts WHERE command = ?").run(command);

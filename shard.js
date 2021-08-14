@@ -96,7 +96,7 @@ class Shard extends BaseClusterWorker {
       broadcast = false;
       return this.ipc.broadcast("broadcastEnd");
     });
-    
+
     // connect to lavalink
     if (!sound.status && !sound.connected) sound.connect(this.bot);
 

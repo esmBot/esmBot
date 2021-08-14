@@ -10,7 +10,7 @@ class InteractionCollector extends EventEmitter {
     this.bot = client;
     this.listener = async (packet) => {
       if (packet.t !== "INTERACTION_CREATE") return;
-      await this.verify(packet.d.message, packet.d.data.custom_id, packet.d.id, packet.d.token, packet.d.member ? packet.d.member.id : packet.d.user.id);
+      await this.verify(packet.d.message, packet.d.data.custom_id, packet.d.id, packet.d.token, packet.d.member ? packet.d.member.user.id : packet.d.user.id);
     };
     this.bot.on("rawWS", this.listener);
     if (options.time) setTimeout(() => this.stop("time"), options.time);
@@ -18,8 +18,7 @@ class InteractionCollector extends EventEmitter {
 
   async verify(message, interaction, id, token, member) {
     if (this.message.id !== message.id) return false;
-    const msg = await this.bot.getMessage(message.channel_id, message.id);
-    this.emit("interaction", msg, interaction, id, token, member);
+    this.emit("interaction", interaction, id, token, member);
     return true;
   }
 
