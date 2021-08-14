@@ -16,6 +16,7 @@ exports.enableCommand = async () => {};
 exports.disableChannel = async () => {};
 exports.enableChannel = async () => {};
 exports.getTags = async () => {};
+exports.getTag = async () => {};
 exports.setTag = async () => {};
 exports.removeTag = async () => {};
 exports.editTag = async () => {};

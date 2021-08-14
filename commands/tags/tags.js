@@ -9,69 +9,70 @@ class TagsCommand extends Command {
     if (!this.message.channel.guild) return "This command only works in servers!";
 
     if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
-    const tags = await database.getTags(this.message.channel.guild.id);
     const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
-    switch (this.args[0].toLowerCase()) {
-      case "create":
-      case "add":
-        if (this.args[1] === undefined) return "You need to provide the name of the tag you want to add!";
-        if (blacklist.includes(this.args[1].toLowerCase())) return "You can't make a tag with that name!";
-        if (tags[this.args[1].toLowerCase()]) return "This tag already exists!";
-        var result = await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message);
-        if (result) return result;
-        return `The tag \`${this.args[1].toLowerCase()}\` has been added!`;
-      case "delete":
-      case "remove":
-        if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
-        if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
-        await database.removeTag(this.args[1].toLowerCase(), this.message.channel.guild);
-        return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
-      case "edit":
-        if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
-        if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        if (tags[this.args[1].toLowerCase()].author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
-        await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, true);
-        return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
-      case "own":
-      case "owner":
-        if (this.args[1] === undefined) return "You need to provide the name of the tag you want to check the owner of!";
-        if (!tags[this.args[1].toLowerCase()]) return "This tag doesn't exist!";
-        var user = await this.ipc.fetchUser(tags[this.args[1].toLowerCase()].author);
-        if (!user) return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${tags[this.args[1].toLowerCase()].author}\``;
-        return `This tag is owned by **${user.username}#${user.discriminator}** (\`${tags[this.args[1].toLowerCase()].author}\`).`;
-      case "list":
-        if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
-        var pageSize = 15;
-        var embeds = [];
-        var groups = Object.keys(tags).map((item, index) => {
-          return index % pageSize === 0 ? Object.keys(tags).slice(index, index + pageSize) : null;
-        }).filter((item) => {
-          return item;
-        });
-        for (const [i, value] of groups.entries()) {
-          embeds.push({
-            "embed": {
-              "title": "Tag List",
-              "color": 16711680,
-              "footer": {
-                "text": `Page ${i + 1} of ${groups.length}`
-              },
-              "description": value.join("\n"),
-              "author": {
-                "name": this.message.author.username,
-                "icon_url": this.message.author.avatarURL
-              }
+    if (this.args[0].toLowerCase() === "create" || this.args[0].toLowerCase() === "add") {
+      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to add!";
+      if (blacklist.includes(this.args[1].toLowerCase())) return "You can't make a tag with that name!";
+      const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
+      if (getResult) return "This tag already exists!";
+      const result = await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message);
+      if (result) return result;
+      return `The tag \`${this.args[1].toLowerCase()}\` has been added!`;
+    } else if (this.args[0].toLowerCase() === "delete" || this.args[0].toLowerCase() === "remove") {
+      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
+      const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
+      if (!getResult) return "This tag doesn't exist!";
+      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+      await database.removeTag(this.args[1].toLowerCase(), this.message.channel.guild);
+      return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
+    } else if (this.args[0].toLowerCase() === "edit") {
+      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
+      const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
+      if (!getResult) return "This tag doesn't exist!";
+      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+      await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, true);
+      return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
+    } else if (this.args[0].toLowerCase() === "own" || this.args[0].toLowerCase() === "owner") {
+      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to check the owner of!";
+      const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
+      if (!getResult) return "This tag doesn't exist!";
+      const user = await this.ipc.fetchUser(getResult.author);
+      if (!user) return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${getResult.author}\``;
+      return `This tag is owned by **${user.username}#${user.discriminator}** (\`${getResult.author}\`).`;
+    } else if (this.args[0].toLowerCase() === "list") {
+      if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+      const tagList = await database.getTags(this.message.channel.guild.id);
+      const embeds = [];
+      const groups = Object.keys(tagList).map((item, index) => {
+        return index % 15 === 0 ? Object.keys(tagList).slice(index, index + 15) : null;
+      }).filter((item) => {
+        return item;
+      });
+      for (const [i, value] of groups.entries()) {
+        embeds.push({
+          "embed": {
+            "title": "Tag List",
+            "color": 16711680,
+            "footer": {
+              "text": `Page ${i + 1} of ${groups.length}`
+            },
+            "description": value.join("\n"),
+            "author": {
+              "name": this.message.author.username,
+              "icon_url": this.message.author.avatarURL
             }
-          });
-        }
-        if (embeds.length === 0) return "I couldn't find any tags!";
-        return paginator(this.client, this.message, embeds);
-      case "random":
-        return tags[random(Object.keys(tags))].content;
-      default:
-        if (!tags[this.args[0].toLowerCase()]) return "This tag doesn't exist!";
-        return tags[this.args[0].toLowerCase()].content;
+          }
+        });
+      }
+      if (embeds.length === 0) return "I couldn't find any tags!";
+      return paginator(this.client, this.message, embeds);
+    } else if (this.args[0].toLowerCase() === "random") {
+      const tagList = await database.getTags(this.message.channel.guild.id);
+      return tagList[random(Object.keys(tagList))].content;
+    } else {
+      const getResult = await database.getTag(this.message.channel.guild.id, this.args[0].toLowerCase());
+      if (!getResult) return "This tag doesn't exist!";
+      return getResult.content;
     }
   }
 

@@ -97,6 +97,11 @@ exports.enableChannel = async (channel) => {
   collections.disabledCache.set(channel.guild.id, newDisabled);
 };
 
+exports.getTag = async (guild, tag) => {
+  const tagResult = connection.prepare("SELECT * FROM tags WHERE guild_id = ? AND name = ?").get(guild, tag);
+  return tagResult ? { content: tagResult.content, author: tagResult.author } : undefined;
+};
+
 exports.getTags = async (guild) => {
   const tagArray = connection.prepare("SELECT * FROM tags WHERE guild_id = ?").all(guild);
   const tags = {};

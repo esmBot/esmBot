@@ -89,7 +89,7 @@ exports.play = async (client, sound, message, music = false) => {
 };
 
 exports.nextSong = async (client, message, connection, track, info, music, voiceChannel, loop = false, inQueue = false, lastTrack = null) => {
-  this.skipVotes.set(this.message.channel.guild.id, { count: 0, ids: [] });
+  this.skipVotes.set(voiceChannel.guild.id, { count: 0, ids: [] });
   const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
   if (!music && this.players.get(voiceChannel.guild.id)) {

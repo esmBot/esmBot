@@ -16,6 +16,11 @@ exports.setPrefix = async (prefix, guild) => {
   collections.prefixCache.set(guild.id, prefix);
 };
 
+exports.getTag = async (guild, tag) => {
+  const tagResult = (await connection.query("SELECT * FROM tags WHERE guild_id = $1 AND name = $2", [guild, tag])).rows;
+  return tagResult[0] ? { content: tagResult[0].content, author: tagResult[0].author } : undefined;
+};
+
 exports.getTags = async (guild) => {
   const tagArray = (await connection.query("SELECT * FROM tags WHERE guild_id = $1", [guild])).rows;
   const tags = {};
@@ -85,7 +90,11 @@ exports.addCount = async (command) => {
 exports.addGuild = async (guild) => {
   const query = await this.getGuild(guild);
   if (query) return query;
-  await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], []]);
+  try {
+    await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], []]);
+  } catch (e) {
+    logger.error(`Failed to register guild ${guild.id}: ${e}`);
+  }
   return await this.getGuild(guild.id);
 };
 
