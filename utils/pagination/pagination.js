@@ -74,7 +74,7 @@ module.exports = async (client, message, pages, timeout = 120000) => {
   if (pages.length > 1) {
     const interactionCollector = new InteractionCollector(client, currentPage, { time: timeout });
     interactionCollector.on("interaction", async (msg, interaction, id, token, member) => {
-      if (member.user.id === message.author.id) {
+      if (member === message.author.id) {
         switch (interaction) {
           case "back":
             await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
