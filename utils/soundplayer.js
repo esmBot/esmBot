@@ -94,7 +94,11 @@ exports.nextSong = async (client, message, connection, track, info, music, voice
   let playingMessage;
   if (!music && this.players.get(voiceChannel.guild.id)) {
     const playMessage = this.players.get(voiceChannel.guild.id).playMessage;
-    if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+    try {
+      playMessage.delete();
+    } catch {
+      // no-op
+    }
   }
   if (lastTrack === track) {
     playingMessage = this.players.get(voiceChannel.guild.id).playMessage;

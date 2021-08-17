@@ -15,6 +15,8 @@ class PrometheusWorker extends BaseServiceWorker {
         }
         res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
+# HELP esmbot_server_count Number of servers/guilds the bot is in
+# TYPE esmbot_server_count gauge
 `);
         if (process.env.API === "true") {
           const servers = await this.ipc.command("image", { type: "stats" }, true);
@@ -38,6 +40,9 @@ esmbot_connected_workers ${servers.length}
         for (const [i, w] of Object.entries(counts)) {
           res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
         }
+
+        const stats = await this.ipc.getStats();
+        res.write(`esmbot_server_count ${stats.guilds}\n`);
         res.end();
       });
       this.httpServer.listen(process.env.METRICS, () => {

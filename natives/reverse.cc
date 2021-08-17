@@ -27,6 +27,8 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
     if (soos) {
       list<Image> copy = coalesced;
       copy.reverse();
+      copy.pop_back();
+      copy.pop_front();
       coalesced.insert(coalesced.end(), copy.begin(), copy.end());
     } else {
       coalesced.reverse();
