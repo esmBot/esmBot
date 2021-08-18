@@ -15,6 +15,7 @@ class CommandCommand extends Command {
     if (this.args[0].toLowerCase() === "disable") {
       if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase())) return "That isn't a command!";
       const command = collections.aliases.has(this.args[1].toLowerCase()) ? collections.aliases.get(this.args[1].toLowerCase()) : this.args[1].toLowerCase();
+      if (command === "command") return "You can't disable that command!";
       if (disabled && disabled.includes(command)) return "That command is already disabled!";
 
       await db.disableCommand(this.message.channel.guild.id, command);
