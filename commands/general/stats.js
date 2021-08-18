@@ -22,12 +22,12 @@ class StatsCommand extends Command {
         },
         {
           "name": "Cluster Memory Usage",
-          "value": `${stats.clusters[this.cluster].ram.toFixed(2)} MB`,
+          "value": stats ? `${stats.clusters[this.cluster].ram.toFixed(2)} MB` : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
           "inline": true
         },
         {
           "name": "Total Memory Usage",
-          "value": stats.totalRam ? `${stats.totalRam.toFixed(2)} MB` : "Unknown",
+          "value": stats && stats.totalRam ? `${stats.totalRam.toFixed(2)} MB` : "Unknown",
           "inline": true
         },
         {
@@ -64,12 +64,12 @@ class StatsCommand extends Command {
         },
         {
           "name": "Servers",
-          "value": stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
+          "value": stats && stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
           "inline": true
         },
         {
           "name": "Users (approximation)",
-          "value": stats.users ? stats.users : `${this.client.users.size} (for this cluster only)`,
+          "value": stats && stats.users ? stats.users : `${this.client.users.size} (for this cluster only)`,
           "inline": true
         }
         ]
