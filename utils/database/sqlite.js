@@ -144,7 +144,7 @@ exports.addGuild = async (guild) => {
     disabled: "[]",
     disabledCommands: "[]"
   };
-  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @tagsDisabled)").run(guildObject);
+  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guildObject);
   return guildObject;
 };
 
