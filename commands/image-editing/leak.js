@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class LeakCommand extends ImageCommand {
   static description = "Creates a fake Smash leak thumbnail";
@@ -8,4 +8,4 @@ class LeakCommand extends ImageCommand {
   static command = "leak";
 }
 
-module.exports = LeakCommand;
+export default LeakCommand;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class MagikCommand extends ImageCommand {
   static description = "Adds a content aware scale effect to an image";
@@ -8,4 +8,4 @@ class MagikCommand extends ImageCommand {
   static command = "magik";
 }
 
-module.exports = MagikCommand;
+export default MagikCommand;

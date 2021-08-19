@@ -1,5 +1,5 @@
-const ImageCommand = require("../../classes/imageCommand.js");
-const { random } = require("../../utils/misc.js");
+import ImageCommand from "../../classes/imageCommand.js";
+import { random } from "../../utils/misc.js";
 const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "chonkers", "memes", "funny", "pcmasterrace", "bellybros"];
 
 class RedditCommand extends ImageCommand {
@@ -16,4 +16,4 @@ class RedditCommand extends ImageCommand {
   static command = "reddit";
 }
 
-module.exports = RedditCommand;
+export default RedditCommand;

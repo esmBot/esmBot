@@ -1,32 +1,32 @@
-const collections = require("./collections.js");
-const fs = require("fs");
+import { commands, info } from "./collections.js";
+import { promises } from "fs";
 
 const categoryTemplate = {
   general: [],
   tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
   "image-editing": ["> **These commands support the PNG, JPEG, WEBP (static), and GIF (animated or static) formats.**\n"]
 };
-exports.categories = categoryTemplate;
+export let categories = categoryTemplate;
 
-exports.generateList = async () => {
-  this.categories = categoryTemplate;
-  for (const [command] of collections.commands) {
-    const category = collections.info.get(command).category;
-    const description = collections.info.get(command).description;
-    const params = collections.info.get(command).params;
+export async function generateList() {
+  categories = categoryTemplate;
+  for (const [command] of commands) {
+    const category = info.get(command).category;
+    const description = info.get(command).description;
+    const params = info.get(command).params;
     if (category === "tags") {
       const subCommands = [...Object.keys(description)];
       for (const subCommand of subCommands) {
-        this.categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+        categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
       }
     } else {
-      if (!this.categories[category]) this.categories[category] = [];
-      this.categories[category].push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
+      if (!categories[category]) categories[category] = [];
+      categories[category].push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
     }
   }
-};
+}
 
-exports.createPage = async (output) => {
+export async function createPage(output) {
   let template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 
 This page was last generated on \`${new Date().toString()}\`.
@@ -41,7 +41,7 @@ Default prefix is \`&\`.
 `;
 
   template += "\n## Table of Contents\n";
-  for (const category of Object.keys(this.categories)) {
+  for (const category of Object.keys(categories)) {
     const categoryStringArray = category.split("-");
     for (const index of categoryStringArray.keys()) {
       categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
@@ -50,13 +50,13 @@ Default prefix is \`&\`.
   }
 
   // hell
-  for (const category of Object.keys(this.categories)) {
+  for (const category of Object.keys(categories)) {
     const categoryStringArray = category.split("-");
     for (const index of categoryStringArray.keys()) {
       categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
     }
     template += `\n## ${categoryStringArray.join(" ")}\n`;
-    for (const command of this.categories[category]) {
+    for (const command of categories[category]) {
       if (command.startsWith(">")) {
         template += `${command}\n`;
       } else {
@@ -65,5 +65,5 @@ Default prefix is \`&\`.
     }
   }
 
-  await fs.promises.writeFile(output, template);
-};
+  await promises.writeFile(output, template);
+}

@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class CatCommand extends Command {
   async run() {
@@ -31,4 +31,4 @@ class CatCommand extends Command {
   static aliases = ["kitters", "kitties", "kitty", "cattos", "catto", "cats", "cta"];
 }
 
-module.exports = CatCommand;
+export default CatCommand;

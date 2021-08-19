@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class DeepfryCommand extends ImageCommand {
   static description = "Deep-fries an image";
@@ -8,4 +8,4 @@ class DeepfryCommand extends ImageCommand {
   static command = "deepfry";
 }
 
-module.exports = DeepfryCommand;
+export default DeepfryCommand;

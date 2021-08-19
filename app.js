@@ -3,19 +3,24 @@ Although there's a (very) slim chance of it working, multiple aspects of the bot
 The bot will continue to run past this message, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` + "\x1b[0m");
 
 // load config from .env file
-require("dotenv").config();
+import { config } from "dotenv";
+config();
 
 // main sharding manager
-const { Fleet } = require("eris-fleet");
-const { isMaster } = require("cluster");
+import { Fleet } from "eris-fleet";
+import { isMaster } from "cluster";
 // some utils
-const path = require("path");
-const winston = require("winston");
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { readFileSync } from "fs";
+import winston from "winston";
 // dbl posting
-const TopGG = require("@top-gg/sdk");
-const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new TopGG.Api(process.env.DBL) : null;
+import { Api } from "@top-gg/sdk";
+const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new Api(process.env.DBL) : null;
 
 if (isMaster) {
+  const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
+  const erisFleetVersion = JSON.parse(readFileSync(new URL("./node_modules/eris-fleet/package.json", import.meta.url))).version; // a bit of a hacky way to get the eris-fleet version
   console.log(`
      ,*\`$                    z\`"v       
     F zBw\`%                 A ,W "W     
@@ -37,13 +42,12 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${require("./package.json").version}, powered by eris-fleet ${require("./node_modules/eris-fleet/package.json").version}
+esmBot ${esmBotVersion}, powered by eris-fleet ${erisFleetVersion}
 `);
-  // a bit of a hacky way to get the eris-fleet version
 }
 
 const Admiral = new Fleet({
-  path: path.join(__dirname, "./shard.js"),
+  path: join(dirname(fileURLToPath(import.meta.url)), "./shard.js"),
   token: `Bot ${process.env.TOKEN}`,
   startingStatus: {
     status: "idle",
@@ -99,8 +103,8 @@ const Admiral = new Fleet({
     }
   },
   services: [
-    { name: "prometheus", path: path.join(__dirname, "./utils/services/prometheus.js") },
-    { name: "image", path: path.join(__dirname, "./utils/services/image.js") }
+    { name: "prometheus", path: join(dirname(fileURLToPath(import.meta.url)), "./utils/services/prometheus.js") },
+    { name: "image", path: join(dirname(fileURLToPath(import.meta.url)), "./utils/services/image.js") }
   ]
 });
 

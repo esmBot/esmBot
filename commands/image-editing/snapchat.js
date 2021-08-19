@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SnapchatCommand extends ImageCommand {
   params(url) {
@@ -25,4 +25,4 @@ class SnapchatCommand extends ImageCommand {
   static command = "snapchat";
 }
 
-module.exports = SnapchatCommand;
+export default SnapchatCommand;

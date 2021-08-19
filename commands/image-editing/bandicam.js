@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class BandicamCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class BandicamCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = BandicamCommand;
+export default BandicamCommand;

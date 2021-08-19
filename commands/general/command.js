@@ -1,6 +1,6 @@
-const db = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
-const collections = require("../../utils/collections.js");
+import db from "../../utils/database.js";
+import Command from "../../classes/command.js";
+import * as collections from "../../utils/collections.js";
 
 class CommandCommand extends Command {
   async run() {
@@ -35,4 +35,4 @@ class CommandCommand extends Command {
   static arguments = ["[enable/disable]", "[command]"];
 }
 
-module.exports = CommandCommand;
+export default CommandCommand;

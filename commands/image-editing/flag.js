@@ -1,7 +1,7 @@
-const fs = require("fs");
-const emojiRegex = require("emoji-regex");
-const emoji = require("node-emoji");
-const ImageCommand = require("../../classes/imageCommand.js");
+import fs from "fs";
+import emojiRegex from "emoji-regex";
+import emoji from "node-emoji";
+import ImageCommand from "../../classes/imageCommand.js";
 
 class FlagCommand extends ImageCommand {
   flagPath = "";
@@ -38,4 +38,4 @@ class FlagCommand extends ImageCommand {
   static command = "flag";
 }
 
-module.exports = FlagCommand;
+export default FlagCommand;

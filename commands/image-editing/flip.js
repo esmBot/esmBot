@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class FlipCommand extends ImageCommand {
   static description = "Flips an image";
@@ -7,4 +7,4 @@ class FlipCommand extends ImageCommand {
   static command = "flip";
 }
 
-module.exports = FlipCommand;
+export default FlipCommand;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class MemeCommand extends ImageCommand {
   params(url) {
@@ -19,4 +19,4 @@ class MemeCommand extends ImageCommand {
   static command = "meme";
 }
 
-module.exports = MemeCommand;
+export default MemeCommand;

@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class ImageReloadCommand extends Command {
   async run() {
@@ -15,4 +15,4 @@ class ImageReloadCommand extends Command {
   static aliases = ["magickconnect", "magick"];
 }
 
-module.exports = ImageReloadCommand;
+export default ImageReloadCommand;

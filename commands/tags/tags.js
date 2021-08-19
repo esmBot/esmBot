@@ -1,7 +1,7 @@
-const database = require("../../utils/database.js");
-const paginator = require("../../utils/pagination/pagination.js");
-const { random } = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+import database from "../../utils/database.js";
+import paginator from "../../utils/pagination/pagination.js";
+import { random } from "../../utils/misc.js";
+import Command from "../../classes/command.js";
 
 class TagsCommand extends Command {
   // todo: find a way to split this into subcommands
@@ -108,4 +108,4 @@ class TagsCommand extends Command {
   };
 }
 
-module.exports = TagsCommand;
+export default TagsCommand;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class CircleCommand extends ImageCommand {
   static description = "Applies a radial blur effect on an image";
@@ -8,4 +8,4 @@ class CircleCommand extends ImageCommand {
   static command = "circle";
 }
 
-module.exports = CircleCommand;
+export default CircleCommand;

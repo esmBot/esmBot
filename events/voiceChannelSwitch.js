@@ -1,5 +1,5 @@
-const leaveHandler = require("./voiceChannelLeave.js");
+import leaveHandler from "./voiceChannelLeave.js";
 
-module.exports = async (client, cluster, worker, ipc, member, newChannel, oldChannel) => {
+export default async (client, cluster, worker, ipc, member, newChannel, oldChannel) => {
   await leaveHandler(client, cluster, worker, ipc, member, oldChannel);
 };

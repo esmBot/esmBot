@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SharpenCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class SharpenCommand extends ImageCommand {
   static command = "blur";
 }
 
-module.exports = SharpenCommand;
+export default SharpenCommand;

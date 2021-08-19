@@ -15,7 +15,7 @@
       ]
     }
   },
-  "plugins": ["@babel"],
+  "plugins": ["@babel", "unicorn"],
   "rules": {
     "no-console": "off",
     "indent": [
@@ -29,6 +29,7 @@
       "error",
       "unix"
     ],
+    "unicorn/prefer-module": "error",
     "quotes": [
       "warn",
       "double"

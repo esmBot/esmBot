@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class JPEGCommand extends ImageCommand {
   static description = "Adds max JPEG compression to an image";
@@ -8,4 +8,4 @@ class JPEGCommand extends ImageCommand {
   static command = "jpeg";
 }
 
-module.exports = JPEGCommand;
+export default JPEGCommand;

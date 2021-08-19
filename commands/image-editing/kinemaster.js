@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class KineMasterCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class KineMasterCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = KineMasterCommand;
+export default KineMasterCommand;

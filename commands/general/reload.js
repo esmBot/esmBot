@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class ReloadCommand extends Command {
   // quite possibly one of the hackiest commands in the bot
@@ -24,4 +24,4 @@ class ReloadCommand extends Command {
   static arguments = ["[command]"];
 }
 
-module.exports = ReloadCommand;
+export default ReloadCommand;

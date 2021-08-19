@@ -32,4 +32,4 @@ class Command {
   static requires = [];
 }
 
-module.exports = Command;
+export default Command;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class ShutterstockCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class ShutterstockCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = ShutterstockCommand;
+export default ShutterstockCommand;

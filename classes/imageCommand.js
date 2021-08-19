@@ -1,8 +1,9 @@
-const Command = require("./command.js");
-const imageDetect = require("../utils/imagedetect.js");
-const collections = require("../utils/collections.js");
-const { emotes } = require("../messages.json");
-const { random } = require("../utils/misc.js");
+import Command from "./command.js";
+import imageDetect from "../utils/imagedetect.js";
+import { runningCommands } from "../utils/collections.js";
+import { readFileSync } from "fs";
+const { emotes } = JSON.parse(readFileSync(new URL("../messages.json", import.meta.url)));
+import { random } from "../utils/misc.js";
 
 class ImageCommand extends Command {
   /*this.embed = {
@@ -39,11 +40,11 @@ class ImageCommand extends Command {
   async run() {
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
-    if (collections.runningCommands.has(this.message.author.id) && (new Date(collections.runningCommands.get(this.message.author.id)) - new Date(this.message.createdAt)) < 5000) {
+    if (runningCommands.has(this.message.author.id) && (new Date(runningCommands.get(this.message.author.id)) - new Date(this.message.createdAt)) < 5000) {
       return "Please slow down a bit.";
     }
     // before awaiting the command result, add this command to the set of running commands
-    collections.runningCommands.set(this.message.author.id, this.message.createdAt);
+    runningCommands.set(this.message.author.id, this.message.createdAt);
   
     const magickParams = {
       cmd: this.constructor.command
@@ -53,13 +54,13 @@ class ImageCommand extends Command {
       try {
         const image = await imageDetect(this.client, this.message, true);
         if (image === undefined) {
-          collections.runningCommands.delete(this.message.author.id);
+          runningCommands.delete(this.message.author.id);
           return this.constructor.noImage;
         } else if (image.type === "large") {
-          collections.runningCommands.delete(this.message.author.id);
+          runningCommands.delete(this.message.author.id);
           return "That image is too large (>= 25MB)! Try using a smaller image.";
         } else if (image.type === "tenorlimit") {
-          collections.runningCommands.delete(this.message.author.id);
+          runningCommands.delete(this.message.author.id);
           return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
         }
         magickParams.path = image.path;
@@ -68,7 +69,7 @@ class ImageCommand extends Command {
         magickParams.delay = image.delay ? image.delay : 0;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
-        collections.runningCommands.delete(this.message.author.id);
+        runningCommands.delete(this.message.author.id);
         throw e;
       }
       
@@ -76,7 +77,7 @@ class ImageCommand extends Command {
 
     if (this.constructor.requiresText) {
       if (this.args.length === 0 || !await this.criteria(this.args)) {
-        collections.runningCommands.delete(this.message.author.id);
+        runningCommands.delete(this.message.author.id);
         return this.constructor.noText;
       }
     }
@@ -112,7 +113,7 @@ class ImageCommand extends Command {
       throw e;
     } finally {
       if (status && await this.client.getMessage(status.channel.id, status.id).catch(() => undefined)) await status.delete();
-      collections.runningCommands.delete(this.message.author.id);
+      runningCommands.delete(this.message.author.id);
     }
     
   }
@@ -129,4 +130,4 @@ class ImageCommand extends Command {
   static command = "";
 }
 
-module.exports = ImageCommand;
+export default ImageCommand;

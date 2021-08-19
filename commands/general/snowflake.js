@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class SnowflakeCommand extends Command {
   async run() {
@@ -12,4 +12,4 @@ class SnowflakeCommand extends Command {
   static arguments = ["[id]"];
 }
 
-module.exports = SnowflakeCommand;
+export default SnowflakeCommand;

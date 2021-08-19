@@ -1,5 +1,5 @@
-const Command = require("../../classes/command.js");
-const { random } = require("../../utils/misc.js");
+import Command from "../../classes/command.js";
+import { random } from "../../utils/misc.js";
 
 class EightBallCommand extends Command {
   static responses = [
@@ -34,4 +34,4 @@ class EightBallCommand extends Command {
   static arguments = ["{text}"];
 }
 
-module.exports = EightBallCommand;
+export default EightBallCommand;

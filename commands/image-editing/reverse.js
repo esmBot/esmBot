@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class ReverseCommand extends ImageCommand {
   params(url, delay) {
@@ -15,4 +15,4 @@ class ReverseCommand extends ImageCommand {
   static command = "reverse";
 }
 
-module.exports = ReverseCommand;
+export default ReverseCommand;

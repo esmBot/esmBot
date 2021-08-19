@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class DogCommand extends Command {
   async run() {
@@ -20,4 +20,4 @@ class DogCommand extends Command {
   static aliases = ["doggos", "doggo", "pupper", "puppers", "dogs", "puppy", "puppies", "pups", "pup"];
 }
 
-module.exports = DogCommand;
+export default DogCommand;

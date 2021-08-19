@@ -1,5 +1,5 @@
-const wrap = require("../../utils/wrap.js");
-const ImageCommand = require("../../classes/imageCommand.js");
+import wrap from "../../utils/wrap.js";
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SonicCommand extends ImageCommand {
   params() {
@@ -18,4 +18,4 @@ class SonicCommand extends ImageCommand {
   static command = "sonic";
 }
 
-module.exports = SonicCommand;
+export default SonicCommand;

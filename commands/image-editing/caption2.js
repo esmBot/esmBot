@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 const words = ["me irl", "dank", "follow my second account @esmBot_", "2016", "meme", "wholesome", "reddit", "instagram", "twitter", "facebook", "fortnite", "minecraft", "relatable", "gold", "funny", "template", "hilarious", "memes", "deep fried", "2020", "leafy", "pewdiepie"];
 
 class CaptionTwoCommand extends ImageCommand {
@@ -23,4 +23,4 @@ class CaptionTwoCommand extends ImageCommand {
   static command = "captionTwo";
 }
 
-module.exports = CaptionTwoCommand;
+export default CaptionTwoCommand;

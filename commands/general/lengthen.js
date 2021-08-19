@@ -1,6 +1,6 @@
-const urlCheck = require("../../utils/urlcheck.js");
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import urlCheck from "../../utils/urlcheck.js";
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class LengthenCommand extends Command {
   async run() {
@@ -19,4 +19,4 @@ class LengthenCommand extends Command {
   static arguments = ["[url]"];
 }
 
-module.exports = LengthenCommand;
+export default LengthenCommand;

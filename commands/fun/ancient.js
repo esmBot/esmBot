@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class AncientCommand extends Command {
   async run() {
@@ -30,4 +30,4 @@ class AncientCommand extends Command {
   static aliases = ["old", "oldmeme", "badmeme"];
 }
 
-module.exports = AncientCommand;
+export default AncientCommand;

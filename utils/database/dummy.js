@@ -1,33 +1,32 @@
 // dummy (no-op) database handler
-const misc = require("../misc.js");
-const logger = require("../logger.js");
+import { warn } from "../logger.js";
 
-logger.warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
+warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
 
-exports.setup = async () => {};
-exports.stop = async () => {};
-exports.fixGuild = async () => {};
-exports.addCount = async () => {};
-exports.getCounts = async () => {
+export async function setup() {}
+export async function stop() {}
+export async function fixGuild() {}
+export async function addCount() {}
+export async function getCounts() {
   return {};
-};
-exports.disableCommand = async () => {};
-exports.enableCommand = async () => {};
-exports.disableChannel = async () => {};
-exports.enableChannel = async () => {};
-exports.getTags = async () => {};
-exports.getTag = async () => {};
-exports.setTag = async () => {};
-exports.removeTag = async () => {};
-exports.editTag = async () => {};
-exports.setPrefix = async () => {};
-exports.addGuild = async (guild) => {
+}
+export async function disableCommand() {}
+export async function enableCommand() {}
+export async function disableChannel() {}
+export async function enableChannel() {}
+export async function getTags() {}
+export async function getTag() {}
+export async function setTag() {}
+export async function removeTag() {}
+export async function editTag() {}
+export async function setPrefix() {}
+export async function addGuild(guild) {
   return {
     id: guild.id,
-    tags: misc.tagDefaults,
+    tags: {},
     prefix: process.env.PREFIX,
     disabled: [],
     disabled_commands: []
   };
-};
-exports.getGuild = exports.addGuild;
+}
+export const getGuild = addGuild;

@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
-const format = require("format-duration");
-const MusicCommand = require("../../classes/musicCommand.js");
+import fetch from "node-fetch";
+import format from "format-duration";
+import MusicCommand from "../../classes/musicCommand.js";
 
 class NowPlayingCommand extends MusicCommand {
   async run() {
@@ -44,4 +44,4 @@ class NowPlayingCommand extends MusicCommand {
   static aliases = ["playing", "np"];
 }
 
-module.exports = NowPlayingCommand;
+export default NowPlayingCommand;

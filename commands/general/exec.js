@@ -1,7 +1,8 @@
-const { clean } = require("../../utils/misc.js");
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
-const Command = require("../../classes/command.js");
+import { clean } from "../../utils/misc.js";
+import * as util from "util";
+import { exec as baseExec } from "child_process";
+const exec = util.promisify(baseExec);
+import Command from "../../classes/command.js";
 
 class ExecCommand extends Command {
   async run() {
@@ -31,4 +32,4 @@ class ExecCommand extends Command {
   static arguments = ["[command]"];
 }
 
-module.exports = ExecCommand;
+export default ExecCommand;

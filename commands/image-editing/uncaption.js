@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class UncaptionCommand extends ImageCommand {
   static description = "Removes the caption from an image";
@@ -7,4 +7,4 @@ class UncaptionCommand extends ImageCommand {
   static command = "uncaption";
 }
 
-module.exports = UncaptionCommand;
+export default UncaptionCommand;

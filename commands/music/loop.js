@@ -1,5 +1,5 @@
-const soundPlayer = require("../../utils/soundplayer.js");
-const MusicCommand = require("../../classes/musicCommand.js");
+import { players } from "../../utils/soundplayer.js";
+import MusicCommand from "../../classes/musicCommand.js";
 
 class LoopCommand extends MusicCommand {
   async run() {
@@ -11,7 +11,7 @@ class LoopCommand extends MusicCommand {
     if (this.connection.host !== this.message.author.id) return "Only the current voice session host can loop the music!";
     const object = this.connection;
     object.loop = !object.loop;
-    soundPlayer.players.set(this.message.channel.guild.id, object);
+    players.set(this.message.channel.guild.id, object);
     return object.loop ? "🔊 The player is now looping." : "🔊 The player is no longer looping.";
   }
 
@@ -19,4 +19,4 @@ class LoopCommand extends MusicCommand {
   static aliases = ["toggleloop", "repeat"];
 }
 
-module.exports = LoopCommand;
+export default LoopCommand;

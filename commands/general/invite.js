@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class InviteCommand extends Command {
   async run() {
@@ -9,4 +9,4 @@ class InviteCommand extends Command {
   static aliases = ["botinfo", "credits"];
 }
 
-module.exports = InviteCommand;
+export default InviteCommand;

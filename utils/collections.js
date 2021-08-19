@@ -1,7 +1,7 @@
-exports.commands = new Map();
-exports.paths = new Map();
-exports.aliases = new Map();
-exports.info = new Map();
+export const commands = new Map();
+export const paths = new Map();
+export const aliases = new Map();
+export const info = new Map();
 
 class TimedMap extends Map {
   set(key, value) {
@@ -12,7 +12,7 @@ class TimedMap extends Map {
   }
 }
 
-exports.runningCommands = new TimedMap();
+export const runningCommands = new TimedMap();
 
 /*class Cache extends Map {
   constructor(values) {
@@ -26,6 +26,6 @@ exports.runningCommands = new TimedMap();
   }
 }*/
 
-exports.prefixCache = new Map();
-exports.disabledCache = new Map();
-exports.disabledCmdCache = new Map();
+export const prefixCache = new Map();
+export const disabledCache = new Map();
+export const disabledCmdCache = new Map();

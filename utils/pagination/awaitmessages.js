@@ -1,5 +1,5 @@
 // eris doesn't come with an awaitMessages method by default, so we make our own
-const EventEmitter = require("events").EventEmitter;
+import { EventEmitter } from "events";
 
 class MessageCollector extends EventEmitter {
   constructor(client, channel, filter, options = {}) {
@@ -34,4 +34,4 @@ class MessageCollector extends EventEmitter {
   }
 }
 
-module.exports = MessageCollector;
+export default MessageCollector;

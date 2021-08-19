@@ -1,4 +1,4 @@
-module.exports = (input) => {
+export default (input) => {
   if (typeof input === "string") input = input.split(/\s+/g);
   const args = { _: [] };
   let curr = null;
@@ -61,7 +61,7 @@ module.exports = (input) => {
 // Format: 
 // [{name: "verbose", type: "bool"}, {name: "username", type: "string"}]
 // */
-// module.exports = (input, format) => {
+// export default (input, format) => {
 //     let results = {};
 //     let text = input.split(' ').slice(1).join(' ');
 //     format.forEach(element => {

@@ -1,12 +1,12 @@
-const misc = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+import { random } from "../../utils/misc.js";
+import Command from "../../classes/command.js";
 
 class RPSCommand extends Command {
   async run() {
     if (this.args.length === 0 || (this.args[0] !== "rock" && this.args[0] !== "paper" && this.args[0] !== "scissors")) return "You need to choose whether you want to be rock, paper, or scissors!";
     let emoji;
     let winOrLose;
-    const result = misc.random(["rock", "paper", "scissors"]);
+    const result = random(["rock", "paper", "scissors"]);
     switch (result) {
       case "rock":
         emoji = "✊";
@@ -31,4 +31,4 @@ class RPSCommand extends Command {
   static arguments = ["[rock/paper/scissors]"];
 }
 
-module.exports = RPSCommand;
+export default RPSCommand;

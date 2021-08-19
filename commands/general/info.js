@@ -1,5 +1,6 @@
-const { version } = require("../../package.json");
-const Command = require("../../classes/command.js");
+import { readFileSync } from "fs";
+const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
+import Command from "../../classes/command.js";
 
 class InfoCommand extends Command {
   async run() {
@@ -46,4 +47,4 @@ class InfoCommand extends Command {
   static aliases = ["botinfo", "credits"];
 }
 
-module.exports = InfoCommand;
+export default InfoCommand;

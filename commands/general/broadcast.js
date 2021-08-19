@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class BroadcastCommand extends Command {
   // yet another very hacky command
@@ -24,4 +24,4 @@ class BroadcastCommand extends Command {
   static description = "Broadcasts a playing message until the command is run again or the bot restarts";
 }
 
-module.exports = BroadcastCommand;
+export default BroadcastCommand;

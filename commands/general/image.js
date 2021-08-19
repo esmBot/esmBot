@@ -1,8 +1,9 @@
-const paginator = require("../../utils/pagination/pagination.js");
-const { searx } = require("../../servers.json");
-const { random } = require("../../utils/misc.js");
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import paginator from "../../utils/pagination/pagination.js";
+import { readFileSync } from "fs";
+const { searx } = JSON.parse(readFileSync(new URL("../../servers.json", import.meta.url)));
+import { random } from "../../utils/misc.js";
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class ImageSearchCommand extends Command {
   async run() {
@@ -40,4 +41,4 @@ class ImageSearchCommand extends Command {
   static arguments = ["[query]"];
 }
 
-module.exports = ImageSearchCommand;
+export default ImageSearchCommand;

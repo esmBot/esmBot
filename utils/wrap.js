@@ -1,4 +1,4 @@
-module.exports = (str) => {
+export default (str) => {
   var regexString = ".{1,15}([\\s\u200B]+|$)|[^\\s\u200B]+?([\\s\u200B]+|$)";
   var re = new RegExp(regexString, "g");
   var lines = str.match(re) || [];

@@ -2,7 +2,8 @@
   "name": "esmbot",
   "version": "1.6.2",
   "description": "A Discord bot with miscellaneous features",
-  "main": "app.js",
+  "exports": "./app.js",
+  "type": "module",
   "engines": {
     "node": ">=15"
   },
@@ -45,7 +46,8 @@
     "@babel/eslint-parser": "^7.13.8",
     "@babel/eslint-plugin": "^7.13.0",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "eslint": "^7.23.0"
+    "eslint": "^7.32.0",
+    "eslint-plugin-unicorn": "^35.0.0"
   },
   "optionalDependencies": {
     "better-sqlite3": "^7.4.1",

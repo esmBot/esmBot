@@ -1,5 +1,5 @@
-const { clean } = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+import { clean } from "../../utils/misc.js";
+import Command from "../../classes/command.js";
 
 class DecodeCommand extends Command {
   async run() {
@@ -13,4 +13,4 @@ class DecodeCommand extends Command {
   static arguments = ["[text]"];
 }
 
-module.exports = DecodeCommand;
+export default DecodeCommand;

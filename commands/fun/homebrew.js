@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class HomebrewCommand extends ImageCommand {
   params() {
@@ -17,4 +17,4 @@ class HomebrewCommand extends ImageCommand {
   static command = "homebrew";
 }
 
-module.exports = HomebrewCommand;
+export default HomebrewCommand;

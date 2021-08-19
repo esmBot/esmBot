@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class MotivateCommand extends ImageCommand {
   params(url) {
@@ -20,4 +20,4 @@ class MotivateCommand extends ImageCommand {
   static command = "motivate";
 }
 
-module.exports = MotivateCommand;
+export default MotivateCommand;

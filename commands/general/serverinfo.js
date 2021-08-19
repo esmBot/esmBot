@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class ServerInfoCommand extends Command {
   async run() {
@@ -49,4 +49,4 @@ class ServerInfoCommand extends Command {
   static aliases = ["server"];
 }
 
-module.exports = ServerInfoCommand;
+export default ServerInfoCommand;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class CropCommand extends ImageCommand {
   static description = "Crops an image to 1:1";
@@ -7,4 +7,4 @@ class CropCommand extends ImageCommand {
   static command = "crop";
 }
 
-module.exports = CropCommand;
+export default CropCommand;

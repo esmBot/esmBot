@@ -1,5 +1,5 @@
-const db = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+import db from "../../utils/database.js";
+import Command from "../../classes/command.js";
 
 class ChannelCommand extends Command {
   async run() {
@@ -43,4 +43,4 @@ class ChannelCommand extends Command {
   static arguments = ["[enable/disable]", "{id}"];
 }
 
-module.exports = ChannelCommand;
+export default ChannelCommand;

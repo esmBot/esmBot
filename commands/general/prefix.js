@@ -1,5 +1,5 @@
-const database = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+import database from "../../utils/database.js";
+import Command from "../../classes/command.js";
 
 class PrefixCommand extends Command {
   async run() {
@@ -19,4 +19,4 @@ class PrefixCommand extends Command {
   static arguments = ["{prefix}"];
 }
 
-module.exports = PrefixCommand;
+export default PrefixCommand;

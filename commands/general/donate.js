@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class DonateCommand extends Command {
   async run() {
@@ -27,4 +27,4 @@ class DonateCommand extends Command {
   static aliases = ["support", "patreon", "patrons"];
 }
 
-module.exports = DonateCommand;
+export default DonateCommand;

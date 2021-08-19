@@ -1,13 +1,12 @@
-const fs = require("fs");
-const fetch = require("node-fetch");
-const database = require("../utils/database.js");
-const logger = require("../utils/logger.js");
-const collections = require("../utils/collections.js");
-const parseCommand = require("../utils/parseCommand.js");
-const { clean } = require("../utils/misc.js");
+import { promises } from "fs";
+import database from "../utils/database.js";
+import { log, error as _error } from "../utils/logger.js";
+import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "../utils/collections.js";
+import parseCommand from "../utils/parseCommand.js";
+import { clean } from "../utils/misc.js";
 
 // run when someone sends a message
-module.exports = async (client, cluster, worker, ipc, message) => {
+export default async (client, cluster, worker, ipc, message) => {
   // ignore other bots
   if (message.author.bot) return;
 
@@ -17,7 +16,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
   let prefixCandidate;
   let guildDB;
   if (message.channel.guild) {
-    const cachedPrefix = collections.prefixCache.get(message.channel.guild.id);
+    const cachedPrefix = prefixCache.get(message.channel.guild.id);
     if (cachedPrefix) {
       prefixCandidate = cachedPrefix;
     } else {
@@ -26,7 +25,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
         guildDB = await database.fixGuild(message.channel.guild);
       }
       prefixCandidate = guildDB.prefix;
-      collections.prefixCache.set(message.channel.guild.id, guildDB.prefix);
+      prefixCache.set(message.channel.guild.id, guildDB.prefix);
     }
   }
 
@@ -58,35 +57,35 @@ module.exports = async (client, cluster, worker, ipc, message) => {
   preArgs.shift();
   const command = rawContent.split(/\s+/g).shift().toLowerCase();
   const parsed = parseCommand(preArgs);
-  const aliased = collections.aliases.get(command);
+  const aliased = aliases.get(command);
 
   // don't run if message is in a disabled channel
   if (message.channel.guild) {
-    const disabled = collections.disabledCache.get(message.channel.guild.id);
+    const disabled = disabledCache.get(message.channel.guild.id);
     if (disabled) {
       if (disabled.includes(message.channel.id) && command != "channel") return;
     } else {
       guildDB = await database.getGuild(message.channel.guild.id);
-      collections.disabledCache.set(message.channel.guild.id, guildDB.disabled);
+      disabledCache.set(message.channel.guild.id, guildDB.disabled);
       if (guildDB.disabled.includes(message.channel.id) && command !== "channel") return;
     }
 
-    const disabledCmds = collections.disabledCmdCache.get(message.channel.guild.id);
+    const disabledCmds = disabledCmdCache.get(message.channel.guild.id);
     if (disabledCmds) {
       if (disabledCmds.includes(aliased ? aliased : command)) return;
     } else {
       guildDB = await database.getGuild(message.channel.guild.id);
-      collections.disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands);
+      disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands);
       if ((guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands).includes(aliased ? aliased : command)) return;
     }
   }
 
   // check if command exists and if it's enabled
-  const cmd = aliased ? collections.commands.get(aliased) : collections.commands.get(command);
+  const cmd = aliased ? commands.get(aliased) : commands.get(command);
   if (!cmd) return;
 
   // actually run the command
-  logger.log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
+  log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
   const reference = {
     messageReference: {
       channelID: message.channel.id,
@@ -99,7 +98,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     }
   };
   try {
-    await database.addCount(collections.aliases.has(command) ? collections.aliases.get(command) : command);
+    await database.addCount(aliases.has(command) ? aliases.get(command) : command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
@@ -116,18 +115,8 @@ module.exports = async (client, cluster, worker, ipc, message) => {
     } else if (typeof result === "object" && result.file) {
       if (result.file.length > 8388119 && process.env.TEMPDIR !== "") {
         const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-        await fs.promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
+        await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
         const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
-        const controller = new AbortController(); // eslint-disable-line no-undef
-        const timeout = setTimeout(() => {
-          controller.abort();
-        }, 5000);
-        try {
-          await fetch(imageURL, { signal: controller.signal });
-          clearTimeout(timeout);
-        } catch {
-          // this is here to make sure the image is properly cached by discord
-        }
         await client.createMessage(message.channel.id, Object.assign({
           embed: {
             color: 16711680,
@@ -161,7 +150,7 @@ module.exports = async (client, cluster, worker, ipc, message) => {
         content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size."
       }, reference));
     } else {
-      logger.error(`Error occurred with command message ${message.cleanContent}: ${error.toString()}`);
+      _error(`Error occurred with command message ${message.cleanContent}: ${error.toString()}`);
       try {
         await client.createMessage(message.channel.id, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"

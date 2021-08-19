@@ -1,5 +1,5 @@
-const emojiRegex = require("emoji-regex");
-const Command = require("../../classes/command.js");
+import emojiRegex from "emoji-regex";
+import Command from "../../classes/command.js";
 
 class EmoteCommand extends Command {
   async run() {
@@ -22,4 +22,4 @@ class EmoteCommand extends Command {
   static arguments = ["[emote]"];
 }
 
-module.exports = EmoteCommand;
+export default EmoteCommand;

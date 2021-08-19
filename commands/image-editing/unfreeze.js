@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class UnfreezeCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class UnfreezeCommand extends ImageCommand {
   static command = "freeze";
 }
 
-module.exports = UnfreezeCommand;
+export default UnfreezeCommand;

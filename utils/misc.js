@@ -1,18 +1,19 @@
-const util = require("util");
-const fs = require("fs");
+import util from "util";
+import fs from "fs";
+import { config } from "dotenv";
 
 // random(array) to select a random entry in array
-exports.random = (array) => {
+export function random(array) {
   if (!array || array.length < 1) return null;
   return array[Math.floor(Math.random() * array.length)];
-};
+}
 
 const optionalReplace = (token) => {
   return token === undefined || token === "" ? "" : (token === "true" || token === "false" ? token : "<redacted>");
 };
 
 // clean(text) to clean message of any private info or mentions
-exports.clean = async (text) => {
+export async function clean(text) {
   if (text && text.constructor && text.constructor.name == "Promise")
     text = await text;
   if (typeof text !== "string")
@@ -22,7 +23,7 @@ exports.clean = async (text) => {
     .replaceAll("`", `\`${String.fromCharCode(8203)}`)
     .replaceAll("@", `@${String.fromCharCode(8203)}`);
 
-  const { parsed } = require("dotenv").config();
+  const { parsed } = config();
   const imageServers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
   for (const { server, auth } of imageServers) {
@@ -35,15 +36,15 @@ exports.clean = async (text) => {
   }
 
   return text;
-};
+}
 
 // regexEscape(string) to escape characters in a string for use in a regex
-exports.regexEscape = (string) => {
+export function regexEscape(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-};
+}
 
 // decodeEntities(string)
-exports.decodeEntities = (string) => {
+export function decodeEntities(string) {
   var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
   var translate = {
     "nbsp": " ",
@@ -58,15 +59,4 @@ exports.decodeEntities = (string) => {
     var num = parseInt(numStr, 10);
     return String.fromCharCode(num);
   });
-};
-
-// define defaults for prefixes and tags
-exports.defaults = {
-  prefix: process.env.PREFIX
-};
-exports.tagDefaults = {
-  help: {
-    content: "https://projectlounge.pw/esmBot/help.html",
-    author: "198198681982205953"
-  }
-};
+}

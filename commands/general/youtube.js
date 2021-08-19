@@ -1,8 +1,9 @@
-const fetch = require("node-fetch");
-const { searx } = require("../../servers.json");
-const { random } = require("../../utils/misc.js");
-const paginator = require("../../utils/pagination/pagination.js");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import { readFileSync } from "fs";
+const { searx } = JSON.parse(readFileSync(new URL("../../servers.json", import.meta.url)));
+import { random } from "../../utils/misc.js";
+import paginator from "../../utils/pagination/pagination.js";
+import Command from "../../classes/command.js";
 
 class YouTubeCommand extends Command {
   async run() {
@@ -22,4 +23,4 @@ class YouTubeCommand extends Command {
   static arguments = ["[query]"];
 }
 
-module.exports = YouTubeCommand;
+export default YouTubeCommand;

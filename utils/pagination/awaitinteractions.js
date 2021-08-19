@@ -1,5 +1,5 @@
 // eris doesn't come with a method to wait for interactions by default, so we make our own
-const EventEmitter = require("events").EventEmitter;
+import { EventEmitter } from "events";
 
 class InteractionCollector extends EventEmitter {
   constructor(client, message, options = {}) {
@@ -30,4 +30,4 @@ class InteractionCollector extends EventEmitter {
   }
 }
 
-module.exports = InteractionCollector;
+export default InteractionCollector;

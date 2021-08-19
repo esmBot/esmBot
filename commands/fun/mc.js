@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class MCCommand extends Command {
   async run() {
@@ -17,4 +17,4 @@ class MCCommand extends Command {
   static arguments = ["[text]"];
 }
 
-module.exports = MCCommand;
+export default MCCommand;

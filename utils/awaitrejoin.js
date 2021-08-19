@@ -1,5 +1,5 @@
 // this is a method to wait for someone to rejoin a voice channel
-const { EventEmitter } = require("events");
+import { EventEmitter } from "events";
 
 class AwaitRejoin extends EventEmitter {
   constructor(channel, anyone, memberID) {
@@ -37,4 +37,4 @@ class AwaitRejoin extends EventEmitter {
   }
 }
 
-module.exports = AwaitRejoin;
+export default AwaitRejoin;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SpinCommand extends ImageCommand {
   static description = "Spins an image";
@@ -8,4 +8,4 @@ class SpinCommand extends ImageCommand {
   static command = "spin";
 }
 
-module.exports = SpinCommand;
+export default SpinCommand;

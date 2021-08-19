@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class TrumpCommand extends ImageCommand {
   static description = "Makes Trump display an image";
@@ -7,4 +7,4 @@ class TrumpCommand extends ImageCommand {
   static command = "trump";
 }
 
-module.exports = TrumpCommand;
+export default TrumpCommand;

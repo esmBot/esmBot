@@ -1,6 +1,4 @@
-const handler = require("../../utils/handler.js");
-const collections = require("../../utils/collections.js");
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class RestartCommand extends Command {
   async run() {
@@ -8,9 +6,6 @@ class RestartCommand extends Command {
     await this.client.createMessage(this.message.channel.id, Object.assign({
       content: "esmBot is restarting."
     }, this.reference));
-    for (const command of collections.commands) {
-      await handler.unload(command);
-    }
     this.ipc.restartAllClusters(true);
     //this.ipc.broadcast("restart");
   }
@@ -19,4 +14,4 @@ class RestartCommand extends Command {
   static aliases = ["reboot"];
 }
 
-module.exports = RestartCommand;
+export default RestartCommand;

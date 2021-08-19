@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SwirlCommand extends ImageCommand {
   static description = "Swirls an image";
@@ -8,4 +8,4 @@ class SwirlCommand extends ImageCommand {
   static command = "swirl";
 }
 
-module.exports = SwirlCommand;
+export default SwirlCommand;

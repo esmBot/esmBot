@@ -1,6 +1,6 @@
-const paginator = require("../../utils/pagination/pagination.js");
-const database = require("../../utils/database.js");
-const Command = require("../../classes/command.js");
+import paginator from "../../utils/pagination/pagination.js";
+import database from "../../utils/database.js";
+import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
@@ -46,4 +46,4 @@ class CountCommand extends Command {
   static arguments = ["{mention/id}"];
 }
 
-module.exports = CountCommand;
+export default CountCommand;

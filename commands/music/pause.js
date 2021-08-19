@@ -1,4 +1,4 @@
-const MusicCommand = require("../../classes/musicCommand.js");
+import MusicCommand from "../../classes/musicCommand.js";
 
 class PauseCommand extends MusicCommand {
   async run() {
@@ -17,4 +17,4 @@ class PauseCommand extends MusicCommand {
   static aliases = ["resume"];
 }
 
-module.exports = PauseCommand;
+export default PauseCommand;

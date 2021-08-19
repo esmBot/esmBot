@@ -1,5 +1,5 @@
-const soundPlayer = require("../../utils/soundplayer.js");
-const MusicCommand = require("../../classes/musicCommand.js");
+import { play } from "../../utils/soundplayer.js";
+import MusicCommand from "../../classes/musicCommand.js";
 const urlRegex = /(?:\w+:)?\/\/(\S+)/;
 const searchRegex = /^ytsearch:/;
 
@@ -10,7 +10,7 @@ class PlayCommand extends MusicCommand {
     if (!this.args[0]) return "You need to provide what you want to play!";
     const query = this.args.join(" ").trim();
     const search = urlRegex.test(query) ? query : (searchRegex.test(query) ? query : `ytsearch:${query}`);
-    return await soundPlayer.play(this.client, encodeURIComponent(search), this.message, true);
+    return await play(this.client, encodeURIComponent(search), this.message, true);
   }
 
   static description = "Plays a song or adds it to the queue";
@@ -18,4 +18,4 @@ class PlayCommand extends MusicCommand {
   static arguments = ["[url]"];
 }
 
-module.exports = PlayCommand;
+export default PlayCommand;

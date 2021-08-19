@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class FlopCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class FlopCommand extends ImageCommand {
   static command = "flip";
 }
 
-module.exports = FlopCommand;
+export default FlopCommand;

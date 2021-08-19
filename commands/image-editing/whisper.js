@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class WhisperCommand extends ImageCommand {
   params(url) {
@@ -18,4 +18,4 @@ class WhisperCommand extends ImageCommand {
   static command = "whisper";
 }
 
-module.exports = WhisperCommand;
+export default WhisperCommand;

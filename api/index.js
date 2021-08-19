@@ -1,9 +1,12 @@
-require("dotenv").config();
-const os = require("os");
-const { Worker } = require("worker_threads");
-const path = require("path");
-const http = require("http");
-const WebSocket = require("ws");
+import { config } from "dotenv";
+config();
+import { cpus } from "os";
+import { Worker } from "worker_threads";
+import { join } from "path";
+import { createServer } from "http";
+import ws from "ws";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const start = process.hrtime();
 const log = (msg, jobNum) => {
@@ -24,9 +27,9 @@ const jobs = new JobCache();
 const queue = [];
 // Array of UUIDs
 
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
-const MAX_JOBS = process.env.JOBS !== "" && process.env.JOBS !== undefined ? parseInt(process.env.JOBS) : os.cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+const MAX_JOBS = process.env.JOBS !== "" && process.env.JOBS !== undefined ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
 const PASS = process.env.PASS !== "" && process.env.PASS !== undefined ? process.env.PASS : undefined;
 let jobAmount = 0;
 
@@ -52,7 +55,7 @@ const acceptJob = (uuid, sock) => {
   });
 };
 
-const wss = new WebSocket.Server({ clientTracking: true, noServer: true });
+const wss = new ws.Server({ clientTracking: true, noServer: true });
 
 wss.on("connection", (ws, request) => {
   log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
@@ -102,7 +105,7 @@ wss.on("error", (err) => {
   console.error("A WS error occurred: ", err);
 });
 
-const httpServer = http.createServer();
+const httpServer = createServer();
 
 httpServer.on("request", async (req, res) => {
   if (req.method !== "GET") {
@@ -192,7 +195,7 @@ const runJob = (job, sock) => {
       reject(new TypeError("Unknown image type"));
     }
 
-    const worker = new Worker(path.join(__dirname, "../utils/image-runner.js"), {
+    const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../utils/image-runner.js"), {
       workerData: object
     });
     const timeout = setTimeout(() => {

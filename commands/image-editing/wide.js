@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class WideCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class WideCommand extends ImageCommand {
   static command = "resize";
 }
 
-module.exports = WideCommand;
+export default WideCommand;

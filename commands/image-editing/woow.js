@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class WooWCommand extends ImageCommand {
   params = {
@@ -13,4 +13,4 @@ class WooWCommand extends ImageCommand {
   static command = "mirror";
 }
 
-module.exports = WooWCommand;
+export default WooWCommand;

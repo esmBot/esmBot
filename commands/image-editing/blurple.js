@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class BlurpleCommand extends ImageCommand {
   params() {
@@ -18,4 +18,4 @@ class BlurpleCommand extends ImageCommand {
   static aliases = ["blurp"];
 }
 
-module.exports = BlurpleCommand;
+export default BlurpleCommand;

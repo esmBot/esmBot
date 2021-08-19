@@ -1,8 +1,8 @@
-const MessageCollector = require("./awaitmessages.js");
-const InteractionCollector = require("./awaitinteractions.js");
-const fetch = require("node-fetch");
+import MessageCollector from "./awaitmessages.js";
+import InteractionCollector from "./awaitinteractions.js";
+import fetch from "node-fetch";
 
-module.exports = async (client, message, pages, timeout = 120000) => {
+export default async (client, message, pages, timeout = 120000) => {
   const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   const options = {
     messageReference: {

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class TileCommand extends ImageCommand {
   static description = "Creates a tile pattern from an image";
@@ -8,4 +8,4 @@ class TileCommand extends ImageCommand {
   static command = "tile";
 }
 
-module.exports = TileCommand;
+export default TileCommand;

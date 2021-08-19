@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class ImageStatsCommand extends Command {
   async run() {
@@ -28,4 +28,4 @@ class ImageStatsCommand extends Command {
   static aliases = ["imgstat", "imstats", "imgstats", "imstat"];
 }
 
-module.exports = ImageStatsCommand;
+export default ImageStatsCommand;

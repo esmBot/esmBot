@@ -1,8 +1,12 @@
-const magick = require(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
-const { isMainThread, parentPort, workerData } = require("worker_threads");
-const fetch = require("node-fetch");
+import { createRequire } from "module";
+import { isMainThread, parentPort, workerData } from "worker_threads";
+import fetch from "node-fetch";
 
-exports.run = object => {
+const nodeRequire = createRequire(import.meta.url);
+
+const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+
+function run(object) {
   return new Promise((resolve, reject) => {
     // If the image has a path, it must also have a type
     let promise = new Promise((resolveTest) => { resolveTest(); }); // no-op
@@ -32,10 +36,10 @@ exports.run = object => {
       }
     });
   });
-};
+}
 
 if (!isMainThread) {
-  this.run(workerData)
+  run(workerData)
     .then(returnObject => {
       parentPort.postMessage(returnObject);
       process.exit();

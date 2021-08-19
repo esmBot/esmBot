@@ -1,7 +1,7 @@
-exports.log = (type, content) => content ? process.send({ op: type, msg: content }) : process.send({ op: "info", msg: type });
+export function log(type, content) { return content ? process.send({ op: type, msg: content }) : process.send({ op: "info", msg: type }); }
 
-exports.error = (...args) => this.log("error", ...args);
+export function error(...args) { return log("error", ...args); }
 
-exports.warn = (...args) => this.log("warn", ...args);
+export function warn(...args) { return log("warn", ...args); }
 
-exports.debug = (...args) => this.log("debug", ...args);
+export function debug(...args) { return log("debug", ...args); }

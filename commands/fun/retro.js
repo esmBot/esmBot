@@ -1,5 +1,5 @@
-const wrap = require("../../utils/wrap.js");
-const ImageCommand = require("../../classes/imageCommand.js");
+import wrap from "../../utils/wrap.js";
+import ImageCommand from "../../classes/imageCommand.js";
 
 class RetroCommand extends ImageCommand {
   params() {
@@ -29,4 +29,4 @@ class RetroCommand extends ImageCommand {
   static command = "retro";
 }
 
-module.exports = RetroCommand;
+export default RetroCommand;

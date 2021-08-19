@@ -1,14 +1,14 @@
-const { BaseServiceWorker } = require("eris-fleet");
-const http = require("http");
-const logger = require("../logger.js");
-const database = require("../database.js");
+import { BaseServiceWorker } from "eris-fleet";
+import { createServer } from "http";
+import { log } from "../logger.js";
+import database from "../database.js";
 
 class PrometheusWorker extends BaseServiceWorker {
   constructor(setup) {
     super(setup);
 
     if (process.env.METRICS !== "" && process.env.METRICS !== undefined) {
-      this.httpServer = http.createServer(async (req, res) => {
+      this.httpServer = createServer(async (req, res) => {
         if (req.method !== "GET") {
           res.statusCode = 405;
           return res.end("GET only");
@@ -46,7 +46,7 @@ esmbot_connected_workers ${servers.length}
         res.end();
       });
       this.httpServer.listen(process.env.METRICS, () => {
-        logger.log("info", `Serving metrics at ${process.env.METRICS}`);
+        log("info", `Serving metrics at ${process.env.METRICS}`);
       });
     }
 
@@ -59,4 +59,4 @@ esmbot_connected_workers ${servers.length}
   }
 }
 
-module.exports = PrometheusWorker;
+export default PrometheusWorker;

@@ -1,12 +1,13 @@
-const jsqr = require("jsqr");
-const fetch = require("node-fetch");
-const sharp = require("sharp");
-const { clean } = require("../../utils/misc.js");
-const Command = require("../../classes/command.js");
+import jsqr from "jsqr";
+import fetch from "node-fetch";
+import sharp from "sharp";
+import { clean } from "../../utils/misc.js";
+import Command from "../../classes/command.js";
+import imageDetect from "../../utils/imagedetect.js";
 
 class QrReadCommand extends Command {
   async run() {
-    const image = await require("../../utils/imagedetect.js")(this.client, this.message);
+    const image = await imageDetect(this.client, this.message);
     if (image === undefined) return "You need to provide an image with a QR code to read!";
     this.client.sendChannelTyping(this.message.channel.id);
     const data = await (await fetch(image.path)).buffer();
@@ -19,4 +20,4 @@ class QrReadCommand extends Command {
   static description = "Reads a QR code";
 }
 
-module.exports = QrReadCommand;
+export default QrReadCommand;

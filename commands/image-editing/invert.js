@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class InvertCommand extends ImageCommand {
   static description = "Inverts an image";
@@ -8,4 +8,4 @@ class InvertCommand extends ImageCommand {
   static command = "invert";
 }
 
-module.exports = InvertCommand;
+export default InvertCommand;

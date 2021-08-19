@@ -1,6 +1,8 @@
-const { version } = require("../../package.json");
-const os = require("os");
-const Command = require("../../classes/command.js");
+import { readFileSync } from "fs";
+const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
+import os from "os";
+import Command from "../../classes/command.js";
+import { VERSION } from "eris";
 
 class StatsCommand extends Command {
   async run() {
@@ -44,7 +46,7 @@ class StatsCommand extends Command {
         },
         {
           "name": "Library",
-          "value": `Eris ${require("eris").VERSION}`,
+          "value": `Eris ${VERSION}`,
           "inline": true
         },
         {
@@ -81,4 +83,4 @@ class StatsCommand extends Command {
   static aliases = ["status", "stat"];
 }
 
-module.exports = StatsCommand;
+export default StatsCommand;

@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class HypercamCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class HypercamCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = HypercamCommand;
+export default HypercamCommand;

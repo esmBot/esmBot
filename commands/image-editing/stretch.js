@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class StretchCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class StretchCommand extends ImageCommand {
   static command = "resize";
 }
 
-module.exports = StretchCommand;
+export default StretchCommand;

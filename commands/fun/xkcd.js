@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class XKCDCommand extends Command {
   async run() {
@@ -28,4 +28,4 @@ class XKCDCommand extends Command {
   static arguments = ["{id}"];
 }
 
-module.exports = XKCDCommand;
+export default XKCDCommand;

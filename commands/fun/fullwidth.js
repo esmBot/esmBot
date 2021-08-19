@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class FullwidthCommand extends Command {
   async run() {
@@ -11,4 +11,4 @@ class FullwidthCommand extends Command {
   static arguments = ["[text]"];
 }
 
-module.exports = FullwidthCommand;
+export default FullwidthCommand;

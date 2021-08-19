@@ -1,12 +1,12 @@
-const qrcode = require("qrcode");
-const stream = require("stream");
-const Command = require("../../classes/command.js");
+import qrcode from "qrcode";
+import { PassThrough } from "stream";
+import Command from "../../classes/command.js";
 
 class QrCreateCommand extends Command {
   async run() {
     if (this.args.length === 0) return "You need to provide some text to generate a QR code!";
     this.client.sendChannelTyping(this.message.channel.id);
-    const writable = new stream.PassThrough();
+    const writable = new PassThrough();
     qrcode.toFileStream(writable, this.content, { margin: 1 });
     const file = await this.streamToBuf(writable);
     return {
@@ -34,4 +34,4 @@ class QrCreateCommand extends Command {
   static arguments = ["[text]"];
 }
 
-module.exports = QrCreateCommand;
+export default QrCreateCommand;

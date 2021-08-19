@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto"];
 
 class CaptionCommand extends ImageCommand {
@@ -30,4 +30,4 @@ class CaptionCommand extends ImageCommand {
   static command = "caption";
 }
 
-module.exports = CaptionCommand;
+export default CaptionCommand;

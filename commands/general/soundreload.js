@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class SoundReloadCommand extends Command {
   // another very hacky command
@@ -24,4 +24,4 @@ class SoundReloadCommand extends Command {
   static aliases = ["lava", "lavalink", "lavaconnect", "soundconnect"];
 }
 
-module.exports = SoundReloadCommand;
+export default SoundReloadCommand;

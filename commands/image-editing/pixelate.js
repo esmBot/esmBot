@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class PixelateCommand extends ImageCommand {
   static description = "Pixelates an image";
@@ -8,4 +8,4 @@ class PixelateCommand extends ImageCommand {
   static command = "resize";
 }
 
-module.exports = PixelateCommand;
+export default PixelateCommand;

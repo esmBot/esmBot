@@ -1,25 +1,25 @@
-const soundPlayer = require("../utils/soundplayer.js");
-const AwaitRejoin = require("../utils/awaitrejoin.js");
-const { random } = require("../utils/misc.js");
+import { players, manager, queues } from "../utils/soundplayer.js";
+import AwaitRejoin from "../utils/awaitrejoin.js";
+import { random } from "../utils/misc.js";
 
-module.exports = async (client, cluster, worker, ipc, member, oldChannel) => {
+export default async (client, cluster, worker, ipc, member, oldChannel) => {
   if (!oldChannel) return;
-  const connection = soundPlayer.players.get(oldChannel.guild.id);
+  const connection = players.get(oldChannel.guild.id);
   if (connection && connection.type === "music" && oldChannel.id === connection.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id).length === 0) {
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);
       awaitRejoin.on("end", (rejoined, member) => {
         if (rejoined) {
-          soundPlayer.players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
+          players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
           if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
           connection.player.stop(connection.originalChannel.guild.id);
-          soundPlayer.manager.leave(connection.originalChannel.guild.id);
+          manager.leave(connection.originalChannel.guild.id);
           connection.player.destroy();
-          soundPlayer.players.delete(connection.originalChannel.guild.id);
-          soundPlayer.queues.delete(connection.originalChannel.guild.id);
+          players.delete(connection.originalChannel.guild.id);
+          queues.delete(connection.originalChannel.guild.id);
           client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
         }
       });
@@ -34,24 +34,24 @@ module.exports = async (client, cluster, worker, ipc, member, oldChannel) => {
           if (members.length === 0) {
             if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
             connection.player.stop(connection.originalChannel.guild.id);
-            soundPlayer.manager.leave(connection.originalChannel.guild.id);
+            manager.leave(connection.originalChannel.guild.id);
             connection.player.destroy();
-            soundPlayer.players.delete(connection.originalChannel.guild.id);
-            soundPlayer.queues.delete(connection.originalChannel.guild.id);
+            players.delete(connection.originalChannel.guild.id);
+            queues.delete(connection.originalChannel.guild.id);
             client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
           } else {
             const randomMember = random(members);
-            soundPlayer.players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
+            players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
             waitMessage.edit(`🔊 ${randomMember.mention} is the new voice channel host.`);
           }
         }
       });
     } else if (member.id === client.user.id) {
       connection.player.stop(connection.originalChannel.guild.id);
-      soundPlayer.manager.leave(connection.originalChannel.guild.id);
+      manager.leave(connection.originalChannel.guild.id);
       connection.player.destroy();
-      soundPlayer.players.delete(connection.originalChannel.guild.id);
-      soundPlayer.queues.delete(connection.originalChannel.guild.id);
+      players.delete(connection.originalChannel.guild.id);
+      queues.delete(connection.originalChannel.guild.id);
       await client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
     }
   }

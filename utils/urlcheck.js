@@ -1,4 +1,4 @@
-module.exports = (string) => {
+export default (string) => {
   const protocolAndDomainRE = /^(?:\w+:)?\/\/(\S+)$/;
   const domainRE = /^[^\s.]+\.\S{2,}$/;
   const match = string.match(protocolAndDomainRE);

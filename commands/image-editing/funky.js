@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class FunkyCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class FunkyCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = FunkyCommand;
+export default FunkyCommand;

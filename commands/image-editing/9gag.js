@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class NineGagCommand extends ImageCommand {
   params = {
@@ -13,4 +13,4 @@ class NineGagCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = NineGagCommand;
+export default NineGagCommand;

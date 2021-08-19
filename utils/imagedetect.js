@@ -1,6 +1,8 @@
-const fetch = require("node-fetch");
-const { getType } = require("./image.js");
-const execPromise = require("util").promisify(require("child_process").exec);
+import fetch from "node-fetch";
+import { getType } from "./image.js";
+import { exec } from "child_process";
+import { promisify } from "util";
+const execPromise = promisify(exec);
 
 const tenorURLs = [
   "tenor.com",
@@ -119,7 +121,7 @@ const checkImages = async (message, extraReturnTypes, video) => {
 };
 
 // this checks for the latest message containing an image and returns the url of the image
-module.exports = async (client, cmdMessage, extraReturnTypes = false, video = false) => {
+export default async (client, cmdMessage, extraReturnTypes = false, video = false) => {
   // we start by checking if the message is a reply to another message
   if (cmdMessage.messageReference) {
     const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);

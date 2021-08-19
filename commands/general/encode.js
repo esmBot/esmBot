@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class EncodeCommand extends Command {
   async run() {
@@ -12,4 +12,4 @@ class EncodeCommand extends Command {
   static arguments = ["[text]"];
 }
 
-module.exports = EncodeCommand;
+export default EncodeCommand;

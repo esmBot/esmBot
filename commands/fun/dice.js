@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class DiceCommand extends Command {
   async run() {
@@ -14,4 +14,4 @@ class DiceCommand extends Command {
   static arguments = ["{number}"];
 }
 
-module.exports = DiceCommand;
+export default DiceCommand;

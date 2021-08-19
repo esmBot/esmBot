@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class UserInfoCommand extends Command {
   async run() {
@@ -54,4 +54,4 @@ class UserInfoCommand extends Command {
   static arguments = ["[mention/id]"];
 }
 
-module.exports = UserInfoCommand;
+export default UserInfoCommand;

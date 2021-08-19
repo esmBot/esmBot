@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class WaaWCommand extends ImageCommand {
   static description = "Mirrors the right side of an image onto the left";
@@ -8,4 +8,4 @@ class WaaWCommand extends ImageCommand {
   static command = "mirror";
 }
 
-module.exports = WaaWCommand;
+export default WaaWCommand;

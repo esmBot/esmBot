@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class DeviantArtCommand extends ImageCommand {
   params = {
@@ -14,4 +14,4 @@ class DeviantArtCommand extends ImageCommand {
   static command = "watermark";
 }
 
-module.exports = DeviantArtCommand;
+export default DeviantArtCommand;

@@ -1,18 +1,36 @@
-const collections = require("./collections.js");
-const logger = require("./logger.js");
+import { paths, commands, info, aliases as _aliases } from "./collections.js";
+import { log } from "./logger.js";
+//import { Worker, isMainThread, workerData, parentPort } from "worker_threads";
+//import { join, dirname } from "path";
+//import { fileURLToPath } from "url";
+
+/*const importNoCache = (module) => {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL("./handler.js", import.meta.url), {
+      workerData: { module: module }
+    });
+    worker.once("message", (result) => {
+      resolve(result);
+    });
+    worker.once("error", (result) => {
+      reject(result);
+    });
+  });
+};*/
 
 // load command into memory
-exports.load = async (command, soundStatus) => {
-  const props = require(`../${command}`);
-  if (props.requires.includes("mashape") && process.env.MASHAPE === "") return logger.log("warn", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
-  if (props.requires.includes("sound") && soundStatus) return logger.log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
+export async function load(command, soundStatus) {
+  //const props = await importNoCache(`../${command}`);
+  const { default: props } = await import(`../${command}`);
+  if (props.requires.includes("mashape") && process.env.MASHAPE === "") return log("warn", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
+  if (props.requires.includes("sound") && soundStatus) return log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
   
-  collections.paths.set(commandName, command);
-  collections.commands.set(commandName, props);
+  paths.set(commandName, command);
+  commands.set(commandName, props);
 
-  collections.info.set(commandName, {
+  info.set(commandName, {
     category: commandArray[2],
     description: props.description,
     aliases: props.aliases,
@@ -22,23 +40,23 @@ exports.load = async (command, soundStatus) => {
   
   if (props.aliases) {
     for (const alias of props.aliases) {
-      collections.aliases.set(alias, commandName);
-      collections.paths.set(alias, command);
+      _aliases.set(alias, commandName);
+      paths.set(alias, command);
     }
   }
   return false;
-};
+}
 
 // unload command from memory
-exports.unload = async (command) => {
+/*export async function unload(command) {
   let cmd;
-  if (collections.commands.has(command)) {
-    cmd = collections.commands.get(command);
-  } else if (collections.aliases.has(command)) {
-    cmd = collections.commands.get(collections.aliases.get(command));
+  if (commands.has(command)) {
+    cmd = commands.get(command);
+  } else if (_aliases.has(command)) {
+    cmd = commands.get(_aliases.get(command));
   }
   if (!cmd) return `The command \`${command}\` doesn't seem to exist, nor is it an alias.`;
-  const path = collections.paths.get(command);
+  const path = paths.get(command);
   const mod = require.cache[require.resolve(`../${path}`)];
   delete require.cache[require.resolve(`../${path}`)];
   for (let i = 0; i < module.children.length; i++) {
@@ -48,4 +66,15 @@ exports.unload = async (command) => {
     }
   }
   return false;
-};
+}*/
+
+/*if (!isMainThread) {
+  const getModule = async () => {
+    console.log("test");
+    const module = await import(workerData.module);
+    console.log("test 2");
+    parentPort.postMessage(module);
+    process.exit();
+  };
+  getModule();
+}*/

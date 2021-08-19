@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
   params() {
@@ -17,4 +17,4 @@ class SpeedCommand extends ImageCommand {
   static command = "speed";
 }
 
-module.exports = SpeedCommand;
+export default SpeedCommand;

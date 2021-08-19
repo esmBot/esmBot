@@ -1,16 +1,16 @@
-const fetch = require("node-fetch");
-const fs = require("fs");
-const fileType = require("file-type");
+import fetch from "node-fetch";
+import fs from "fs";
+import fileType from "file-type";
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/mov"];
 
-exports.jobs = {};
+export const jobs = {};
 
-exports.connections = new Map();
+export const connections = new Map();
 
-exports.servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
+export const servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
-exports.getType = async (image, extraReturnTypes) => {
+export async function getType(image, extraReturnTypes) {
   if (!image.startsWith("http")) {
     const imageType = await fileType.fromFile(image);
     if (imageType && formats.includes(imageType.mime)) {
@@ -50,4 +50,4 @@ exports.getType = async (image, extraReturnTypes) => {
     clearTimeout(timeout);
   }
   return type;
-};
+}

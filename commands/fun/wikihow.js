@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const Command = require("../../classes/command.js");
+import fetch from "node-fetch";
+import Command from "../../classes/command.js";
 
 class WikihowCommand extends Command {
   async run() {
@@ -25,4 +25,4 @@ class WikihowCommand extends Command {
   static requires = ["mashape"];
 }
 
-module.exports = WikihowCommand;
+export default WikihowCommand;

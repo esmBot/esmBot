@@ -1,24 +1,24 @@
 // shard base
-const { BaseClusterWorker } = require("eris-fleet");
+import { BaseClusterWorker } from "eris-fleet";
 // path stuff
-const { readdir } = require("fs").promises;
+import { readdir } from "fs/promises";
+import { readFileSync } from "fs";
 // fancy loggings
-const logger = require("./utils/logger.js");
+import { log, error } from "./utils/logger.js";
 // initialize command loader
-const handler = require("./utils/handler.js");
+import { load } from "./utils/handler.js";
 // lavalink stuff
-const sound = require("./utils/soundplayer.js");
+import { checkStatus, connect, status, connected } from "./utils/soundplayer.js";
 // database stuff
-const database = require("./utils/database.js");
+import database from "./utils/database.js";
 // command collections
-const collections = require("./utils/collections.js");
+import { paths } from "./utils/collections.js";
 // playing messages
-const { messages } = require("./messages.json");
+const { messages } = JSON.parse(readFileSync(new URL("./messages.json", import.meta.url)));
 // other stuff
-const misc = require("./utils/misc.js");
+import { random } from "./utils/misc.js";
 // generate help page
-const helpGenerator =
-  process.env.OUTPUT !== "" ? require("./utils/help.js") : null;
+import { generateList, createPage } from "./utils/help.js";
 // whether a broadcast is currently in effect
 let broadcast = false;
 
@@ -31,40 +31,40 @@ class Shard extends BaseClusterWorker {
 
   async init() {
     // register commands and their info
-    const soundStatus = await sound.checkStatus();
-    logger.log("info", "Attempting to load commands...");
+    const soundStatus = await checkStatus();
+    log("info", "Attempting to load commands...");
     for await (const commandFile of this.getFiles("./commands/")) {
-      logger.log("log", `Loading command from ${commandFile}...`);
+      log("log", `Loading command from ${commandFile}...`);
       try {
-        await handler.load(commandFile, soundStatus);
+        await load(commandFile, soundStatus);
       } catch (e) {
-        logger.error(`Failed to register command from ${commandFile}: ${e}`);
+        error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
 
     // register events
     const events = await readdir("./events/");
-    logger.log("info", `Attempting to load ${events.length} events...`);
+    log("info", `Attempting to load ${events.length} events...`);
     for (const file of events) {
-      logger.log("log", `Loading event from ${file}...`);
+      log("log", `Loading event from ${file}...`);
       const eventName = file.split(".")[0];
-      const event = require(`./events/${file}`);
+      const { default: event } = await import(`./events/${file}`);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
 
     // generate docs
-    if (helpGenerator) {
-      await helpGenerator.generateList();
-      if (this.clusterID === 0 && helpGenerator) {
-        await helpGenerator.createPage(process.env.OUTPUT);
-        logger.log("info", "The help docs have been generated.");
+    if (process.env.OUTPUT !== "") {
+      await generateList();
+      if (this.clusterID === 0) {
+        await createPage(process.env.OUTPUT);
+        log("info", "The help docs have been generated.");
       }
     }
 
     this.ipc.register("reload", async (message) => {
-      const result = await handler.unload(message.msg);
-      if (result) return this.ipc.broadcast("reloadFail", { result: result });
-      const result2 = await handler.load(collections.paths.get(message.msg));
+      //const result = await unload(message.msg);
+      //if (result) return this.ipc.broadcast("reloadFail", { result: result });
+      const result2 = await load(paths.get(message.msg));
       if (result2) return this.ipc.broadcast("reloadFail", { result: result2 });
       return this.ipc.broadcast("reloadSuccess");
     });
@@ -72,9 +72,9 @@ class Shard extends BaseClusterWorker {
     this.bot.privateChannels.limit = 0;
 
     this.ipc.register("soundreload", async () => {
-      const soundStatus = await sound.checkStatus();
+      const soundStatus = await checkStatus();
       if (!soundStatus) {
-        const length = await sound.connect(this.bot);
+        const length = await connect(this.bot);
         return this.ipc.broadcast("soundReloadSuccess", { length });
       } else {
         return this.ipc.broadcast("soundReloadFail");
@@ -91,27 +91,27 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("broadcastend", () => {
       this.bot.editStatus("dnd", {
-        name: `${misc.random(messages)} | @${this.bot.user.username} help`,
+        name: `${random(messages)} | @${this.bot.user.username} help`,
       });
       broadcast = false;
       return this.ipc.broadcast("broadcastEnd");
     });
 
     // connect to lavalink
-    if (!sound.status && !sound.connected) sound.connect(this.bot);
+    if (!status && !connected) connect(this.bot);
 
     database.setup();
 
     this.activityChanger();
 
-    logger.log("info", `Started worker ${this.workerID}.`);
+    log("info", `Started worker ${this.workerID}.`);
   }
 
   // set activity (a.k.a. the gamer code)
   activityChanger() {
     if (!broadcast) {
       this.bot.editStatus("dnd", {
-        name: `${misc.random(messages)} | @${this.bot.user.username} help`,
+        name: `${random(messages)} | @${this.bot.user.username} help`,
       });
     }
     setTimeout(this.activityChanger.bind(this), 900000);
@@ -129,17 +129,14 @@ class Shard extends BaseClusterWorker {
   }
 
   shutdown(done) {
-    logger.log("warn", "Shutting down...");
+    log("warn", "Shutting down...");
     this.bot.editStatus("dnd", {
       name: "Restarting/shutting down..."
     });
-    for (const command in collections.commands) {
-      handler.unload(command);
-    }
     database.stop();
     done();
   }
 
 }
 
-module.exports = Shard;
+export default Shard;

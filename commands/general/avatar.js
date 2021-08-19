@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class AvatarCommand extends Command {
   async run() {
@@ -23,4 +23,4 @@ class AvatarCommand extends Command {
   static arguments = ["{mention/id}"];
 }
 
-module.exports = AvatarCommand;
+export default AvatarCommand;

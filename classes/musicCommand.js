@@ -1,13 +1,13 @@
-const Command = require("./command.js");
-const soundPlayer = require("../utils/soundplayer.js");
+import Command from "./command.js";
+import { players } from "../utils/soundplayer.js";
 
 class MusicCommand extends Command {
   constructor(client, cluster, worker, ipc, message, args, content, specialArgs) {
     super(client, cluster, worker, ipc, message, args, content, specialArgs);
-    this.connection = soundPlayer.players.get(message.channel.guild.id);
+    this.connection = players.get(message.channel.guild.id);
   }
 
   static requires = ["sound"];
 }
 
-module.exports = MusicCommand;
+export default MusicCommand;

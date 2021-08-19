@@ -1,4 +1,4 @@
-const Command = require("../../classes/command.js");
+import Command from "../../classes/command.js";
 
 class PingCommand extends Command {
   async run() {
@@ -12,4 +12,4 @@ class PingCommand extends Command {
   static aliases = ["pong"];
 }
 
-module.exports = PingCommand;
+export default PingCommand;

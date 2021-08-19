@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class GameXplainCommand extends ImageCommand {
   static description = "Makes a GameXplain thumbnail from an image";
@@ -8,4 +8,4 @@ class GameXplainCommand extends ImageCommand {
   static command = "gamexplain";
 }
 
-module.exports = GameXplainCommand;
+export default GameXplainCommand;

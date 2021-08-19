@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class ImplodeCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class ImplodeCommand extends ImageCommand {
   static command = "explode";
 }
 
-module.exports = ImplodeCommand;
+export default ImplodeCommand;

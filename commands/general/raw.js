@@ -1,5 +1,5 @@
-const Command = require("../../classes/command.js");
-const imageDetect = require("../../utils/imagedetect.js");
+import Command from "../../classes/command.js";
+import imageDetect from "../../utils/imagedetect.js";
 
 class RawCommand extends Command {
   async run() {
@@ -13,4 +13,4 @@ class RawCommand extends Command {
   static aliases = ["gif", "getgif", "giflink", "imglink", "getimg", "rawgif", "rawimg"];
 }
 
-module.exports = RawCommand;
+export default RawCommand;

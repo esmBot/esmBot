@@ -1,4 +1,4 @@
-const ImageCommand = require("../../classes/imageCommand.js");
+import ImageCommand from "../../classes/imageCommand.js";
 
 class HooHCommand extends ImageCommand {
   params = {
@@ -12,4 +12,4 @@ class HooHCommand extends ImageCommand {
   static command = "mirror";
 }
 
-module.exports = HooHCommand;
+export default HooHCommand;

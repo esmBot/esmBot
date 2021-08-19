@@ -1,11 +1,12 @@
-const { BaseServiceWorker } = require("eris-fleet");
-const logger = require("../logger.js");
-const fetch = require("node-fetch");
-const WebSocket = require("ws");
-const fs = require("fs");
-const path = require("path");
-const { Worker } = require("worker_threads");
-const { EventEmitter } = require("events");
+import { BaseServiceWorker } from "eris-fleet";
+import * as logger from "../logger.js";
+import fetch from "node-fetch";
+import WebSocket from "ws";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { Worker } from "worker_threads";
+import { EventEmitter } from "events";
 
 class ImageWorker extends BaseServiceWorker {
   constructor(setup) {
@@ -255,7 +256,7 @@ class ImageWorker extends BaseServiceWorker {
         }).catch(err => reject(err));
       } else {
         // Called from command (not using image API)
-        const worker = new Worker(path.join(__dirname, "../image-runner.js"), {
+        const worker = new Worker(path.join(path.dirname(fileURLToPath(import.meta.url)), "../image-runner.js"), {
           workerData: object
         });
         worker.once("message", (data) => {
@@ -300,4 +301,4 @@ class ImageWorker extends BaseServiceWorker {
   }
 }
 
-module.exports = ImageWorker;
+export default ImageWorker;
