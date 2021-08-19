@@ -1,5 +1,5 @@
-import collections from "../collections.js";
-import logger from "../logger.js";
+import * as collections from "../collections.js";
+import * as logger from "../logger.js";
 
 import sqlite3 from "better-sqlite3";
 const connection = sqlite3(process.env.DB.replace("sqlite://", ""));
