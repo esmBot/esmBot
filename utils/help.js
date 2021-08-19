@@ -1,7 +1,7 @@
 import { commands, info } from "./collections.js";
 import { promises } from "fs";
 
-const categoryTemplate = {
+export const categoryTemplate = {
   general: [],
   tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
   "image-editing": ["> **These commands support the PNG, JPEG, WEBP (static), and GIF (animated or static) formats.**\n"]
