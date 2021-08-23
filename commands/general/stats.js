@@ -42,7 +42,8 @@ class StatsCommand extends Command {
         },
         {
           "name": "Host",
-          "value": `${os.type()} ${os.release()} (${os.arch()})`
+          "value": `${os.type()} ${os.release()} (${os.arch()})`,
+          "inline": true
         },
         {
           "name": "Library",
@@ -67,11 +68,6 @@ class StatsCommand extends Command {
         {
           "name": "Servers",
           "value": stats && stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
-          "inline": true
-        },
-        {
-          "name": "Users (approximation)",
-          "value": stats && stats.users ? stats.users : `${this.client.users.size} (for this cluster only)`,
           "inline": true
         }
         ]
