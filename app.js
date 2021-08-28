@@ -62,12 +62,6 @@ const Admiral = new Fleet({
     disableEvents: {
       CHANNEL_DELETE: true,
       GUILD_BAN_REMOVE: true,
-      GUILD_MEMBER_ADD: true,
-      GUILD_MEMBER_REMOVE: true,
-      GUILD_MEMBER_UPDATE: true,
-      GUILD_ROLE_CREATE: true,
-      GUILD_ROLE_DELETE: true,
-      GUILD_ROLE_UPDATE: true,
       TYPING_START: true,
       MESSAGE_DELETE_BULK: true,
       WEBHOOKS_UPDATE: true,
