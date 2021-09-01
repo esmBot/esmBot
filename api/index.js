@@ -119,7 +119,11 @@ httpServer.on("request", async (req, res) => {
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   if (reqUrl.pathname === "/status" && req.method === "GET") {
     log(`Sending server status to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    return res.end(Buffer.from((MAX_JOBS - jobAmount).toString()));
+    const statusObject = {
+      load: MAX_JOBS - jobAmount,
+      queued: queue.length
+    };
+    return res.end(JSON.stringify(statusObject));
   } else if (reqUrl.pathname === "/running" && req.method === "GET") {
     log(`Sending currently running jobs to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     const keys = jobs.keys();

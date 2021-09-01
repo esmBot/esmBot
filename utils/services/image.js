@@ -87,6 +87,10 @@ class ImageWorker extends BaseServiceWorker {
     if (ideal.length === 0) throw "No available servers";
     const sorted = ideal.sort((a, b) => {
       return b.load - a.load;
+    }).filter((e, i, array) => {
+      return !(e.load < array[0].load);
+    }).sort((a, b) => {
+      return a.queued - b.queued;
     });
     return sorted[0];
   }
@@ -123,11 +127,12 @@ class ImageWorker extends BaseServiceWorker {
           }
         });
         clearTimeout(timeout);
-        const status = await statusRequest.text();
+        const status = await statusRequest.json();
         serversLeft--;
         idealServers.push({
           addr: address,
-          load: parseInt(status)
+          load: status.load,
+          queued: status.queued
         });
       } catch (e) {
         if (e.name === "AbortError") {
