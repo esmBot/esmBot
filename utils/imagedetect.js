@@ -70,7 +70,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
       } else if (giphyMediaURLs.includes(host)) {
         payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
       } else if (imgurURLs.includes(host)) {
-        // Seems that Tenor has a possibility of making GIFs static
+        // Seems that Imgur has a possibility of making GIFs static
         payload.path = image.replace(".mp4", ".gif");
       } else if (gfycatURLs.includes(host)) {
         // iirc Gfycat also seems to sometimes make GIFs static

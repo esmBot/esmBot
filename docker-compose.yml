@@ -11,6 +11,7 @@ services:
       - ./logs:/home/esmBot/.internal/logs
       - ./bot-help:/home/esmBot/help
       - ./bot-temp:/home/esmBot/temp
+      - ./servers.json:/home/esmBot/.internal/servers.json
     env_file:
       - .env
     environment:
