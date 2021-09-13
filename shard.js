@@ -41,6 +41,7 @@ class Shard extends BaseClusterWorker {
         error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
+    log("info", "Finished loading commands.");
 
     // register events
     const events = await readdir("./events/");
@@ -51,6 +52,7 @@ class Shard extends BaseClusterWorker {
       const { default: event } = await import(`./events/${file}`);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
+    log("info", "Finished loading events.");
 
     // generate docs
     if (process.env.OUTPUT !== "") {

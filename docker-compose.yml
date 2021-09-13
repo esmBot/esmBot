@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
     environment:
-      OUTPUT: /home/esmBot/help
+      OUTPUT: /home/esmBot/help/help.md
       TEMPDIR: /home/esmBot/temp
     links:
       - lavalink
