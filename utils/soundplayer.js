@@ -125,55 +125,54 @@ export async function nextSong(client, message, connection, track, info, music, 
       }
     });
   }
+  connection.removeAllListeners("error");
+  connection.removeAllListeners("end");
   await connection.play(track);
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, playMessage: playingMessage });
-  if (connection.listeners("error").length === 0) {
-    connection.on("error", (error) => {
-      if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
-      const playMessage = players.get(voiceChannel.guild.id).playMessage;
-      if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+  connection.once("error", (error) => {
+    if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
+    const playMessage = players.get(voiceChannel.guild.id).playMessage;
+    if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+    manager.leave(voiceChannel.guild.id);
+    connection.removeAllListeners("end");
+    connection.destroy();
+    players.delete(voiceChannel.guild.id);
+    queues.delete(voiceChannel.guild.id);
+    logger.error(error);
+  });
+  connection.on("end", async (data) => {
+    if (data.reason === "REPLACED") return;
+    const queue = queues.get(voiceChannel.guild.id);
+    const player = players.get(voiceChannel.guild.id);
+    let newQueue;
+    if (player && player.loop) {
+      queue.push(queue.shift());
+      newQueue = queue;
+    } else {
+      newQueue = queue ? queue.slice(1) : [];
+    }
+    queues.set(voiceChannel.guild.id, newQueue);
+    if (newQueue.length === 0) {
       manager.leave(voiceChannel.guild.id);
       connection.destroy();
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
-      logger.error(error);
-    });
-  }
-  if (connection.listeners("end").length === 0) {
-    connection.on("end", async (data) => {
-      if (data.reason === "REPLACED") return;
-      const queue = queues.get(voiceChannel.guild.id);
-      const player = players.get(voiceChannel.guild.id);
-      let newQueue;
-      if (player && player.loop) {
-        queue.push(queue.shift());
-        newQueue = queue;
-      } else {
-        newQueue = queue ? queue.slice(1) : [];
+      if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
+      try {
+        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        if (player && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+      } catch {
+        // no-op
       }
-      queues.set(voiceChannel.guild.id, newQueue);
-      if (newQueue.length === 0) {
-        manager.leave(voiceChannel.guild.id);
-        connection.destroy();
-        players.delete(voiceChannel.guild.id);
-        queues.delete(voiceChannel.guild.id);
-        if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
-        try {
-          if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-          if (player && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
-        } catch {
-          // no-op
-        }
-      } else {
-        const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
-        nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, track);
-        try {
-          if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-          if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
-        } catch {
-          // no-op
-        }
+    } else {
+      const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
+      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, track);
+      try {
+        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+      } catch {
+        // no-op
       }
-    });
-  }
+    }
+  });
 }

@@ -29,7 +29,7 @@
     "cowsay2": "^2.0.4",
     "dotenv": "^9.0.2",
     "emoji-regex": "^9.2.2",
-    "eris": "github:abalabahaha/eris#dev",
+    "eris": "^0.15.1",
     "eris-fleet": "github:esmBot/eris-fleet",
     "file-type": "^16.1.0",
     "format-duration": "^1.4.0",

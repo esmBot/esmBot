@@ -7,10 +7,12 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
   const connection = players.get(oldChannel.guild.id);
   if (connection && connection.type === "music" && oldChannel.id === connection.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id).length === 0) {
+      connection.player.pause(true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);
       awaitRejoin.on("end", (rejoined, member) => {
         if (rejoined) {
+          connection.player.pause(false);
           players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {

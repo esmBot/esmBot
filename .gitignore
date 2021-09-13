@@ -38,3 +38,4 @@ todo.txt
 .vscode/
 migratedb.js
 processed.txt
+data.sqlite
