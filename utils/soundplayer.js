@@ -2,7 +2,7 @@ import * as logger from "./logger.js";
 import fetch from "node-fetch";
 import fs from "fs";
 import format from "format-duration";
-import { Manager } from "lavacord";
+import { Manager, Rest } from "lavacord";
 
 let nodes;
 
@@ -63,11 +63,12 @@ export async function play(client, sound, message, music = false) {
   if (!music && !nodes.filter(obj => obj.host === node.host)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }
-  const { tracks } = await fetch(`http://${node.host}:${node.port}/loadtracks?identifier=${sound}`, { headers: { Authorization: node.password } }).then(res => res.json());
+  const { tracks, playlistInfo } = await Rest.load(node, sound);
   const oldQueue = queues.get(voiceChannel.guild.id);
   if (!tracks || tracks.length === 0) return "I couldn't find that song!";
   if (music) {
-    queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, tracks[0].track] : [tracks[0].track]);
+    const playlistTracks = tracks.map((val) => { return val.track; });
+    queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
   const connection = await manager.join({
     guild: voiceChannel.guild.id,
@@ -76,7 +77,7 @@ export async function play(client, sound, message, music = false) {
   });
 
   if (oldQueue && music) {
-    return `Your tune \`${tracks[0].info.title}\` has been added to the queue!`;
+    return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : tracks[0].info.title}\` has been added to the queue!`;
   } else {
     nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
     return;
@@ -165,7 +166,7 @@ export async function nextSong(client, message, connection, track, info, music, 
         // no-op
       }
     } else {
-      const newTrack = await fetch(`http://${connection.node.host}:${connection.node.port}/decodetrack?track=${encodeURIComponent(newQueue[0])}`, { headers: { Authorization: connection.node.password } }).then(res => res.json());
+      const newTrack = await Rest.decode(connection.node, newQueue[0]);
       nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, track);
       try {
         if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
