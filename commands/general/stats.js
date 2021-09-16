@@ -24,7 +24,7 @@ class StatsCommand extends Command {
         },
         {
           "name": "Cluster Memory Usage",
-          "value": stats ? `${stats.clusters[this.cluster].ram.toFixed(2)} MB` : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+          "value": stats && stats.clusters[this.cluster] ? `${stats.clusters[this.cluster].ram.toFixed(2)} MB` : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
           "inline": true
         },
         {
