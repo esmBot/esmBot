@@ -8,6 +8,8 @@ export const categoryTemplate = {
 };
 export let categories = categoryTemplate;
 
+export let generated = false;
+
 export async function generateList() {
   categories = categoryTemplate;
   for (const [command] of commands) {
@@ -24,6 +26,7 @@ export async function generateList() {
       categories[category].push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
     }
   }
+  generated = true;
 }
 
 export async function createPage(output) {

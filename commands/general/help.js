@@ -53,7 +53,7 @@ class HelpCommand extends Command {
     } else {
       if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
       const pages = [];
-      if (help.categories === help.categoryTemplate) await help.generateList();
+      if (help.categories === help.categoryTemplate && !help.generated) await help.generateList();
       for (const category of Object.keys(help.categories)) {
         const splitPages = help.categories[category].map((item, index) => {
           return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
