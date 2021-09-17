@@ -3,6 +3,9 @@ const { version } = JSON.parse(readFileSync(new URL("../../package.json", import
 import os from "os";
 import Command from "../../classes/command.js";
 import { VERSION } from "eris";
+import { exec as baseExec } from "child_process";
+import { promisify } from "util";
+const exec = promisify(baseExec);
 
 class StatsCommand extends Command {
   async run() {
@@ -20,7 +23,7 @@ class StatsCommand extends Command {
         "color": 16711680,
         "fields": [{
           "name": "Version",
-          "value": `v${version}${process.env.NODE_ENV === "development" ? "-dev" : ""}`
+          "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD")).stdout.substring(0, 7)})` : ""}`
         },
         {
           "name": "Cluster Memory Usage",

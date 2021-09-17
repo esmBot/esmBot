@@ -14,6 +14,9 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
 import winston from "winston";
+import { exec as baseExec } from "child_process";
+import { promisify } from "util";
+const exec = promisify(baseExec);
 // dbl posting
 import { Api } from "@top-gg/sdk";
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new Api(process.env.DBL) : null;
@@ -42,7 +45,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${esmBotVersion}, powered by eris-fleet ${erisFleetVersion}
+esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD")).stdout.substring(0, 7)}), powered by eris-fleet ${erisFleetVersion}
 `);
 }
 
