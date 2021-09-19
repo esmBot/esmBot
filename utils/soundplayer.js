@@ -110,11 +110,11 @@ export async function nextSong(client, message, connection, track, info, music, 
         },
         "fields": [{
           "name": "ℹ️ Title:",
-          "value": info.title
+          "value": info.title !== "" ? info.title : "(blank)"
         },
         {
           "name": "🎤 Artist:",
-          "value": info.author
+          "value": info.author !== "" ? info.author : "(blank)"
         },
         {
           "name": "💬 Channel:",
@@ -130,6 +130,7 @@ export async function nextSong(client, message, connection, track, info, music, 
   connection.removeAllListeners("error");
   connection.removeAllListeners("end");
   await connection.play(track);
+  await connection.volume(75);
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, playMessage: playingMessage });
   connection.once("error", (error) => {
     if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
@@ -159,6 +160,7 @@ export async function nextSong(client, message, connection, track, info, music, 
       connection.destroy();
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
+      skipVotes.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
       try {
         if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();

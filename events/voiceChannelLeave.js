@@ -1,4 +1,4 @@
-import { players, manager, queues } from "../utils/soundplayer.js";
+import { players, manager, queues, skipVotes } from "../utils/soundplayer.js";
 import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
 
@@ -22,6 +22,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           connection.player.destroy();
           players.delete(connection.originalChannel.guild.id);
           queues.delete(connection.originalChannel.guild.id);
+          skipVotes.delete(connection.originalChannel.guild.id);
           client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
         }
       });
@@ -40,6 +41,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             connection.player.destroy();
             players.delete(connection.originalChannel.guild.id);
             queues.delete(connection.originalChannel.guild.id);
+            skipVotes.delete(connection.originalChannel.guild.id);
             client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
           } else {
             const randomMember = random(members);
@@ -54,6 +56,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       connection.player.destroy();
       players.delete(connection.originalChannel.guild.id);
       queues.delete(connection.originalChannel.guild.id);
+      skipVotes.delete(connection.originalChannel.guild.id);
       await client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
     }
   }
