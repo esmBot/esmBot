@@ -18,7 +18,7 @@ class QueueCommand extends MusicCommand {
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {
-      trackList.push(`${i + 1}. ${track.info.author} - **${track.info.title}** (${track.info.isStream ? "∞" : format(track.info.length)})`);
+      trackList.push(`${i + 1}. ${track.info.author !== "" ? track.info.author : "(blank)"} - **${track.info.title !== "" ? track.info.title : "(blank)"}** (${track.info.isStream ? "∞" : format(track.info.length)})`);
     }
     const pageSize = 5;
     const embeds = [];
@@ -39,7 +39,7 @@ class QueueCommand extends MusicCommand {
           },
           "fields": [{
             "name": "🎶 Now Playing",
-            "value": `${firstTrack.info.author} - **${firstTrack.info.title}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
+            "value": `${firstTrack.info.author !== "" ? firstTrack.info.author : "(blank)"} - **${firstTrack.info.title !== "" ? firstTrack.info.title : "(blank)"}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
           }, {
             "name": "🔁 Looping?",
             "value": player.loop ? "Yes" : "No"

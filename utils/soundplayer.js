@@ -78,7 +78,7 @@ export async function play(client, sound, message, music = false) {
   });
 
   if (oldQueue && music) {
-    return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : tracks[0].info.title}\` has been added to the queue!`;
+    return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : (tracks[0].info.title !== "" ? tracks[0].info.title : "(blank)")}\` has been added to the queue!`;
   } else {
     nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
     return;
