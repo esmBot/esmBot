@@ -80,12 +80,12 @@ export async function play(client, sound, message, music = false) {
   if (oldQueue && music) {
     return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : (tracks[0].info.title !== "" ? tracks[0].info.title : "(blank)")}\` has been added to the queue!`;
   } else {
-    nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false);
+    nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false, player ? player.shuffle : false);
     return;
   }
 }
 
-export async function nextSong(client, message, connection, track, info, music, voiceChannel, loop = false, lastTrack = null) {
+export async function nextSong(client, message, connection, track, info, music, voiceChannel, loop = false, shuffle = false, lastTrack = null) {
   skipVotes.delete(voiceChannel.guild.id);
   const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
@@ -131,7 +131,7 @@ export async function nextSong(client, message, connection, track, info, music, 
   connection.removeAllListeners("end");
   await connection.play(track);
   await connection.volume(75);
-  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, playMessage: playingMessage });
+  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
   connection.once("error", (error) => {
     if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
     const playMessage = players.get(voiceChannel.guild.id).playMessage;
@@ -145,10 +145,18 @@ export async function nextSong(client, message, connection, track, info, music, 
   });
   connection.on("end", async (data) => {
     if (data.reason === "REPLACED") return;
-    const queue = queues.get(voiceChannel.guild.id);
+    let queue = queues.get(voiceChannel.guild.id);
     const player = players.get(voiceChannel.guild.id);
     let newQueue;
-    if (player && player.loop) {
+    if (player && player.shuffle) {
+      if (player.loop) {
+        queue.push(queue.shift());
+      } else {
+        queue = queue.slice(1);
+      }
+      queue.unshift(queue.splice(Math.floor(Math.random() * queue.length), 1)[0]);
+      newQueue = queue;
+    } else if (player && player.loop) {
       queue.push(queue.shift());
       newQueue = queue;
     } else {
@@ -170,7 +178,7 @@ export async function nextSong(client, message, connection, track, info, music, 
       }
     } else {
       const newTrack = await Rest.decode(connection.node, newQueue[0]);
-      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, track);
+      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, player.shuffle, track);
       try {
         if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
         if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();

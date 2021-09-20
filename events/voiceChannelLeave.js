@@ -13,7 +13,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       awaitRejoin.on("end", (rejoined, member) => {
         if (rejoined) {
           connection.player.pause(false);
-          players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
+          players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
           if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
@@ -45,7 +45,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
           } else {
             const randomMember = random(members);
-            players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel });
+            players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
             waitMessage.edit(`🔊 ${randomMember.mention} is the new voice channel host.`);
           }
         }
