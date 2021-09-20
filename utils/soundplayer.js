@@ -133,9 +133,13 @@ export async function nextSong(client, message, connection, track, info, music, 
   await connection.volume(75);
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
   connection.once("error", (error) => {
-    if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
-    const playMessage = players.get(voiceChannel.guild.id).playMessage;
-    if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+    try {
+      if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
+      const playMessage = players.get(voiceChannel.guild.id).playMessage;
+      if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+    } catch {
+      // no-op
+    }
     manager.leave(voiceChannel.guild.id);
     connection.removeAllListeners("end");
     connection.destroy();
