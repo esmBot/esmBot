@@ -16,7 +16,11 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
-          if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+          try {
+            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+          } catch {
+            // no-op
+          }
           connection.player.stop(connection.originalChannel.guild.id);
           manager.leave(connection.originalChannel.guild.id);
           connection.player.destroy();
@@ -31,11 +35,19 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
       awaitRejoin.on("end", (rejoined) => {
         if (rejoined) {
-          if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+          try {
+            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+          } catch {
+            // no-op
+          }
         } else {
           const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id);
           if (members.length === 0) {
-            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+            try {
+              if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+            } catch {
+              // no-op
+            }
             connection.player.stop(connection.originalChannel.guild.id);
             manager.leave(connection.originalChannel.guild.id);
             connection.player.destroy();
