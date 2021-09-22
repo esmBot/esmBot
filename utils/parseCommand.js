@@ -5,9 +5,9 @@ export default (input) => {
   let concated = "";
   for (let i = 0; i < input.length; i++) {
     const a = input[i];
-    if (a.startsWith("--") && !curr) {
+    if ((a.startsWith("--") || a.startsWith("—")) && !curr) {
       if (a.includes("=")) {
-        const [arg, value] = a.slice(2).split("=");
+        const [arg, value] = (a.startsWith("--") ? a.slice(2).split("=") : a.slice(1).split("="));
         let ended = true;
         if (arg !== "_") {
           if (value.startsWith("\"")) {
