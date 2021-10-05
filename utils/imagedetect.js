@@ -94,50 +94,54 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
   }
 };
 
-const checkImages = async (message, extraReturnTypes, video) => {
+const checkImages = async (message, extraReturnTypes, video, sticker) => {
   let type;
-  // first check the embeds
-  if (message.embeds.length !== 0) {
-    // embeds can vary in types, we check for tenor gifs first
-    if (message.embeds[0].type === "gifv") {
-      type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, extraReturnTypes, true);
-    // then we check for other image types
-    } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
-      type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
-    // finally we check both possible image fields for "generic" embeds
-    } else if (message.embeds[0].type === "rich") {
-      if (message.embeds[0].thumbnail) {
+  if (sticker && message.stickerItems) {
+    type = message.stickerItems[0];
+  } else {
+    // first check the embeds
+    if (message.embeds.length !== 0) {
+      // embeds can vary in types, we check for tenor gifs first
+      if (message.embeds[0].type === "gifv") {
+        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, extraReturnTypes, true);
+      // then we check for other image types
+      } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
         type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
-      } else if (message.embeds[0].image) {
-        type = await getImage(message.embeds[0].image.proxy_url, message.embeds[0].image.url, video, extraReturnTypes);
+      // finally we check both possible image fields for "generic" embeds
+      } else if (message.embeds[0].type === "rich") {
+        if (message.embeds[0].thumbnail) {
+          type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
+        } else if (message.embeds[0].image) {
+          type = await getImage(message.embeds[0].image.proxy_url, message.embeds[0].image.url, video, extraReturnTypes);
+        }
       }
+    // then check the attachments
+    } else if (message.attachments.length !== 0 && message.attachments[0].width) {
+      type = await getImage(message.attachments[0].proxy_url, message.attachments[0].url, video);
     }
-  // then check the attachments
-  } else if (message.attachments.length !== 0 && message.attachments[0].width) {
-    type = await getImage(message.attachments[0].proxy_url, message.attachments[0].url, video);
   }
   // if the return value exists then return it
   return type ? type : false;
 };
 
 // this checks for the latest message containing an image and returns the url of the image
-export default async (client, cmdMessage, extraReturnTypes = false, video = false) => {
+export default async (client, cmdMessage, extraReturnTypes = false, video = false, sticker = false) => {
   // we start by checking if the message is a reply to another message
   if (cmdMessage.messageReference) {
     const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
     if (replyMessage) {
-      const replyResult = await checkImages(replyMessage, extraReturnTypes, video);
+      const replyResult = await checkImages(replyMessage, extraReturnTypes, video, sticker);
       if (replyResult !== false) return replyResult;
     }
   }
   // then we check the current message
-  const result = await checkImages(cmdMessage, extraReturnTypes, video);
+  const result = await checkImages(cmdMessage, extraReturnTypes, video, sticker);
   if (result !== false) return result;
   // if there aren't any replies then iterate over the last few messages in the channel
   const messages = await client.getMessages(cmdMessage.channel.id);
   // iterate over each message
   for (const message of messages) {
-    const result = await checkImages(message, extraReturnTypes, video);
+    const result = await checkImages(message, extraReturnTypes, video, sticker);
     if (result === false) {
       continue;
     } else {
