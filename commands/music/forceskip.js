@@ -8,7 +8,7 @@ class ForceSkipCommand extends MusicCommand {
     if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     if (!this.message.member.permissions.has("manageChannels")) return "You need to have the `Manage Channels` permission to force skip!";
     this.connection.player.stop(this.message.channel.guild.id);
-    skipVotes.set(this.message.channel.guild.id, { count: 0, ids: [], max: Math.min(3, this.connection.voiceChannel.voiceMembers.size - 1) });
+    skipVotes.set(this.message.channel.guild.id, { count: 0, ids: [], max: Math.min(3, this.connection.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) });
     return;
   }
 

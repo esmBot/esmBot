@@ -6,7 +6,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
   if (!oldChannel) return;
   const connection = players.get(oldChannel.guild.id);
   if (connection && connection.type === "music" && oldChannel.id === connection.voiceChannel.id) {
-    if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id).length === 0) {
+    if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
       connection.player.pause(true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);
@@ -41,7 +41,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             // no-op
           }
         } else {
-          const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id);
+          const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
           if (members.length === 0) {
             try {
               if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
