@@ -113,23 +113,38 @@ export default async (client, cluster, worker, ipc, message) => {
     } else if (typeof result === "object" && result.embed) {
       await client.createMessage(message.channel.id, Object.assign(result, reference));
     } else if (typeof result === "object" && result.file) {
-      if (result.file.length > 8388119 && process.env.TEMPDIR !== "") {
-        const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-        await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-        const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
-        await client.createMessage(message.channel.id, Object.assign({
-          embed: {
-            color: 16711680,
-            title: "Here's your image!",
-            url: imageURL,
-            image: {
-              url: imageURL
-            },
-            footer: {
-              text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
-            },
-          }
-        }, reference));
+      let fileSize = 8388119;
+      if (message.channel.guild) {
+        switch (message.channel.guild.premiumTier) {
+          case 2:
+            fileSize = 52428308;
+            break;
+          case 3:
+            fileSize = 104856616;
+            break;
+          default:
+            break;
+        }
+      }
+      if (result.file.length > fileSize) {
+        if (process.env.TEMPDIR !== "") {
+          const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
+          await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
+          const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
+          await client.createMessage(message.channel.id, Object.assign({
+            embed: {
+              color: 16711680,
+              title: "Here's your image!",
+              url: imageURL,
+              image: {
+                url: imageURL
+              },
+              footer: {
+                text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
+              },
+            }
+          }, reference));
+        }
       } else {
         await client.createMessage(message.channel.id, Object.assign({
           content: result.text ? result.text : undefined
