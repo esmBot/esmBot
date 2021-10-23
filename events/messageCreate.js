@@ -122,8 +122,6 @@ export default async (client, cluster, worker, ipc, message) => {
           case 3:
             fileSize = 104856616;
             break;
-          default:
-            break;
         }
       }
       if (result.file.length > fileSize) {

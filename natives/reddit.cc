@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -23,7 +24,13 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     list<Image> mid;
     Image watermark;
     Image text_image;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
 
     watermark.read("./assets/images/reddit.png");
     text_image.textGravity(Magick::WestGravity);

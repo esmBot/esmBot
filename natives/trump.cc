@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -22,7 +23,13 @@ Napi::Value Trump(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> mid;
     Image watermark;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
     watermark.read("./assets/images/trump.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 

@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -13,7 +14,8 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
-    float pos = obj.Has("pos") ? obj.Get("pos").As<Napi::Number>().FloatValue() : 0.5;
+    float pos =
+        obj.Has("pos") ? obj.Get("pos").As<Napi::Number>().FloatValue() : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -24,7 +26,13 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> captioned;
     Blob caption_blob;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
 
     size_t width = frames.front().baseColumns();
     size_t height = frames.front().baseRows();
@@ -44,8 +52,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
 
     for (Image &image : coalesced) {
       list<Image> images;
-      image.composite(caption_image, 0, height * pos,
-                      Magick::OverCompositeOp);
+      image.composite(caption_image, 0, height * pos, Magick::OverCompositeOp);
       image.magick(type);
       image.animationDelay(delay == 0 ? image.animationDelay() : delay);
       captioned.push_back(image);

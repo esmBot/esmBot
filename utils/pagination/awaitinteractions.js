@@ -2,10 +2,10 @@
 import { EventEmitter } from "events";
 
 class InteractionCollector extends EventEmitter {
-  constructor(client, message, options = {}) {
+  constructor(client, message, timeout = 120000) {
     super();
     this.message = message;
-    this.options = options;
+    //this.time = timeout;
     this.ended = false;
     this.bot = client;
     this.listener = async (packet) => {
@@ -13,7 +13,7 @@ class InteractionCollector extends EventEmitter {
       await this.verify(packet.d.message, packet.d.data.custom_id, packet.d.id, packet.d.token, packet.d.member ? packet.d.member.user.id : packet.d.user.id);
     };
     this.bot.on("rawWS", this.listener);
-    if (options.time) setTimeout(() => this.stop("time"), options.time);
+    setTimeout(() => this.stop("time"), timeout);
   }
 
   async verify(message, interaction, id, token, member) {

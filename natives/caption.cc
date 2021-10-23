@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -23,7 +24,13 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     list<Image> frames;
     list<Image> coalesced;
     list<Image> captioned;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
 
     size_t width = frames.front().baseColumns();
     string query(to_string(width - ((width / 25) * 2)) + "x");
@@ -32,7 +39,10 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     caption_image.alpha(true);
     caption_image.fontPointsize(width / 13);
     caption_image.textGravity(Magick::CenterGravity);
-    caption_image.read("pango:<span font_family=\"" + (font == "roboto" ? "Roboto Condensed" : font) + "\" weight=\"" + (font != "impact" ? "bold" : "normal") + "\">" + caption + "</span>");
+    caption_image.read("pango:<span font_family=\"" +
+                       (font == "roboto" ? "Roboto Condensed" : font) +
+                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
+                       "\">" + caption + "</span>");
     caption_image.extent(Geometry(width, caption_image.rows() + (width / 13)),
                          Magick::CenterGravity);
 

@@ -32,7 +32,13 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> mid;
     Image watermark;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
     watermark.read(water);
     if (resize && append) {
       string query(to_string(frames.front().baseColumns()) + "x");

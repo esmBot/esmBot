@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -25,7 +26,13 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     list<Image> mid;
     Image top_text;
     Image bottom_text;
-    readImages(&frames, Blob(data.Data(), data.Length()));
+    try {
+      readImages(&frames, Blob(data.Data(), data.Length()));
+    } catch (Magick::WarningCoder &warning) {
+      cerr << "Coder Warning: " << warning.what() << endl;
+    } catch (Magick::Warning &warning) {
+      cerr << "Warning: " << warning.what() << endl;
+    }
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     int width = coalesced.front().columns();
@@ -42,7 +49,9 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     top_text_fill.morphology(Magick::EdgeOutMorphology, "Octagon");
     top_text_fill.backgroundColor("black");
     top_text_fill.alphaChannel(Magick::ShapeAlphaChannel);
-    if (dividedWidth > 1) top_text_fill.morphology(Magick::DilateMorphology, "Octagon", dividedWidth);
+    if (dividedWidth > 1)
+      top_text_fill.morphology(Magick::DilateMorphology, "Octagon",
+                               dividedWidth);
     top_text.composite(top_text_fill, Magick::CenterGravity,
                        Magick::DstOverCompositeOp);
 
@@ -58,7 +67,9 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       bottom_text_fill.morphology(Magick::EdgeOutMorphology, "Octagon");
       bottom_text_fill.backgroundColor("black");
       bottom_text_fill.alphaChannel(Magick::ShapeAlphaChannel);
-      if (dividedWidth > 1) bottom_text_fill.morphology(Magick::DilateMorphology, "Octagon", dividedWidth);
+      if (dividedWidth > 1)
+        bottom_text_fill.morphology(Magick::DilateMorphology, "Octagon",
+                                    dividedWidth);
       bottom_text.composite(bottom_text_fill, Magick::CenterGravity,
                             Magick::DstOverCompositeOp);
     }

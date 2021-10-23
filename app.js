@@ -45,7 +45,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD")).stdout.substring(0, 7)}), powered by eris-fleet ${erisFleetVersion}
+esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").catch(() => {})).stdout.substring(0, 7)}), powered by eris-fleet ${erisFleetVersion}
 `);
 }
 
@@ -89,6 +89,7 @@ const Admiral = new Fleet({
       repliedUser: true
     },
     guildSubscriptions: false,
+    messageLimit: 50,
     intents: [
       "guilds",
       "guildVoiceStates",

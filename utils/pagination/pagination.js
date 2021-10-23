@@ -72,7 +72,7 @@ export default async (client, message, pages, timeout = 120000) => {
   };
   let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
   if (pages.length > 1) {
-    const interactionCollector = new InteractionCollector(client, currentPage, { time: timeout });
+    const interactionCollector = new InteractionCollector(client, currentPage, timeout);
     interactionCollector.on("interaction", async (interaction, id, token, member) => {
       if (member === message.author.id) {
         switch (interaction) {

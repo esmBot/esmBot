@@ -1,6 +1,7 @@
 #include <Magick++.h>
 #include <napi.h>
 
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -83,7 +84,13 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
         Blob blob;
 
         list<Image> frames;
-        readImages(&frames, Blob(data.Data(), data.Length()));
+        try {
+          readImages(&frames, Blob(data.Data(), data.Length()));
+        } catch (Magick::WarningCoder &warning) {
+          cerr << "Coder Warning: " << warning.what() << endl;
+        } catch (Magick::Warning &warning) {
+          cerr << "Warning: " << warning.what() << endl;
+        }
 
         for (list<Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
           int index = distance(frames.begin(), i);
@@ -126,7 +133,13 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
         Blob blob;
 
         list<Image> frames;
-        readImages(&frames, Blob(data.Data(), data.Length()));
+        try {
+          readImages(&frames, Blob(data.Data(), data.Length()));
+        } catch (Magick::WarningCoder &warning) {
+          cerr << "Coder Warning: " << warning.what() << endl;
+        } catch (Magick::Warning &warning) {
+          cerr << "Warning: " << warning.what() << endl;
+        }
 
         for (int i = 0; i < speed - 1; ++i) {
           frames.remove_if([counter = 0](const auto x) mutable {
