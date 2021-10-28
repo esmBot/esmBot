@@ -10,10 +10,10 @@ class FlagCommand extends ImageCommand {
     if (!this.args[0].match(emojiRegex)) return false;
     const flag = emoji.unemojify(this.args[0]).replaceAll(":", "").replace("flag-", "");
     let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
-    if (flag === "🏴‍☠️") path = "./assets/images/pirateflag.png";
+    if (flag === "pirate_flag") path = "./assets/images/pirateflag.png";
     if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";
     if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
-    if (flag === "🏳️‍⚧️") path = "./assets/images/transflag.png";
+    if (flag === "transgender_flag") path = "./assets/images/transflag.png";
     try {
       await fs.promises.access(path);
       this.flagPath = path;
