@@ -7,7 +7,7 @@ const exec = promisify(baseExec);
 
 class InfoCommand extends Command {
   async run() {
-    const owner = await this.ipc.fetchUser(process.env.OWNER);
+    const owner = await this.ipc.fetchUser(process.env.OWNER.split(",")[0]);
     const stats = await this.ipc.getStats();
     return {
       "embed": {

@@ -3,7 +3,8 @@ import Command from "../../classes/command.js";
 
 class EvalRawCommand extends Command {
   async run() {
-    if (this.message.author.id !== process.env.OWNER) return "Only the bot owner can use evalraw!";
+    const owners = process.env.OWNER.split(",");
+    if (!owners.includes(this.message.author.id)) return "Only the bot owner can use evalraw!";
     const code = this.args.join(" ");
     try {
       const evaled = eval(code);

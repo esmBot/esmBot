@@ -5,7 +5,8 @@ import * as collections from "../../utils/collections.js";
 class CommandCommand extends Command {
   async run() {
     if (!this.message.channel.guild) return "This command only works in servers!";
-    if (!this.message.member.permissions.has("administrator") && this.message.member.id !== process.env.OWNER) return "You need to be an administrator to enable/disable me!";
+    const owners = process.env.OWNER.split(",");
+    if (!this.message.member.permissions.has("administrator") && !owners.includes(this.message.member.id)) return "You need to be an administrator to enable/disable me!";
     if (this.args.length === 0) return "You need to provide what command to enable/disable!";
     if (this.args[0] !== "disable" && this.args[0] !== "enable") return "That's not a valid option!";
 

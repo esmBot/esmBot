@@ -22,14 +22,16 @@ class TagsCommand extends Command {
       if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
       const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
       if (!getResult) return "This tag doesn't exist!";
-      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+      const owners = process.env.OWNER.split(",");
+      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && !owners.includes(this.message.author.id)) return "You don't own this tag!";
       await database.removeTag(this.args[1].toLowerCase(), this.message.channel.guild);
       return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
     } else if (this.args[0].toLowerCase() === "edit") {
       if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
       const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
       if (!getResult) return "This tag doesn't exist!";
-      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && this.message.author.id !== process.env.OWNER) return "You don't own this tag!";
+      const owners = process.env.OWNER.split(",");
+      if (getResult.author !== this.message.author.id && !this.message.member.permissions.has("manageMessages") && !owners.includes(this.message.author.id)) return "You don't own this tag!";
       await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, true);
       return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
     } else if (this.args[0].toLowerCase() === "own" || this.args[0].toLowerCase() === "owner") {

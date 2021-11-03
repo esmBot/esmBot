@@ -4,7 +4,8 @@ class ReloadCommand extends Command {
   // quite possibly one of the hackiest commands in the bot
   run() {
     return new Promise((resolve) => {
-      if (this.message.author.id !== process.env.OWNER) resolve("Only the bot owner can reload commands!");
+      const owners = process.env.OWNER.split(",");
+      if (!owners.includes(this.message.author.id)) resolve("Only the bot owner can reload commands!");
       if (this.args.length === 0) resolve("You need to provide a command to reload!");
       this.ipc.broadcast("reload", this.args[0]);
       this.ipc.register("reloadSuccess", () => {
