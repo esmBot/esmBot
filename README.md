@@ -7,7 +7,7 @@ esmBot is an easily-extendable, multipurpose, and entertainment-focused Discord 
 [![Top.gg](https://top.gg/api/widget/429305856241172480.svg)](https://top.gg/bot/429305856241172480)
 
 ## Usage
-You can invite the bot to your server using this link: https://projectlounge.pw/invite
+~~You can invite the bot to your server using this link: https://projectlounge.pw/invite~~ **The main instance of the bot is currently disabled by Discord with no explanation. Please use a self-hosted instance.**
 
 A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 
