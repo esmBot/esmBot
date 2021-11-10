@@ -7,12 +7,12 @@ class DogCommand extends Command {
     const imageData = await fetch("https://dog.ceo/api/breeds/image/random");
     const json = await imageData.json();
     return {
-      embed: {
+      embeds: [{
         color: 16711680,
         image: {
           url: json.message
         }
-      }
+      }]
     };
   }
 

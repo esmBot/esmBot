@@ -17,35 +17,35 @@ class UserInfoCommand extends Command {
     }
     const member = this.message.channel.guild ? this.message.channel.guild.members.get(user.id) : undefined;
     return {
-      "embed": {
-        "title": `${user.username}#${user.discriminator}`,
-        "thumbnail": {
-          "url": user.avatarURL
+      embeds: [{
+        title: `${user.username}#${user.discriminator}`,
+        thumbnail: {
+          url: user.avatarURL
         },
-        "color": 16711680,
-        "fields": [
+        color: 16711680,
+        fields: [
           {
-            "name": "🔢 **ID:**",
-            "value": user.id
+            name: "🔢 **ID:**",
+            value: user.id
           },
           {
-            "name": "📛 **Nickname:**",
-            "value": member ? (member.nick ? member.nick : "None") : "N/A"
+            name: "📛 **Nickname:**",
+            value: member ? (member.nick ? member.nick : "None") : "N/A"
           },
           {
-            "name": "🤖 **Bot:**",
-            "value": user.bot ? "Yes" : "No"
+            name: "🤖 **Bot:**",
+            value: user.bot ? "Yes" : "No"
           },
           {
-            "name": "🗓️ **Joined Discord on:**",
-            "value": `<t:${Math.floor(user.createdAt / 1000)}:F>`
+            name: "🗓️ **Joined Discord on:**",
+            value: `<t:${Math.floor(user.createdAt / 1000)}:F>`
           },
           {
-            "name": "💬 **Joined this server on:**",
-            "value": member ? `<t:${Math.floor(member.joinedAt / 1000)}:F>` : "N/A"
+            name: "💬 **Joined this server on:**",
+            value: member ? `<t:${Math.floor(member.joinedAt / 1000)}:F>` : "N/A"
           }
         ]
-      }
+      }]
     };
   }
 

@@ -7,18 +7,17 @@ class XKCDCommand extends Command {
     try {
       const request = await fetch(url);
       const json = await request.json();
-      const embed = {
-        "embed": {
-          "title": json.safe_title,
-          "url": `https://xkcd.com/${json.num}`,
-          "color": 16711680,
-          "description": json.alt,
-          "image": {
-            "url": json.img
+      return {
+        embeds: [{
+          title: json.safe_title,
+          url: `https://xkcd.com/${json.num}`,
+          color: 16711680,
+          description: json.alt,
+          image: {
+            url: json.img
           }
-        }
+        }]
       };
-      return embed;
     } catch {
       return "I couldn't get that XKCD!";
     }

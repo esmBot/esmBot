@@ -14,7 +14,7 @@ class StatsCommand extends Command {
     const owner = await this.ipc.fetchUser(process.env.OWNER.split(",")[0]);
     const stats = await this.ipc.getStats();
     return {
-      embed: {
+      embeds: [{
         "author": {
           "name": "esmBot Statistics",
           "icon_url": this.client.user.avatarURL
@@ -74,7 +74,7 @@ class StatsCommand extends Command {
           "inline": true
         }
         ]
-      }
+      }]
     };
   }
 

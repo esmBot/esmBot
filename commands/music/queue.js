@@ -28,26 +28,26 @@ class QueueCommand extends MusicCommand {
     if (groups.length === 0) groups.push("del");
     for (const [i, value] of groups.entries()) {
       embeds.push({
-        "embed": {
-          "author": {
-            "name": "Queue",
-            "icon_url": this.client.user.avatarURL
+        embeds: [{
+          author: {
+            name: "Queue",
+            icon_url: this.client.user.avatarURL
           },
-          "color": 16711680,
-          "footer": {
-            "text": `Page ${i + 1} of ${groups.length}`
+          color: 16711680,
+          footer: {
+            text: `Page ${i + 1} of ${groups.length}`
           },
-          "fields": [{
-            "name": "🎶 Now Playing",
-            "value": `${firstTrack.info.author !== "" ? firstTrack.info.author : "(blank)"} - **${firstTrack.info.title !== "" ? firstTrack.info.title : "(blank)"}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
+          fields: [{
+            name: "🎶 Now Playing",
+            value: `${firstTrack.info.author !== "" ? firstTrack.info.author : "(blank)"} - **${firstTrack.info.title !== "" ? firstTrack.info.title : "(blank)"}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
           }, {
-            "name": "🔁 Looping?",
-            "value": player.loop ? "Yes" : "No"
+            name: "🔁 Looping?",
+            value: player.loop ? "Yes" : "No"
           }, {
-            "name": "🗒️ Queue",
-            "value": value !== "del" ? value.join("\n") : "There's nothing in the queue!"
+            name: "🗒️ Queue",
+            value: value !== "del" ? value.join("\n") : "There's nothing in the queue!"
           }]
-        }
+        }]
       });
     }
     if (embeds.length === 0) return "There's nothing in the queue!";

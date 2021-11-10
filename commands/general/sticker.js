@@ -9,13 +9,13 @@ class StickerCommand extends Command {
       return `https://cdn.discordapp.com/stickers/${result.id}.png`;
     } else if (result.format_type === 2) { // APNG
       return {
-        embed: {
+        embeds: [{
           color: 16711680,
           description: `[This sticker is an APNG; however, since Discord doesn't allow displaying APNGs outside of stickers, you'll have to save it or open it in your browser to view it.](https://cdn.discordapp.com/stickers/${result.id}.png)`,
           image: {
             url: `https://cdn.discordapp.com/stickers/${result.id}.png`
           }
-        }
+        }]
       };
     } else if (result.format_type === 3) { // Lottie
       return `I can't display this sticker because it uses the Lottie animation format; however, I can give you the raw JSON link to it: https://cdn.discordapp.com/stickers/${result.id}.json`;

@@ -130,7 +130,7 @@ export default async (client, cluster, worker, ipc, message) => {
           await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
           const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
           await client.createMessage(message.channel.id, Object.assign({
-            embed: {
+            embeds: [{
               color: 16711680,
               title: "Here's your image!",
               url: imageURL,
@@ -140,7 +140,7 @@ export default async (client, cluster, worker, ipc, message) => {
               footer: {
                 text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
               },
-            }
+            }]
           }, reference));
         }
       } else {

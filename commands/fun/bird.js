@@ -7,12 +7,12 @@ class BirdCommand extends Command {
     const imageData = await fetch("http://shibe.online/api/birds");
     const json = await imageData.json();
     return {
-      embed: {
+      embeds: [{
         color: 16711680,
         image: {
           url: json[0]
         }
-      }
+      }]
     };
   }
 

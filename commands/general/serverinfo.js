@@ -5,43 +5,43 @@ class ServerInfoCommand extends Command {
     if (!this.message.channel.guild) return "This command only works in servers!";
     const owner = await this.message.channel.guild.members.get(this.message.channel.guild.ownerID);
     return {
-      "embed": {
-        "title": this.message.channel.guild.name,
-        "thumbnail": {
-          "url": this.message.channel.guild.iconURL
+      embeds: [{
+        title: this.message.channel.guild.name,
+        thumbnail: {
+          url: this.message.channel.guild.iconURL
         },
-        "color": 16711680,
-        "fields": [
+        color: 16711680,
+        fields: [
           {
-            "name": "🔢 **ID:**",
-            "value": this.message.channel.guild.id
+            name: "🔢 **ID:**",
+            value: this.message.channel.guild.id
           },
           {
-            "name": "👤 **Owner:**",
-            "value": owner ? `${owner.user.username}#${owner.user.discriminator}` : this.message.channel.guild.ownerID
+            name: "👤 **Owner:**",
+            value: owner ? `${owner.user.username}#${owner.user.discriminator}` : this.message.channel.guild.ownerID
           },
           {
-            "name": "🗺 **Region:**",
-            "value": this.message.channel.guild.region
+            name: "🗺 **Region:**",
+            value: this.message.channel.guild.region
           },
           {
-            "name": "🗓 **Created on:**",
-            "value": `<t:${Math.floor(this.message.channel.guild.createdAt / 1000)}:F>`
+            name: "🗓 **Created on:**",
+            value: `<t:${Math.floor(this.message.channel.guild.createdAt / 1000)}:F>`
           },
           {
-            "name": "👥 **Users:**",
-            "value": this.message.channel.guild.memberCount
+            name: "👥 **Users:**",
+            value: this.message.channel.guild.memberCount
           },
           {
-            "name": "💬 **Channels:**",
-            "value": this.message.channel.guild.channels.size
+            name: "💬 **Channels:**",
+            value: this.message.channel.guild.channels.size
           },
           {
-            "name": "😃 **Emojis:**",
-            "value": this.message.channel.guild.emojis.length
+            name: "😃 **Emojis:**",
+            value: this.message.channel.guild.emojis.length
           }
         ]
-      }
+      }]
     };
   }
 

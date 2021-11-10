@@ -16,35 +16,35 @@ class HelpCommand extends Command {
       const info = collections.info.get(command);
       const counts = await database.getCounts();
       const embed = {
-        "embed": {
-          "author": {
-            "name": "esmBot Help",
-            "icon_url": this.client.user.avatarURL
+        embeds: [{
+          author: {
+            name: "esmBot Help",
+            icon_url: this.client.user.avatarURL
           },
-          "title": `${this.message.channel.guild ? prefix : ""}${command}`,
-          "url": "https://projectlounge.pw/esmBot/help.html",
-          "description": command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
-          "color": 16711680,
-          "fields": [{
-            "name": "Aliases",
-            "value": info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
+          title: `${this.message.channel.guild ? prefix : ""}${command}`,
+          url: "https://projectlounge.pw/esmBot/help.html",
+          description: command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
+          color: 16711680,
+          fields: [{
+            name: "Aliases",
+            value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
           }, {
-            "name": "Times Used",
-            "value": counts[command],
-            "inline": true
+            name: "Times Used",
+            value: counts[command],
+            inline: true
           }, {
-            "name": "Parameters",
-            "value": command === "tags" ? "[name]" : (info.params ? (info.params.length !== 0 ? info.params.join(" ") : "None") : "None"),
-            "inline": true
+            name: "Parameters",
+            value: command === "tags" ? "[name]" : (info.params ? (info.params.length !== 0 ? info.params.join(" ") : "None") : "None"),
+            inline: true
           }]
-        }
+        }]
       };
       if (info.flags.length !== 0) {
         const flagInfo = [];
         for (const flag of info.flags) {
           flagInfo.push(`\`--${flag.name}${flag.type ? `=[${flag.type}]` : ""}\` - ${flag.description}`);
         }
-        embed.embed.fields.push({
+        embed.embeds[0].fields.push({
           "name": "Flags",
           "value": flagInfo.join("\n")
         });
@@ -74,25 +74,25 @@ class HelpCommand extends Command {
       const embeds = [];
       for (const [i, value] of pages.entries()) {
         embeds.push({
-          "embed": {
-            "author": {
-              "name": "esmBot Help",
-              "icon_url": this.client.user.avatarURL
+          embeds: [{
+            author: {
+              name: "esmBot Help",
+              icon_url: this.client.user.avatarURL
             },
-            "title": value.title,
-            "description": value.page.join("\n"),
-            "color": 16711680,
-            "footer": {
-              "text": `Page ${i + 1} of ${pages.length}`
+            title: value.title,
+            description: value.page.join("\n"),
+            color: 16711680,
+            footer: {
+              text: `Page ${i + 1} of ${pages.length}`
             },
-            "fields": [{
-              "name": "Prefix",
-              "value": this.message.channel.guild ? prefix : "N/A"
+            fields: [{
+              name: "Prefix",
+              value: this.message.channel.guild ? prefix : "N/A"
             }, {
-              "name": "Tip",
-              "value": random(tips)
+              name: "Tip",
+              value: random(tips)
             }]
-          }
+          }]
         });
       }
       return paginator(this.client, this.message, embeds);

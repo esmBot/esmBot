@@ -12,13 +12,12 @@ class CatCommand extends Command {
       const data = await fetch("https://projectlounge.pw/cta/", { redirect: "manual", signal: controller.signal });
       clearTimeout(timeout);
       return {
-        embed: {
+        embeds: [{
           color: 16711680,
-          description: "Cat images are sourced from a subset of the [dm4catbot](https://twitter.com/dm4catbot) database.",
           image: {
             url: data.headers.get("location")
           }
-        }
+        }]
       };
     } catch (e) {
       if (e.name === "AbortError") {

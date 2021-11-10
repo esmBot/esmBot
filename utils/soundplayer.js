@@ -102,29 +102,29 @@ export async function nextSong(client, message, connection, track, info, music, 
     playingMessage = players.get(voiceChannel.guild.id).playMessage;
   } else {
     playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
-      "embed": {
-        "color": 16711680,
-        "author": {
-          "name": "Now Playing",
-          "icon_url": client.user.avatarURL
+      embeds: [{
+        color: 16711680,
+        author: {
+          name: "Now Playing",
+          icon_url: client.user.avatarURL
         },
-        "fields": [{
-          "name": "ℹ️ Title:",
-          "value": info.title !== "" ? info.title : "(blank)"
-        },
-        {
-          "name": "🎤 Artist:",
-          "value": info.author !== "" ? info.author : "(blank)"
+        fields: [{
+          name: "ℹ️ Title:",
+          value: info.title !== "" ? info.title : "(blank)"
         },
         {
-          "name": "💬 Channel:",
-          "value": voiceChannel.name
+          name: "🎤 Artist:",
+          value: info.author !== "" ? info.author : "(blank)"
         },
         {
-          "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          "value": `0:00/${info.isStream ? "∞" : format(info.length)}`
+          name: "💬 Channel:",
+          value: voiceChannel.name
+        },
+        {
+          name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+          value: `0:00/${info.isStream ? "∞" : format(info.length)}`
         }]
-      }
+      }]
     });
   }
   connection.removeAllListeners("error");

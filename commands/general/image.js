@@ -16,21 +16,21 @@ class ImageSearchCommand extends Command {
     const images = rawImages.results.filter((val) => !val.img_src.startsWith("data:"));
     for (const [i, value] of images.entries()) {
       embeds.push({
-        "embed": {
-          "title": "Search Results",
-          "color": 16711680,
-          "footer": {
-            "text": `Page ${i + 1} of ${images.length}`
+        embeds: [{
+          title: "Search Results",
+          color: 16711680,
+          footer: {
+            text: `Page ${i + 1} of ${images.length}`
           },
-          "description": value.title,
-          "image": {
-            "url": encodeURI(value.img_src)
+          description: value.title,
+          image: {
+            url: encodeURI(value.img_src)
           },
-          "author": {
-            "name": this.message.author.username,
-            "icon_url": this.message.author.avatarURL
+          author: {
+            name: this.message.author.username,
+            icon_url: this.message.author.avatarURL
           }
-        }
+        }]
       });
     }
     return paginator(this.client, this.message, embeds);

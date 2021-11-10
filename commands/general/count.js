@@ -25,18 +25,18 @@ class CountCommand extends Command {
     });
     for (const [i, value] of groups.entries()) {
       embeds.push({
-        "embed": {
-          "title": "Command Usage Counts",
-          "color": 16711680,
-          "footer": {
-            "text": `Page ${i + 1} of ${groups.length}`
+        embeds: [{
+          title: "Command Usage Counts",
+          color: 16711680,
+          footer: {
+            text: `Page ${i + 1} of ${groups.length}`
           },
-          "description": value.join("\n"),
-          "author": {
-            "name": this.message.author.username,
-            "icon_url": this.message.author.avatarURL
+          description: value.join("\n"),
+          author: {
+            name: this.message.author.username,
+            icon_url: this.message.author.avatarURL
           }
-        }
+        }]
       });
     }
     return paginator(this.client, this.message, embeds);

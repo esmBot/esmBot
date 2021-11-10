@@ -52,18 +52,18 @@ class TagsCommand extends Command {
       });
       for (const [i, value] of groups.entries()) {
         embeds.push({
-          "embed": {
-            "title": "Tag List",
-            "color": 16711680,
-            "footer": {
-              "text": `Page ${i + 1} of ${groups.length}`
+          embeds: [{
+            title: "Tag List",
+            color: 16711680,
+            footer: {
+              text: `Page ${i + 1} of ${groups.length}`
             },
-            "description": value.join("\n"),
-            "author": {
-              "name": this.message.author.username,
-              "icon_url": this.message.author.avatarURL
+            description: value.join("\n"),
+            author: {
+              name: this.message.author.username,
+              icon_url: this.message.author.avatarURL
             }
-          }
+          }]
         });
       }
       if (embeds.length === 0) return "I couldn't find any tags!";

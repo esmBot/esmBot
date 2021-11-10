@@ -12,12 +12,12 @@ class AncientCommand extends Command {
       const data = await fetch("https://projectlounge.pw/meme/", { redirect: "manual", signal: controller.signal });
       clearTimeout(timeout);
       return {
-        embed: {
+        embeds: [{
           color: 16711680,
           image: {
             url: data.headers.get("location")
           }
-        }
+        }]
       };
     } catch (e) {
       if (e.name === "AbortError") {

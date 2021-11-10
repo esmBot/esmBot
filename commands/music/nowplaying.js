@@ -12,29 +12,29 @@ class NowPlayingCommand extends MusicCommand {
     const track = await Rest.decode(player.node, player.track);
     const parts = Math.floor((player.state.position / track.length) * 10);
     return {
-      "embed": {
-        "color": 16711680,
-        "author": {
-          "name": "Now Playing",
-          "icon_url": this.client.user.avatarURL
+      embeds: [{
+        color: 16711680,
+        author: {
+          name: "Now Playing",
+          icon_url: this.client.user.avatarURL
         },
-        "fields": [{
-          "name": "ℹ️ Title:",
-          "value": track.title ? track.title : "Unknown"
-        },
-        {
-          "name": "🎤 Artist:",
-          "value": track.author ? track.author : "Unknown"
+        fields: [{
+          name: "ℹ️ Title:",
+          value: track.title ? track.title : "Unknown"
         },
         {
-          "name": "💬 Channel:",
-          "value": this.message.channel.guild.channels.get(this.message.member.voiceState.channelID).name
+          name: "🎤 Artist:",
+          value: track.author ? track.author : "Unknown"
         },
         {
-          "name": `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          "value": `${format(player.state.position)}/${track.isStream ? "∞" : format(track.length)}`
+          name: "💬 Channel:",
+          value: this.message.channel.guild.channels.get(this.message.member.voiceState.channelID).name
+        },
+        {
+          name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+          value: `${format(player.state.position)}/${track.isStream ? "∞" : format(track.length)}`
         }]
-      }
+      }]
     };
   }
 
