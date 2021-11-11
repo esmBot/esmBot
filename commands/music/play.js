@@ -5,9 +5,10 @@ const searchRegex = /^ytsearch:/;
 
 class PlayCommand extends MusicCommand {
   async run() {
-    if (!this.args[0]) return "You need to provide what you want to play!";
+    if (!this.args[0] && this.message.attachments.length <= 0) return "You need to provide what you want to play!";
     const query = this.args.join(" ").trim();
-    const search = urlRegex.test(query) ? query : (searchRegex.test(query) ? query : `ytsearch:${query}`);
+    const attachment = this.message.attachments[0];
+    const search = urlRegex.test(query) ? query : searchRegex.test(query) ? query : !this.args[0] && attachment ? attachment.url : `ytsearch:${query}`;
     return await play(this.client, search, this.message, true);
   }
 
