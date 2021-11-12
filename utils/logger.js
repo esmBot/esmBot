@@ -1,4 +1,4 @@
-export function log(type, content) { return content ? process.send({ op: type, msg: content }) : process.send({ op: "info", msg: type }); }
+export function log(type, content) { return content ? console[type](content) : console.info(type); }
 
 export function error(...args) { return log("error", ...args); }
 

@@ -110,7 +110,7 @@ export default async (client, cluster, worker, ipc, message) => {
       await client.createMessage(message.channel.id, Object.assign({
         content: result
       }, reference));
-    } else if (typeof result === "object" && result.embed) {
+    } else if (typeof result === "object" && result.embeds) {
       await client.createMessage(message.channel.id, Object.assign(result, reference));
     } else if (typeof result === "object" && result.file) {
       let fileSize = 8388119;

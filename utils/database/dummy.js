@@ -1,9 +1,9 @@
 // dummy (no-op) database handler
 import { warn } from "../logger.js";
 
-warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
-
-export async function setup() {}
+export async function setup() {
+  warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
+}
 export async function stop() {}
 export async function fixGuild() {}
 export async function addCount() {}

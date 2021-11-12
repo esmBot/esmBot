@@ -9,9 +9,11 @@ config();
 // main sharding manager
 import { Fleet } from "eris-fleet";
 import { isMaster } from "cluster";
+// main services
+import Shard from "./shard.js";
+import ImageWorker from "./utils/services/image.js";
+import PrometheusWorker from "./utils/services/prometheus.js";
 // some utils
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
 import winston from "winston";
 import { exec as baseExec } from "child_process";
@@ -50,8 +52,9 @@ esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").catch(() => {})).st
 }
 
 const Admiral = new Fleet({
-  path: join(dirname(fileURLToPath(import.meta.url)), "./shard.js"),
+  BotWorker: Shard,
   token: `Bot ${process.env.TOKEN}`,
+  fetchTimeout: 900000,
   startingStatus: {
     status: "idle",
     game: {
@@ -101,8 +104,8 @@ const Admiral = new Fleet({
     }
   },
   services: [
-    { name: "prometheus", path: join(dirname(fileURLToPath(import.meta.url)), "./utils/services/prometheus.js") },
-    { name: "image", path: join(dirname(fileURLToPath(import.meta.url)), "./utils/services/image.js") }
+    { name: "prometheus", ServiceWorker: PrometheusWorker },
+    { name: "image", ServiceWorker: ImageWorker }
   ]
 });
 

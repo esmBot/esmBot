@@ -28,7 +28,7 @@
     "dotenv": "^9.0.2",
     "emoji-regex": "^9.2.2",
     "eris": "github:abalabahaha/eris#dev",
-    "eris-fleet": "github:esmBot/eris-fleet",
+    "eris-fleet": "github:esmBot/eris-fleet#development",
     "file-type": "^16.1.0",
     "format-duration": "^1.4.0",
     "lavacord": "^1.1.9",
