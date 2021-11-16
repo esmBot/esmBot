@@ -79,12 +79,12 @@ export default async (client, message, pages, timeout = 120000) => {
           case "back":
             await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
             page = page > 0 ? --page : pages.length - 1;
-            currentPage = await currentPage.edit(pages[page]);
+            currentPage = await currentPage.edit(Object.assign(pages[page], options));
             break;
           case "forward":
             await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
             page = page + 1 < pages.length ? ++page : 0;
-            currentPage = await currentPage.edit(pages[page]);
+            currentPage = await currentPage.edit(Object.assign(pages[page], options));
             break;
           case "jump":
             await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
@@ -107,7 +107,7 @@ export default async (client, message, pages, timeout = 120000) => {
                 if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) askMessage.delete();
                 if (manageMessages) await response.delete();
                 page = Number(response.content) - 1;
-                currentPage = await currentPage.edit(pages[page]);
+                currentPage = await currentPage.edit(Object.assign(pages[page], options));
               });
             }).catch(error => {
               throw error;
@@ -127,5 +127,4 @@ export default async (client, message, pages, timeout = 120000) => {
       interactionCollector.removeAllListeners("interaction");
     });
   }
-  return currentPage;
 };
