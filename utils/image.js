@@ -35,7 +35,7 @@ export async function getType(image, extraReturnTypes) {
       type = "large";
       return type;
     }
-    const imageBuffer = await imageRequest.buffer();
+    const imageBuffer = await imageRequest.arrayBuffer();
     const imageType = await fileType.fromBuffer(imageBuffer);
     if (imageType && formats.includes(imageType.mime)) {
       type = imageType.mime;

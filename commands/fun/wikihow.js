@@ -13,7 +13,7 @@ class WikihowCommand extends Command {
     });
     const json = await request.json();
     const image = await fetch(json["1"]);
-    const imageBuffer = await image.buffer();
+    const imageBuffer = Buffer.from(await image.arrayBuffer());
     return {
       file: imageBuffer,
       name: json["1"].split("/")[json["1"].split("/").length - 1]

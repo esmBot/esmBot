@@ -177,7 +177,7 @@ class ImageWorker extends BaseServiceWorker {
               "Authentication": auth && auth !== "" ? auth : undefined
             }
           });
-          const image = await imageReq.buffer();
+          const image = Buffer.from(await imageReq.arrayBuffer());
           // The response data is given as the file extension/ImageMagick type of the image (e.g. "png"), followed
           // by a newline, followed by the image data.
 

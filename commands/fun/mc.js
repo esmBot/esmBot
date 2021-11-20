@@ -7,7 +7,7 @@ class MCCommand extends Command {
     this.client.sendChannelTyping(this.message.channel.id);
     const request = await fetch(`https://www.minecraftskinstealer.com/achievement/a.php?i=13&h=Achievement+get%21&t=${encodeURIComponent(this.args.join("+"))}`);
     return {
-      file: await request.buffer(),
+      file: Buffer.from(await request.arrayBuffer()),
       name: "mc.png"
     };
   }

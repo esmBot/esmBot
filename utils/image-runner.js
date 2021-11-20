@@ -15,7 +15,7 @@ function run(object) {
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      promise = fetch(object.path).then(res => res.buffer());
+      promise = fetch(object.path).then(res => res.arrayBuffer()).then(buf => { return Buffer.from(buf); });
     }
     // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.

@@ -25,24 +25,24 @@
   "dependencies": {
     "@top-gg/sdk": "^3.1.1",
     "cowsay2": "^2.0.4",
-    "dotenv": "^9.0.2",
-    "emoji-regex": "^9.2.2",
+    "dotenv": "^10.0.0",
+    "emoji-regex": "^10.0.0",
     "eris": "github:abalabahaha/eris#dev",
     "eris-fleet": "github:esmBot/eris-fleet#development",
     "file-type": "^16.1.0",
     "format-duration": "^1.4.0",
     "lavacord": "^1.1.9",
-    "node-addon-api": "^3.2.1",
+    "node-addon-api": "^4.2.0",
     "node-emoji": "^1.10.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.8",
     "@babel/eslint-plugin": "^7.13.0",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-unicorn": "^35.0.0"
+    "eslint": "^8.2.0",
+    "eslint-plugin-unicorn": "^38.0.1"
   },
   "optionalDependencies": {
     "better-sqlite3": "^7.4.1",
@@ -50,7 +50,7 @@
     "erlpack": "github:abalabahaha/erlpack",
     "pg": "^8.5.1",
     "uuid": "^8.3.1",
-    "ws": "^7.5.0",
+    "ws": "^8.2.3",
     "zlib-sync": "^0.1.6"
   }
 }
