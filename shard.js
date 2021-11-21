@@ -64,7 +64,7 @@ class Shard extends BaseClusterWorker {
     }
 
     this.ipc.register("reload", async (message) => {
-      const path = paths.get(message.msg);
+      const path = paths.get(message);
       if (!path) return this.ipc.broadcast("reloadFail", { result: "I couldn't find that command!" });
       const result = await load(path, await checkStatus());
       if (result) return this.ipc.broadcast("reloadFail", { result });
@@ -85,7 +85,7 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("playbroadcast", (message) => {
       this.bot.editStatus("dnd", {
-        name: `${message.msg} | @${this.bot.user.username} help`,
+        name: `${message} | @${this.bot.user.username} help`,
       });
       broadcast = true;
       return this.ipc.broadcast("broadcastSuccess");

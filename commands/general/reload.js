@@ -16,7 +16,7 @@ class ReloadCommand extends Command {
       this.ipc.register("reloadFail", (message) => {
         this.ipc.unregister("reloadSuccess");
         this.ipc.unregister("reloadFail");
-        resolve(message.msg.result);
+        resolve(message.result);
       });
     });
   }
