@@ -77,7 +77,8 @@ class TagsCommand extends Command {
       if (getResult.content.length > 2000) {
         return {
           embeds: [{
-            "description": getResult.content,
+            color: 16711680,
+            description: getResult.content
           }],
         };
       }
