@@ -74,13 +74,21 @@ class TagsCommand extends Command {
     } else {
       const getResult = await database.getTag(this.message.channel.guild.id, this.args[0].toLowerCase());
       if (!getResult) return "This tag doesn't exist!";
+      if (getResult.content.length > 2000) {
+        return {
+          embeds: [{
+            color: 16711680,
+            description: getResult.content
+          }],
+        };
+      }
       return getResult.content;
     }
   }
 
   async setTag(content, name, message, edit = false) {
     if ((!content || content.length === 0) && message.attachments.length === 0) return "You need to provide the content of the tag!";
-    if (content && content.length >= 2000) return "Your tag content is too long!";
+    if (content && content.length > 4096) return "Your tag content is too long!";
     if (message.attachments.length !== 0 && content) {
       await database[edit ? "editTag" : "setTag"](name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
     } else if (message.attachments.length !== 0) {
