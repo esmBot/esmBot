@@ -14,6 +14,9 @@ class FlagCommand extends ImageCommand {
     if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";
     if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
     if (flag === "transgender_flag") path = "./assets/images/transflag.png";
+    if (flag === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "./assets/images/region-flags/png/GB-SCT.png";
+    if (flag === "🏴󠁧󠁢󠁷󠁬󠁳󠁿") path = "./assets/images/region-flags/png/GB-WLS.png";
+    if (flag === "🏴󠁧󠁢󠁥󠁮󠁧󠁿") path = "./assets/images/region-flags/png/GB-ENG.png";
     try {
       await fs.promises.access(path);
       this.flagPath = path;
