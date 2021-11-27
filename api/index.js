@@ -257,23 +257,11 @@ const runJob = (job, ws) => {
       jobs.set(job.id, jobObject);
       const waitResponse = Buffer.concat([Buffer.from([Rwait]), jobObject.tag]);
       ws.send(waitResponse);
+      resolve();
     });
     worker.once("error", (e) => {
       clearTimeout(timeout);
       reject(e);
     });
-    /*run(object).then((data) => {
-      log(`Sending result of job ${job.uuid} back to the bot`, job.num);
-      const jobObject = jobs.get(job.uuid);
-      jobObject.data = data.buffer;
-      jobObject.ext = data.fileExtension;
-      jobs.set(job.uuid, jobObject);
-      sock.write(Buffer.concat([Buffer.from([0x1]), Buffer.from(job.uuid)]), (e) => {
-        if (e) return reject(e);
-        return resolve();
-      });
-    }).catch(e => {
-      reject(e);
-    });*/
   });
 };
