@@ -18,7 +18,7 @@ class ImageStatsCommand extends Command {
     for (let i = 0; i < servers.length; i++) {
       embed.embeds[0].fields.push({
         name: `Server ${i + 1}`,
-        value: `Running Jobs: ${servers[i].runningJobs}\nQueued: ${servers[i].queued}\nMax Jobs: ${servers[i].max}`
+        value: `Running Jobs: ${servers[i].runningJobs}\nQueued: ${Math.max(0, servers[i].runningJobs - servers[i].max)}\nMax Jobs: ${servers[i].max}`
       });
     }
     return embed;

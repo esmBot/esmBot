@@ -15,11 +15,11 @@ Rinit 0x08
 */
 const Rerror = 0x01;
 const Tqueue = 0x02;
-//const Rqueue = 0x03;
+const Rqueue = 0x03;
 const Tcancel = 0x04;
-//const Rcancel = 0x05;
+const Rcancel = 0x05;
 const Twait = 0x06;
-//const Rwait = 0x07;
+const Rwait = 0x07;
 const Rinit = 0x08;
 
 class ImageConnection {
@@ -66,7 +66,10 @@ class ImageConnection {
     const tag = msg.readUint32LE(1);
     const promise = this.requests.get(tag);
     this.requests.delete(tag);
+    if (op === Rqueue) this.njobs++;
+    if (op === Rcancel || op === Rwait) this.njobs--;
     if (op === Rerror) {
+      this.njobs--;
       promise.reject(new Error(msg.slice(5, msg.length).toString()));
       return;
     }

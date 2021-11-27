@@ -86,11 +86,10 @@ const wss = new WebSocketServer({ clientTracking: true, noServer: true });
 
 wss.on("connection", (ws, request) => {
   log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
-
-  ws.on("open", () => {
-    const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from(MAX_JOBS), Buffer.from(JSON.stringify(Object.keys(magick)))]);
-    ws.send(init);
-  });
+  const num = Buffer.alloc(2);
+  num.writeUInt16LE(MAX_JOBS);
+  const init = Buffer.concat([Buffer.from([Rinit]), num, Buffer.from(JSON.stringify(Object.keys(magick)))]);
+  ws.send(init);
 
   ws.on("error", (err) => {
     console.error(err);
