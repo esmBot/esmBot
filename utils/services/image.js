@@ -65,12 +65,13 @@ class ImageWorker extends BaseServiceWorker {
     return sorted[0];
   }
 
-  async getIdeal() {
+  async getIdeal(object) {
     const idealServers = [];
     for (const [address, connection] of this.connections) {
       if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
         continue;
       }
+      if (!connection.formats[object.cmd].includes(object.type)) continue;
       idealServers.push({
         addr: address,
         load: connection.njobs / connection.max
@@ -108,7 +109,7 @@ class ImageWorker extends BaseServiceWorker {
   async run(object) {
     if (process.env.API === "true") {
       const num = this.nextID++;
-      const currentServer = await this.getIdeal();
+      const currentServer = await this.getIdeal(object);
       await currentServer.queue(num, object);
       await currentServer.wait(num);
       const output = await currentServer.getOutput(num);

@@ -23,11 +23,11 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 [s] means a string that goes until the end of the message.
 [j] means JSON data that goes until the end of the message.
 `tag` is used to identify a request/response pair, like `lock` in the original API. `jid` is used to identify a job. `job` is a job object.
-- Rerror tag[4] error[s]
-- Tqueue tag[4] jid[4] job[j]
-- Rqueue tag[4]
-- Tcancel tag[4] jid[4]
-- Rcancel tag[4]
-- Twait tag[4] jid[4]
-- Rwait tag[4]
-- Rinit max_jobs[2] formats[j]
+- Rerror tag[2] error[s]
+- Tqueue tag[2] jid[4] job[j]
+- Rqueue tag[2]
+- Tcancel tag[2] jid[4]
+- Rcancel tag[2]
+- Twait tag[2] jid[4]
+- Rwait tag[2]
+- Rinit tag[2] max_jobs[2] formats[j]

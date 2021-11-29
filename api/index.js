@@ -88,7 +88,11 @@ wss.on("connection", (ws, request) => {
   log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
   const num = Buffer.alloc(2);
   num.writeUInt16LE(MAX_JOBS);
-  const init = Buffer.concat([Buffer.from([Rinit]), num, Buffer.from(JSON.stringify(Object.keys(magick)))]);
+  const formats = {};
+  for (const cmd of Object.keys(magick)) {
+    formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp"];
+  }
+  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00]), num, Buffer.from(JSON.stringify(formats))]);
   ws.send(init);
 
   ws.on("error", (err) => {
@@ -97,11 +101,11 @@ wss.on("connection", (ws, request) => {
 
   ws.on("message", (msg) => {
     const opcode = msg.readUint8(0);
-    const tag = msg.slice(1, 5);
-    const req = msg.toString().slice(5, msg.length);
+    const tag = msg.slice(1, 3);
+    const req = msg.toString().slice(3);
     if (opcode == Tqueue) {
-      const id = msg.readUInt32LE(5);
-      const obj = msg.slice(9, msg.length);
+      const id = msg.readUInt32LE(3);
+      const obj = msg.slice(7);
       const job = { msg: obj, num: jobAmount };
       jobs.set(id, job);
       queue.push(id);
@@ -121,7 +125,7 @@ wss.on("connection", (ws, request) => {
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
       ws.send(cancelResponse);
     } else if (opcode == Twait) {
-      const id = msg.readUInt32LE(5);
+      const id = msg.readUInt32LE(3);
       const job = jobs.get(id);
       if (!job) {
         const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from("Invalid job ID")]);

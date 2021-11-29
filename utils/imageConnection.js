@@ -59,18 +59,18 @@ class ImageConnection {
   onMessage(msg) {
     const op = msg.readUint8(0);
     if (op === Rinit) {
-      this.max = msg.readUint16LE(1);
-      this.formats = JSON.parse(msg.toString("utf8", 3));
+      this.max = msg.readUint16LE(3);
+      this.formats = JSON.parse(msg.toString("utf8", 5));
       return;
     }
-    const tag = msg.readUint32LE(1);
+    const tag = msg.readUint16LE(1);
     const promise = this.requests.get(tag);
     this.requests.delete(tag);
     if (op === Rqueue) this.njobs++;
     if (op === Rcancel || op === Rwait) this.njobs--;
     if (op === Rerror) {
       this.njobs--;
-      promise.reject(new Error(msg.slice(5, msg.length).toString()));
+      promise.reject(new Error(msg.slice(3, msg.length).toString()));
       return;
     }
     promise.resolve();
@@ -107,10 +107,9 @@ class ImageConnection {
 
   queue(jobid, jobobj) {
     const str = JSON.stringify(jobobj);
-    const buf = Buffer.alloc(4 + str.length);
+    const buf = Buffer.alloc(4);
     buf.writeUint32LE(jobid);
-    buf.write(str, 4);
-    return this.do(Tqueue, buf);
+    return this.do(Tqueue, Buffer.concat([buf, Buffer.from(str)]));
   }
 
   wait(jobid) {
@@ -151,10 +150,10 @@ class ImageConnection {
   }
 
   async do(op, data) {
-    const buf = Buffer.alloc(1 + 4);
+    const buf = Buffer.alloc(1 + 2);
     const tag = this.tag++;
     buf.writeUint8(op);
-    buf.writeUint32LE(tag, 1);
+    buf.writeUint16LE(tag, 1);
     this.conn.send(Buffer.concat([buf, data]));
     const promise = new Promise((resolve, reject) => {
       this.requests.set(tag, { resolve, reject });
