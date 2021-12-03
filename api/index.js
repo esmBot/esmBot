@@ -196,7 +196,8 @@ httpServer.on("request", async (req, res) => {
         contentType = "image/webp";
         break;
     }
-    res.setHeader("Content-Type", contentType);
+    if (contentType) res.setHeader("Content-Type", contentType);
+    else res.setHeader("Content-Type", ext);
     const data = jobs.get(id).data;
     jobs.delete(id);
     return res.end(data, (err) => {
@@ -230,8 +231,8 @@ httpServer.on("error", (e) => {
   console.error("An HTTP error occurred: ", e);
 });
 
-httpServer.listen(8080, () => {
-  log("HTTP and WS listening on port 8080");
+httpServer.listen(3762, () => {
+  log("HTTP and WS listening on port 3762");
 });
 
 const runJob = (job, ws) => {

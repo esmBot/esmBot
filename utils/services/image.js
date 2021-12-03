@@ -82,7 +82,7 @@ class ImageWorker extends BaseServiceWorker {
   }
 
   async connect(server, auth) {
-    const connection = new ImageConnection(`${server}:8080`, auth);
+    const connection = new ImageConnection(server, auth);
     this.connections.set(server, connection);
   }
 

@@ -26,6 +26,7 @@ class ImageConnection {
   constructor(host, auth, tls = false) {
     this.requests = new Map();
     this.host = host;
+    this.port = 3762;
     this.auth = auth;
     this.tag = null;
     this.disconnected = false;
@@ -38,7 +39,7 @@ class ImageConnection {
     } else {
       this.wsproto = "ws";
     }
-    this.sockurl = `${this.wsproto}://${host}/sock`;
+    this.sockurl = `${this.wsproto}://${host}:${this.port}/sock`;
     this.conn = new WebSocket(this.sockurl, {
       headers: {
         "Authentication": auth && auth !== "" ? auth : undefined
@@ -50,7 +51,7 @@ class ImageConnection {
     } else {
       httpproto = "http";
     }
-    this.httpurl = `${httpproto}://${host}/image`;
+    this.httpurl = `${httpproto}://${host}:${this.port}/image`;
     this.conn.on("message", (msg) => this.onMessage(msg));
     this.conn.once("error", (err) => this.onError(err));
     this.conn.once("close", () => this.onClose());
@@ -86,7 +87,7 @@ class ImageConnection {
     }
     this.requests.clear();
     if (!this.disconnected) {
-      logger.warn(`Lost connection to ${this.host}, attempting to reconnect in 5 seconds...`);
+      logger.warn(`Lost connection to ${this.host}:${this.port}, attempting to reconnect in 5 seconds...`);
       await setTimeout(5000);
       this.conn = new WebSocket(this.sockurl, {
         headers: {
