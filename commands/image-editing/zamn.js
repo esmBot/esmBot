@@ -1,9 +1,9 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class ZamnCommand extends ImageCommand {
-  static description = "ZAMN! SHES 12?";
+  static description = "Adds a \"ZAMN\" reaction to an image";
 
-  static noImage = "You need to provide an image to zamn at!";
+  static noImage = "You need to provide an image to \"ZAMN\" at!";
   static command = "zamn";
 }
 
