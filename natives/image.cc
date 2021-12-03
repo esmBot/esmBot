@@ -38,6 +38,7 @@
 #include "watermark.h"
 #include "wdt.h"
 #include "whisper.h"
+#include "zamn.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -79,6 +80,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
   exports.Set(Napi::String::New(env, "wdt"), Napi::Function::New(env, Wdt));
   exports.Set(Napi::String::New(env, "whisper"), Napi::Function::New(env, Whisper));
+  exports.Set(Napi::String::New(env, "zamn"), Napi::Function::New(env, Zamn));
   return exports;
 }
 

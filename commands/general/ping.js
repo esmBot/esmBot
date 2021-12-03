@@ -5,7 +5,7 @@ class PingCommand extends Command {
     const pingMessage = await this.client.createMessage(this.message.channel.id, Object.assign({
       content: "🏓 Ping?"
     }, this.reference));
-    return pingMessage.edit(`🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.message.channel.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.message.channel.guild.id]).latency)}ms` : ""}\n\`\`\``);
+    pingMessage.edit(`🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.message.channel.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.message.channel.guild.id]).latency)}ms` : ""}\n\`\`\``);
   }
 
   static description = "Pings Discord's servers";
