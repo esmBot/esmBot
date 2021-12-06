@@ -15,6 +15,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string top = obj.Get("top").As<Napi::String>().Utf8Value();
     string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
+    string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -43,7 +44,10 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     top_text.font("Impact");
     top_text.fontPointsize(width / 12);
     top_text.textGravity(Magick::CenterGravity);
-    top_text.read("pango:<span foreground='white'>" + top + "</span>");
+    top_text.read("pango:<span font_family=\"" +
+                       (font == "roboto" ? "Roboto Condensed" : font) +
+                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
+                       "\" foreground='white'>" + top + "</span>");
     Image top_text_fill = top_text;
     top_text_fill.channel(Magick::AlphaChannel);
     top_text_fill.morphology(Magick::EdgeOutMorphology, "Octagon");

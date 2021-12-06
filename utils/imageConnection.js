@@ -152,7 +152,8 @@ class ImageConnection {
 
   async do(op, data) {
     const buf = Buffer.alloc(1 + 2);
-    const tag = this.tag++;
+    let tag = this.tag++;
+    if (tag > 65535) tag = this.tag = 0;
     buf.writeUint8(op);
     buf.writeUint16LE(tag, 1);
     this.conn.send(Buffer.concat([buf, data]));

@@ -15,6 +15,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string top_text = obj.Get("top").As<Napi::String>().Utf8Value();
     string bottom_text = obj.Get("bottom").As<Napi::String>().Utf8Value();
+    string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -40,7 +41,10 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     top.font("Times");
     top.textGravity(Magick::CenterGravity);
     top.fontPointsize(56);
-    top.read("pango:<span foreground='white'>" + top_text + "</span>");
+    top.read("pango:<span font_family=\"" +
+                       (font == "roboto" ? "Roboto Condensed" : font) +
+                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
+                       "\" foreground='white'>" + top_text + "</span>");
     top.extent(Geometry(bottom_text != "" ? to_string(top.columns()) + "x" +
                                                 to_string(top.rows())
                                           : to_string(top.columns()) + "x" +

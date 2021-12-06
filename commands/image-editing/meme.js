@@ -1,4 +1,5 @@
 import ImageCommand from "../../classes/imageCommand.js";
+const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class MemeCommand extends ImageCommand {
   params(url) {
@@ -6,7 +7,8 @@ class MemeCommand extends ImageCommand {
     const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
     return {
       top: (this.specialArgs.case ? topText : topText.toUpperCase()).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
-      bottom: bottomText ? (this.specialArgs.case ? bottomText : bottomText.toUpperCase()).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : ""
+      bottom: bottomText ? (this.specialArgs.case ? bottomText : bottomText.toUpperCase()).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : "",
+      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "impact"
     };
   }
 
@@ -15,6 +17,10 @@ class MemeCommand extends ImageCommand {
   static flags = [{
     name: "case",
     description: "Make the meme text case-sensitive (allows for lowercase text)"
+  }, {
+    name: "font",
+    type: allowedFonts.join("|"),
+    description: "Specify the font you want to use (default: `impact`)"
   }];
 
   static requiresText = true;

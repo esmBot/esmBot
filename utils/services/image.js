@@ -108,7 +108,8 @@ class ImageWorker extends BaseServiceWorker {
 
   async run(object) {
     if (process.env.API === "true") {
-      const num = this.nextID++;
+      let num = this.nextID++;
+      if (num > 4294967295) num = this.nextID = 0;
       const currentServer = await this.getIdeal(object);
       await currentServer.queue(num, object);
       await currentServer.wait(num);
