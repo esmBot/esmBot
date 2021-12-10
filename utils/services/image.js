@@ -71,7 +71,7 @@ class ImageWorker extends BaseServiceWorker {
       if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
         continue;
       }
-      if (!connection.formats[object.cmd].includes(object.type)) continue;
+      if (object.params.type && !connection.formats[object.cmd].includes(object.params.type)) continue;
       idealServers.push({
         addr: address,
         load: connection.njobs / connection.max

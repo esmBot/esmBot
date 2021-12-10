@@ -47,7 +47,8 @@ class ImageCommand extends Command {
     runningCommands.set(this.message.author.id, this.message.createdAt);
   
     const magickParams = {
-      cmd: this.constructor.command
+      cmd: this.constructor.command,
+      params: {}
     };
 
     if (this.constructor.requiresImage) {
@@ -64,9 +65,9 @@ class ImageCommand extends Command {
           return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
         }
         magickParams.path = image.path;
-        magickParams.type = image.type;
+        magickParams.params.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
-        magickParams.delay = image.delay ? image.delay : 0;
+        magickParams.params.delay = image.delay ? image.delay : 0;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.message.author.id);
@@ -84,15 +85,15 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        Object.assign(magickParams, this.params(magickParams.url, magickParams.delay));
+        Object.assign(magickParams.params, this.params(magickParams.url, magickParams.delay));
         break;
       case "object":
-        Object.assign(magickParams, this.params);
+        Object.assign(magickParams.params, this.params);
         break;
     }
 
     let status;
-    if (magickParams.type === "image/gif") {
+    if (magickParams.params.type === "image/gif") {
       status = await this.processMessage(this.message);
     } else {
       this.client.sendChannelTyping(this.message.channel.id);
