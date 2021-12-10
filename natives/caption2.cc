@@ -15,6 +15,7 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
     bool top = obj.Get("top").As<Napi::Boolean>().Value();
+    string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -39,7 +40,10 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     caption_image.fillColor("black");
     caption_image.font("Helvetica Neue");
     caption_image.fontPointsize(width / 17);
-    caption_image.read("pango:" + caption);
+    caption_image.read("pango:<span font_family=\"" +
+                       (font == "roboto" ? "Roboto Condensed" : font) +
+                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
+                       "\">" + caption + "</span>");
     caption_image.extent(Geometry(width, caption_image.rows() + (width / 25)),
                          Magick::CenterGravity);
 

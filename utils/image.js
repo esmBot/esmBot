@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import fs from "fs";
 import fileType from "file-type";
 
-const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/mov"];
+const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 
 export const jobs = {};
 

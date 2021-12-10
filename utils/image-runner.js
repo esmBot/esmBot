@@ -11,7 +11,7 @@ function run(object) {
     // If the image has a path, it must also have a type
     let promise = new Promise((resolveTest) => { resolveTest(); }); // no-op
     if (object.path) {
-      if (object.type !== "image/gif" && object.onlyGIF) resolve({
+      if (object.params.type !== "image/gif" && object.onlyGIF) resolve({
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
@@ -20,10 +20,10 @@ function run(object) {
     // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.
     // If no image type is given (say, the command generates its own image), make it a PNG.
-    const fileExtension = object.type ? object.type.split("/")[1] : "png";
+    const fileExtension = object.params.type ? object.params.type.split("/")[1] : "png";
     promise.then(buf => {
-      object.data = buf;
-      const objectWithFixedType = Object.assign({}, object, {type: fileExtension});
+      object.params.data = buf;
+      const objectWithFixedType = Object.assign({}, object.params, {type: fileExtension});
       try {
         const result = magick[object.cmd](objectWithFixedType);
         const returnObject = {

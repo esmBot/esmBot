@@ -1,5 +1,5 @@
 import ImageCommand from "../../classes/imageCommand.js";
-const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto"];
+const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class CaptionCommand extends ImageCommand {
   params(url) {
