@@ -77,7 +77,7 @@ export async function play(client, sound, message, music = false) {
     node: node.id
   });
 
-  if (oldQueue && music) {
+  if (oldQueue && oldQueue.length !== 0 && music) {
     return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : (tracks[0].info.title !== "" ? tracks[0].info.title : "(blank)")}\` has been added to the queue!`;
   } else {
     nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false, player ? player.shuffle : false);
@@ -151,6 +151,10 @@ export async function nextSong(client, message, connection, track, info, music, 
     if (data.reason === "REPLACED") return;
     let queue = queues.get(voiceChannel.guild.id);
     const player = players.get(voiceChannel.guild.id);
+    if (player && process.env.STAYVC === "true") {
+      player.type = "idle";
+      players.set(voiceChannel.guild.id, player);
+    }
     let newQueue;
     if (player && player.shuffle) {
       if (player.loop) {
@@ -167,7 +171,16 @@ export async function nextSong(client, message, connection, track, info, music, 
       newQueue = queue ? queue.slice(1) : [];
     }
     queues.set(voiceChannel.guild.id, newQueue);
-    if (newQueue.length === 0) {
+    if (newQueue.length !== 0) {
+      const newTrack = await Rest.decode(connection.node, newQueue[0]);
+      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, player.shuffle, track);
+      try {
+        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+      } catch {
+        // no-op
+      }
+    } else if (process.env.STAYVC !== "true") {
       manager.leave(voiceChannel.guild.id);
       connection.destroy();
       players.delete(voiceChannel.guild.id);
@@ -181,11 +194,9 @@ export async function nextSong(client, message, connection, track, info, music, 
         // no-op
       }
     } else {
-      const newTrack = await Rest.decode(connection.node, newQueue[0]);
-      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, player.shuffle, track);
       try {
-        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+        if (player && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }
