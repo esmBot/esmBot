@@ -6,6 +6,12 @@ class UserInfoCommand extends Command {
     let user;
     if (getUser) {
       user = getUser;
+    } else if (this.args[0].match(/^<?[@#]?[&!]?\d+>?$/) && this.args[0] >= 21154535154122752) {
+      try {
+        user = await this.client.getRESTUser(this.args[0]);
+      } catch {
+        user = this.message.author;
+      }
     } else if (this.args.join(" ") !== "") {
       const userRegex = new RegExp(this.args.join("|"), "i");
       const member = this.client.users.find(element => {

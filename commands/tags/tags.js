@@ -39,8 +39,16 @@ class TagsCommand extends Command {
       const getResult = await database.getTag(this.message.channel.guild.id, this.args[1].toLowerCase());
       if (!getResult) return "This tag doesn't exist!";
       const user = await this.ipc.fetchUser(getResult.author);
-      if (!user) return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${getResult.author}\``;
-      return `This tag is owned by **${user.username}#${user.discriminator}** (\`${getResult.author}\`).`;
+      if (!user) {
+        try {
+          const restUser = await this.client.getRESTUser(getResult.author);
+          return `This tag is owned by **${restUser.username}#${restUser.discriminator}** (\`${getResult.author}\`).`;
+        } catch {
+          return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${getResult.author}\``;
+        }
+      } else {
+        return `This tag is owned by **${user.username}#${user.discriminator}** (\`${getResult.author}\`).`;
+      }
     } else if (this.args[0].toLowerCase() === "list") {
       if (!this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
       const tagList = await database.getTags(this.message.channel.guild.id);

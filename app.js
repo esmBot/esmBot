@@ -91,7 +91,7 @@ const Admiral = new Fleet({
       users: true,
       repliedUser: true
     },
-    guildSubscriptions: false,
+    restMode: true,
     messageLimit: 50,
     intents: [
       "guilds",
