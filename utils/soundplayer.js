@@ -93,7 +93,7 @@ export async function nextSong(client, message, connection, track, info, music, 
     const playMessage = players.get(voiceChannel.guild.id).playMessage;
     try {
       players.delete(voiceChannel.guild.id);
-      playMessage.delete();
+      await playMessage.delete();
     } catch {
       // no-op
     }
@@ -132,11 +132,11 @@ export async function nextSong(client, message, connection, track, info, music, 
   await connection.play(track);
   await connection.volume(75);
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
-  connection.once("error", (error) => {
+  connection.once("error", async (error) => {
     try {
-      if (playingMessage.channel.messages.get(playingMessage.id)) playingMessage.delete();
+      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
       const playMessage = players.get(voiceChannel.guild.id).playMessage;
-      if (playMessage.channel.messages.get(playMessage.id)) playMessage.delete();
+      if (playMessage.channel.messages.get(playMessage.id)) await playMessage.delete();
     } catch {
       // no-op
     }

@@ -10,14 +10,14 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       connection.player.pause(true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);
-      awaitRejoin.on("end", (rejoined, member) => {
+      awaitRejoin.on("end", async (rejoined, member) => {
         if (rejoined) {
           connection.player.pause(false);
           players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
           try {
-            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+            if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
           } catch {
             // no-op
           }
@@ -33,10 +33,10 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
     } else if (member.id === connection.host) {
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for the host to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
-      awaitRejoin.on("end", (rejoined) => {
+      awaitRejoin.on("end", async (rejoined) => {
         if (rejoined) {
           try {
-            if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+            if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
           } catch {
             // no-op
           }
@@ -44,7 +44,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
           if (members.length === 0) {
             try {
-              if (waitMessage.channel.messages.get(waitMessage.id)) waitMessage.delete();
+              if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
             } catch {
               // no-op
             }

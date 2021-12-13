@@ -104,7 +104,7 @@ export default async (client, message, pages, timeout = 120000) => {
                 maxMatches: 1
               });
               return messageCollector.on("message", async (response) => {
-                if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) askMessage.delete();
+                if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
                 if (manageMessages) await response.delete();
                 page = Number(response.content) - 1;
                 currentPage = await currentPage.edit(Object.assign(pages[page], options));
