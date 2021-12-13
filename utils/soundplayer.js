@@ -140,9 +140,9 @@ export async function nextSong(client, message, connection, track, info, music, 
     } catch {
       // no-op
     }
-    manager.leave(voiceChannel.guild.id);
+    await manager.leave(voiceChannel.guild.id);
     connection.removeAllListeners("end");
-    connection.destroy();
+    await connection.destroy();
     players.delete(voiceChannel.guild.id);
     queues.delete(voiceChannel.guild.id);
     logger.error(error);
@@ -181,8 +181,8 @@ export async function nextSong(client, message, connection, track, info, music, 
         // no-op
       }
     } else if (process.env.STAYVC !== "true") {
-      manager.leave(voiceChannel.guild.id);
-      connection.destroy();
+      await manager.leave(voiceChannel.guild.id);
+      await connection.destroy();
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
       skipVotes.delete(voiceChannel.guild.id);

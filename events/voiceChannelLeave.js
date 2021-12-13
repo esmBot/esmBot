@@ -7,12 +7,12 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
   const connection = players.get(oldChannel.guild.id);
   if (connection && oldChannel.id === connection.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
-      connection.player.pause(true);
+      await connection.player.pause(true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, true);
       awaitRejoin.on("end", async (rejoined, member) => {
         if (rejoined) {
-          connection.player.pause(false);
+          await connection.player.pause(false);
           players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
@@ -21,9 +21,9 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           } catch {
             // no-op
           }
-          connection.player.stop(connection.originalChannel.guild.id);
-          manager.leave(connection.originalChannel.guild.id);
-          connection.player.destroy();
+          await connection.player.stop(connection.originalChannel.guild.id);
+          await manager.leave(connection.originalChannel.guild.id);
+          await connection.player.destroy();
           players.delete(connection.originalChannel.guild.id);
           queues.delete(connection.originalChannel.guild.id);
           skipVotes.delete(connection.originalChannel.guild.id);
@@ -48,9 +48,9 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             } catch {
               // no-op
             }
-            connection.player.stop(connection.originalChannel.guild.id);
-            manager.leave(connection.originalChannel.guild.id);
-            connection.player.destroy();
+            await connection.player.stop(connection.originalChannel.guild.id);
+            await manager.leave(connection.originalChannel.guild.id);
+            await connection.player.destroy();
             players.delete(connection.originalChannel.guild.id);
             queues.delete(connection.originalChannel.guild.id);
             skipVotes.delete(connection.originalChannel.guild.id);
@@ -63,9 +63,9 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
         }
       });
     } else if (member.id === client.user.id) {
-      connection.player.stop(connection.originalChannel.guild.id);
-      manager.leave(connection.originalChannel.guild.id);
-      connection.player.destroy();
+      await connection.player.stop(connection.originalChannel.guild.id);
+      await manager.leave(connection.originalChannel.guild.id);
+      await connection.player.destroy();
       players.delete(connection.originalChannel.guild.id);
       queues.delete(connection.originalChannel.guild.id);
       skipVotes.delete(connection.originalChannel.guild.id);

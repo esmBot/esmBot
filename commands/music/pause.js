@@ -7,7 +7,7 @@ class PauseCommand extends MusicCommand {
     if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     if (this.connection.host !== this.message.author.id && !this.message.member.permissions.has("manageChannels")) return "Only the current voice session host can pause/resume the music!";
     const player = this.connection.player;
-    player.pause(!player.paused ? true : false);
+    await player.pause(!player.paused ? true : false);
     return `🔊 The player has been ${!player.paused ? "paused" : "resumed"}.`;
   }
 
