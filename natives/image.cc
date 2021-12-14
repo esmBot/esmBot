@@ -1,7 +1,7 @@
 #include <napi.h>
 #include <list>
 #include "blur.h"
-#include "blurple.h"
+#include "colors.h"
 #include "caption.h"
 #include "caption2.h"
 #include "circle.h"
@@ -43,7 +43,7 @@
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   exports.Set(Napi::String::New(env, "blur"), Napi::Function::New(env, Blur));
-  exports.Set(Napi::String::New(env, "blurple"), Napi::Function::New(env, Blurple));
+  exports.Set(Napi::String::New(env, "colors"), Napi::Function::New(env, Colors));
   exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
   exports.Set(Napi::String::New(env, "captionTwo"), Napi::Function::New(env, CaptionTwo));
   exports.Set(Napi::String::New(env, "circle"), Napi::Function::New(env, Circle));

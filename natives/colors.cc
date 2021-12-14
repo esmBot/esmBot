@@ -7,7 +7,7 @@
 using namespace std;
 using namespace Magick;
 
-Napi::Value Blurple(const Napi::CallbackInfo &info) {
+Napi::Value Colors(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   try {
@@ -15,6 +15,7 @@ Napi::Value Blurple(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool old =
         obj.Has("old") ? obj.Get("old").As<Napi::Boolean>().Value() : false;
+    string color = obj.Get("color").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -23,7 +24,7 @@ Napi::Value Blurple(const Napi::CallbackInfo &info) {
 
     list<Image> frames;
     list<Image> coalesced;
-    list<Image> blurpled;
+    list<Image> colored;
     try {
       readImages(&frames, Blob(data.Data(), data.Length()));
     } catch (Magick::WarningCoder &warning) {
@@ -34,23 +35,30 @@ Napi::Value Blurple(const Napi::CallbackInfo &info) {
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {
-      image.threshold(49151.25);
-      image.levelColors(old ? "#7289DA" : "#5865F2", "white");
+      if (color == "blurple") {
+        image.threshold(49151.25);
+        image.levelColors(old ? "#7289DA" : "#5865F2", "white");
+      } else if (color == "grayscale") {
+        image.quantizeColorSpace(GRAYColorspace);
+        image.quantizeColors(256);
+      } else if (color == "sepia") {
+        image.sepiaTone(49151.25);
+      }
       image.magick(type);
       image.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      blurpled.push_back(image);
+      colored.push_back(image);
     }
 
-    optimizeTransparency(blurpled.begin(), blurpled.end());
+    optimizeTransparency(colored.begin(), colored.end());
 
     if (type == "gif") {
-      for (Image &image : blurpled) {
+      for (Image &image : colored) {
         image.quantizeDitherMethod(FloydSteinbergDitherMethod);
         image.quantize();
       }
     }
 
-    writeImages(blurpled.begin(), blurpled.end(), &blob);
+    writeImages(colored.begin(), colored.end(), &blob);
 
     Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),

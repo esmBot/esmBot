@@ -39,3 +39,4 @@ todo.txt
 migratedb.js
 processed.txt
 data.sqlite
+.cache

@@ -3,7 +3,8 @@ import ImageCommand from "../../classes/imageCommand.js";
 class BlurpleCommand extends ImageCommand {
   params() {
     return {
-      old: !!this.specialArgs.old
+      old: !!this.specialArgs.old,
+      color: "blurple"
     };
   }
   
@@ -14,7 +15,7 @@ class BlurpleCommand extends ImageCommand {
   }];
 
   static noImage = "You need to provide an image to make blurple!";
-  static command = "blurple";
+  static command = "colors";
   static aliases = ["blurp"];
 }
 
