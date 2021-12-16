@@ -80,7 +80,6 @@ const Admiral = new Fleet({
       MESSAGE_REACTION_REMOVE_EMOJI: true,
       INVITE_CREATE: true,
       INVITE_DELETE: true,
-      THREAD_CREATE: true,
       THREAD_UPDATE: true,
       THREAD_DELETE: true,
       THREAD_LIST_SYNC: true
