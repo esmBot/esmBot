@@ -230,8 +230,8 @@ httpServer.on("upgrade", (req, sock, head) => {
 httpServer.on("error", (e) => {
   console.error("An HTTP error occurred: ", e);
 });
-
-httpServer.listen(3762, () => {
+const port = parseInt(process.env.PORT) || 3762;
+httpServer.listen(port, () => {
   log("HTTP and WS listening on port 3762");
 });
 
