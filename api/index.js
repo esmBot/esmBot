@@ -35,6 +35,9 @@ const start = process.hrtime();
 const log = (msg, jobNum) => {
   console.log(`[${process.hrtime(start)[1] / 1000000}${jobNum !== undefined ? `:${jobNum}` : ""}]\t ${msg}`);
 };
+const error = (msg, jobNum) => {
+  console.error(`[${process.hrtime(start)[1] / 1000000}${jobNum !== undefined ? `:${jobNum}` : ""}]\t ${msg}`);
+};
 
 class JobCache extends Map {
   set(key, value) {
@@ -65,7 +68,7 @@ const acceptJob = (id, sock) => {
   }, sock).then(() => {
     log(`Job ${id} has finished`);
   }).catch((err) => {
-    console.error(`Error on job ${id}:`, err);
+    error(`Error on job ${id}:`, err, job.num);
     const newJob = jobs.get(id);
     if (!newJob.tag) {
       newJob.error = err.message;
@@ -96,7 +99,7 @@ wss.on("connection", (ws, request) => {
   ws.send(init);
 
   ws.on("error", (err) => {
-    console.error(err);
+    error(err);
   });
 
   ws.on("message", (msg) => {
@@ -153,7 +156,7 @@ wss.on("connection", (ws, request) => {
 });
 
 wss.on("error", (err) => {
-  console.error("A WS error occurred: ", err);
+  error("A WS error occurred: ", err);
 });
 
 const httpServer = createServer();
@@ -201,7 +204,7 @@ httpServer.on("request", async (req, res) => {
     const data = jobs.get(id).data;
     jobs.delete(id);
     return res.end(data, (err) => {
-      if (err) console.error(err);
+      if (err) error(err);
     });
   } else {
     res.statusCode = 404;
@@ -228,7 +231,7 @@ httpServer.on("upgrade", (req, sock, head) => {
 });
 
 httpServer.on("error", (e) => {
-  console.error("An HTTP error occurred: ", e);
+  error("An HTTP error occurred: ", e);
 });
 const port = parseInt(process.env.PORT) || 3762;
 httpServer.listen(port, () => {
