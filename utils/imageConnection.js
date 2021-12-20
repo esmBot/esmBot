@@ -68,6 +68,10 @@ class ImageConnection {
     }
     const tag = msg.readUint16LE(1);
     const promise = this.requests.get(tag);
+    if (!promise) {
+      logger.error(`Received response for unknown request ${tag}`);
+      return;
+    }
     this.requests.delete(tag);
     if (op === Rqueue) this.njobs++;
     if (op === Rcancel || op === Rwait) this.njobs--;
