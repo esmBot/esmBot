@@ -43,7 +43,6 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     top.fontPointsize(56);
     top.read("pango:<span font_family=\"" +
                        (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
                        "\" foreground='white'>" + top_text + "</span>");
     top.extent(Geometry(bottom_text != "" ? to_string(top.columns()) + "x" +
                                                 to_string(top.rows())
@@ -57,7 +56,9 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
       bottom.font("Times");
       bottom.textGravity(Magick::CenterGravity);
       bottom.fontPointsize(28);
-      bottom.read("pango:<span foreground='white'>" + bottom_text + "</span>");
+      bottom.read("pango:<span font_family=\"" +
+                       (font == "roboto" ? "Roboto Condensed" : font) +
+                       "\" foreground='white'>" + top_text + "</span>");
       bottom.extent(Geometry(to_string(bottom.columns()) + "x" +
                              to_string(bottom.rows() + 20)),
                     "black", Magick::NorthGravity);
