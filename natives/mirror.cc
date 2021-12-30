@@ -48,6 +48,7 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
     }
 
     for (Image &image : coalesced) {
+      image.colorSpace(Magick::sRGBColorspace);
       list<Image> mirrored;
       Image final;
       image.extent(Geometry(to_string(vertical ? image.baseColumns()
