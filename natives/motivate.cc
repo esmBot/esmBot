@@ -58,7 +58,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
       bottom.fontPointsize(28);
       bottom.read("pango:<span font_family=\"" +
                        (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" foreground='white'>" + top_text + "</span>");
+                       "\" foreground='white'>" + bottom_text + "</span>");
       bottom.extent(Geometry(to_string(bottom.columns()) + "x" +
                              to_string(bottom.rows() + 20)),
                     "black", Magick::NorthGravity);
