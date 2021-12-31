@@ -9,7 +9,7 @@
     "node": ">=15"
   },
   "scripts": {
-    "build": "node-gyp configure build -j max",
+    "build": "cmake-js compile",
     "docker:build": "docker build -t esmbot -f Dockerfile.bot .",
     "docker:build-api": "docker build -t esmbot-api -f Dockerfile.api .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@top-gg/sdk": "^3.1.1",
+    "cmake-js": "^6.3.0",
     "cowsay2": "^2.0.4",
     "dotenv": "^10.0.0",
     "emoji-regex": "^10.0.0",

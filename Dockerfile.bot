@@ -2,7 +2,7 @@
 FROM node:alpine
 
 RUN apk --no-cache upgrade
-RUN apk add --no-cache git msttcorefonts-installer python3 alpine-sdk ffmpeg \
+RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmpeg \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
     libtool libwebp-dev libxml2-dev pango-dev freetype fontconfig \
 	vips vips-dev
