@@ -6,7 +6,7 @@ file(GLOB SOURCE_FILES "natives/*.cc" "natives/*.h")
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})
-set(CMAKE_CXX_STANDARD 17)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 add_definitions(-DNAPI_CPP_EXCEPTIONS)
 add_definitions(-DNAPI_VERSION=3)
 
