@@ -30,7 +30,7 @@
     "dotenv": "^10.0.0",
     "emoji-regex": "^10.0.0",
     "eris": "^0.16.1",
-    "eris-fleet": "github:esmBot/eris-fleet#development",
+    "eris-fleet": "github:esmBot/eris-fleet#master",
     "file-type": "^16.1.0",
     "format-duration": "^1.4.0",
     "lavacord": "^1.1.9",
