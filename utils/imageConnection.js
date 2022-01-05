@@ -63,7 +63,8 @@ class ImageConnection {
     const op = msg.readUint8(0);
     if (op === Rinit) {
       this.max = msg.readUint16LE(3);
-      this.formats = JSON.parse(msg.toString("utf8", 5));
+      this.njobs = msg.readUint16LE(5);
+      this.formats = JSON.parse(msg.toString("utf8", 7));
       return;
     }
     const tag = msg.readUint16LE(1);

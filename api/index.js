@@ -91,11 +91,13 @@ wss.on("connection", (ws, request) => {
   log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
   const num = Buffer.alloc(2);
   num.writeUInt16LE(MAX_JOBS);
+  const cur = Buffer.alloc(2);
+  cur.writeUInt16LE(jobAmount);
   const formats = {};
   for (const cmd of Object.keys(magick)) {
     formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp"];
   }
-  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00]), num, Buffer.from(JSON.stringify(formats))]);
+  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00]), num, cur, Buffer.from(JSON.stringify(formats))]);
   ws.send(init);
 
   ws.on("error", (err) => {

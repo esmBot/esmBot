@@ -30,7 +30,7 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 - Rcancel tag[2]
 - Twait tag[2] jid[4]
 - Rwait tag[2]
-- Rinit tag[2] max_jobs[2] formats[j]
+- Rinit tag[2] max_jobs[2] running_jobs[2] formats[j]
 
 ### Job Object
 The job object is formatted like this:
