@@ -58,7 +58,7 @@ class ImageWorker extends BaseServiceWorker {
   async chooseServer(ideal) {
     if (ideal.length === 0) throw "No available servers";
     const sorted = ideal.sort((a, b) => {
-      return b.load - a.load;
+      return a.load - b.load;
     }).filter((e, i, array) => {
       return !(e.load < array[0].load);
     });
