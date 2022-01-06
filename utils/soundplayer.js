@@ -78,7 +78,7 @@ export async function play(client, sound, message, music = false) {
   });
 
   if (oldQueue && oldQueue.length !== 0 && music) {
-    return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name : (tracks[0].info.title !== "" ? tracks[0].info.title : "(blank)")}\` has been added to the queue!`;
+    return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name.trim() : (tracks[0].info.title !== "" ? tracks[0].info.title.trim() : "(blank)")}\` has been added to the queue!`;
   } else {
     nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false, player ? player.shuffle : false);
     return;
@@ -101,31 +101,35 @@ export async function nextSong(client, message, connection, track, info, music, 
   if (music && lastTrack === track && players.get(voiceChannel.guild.id)) {
     playingMessage = players.get(voiceChannel.guild.id).playMessage;
   } else {
-    playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
-      embeds: [{
-        color: 16711680,
-        author: {
-          name: "Now Playing",
-          icon_url: client.user.avatarURL
-        },
-        fields: [{
-          name: "ℹ️ Title:",
-          value: info.title !== "" ? info.title : "(blank)"
-        },
-        {
-          name: "🎤 Artist:",
-          value: info.author !== "" ? info.author : "(blank)"
-        },
-        {
-          name: "💬 Channel:",
-          value: voiceChannel.name
-        },
-        {
-          name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          value: `0:00/${info.isStream ? "∞" : format(info.length)}`
+    try {
+      playingMessage = await client.createMessage(message.channel.id, !music ? "🔊 Playing sound..." : {
+        embeds: [{
+          color: 16711680,
+          author: {
+            name: "Now Playing",
+            icon_url: client.user.avatarURL
+          },
+          fields: [{
+            name: "ℹ️ Title:",
+            value: info.title && info.title.trim() !== "" ? info.title : "(blank)"
+          },
+          {
+            name: "🎤 Artist:",
+            value: info.title && info.author.trim() !== "" ? info.author : "(blank)"
+          },
+          {
+            name: "💬 Channel:",
+            value: voiceChannel.name
+          },
+          {
+            name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+            value: `0:00/${info.isStream ? "∞" : format(info.length)}`
+          }]
         }]
-      }]
-    });
+      });
+    } catch {
+      // no-op
+    }
   }
   connection.removeAllListeners("error");
   connection.removeAllListeners("end");
