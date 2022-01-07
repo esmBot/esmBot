@@ -55,7 +55,7 @@ class Shard extends BaseClusterWorker {
     log("info", "Finished loading events.");
 
     // generate docs
-    if (process.env.OUTPUT !== "") {
+    if (process.env.OUTPUT && process.env.OUTPUT !== "") {
       await generateList();
       if (this.clusterID === 0) {
         await createPage(process.env.OUTPUT);
