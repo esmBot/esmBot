@@ -68,7 +68,7 @@ export async function play(client, sound, message, music = false) {
   if (!tracks || tracks.length === 0) return "I couldn't find that song!";
   if (music) {
     const sortedTracks = tracks.map((val) => { return val.track; });
-    const playlistTracks = playlistInfo.selectedTrack !== undefined ? sortedTracks : [sortedTracks[0]];
+    const playlistTracks = playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
   const connection = await manager.join({

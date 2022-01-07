@@ -7,7 +7,7 @@ class PrometheusWorker extends BaseServiceWorker {
   constructor(setup) {
     super(setup);
 
-    if (process.env.METRICS !== "" && process.env.METRICS !== undefined) {
+    if (process.env.METRICS && process.env.METRICS !== "") {
       this.httpServer = createServer(async (req, res) => {
         if (req.method !== "GET") {
           res.statusCode = 405;

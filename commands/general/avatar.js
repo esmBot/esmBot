@@ -2,7 +2,7 @@ import Command from "../../classes/command.js";
 
 class AvatarCommand extends Command {
   async run() {
-    if (this.message.mentions[0] !== undefined) {
+    if (this.message.mentions[0]) {
       return this.message.mentions[0].dynamicAvatarURL(null, 1024);
     } else if (await this.ipc.fetchUser(this.args[0])) {
       const user = await this.ipc.fetchUser(this.args[0]);

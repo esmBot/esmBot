@@ -33,10 +33,10 @@ const Rinit = 0x08;
 
 const start = process.hrtime();
 const log = (msg, jobNum) => {
-  console.log(`[${process.hrtime(start)[1] / 1000000}${jobNum !== undefined ? `:${jobNum}` : ""}]\t ${msg}`);
+  console.log(`[${process.hrtime(start)[1] / 1000000}${jobNum ? `:${jobNum}` : ""}]\t ${msg}`);
 };
 const error = (msg, jobNum) => {
-  console.error(`[${process.hrtime(start)[1] / 1000000}${jobNum !== undefined ? `:${jobNum}` : ""}]\t ${msg}`);
+  console.error(`[${process.hrtime(start)[1] / 1000000}${jobNum ? `:${jobNum}` : ""}]\t ${msg}`);
 };
 
 class JobCache extends Map {
@@ -53,8 +53,8 @@ const jobs = new JobCache();
 const queue = [];
 // Array of IDs
 
-const MAX_JOBS = process.env.JOBS !== "" && process.env.JOBS !== undefined ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
-const PASS = process.env.PASS !== "" && process.env.PASS !== undefined ? process.env.PASS : undefined;
+const MAX_JOBS = process.env.JOBS && process.env.JOBS !== "" ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+const PASS = process.env.PASS && process.env.PASS !== "" ? process.env.PASS : undefined;
 let jobAmount = 0;
 
 const acceptJob = (id, sock) => {

@@ -1,6 +1,12 @@
 if (process.platform === "win32") console.error("\x1b[1m\x1b[31m\x1b[40m" + `WIN32 IS NOT OFFICIALLY SUPPORTED!
 Although there's a (very) slim chance of it working, multiple aspects of the bot are built with UNIX-like systems in mind and could break on Win32-based systems. If you want to run the bot on Windows, using Windows Subsystem for Linux is highly recommended.
 The bot will continue to run past this message, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` + "\x1b[0m");
+if (process.versions.node.split(".")[0] < 15) {
+  console.error(`You are currently running Node.js version ${process.version}.
+esmBot requires Node.js version 15 or above.
+Please refer to step 3 of the setup guide.`);
+  process.exit(1);
+}
 
 // load config from .env file
 import { config } from "dotenv";
@@ -55,6 +61,7 @@ const Admiral = new Fleet({
   BotWorker: Shard,
   token: `Bot ${process.env.TOKEN}`,
   fetchTimeout: 900000,
+  useCentralRequestHandler: true,
   startingStatus: {
     status: "idle",
     game: {

@@ -44,8 +44,8 @@ export async function removeTag(name, guild) {
 
 export async function disableCommand(guild, command) {
   const guildDB = await this.getGuild(guild);
-  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => v !== undefined), guild]);
-  disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => v !== undefined));
+  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v), guild]);
+  disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
 }
 
 export async function enableCommand(guild, command) {
