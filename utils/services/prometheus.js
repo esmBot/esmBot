@@ -21,7 +21,7 @@ class PrometheusWorker extends BaseServiceWorker {
 # TYPE esmbot_shard_count gauge
 `);
         if (process.env.API === "true") {
-          const servers = await this.ipc.command("image", { type: "stats" }, true);
+          const servers = await this.ipc.serviceCommand("image", { type: "stats" }, true);
           res.write(`# HELP esmbot_connected_workers Number of workers connected
 # TYPE esmbot_connected_workers gauge
 esmbot_connected_workers ${servers.length}

@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 class ImageStatsCommand extends Command {
   async run() {
     await this.client.sendChannelTyping(this.message.channel.id);
-    const servers = await this.ipc.command("image", { type: "stats" }, true);
+    const servers = await this.ipc.serviceCommand("image", { type: "stats" }, true);
     const embed = {
       embeds: [{
         "author": {
