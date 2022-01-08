@@ -26,9 +26,11 @@ export async function clean(text) {
   const { parsed } = config();
   const imageServers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
 
-  for (const { server, auth } of imageServers) {
-    text = text.replaceAll(server, optionalReplace(server));
-    text = text.replaceAll(auth, optionalReplace(auth));
+  if (imageServers && imageServers.length !== 0) {
+    for (const { server, auth } of imageServers) {
+      text = text.replaceAll(server, optionalReplace(server));
+      text = text.replaceAll(auth, optionalReplace(auth));
+    }
   }
 
   for (const env of Object.keys(parsed)) {
