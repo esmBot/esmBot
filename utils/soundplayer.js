@@ -59,11 +59,23 @@ export async function play(client, sound, message, music = false) {
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
   const player = players.get(message.channel.guild.id);
   if (!music && manager.voiceStates.has(message.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
-  const node = manager.idealNodes[0];
+  let node = manager.idealNodes[0];
+  if (!node) {
+    const status = await checkStatus();
+    if (!status) {
+      await connect(client);
+      node = manager.idealNodes[0];
+    }
+  }
   if (!music && !nodes.filter(obj => obj.host === node.host)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }
-  const { tracks, playlistInfo } = await Rest.load(node, sound);
+  let tracks, playlistInfo;
+  try {
+    ({ tracks, playlistInfo } = await Rest.load(node, sound));
+  } catch {
+    return "🔊 Hmmm, seems that all of the audio servers are down. Try again in a bit.";
+  }
   const oldQueue = queues.get(voiceChannel.guild.id);
   if (!tracks || tracks.length === 0) return "I couldn't find that song!";
   if (music) {
@@ -144,12 +156,17 @@ export async function nextSong(client, message, connection, track, info, music, 
     } catch {
       // no-op
     }
-    await manager.leave(voiceChannel.guild.id);
+    try {
+      await manager.leave(voiceChannel.guild.id);
+      await connection.destroy();
+    } catch {
+      // no-op
+    }
     connection.removeAllListeners("end");
-    await connection.destroy();
     players.delete(voiceChannel.guild.id);
     queues.delete(voiceChannel.guild.id);
     logger.error(error);
+    await client.createMessage(message.channel.id, `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${error.type}: ${error.error}\`\`\``);
   });
   connection.on("end", async (data) => {
     if (data.reason === "REPLACED") return;

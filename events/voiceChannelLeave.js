@@ -21,9 +21,13 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           } catch {
             // no-op
           }
-          await connection.player.stop(connection.originalChannel.guild.id);
-          await manager.leave(connection.originalChannel.guild.id);
-          await connection.player.destroy();
+          try {
+            await connection.player.stop(connection.originalChannel.guild.id);
+            await manager.leave(connection.originalChannel.guild.id);
+            await connection.player.destroy();
+          } catch {
+            // no-op
+          }
           players.delete(connection.originalChannel.guild.id);
           queues.delete(connection.originalChannel.guild.id);
           skipVotes.delete(connection.originalChannel.guild.id);
@@ -48,9 +52,13 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             } catch {
               // no-op
             }
-            await connection.player.stop(connection.originalChannel.guild.id);
-            await manager.leave(connection.originalChannel.guild.id);
-            await connection.player.destroy();
+            try {
+              await connection.player.stop(connection.originalChannel.guild.id);
+              await manager.leave(connection.originalChannel.guild.id);
+              await connection.player.destroy();
+            } catch {
+              // no-op
+            }
             players.delete(connection.originalChannel.guild.id);
             queues.delete(connection.originalChannel.guild.id);
             skipVotes.delete(connection.originalChannel.guild.id);
@@ -63,9 +71,13 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
         }
       });
     } else if (member.id === client.user.id) {
-      await connection.player.stop(connection.originalChannel.guild.id);
-      await manager.leave(connection.originalChannel.guild.id);
-      await connection.player.destroy();
+      try {
+        await connection.player.stop(connection.originalChannel.guild.id);
+        await manager.leave(connection.originalChannel.guild.id);
+        await connection.player.destroy();
+      } catch {
+        // no-op
+      }
       players.delete(connection.originalChannel.guild.id);
       queues.delete(connection.originalChannel.guild.id);
       skipVotes.delete(connection.originalChannel.guild.id);
