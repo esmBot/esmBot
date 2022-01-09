@@ -5,7 +5,14 @@ RUN apk --no-cache upgrade
 RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmpeg \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
     libtool libwebp-dev libxml2-dev pango-dev freetype fontconfig \
-	vips vips-dev
+        vips vips-dev curl rpm2cpio
+
+# install Twemoji font from rpm package
+RUN mkdir twemoji \
+    && cd twemoji \
+    && curl -o twemoji.rpm https://kojipkgs.fedoraproject.org//packages/twitter-twemoji-fonts/13.1.0/2.fc35/noarch/twitter-twemoji-fonts-13.1.0-2.fc35.noarch.rpm \
+    && rpm2cpio twemoji.rpm | cpio -ivd \
+    && cp ./usr/share/fonts/twemoji/Twemoji.ttf /usr/share/fonts/Twemoji.ttf
 
 # liblqr needs to be built manually for magick to work
 # and because alpine doesn't have it in their repos
