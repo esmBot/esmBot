@@ -10,6 +10,9 @@ class ServerInfoCommand extends Command {
         thumbnail: {
           url: this.message.channel.guild.iconURL
         },
+        image: {
+          url: this.message.channel.guild.bannerURL
+        },
         color: 16711680,
         fields: [
           {
@@ -21,24 +24,23 @@ class ServerInfoCommand extends Command {
             value: owner ? `${owner.user.username}#${owner.user.discriminator}` : this.message.channel.guild.ownerID
           },
           {
-            name: "🗺 **Region:**",
-            value: this.message.channel.guild.region
-          },
-          {
             name: "🗓 **Created on:**",
             value: `<t:${Math.floor(this.message.channel.guild.createdAt / 1000)}:F>`
           },
           {
             name: "👥 **Users:**",
-            value: this.message.channel.guild.memberCount
+            value: this.message.channel.guild.memberCount,
+            inline: true
           },
           {
             name: "💬 **Channels:**",
-            value: this.message.channel.guild.channels.size
+            value: this.message.channel.guild.channels.size,
+            inline: true
           },
           {
             name: "😃 **Emojis:**",
-            value: this.message.channel.guild.emojis.length
+            value: this.message.channel.guild.emojis.length,
+            inline: true
           }
         ]
       }]

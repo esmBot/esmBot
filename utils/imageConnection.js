@@ -90,7 +90,7 @@ class ImageConnection {
 
   async onClose() {
     for (const promise of this.requests.values()) {
-      promise.reject(new Error("Request ended prematurely due to a closed connection"));
+      promise.reject("Request ended prematurely due to a closed connection");
     }
     this.requests.clear();
     if (!this.disconnected) {
