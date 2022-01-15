@@ -109,7 +109,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
       } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
         type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
       // finally we check both possible image fields for "generic" embeds
-      } else if (message.embeds[0].type === "rich") {
+      } else if (message.embeds[0].type === "rich" || message.embeds[0].type === "article") {
         if (message.embeds[0].thumbnail) {
           type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
         } else if (message.embeds[0].image) {

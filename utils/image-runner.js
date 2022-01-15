@@ -43,7 +43,6 @@ if (!isMainThread) {
     .then(returnObject => {
       parentPort.postMessage(returnObject);
       process.exit();
-      return;
     })
     .catch(err => {
       // turn promise rejection into normal error
