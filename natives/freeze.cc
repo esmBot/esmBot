@@ -25,8 +25,8 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     Napi::Object result = Napi::Object::New(env);
 
     char *fileData = data.Data();
-    char *match = "\x21\xFF\x0BNETSCAPE2.0\x03\x01";
-    char *descriptor = "\x2C\x00\x00\x00\x00";
+    char *match = (char *)"\x21\xFF\x0BNETSCAPE2.0\x03\x01";
+    char *descriptor = (char *)"\x2C\x00\x00\x00\x00";
     char *lastPos;
 
     bool none = true;

@@ -32,7 +32,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
     char *fileData = data.Data();
 
-    char *match = "\x00\x21\xF9\x04";
+    char *match = (char *)"\x00\x21\xF9\x04";
 
     // if passed a delay, use that. otherwise iterate over every frame.
     if (delay == 0) {
@@ -98,9 +98,8 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
         }
 
         for (int i = 0; i < speed - 1; ++i) {
-          frames.remove_if([counter = 0](const auto x) mutable {
-            return ++counter % 2 == 0;
-          });
+          auto it = frames.begin();
+          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
         }
 
         for_each(frames.begin(), frames.end(), magickImage(type));
@@ -142,9 +141,8 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
         }
 
         for (int i = 0; i < speed - 1; ++i) {
-          frames.remove_if([counter = 0](const auto x) mutable {
-            return ++counter % 2 == 0;
-          });
+          auto it = frames.begin();
+          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
         }
 
         for_each(frames.begin(), frames.end(), magickImage(type));

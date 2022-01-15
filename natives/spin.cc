@@ -43,7 +43,7 @@ Napi::Value Spin(const Napi::CallbackInfo &info) {
       image.virtualPixelMethod(Magick::TransparentVirtualPixelMethod);
       image.scale(Geometry("256x256"));
       image.alphaChannel(Magick::SetAlphaChannel);
-      double rotation[1] = {360 * i / coalesced.size()};
+      double rotation[1] = {(double)360 * i / coalesced.size()};
       image.distort(Magick::ScaleRotateTranslateDistortion, 1, rotation);
       image.magick("GIF");
       mid.push_back(image);
