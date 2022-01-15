@@ -13,7 +13,7 @@ class RemoveCommand extends MusicCommand {
     const removed = this.queue.splice(pos, 1);
     const track = await Rest.decode(this.connection.player.node, removed[0]);
     queues.set(this.message.channel.guild.id, this.queue);
-    return `🔊 The song \`${track.title !== "" ? track.title : "(blank)"}\` has been removed from the queue.`;
+    return `🔊 The song \`${track.title ? track.title : "(blank)"}\` has been removed from the queue.`;
   }
 
   static description = "Removes a song from the queue";

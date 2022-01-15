@@ -53,8 +53,8 @@ const jobs = new JobCache();
 const queue = [];
 // Array of IDs
 
-const MAX_JOBS = process.env.JOBS && process.env.JOBS !== "" ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
-const PASS = process.env.PASS && process.env.PASS !== "" ? process.env.PASS : undefined;
+const MAX_JOBS = process.env.JOBS ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
 
 const acceptJob = (id, sock) => {

@@ -6,7 +6,7 @@ class UserInfoCommand extends Command {
     let user;
     if (getUser) {
       user = getUser;
-    } else if (this.args[0].match(/^<?[@#]?[&!]?\d+>?$/) && this.args[0] >= 21154535154122752) {
+    } else if (this.args[0].match(/^<?[@#]?[&!]?\d+>?$/) && this.args[0] >= 21154535154122752n) {
       try {
         user = await this.client.getRESTUser(this.args[0]);
       } catch {
@@ -17,7 +17,7 @@ class UserInfoCommand extends Command {
       const member = this.client.users.find(element => {
         return userRegex.test(element.username);
       });
-      user = member ? member : this.message.author;
+      user = member ?? this.message.author;
     } else {
       user = this.message.author;
     }
@@ -36,7 +36,7 @@ class UserInfoCommand extends Command {
           },
           {
             name: "📛 **Nickname:**",
-            value: member ? (member.nick ? member.nick : "None") : "N/A"
+            value: member ? (member.nick ?? "None") : "N/A"
           },
           {
             name: "🤖 **Bot:**",

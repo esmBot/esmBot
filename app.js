@@ -27,7 +27,7 @@ import { promisify } from "util";
 const exec = promisify(baseExec);
 // dbl posting
 import { Api } from "@top-gg/sdk";
-const dbl = process.env.NODE_ENV === "production" && process.env.DBL !== "" ? new Api(process.env.DBL) : null;
+const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
 
 if (isMaster) {
   const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;

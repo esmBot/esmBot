@@ -67,7 +67,7 @@ class ImageCommand extends Command {
         magickParams.path = image.path;
         magickParams.params.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
-        magickParams.params.delay = image.delay ? image.delay : 0;
+        magickParams.params.delay = image.delay ?? 0;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.message.author.id);

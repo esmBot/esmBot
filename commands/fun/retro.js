@@ -7,8 +7,8 @@ class RetroCommand extends ImageCommand {
     if (!line2 && line1.length > 15) {
       const [split1, split2, split3] = wrap(line1, { width: 15, indent: "" }).split("\n");
       line1 = split1;
-      line2 = split2 ? split2 : "";
-      line3 = split3 ? split3 : "";
+      line2 = split2 ?? "";
+      line3 = split3 ?? "";
     } else {
       if (!line2) {
         line2 = "";

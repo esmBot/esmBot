@@ -72,16 +72,16 @@ export default async (client, cluster, worker, ipc, message) => {
 
     const disabledCmds = disabledCmdCache.get(message.channel.guild.id);
     if (disabledCmds) {
-      if (disabledCmds.includes(aliased ? aliased : command)) return;
+      if (disabledCmds.includes(aliased ?? command)) return;
     } else {
       guildDB = await database.getGuild(message.channel.guild.id);
-      disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands);
-      if ((guildDB.disabled_commands ? guildDB.disabled_commands : guildDB.disabledCommands).includes(aliased ? aliased : command)) return;
+      disabledCmdCache.set(message.channel.guild.id, guildDB.disabled_commands ?? guildDB.disabledCommands);
+      if ((guildDB.disabled_commands ?? guildDB.disabledCommands).includes(aliased ?? command)) return;
     }
   }
 
   // check if command exists and if it's enabled
-  const cmd = aliased ? commands.get(aliased) : commands.get(command);
+  const cmd = commands.get(aliased ?? command);
   if (!cmd) return;
 
   // actually run the command
@@ -98,7 +98,7 @@ export default async (client, cluster, worker, ipc, message) => {
     }
   };
   try {
-    await database.addCount(aliases.has(command) ? aliases.get(command) : command);
+    await database.addCount(aliases.get(command) ?? command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
@@ -128,7 +128,7 @@ export default async (client, cluster, worker, ipc, message) => {
         if (process.env.TEMPDIR !== "") {
           const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
           await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-          const imageURL = `${process.env.TMP_DOMAIN == "" ? "https://tmp.projectlounge.pw" : process.env.TMP_DOMAIN}/${filename}`;
+          const imageURL = `${process.env.TMP_DOMAIN !== "" ? process.env.TMP_DOMAIN : "https://tmp.projectlounge.pw"}/${filename}`;
           await client.createMessage(message.channel.id, Object.assign({
             embeds: [{
               color: 16711680,

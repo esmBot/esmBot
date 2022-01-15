@@ -77,17 +77,22 @@ export default async (client, message, pages, timeout = 120000) => {
       if (member === message.author.id) {
         switch (interaction) {
           case "back":
-            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            await fetch(`https://discord.com/api/v9/interactions/${id}/${token}/callback`, ackOptions);
             page = page > 0 ? --page : pages.length - 1;
             currentPage = await currentPage.edit(Object.assign(pages[page], options));
             break;
           case "forward":
-            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            await fetch(`https://discord.com/api/v9/interactions/${id}/${token}/callback`, ackOptions);
             page = page + 1 < pages.length ? ++page : 0;
             currentPage = await currentPage.edit(Object.assign(pages[page], options));
             break;
           case "jump":
-            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            await fetch(`https://discord.com/api/v9/interactions/${id}/${token}/callback`, ackOptions);
+            const newComponents = JSON.parse(JSON.stringify(components));
+            for (const index of newComponents.components[0].components.keys()) {
+              newComponents.components[0].components[index].disabled = true;
+            }
+            currentPage = await currentPage.edit(newComponents);
             client.createMessage(message.channel.id, Object.assign({ content: "What page do you want to jump to?" }, {
               messageReference: {
                 channelID: currentPage.channel.id,
@@ -107,14 +112,14 @@ export default async (client, message, pages, timeout = 120000) => {
                 if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
                 if (manageMessages) await response.delete();
                 page = Number(response.content) - 1;
-                currentPage = await currentPage.edit(Object.assign(pages[page], options));
+                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
               });
             }).catch(error => {
               throw error;
             });
             break;
           case "delete":
-            await fetch(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, ackOptions);
+            await fetch(`https://discord.com/api/v9/interactions/${id}/${token}/callback`, ackOptions);
             interactionCollector.emit("end");
             if (await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) await currentPage.delete();
             return;
@@ -123,8 +128,14 @@ export default async (client, message, pages, timeout = 120000) => {
         }
       }
     });
-    interactionCollector.once("end", () => {
+    interactionCollector.once("end", async () => {
       interactionCollector.removeAllListeners("interaction");
+      if (await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) {
+        for (const index of components.components[0].components.keys()) {
+          components.components[0].components[index].disabled = true;
+        }
+        await currentPage.edit(components);
+      }
     });
   }
 };

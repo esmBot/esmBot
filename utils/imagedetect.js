@@ -59,6 +59,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
             }
           }
           const json = await data.json();
+          if (json.error) throw Error(json.error);
           payload.path = json.results[0].media[0].gif.url;
         } else {
           const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${image}`)).stdout.replace("\n", "");
@@ -121,7 +122,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
     }
   }
   // if the return value exists then return it
-  return type ? type : false;
+  return type ?? false;
 };
 
 // this checks for the latest message containing an image and returns the url of the image
