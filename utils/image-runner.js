@@ -9,13 +9,13 @@ const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG ==
 function run(object) {
   return new Promise((resolve, reject) => {
     // If the image has a path, it must also have a type
-    let promise = new Promise((resolveTest) => { resolveTest(); }); // no-op
+    let promise = Promise.resolve();
     if (object.path) {
       if (object.params.type !== "image/gif" && object.onlyGIF) resolve({
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      promise = fetch(object.path).then(res => res.arrayBuffer()).then(buf => { return Buffer.from(buf); });
+      promise = fetch(object.path).then(res => res.arrayBuffer()).then(buf => Buffer.from(buf));
     }
     // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.
