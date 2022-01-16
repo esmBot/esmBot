@@ -128,7 +128,7 @@ export default async (client, cluster, worker, ipc, message) => {
         if (process.env.TEMPDIR !== "") {
           const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
           await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-          const imageURL = `${process.env.TMP_DOMAIN !== "" ? process.env.TMP_DOMAIN : "https://tmp.projectlounge.pw"}/${filename}`;
+          const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
           await client.createMessage(message.channel.id, Object.assign({
             embeds: [{
               color: 16711680,

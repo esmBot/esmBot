@@ -135,7 +135,7 @@ class ImageConnection {
   async getOutput(jobid) {
     const req = await fetch(`${this.httpurl}?id=${jobid}`, {
       headers: {
-        "Authentication": this.auth ? this.auth : undefined
+        "Authentication": this.auth || undefined
       }
     });
     const contentType = req.headers.get("Content-Type");
