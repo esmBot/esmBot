@@ -42,15 +42,17 @@ class ImageWorker extends BaseServiceWorker {
 
   async getRunning() {
     const statuses = [];
-    for (const [address, connection] of this.connections) {
-      if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
-        continue;
+    if (process.env.API === "true") {
+      for (const [address, connection] of this.connections) {
+        if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
+          continue;
+        }
+        statuses.push({
+          address,
+          runningJobs: connection.njobs,
+          max: connection.max
+        });
       }
-      statuses.push({
-        address,
-        runningJobs: connection.njobs,
-        max: connection.max
-      });
     }
     return statuses;
   }
