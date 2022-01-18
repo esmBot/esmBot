@@ -92,16 +92,16 @@ export async function play(client, sound, message, music = false) {
   if (oldQueue && oldQueue.length !== 0 && music) {
     return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name.trim() : (tracks[0].info.title !== "" ? tracks[0].info.title.trim() : "(blank)")}\` has been added to the queue!`;
   } else {
-    nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.loop : false, player ? player.shuffle : false);
+    nextSong(client, message, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.host : message.author.id, player ? player.loop : false, player ? player.shuffle : false);
     return;
   }
 }
 
-export async function nextSong(client, message, connection, track, info, music, voiceChannel, loop = false, shuffle = false, lastTrack = null) {
+export async function nextSong(client, message, connection, track, info, music, voiceChannel, host, loop = false, shuffle = false, lastTrack = null) {
   skipVotes.delete(voiceChannel.guild.id);
   const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
-  if (!music && players.get(voiceChannel.guild.id)) {
+  if (!music && players.has(voiceChannel.guild.id)) {
     const playMessage = players.get(voiceChannel.guild.id).playMessage;
     try {
       players.delete(voiceChannel.guild.id);
@@ -110,7 +110,7 @@ export async function nextSong(client, message, connection, track, info, music, 
       // no-op
     }
   }
-  if (music && lastTrack === track && players.get(voiceChannel.guild.id)) {
+  if (music && lastTrack === track && players.has(voiceChannel.guild.id)) {
     playingMessage = players.get(voiceChannel.guild.id).playMessage;
   } else {
     try {
@@ -147,7 +147,7 @@ export async function nextSong(client, message, connection, track, info, music, 
   connection.removeAllListeners("end");
   await connection.play(track);
   await connection.volume(75);
-  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: message.author.id, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
+  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
   connection.once("error", async (error) => {
     try {
       if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
@@ -194,7 +194,7 @@ export async function nextSong(client, message, connection, track, info, music, 
     queues.set(voiceChannel.guild.id, newQueue);
     if (newQueue.length !== 0) {
       const newTrack = await Rest.decode(connection.node, newQueue[0]);
-      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, player.loop, player.shuffle, track);
+      nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, host, player.loop, player.shuffle, track);
       try {
         if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
         if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
