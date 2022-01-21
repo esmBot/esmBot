@@ -53,8 +53,8 @@ jobs:
         # Used to pull node distributions from node-versions.  Since there's a default, this is typically not supplied by the user.
         #token: # optional, default is ${{ github.token }}
         
-    - run: sudo apt-get update && sudo apt-get install -y git gcc g++ libjpeg-dev libwebp-dev libpango1.0 libpango1.0-dev ffmpeg
-    - run: git clone https://github.com/ImageMagick/ImageMagick && cd ImageMagick && ./configure && make -j`nproc` && sudo make install && sudo ldconfig /usr/local/lib
+    # - run: sudo apt-get update && sudo apt-get install -y git gcc g++ libjpeg-dev libwebp-dev libpango1.0 libpango1.0-dev ffmpeg
+    # - run: git clone https://github.com/ImageMagick/ImageMagick && cd ImageMagick && ./configure && make -j`nproc` && sudo make install && sudo ldconfig /usr/local/lib
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

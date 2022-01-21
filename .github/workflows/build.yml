@@ -1,0 +1,47 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.2
+    - name: Install ImageMagick # necessary because ubuntu doesn't include IM7 in its repository
+      run: git clone https://github.com/SoftCreatR/imei ~/imei && cd ~/imei && sudo chmod +x imei.sh && sudo ./imei.sh
+    - name: Build
+      run: npm install && npm run build
+
+  win32:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.2
+    - name: Install ImageMagick
+      run: choco install imagemagick -PackageParameters InstallDevelopmentHeaders=true
+    - name: Build
+      run: npm install && npm run build
+
+  darwin:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.2
+    - name: Install ImageMagick
+      run: brew install imagemagick
+    - name: Build
+      run: npm install && npm run build
