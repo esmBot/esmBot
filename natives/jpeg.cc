@@ -13,6 +13,8 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
+    int quality =
+        obj.Has("quality") ? obj.Get("quality").As<Napi::Number>().Int32Value() : 0;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -36,7 +38,7 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
 
       for (Image &image : coalesced) {
         Blob temp;
-        image.quality(1);
+        image.quality(quality);
         image.magick("JPEG");
         image.write(&temp);
         Image newImage(temp);

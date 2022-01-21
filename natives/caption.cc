@@ -37,7 +37,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     Image caption_image(Geometry(query), Color("white"));
     caption_image.fillColor("black");
     caption_image.alpha(true);
-    caption_image.fontPointsize(width / 13);
+    caption_image.fontPointsize((double)width / 13);
     caption_image.textGravity(Magick::CenterGravity);
     caption_image.read("pango:<span font_family=\"" +
                        (font == "roboto" ? "Roboto Condensed" : font) +
