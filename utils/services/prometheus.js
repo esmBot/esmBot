@@ -7,6 +7,8 @@ class PrometheusWorker extends BaseServiceWorker {
   constructor(setup) {
     super(setup);
 
+    console.info = (str) => this.ipc.sendToAdmiral("info", str);
+
     if (process.env.METRICS && process.env.METRICS !== "") {
       this.httpServer = createServer(async (req, res) => {
         if (req.method !== "GET") {

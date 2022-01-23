@@ -26,6 +26,7 @@ class Shard extends BaseClusterWorker {
   constructor(bot) {
     super(bot);
 
+    console.info = (str) => this.ipc.sendToAdmiral("info", str);
     this.init();
   }
 

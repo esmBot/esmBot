@@ -11,6 +11,8 @@ class ImageWorker extends BaseServiceWorker {
   constructor(setup) {
     super(setup);
 
+    console.info = (str) => this.ipc.sendToAdmiral("info", str);
+
     if (process.env.API === "true") {
       this.jobs = {};
       this.connections = new Map();
