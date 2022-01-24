@@ -125,7 +125,7 @@ class Shard extends BaseClusterWorker {
     for (const dirent of dirents) {
       if (dirent.isDirectory()) {
         yield* this.getFiles(dir + dirent.name);
-      } else {
+      } else if (dirent.name.endsWith(".js")) {
         yield dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
       }
     }
