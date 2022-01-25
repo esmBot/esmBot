@@ -7,8 +7,8 @@ add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
-if(MSVC)
-set(CMAKE_CXX_FLAGS "/Wall /EHsc /GS") # idk anything about msvc
+if(MSVC) # todo: change flags for parity with GCC/clang, I don't know much about MSVC and these arguments cause the build to fail so pull requests are open
+#set(CMAKE_CXX_FLAGS "/Wall /EHsc /GS")
 set(CMAKE_CXX_FLAGS_DEBUG "/Zi")
 else()
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror=format-security -Wno-cast-function-type -fexceptions -D_GLIBCXX_ASSERTIONS -fstack-clash-protection -pedantic -D_GLIBCXX_USE_CXX11_ABI=1")
