@@ -1,5 +1,5 @@
 # esmBot Image API
-The esmBot image API is a combined HTTP and WebSocket API. 3762 is the default port to access the API. The API supports very basic authentication, which is defined on the server via the PASS environment variable and is sent from the client via the Authentication header in both HTTP and WS requests.
+The esmBot image API is a combined HTTP and WebSocket API. The default port to access the API is 3762. The API supports very basic authentication, which is defined on the server via the PASS environment variable and is sent from the client via the Authentication header in both HTTP and WS requests.
 
 ## HTTP
 

@@ -87,8 +87,7 @@ const Admiral = new Fleet({
       INVITE_CREATE: true,
       INVITE_DELETE: true,
       THREAD_UPDATE: true,
-      THREAD_DELETE: true,
-      THREAD_LIST_SYNC: true
+      THREAD_DELETE: true
     },
     allowedMentions: {
       everyone: false,
