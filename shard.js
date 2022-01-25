@@ -45,12 +45,12 @@ class Shard extends BaseClusterWorker {
     log("info", "Finished loading commands.");
 
     // register events
-    const events = await readdir("./events/");
-    log("info", `Attempting to load ${events.length} events...`);
-    for (const file of events) {
+    log("info", `Attempting to load events...`);
+    for await (const file of this.getFiles("./events/")) {
       log("log", `Loading event from ${file}...`);
-      const eventName = file.split(".")[0];
-      const { default: event } = await import(`./events/${file}`);
+      const eventArray = file.split("/");
+      const eventName = eventArray[eventArray.length - 1].split(".")[0];
+      const { default: event } = await import(`./${file}`);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
     log("info", "Finished loading events.");
