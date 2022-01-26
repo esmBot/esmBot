@@ -7,7 +7,7 @@ class DamnDanielCommand extends MusicCommand {
     }
 
     static description = "Plays the \"damn daniel\" sound effect";
-    static aliases = ["daniel"];
+    static aliases = ["daniel", "damn"];
 }
 
 export default DamnDanielCommand;
