@@ -14,7 +14,7 @@ class FreezeCommand extends ImageCommand {
   static arguments = ["{end frame number}"];
 
   static requiresGIF = true;
-  static noImage = "You need to provide an image to freeze!";
+  static noImage = "You need to provide an image/GIF to freeze!";
   static command = "freeze";
 }
 

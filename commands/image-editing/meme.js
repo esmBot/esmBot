@@ -25,7 +25,7 @@ class MemeCommand extends ImageCommand {
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a meme!";
-  static noImage = "You need to provide an image to generate a meme!";
+  static noImage = "You need to provide an image/GIF to generate a meme!";
   static command = "meme";
 }
 

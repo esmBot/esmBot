@@ -10,7 +10,7 @@ class FunkyCommand extends ImageCommand {
   static description = "Adds the New Funky Mode banner to an image";
   static aliases = ["funkymode", "newfunkymode", "funkykong"];
 
-  static noImage = "You need to provide an image to add a New Funky Mode banner!";
+  static noImage = "You need to provide an image/GIF to add a New Funky Mode banner!";
   static command = "watermark";
 }
 

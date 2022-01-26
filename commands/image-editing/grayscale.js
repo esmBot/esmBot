@@ -9,7 +9,7 @@ class GrayscaleCommand extends ImageCommand {
 
   static description = "Adds a grayscale filter";
 
-  static noImage = "You need to provide an image to turn grayscale!";
+  static noImage = "You need to provide an image/GIF to turn grayscale!";
   static command = "colors";
   static aliases = ["gray", "greyscale", "grey"];
 }

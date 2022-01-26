@@ -125,7 +125,7 @@ class ImageCommand extends Command {
   static requiresImage = true;
   static requiresText = false;
   static requiresGIF = false;
-  static noImage = "You need to provide an image!";
+  static noImage = "You need to provide an image/GIF!";
   static noText = "You need to provide some text!";
   static command = "";
 }

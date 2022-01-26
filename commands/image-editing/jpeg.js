@@ -12,7 +12,7 @@ class JPEGCommand extends ImageCommand {
   static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg", "quality"];
   static arguments = ["{quality}"];
 
-  static noImage = "You need to provide an image to add more JPEG!";
+  static noImage = "You need to provide an image/GIF to add more JPEG!";
   static command = "jpeg";
 }
 

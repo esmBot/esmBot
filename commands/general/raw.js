@@ -5,7 +5,7 @@ class RawCommand extends Command {
   async run() {
     this.client.sendChannelTyping(this.message.channel.id);
     const image = await imageDetect(this.client, this.message);
-    if (image === undefined) return "You need to provide an image to get a raw URL!";
+    if (image === undefined) return "You need to provide an image/GIF to get a raw URL!";
     return image.path;
   }
 

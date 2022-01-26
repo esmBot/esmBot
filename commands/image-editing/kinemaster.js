@@ -10,7 +10,7 @@ class KineMasterCommand extends ImageCommand {
   static description = "Adds the KineMaster watermark to an image";
   static aliases = ["kine"];
 
-  static noImage = "You need to provide an image to add a KineMaster watermark!";
+  static noImage = "You need to provide an image/GIF to add a KineMaster watermark!";
   static command = "watermark";
 }
 

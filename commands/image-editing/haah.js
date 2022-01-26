@@ -8,7 +8,7 @@ class HaaHCommand extends ImageCommand {
   static description = "Mirrors the left side of an image onto the right";
   static aliases = ["magik4", "mirror2"];
 
-  static noImage = "You need to provide an image to mirror!";
+  static noImage = "You need to provide an image/GIF to mirror!";
   static command = "mirror";
 }
 

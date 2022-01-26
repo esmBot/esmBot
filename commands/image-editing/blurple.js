@@ -14,7 +14,7 @@ class BlurpleCommand extends ImageCommand {
     description: "Use the old blurple color"
   }];
 
-  static noImage = "You need to provide an image to make blurple!";
+  static noImage = "You need to provide an image/GIF to make blurple!";
   static command = "colors";
   static aliases = ["blurp"];
 }

@@ -23,7 +23,7 @@ class MotivateCommand extends ImageCommand {
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a motivational poster!";
-  static noImage = "You need to provide an image to generate a motivational poster!";
+  static noImage = "You need to provide an image/GIF to generate a motivational poster!";
   static command = "motivate";
 }
 

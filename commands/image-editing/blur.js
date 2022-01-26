@@ -7,7 +7,7 @@ class BlurCommand extends ImageCommand {
 
   static description = "Blurs an image";
 
-  static noImage = "You need to provide an image to blur!";
+  static noImage = "You need to provide an image/GIF to blur!";
   static command = "blur";
 }
 

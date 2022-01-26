@@ -9,7 +9,7 @@ class SepiaCommand extends ImageCommand {
 
   static description = "Adds a sepia filter";
 
-  static noImage = "You need to provide an image to add a sepia filter!";
+  static noImage = "You need to provide an image/GIF to add a sepia filter!";
   static command = "colors";
 }
 

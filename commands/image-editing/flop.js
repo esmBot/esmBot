@@ -8,7 +8,7 @@ class FlopCommand extends ImageCommand {
   static description = "Flips an image";
   static aliases = ["flip2"];
 
-  static noImage = "You need to provide an image to flop!";
+  static noImage = "You need to provide an image/GIF to flop!";
   static command = "flip";
 }
 

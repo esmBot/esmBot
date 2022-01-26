@@ -37,7 +37,7 @@ class FlagCommand extends ImageCommand {
 
   static requiresText = true;
   static noText = "You need to provide an emoji of a flag to overlay!";
-  static noImage = "You need to provide an image to overlay a flag onto!";
+  static noImage = "You need to provide an image/GIF to overlay a flag onto!";
   static command = "flag";
 }
 
