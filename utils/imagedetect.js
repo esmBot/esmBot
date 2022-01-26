@@ -67,7 +67,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
         }
       } else if (giphyURLs.includes(host)) {
         // Can result in an HTML page instead of a GIF
-        payload.path = `https://media0.giphy.com/media/${image2.split("-").pop()}/giphy.gif`;
+        payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.gif`;
       } else if (giphyMediaURLs.includes(host)) {
         payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
       } else if (imgurURLs.includes(host)) {

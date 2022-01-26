@@ -87,7 +87,7 @@ export async function play(client, sound, message, music = false) {
     guild: voiceChannel.guild.id,
     channel: voiceChannel.id,
     node: node.id
-  });
+  }, { selfdeaf: true });
 
   if (oldQueue && oldQueue.length !== 0 && music) {
     return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name.trim() : (tracks[0].info.title !== "" ? tracks[0].info.title.trim() : "(blank)")}\` has been added to the queue!`;

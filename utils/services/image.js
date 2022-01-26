@@ -114,11 +114,21 @@ class ImageWorker extends BaseServiceWorker {
     if (process.env.API === "true") {
       let num = this.nextID++;
       if (num > 4294967295) num = this.nextID = 0;
-      const currentServer = await this.getIdeal(object);
-      await currentServer.queue(num, object);
-      await currentServer.wait(num);
-      const output = await currentServer.getOutput(num);
-      return output;
+      for (let i = 0; i < 3; i++) {
+        const currentServer = await this.getIdeal(object);
+        try {
+          await currentServer.queue(num, object);
+          await currentServer.wait(num);
+          const output = await currentServer.getOutput(num);
+          return output;
+        } catch (e) {
+          if (i < 2 && e === "Request ended prematurely due to a closed connection") {
+            continue;
+          } else {
+            throw e;
+          }
+        }
+      }
     } else {
       // Called from command (not using image API)
       const worker = new Worker(path.join(path.dirname(fileURLToPath(import.meta.url)), "../image-runner.js"), {
