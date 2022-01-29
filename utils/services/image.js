@@ -125,6 +125,7 @@ class ImageWorker extends BaseServiceWorker {
           if (i < 2 && e === "Request ended prematurely due to a closed connection") {
             continue;
           } else {
+            if (e === "No available servers" && i >= 2) e = "Request ended prematurely due to a closed connection";
             throw e;
           }
         }

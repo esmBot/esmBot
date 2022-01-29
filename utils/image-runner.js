@@ -6,7 +6,7 @@ const nodeRequire = createRequire(import.meta.url);
 
 const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
-function run(object) {
+export default function run(object) {
   return new Promise((resolve, reject) => {
     // If the image has a path, it must also have a type
     let promise = Promise.resolve();

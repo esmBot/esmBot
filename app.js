@@ -28,6 +28,9 @@ const exec = promisify(baseExec);
 // dbl posting
 import { Api } from "@top-gg/sdk";
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
+// only requiring this to work around an issue regarding worker threads
+const nodeRequire = createRequire(import.meta.url);
+nodeRequire(`./build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
 if (isMaster) {
   const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
