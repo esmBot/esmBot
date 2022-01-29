@@ -5,6 +5,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
 
+// only requiring this to work around an issue regarding worker threads
+const nodeRequire = createRequire(import.meta.url);
+nodeRequire(`./build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+
 import ImageConnection from "../imageConnection.js";
 
 class ImageWorker extends BaseServiceWorker {
