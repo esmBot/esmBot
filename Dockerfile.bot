@@ -54,13 +54,13 @@ COPY . .
 RUN rm .env
 RUN npm run build
 
-mkdir /home/esmBot/help
-chown esmBot:esmBot /home/esmBot/help
-chmod 644 /home/esmBot/help
+RUN mkdir /home/esmBot/help
+RUN chown esmBot:esmBot /home/esmBot/help
+RUN chmod 644 /home/esmBot/help
 
-mkdir /home/esmBot/temp
-chown esmBot:esmBot /home/esmBot/temp
-chmod 644 /home/esmBot/temp
+RUN mkdir /home/esmBot/temp
+RUN chown esmBot:esmBot /home/esmBot/temp
+RUN chmod 644 /home/esmBot/temp
 
 USER esmBot
 
