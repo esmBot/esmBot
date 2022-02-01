@@ -16,7 +16,7 @@ class PlayCommand extends MusicCommand {
       const url = new URL(query);
       return await play(this.client, url, this.message, true);
     } catch {
-      const search = searchRegex.startsWith("ytsearch:") ? query : !this.args[0] && attachment ? attachment.url : `ytsearch:${query}`;
+      const search = query.startsWith("ytsearch:") ? query : !this.args[0] && attachment ? attachment.url : `ytsearch:${query}`;
       return await play(this.client, search, this.message, true);
     }
   }
