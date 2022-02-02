@@ -2,30 +2,30 @@
 import { EventEmitter } from "events";
 
 class InteractionCollector extends EventEmitter {
-  constructor(client, message, timeout = 120000) {
+  constructor(client, message, type, timeout = 120000) {
     super();
     this.message = message;
-    //this.time = timeout;
+    this.type = type;
     this.ended = false;
     this.bot = client;
-    this.listener = async (packet) => {
-      if (packet.t !== "INTERACTION_CREATE") return;
-      await this.verify(packet.d.message, packet.d.data.custom_id, packet.d.id, packet.d.token, packet.d.member ? packet.d.member.user.id : packet.d.user.id);
+    this.listener = async (interaction) => {
+      await this.verify(interaction);
     };
-    this.bot.on("rawWS", this.listener);
+    this.bot.on("interactionCreate", this.listener);
     setTimeout(() => this.stop("time"), timeout);
   }
 
-  async verify(message, interaction, id, token, member) {
-    if (this.message.id !== message.id) return false;
-    this.emit("interaction", interaction, id, token, member);
+  async verify(interaction) {
+    if (!(interaction instanceof this.type)) return false;
+    if (this.message.id !== interaction.message.id) return false;
+    this.emit("interaction", interaction);
     return true;
   }
 
   stop(reason) {
     if (this.ended) return;
     this.ended = true;
-    this.bot.removeListener("rawWS", this.listener);
+    this.bot.removeListener("interactionCreate", this.listener);
     this.emit("end", this.collected, reason);
   }
 }

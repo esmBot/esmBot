@@ -42,7 +42,6 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     caption_image.fontPointsize(width / 17);
     caption_image.read("pango:<span font_family=\"" +
                        (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
                        "\">" + caption + "</span>");
     caption_image.extent(Geometry(width, caption_image.rows() + (width / 25)),
                          Magick::CenterGravity);

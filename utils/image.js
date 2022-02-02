@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import fs from "fs";
-import fileType from "file-type";
+import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 
@@ -12,7 +12,7 @@ export const servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: 
 
 export async function getType(image, extraReturnTypes) {
   if (!image.startsWith("http")) {
-    const imageType = await fileType.fromFile(image);
+    const imageType = await fileTypeFromFile(image);
     if (imageType && formats.includes(imageType.mime)) {
       return imageType.mime;
     }
@@ -36,7 +36,7 @@ export async function getType(image, extraReturnTypes) {
       return type;
     }
     const imageBuffer = await imageRequest.arrayBuffer();
-    const imageType = await fileType.fromBuffer(imageBuffer);
+    const imageType = await fileTypeFromBuffer(imageBuffer);
     if (imageType && formats.includes(imageType.mime)) {
       type = imageType.mime;
     }

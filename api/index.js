@@ -68,7 +68,7 @@ const acceptJob = (id, sock) => {
   }, sock).then(() => {
     log(`Job ${id} has finished`);
   }).catch((err) => {
-    error(`Error on job ${id}:`, err, job.num);
+    error(`Error on job ${id}: ${err}`, job.num);
     const newJob = jobs.get(id);
     if (!newJob.tag) {
       newJob.error = err.message;
