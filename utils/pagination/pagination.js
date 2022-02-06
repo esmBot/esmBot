@@ -1,4 +1,3 @@
-import MessageCollector from "./awaitmessages.js";
 import InteractionCollector from "./awaitinteractions.js";
 import { ComponentInteraction } from "eris";
 
@@ -73,11 +72,13 @@ export default async (client, message, pages, timeout = 120000) => {
             await interaction.deferUpdate();
             page = page > 0 ? --page : pages.length - 1;
             currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            interactionCollector.extend();
             break;
           case "forward":
             await interaction.deferUpdate();
             page = page + 1 < pages.length ? ++page : 0;
             currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            interactionCollector.extend();
             break;
           case "jump":
             await interaction.deferUpdate();
@@ -86,6 +87,7 @@ export default async (client, message, pages, timeout = 120000) => {
               newComponents.components[0].components[index].disabled = true;
             }
             currentPage = await currentPage.edit(newComponents);
+            interactionCollector.extend();
             const jumpComponents = {
               components: [{
                 type: 1,

@@ -94,6 +94,10 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
         for (list<Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
           int index = distance(frames.begin(), i);
+          if (index >= (int)old_delays.size()) {
+            old_delays.resize(index+1);
+            old_delays[index] = old_delays[index-1];
+          }
           i->animationDelay(old_delays[index]);
         }
 

@@ -8,11 +8,12 @@ class InteractionCollector extends EventEmitter {
     this.type = type;
     this.ended = false;
     this.bot = client;
+    this.timeout = timeout;
     this.listener = async (interaction) => {
       await this.verify(interaction);
     };
     this.bot.on("interactionCreate", this.listener);
-    setTimeout(() => this.stop("time"), timeout);
+    this.end = setTimeout(() => this.stop("time"), timeout);
   }
 
   async verify(interaction) {
@@ -20,6 +21,11 @@ class InteractionCollector extends EventEmitter {
     if (this.message.id !== interaction.message.id) return false;
     this.emit("interaction", interaction);
     return true;
+  }
+
+  extend() {
+    clearTimeout(this.end);
+    this.end = setTimeout(() => this.stop("time"), this.timeout);
   }
 
   stop(reason) {
