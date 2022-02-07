@@ -4,25 +4,26 @@ import Command from "../../classes/command.js";
 class WikihowCommand extends Command {
   async run() {
     this.client.sendChannelTyping(this.message.channel.id);
-    const request = await fetch("https://hargrimm-wikihow-v1.p.rapidapi.com/images?count=1", {
-      headers: {
-        "X-RapidAPI-Key": process.env.MASHAPE,
-        "X-RapidAPI-Host": "hargrimm-wikihow-v1.p.rapidapi.com",
-        "Accept": "application/json"
-      }
-    });
+    const request = await fetch("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6");
     const json = await request.json();
-    const image = await fetch(json["1"]);
-    const imageBuffer = Buffer.from(await image.arrayBuffer());
-    return {
-      file: imageBuffer,
-      name: json["1"].split("/")[json["1"].split("/").length - 1]
-    };
+    const id = Object.keys(json.query.pages)[0];
+    const data = json.query.pages[id];
+    if (data.imageinfo) {
+      return {
+        embeds: [{
+          color: 16711680,
+          image: {
+            url: json.query.pages[id].imageinfo[0].url
+          }
+        }]
+      };
+    } else {
+      return await this.run();
+    }
   }
 
   static description = "Gets a random WikiHow image";
   static aliases = ["wiki"];
-  static requires = ["mashape"];
 }
 
 export default WikihowCommand;

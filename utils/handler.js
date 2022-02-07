@@ -7,7 +7,6 @@ let queryValue = 0;
 export async function load(command, soundStatus) {
   const { default: props } = await import(`../${command}?v=${queryValue}`);
   queryValue++;
-  if (props.requires.includes("mashape") && process.env.MASHAPE === "") return log("warn", `Mashape/RapidAPI info not provided in config, skipped loading command ${command}...`);
   if (props.requires.includes("sound") && soundStatus) return log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
