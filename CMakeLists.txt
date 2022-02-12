@@ -33,3 +33,7 @@ add_definitions(-DMAGICKCORE_QUANTUM_DEPTH=16)
 add_definitions(-DMAGICKCORE_HDRI_ENABLE=0)
 include_directories(${ImageMagick_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${ImageMagick_LIBRARIES})
+
+pkg_check_modules(VIPS REQUIRED vips-cpp)
+include_directories(${VIPS_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${VIPS_LIBRARIES})

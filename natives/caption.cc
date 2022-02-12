@@ -1,15 +1,16 @@
-#include <Magick++.h>
+#include <iostream>
+#include <vips/vips8>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
-
 using namespace std;
-using namespace Magick;
+using namespace vips;
+
+/*void finalizer(Napi::Env env, char* data) {
+    free(data);
+}*/
 
 Napi::Value Caption(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
-
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
@@ -19,66 +20,66 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "", VImage::option()
+            ->set("n", -1)
+            ->set("access", "sequential"))
+        .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha())
+        in = in.bandjoin(255);
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> captioned;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    int width = in.width();
+    int size = width / 10;
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+    int textWidth = width - ((width / 25) * 2);
+
+    //char font_string[12 + sizeof(size)];
+    //sprintf(font_string, "futura bold %d", size);
+
+    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " + (font != "impact" ? "bold" : "normal") + " " + to_string(size);
+
+    string captionText =
+        "<span background=\"white\">" + caption + "</span>";
+
+    VImage text =
+        VImage::text(captionText.c_str(), VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", font_string.c_str())
+            ->set("width", textWidth));
+    VImage captionImage = ((text == (vector<double>) {0, 0, 0, 0}).bandand())
+        .ifthenelse(255, text)
+        .gravity(VIPS_COMPASS_DIRECTION_CENTRE,
+            width, text.height() + size, VImage::option()
+            ->set("extend", "white"));
+
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+        VImage img_frame = in.crop(0, i * page_height, width, page_height);
+        VImage frame = captionImage.join(img_frame,
+            VIPS_DIRECTION_VERTICAL, VImage::option()
+            ->set("background", 0xffffff)
+            ->set("expand", true));
+        img.push_back(frame);
     }
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height + captionImage.height());
 
-    size_t width = frames.front().baseColumns();
-    string query(to_string(width - ((width / 25) * 2)) + "x");
-    Image caption_image(Geometry(query), Color("white"));
-    caption_image.fillColor("black");
-    caption_image.alpha(true);
-    caption_image.fontPointsize((double)width / 13);
-    caption_image.textGravity(Magick::CenterGravity);
-    caption_image.read("pango:<span font_family=\"" +
-                       (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" weight=\"" + (font != "impact" ? "bold" : "normal") +
-                       "\">" + caption + "</span>");
-    caption_image.extent(Geometry(width, caption_image.rows() + (width / 13)),
-                         Magick::CenterGravity);
+    void *buf;
+    size_t length;
+    final.write_to_buffer(("." + type).c_str(), &buf, &length, VImage::option()
+        ->set("dither", 0));
 
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      Image appended;
-      list<Image> images;
-      image.backgroundColor("white");
-      images.push_back(caption_image);
-      images.push_back(image);
-      appendImages(&appended, images.begin(), images.end(), true);
-      appended.repage();
-      appended.magick(type);
-      appended.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      appended.gifDisposeMethod(Magick::BackgroundDispose);
-      captioned.push_back(appended);
-    }
-
-    optimizeTransparency(captioned.begin(), captioned.end());
-
-    if (type == "gif") {
-      for (Image &image : captioned) {
-        image.quantizeDither(false);
-        image.quantize();
-      }
-    }
-
-    writeImages(captioned.begin(), captioned.end(), &blob);
+    //vips_shutdown();
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::New(env, (char *)buf,
+                                                length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
+    cerr << "Error: " << err.what() << endl;
     throw Napi::Error::New(env, err.what());
   } catch (...) {
     throw Napi::Error::New(env, "Unknown error");

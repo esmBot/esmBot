@@ -43,12 +43,15 @@
 #ifdef _WIN32
 #include <Magick++.h>
 #endif
+#include <vips/vips8>
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
 #ifdef _WIN32
   Magick::InitializeMagick("");
 #endif
+  if (vips_init(""))
+        vips_error_exit(NULL);
   exports.Set(Napi::String::New(env, "blur"), Napi::Function::New(env, Blur));
   exports.Set(Napi::String::New(env, "colors"), Napi::Function::New(env, Colors));
   exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
@@ -91,4 +94,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   return exports;
 }
 
-NODE_API_MODULE(addon, Init);
+NODE_API_MODULE(addon, Init)
