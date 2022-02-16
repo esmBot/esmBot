@@ -55,7 +55,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
 
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
-        VImage img_frame = in.crop(0, i * page_height, width, page_height);
+        VImage img_frame = type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
         VImage frame = captionImage.join(img_frame,
             VIPS_DIRECTION_VERTICAL, VImage::option()
             ->set("background", 0xffffff)
