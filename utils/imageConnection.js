@@ -155,6 +155,9 @@ class ImageConnection {
       case "image/webp":
         type = "webp";
         break;
+      default:
+        type = contentType;
+        break;
     }
     return { buffer: Buffer.from(await req.arrayBuffer()), type };
   }

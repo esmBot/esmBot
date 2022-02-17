@@ -13,6 +13,7 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
+    float tolerance = obj.Has("tolerance") ? obj.Get("tolerance").As<Napi::Number>().FloatValue() : 0.95;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -37,7 +38,7 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     ssize_t row;
     for (row = 0; row < rows; ++row) {
       ColorGray color = firstImage.pixelColor(0, row);
-      if (color.shade() < 0.95) {
+      if (color.shade() < tolerance) {
         break;
       }
     }

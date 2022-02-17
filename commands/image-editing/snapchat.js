@@ -16,7 +16,7 @@ class SnapchatCommand extends ImageCommand {
   static flags = [{
     name: "position",
     type: "number",
-    description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom)"
+    description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.5)"
   }];
 
   static requiresText = true;
