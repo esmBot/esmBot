@@ -53,7 +53,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").catch(() => {})).stdout.substring(0, 7)}), powered by eris-fleet ${erisFleetVersion}
+esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit"))}), powered by eris-fleet ${erisFleetVersion}
 `);
 }
 
