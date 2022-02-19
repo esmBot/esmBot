@@ -100,7 +100,7 @@ export default async (client, cluster, worker, ipc, message) => {
   try {
     await database.addCount(aliases.get(command) ?? command);
     const startTime = new Date();
-    await database.updateTime(startTime, message.channel.guild.id);
+    if (message.channel.guild) await database.updateTime(startTime, message.channel.guild.id);
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
