@@ -1,5 +1,5 @@
 import { prefixCache, disabledCmdCache, disabledCache, commands } from "../collections.js";
-import { error, log } from "../logger.js";
+import * as logger from "../logger.js";
 
 import Postgres from "pg";
 const connection = new Postgres.Pool({
@@ -7,8 +7,72 @@ const connection = new Postgres.Pool({
   statement_timeout: 10000
 });
 
+const psqlUpdates = [
+  "", // reserved
+  "CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;"
+];
+// INSERT INTO settings (id, version) VALUES(1, $1)
+export async function setup(ipc) {
+  let version;
+  try {
+    version = (await connection.query("SELECT version FROM settings WHERE id = 1")).rows[0].version;
+  } catch {
+    version = 0;
+  }
+  if (version < (psqlUpdates.length - 1)) {
+    logger.warn(`Migrating PostgreSQL database, which is currently at version ${version}...`);
+    await connection.query("BEGIN");
+    try {
+      while (version < (psqlUpdates.length - 1)) {
+        version++;
+        logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
+        await connection.query(psqlUpdates[version]);
+      }
+      await connection.query("COMMIT");
+      await connection.query("INSERT INTO settings (id, version) VALUES (1, $1) ON CONFLICT (id) DO NOTHING", [psqlUpdates.length - 1]);
+    } catch (e) {
+      logger.error(`PostgreSQL migration failed: ${e}`);
+      await connection.query("ROLLBACK");
+      logger.error("Unable to start the bot, quitting now.");
+      throw ipc.totalShutdown();
+    }
+  }
+
+  let counts;
+  try {
+    counts = await connection.query("SELECT * FROM counts");
+  } catch {
+    counts = { rows: [] };
+  }
+
+  if (!counts.rows[0]) {
+    for (const command of commands.keys()) {
+      await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+    }
+  } else {
+    const exists = [];
+    for (const command of commands.keys()) {
+      const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
+      if (!count.rows[0]) {
+        await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+      }
+      exists.push(command);
+    }
+
+    for (const { command } of counts.rows) {
+      if (!exists.includes(command)) {
+        await connection.query("DELETE FROM counts WHERE command = $1", [command]);
+      }
+    }
+  }
+}
+
 export async function getGuild(query) {
   return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];
+}
+
+export async function updateTime(time, guild) {
+  await connection.query("UPDATE guilds SET accessed = $1 WHERE guild_id = $2", [time, guild]);
 }
 
 export async function setPrefix(prefix, guild) {
@@ -93,7 +157,7 @@ export async function addGuild(guild) {
   try {
     await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], []]);
   } catch (e) {
-    error(`Failed to register guild ${guild.id}: ${e}`);
+    logger.error(`Failed to register guild ${guild.id}: ${e}`);
   }
   return await this.getGuild(guild.id);
 }
@@ -101,38 +165,8 @@ export async function addGuild(guild) {
 export async function fixGuild(guild) {
   const guildDB = await connection.query("SELECT exists(SELECT 1 FROM guilds WHERE guild_id = $1)", [guild.id]);
   if (!guildDB.rows[0].exists) {
-    log(`Registering guild database entry for guild ${guild.id}...`);
+    logger.log(`Registering guild database entry for guild ${guild.id}...`);
     return await this.addGuild(guild);
-  }
-}
-
-export async function setup() {
-  let counts;
-  try {
-    counts = await connection.query("SELECT * FROM counts");
-  } catch {
-    counts = { rows: [] };
-  }
-
-  if (!counts.rows[0]) {
-    for (const command of commands.keys()) {
-      await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
-    }
-  } else {
-    const exists = [];
-    for (const command of commands.keys()) {
-      const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-      if (!count.rows[0]) {
-        await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
-      }
-      exists.push(command);
-    }
-
-    for (const { command } of counts.rows) {
-      if (!exists.includes(command)) {
-        await connection.query("DELETE FROM counts WHERE command = $1", [command]);
-      }
-    }
   }
 }
 

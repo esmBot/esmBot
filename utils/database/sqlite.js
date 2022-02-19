@@ -4,7 +4,32 @@ import * as logger from "../logger.js";
 import sqlite3 from "better-sqlite3";
 const connection = sqlite3(process.env.DB.replace("sqlite://", ""));
 
-export async function setup() {
+const sqliteUpdates = [
+  "", // reserved
+  "ALTER TABLE guilds ADD COLUMN accessed int" // CREATE TABLE settings ( version int );\n
+];
+
+export async function setup(ipc) {
+  let version = connection.pragma("user_version", { simple: true });
+  if (version < (sqliteUpdates.length - 1)) {
+    logger.warn(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+    connection.prepare("BEGIN TRANSACTION").run();
+    try {
+      while (version < (sqliteUpdates.length - 1)) {
+        version++;
+        logger.warn(`Running version ${version} update script (${sqliteUpdates[version]})...`);
+        connection.prepare(sqliteUpdates[version]).run();
+      }
+      connection.pragma(`user_version = ${version}`); // insecure, but the normal templating method doesn't seem to work here
+      connection.prepare("COMMIT").run();
+    } catch (e) {
+      logger.error(`SQLite migration failed: ${e}`);
+      connection.prepare("ROLLBACK").run();
+      logger.error("Unable to start the bot, quitting now.");
+      ipc.totalShutdown();
+    }
+  }
+
   let counts;
   try {
     counts = connection.prepare("SELECT * FROM counts").all();
@@ -56,6 +81,10 @@ export async function fixGuild(guild) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);
     return await this.addGuild(guild);
   }
+}
+
+export async function updateTime(time, guild) {
+  connection.prepare("UPDATE guilds SET accessed = ? WHERE guild_id = ?").run(Math.floor(time / 1000), guild);
 }
 
 export async function addCount(command) {
