@@ -10,25 +10,7 @@ const sqliteUpdates = [
 ];
 
 export async function setup(ipc) {
-  let version = connection.pragma("user_version", { simple: true });
-  if (version < (sqliteUpdates.length - 1)) {
-    logger.warn(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
-    connection.prepare("BEGIN TRANSACTION").run();
-    try {
-      while (version < (sqliteUpdates.length - 1)) {
-        version++;
-        logger.warn(`Running version ${version} update script (${sqliteUpdates[version]})...`);
-        connection.prepare(sqliteUpdates[version]).run();
-      }
-      connection.pragma(`user_version = ${version}`); // insecure, but the normal templating method doesn't seem to work here
-      connection.prepare("COMMIT").run();
-    } catch (e) {
-      logger.error(`SQLite migration failed: ${e}`);
-      connection.prepare("ROLLBACK").run();
-      logger.error("Unable to start the bot, quitting now.");
-      ipc.totalShutdown();
-    }
-  }
+  connection.prepare("CREATE TABLE IF NOT EXISTS guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
 
   let counts;
   try {
@@ -62,6 +44,26 @@ export async function setup(ipc) {
       if (!exists.includes(command)) {
         connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
       }
+    }
+  }
+  
+  let version = connection.pragma("user_version", { simple: true });
+  if (version < (sqliteUpdates.length - 1)) {
+    logger.warn(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+    connection.prepare("BEGIN TRANSACTION").run();
+    try {
+      while (version < (sqliteUpdates.length - 1)) {
+        version++;
+        logger.warn(`Running version ${version} update script (${sqliteUpdates[version]})...`);
+        connection.prepare(sqliteUpdates[version]).run();
+      }
+      connection.pragma(`user_version = ${version}`); // insecure, but the normal templating method doesn't seem to work here
+      connection.prepare("COMMIT").run();
+    } catch (e) {
+      logger.error(`SQLite migration failed: ${e}`);
+      connection.prepare("ROLLBACK").run();
+      logger.error("Unable to start the bot, quitting now.");
+      throw ipc.totalShutdown();
     }
   }
 }
