@@ -150,9 +150,9 @@ if (isMaster) {
     error: "red"
   });
 
-  (async () => {
-    if (await database.upgrade(logger)) return process.exit(1);
-  })();
+  database.upgrade(logger).then(result => {
+    if (result === 1) return process.exit(1);
+  });
 
   Admiral.on("log", (m) => logger.main(m));
   Admiral.on("info", (m) => logger.info(m));
