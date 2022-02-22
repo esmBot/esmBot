@@ -9,35 +9,11 @@ const connection = new Postgres.Pool({
 
 const psqlUpdates = [
   "", // reserved
-  "CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;"
+  "CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
+  "ALTER TABLE guilds DROP COLUMN accessed"
 ];
-// INSERT INTO settings (id, version) VALUES(1, $1)
-export async function setup(ipc) {
-  let version;
-  try {
-    version = (await connection.query("SELECT version FROM settings WHERE id = 1")).rows[0].version;
-  } catch {
-    version = 0;
-  }
-  if (version < (psqlUpdates.length - 1)) {
-    logger.warn(`Migrating PostgreSQL database, which is currently at version ${version}...`);
-    await connection.query("BEGIN");
-    try {
-      while (version < (psqlUpdates.length - 1)) {
-        version++;
-        logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
-        await connection.query(psqlUpdates[version]);
-      }
-      await connection.query("COMMIT");
-      await connection.query("INSERT INTO settings (id, version) VALUES (1, $1) ON CONFLICT (id) DO NOTHING", [psqlUpdates.length - 1]);
-    } catch (e) {
-      logger.error(`PostgreSQL migration failed: ${e}`);
-      await connection.query("ROLLBACK");
-      logger.error("Unable to start the bot, quitting now.");
-      throw ipc.totalShutdown();
-    }
-  }
 
+export async function setup() {
   let counts;
   try {
     counts = await connection.query("SELECT * FROM counts");
@@ -67,12 +43,35 @@ export async function setup(ipc) {
   }
 }
 
-export async function getGuild(query) {
-  return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];
+export async function upgrade(logger) {
+  let version;
+  try {
+    version = (await connection.query("SELECT version FROM settings WHERE id = 1")).rows[0].version;
+  } catch {
+    version = 0;
+  }
+  if (version < (psqlUpdates.length - 1)) {
+    logger.warn(`Migrating PostgreSQL database, which is currently at version ${version}...`);
+    await connection.query("BEGIN");
+    try {
+      while (version < (psqlUpdates.length - 1)) {
+        version++;
+        logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
+        await connection.query(psqlUpdates[version]);
+      }
+      await connection.query("COMMIT");
+      await connection.query("INSERT INTO settings (id, version) VALUES (1, $1) ON CONFLICT (id) DO UPDATE SET version = $1", [psqlUpdates.length - 1]);
+    } catch (e) {
+      logger.error(`PostgreSQL migration failed: ${e}`);
+      await connection.query("ROLLBACK");
+      logger.error("Unable to start the bot, quitting now.");
+      return 1;
+    }
+  }
 }
 
-export async function updateTime(time, guild) {
-  await connection.query("UPDATE guilds SET accessed = $1 WHERE guild_id = $2", [time, guild]);
+export async function getGuild(query) {
+  return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];
 }
 
 export async function setPrefix(prefix, guild) {

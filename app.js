@@ -25,6 +25,8 @@ import winston from "winston";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
 const exec = promisify(baseExec);
+// database stuff
+import database from "./utils/database.js";
 // dbl posting
 import { Api } from "@top-gg/sdk";
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
@@ -147,6 +149,10 @@ if (isMaster) {
     warn: "yellow",
     error: "red"
   });
+
+  (async () => {
+    if (await database.upgrade(logger)) return process.exit(1);
+  })();
 
   Admiral.on("log", (m) => logger.main(m));
   Admiral.on("info", (m) => logger.info(m));

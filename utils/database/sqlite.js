@@ -6,26 +6,12 @@ const connection = sqlite3(process.env.DB.replace("sqlite://", ""));
 
 const sqliteUpdates = [
   "", // reserved
-  "ALTER TABLE guilds ADD COLUMN accessed int" // CREATE TABLE settings ( version int );\n
+  "ALTER TABLE guilds ADD COLUMN accessed int",
+  "ALTER TABLE guilds DROP COLUMN accessed"
 ];
 
-export async function setup(ipc) {
-  connection.prepare("CREATE TABLE IF NOT EXISTS guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
-
-  let counts;
-  try {
-    counts = connection.prepare("SELECT * FROM counts").all();
-  } catch {
-    connection.prepare("CREATE TABLE counts ( command VARCHAR NOT NULL PRIMARY KEY, count integer NOT NULL )").run();
-    counts = [];
-  }
-
-  try {
-    connection.prepare("SELECT * FROM tags").all();
-  } catch {
-    connection.prepare("CREATE TABLE tags ( guild_id VARCHAR(30) NOT NULL, name text NOT NULL, content text NOT NULL, author VARCHAR(30) NOT NULL, UNIQUE(guild_id, name) )").run();
-  }
-
+export async function setup() {
+  const counts = connection.prepare("SELECT * FROM counts").all();
   if (!counts) {
     for (const command of collections.commands.keys()) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
@@ -46,7 +32,17 @@ export async function setup(ipc) {
       }
     }
   }
-  
+}
+
+export async function stop() {
+  connection.close();
+}
+
+export async function upgrade(logger) {
+  connection.prepare("CREATE TABLE IF NOT EXISTS guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
+  connection.prepare("CREATE TABLE IF NOT EXISTS counts ( command VARCHAR NOT NULL PRIMARY KEY, count integer NOT NULL )").run();
+  connection.prepare("CREATE TABLE IF NOT EXISTS tags ( guild_id VARCHAR(30) NOT NULL, name text NOT NULL, content text NOT NULL, author VARCHAR(30) NOT NULL, UNIQUE(guild_id, name) )").run();
+
   let version = connection.pragma("user_version", { simple: true });
   if (version < (sqliteUpdates.length - 1)) {
     logger.warn(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
@@ -63,13 +59,9 @@ export async function setup(ipc) {
       logger.error(`SQLite migration failed: ${e}`);
       connection.prepare("ROLLBACK").run();
       logger.error("Unable to start the bot, quitting now.");
-      throw ipc.totalShutdown();
+      return 1;
     }
   }
-}
-
-export async function stop() {
-  connection.close();
 }
 
 export async function fixGuild(guild) {
@@ -83,10 +75,6 @@ export async function fixGuild(guild) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);
     return await this.addGuild(guild);
   }
-}
-
-export async function updateTime(time, guild) {
-  connection.prepare("UPDATE guilds SET accessed = ? WHERE guild_id = ?").run(Math.floor(time / 1000), guild);
 }
 
 export async function addCount(command) {

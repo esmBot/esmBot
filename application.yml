@@ -11,7 +11,7 @@ lavalink:
       twitch: true
       vimeo: true
       mixer: true
-      http: true
+      http: false
       local: true
     bufferDurationMs: 400
     youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
@@ -25,6 +25,9 @@ lavalink:
       #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
       #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
       #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
+  plugins:
+    - dependency: "com.github.esmBot:lava-xm-plugin:v0.1.0"
+      repository: "https://jitpack.io"
 
 metrics:
   prometheus:
