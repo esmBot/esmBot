@@ -55,9 +55,12 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
-      VImage frame = img_frame.join(
-          captionImage, VIPS_DIRECTION_VERTICAL,
-          VImage::option()->set("background", 0xffffff)->set("expand", true));
+      VImage frame =
+          (top ? captionImage : img_frame)
+              .join(top ? img_frame : captionImage, VIPS_DIRECTION_VERTICAL,
+                    VImage::option()
+                        ->set("background", 0xffffff)
+                        ->set("expand", true));
       img.push_back(frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));

@@ -33,7 +33,7 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     VImage out;
 
     if (color == "blurple") {
-      out = in;
+      out = in; // TODO: figure out how to implement blurple
     } else if (color == "grayscale") {
       out = in.colourspace(VIPS_INTERPRETATION_B_W);
     } else if (color == "sepia") {
