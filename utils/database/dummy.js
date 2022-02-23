@@ -10,6 +10,7 @@ export async function addCount() {}
 export async function getCounts() {
   return {};
 }
+export async function upgrade() {}
 export async function disableCommand() {}
 export async function enableCommand() {}
 export async function disableChannel() {}

@@ -62,6 +62,10 @@ RUN mkdir /home/esmBot/temp
 RUN chown esmBot:esmBot /home/esmBot/temp
 RUN chmod 666 /home/esmBot/temp
 
+RUN mkdir /home/esmBot/.internal/logs
+RUN chown esmBot:esmBot /home/esmBot/.internal/logs
+RUN chmod 666 /home/esmBot/.internal/logs
+
 USER esmBot
 
 ENTRYPOINT ["node", "app.js"]
