@@ -125,7 +125,7 @@ export default async (client, cluster, worker, ipc, message) => {
         }
       }
       if (result.file.length > fileSize) {
-        if (process.env.TEMPDIR !== "") {
+        if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
           const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
           await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
           const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
@@ -142,6 +142,8 @@ export default async (client, cluster, worker, ipc, message) => {
               },
             }]
           }, reference));
+        } else {
+          await client.createMessage(message.channel.id, "The resulting image was more than 8MB in size, so I can't upload it.");
         }
       } else {
         await client.createMessage(message.channel.id, Object.assign({

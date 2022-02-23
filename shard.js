@@ -47,7 +47,7 @@ class Shard extends BaseClusterWorker {
     await database.setup(this.ipc);
 
     // register events
-    log("info", `Attempting to load events...`);
+    log("info", "Attempting to load events...");
     for await (const file of this.getFiles("./events/")) {
       log("log", `Loading event from ${file}...`);
       const eventArray = file.split("/");
