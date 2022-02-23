@@ -1,11 +1,11 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Blur(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -18,42 +18,29 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    if (sharp) {
-      for_each(coalesced.begin(), coalesced.end(), sharpenImage(0, 3));
-    } else {
-      for_each(coalesced.begin(), coalesced.end(), blurImage(15));
-    }
+    // TODO: find a better way to calculate the intensity for GIFs without
+    // splitting frames
+    VImage out = sharp ? in.sharpen(VImage::option()->set("sigma", 3))
+                       : in.gaussblur(15);
 
-    for_each(coalesced.begin(), coalesced.end(), magickImage(type));
+    if (delay) out.set("delay", delay);
 
-    optimizeTransparency(coalesced.begin(), coalesced.end());
+    void *buf;
+    size_t length;
+    out.write_to_buffer(("." + type).c_str(), &buf, &length);
 
-    if (type == "gif") {
-      for (Image &image : coalesced) {
-        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
-    }
-
-    writeImages(coalesced.begin(), coalesced.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

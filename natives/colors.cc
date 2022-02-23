@@ -1,11 +1,14 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
+
+VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
+                                   0.1140, 0.2392, 0.4696, 0.0912);
 
 Napi::Value Colors(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -20,21 +23,24 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> colored;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+
+    VImage out;
+
+    if (color == "blurple") {
+      out = in;
+    } else if (color == "grayscale") {
+      out = in.colourspace(VIPS_INTERPRETATION_B_W);
+    } else if (color == "sepia") {
+      out = in.flatten().recomb(sepia);
     }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
 
-    for (Image &image : coalesced) {
+    /*for (Image &image : coalesced) {
       if (color == "blurple") {
         image.threshold(49151.25);
         image.levelColors(old ? "#7289DA" : "#5865F2", "white");
@@ -47,22 +53,18 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
       image.magick(type);
       image.animationDelay(delay == 0 ? image.animationDelay() : delay);
       colored.push_back(image);
-    }
+    }*/
 
-    optimizeTransparency(colored.begin(), colored.end());
+    if (delay) out.set("delay", delay);
 
-    if (type == "gif") {
-      for (Image &image : colored) {
-        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-        image.quantize();
-      }
-    }
+    void *buf;
+    size_t length;
+    out.write_to_buffer(("." + type).c_str(), &buf, &length);
 
-    writeImages(colored.begin(), colored.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
