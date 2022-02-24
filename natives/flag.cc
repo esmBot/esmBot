@@ -1,11 +1,11 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Flag(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -19,50 +19,47 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    Image watermark;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
+
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+
     string assetPath = basePath + overlay;
-    watermark.read(assetPath);
-    watermark.alphaChannel(Magick::SetAlphaChannel);
-    watermark.evaluate(Magick::AlphaChannel, Magick::MultiplyEvaluateOperator,
-                       0.5);
-    string query(to_string(frames.front().baseColumns()) + "x" +
-                 to_string(frames.front().baseRows()) + "!");
-    watermark.scale(Geometry(query));
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      image.composite(watermark, Magick::NorthGravity, Magick::OverCompositeOp);
-      image.magick(type);
-      mid.push_back(image);
+    VImage overlayImage = VImage::new_from_file(assetPath.c_str()).thumbnail_image(width, VImage::option()->set("height", page_height)->set("size", VIPS_SIZE_FORCE));
+    if (!overlayImage.has_alpha()) {
+      overlayImage = overlayImage.bandjoin(127);
+    } else {
+      overlayImage = overlayImage * vector<double>{ 1, 1, 1, 0.5 }; // this is a pretty cool line, just saying
     }
 
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+      VImage composited = img_frame.composite2(overlayImage, VIPS_BLEND_MODE_OVER);
+      img.push_back(composited);
     }
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    if (delay) final.set("delay", delay);
+
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf,
+                                                length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

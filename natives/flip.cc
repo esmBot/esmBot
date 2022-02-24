@@ -1,4 +1,3 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
