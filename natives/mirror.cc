@@ -1,11 +1,11 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Mirror(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -22,74 +22,63 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    MagickCore::GravityType gravity;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    if (vertical && first) {
-      gravity = Magick::NorthGravity;
-    } else if (!vertical && first) {
-      gravity = Magick::WestGravity;
-    } else if (vertical && !first) {
-      gravity = Magick::SouthGravity;
+    VImage out;
+
+    if (vertical) {
+      if (type == "gif") {
+        // once again, libvips gif handling is both a blessing and a curse
+        vector<VImage> img;
+        int page_height = vips_image_get_page_height(in.get_image());
+        int n_pages = vips_image_get_n_pages(in.get_image());
+        bool isOdd = page_height % 2;
+        for (int i = 0; i < n_pages; i++) {
+          int x = (i * page_height) + (first ? 0 : (page_height / 2));
+          VImage cropped = in.crop(0, x, in.width(), page_height / 2);
+          VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
+          VImage final = VImage::arrayjoin(
+              {first ? cropped : flipped, first ? flipped : cropped},
+              VImage::option()->set("across", 1));
+          img.push_back(final);
+        }
+        out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+        out.set(VIPS_META_PAGE_HEIGHT, page_height - (isOdd ? 1 : 0));
+      } else {
+        VImage cropped = in.extract_area(0, 0, in.width(), in.height() / 2);
+        VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
+        out = VImage::arrayjoin({cropped, flipped},
+                                VImage::option()->set("across", 1));
+      }
     } else {
-      gravity = Magick::EastGravity;
-    }
-
-    for (Image &image : coalesced) {
-      image.colorSpace(Magick::sRGBColorspace);
-      list<Image> mirrored;
-      Image final;
-      image.extent(Geometry(to_string(vertical ? image.baseColumns()
-                                               : image.baseColumns() / 2) +
-                            "x" +
-                            to_string(vertical ? image.baseRows() / 2
-                                               : image.baseRows())),
-                   gravity);
-      mirrored.push_back(image);
-      Image mirror = image;
-      if (vertical) {
-        mirror.flip();
-      } else {
-        mirror.flop();
-      }
       if (first) {
-        mirrored.push_back(mirror);
+        VImage cropped = in.extract_area(0, 0, in.width() / 2, in.height());
+        VImage flipped = cropped.flip(VIPS_DIRECTION_HORIZONTAL);
+        out = VImage::arrayjoin({cropped, flipped});
       } else {
-        mirrored.push_front(mirror);
-      }
-      appendImages(&final, mirrored.begin(), mirrored.end(), vertical);
-      final.repage();
-      final.magick(type);
-      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      mid.push_back(final);
-    }
-
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
+        int size = in.width() / 2;
+        VImage cropped = in.extract_area(size, 0, size, in.height());
+        VImage flipped = cropped.flip(VIPS_DIRECTION_HORIZONTAL);
+        out = VImage::arrayjoin({flipped, cropped});
       }
     }
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    if (delay) out.set("delay", delay);
+
+    void *buf;
+    size_t length;
+    out.write_to_buffer(("." + type).c_str(), &buf, &length);
+
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
