@@ -9,7 +9,7 @@ const connection = new Postgres.Pool({
 
 const psqlUpdates = [
   "", // reserved
-  "CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
+  "CREATE TABLE IF NOT EXISTS settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
   "ALTER TABLE guilds DROP COLUMN accessed"
 ];
 
