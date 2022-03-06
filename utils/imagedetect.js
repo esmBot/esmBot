@@ -10,7 +10,8 @@ const tenorURLs = [
 ];
 const giphyURLs = [
   "giphy.com",
-  "www.giphy.com"
+  "www.giphy.com",
+  "i.giphy.com"
 ];
 const giphyMediaURLs = [ // there could be more of these
   "media.giphy.com",
