@@ -6,6 +6,19 @@ const nodeRequire = createRequire(import.meta.url);
 
 const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
+const enumMap = {
+	"ForgetGravity":0,
+	"NorthWestGravity":1,
+	"NorthGravity":2,
+	"NorthEastGravity":3,
+	"WestGravity":4,
+	"CenterGravity":5,
+	"EastGravity":6,
+	"SouthWestGravit":7,
+	"SouthGravity":8,
+	"SouthEastGravity":9
+}
+
 export default function run(object) {
   return new Promise((resolve, reject) => {
     // If the image has a path, it must also have a type
@@ -24,6 +37,11 @@ export default function run(object) {
     promise.then(buf => {
       object.params.data = buf;
       const objectWithFixedType = Object.assign({}, object.params, {type: fileExtension});
+      if (objectWithFixedType.gravity) {
+	if (isNaN(Number(objectWithFixedType.gravity))){
+           objectWithFixedType.gravity=enumMap[objectWithFixedType.gravity];
+	}
+      }
       try {
         const result = magick[object.cmd](objectWithFixedType);
         const returnObject = {
