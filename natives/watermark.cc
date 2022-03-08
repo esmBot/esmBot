@@ -7,47 +7,6 @@
 using namespace std;
 using namespace Magick;
 
-Magick::GravityType NapiToGravity(const Napi::Value gravity) {
-  Magick::GravityType g = Magick::GravityType();
-  if (gravity.IsNumber()) {
-    return Magick::GravityType(gravity.As<Napi::Number>().Int64Value());
-  }else if (gravity.IsString()) {
-    string grav = gravity.As<Napi::String>().Utf8Value();
-    if (grav == "northwest") {
-      g = Magick::NorthWestGravity;
-    } else if (grav == "north") {
-      g = Magick::NorthGravity;
-    } else if (grav == "northeast") {
-      g = Magick::NorthEastGravity;
-    } else if (grav == "west") {
-      g = Magick::WestGravity;
-    } else if (grav == "center") {
-      g = Magick::CenterGravity;
-    } else if (grav == "east") {
-      g = Magick::EastGravity;
-    } else if (grav == "southwest") {
-      g = Magick::SouthWestGravity;
-    } else if (grav == "south") {
-      g = Magick::SouthGravity;
-    } else if (grav == "southeast") {
-      g = Magick::SouthEastGravity;
-    } else if (grav == "forget") {
-      g = Magick::ForgetGravity;
-    } else if (grav == "north_east") {
-      g = Magick::NorthEastGravity;
-    } else if (grav == "north_west") {
-      g = Magick::NorthWestGravity;
-    } else if (grav == "south_east") {
-      g = Magick::SouthEastGravity;
-    } else if (grav == "south_west") {
-      g = Magick::SouthWestGravity;
-    } else {
-      g = Magick::CenterGravity;
-    }
-  }
-  return g;
-}
-
 Napi::Value Watermark(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
@@ -55,7 +14,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string water = obj.Get("water").As<Napi::String>().Utf8Value();
-    Magick::GravityType gravity = NapiToGravity(obj.Get("gravity"));
+    Magick::GravityType gravity = Magick::GravityType(obj.Get("gravity").As<Napi::Number>().Int64Value());
     bool resize = obj.Has("resize")
                       ? obj.Get("resize").As<Napi::Boolean>().Value()
                       : false;
