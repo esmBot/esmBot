@@ -7,6 +7,47 @@
 using namespace std;
 using namespace Magick;
 
+Magick::GravityType NapiToGravity(const Napi::Value gravity) {
+  Magick::GravityType g = Magick::GravityType();
+  if (gravity.IsNumber()) {
+    return Magick::GravityType(gravity.As<Napi::Number>().Int64Value());
+  }else if (gravity.IsString()) {
+    string grav = gravity.As<Napi::String>().Utf8Value();
+    if (grav == "northwest") {
+      g = Magick::NorthWestGravity;
+    } else if (grav == "north") {
+      g = Magick::NorthGravity;
+    } else if (grav == "northeast") {
+      g = Magick::NorthEastGravity;
+    } else if (grav == "west") {
+      g = Magick::WestGravity;
+    } else if (grav == "center") {
+      g = Magick::CenterGravity;
+    } else if (grav == "east") {
+      g = Magick::EastGravity;
+    } else if (grav == "southwest") {
+      g = Magick::SouthWestGravity;
+    } else if (grav == "south") {
+      g = Magick::SouthGravity;
+    } else if (grav == "southeast") {
+      g = Magick::SouthEastGravity;
+    } else if (grav == "forget") {
+      g = Magick::ForgetGravity;
+    } else if (grav == "north_east") {
+      g = Magick::NorthEastGravity;
+    } else if (grav == "north_west") {
+      g = Magick::NorthWestGravity;
+    } else if (grav == "south_east") {
+      g = Magick::SouthEastGravity;
+    } else if (grav == "south_west") {
+      g = Magick::SouthWestGravity;
+    } else {
+      g = Magick::CenterGravity;
+    }
+  }
+  return g;
+}
+
 Napi::Value Watermark(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
@@ -14,10 +55,12 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string water = obj.Get("water").As<Napi::String>().Utf8Value();
-    int gravity = obj.Get("gravity").As<Napi::Number>().Int32Value();
+    Magick::GravityType gravity = NapiToGravity(obj.Get("gravity"));
     bool resize = obj.Has("resize")
                       ? obj.Get("resize").As<Napi::Boolean>().Value()
                       : false;
+    float yscale = obj.Has("yscale")
+	    ? obj.Get("yscale").As<Napi::Number>().FloatValue() : false;
     bool append = obj.Has("append")
                       ? obj.Get("append").As<Napi::Boolean>().Value()
                       : false;
@@ -43,8 +86,11 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     if (resize && append) {
       string query(to_string(frames.front().baseColumns()) + "x");
       watermark.scale(Geometry(query));
+    } else if (resize&&yscale) {
+      string query(to_string(frames.front().baseColumns())+"x"+to_string(frames.front().baseRows()*yscale)+"!");
+      watermark.resize(Geometry(query));     
     } else if (resize) {
-      string query("x" + to_string(frames.front().baseRows()));
+      string query("x"+to_string(frames.front().baseRows()));
       watermark.scale(Geometry(query));
     }
     coalesceImages(&coalesced, frames.begin(), frames.end());
@@ -60,11 +106,11 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
       } else if (mc) {
         image.backgroundColor("white");
         image.extent(Geometry(image.columns(), image.rows() + 15));
-        image.composite(watermark, Magick::GravityType(gravity),
+        image.composite(watermark, gravity,
                         Magick::OverCompositeOp);
         final = image;
       } else {
-        image.composite(watermark, Magick::GravityType(gravity),
+        image.composite(watermark, gravity,
                         Magick::OverCompositeOp);
         final = image;
       }
