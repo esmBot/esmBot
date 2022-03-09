@@ -168,4 +168,21 @@ if (isMaster) {
       });
     });
   }
+
+  //process the threshold into bytes early
+  if (process.env.THRESHOLD) {
+    const matched = process.env.THRESHOLD.match(/(\d+)([KMGT])/);
+    const sizes = {
+      "K":1024,
+      "M":1048576,
+      "G":1073741824,
+      "T":1099511627776
+    };
+    if (matched&&matched[1]&&matched[2]) {
+      process.env.THRESHOLD=matched[1]*sizes[matched[2]];
+    } else {
+      logger.error("Invalid THRESHOLD config.");
+      process.env.THRESHOLD = undefined;
+    }
+  }
 }
