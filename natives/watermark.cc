@@ -47,6 +47,8 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
 
     if (resize && append) {
       watermark = watermark.thumbnail_image(width);
+    } else if (resize && yscale) {
+      watermark = watermark.thumbnail_image(width, VImage::option()->set("height", page_height * yscale)->set("size", VIPS_SIZE_FORCE));
     } else if (resize) {
       watermark = watermark.thumbnail_image(
           VIPS_MAX_COORD, VImage::option()->set("height", page_height));
