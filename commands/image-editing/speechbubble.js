@@ -1,18 +1,18 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
-class SpeechbubbleCommand extends ImageCommand {
-	  params = {
-		      water: "./assets/images/speechbubble.png",
-		      gravity: "north",
-		      resize: true,
-		      yscale: 0.2, 	    
-	  };
+class SpeechBubbleCommand extends ImageCommand {
+  params = {
+    water: "./assets/images/speechbubble.png",
+    gravity: "north",
+    resize: true,
+    yscale: 0.2,
+  };
 
-	  static description = "Adds a speech bubble to the image.";
-	  static aliases = ["speech","speechbubble"];
+  static description = "Adds a speech bubble to an image";
+  static aliases = ["speech", "sb"];
 
-	  static noImage = "You need to provide an image/GIF to add a speech bubble."
-	  static command = "watermark";
+  static noImage = "You need to provide an image/GIF to add a speech bubble!";
+  static command = "watermark";
 }
 
-export default SpeechbubbleCommand;
+export default SpeechBubbleCommand;

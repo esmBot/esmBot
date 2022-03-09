@@ -7,17 +7,17 @@ const nodeRequire = createRequire(import.meta.url);
 const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
 const enumMap = {
-	"forget":0,
-	"northwest":1,
-	"north":2,
-	"northeast":3,
-	"west":4,
-	"center":5,
-	"east":6,
-	"southwest":7,
-	"south":8,
-	"southeast":9
-}
+  "forget": 0,
+  "northwest": 1,
+  "north": 2,
+  "northeast": 3,
+  "west": 4,
+  "center": 5,
+  "east": 6,
+  "southwest": 7,
+  "south": 8,
+  "southeast": 9
+};
 
 export default function run(object) {
   return new Promise((resolve, reject) => {
@@ -36,10 +36,10 @@ export default function run(object) {
     const fileExtension = object.params.type ? object.params.type.split("/")[1] : "png";
     promise.then(buf => {
       object.params.data = buf;
-      const objectWithFixedType = Object.assign({}, object.params, {type: fileExtension});
+      const objectWithFixedType = Object.assign({}, object.params, { type: fileExtension });
       if (objectWithFixedType.gravity) {
-        if (isNaN(Number(objectWithFixedType.gravity))){
-          objectWithFixedType.gravity=enumMap[objectWithFixedType.gravity];
+        if (isNaN(objectWithFixedType.gravity)) {
+          objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
         }
       }
       try {
