@@ -2,7 +2,6 @@ import InteractionCollector from "./awaitinteractions.js";
 import { ComponentInteraction } from "eris";
 
 export default async (client, message, pages, timeout = 120000) => {
-  const manageMessages = message.channel.guild && message.channel.permissionsOf(client.user.id).has("manageMessages") ? true : false;
   const options = {
     messageReference: {
       channelID: message.channel.id,
@@ -82,13 +81,13 @@ export default async (client, message, pages, timeout = 120000) => {
             break;
           case "jump":
             await interaction.deferUpdate();
-            const newComponents = JSON.parse(JSON.stringify(components));
+            var newComponents = JSON.parse(JSON.stringify(components));
             for (const index of newComponents.components[0].components.keys()) {
               newComponents.components[0].components[index].disabled = true;
             }
             currentPage = await currentPage.edit(newComponents);
             interactionCollector.extend();
-            const jumpComponents = {
+            var jumpComponents = {
               components: [{
                 type: 1,
                 components: [{
@@ -99,7 +98,7 @@ export default async (client, message, pages, timeout = 120000) => {
                 }]
               }]
             };
-            for (let i = 0; i < pages.length; i++) {
+            for (let i = 0; i < pages.length && i < 25; i++) {
               const payload = {
                 label: i + 1,
                 value: i

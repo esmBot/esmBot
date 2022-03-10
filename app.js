@@ -129,7 +129,7 @@ if (isMaster) {
       new winston.transports.File({ filename: "logs/error.log", level: "error" }),
       new winston.transports.File({ filename: "logs/main.log" })
     ],
-    level: "main",
+    level: process.env.DEBUG_LOG ? "debug" : "main",
     format: winston.format.combine(
       winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       winston.format.printf((info) => {
@@ -145,7 +145,7 @@ if (isMaster) {
   winston.addColors({
     info: "green",
     main: "gray",
-    debug: "purple",
+    debug: "magenta",
     warn: "yellow",
     error: "red"
   });
