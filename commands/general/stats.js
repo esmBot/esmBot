@@ -1,4 +1,6 @@
 import { readFileSync } from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
 import os from "os";
 import Command from "../../classes/command.js";
@@ -23,7 +25,7 @@ class StatsCommand extends Command {
         "color": 16711680,
         "fields": [{
           "name": "Version",
-          "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD")).stdout.substring(0, 7)})` : ""}`
+          "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD", { cwd: dirname(fileURLToPath(import.meta.url)) })).stdout.substring(0, 7)})` : ""}`
         },
         {
           "name": "Cluster Memory Usage",

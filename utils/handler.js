@@ -5,7 +5,7 @@ let queryValue = 0;
 
 // load command into memory
 export async function load(command, soundStatus) {
-  const { default: props } = await import(`../${command}?v=${queryValue}`);
+  const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   if (props.requires.includes("sound") && soundStatus) return log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
   const commandArray = command.split("/");
@@ -15,7 +15,7 @@ export async function load(command, soundStatus) {
   commands.set(commandName, props);
 
   info.set(commandName, {
-    category: commandArray[2],
+    category: commandArray[commandArray.length - 2],
     description: props.description,
     aliases: props.aliases,
     params: props.arguments,

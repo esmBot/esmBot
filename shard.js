@@ -3,6 +3,8 @@ import { BaseClusterWorker } from "eris-fleet";
 // path stuff
 import { readdir } from "fs/promises";
 import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 // fancy loggings
 import { log, error } from "./utils/logger.js";
 // initialize command loader
@@ -34,7 +36,7 @@ class Shard extends BaseClusterWorker {
     // register commands and their info
     const soundStatus = await checkStatus();
     log("info", "Attempting to load commands...");
-    for await (const commandFile of this.getFiles("./commands/")) {
+    for await (const commandFile of this.getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
       log("log", `Loading command from ${commandFile}...`);
       try {
         await load(commandFile, soundStatus);
@@ -48,11 +50,11 @@ class Shard extends BaseClusterWorker {
 
     // register events
     log("info", "Attempting to load events...");
-    for await (const file of this.getFiles("./events/")) {
+    for await (const file of this.getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
       log("log", `Loading event from ${file}...`);
       const eventArray = file.split("/");
       const eventName = eventArray[eventArray.length - 1].split(".")[0];
-      const { default: event } = await import(`./${file}`);
+      const { default: event } = await import(file);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
     log("info", "Finished loading events.");
@@ -123,10 +125,11 @@ class Shard extends BaseClusterWorker {
   async* getFiles(dir) {
     const dirents = await readdir(dir, { withFileTypes: true });
     for (const dirent of dirents) {
+      const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
       if (dirent.isDirectory()) {
-        yield* this.getFiles(dir + dirent.name);
+        yield* this.getFiles(name);
       } else if (dirent.name.endsWith(".js")) {
-        yield dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
+        yield name;
       }
     }
   }

@@ -9,8 +9,10 @@ Please refer to step 3 of the setup guide.`);
 }
 
 // load config from .env file
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import { config } from "dotenv";
-config();
+config({ path: resolve(dirname(fileURLToPath(import.meta.url)), ".env") });
 
 // main sharding manager
 import { Fleet } from "eris-fleet";

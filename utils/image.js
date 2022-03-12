@@ -8,7 +8,7 @@ export const jobs = {};
 
 export const connections = new Map();
 
-export const servers = JSON.parse(fs.readFileSync("./servers.json", { encoding: "utf8" })).image;
+export const servers = JSON.parse(fs.readFileSync(new URL("../servers.json", import.meta.url), { encoding: "utf8" })).image;
 
 export async function getType(image, extraReturnTypes) {
   if (!image.startsWith("http")) {
