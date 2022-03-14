@@ -32,6 +32,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     int page_height = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
     int size = width / 9;
+    int dividedWidth = width / 1000;
     int rad = 1;
 
     string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
@@ -40,6 +41,13 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
 
     VImage mask = VImage::black(rad * 2 + 1, rad * 2 + 1) + 128;
     mask.draw_circle({255}, rad, rad, rad, VImage::option()->set("fill", true));
+
+    VImage altMask;
+
+    if (dividedWidth >= 1) {
+      altMask = VImage::black(dividedWidth * 2 + 1, dividedWidth * 2 + 1) + 128;
+      altMask.draw_circle({255}, dividedWidth, dividedWidth, dividedWidth, VImage::option()->set("fill", true));
+    }
 
     VImage topText;
     if (top != "") {
@@ -57,6 +65,9 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       VImage topOutline =
           topIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
               .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
+      if (dividedWidth >= 1) {
+        topOutline = topOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
+      }
       topOutline = (topOutline == (vector<double>){0, 0, 0, 0});
       VImage topInvert = topOutline.extract_band(3).invert();
       topOutline = topOutline
@@ -81,6 +92,9 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       VImage bottomOutline =
           bottomIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
               .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
+      if (dividedWidth >= 1) {
+        bottomOutline = bottomOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
+      }
       bottomOutline = (bottomOutline == (vector<double>){0, 0, 0, 0});
       VImage bottomInvert = bottomOutline.extract_band(3).invert();
       bottomOutline = bottomOutline
