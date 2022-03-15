@@ -120,7 +120,11 @@ export default async (client, message, pages, timeout = 120000) => {
               let ended = false;
               dropdownCollector.on("interaction", async (response) => {
                 if (response.data.custom_id !== "seekDropdown") return;
-                if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
+                try {
+                  if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
+                } catch {
+                  // no-op
+                }
                 page = Number(response.data.values[0]);
                 currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
                 ended = true;
@@ -128,7 +132,11 @@ export default async (client, message, pages, timeout = 120000) => {
               });
               dropdownCollector.once("end", async () => {
                 if (ended) return;
-                if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
+                try {
+                  if (await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
+                } catch {
+                  // no-op
+                }
                 currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
               });
             }).catch(error => {
