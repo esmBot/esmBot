@@ -36,7 +36,6 @@ esmbot_connected_workers ${servers.length}
 `);
           for (const [i, w] of servers.entries()) {
             res.write(`esmbot_running_jobs{worker="${i}"} ${w.runningJobs}\n`);
-            res.write(`esmbot_queued_jobs{worker="${i}"} ${w.queued}\n`);
             res.write(`esmbot_max_jobs{worker="${i}"} ${w.max}\n`);
           }
         }
