@@ -111,6 +111,7 @@ const Admiral = new Fleet({
       requestTimeout: 30000
     }
   },
+  useCentralRequestHandler: true,
   services: [
     { name: "prometheus", ServiceWorker: PrometheusWorker },
     { name: "image", ServiceWorker: ImageWorker }

@@ -150,9 +150,9 @@ export async function nextSong(client, message, connection, track, info, music, 
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: message.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
   connection.once("error", async (error) => {
     try {
-      if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
+      if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
       const playMessage = players.get(voiceChannel.guild.id).playMessage;
-      if (playMessage.channel.messages.get(playMessage.id)) await playMessage.delete();
+      if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
     } catch {
       // no-op
     }
@@ -196,8 +196,8 @@ export async function nextSong(client, message, connection, track, info, music, 
       const newTrack = await Rest.decode(connection.node, newQueue[0]);
       nextSong(client, message, connection, newQueue[0], newTrack, music, voiceChannel, host, player.loop, player.shuffle, track);
       try {
-        if (newQueue[0] !== track && playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (newQueue[0] !== track && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+        if (newQueue[0] !== track && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }
@@ -209,15 +209,15 @@ export async function nextSong(client, message, connection, track, info, music, 
       skipVotes.delete(voiceChannel.guild.id);
       if (music) await client.createMessage(message.channel.id, "🔊 The current voice channel session has ended.");
       try {
-        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (player && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+        if (player && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }
     } else {
       try {
-        if (playingMessage.channel.messages.get(playingMessage.id)) await playingMessage.delete();
-        if (player && player.playMessage.channel.messages.get(player.playMessage.id)) await player.playMessage.delete();
+        if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+        if (player && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }

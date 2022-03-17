@@ -17,7 +17,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
         } else {
           try {
-            if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
+            if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
           } catch {
             // no-op
           }
@@ -40,7 +40,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       awaitRejoin.on("end", async (rejoined) => {
         if (rejoined) {
           try {
-            if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
+            if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
           } catch {
             // no-op
           }
@@ -48,7 +48,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
           if (members.length === 0) {
             try {
-              if (waitMessage.channel.messages.get(waitMessage.id)) await waitMessage.delete();
+              if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
             } catch {
               // no-op
             }
