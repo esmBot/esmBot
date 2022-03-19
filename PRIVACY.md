@@ -7,11 +7,11 @@ esmBot uses the following user-related info:
 + User IDs (needed for many reasons such as the tag commands and replying to users)
 + Avatars (needed for some embeds and the avatar command)
 + Usernames (for embeds and avatar command)
-+ Discriminators (embeds)
++ Discriminators (userinfo command)
 + Permissions (for checking if a user has perms to run some commands)
 + Whether the user is a bot (needed to prevent other bots from running commands)
 
-Out of these, **only user IDs are stored in the database**, and they are used only for checking the owner of a tag.
+Out of these, **only user IDs are stored in the database**, and they are used only with the tag system for checking the owner of a tag.
 
 esmBot uses the following guild-related info:
 + Guild IDs (for guild-specific settings)
@@ -22,6 +22,6 @@ esmBot uses the following guild-related info:
 
 Out of these, **only guild and channel IDs are stored in the database** for configuration info and storing disabled channels/commands, prefixes, and tags.
 
-The stored info is stored in the database forever; however, I do intend to change this in the future. If you want this data removed on the main instance, you can DM me on Discord (Essem#9261) or email me at [data@essem.space](mailto:data@essem.space).
+If you want this data removed on the main instance, you can DM me on Discord (Essem#9261) or email me at [data@essem.space](mailto:data@essem.space).
 
 Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact me via the [esmBot Support](https://projectlounge.pw/support) server.
