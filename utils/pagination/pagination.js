@@ -121,7 +121,7 @@ export default async (client, message, pages, timeout = 120000) => {
               dropdownCollector.on("interaction", async (response) => {
                 if (response.data.custom_id !== "seekDropdown") return;
                 try {
-                  if (askMessage.channel.messages.has(askMessage.id)) await askMessage.delete();
+                  if (askMessage.channel.messages ? askMessage.channel.messages.has(askMessage.id) : await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
                 } catch {
                   // no-op
                 }
@@ -133,7 +133,7 @@ export default async (client, message, pages, timeout = 120000) => {
               dropdownCollector.once("end", async () => {
                 if (ended) return;
                 try {
-                  if (askMessage.channel.messages.has(askMessage.id)) await askMessage.delete();
+                  if (askMessage.channel.messages ? askMessage.channel.messages.has(askMessage.id) : await client.getMessage(askMessage.channel.id, askMessage.id).catch(() => undefined)) await askMessage.delete();
                 } catch {
                   // no-op
                 }
@@ -146,7 +146,7 @@ export default async (client, message, pages, timeout = 120000) => {
           case "delete":
             await interaction.deferUpdate();
             interactionCollector.emit("end");
-            if (currentPage.channel.messages.has(currentPage.id)) await currentPage.delete();
+            if (currentPage.channel.messages ? currentPage.channel.messages.has(currentPage.id) : await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) await currentPage.delete();
             return;
           default:
             break;
@@ -158,7 +158,7 @@ export default async (client, message, pages, timeout = 120000) => {
       for (const index of components.components[0].components.keys()) {
         components.components[0].components[index].disabled = true;
       }
-      if (currentPage.channel.messages.has(currentPage.id)) {
+      if (currentPage.channel.messages ? currentPage.channel.messages.has(currentPage.id) : await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) {
         await currentPage.edit(components);
       }
     });
