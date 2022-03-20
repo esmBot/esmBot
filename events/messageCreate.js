@@ -50,7 +50,7 @@ export default async (client, cluster, worker, ipc, message) => {
   if (!message.content.startsWith(prefix)) return;
 
   // separate commands and args
-  const replace = isMention ? `@${client.user.username} ` : prefix;
+  const replace = isMention ? `@${(message.channel.guild ? message.channel.guild.members.get(client.user.id).nick : client.user.username) ?? client.user.username} ` : prefix;
   const content = message.cleanContent.substring(replace.length).trim();
   const rawContent = message.content.substring(prefix.length).trim();
   const preArgs = content.split(/\s+/g);
