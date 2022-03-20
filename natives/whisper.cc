@@ -1,11 +1,11 @@
-#include <Magick++.h>
 #include <napi.h>
 
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Whisper(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -18,74 +18,81 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> captioned;
-    Blob caption_blob;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    size_t width = frames.front().baseColumns();
-    size_t height = frames.front().baseRows();
-
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+    int size = width / 6;
     int dividedWidth = width / 175;
+    int rad = 1;
 
-    Image caption_image;
-    caption_image.size(Geometry(to_string(width) + "x" + to_string(height)));
-    caption_image.backgroundColor("none");
-    caption_image.fillColor("white");
-    caption_image.font("Upright");
-    caption_image.fontPointsize(width / 8);
-    caption_image.textGravity(Magick::CenterGravity);
-    caption_image.read("pango:" + caption);
-    caption_image.trim();
-    caption_image.repage();
-    Image caption_fill = caption_image;
-    caption_fill.extent(Geometry(width, height), Magick::CenterGravity);
-    caption_fill.channel(Magick::AlphaChannel);
-    caption_fill.morphology(Magick::EdgeOutMorphology, "Octagon",
-                            dividedWidth != 0 ? dividedWidth : 1);
-    caption_fill.backgroundColor("black");
-    caption_fill.alphaChannel(Magick::ShapeAlphaChannel);
-    size_t fill_width = caption_fill.columns();
-    size_t fill_height = caption_fill.rows();
-    caption_image.extent(Geometry(fill_width, fill_height),
-                         Magick::CenterGravity);
-    caption_image.composite(caption_fill, Magick::CenterGravity,
-                            Magick::DstOverCompositeOp);
+    string font_string = "Upright " + to_string(size);
 
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      list<Image> images;
-      image.composite(caption_image, Magick::CenterGravity,
-                      Magick::OverCompositeOp);
-      image.magick(type);
-      image.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      captioned.push_back(image);
+    VImage mask;
+    if (dividedWidth >= 1) {
+      mask = VImage::black(dividedWidth * 2 + 1, dividedWidth * 2 + 1) + 128;
+      mask.draw_circle({255}, dividedWidth, dividedWidth, dividedWidth,
+                       VImage::option()->set("fill", true));
+      mask.write_to_file("/home/esm/mask.png");
+    } else {
+      mask = VImage::black(rad * 2 + 1, rad * 2 + 1) + 128;
+      mask.draw_circle({255}, rad, rad, rad,
+                       VImage::option()->set("fill", true));
     }
 
-    optimizeTransparency(captioned.begin(), captioned.end());
+    VImage textIn = VImage::text(
+        ("<span foreground=\"white\">" + caption + "</span>").c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", font_string.c_str())
+            ->set("width", width));
 
-    if (type == "gif") {
-      for (Image &image : captioned) {
-        image.quantizeDither(false);
-        image.quantize();
-      }
+    textIn = textIn.embed(rad + 10, rad + 10, (textIn.width() + 2 * rad) + 20,
+                          (textIn.height() + 2 * rad) + 20);
+
+    VImage outline =
+        textIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
+            .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
+    outline = (outline == (vector<double>){0, 0, 0, 0});
+    VImage invert = outline.extract_band(3).invert();
+    outline =
+        outline.extract_band(0, VImage::option()->set("n", outline.bands() - 1))
+            .bandjoin(invert);
+    VImage textImg = outline.composite2(textIn, VIPS_BLEND_MODE_OVER);
+
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+      img_frame = img_frame.composite2(
+          textImg, VIPS_BLEND_MODE_OVER,
+          VImage::option()
+              ->set("x", (width / 2) - (textImg.width() / 2))
+              ->set("y", (page_height / 2) - (textImg.height() / 2)));
+      img.push_back(img_frame);
     }
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    if (delay) final.set("delay", delay);
 
-    writeImages(captioned.begin(), captioned.end(), &blob);
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
+
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
