@@ -9,7 +9,7 @@ class ImageSearchCommand extends Command {
   async run() {
     if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     if (this.args.length === 0) return "You need to provide something to search for!";
-    this.client.sendChannelTyping(this.message.channel.id);
+    this.acknowledge();
     const embeds = [];
     const rawImages = await fetch(`${random(searx)}/search?format=json&safesearch=2&categories=images&q=!goi%20!ddi%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
     if (rawImages.results.length === 0) return "I couldn't find any results!";

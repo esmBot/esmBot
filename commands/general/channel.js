@@ -3,6 +3,7 @@ import Command from "../../classes/command.js";
 
 class ChannelCommand extends Command {
   async run() {
+    if (this.type !== "classic") return "This command only works with the old command style!";
     if (!this.message.channel.guild) return "This command only works in servers!";
     const owners = process.env.OWNER.split(",");
     if (!this.message.member.permissions.has("administrator") && !owners.includes(this.message.member.id)) return "You need to be an administrator to enable/disable me!";
@@ -40,8 +41,9 @@ class ChannelCommand extends Command {
     }
   }
 
-  static description = "Enables/disables me in a channel";
+  static description = "Enables/disables me in a channel (does not work with slash commands)";
   static arguments = ["[enable/disable]", "{id}"];
+  static slashAllowed = false;
 }
 
 export default ChannelCommand;

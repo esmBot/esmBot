@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class DogCommand extends Command {
   async run() {
-    this.client.sendChannelTyping(this.message.channel.id);
+    this.acknowledge();
     const imageData = await fetch("https://dog.ceo/api/breeds/image/random");
     const json = await imageData.json();
     return {

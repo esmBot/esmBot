@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class CatCommand extends Command {
   async run() {
-    this.client.sendChannelTyping(this.message.channel.id);
+    this.acknowledge();
     const controller = new AbortController(); // eslint-disable-line no-undef
     const timeout = setTimeout(() => {
       controller.abort();

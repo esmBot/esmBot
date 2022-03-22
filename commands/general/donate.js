@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class DonateCommand extends Command {
   async run() {
-    this.client.sendChannelTyping(this.message.channel.id);
+    this.acknowledge();
     let prefix = "";
     const controller = new AbortController(); // eslint-disable-line no-undef
     const timeout = setTimeout(() => {

@@ -96,7 +96,7 @@ class ImageCommand extends Command {
     if (magickParams.params.type === "image/gif") {
       status = await this.processMessage(this.message);
     } else {
-      this.client.sendChannelTyping(this.message.channel.id);
+      this.acknowledge();
     }
 
     try {

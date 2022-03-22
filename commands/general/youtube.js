@@ -8,7 +8,7 @@ import Command from "../../classes/command.js";
 class YouTubeCommand extends Command {
   async run() {
     if (this.args.length === 0) return "You need to provide something to search for!";
-    this.client.sendChannelTyping(this.message.channel.id);
+    this.acknowledge();
     const messages = [];
     const videos = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
     if (videos.results.length === 0) return "I couldn't find any results!";

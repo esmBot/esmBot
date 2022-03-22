@@ -101,7 +101,7 @@ export default async (client, cluster, worker, ipc, message) => {
     await database.addCount(aliases.get(command) ?? command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, cluster, worker, ipc, message, parsed._, message.content.substring(prefix.length).trim().replace(command, "").trim(), (({ _, ...o }) => o)(parsed)); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, cluster, worker, ipc, { type: "classic", message, args: parsed._, content: message.content.substring(prefix.length).trim().replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
