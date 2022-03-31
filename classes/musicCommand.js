@@ -11,6 +11,7 @@ class MusicCommand extends Command {
   }
 
   static requires = ["sound"];
+  static slashAllowed = false;
 }
 
 export default MusicCommand;
