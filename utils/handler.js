@@ -4,7 +4,7 @@ import { log } from "./logger.js";
 let queryValue = 0;
 
 // load command into memory
-export async function load(client, cluster, worker, ipc, command, soundStatus) {
+export async function load(client, cluster, worker, ipc, command, soundStatus, slashReload = false) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   if (props.requires.includes("sound") && soundStatus) {
@@ -27,6 +27,19 @@ export async function load(client, cluster, worker, ipc, command, soundStatus) {
     flags: propsInstance.flags ?? props.flags,
     slashAllowed: props.slashAllowed
   });
+
+  if (slashReload && props.slashAllowed) {
+    const commandList = await client.getCommands();
+    const oldCommand = commandList.filter((item) => {
+      return item.name === commandName;
+    })[0];
+    await client.editCommand(oldCommand.id, {
+      name: commandName,
+      type: 1,
+      description: props.description,
+      options: propsInstance.flags ?? props.flags
+    });
+  }
   
   if (props.aliases) {
     for (const alias of props.aliases) {

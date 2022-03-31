@@ -49,7 +49,7 @@ class QueueCommand extends MusicCommand {
       });
     }
     if (embeds.length === 0) return "There's nothing in the queue!";
-    return paginator(this.client, this.message, embeds);
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
   }
 
   static description = "Shows the current queue";

@@ -13,10 +13,10 @@ class SnapchatCommand extends ImageCommand {
   }
 
   params(url) {
-    const newArgs = this.args.filter(item => !item.includes(url));
+    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
     const position = parseFloat(this.specialArgs.position);
     return {
-      caption: newArgs.join(" ").replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
+      caption: newArgs.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
       pos: isNaN(position) ? 0.5 : position
     };
   }

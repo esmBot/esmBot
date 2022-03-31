@@ -1,18 +1,18 @@
 import InteractionCollector from "./awaitinteractions.js";
 import { ComponentInteraction } from "eris";
 
-export default async (client, message, pages, timeout = 120000) => {
-  const options = {
+export default async (client, info, pages, timeout = 120000) => {
+  const options = info.type === "classic" ? {
     messageReference: {
-      channelID: message.channel.id,
-      messageID: message.id,
-      guildID: message.channel.guild ? message.channel.guild.id : undefined,
+      channelID: info.channel.id,
+      messageID: info.message.id,
+      guildID: info.channel.guild ? info.channel.guild.id : undefined,
       failIfNotExists: false
     },
     allowedMentions: {
       repliedUser: false
     }
-  };
+  } : {};
   let page = 0;
   const components = {
     components: [{
@@ -61,11 +61,18 @@ export default async (client, message, pages, timeout = 120000) => {
       ]
     }]
   };
-  let currentPage = await client.createMessage(message.channel.id, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
+  let currentPage;
+  if (info.type === "classic") {
+    currentPage = await client.createMessage(info.message.channel.id, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
+  } else {
+    await info.interaction[info.interaction.acknowledged ? "editOriginalMessage" : "createMessage"](Object.assign(pages[page], pages.length > 1 ? components : {}));
+    currentPage = await info.interaction.getOriginalMessage();
+  }
+  
   if (pages.length > 1) {
     const interactionCollector = new InteractionCollector(client, currentPage, ComponentInteraction, timeout);
     interactionCollector.on("interaction", async (interaction) => {
-      if ((interaction.member ?? interaction.user).id === message.author.id) {
+      if ((interaction.member ?? interaction.user).id === info.author.id) {
         switch (interaction.data.custom_id) {
           case "back":
             await interaction.deferUpdate();
@@ -105,17 +112,23 @@ export default async (client, message, pages, timeout = 120000) => {
               };
               jumpComponents.components[0].components[0].options[i] = payload;
             }
-            client.createMessage(message.channel.id, Object.assign({ content: "What page do you want to jump to?" }, {
-              messageReference: {
-                channelID: currentPage.channel.id,
-                messageID: currentPage.id,
-                guildID: currentPage.channel.guild ? currentPage.channel.guild.id : undefined,
-                failIfNotExists: false
-              },
-              allowedMentions: {
-                repliedUser: false
-              }
-            }, jumpComponents)).then(askMessage => {
+            var promise;
+            if (info.type === "classic") {
+              promise = client.createMessage(info.message.channel.id, Object.assign({ content: "What page do you want to jump to?" }, {
+                messageReference: {
+                  channelID: currentPage.channel.id,
+                  messageID: currentPage.id,
+                  guildID: currentPage.channel.guild ? currentPage.channel.guild.id : undefined,
+                  failIfNotExists: false
+                },
+                allowedMentions: {
+                  repliedUser: false
+                }
+              }, jumpComponents));
+            } else {
+              promise = info.interaction.createFollowup(Object.assign({ content: "What page do you want to jump to?" }, jumpComponents));
+            }
+            promise.then(askMessage => {
               const dropdownCollector = new InteractionCollector(client, askMessage, ComponentInteraction, timeout);
               let ended = false;
               dropdownCollector.on("interaction", async (response) => {
@@ -145,7 +158,7 @@ export default async (client, message, pages, timeout = 120000) => {
             break;
           case "delete":
             await interaction.deferUpdate();
-            interactionCollector.emit("end");
+            interactionCollector.emit("end", true);
             if (currentPage.channel.messages ? currentPage.channel.messages.has(currentPage.id) : await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) await currentPage.delete();
             return;
           default:
@@ -153,13 +166,15 @@ export default async (client, message, pages, timeout = 120000) => {
         }
       }
     });
-    interactionCollector.once("end", async () => {
+    interactionCollector.once("end", async (deleted = false) => {
       interactionCollector.removeAllListeners("interaction");
-      for (const index of components.components[0].components.keys()) {
-        components.components[0].components[index].disabled = true;
-      }
-      if (currentPage.channel.messages ? currentPage.channel.messages.has(currentPage.id) : await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) {
-        await currentPage.edit(components);
+      if (!deleted) {
+        for (const index of components.components[0].components.keys()) {
+          components.components[0].components[index].disabled = true;
+        }
+        if (currentPage.channel.messages ? currentPage.channel.messages.has(currentPage.id) : await client.getMessage(currentPage.channel.id, currentPage.id).catch(() => undefined)) {
+          await currentPage.edit(components);
+        }
       }
     });
   }

@@ -25,6 +25,7 @@ class EvalRawCommand extends Command {
   static description = "Executes JavaScript code (with raw output)";
   static aliases = ["run"];
   static arguments = ["[code]"];
+  static slashAllowed = false;
 }
 
 export default EvalRawCommand;

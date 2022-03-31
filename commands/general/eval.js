@@ -5,7 +5,8 @@ class EvalCommand extends Command {
   async run() {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) return "Only the bot owner can use eval!";
-    const code = this.args.join(" ");
+    await this.acknowledge();
+    const code = this.type === "classic" ? this.args.join(" ") : this.options.code;
     try {
       const evaled = eval(code);
       const cleaned = await clean(evaled);
@@ -23,6 +24,13 @@ class EvalCommand extends Command {
       return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
     }
   }
+
+  static flags = [{
+    name: "code",
+    type: 3,
+    description: "The code to execute",
+    required: true
+  }];
 
   static description = "Executes JavaScript code";
   static aliases = ["run"];

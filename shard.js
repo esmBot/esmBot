@@ -80,8 +80,8 @@ class Shard extends BaseClusterWorker {
     this.ipc.register("reload", async (message) => {
       const path = paths.get(message);
       if (!path) return this.ipc.broadcast("reloadFail", { result: "I couldn't find that command!" });
-      const result = await load(this.bot, this.clusterID, this.workerID, this.ipc, path, await checkStatus());
-      if (result) return this.ipc.broadcast("reloadFail", { result });
+      const result = await load(this.bot, this.clusterID, this.workerID, this.ipc, path, await checkStatus(), true);
+      if (result !== message) return this.ipc.broadcast("reloadFail", { result });
       return this.ipc.broadcast("reloadSuccess");
     });
 

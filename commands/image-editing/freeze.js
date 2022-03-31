@@ -1,8 +1,18 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class FreezeCommand extends ImageCommand {
+  constructor(client, cluster, worker, ipc, options) {
+    super(client, cluster, worker, ipc, options);
+    this.flags.push({
+      name: "endframe",
+      type: 4,
+      description: "Set the end frame (default: last frame)",
+      min_value: 0
+    });
+  }
+
   params() {
-    const frameCount = parseInt(this.args[0]);
+    const frameCount = parseInt(this.type === "classic" ? this.args[0] : this.options.endframe);
     return {
       loop: false,
       frame: isNaN(frameCount) ? -1 : frameCount

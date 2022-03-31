@@ -3,9 +3,10 @@ import { random } from "../../utils/misc.js";
 const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "chonkers", "memes", "funny", "pcmasterrace", "thomastheplankengine"];
 
 class RedditCommand extends ImageCommand {
-  params() {
+  params(url) {
+    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
     return {
-      caption: this.args.length === 0 ? random(names) : this.args.join(" ").replaceAll("\n", "").replaceAll(" ", "")
+      caption: newArgs && newArgs.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names)
     };
   }
 

@@ -58,6 +58,7 @@ class UserInfoCommand extends Command {
   static description = "Gets info about a user";
   static aliases = ["user"];
   static arguments = ["[mention/id]"];
+  static slashAllowed = false;
 }
 
 export default UserInfoCommand;

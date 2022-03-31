@@ -93,7 +93,7 @@ class HelpCommand extends Command {
           }]
         });
       }
-      return paginator(this.client, this.message, embeds);
+      return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
     }
   }
 

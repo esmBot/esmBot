@@ -7,16 +7,24 @@ import Command from "../../classes/command.js";
 
 class YouTubeCommand extends Command {
   async run() {
-    if (this.args.length === 0) return "You need to provide something to search for!";
+    const query = this.type === "classic" ? this.args.join(" ") : this.options.query;
+    if (!query || !query.trim()) return "You need to provide something to search for!";
     this.acknowledge();
     const messages = [];
-    const videos = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(this.args.join(" "))}`).then(res => res.json());
+    const videos = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(query)}`).then(res => res.json());
     if (videos.results.length === 0) return "I couldn't find any results!";
     for (const [i, value] of videos.results.entries()) {
       messages.push({ content: `Page ${i + 1} of ${videos.results.length}\n<:youtube:637020823005167626> **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
-    return paginator(this.client, this.message, messages);
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, messages);
   }
+
+  static flags = [{
+    name: "query",
+    type: 3,
+    description: "The query you want to search for",
+    required: true
+  }];
 
   static description = "Searches YouTube";
   static aliases = ["yt", "video", "ytsearch"];

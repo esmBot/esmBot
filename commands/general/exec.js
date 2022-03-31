@@ -8,7 +8,8 @@ class ExecCommand extends Command {
   async run() {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) return "Only the bot owner can use exec!";
-    const code = this.args.join(" ");
+    await this.acknowledge();
+    const code = this.type === "classic" ? this.args.join(" ") : this.options.cmd;
     try {
       const execed = await exec(code);
       if (execed.stderr) return `\`ERROR\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;
@@ -27,6 +28,13 @@ class ExecCommand extends Command {
       return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
     }
   }
+
+  static flags = [{
+    name: "cmd",
+    type: 3,
+    description: "The command to execute",
+    required: true
+  }];
 
   static description = "Executes a shell command";
   static aliases = ["runcmd"];

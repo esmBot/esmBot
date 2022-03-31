@@ -1,8 +1,19 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class JPEGCommand extends ImageCommand {
+  constructor(client, cluster, worker, ipc, options) {
+    super(client, cluster, worker, ipc, options);
+    this.flags.push({
+      name: "quality",
+      type: 4,
+      description: "Set the JPEG quality (default: 1)",
+      min_value: 1,
+      max_value: 100
+    });
+  }
+
   params() {
-    const quality = parseInt(this.args[0]);
+    const quality = parseInt(this.type === "classic" ? this.args[0] : this.options.quality);
     return {
       quality: isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100))
     };

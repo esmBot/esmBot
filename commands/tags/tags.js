@@ -75,7 +75,7 @@ class TagsCommand extends Command {
         });
       }
       if (embeds.length === 0) return "I couldn't find any tags!";
-      return paginator(this.client, this.message, embeds);
+      return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
     } else if (this.args[0].toLowerCase() === "random") {
       const tagList = await database.getTags(this.channel.guild.id);
       return tagList[random(Object.keys(tagList))].content;

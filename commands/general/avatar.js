@@ -28,6 +28,7 @@ class AvatarCommand extends Command {
   static description = "Gets a user's avatar";
   static aliases = ["pfp", "ava"];
   static arguments = ["{mention/id}"];
+  static slashAllowed = false;
 }
 
 export default AvatarCommand;
