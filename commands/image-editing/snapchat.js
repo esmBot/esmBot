@@ -1,6 +1,17 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SnapchatCommand extends ImageCommand {
+  constructor(client, cluster, worker, ipc, options) {
+    super(client, cluster, worker, ipc, options);
+    this.flags.push({
+      name: "position",
+      type: 10,
+      description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.5)",
+      min_value: 0,
+      max_value: 1
+    });
+  }
+
   params(url) {
     const newArgs = this.args.filter(item => !item.includes(url));
     const position = parseFloat(this.specialArgs.position);
@@ -13,11 +24,6 @@ class SnapchatCommand extends ImageCommand {
   static description = "Adds a Snapchat style caption to an image";
   static aliases = ["snap", "caption3"];
   static arguments = ["[text]"];
-  static flags = [{
-    name: "position",
-    type: "number",
-    description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.5)"
-  }];
 
   static requiresText = true;
   static noText = "You need to provide some text to add a caption!";

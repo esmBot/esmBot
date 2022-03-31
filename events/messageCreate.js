@@ -85,7 +85,7 @@ export default async (client, cluster, worker, ipc, message) => {
   if (!cmd) return;
 
   // actually run the command
-  log("log", `${message.author.username} (${message.author.id}) ran command ${command}`);
+  log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
   const reference = {
     messageReference: {
       channelID: message.channel.id,

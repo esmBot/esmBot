@@ -7,6 +7,7 @@ class InviteCommand extends Command {
 
   static description = "Gets my invite link";
   static aliases = ["botinfo", "credits"];
+  static slashAllowed = false;
 }
 
 export default InviteCommand;

@@ -111,7 +111,7 @@ const Admiral = new Fleet({
       requestTimeout: 30000
     }
   },
-  useCentralRequestHandler: true,
+  useCentralRequestHandler: process.env.DEBUG_LOG ? false : true, // workaround for eris-fleet weirdness
   services: [
     { name: "prometheus", ServiceWorker: PrometheusWorker },
     { name: "image", ServiceWorker: ImageWorker }

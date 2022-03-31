@@ -10,6 +10,7 @@ class SnowflakeCommand extends Command {
   static description = "Converts a Discord snowflake id into a timestamp";
   static aliases = ["timestamp", "snowstamp", "snow"];
   static arguments = ["[id]"];
+  static slashAllowed = false;
 }
 
 export default SnowflakeCommand;

@@ -7,7 +7,7 @@ import Command from "../../classes/command.js";
 
 class ImageSearchCommand extends Command {
   async run() {
-    if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+    if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     if (this.args.length === 0) return "You need to provide something to search for!";
     this.acknowledge();
     const embeds = [];
@@ -27,8 +27,8 @@ class ImageSearchCommand extends Command {
             url: encodeURI(value.img_src)
           },
           author: {
-            name: this.message.author.username,
-            icon_url: this.message.author.avatarURL
+            name: this.author.username,
+            icon_url: this.author.avatarURL
           }
         }]
       });

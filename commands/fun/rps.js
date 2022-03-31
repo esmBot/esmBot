@@ -29,6 +29,7 @@ class RPSCommand extends Command {
   static description = "Plays rock, paper, scissors with me";
   static aliases = ["rockpaperscissors"];
   static arguments = ["[rock/paper/scissors]"];
+  static slashAllowed = false;
 }
 
 export default RPSCommand;

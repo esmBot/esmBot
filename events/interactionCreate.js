@@ -17,14 +17,14 @@ export default async (client, cluster, worker, ipc, interaction) => {
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
-  logger.log("log", `${invoker.username} (${invoker.id}) ran command ${command}`);
+  logger.log("log", `${invoker.username} (${invoker.id}) ran slash command ${command}`);
   try {
     await database.addCount(command);
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, cluster, worker, ipc, { type: "application", interaction });
     const result = await commandClass.run();
     if (typeof result === "string" || (typeof result === "object" && result.embeds)) {
-      await interaction.createMessage(result);
+      await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"](result);
     } else if (typeof result === "object" && result.file) {
       let fileSize = 8388119;
       if (interaction.channel.guild) {
@@ -42,7 +42,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
           const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
           await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
           const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
-          await interaction.createMessage({
+          await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]({
             embeds: [{
               color: 16711680,
               title: "Here's your image!",
@@ -56,30 +56,26 @@ export default async (client, cluster, worker, ipc, interaction) => {
             }]
           });
         } else {
-          await interaction.createMessage("The resulting image was more than 8MB in size, so I can't upload it.");
+          await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("The resulting image was more than 8MB in size, so I can't upload it.");
         }
       } else {
-        await interaction.createMessage({
-          content: result.text ? result.text : undefined
-        }, result);
+        await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"](result.text ? result.text : {}, result);
       }
     }
   } catch (error) {
     if (error.toString().includes("Request entity too large")) {
-      await interaction.createMessage("The resulting file was too large to upload. Try again with a smaller image if possible.");
+      await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("The resulting file was too large to upload. Try again with a smaller image if possible.");
     } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction.createMessage("Something happened to the image servers before I could receive the image. Try running your command again.");
+      await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("Something happened to the image servers before I could receive the image. Try running your command again.");
     } else if (error.toString().includes("Timed out")) {
-      await interaction.createMessage("The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.");
+      await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.");
     } else {
-      logger.error(`Error occurred with slash command ${command} with arguments ${interaction.data.options}: ${error.toString()}`);
+      logger.error(`Error occurred with slash command ${command} with arguments ${JSON.stringify(interaction.data.options)}: ${JSON.stringify(error)}`);
       try {
-        await interaction.createMessage({
-          content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"
-        }, [{
+        await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>", {
           file: `Message: ${await clean(error)}\n\nStack Trace: ${await clean(error.stack)}`,
           name: "error.txt"
-        }]);
+        });
       } catch { /* silently ignore */ }
     }
   }

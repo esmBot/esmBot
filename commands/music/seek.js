@@ -3,10 +3,10 @@ import MusicCommand from "../../classes/musicCommand.js";
 
 class SeekCommand extends MusicCommand {
   async run() {
-    if (!this.message.channel.guild) return "This command only works in servers!";
+    if (!this.channel.guild) return "This command only works in servers!";
     if (!this.message.member.voiceState.channelID) return "You need to be in a voice channel first!";
-    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
-    if (this.connection.host !== this.message.author.id) return "Only the current voice session host can seek the music!";
+    if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
+    if (this.connection.host !== this.author.id) return "Only the current voice session host can seek the music!";
     const player = this.connection.player;
     const track = await Rest.decode(player.node, player.track);
     if (!track.isSeekable) return "This track isn't seekable!";

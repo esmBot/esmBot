@@ -3,7 +3,7 @@ import imagedetect from "../../utils/imagedetect.js";
 
 class StickerCommand extends Command {
   async run() {
-    const result = await imagedetect(this.client, this.message, false, false, true);
+    const result = await imagedetect(this.client, this.message, this.interaction, this.options, false, false, true);
     if (!result) return "You need to provide a sticker!";
     if (result.format_type === 1) { // PNG
       return `https://cdn.discordapp.com/stickers/${result.id}.png`;

@@ -12,16 +12,16 @@ class BannerCommand extends Command {
         const user = await this.client.getRESTUser(this.args[0]);
         return user.banner ? this.client._formatImage(`/banners/${user.id}/${user.banner}`, null, 1024) : "This user doesn't have a banner!";
       } catch {
-        return this.message.author.banner ? this.message.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
+        return this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
       }
-    } else if (this.args.join(" ") !== "" && this.message.channel.guild) {
+    } else if (this.args.join(" ") !== "" && this.channel.guild) {
       const userRegex = new RegExp(this.args.join("|"), "i");
-      const member = this.message.channel.guild.members.find(element => {
+      const member = this.channel.guild.members.find(element => {
         return userRegex.test(element.nick) ?? userRegex.test(element.username);
       });
-      return member && member.user.banner ? member.user.dynamicBannerURL(null, 1024) : (this.message.author.banner ? this.message.author.dynamicBannerURL(null, 1024) : "This user doesn't have a banner!");
+      return member && member.user.banner ? member.user.dynamicBannerURL(null, 1024) : (this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "This user doesn't have a banner!");
     } else {
-      return this.message.author.banner ? this.message.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
+      return this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
     }
   }
 

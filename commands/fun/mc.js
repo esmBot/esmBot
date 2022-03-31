@@ -15,6 +15,7 @@ class MCCommand extends Command {
   static description = "Generates a Minecraft achievement image";
   static aliases = ["ach", "achievement", "minecraft"];
   static arguments = ["[text]"];
+  static slashAllowed = false;
 }
 
 export default MCCommand;

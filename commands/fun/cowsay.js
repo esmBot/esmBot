@@ -17,6 +17,7 @@ class CowsayCommand extends Command {
   static description = "Makes an ASCII cow say a message";
   static aliases = ["cow"];
   static arguments = ["{cow}", "[text]"];
+  static slashAllowed = false;
 }
 
 export default CowsayCommand;

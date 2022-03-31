@@ -7,7 +7,7 @@ import Command from "../../classes/command.js";
 class ExecCommand extends Command {
   async run() {
     const owners = process.env.OWNER.split(",");
-    if (!owners.includes(this.message.author.id)) return "Only the bot owner can use exec!";
+    if (!owners.includes(this.author.id)) return "Only the bot owner can use exec!";
     const code = this.args.join(" ");
     try {
       const execed = await exec(code);

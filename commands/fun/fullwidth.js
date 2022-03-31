@@ -9,6 +9,7 @@ class FullwidthCommand extends Command {
   static description = "Converts a message to fullwidth/aesthetic text";
   static aliases = ["aesthetic", "aesthetics", "aes"];
   static arguments = ["[text]"];
+  static slashAllowed = false;
 }
 
 export default FullwidthCommand;

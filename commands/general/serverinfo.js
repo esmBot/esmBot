@@ -2,44 +2,44 @@ import Command from "../../classes/command.js";
 
 class ServerInfoCommand extends Command {
   async run() {
-    if (!this.message.channel.guild) return "This command only works in servers!";
-    const owner = await this.message.channel.guild.members.get(this.message.channel.guild.ownerID);
+    if (!this.channel.guild) return "This command only works in servers!";
+    const owner = await this.channel.guild.members.get(this.channel.guild.ownerID);
     return {
       embeds: [{
-        title: this.message.channel.guild.name,
+        title: this.channel.guild.name,
         thumbnail: {
-          url: this.message.channel.guild.iconURL
+          url: this.channel.guild.iconURL
         },
         image: {
-          url: this.message.channel.guild.bannerURL
+          url: this.channel.guild.bannerURL
         },
         color: 16711680,
         fields: [
           {
             name: "🔢 **ID:**",
-            value: this.message.channel.guild.id
+            value: this.channel.guild.id
           },
           {
             name: "👤 **Owner:**",
-            value: owner ? `${owner.user.username}#${owner.user.discriminator}` : this.message.channel.guild.ownerID
+            value: owner ? `${owner.user.username}#${owner.user.discriminator}` : this.channel.guild.ownerID
           },
           {
             name: "🗓 **Created on:**",
-            value: `<t:${Math.floor(this.message.channel.guild.createdAt / 1000)}:F>`
+            value: `<t:${Math.floor(this.channel.guild.createdAt / 1000)}:F>`
           },
           {
             name: "👥 **Users:**",
-            value: this.message.channel.guild.memberCount,
+            value: this.channel.guild.memberCount,
             inline: true
           },
           {
             name: "💬 **Channels:**",
-            value: this.message.channel.guild.channels.size,
+            value: this.channel.guild.channels.size,
             inline: true
           },
           {
             name: "😃 **Emojis:**",
-            value: this.message.channel.guild.emojis.length,
+            value: this.channel.guild.emojis.length,
             inline: true
           }
         ]

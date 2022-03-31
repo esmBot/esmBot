@@ -8,7 +8,7 @@ const tips = ["You can change the bot's prefix using the prefix command.", "Imag
 
 class HelpCommand extends Command {
   async run() {
-    const { prefix } = this.message.channel.guild ? await database.getGuild(this.message.channel.guild.id) : "N/A";
+    const { prefix } = this.channel.guild ? await database.getGuild(this.channel.guild.id) : "N/A";
     if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
@@ -19,7 +19,7 @@ class HelpCommand extends Command {
             name: "esmBot Help",
             icon_url: this.client.user.avatarURL
           },
-          title: `${this.message.channel.guild ? prefix : ""}${command}`,
+          title: `${this.channel.guild ? prefix : ""}${command}`,
           url: "https://projectlounge.pw/esmBot/help.html",
           description: command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
           color: 16711680,
@@ -49,7 +49,7 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
-      if (this.message.channel.guild && !this.message.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+      if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
       const pages = [];
       if (help.categories === help.categoryTemplate && !help.generated) await help.generateList();
       for (const category of Object.keys(help.categories)) {
@@ -85,7 +85,7 @@ class HelpCommand extends Command {
             },
             fields: [{
               name: "Prefix",
-              value: this.message.channel.guild ? prefix : "N/A"
+              value: this.channel.guild ? prefix : "N/A"
             }, {
               name: "Tip",
               value: random(tips)
@@ -100,6 +100,7 @@ class HelpCommand extends Command {
   static description = "Gets a list of commands";
   static aliases = ["commands"];
   static arguments = ["{command}"];
+  static slashAllowed = false;
 }
 
 export default HelpCommand;

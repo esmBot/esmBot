@@ -4,22 +4,28 @@ import { log } from "./logger.js";
 let queryValue = 0;
 
 // load command into memory
-export async function load(command, soundStatus) {
+export async function load(client, cluster, worker, ipc, command, soundStatus) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
-  if (props.requires.includes("sound") && soundStatus) return log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
+  if (props.requires.includes("sound") && soundStatus) {
+    log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
+    return;
+  }
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
   
   paths.set(commandName, command);
   commands.set(commandName, props);
 
+  const propsInstance = new props(client, cluster, worker, ipc, {});
+
   info.set(commandName, {
     category: commandArray[commandArray.length - 2],
     description: props.description,
     aliases: props.aliases,
     params: props.arguments,
-    flags: props.flags
+    flags: propsInstance.flags ?? props.flags,
+    slashAllowed: props.slashAllowed
   });
   
   if (props.aliases) {
@@ -28,5 +34,5 @@ export async function load(command, soundStatus) {
       paths.set(alias, command);
     }
   }
-  return false;
+  return commandName;
 }

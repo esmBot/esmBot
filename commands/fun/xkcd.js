@@ -25,6 +25,7 @@ class XKCDCommand extends Command {
 
   static description = "Gets an XKCD comic";
   static arguments = ["{id}"];
+  static slashAllowed = false;
 }
 
 export default XKCDCommand;

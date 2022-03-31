@@ -8,21 +8,33 @@ class Command {
     this.args = options.args;
     if (options.type === "classic") {
       this.message = options.message;
+      this.channel = options.message.channel;
+      this.author = options.message.author;
       this.content = options.content;
       this.specialArgs = options.specialArgs;
       this.reference = {
         messageReference: {
-          channelID: this.message.channel.id,
+          channelID: this.channel.id,
           messageID: this.message.id,
-          guildID: this.message.channel.guild ? this.message.channel.guild.id : undefined,
+          guildID: this.channel.guild ? this.channel.guild.id : undefined,
           failIfNotExists: false
         },
         allowedMentions: {
           repliedUser: false
         }
       };
-    } else {
+    } else if (options.type === "application") {
       this.interaction = options.interaction;
+      this.channel = options.interaction.channel;
+      this.author = options.interaction.guildID ? options.interaction.member : options.interaction.user;
+      if (options.interaction.data.options) {
+        this.specialArgs = this.options = options.interaction.data.options.reduce((obj, item) => {
+          obj[item.name] = item.value;
+          return obj;
+        }, {});
+      } else {
+        this.specialArgs = this.options = {};
+      }
     }
   }
 
@@ -32,7 +44,7 @@ class Command {
 
   async acknowledge() {
     if (this.type === "classic") {
-      await this.message.channel.sendTyping();
+      await this.client.sendChannelTyping(this.channel.id);
     } else {
       await this.interaction.acknowledge();
     }

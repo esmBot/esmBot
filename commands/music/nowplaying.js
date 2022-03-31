@@ -4,9 +4,9 @@ import MusicCommand from "../../classes/musicCommand.js";
 
 class NowPlayingCommand extends MusicCommand {
   async run() {
-    if (!this.message.channel.guild) return "This command only works in servers!";
+    if (!this.channel.guild) return "This command only works in servers!";
     if (!this.message.member.voiceState.channelID) return "You need to be in a voice channel first!";
-    if (!this.message.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
+    if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     const player = this.connection.player;
     if (!player) return "I'm not playing anything!";
     const track = await Rest.decode(player.node, player.track);
@@ -28,7 +28,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           name: "💬 Channel:",
-          value: this.message.channel.guild.channels.get(this.message.member.voiceState.channelID).name
+          value: this.channel.guild.channels.get(this.message.member.voiceState.channelID).name
         },
         {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,

@@ -12,16 +12,16 @@ class AvatarCommand extends Command {
         const user = await this.client.getRESTUser(this.args[0]);
         return user.avatar ? this.client._formatImage(`/avatars/${user.id}/${user.avatar}`, null, 1024) : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`; // repeat of hacky "solution" from above
       } catch {
-        return this.message.author.dynamicAvatarURL(null, 1024);
+        return this.author.dynamicAvatarURL(null, 1024);
       }
-    } else if (this.args.join(" ") !== "" && this.message.channel.guild) {
+    } else if (this.args.join(" ") !== "" && this.channel.guild) {
       const userRegex = new RegExp(this.args.join("|"), "i");
-      const member = this.message.channel.guild.members.find(element => {
+      const member = this.channel.guild.members.find(element => {
         return userRegex.test(element.nick) ? userRegex.test(element.nick) : userRegex.test(element.username);
       });
-      return member ? member.user.dynamicAvatarURL(null, 1024) : this.message.author.dynamicAvatarURL(null, 1024);
+      return member ? member.user.dynamicAvatarURL(null, 1024) : this.author.dynamicAvatarURL(null, 1024);
     } else {
-      return this.message.author.dynamicAvatarURL(null, 1024);
+      return this.author.dynamicAvatarURL(null, 1024);
     }
   }
 

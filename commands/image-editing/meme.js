@@ -2,9 +2,29 @@ import ImageCommand from "../../classes/imageCommand.js";
 const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class MemeCommand extends ImageCommand {
+  constructor(client, cluster, worker, ipc, options) {
+    super(client, cluster, worker, ipc, options);
+    this.flags.push({
+      name: "case",
+      description: "Make the meme text case-sensitive (allows for lowercase text)",
+      type: 5
+    }, {
+      name: "font",
+      type: 3,
+      choices: (() => {
+        const array = [];
+        for (const font of allowedFonts) {
+          array.push({ name: font, value: font });
+        }
+        return array;
+      })(),
+      description: "Specify the font you want to use (default: impact)"
+    });
+  }
+
   params(url) {
-    const newArgs = this.args.filter(item => !item.includes(url));
-    const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
+    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
+    const [topText, bottomText] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
     return {
       top: (this.specialArgs.case ? topText : topText.toUpperCase()).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
       bottom: bottomText ? (this.specialArgs.case ? bottomText : bottomText.toUpperCase()).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : "",
@@ -14,14 +34,6 @@ class MemeCommand extends ImageCommand {
 
   static description = "Generates a meme from an image (separate top/bottom text with a comma)";
   static arguments = ["[top text]", "{bottom text}"];
-  static flags = [{
-    name: "case",
-    description: "Make the meme text case-sensitive (allows for lowercase text)"
-  }, {
-    name: "font",
-    type: allowedFonts.join("|"),
-    description: "Specify the font you want to use (default: `impact`)"
-  }];
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a meme!";

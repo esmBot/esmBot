@@ -2,6 +2,22 @@ import ImageCommand from "../../classes/imageCommand.js";
 const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class MotivateCommand extends ImageCommand {
+  constructor(client, cluster, worker, ipc, options) {
+    super(client, cluster, worker, ipc, options);
+    this.flags.push({
+      name: "font",
+      type: 3,
+      choices: (() => {
+        const array = [];
+        for (const font of allowedFonts) {
+          array.push({ name: font, value: font });
+        }
+        return array;
+      })(),
+      description: "Specify the font you want to use (default: times)"
+    });
+  }
+
   params(url) {
     const newArgs = this.args.filter(item => !item.includes(url));
     const [topText, bottomText] = newArgs.join(" ").split(/(?<!\\),/).map(elem => elem.trim());
@@ -15,11 +31,6 @@ class MotivateCommand extends ImageCommand {
   static description = "Generates a motivational poster";
   static aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation", "demotivate"];
   static arguments = ["[top text]", "{bottom text}"];
-  static flags = [{
-    name: "font",
-    type: allowedFonts.join("|"),
-    description: "Specify the font you want to use (default: `times`)"
-  }];
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a motivational poster!";

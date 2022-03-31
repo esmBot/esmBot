@@ -27,6 +27,7 @@ class RetroCommand extends ImageCommand {
   static requiresText = true;
   static noText = "You need to provide some text to make retro!";
   static command = "retro";
+  static slashAllowed = false;
 }
 
 export default RetroCommand;
