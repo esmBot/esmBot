@@ -3,8 +3,17 @@ const words = ["me irl", "dank", "follow my second account @esmBot_", "2016", "m
 const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class CaptionTwoCommand extends ImageCommand {
-  constructor(client, cluster, worker, ipc, options) {
-    super(client, cluster, worker, ipc, options);
+  params(url) {
+    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
+    return {
+      caption: newArgs && newArgs.trim() ? newArgs.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
+      top: !!this.specialArgs.top,
+      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "helvetica"
+    };
+  }
+
+  static init() {
+    super.init();
     this.flags.push({
       name: "top",
       description: "Put the caption on the top of an image instead of the bottom",
@@ -21,15 +30,7 @@ class CaptionTwoCommand extends ImageCommand {
       })(),
       description: "Specify the font you want to use (default: helvetica)"
     });
-  }
-
-  params(url) {
-    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
-    return {
-      caption: newArgs && newArgs.trim() ? newArgs.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
-      top: !!this.specialArgs.top,
-      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "helvetica"
-    };
+    return this;
   }
 
   static description = "Adds a me.me caption/tag list to an image";

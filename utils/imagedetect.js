@@ -133,7 +133,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     // we can get a raw attachment or a URL in the interaction itself
     if (options) {
       if (options.image) {
-        const result = await getImage(options.image.proxy_url, options.image.url, video);
+        const result = await getImage(interaction.data.resolved.attachments[options.image].proxy_url, interaction.data.resolved.attachments[options.image].url, video);
         if (result !== false) return result;
       } else if (options.link) {
         const result = await getImage(options.link, options.link, video);

@@ -3,12 +3,13 @@ import Command from "../../classes/command.js";
 
 class EmoteCommand extends Command {
   async run() {
-    if (this.args.length === 0) return "You need to provide an emoji!";
-    if (this.content.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
-      return `https://cdn.discordapp.com/emojis/${this.content.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${this.content.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
-    } else if (this.args[0].match(emojiRegex)) {
+    const emoji = this.type === "classic" ? this.args.join(" ") : this.options.emoji;
+    if (!emoji || !emoji.trim()) return "You need to provide an emoji!";
+    if (emoji.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
+      return `https://cdn.discordapp.com/emojis/${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
+    } else if (emoji.match(emojiRegex)) {
       const codePoints = [];
-      for (const codePoint of this.args[0]) {
+      for (const codePoint of emoji) {
         codePoints.push(codePoint.codePointAt(0).toString(16));
       }
       return `https://twemoji.maxcdn.com/v/latest/72x72/${codePoints.join("-").replace("-fe0f", "")}.png`;
@@ -16,6 +17,13 @@ class EmoteCommand extends Command {
       return "You need to provide a valid emoji to get an image!";
     }
   }
+
+  static flags = [{
+    name: "emoji",
+    type: 3,
+    description: "The emoji you want to get",
+    required: true
+  }];
 
   static description = "Gets a raw emote image";
   static aliases = ["e", "em", "hugemoji", "hugeemoji", "emoji"];

@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class BoomCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/boom.ogg", this.message);
-  }
-
+class BoomCommand extends SoundboardCommand {
+  static file = "./assets/audio/boom.ogg";
   static description = "Plays the Vine boom sound effect";
   static aliases = ["thud", "vine"];
 }

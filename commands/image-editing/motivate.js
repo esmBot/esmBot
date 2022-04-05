@@ -2,8 +2,18 @@ import ImageCommand from "../../classes/imageCommand.js";
 const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times"];
 
 class MotivateCommand extends ImageCommand {
-  constructor(client, cluster, worker, ipc, options) {
-    super(client, cluster, worker, ipc, options);
+  params(url) {
+    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
+    const [topText, bottomText] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
+    return {
+      top: topText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
+      bottom: bottomText ? bottomText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : "",
+      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "times"
+    };
+  }
+
+  static init() {
+    super.init();
     this.flags.push({
       name: "font",
       type: 3,
@@ -16,16 +26,7 @@ class MotivateCommand extends ImageCommand {
       })(),
       description: "Specify the font you want to use (default: times)"
     });
-  }
-
-  params(url) {
-    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
-    const [topText, bottomText] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
-    return {
-      top: topText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
-      bottom: bottomText ? bottomText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%") : "",
-      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "times"
-    };
+    return this;
   }
 
   static description = "Generates a motivational poster";

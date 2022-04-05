@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class BoiCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/boi.ogg", this.message);
-  }
-
+class BoiCommand extends SoundboardCommand {
+  static file = "./assets/audio/boi.ogg";
   static description = "Plays the \"boi\" sound effect";
   static aliases = ["boy", "neutron", "hugh"];
 }

@@ -9,7 +9,7 @@ class YouTubeCommand extends Command {
   async run() {
     const query = this.type === "classic" ? this.args.join(" ") : this.options.query;
     if (!query || !query.trim()) return "You need to provide something to search for!";
-    this.acknowledge();
+    await this.acknowledge();
     const messages = [];
     const videos = await fetch(`${random(searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(query)}`).then(res => res.json());
     if (videos.results.length === 0) return "I couldn't find any results!";

@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class BruhCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/bruh.ogg", this.message);
-  }
-
+class BruhCommand extends SoundboardCommand {
+  static file = "./assets/audio/bruh.ogg";
   static description = "Plays the \"bruh\" sound effect";
   static aliases = ["bro"];
 }

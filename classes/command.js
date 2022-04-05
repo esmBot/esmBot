@@ -4,12 +4,14 @@ class Command {
     this.cluster = cluster;
     this.worker = worker;
     this.ipc = ipc;
+    this.origOptions = options;
     this.type = options.type;
     this.args = options.args;
     if (options.type === "classic") {
       this.message = options.message;
       this.channel = options.message.channel;
       this.author = options.message.author;
+      this.member = options.message.member;
       this.content = options.content;
       this.specialArgs = options.specialArgs;
       this.reference = {
@@ -26,12 +28,13 @@ class Command {
     } else if (options.type === "application") {
       this.interaction = options.interaction;
       this.channel = options.interaction.channel;
-      this.author = options.interaction.guildID ? options.interaction.member : options.interaction.user;
+      this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       if (options.interaction.data.options) {
         this.specialArgs = this.options = options.interaction.data.options.reduce((obj, item) => {
           obj[item.name] = item.value;
           return obj;
         }, {});
+        this.optionsArray = options.interaction.data.options;
       } else {
         this.specialArgs = this.options = {};
       }
@@ -48,6 +51,10 @@ class Command {
     } else {
       await this.interaction.acknowledge();
     }
+  }
+
+  static init() {
+    return this;
   }
 
   static description = "No description found";

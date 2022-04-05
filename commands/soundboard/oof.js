@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class OofCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/oof.ogg", this.message);
-  }
-
+class OofCommand extends SoundboardCommand {
+  static file = "./assets/audio/oof.ogg";
   static description = "Plays the Roblox \"oof\" sound";
   static aliases = ["roblox", "commitdie"];
 }

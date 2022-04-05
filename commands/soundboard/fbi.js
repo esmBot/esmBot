@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class FBICommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/fbi.ogg", this.message);
-  }
-
+class FBICommand extends SoundboardCommand {
+  static file = "./assets/audio/fbi.ogg";
   static description = "Plays the \"FBI OPEN UP\" sound effect";
   static aliases = ["openup"];
 }

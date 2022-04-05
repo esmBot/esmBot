@@ -1,21 +1,22 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
-  constructor(client, cluster, worker, ipc, options) {
-    super(client, cluster, worker, ipc, options);
+  params() {
+    const speed = parseInt(this.type === "classic" ? this.args[0] : this.options.multiplier);
+    return {
+      speed: isNaN(speed) || speed < 1 ? 2 : speed
+    };
+  }
+
+  static init() {
+    super.init();
     this.flags.push({
       name: "multiplier",
       type: 4,
       description: "Set the speed multiplier (default: 2)",
       min_value: 1
     });
-  }
-
-  params() {
-    const speed = parseInt(this.type === "classic" ? this.args[0] : this.options.multiplier);
-    return {
-      speed: isNaN(speed) || speed < 1 ? 2 : speed
-    };
+    return this;
   }
 
   static description = "Makes an image sequence faster";

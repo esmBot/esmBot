@@ -3,7 +3,7 @@ import imageDetect from "../../utils/imagedetect.js";
 
 class RawCommand extends Command {
   async run() {
-    this.acknowledge();
+    await this.acknowledge();
     const image = await imageDetect(this.client, this.message, this.interaction, this.options);
     if (image === undefined) return "You need to provide an image/GIF to get a raw URL!";
     return image.path;

@@ -6,18 +6,20 @@ class SoundReloadCommand extends Command {
     return new Promise((resolve) => {
       const owners = process.env.OWNER.split(",");
       if (!owners.includes(this.author.id)) return "Only the bot owner can reload Lavalink!";
-      this.acknowledge();
-      this.ipc.broadcast("soundreload");
-      this.ipc.register("soundReloadSuccess", (msg) => {
-        this.ipc.unregister("soundReloadSuccess");
-        this.ipc.unregister("soundReloadFail");
-        resolve(`Successfully connected to ${msg.length} Lavalink node(s).`);
+      this.acknowledge().then(() => {
+        this.ipc.broadcast("soundreload");
+        this.ipc.register("soundReloadSuccess", (msg) => {
+          this.ipc.unregister("soundReloadSuccess");
+          this.ipc.unregister("soundReloadFail");
+          resolve(`Successfully connected to ${msg.length} Lavalink node(s).`);
+        });
+        this.ipc.register("soundReloadFail", () => {
+          this.ipc.unregister("soundReloadSuccess");
+          this.ipc.unregister("soundReloadFail");
+          resolve("I couldn't connect to any Lavalink nodes!");
+        });
       });
-      this.ipc.register("soundReloadFail", () => {
-        this.ipc.unregister("soundReloadSuccess");
-        this.ipc.unregister("soundReloadFail");
-        resolve("I couldn't connect to any Lavalink nodes!");
-      });
+
     });
   }
 

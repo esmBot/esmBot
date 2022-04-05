@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class FakePingCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/ping.ogg", this.message);
-  }
-
+class FakePingCommand extends SoundboardCommand {
+  static file = "./assets/audio/ping.ogg";
   static description = "Plays a Discord ping sound effect";
   static aliases = ["notification", "notif"];
 }

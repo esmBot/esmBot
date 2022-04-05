@@ -29,6 +29,12 @@ class EightBallCommand extends Command {
     return `🎱 ${random(EightBallCommand.responses)}`;
   }
 
+  static flags = [{
+    name: "question",
+    type: 3,
+    description: "A question you want to ask the ball"
+  }];
+
   static description = "Asks the magic 8-ball a question";
   static aliases = ["magicball", "magikball", "magic8ball", "magik8ball", "eightball"];
   static arguments = ["{text}"];

@@ -1,4 +1,4 @@
-import { paths, commands, info, aliases as _aliases } from "./collections.js";
+import { paths, commands, info, sounds, categories, aliases as _aliases } from "./collections.js";
 import { log } from "./logger.js";
 
 let queryValue = 0;
@@ -13,20 +13,26 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
   }
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
+
+  props.init();
   
   paths.set(commandName, command);
   commands.set(commandName, props);
 
-  const propsInstance = new props(client, cluster, worker, ipc, {});
+  if (Object.getPrototypeOf(props).name === "SoundboardCommand") sounds.set(commandName, props.file);
 
+  const category = commandArray[commandArray.length - 2];
   info.set(commandName, {
-    category: commandArray[commandArray.length - 2],
+    category: category,
     description: props.description,
     aliases: props.aliases,
     params: props.arguments,
-    flags: propsInstance.flags ?? props.flags,
+    flags: props.flags,
     slashAllowed: props.slashAllowed
   });
+
+  const categoryCommands = categories.get(category);
+  categories.set(category, categoryCommands ? [...categoryCommands, commandName] : [commandName]);
 
   if (slashReload && props.slashAllowed) {
     const commandList = await client.getCommands();
@@ -37,7 +43,7 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
       name: commandName,
       type: 1,
       description: props.description,
-      options: propsInstance.flags ?? props.flags
+      options: props.flags
     });
   }
   
@@ -48,4 +54,31 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
     }
   }
   return commandName;
+}
+
+export async function update() {
+  const commandArray = [];
+  for (const [name, command] of commands.entries()) {
+    let cmdInfo = info.get(name);
+    if (command.postInit) {
+      const cmd = command.postInit();
+      //commands.set(name, cmd);
+      cmdInfo = {
+        category: cmdInfo.category,
+        description: cmd.description,
+        aliases: cmd.aliases,
+        params: cmd.arguments,
+        flags: cmd.flags,
+        slashAllowed: cmd.slashAllowed
+      };
+      info.set(name, cmdInfo);
+    }
+    if (cmdInfo && cmdInfo.slashAllowed) commandArray.push({
+      name,
+      type: 1,
+      description: cmdInfo.description,
+      options: cmdInfo.flags
+    });
+  }
+  return commandArray;
 }

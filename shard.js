@@ -8,13 +8,13 @@ import { fileURLToPath } from "url";
 // fancy loggings
 import { log, error } from "./utils/logger.js";
 // initialize command loader
-import { load } from "./utils/handler.js";
+import { load, update } from "./utils/handler.js";
 // lavalink stuff
 import { checkStatus, connect, status, connected } from "./utils/soundplayer.js";
 // database stuff
 import database from "./utils/database.js";
 // command collections
-import { paths, info } from "./utils/collections.js";
+import { paths } from "./utils/collections.js";
 // playing messages
 const { messages } = JSON.parse(readFileSync(new URL("./messages.json", import.meta.url)));
 // other stuff
@@ -35,23 +35,16 @@ class Shard extends BaseClusterWorker {
   async init() {
     // register commands and their info
     const soundStatus = await checkStatus();
-    const commandArray = [];
     log("info", "Attempting to load commands...");
     for await (const commandFile of this.getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
       log("log", `Loading command from ${commandFile}...`);
       try {
-        const name = await load(this.bot, this.clusterID, this.workerID, this.ipc, commandFile, soundStatus);
-        const commandInfo = info.get(name);
-        if (commandInfo && commandInfo.slashAllowed) commandArray.push({
-          name,
-          type: 1,
-          description: commandInfo.description,
-          options: commandInfo.flags
-        });
+        await load(this.bot, this.clusterID, this.workerID, this.ipc, commandFile, soundStatus);
       } catch (e) {
         error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
+    const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
     log("info", "Finished loading commands.");
 
     await database.setup(this.ipc);

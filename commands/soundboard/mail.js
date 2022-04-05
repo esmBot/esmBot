@@ -1,11 +1,7 @@
-import { play } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import SoundboardCommand from "../../classes/soundboardCommand.js";
 
-class MailCommand extends MusicCommand {
-  async run() {
-    return await play(this.client, "./assets/audio/mail.ogg", this.message);
-  }
-
+class MailCommand extends SoundboardCommand {
+  static file = "./assets/audio/mail.ogg";
   static description = "Plays the \"You've got mail\" sound effect";
   static aliases = ["yougotmail", "youvegotmail", "aol"];
 }

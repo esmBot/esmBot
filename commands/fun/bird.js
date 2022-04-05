@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class BirdCommand extends Command {
   async run() {
-    this.acknowledge();
+    await this.acknowledge();
     const imageData = await fetch("http://shibe.online/api/birds");
     const json = await imageData.json();
     return {

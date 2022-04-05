@@ -8,17 +8,18 @@ class ReloadCommand extends Command {
       if (!owners.includes(this.author.id)) return resolve("Only the bot owner can reload commands!");
       const commandName = this.type === "classic" ? this.args.join(" ") : this.options.cmd;
       if (!commandName || !commandName.trim()) return resolve("You need to provide a command to reload!");
-      this.acknowledge();
-      this.ipc.broadcast("reload", commandName);
-      this.ipc.register("reloadSuccess", () => {
-        this.ipc.unregister("reloadSuccess");
-        this.ipc.unregister("reloadFail");
-        resolve(`The command \`${commandName}\` has been reloaded.`);
-      });
-      this.ipc.register("reloadFail", (message) => {
-        this.ipc.unregister("reloadSuccess");
-        this.ipc.unregister("reloadFail");
-        resolve(message.result);
+      this.acknowledge().then(() => {
+        this.ipc.broadcast("reload", commandName);
+        this.ipc.register("reloadSuccess", () => {
+          this.ipc.unregister("reloadSuccess");
+          this.ipc.unregister("reloadFail");
+          resolve(`The command \`${commandName}\` has been reloaded.`);
+        });
+        this.ipc.register("reloadFail", (message) => {
+          this.ipc.unregister("reloadSuccess");
+          this.ipc.unregister("reloadFail");
+          resolve(message.result);
+        });
       });
     });
   }

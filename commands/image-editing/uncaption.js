@@ -1,8 +1,15 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class UncaptionCommand extends ImageCommand {
-  constructor(client, cluster, worker, ipc, options) {
-    super(client, cluster, worker, ipc, options);
+  params() {
+    const tolerance = parseFloat(this.specialArgs.tolerance);
+    return {
+      tolerance: isNaN(tolerance) ? 0.95 : tolerance
+    };
+  }
+
+  static init() {
+    super.init();
     this.flags.push({
       name: "tolerance",
       type: 10,
@@ -10,13 +17,7 @@ class UncaptionCommand extends ImageCommand {
       min_value: 0,
       max_value: 1
     });
-  }
-
-  params() {
-    const tolerance = parseFloat(this.specialArgs.tolerance);
-    return {
-      tolerance: isNaN(tolerance) ? 0.95 : tolerance
-    };
+    return this;
   }
 
   static description = "Removes the caption from an image";

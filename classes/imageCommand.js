@@ -33,30 +33,6 @@ class ImageCommand extends Command {
       ]
     };*/
 
-  constructor(client, cluster, worker, ipc, options) {
-    super(client, cluster, worker, ipc, options);
-    this.flags = [];
-    if (this.constructor.requiresText || this.constructor.textOptional) {
-      this.flags.push({
-        name: "text",
-        type: 3,
-        description: "The text to put on the image",
-        required: !this.constructor.textOptional
-      });
-    }
-    if (this.constructor.requiresImage) {
-      this.flags.push({
-        name: "image",
-        type: 11,
-        description: "An image/GIF attachment"
-      }, {
-        name: "link",
-        type: 3,
-        description: "An image/GIF URL"
-      });
-    }
-  }
-
   async criteria() {
     return true;
   }
@@ -98,7 +74,6 @@ class ImageCommand extends Command {
         runningCommands.delete(this.author.id);
         throw e;
       }
-
     }
 
     if (this.constructor.requiresText) {
@@ -122,7 +97,7 @@ class ImageCommand extends Command {
     if (magickParams.params.type === "image/gif" && this.type === "classic") {
       status = await this.processMessage(this.message);
     } else {
-      this.acknowledge();
+      await this.acknowledge();
     }
 
     try {
@@ -146,6 +121,30 @@ class ImageCommand extends Command {
 
   processMessage(message) {
     return this.client.createMessage(message.channel.id, `${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
+  }
+
+  static init() {
+    this.flags = [];
+    if (this.requiresText || this.textOptional) {
+      this.flags.push({
+        name: "text",
+        type: 3,
+        description: "The text to put on the image",
+        required: !this.textOptional
+      });
+    }
+    if (this.requiresImage) {
+      this.flags.push({
+        name: "image",
+        type: 11,
+        description: "An image/GIF attachment"
+      }, {
+        name: "link",
+        type: 3,
+        description: "An image/GIF URL"
+      });
+    }
+    return this;
   }
 
   static requiresImage = true;

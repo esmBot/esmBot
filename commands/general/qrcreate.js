@@ -5,7 +5,7 @@ import Command from "../../classes/command.js";
 class QrCreateCommand extends Command {
   async run() {
     if (this.args.length === 0) return "You need to provide some text to generate a QR code!";
-    this.acknowledge();
+    await this.acknowledge();
     const writable = new PassThrough();
     qrcode.toFileStream(writable, this.content, { margin: 1 });
     const file = await this.streamToBuf(writable);
