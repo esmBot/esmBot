@@ -53,9 +53,9 @@ export async function connect(client) {
 export async function play(client, sound, options, music = false) {
   if (!manager) return "The sound commands are still starting up!";
   if (!options.channel.guild) return "This command only works in servers!";
-  if (!options.author.voiceState.channelID) return "You need to be in a voice channel first!";
+  if (!options.member.voiceState.channelID) return "You need to be in a voice channel first!";
   if (!options.channel.guild.permissionsOf(client.user.id).has("voiceConnect")) return "I can't join this voice channel!";
-  const voiceChannel = options.channel.guild.channels.get(options.author.voiceState.channelID);
+  const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
   const player = players.get(options.channel.guild.id);
   if (!music && manager.voiceStates.has(options.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
