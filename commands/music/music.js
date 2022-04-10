@@ -5,7 +5,7 @@ import { commands, aliases, info, categories } from "../../utils/collections.js"
 class MusicAIOCommand extends Command {
   async run() {
     let cmd = this.type === "classic" ? this.args[0] : this.optionsArray[0].name;
-    if (cmd === "music" || this.constructor.aliases.includes(cmd)) return "How dare you recurse me!";
+    if (cmd === "music" || this.constructor.aliases.includes(cmd)) return "https://media.discordapp.net/attachments/322114245632327703/941958748874887178/robot_dance-trans.gif";
     if (this.type === "classic") {
       this.origOptions.args.shift();
     } else {

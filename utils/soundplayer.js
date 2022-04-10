@@ -92,7 +92,7 @@ export async function play(client, sound, options, music = false) {
   if (oldQueue && oldQueue.length !== 0 && music) {
     return `Your ${playlistInfo.name ? "playlist" : "tune"} \`${playlistInfo.name ? playlistInfo.name.trim() : (tracks[0].info.title !== "" ? tracks[0].info.title.trim() : "(blank)")}\` has been added to the queue!`;
   } else {
-    nextSong(client, options, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.host : options.author.id, player ? player.loop : false, player ? player.shuffle : false);
+    nextSong(client, options, connection, tracks[0].track, tracks[0].info, music, voiceChannel, player ? player.host : options.member.id, player ? player.loop : false, player ? player.shuffle : false);
     return;
   }
 }

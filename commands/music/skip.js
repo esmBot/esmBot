@@ -18,12 +18,14 @@ class SkipCommand extends MusicCommand {
       if (votes.count + 1 === votes.max) {
         await player.player.stop(this.channel.guild.id);
         skipVotes.set(this.channel.guild.id, { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) });
+        if (this.type === "application") return "🔊 The current song has been skipped.";
       } else {
         skipVotes.set(this.channel.guild.id, newObject);
         return `🔊 Voted to skip song (${votes.count + 1}/${votes.max} people have voted).`;
       }
     } else {
       await player.player.stop(this.channel.guild.id);
+      if (this.type === "application") return "🔊 The current song has been skipped.";
       return;
     }
   }
