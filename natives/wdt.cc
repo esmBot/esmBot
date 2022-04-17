@@ -14,6 +14,7 @@ Napi::Value Wdt(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
@@ -30,7 +31,7 @@ Napi::Value Wdt(const Napi::CallbackInfo &info) {
     } catch (Magick::Warning &warning) {
       cerr << "Warning: " << warning.what() << endl;
     }
-    watermark.read("./assets/images/whodidthis.png");
+    watermark.read(basePath + "assets/images/whodidthis.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {

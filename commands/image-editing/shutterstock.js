@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class ShutterstockCommand extends ImageCommand {
   params = {
-    water: "./assets/images/shutterstock.png",
+    water: "assets/images/shutterstock.png",
     gravity: 5,
     resize: true
   };

@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class HypercamCommand extends ImageCommand {
   params = {
-    water: "./assets/images/hypercam.png",
+    water: "assets/images/hypercam.png",
     gravity: 1,
     resize: true
   };

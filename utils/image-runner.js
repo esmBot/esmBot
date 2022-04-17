@@ -1,10 +1,13 @@
 import { createRequire } from "module";
 import { isMainThread, parentPort, workerData } from "worker_threads";
 import fetch from "node-fetch";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const nodeRequire = createRequire(import.meta.url);
 
-const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+const relPath = `../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`;
+const magick = nodeRequire(relPath);
 
 const enumMap = {
   "forget": 0,
@@ -42,6 +45,7 @@ export default function run(object) {
           objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
         }
       }
+      objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
       try {
         const result = magick[object.cmd](objectWithFixedType);
         const returnObject = {

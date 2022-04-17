@@ -15,6 +15,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string overlay = obj.Get("overlay").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
@@ -31,7 +32,8 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     } catch (Magick::Warning &warning) {
       cerr << "Warning: " << warning.what() << endl;
     }
-    watermark.read(overlay);
+    string assetPath = basePath + overlay;
+    watermark.read(assetPath);
     watermark.alphaChannel(Magick::SetAlphaChannel);
     watermark.evaluate(Magick::AlphaChannel, Magick::MultiplyEvaluateOperator,
                        0.5);

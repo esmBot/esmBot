@@ -12,6 +12,7 @@ Napi::Value Sonic(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     string text = obj.Get("text").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     Blob blob;
 
@@ -24,7 +25,7 @@ Napi::Value Sonic(const Napi::CallbackInfo &info) {
     text_image.read("pango:<span foreground='white'>" + text + "</span>");
     text_image.resize(Geometry(474, 332));
     text_image.extent(Geometry("1024x538-435-145"), Magick::CenterGravity);
-    image.read("./assets/images/sonic.jpg");
+    image.read(basePath + "assets/images/sonic.jpg");
     image.composite(text_image, Geometry("+160+10"), Magick::OverCompositeOp);
     image.magick("PNG");
     image.write(&blob);

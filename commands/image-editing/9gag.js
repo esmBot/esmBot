@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class NineGagCommand extends ImageCommand {
   params = {
-    water: "./assets/images/9gag.png",
+    water: "assets/images/9gag.png",
     gravity: 6
   };
 

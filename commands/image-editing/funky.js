@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class FunkyCommand extends ImageCommand {
   params = {
-    water: "./assets/images/funky.png",
+    water: "assets/images/funky.png",
     gravity: 3,
     resize: true
   };

@@ -14,6 +14,7 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
@@ -31,8 +32,8 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
     } catch (Magick::Warning &warning) {
       cerr << "Warning: " << warning.what() << endl;
     }
-    distort.read("./assets/images/spheremap.png");
-    overlay.read("./assets/images/sphere_overlay.png");
+    distort.read(basePath + "assets/images/spheremap.png");
+    overlay.read(basePath + "assets/images/sphere_overlay.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     if (type != "gif") {

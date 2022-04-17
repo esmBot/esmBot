@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class DeviantArtCommand extends ImageCommand {
   params = {
-    water: "./assets/images/deviantart.png",
+    water: "assets/images/deviantart.png",
     gravity: 5,
     resize: true
   };

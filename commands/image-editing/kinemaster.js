@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class KineMasterCommand extends ImageCommand {
   params = {
-    water: "./assets/images/kinemaster.png",
+    water: "assets/images/kinemaster.png",
     gravity: 3,
     resize: true
   };

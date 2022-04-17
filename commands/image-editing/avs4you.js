@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class AVSCommand extends ImageCommand {
   params = {
-    water: "./assets/images/avs4you.png",
+    water: "assets/images/avs4you.png",
     gravity: 5,
     resize: true
   };

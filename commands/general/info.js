@@ -25,7 +25,7 @@ class InfoCommand extends Command {
         },
         {
           name: "📝 Credits:",
-          value: "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nIcon by **[MintBurrow](https://twitter.com/MintBurrow)**"
+          value: "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo by **[MintBurrow](https://twitter.com/MintBurrow)**"
         },
         {
           name: "💬 Total Servers:",

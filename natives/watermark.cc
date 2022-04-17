@@ -26,6 +26,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
                       ? obj.Get("append").As<Napi::Boolean>().Value()
                       : false;
     bool mc = obj.Has("mc") ? obj.Get("mc").As<Napi::Boolean>().Value() : false;
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
@@ -43,7 +44,8 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     } catch (Magick::Warning &warning) {
       cerr << "Warning: " << warning.what() << endl;
     }
-    watermark.read(water);
+    string merged = basePath + water;
+    watermark.read(merged);
     if (resize && append) {
       string query(to_string(frames.front().baseColumns()) + "x");
       watermark.scale(Geometry(query));

@@ -14,6 +14,7 @@ Napi::Value Retro(const Napi::CallbackInfo &info) {
     string line1 = obj.Get("line1").As<Napi::String>().Utf8Value();
     string line2 = obj.Get("line2").As<Napi::String>().Utf8Value();
     string line3 = obj.Get("line3").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     Blob blob;
 
@@ -22,7 +23,7 @@ Napi::Value Retro(const Napi::CallbackInfo &info) {
     Image line2_text;
     Image line3_text;
 
-    image.read("./assets/images/retro.png");
+    image.read(basePath + "assets/images/retro.png");
 
     line2_text.backgroundColor("none");
     line2_text.fontPointsize(128);

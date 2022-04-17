@@ -12,11 +12,13 @@ Napi::Value Homebrew(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     Blob blob;
 
     Image image;
-    image.read("./assets/images/hbc.png");
+    string assetPath = basePath + "assets/images/hbc.png";
+    image.read(assetPath);
     image.textGravity(Magick::CenterGravity);
     image.font("./assets/hbc.ttf");
     image.textKerning(-5);

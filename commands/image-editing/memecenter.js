@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class MemeCenterCommand extends ImageCommand {
   params = {
-    water: "./assets/images/memecenter.png",
+    water: "assets/images/memecenter.png",
     gravity: 9,
     mc: true
   };

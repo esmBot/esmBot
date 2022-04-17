@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class iFunnyCommand extends ImageCommand {
   params = {
-    water: "./assets/images/ifunny.png",
+    water: "assets/images/ifunny.png",
     gravity: 8,
     resize: true,
     append: true

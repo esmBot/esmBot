@@ -13,6 +13,7 @@ Napi::Value Zamn(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
@@ -23,7 +24,7 @@ Napi::Value Zamn(const Napi::CallbackInfo &info) {
     list<Image> mid;
     Image watermark;
     readImages(&frames, Blob(data.Data(), data.Length()));
-    watermark.read("./assets/images/zamn.png");
+    watermark.read(basePath + "assets/images/zamn.png");
     coalesceImages(&coalesced, frames.begin(), frames.end());
 
     for (Image &image : coalesced) {

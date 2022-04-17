@@ -14,6 +14,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string text = obj.Get("caption").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
@@ -32,7 +33,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
       cerr << "Warning: " << warning.what() << endl;
     }
 
-    watermark.read("./assets/images/reddit.png");
+    watermark.read(basePath + "assets/images/reddit.png");
     text_image.textGravity(Magick::WestGravity);
     text_image.font("Roboto");
     text_image.fontPointsize(47);

@@ -10,14 +10,14 @@ class FlagCommand extends ImageCommand {
     const text = this.type === "classic" ? this.args[0] : this.options.text;
     if (!text.match(emojiRegex)) return false;
     const flag = emoji.unemojify(text).replaceAll(":", "").replace("flag-", "");
-    let path = `./assets/images/region-flags/png/${flag.toUpperCase()}.png`;
-    if (flag === "pirate_flag") path = "./assets/images/pirateflag.png";
-    if (flag === "rainbow-flag") path = "./assets/images/rainbowflag.png";
-    if (flag === "checkered_flag") path = "./assets/images/checkeredflag.png";
-    if (flag === "transgender_flag") path = "./assets/images/transflag.png";
-    if (text === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "./assets/images/region-flags/png/GB-SCT.png";
-    if (text === "🏴󠁧󠁢󠁷󠁬󠁳󠁿") path = "./assets/images/region-flags/png/GB-WLS.png";
-    if (text === "🏴󠁧󠁢󠁥󠁮󠁧󠁿") path = "./assets/images/region-flags/png/GB-ENG.png";
+    let path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
+    if (flag === "pirate_flag") path = "assets/images/pirateflag.png";
+    if (flag === "rainbow-flag") path = "assets/images/rainbowflag.png";
+    if (flag === "checkered_flag") path = "assets/images/checkeredflag.png";
+    if (flag === "transgender_flag") path = "assets/images/transflag.png";
+    if (text === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "assets/images/region-flags/png/GB-SCT.png";
+    if (text === "🏴󠁧󠁢󠁷󠁬󠁳󠁿") path = "assets/images/region-flags/png/GB-WLS.png";
+    if (text === "🏴󠁧󠁢󠁥󠁮󠁧󠁿") path = "assets/images/region-flags/png/GB-ENG.png";
     try {
       await fs.promises.access(path);
       this.flagPath = path;

@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeechBubbleCommand extends ImageCommand {
   params = {
-    water: "./assets/images/speechbubble.png",
+    water: "assets/images/speechbubble.png",
     gravity: "north",
     resize: true,
     yscale: 0.2,
