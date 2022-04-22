@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class WikihowCommand extends Command {
   async run() {
-    if (!this.interaction.acknowledged) await this.acknowledge();
+    await this.acknowledge();
     const request = await fetch("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6");
     const json = await request.json();
     const id = Object.keys(json.query.pages)[0];
