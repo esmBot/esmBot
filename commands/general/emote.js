@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class EmoteCommand extends Command {
   async run() {
-    const emoji = this.type === "classic" ? this.args.join(" ") : this.options.emoji;
+    const emoji = this.type === "classic" ? this.content : this.options.emoji;
     if (!emoji || !emoji.trim()) return "You need to provide an emoji!";
     if (emoji.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
       return `https://cdn.discordapp.com/emojis/${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
