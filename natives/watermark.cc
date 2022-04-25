@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -46,12 +44,15 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     if (resize && append) {
-      watermark = watermark.thumbnail_image(width);
+      watermark = watermark.resize((double)width / (double)watermark.width());
     } else if (resize && yscale) {
-      watermark = watermark.thumbnail_image(width, VImage::option()->set("height", page_height * yscale)->set("size", VIPS_SIZE_FORCE));
+      watermark = watermark.resize(
+          (double)width / (double)watermark.width(),
+          VImage::option()->set("vscale", (double)(page_height * yscale) /
+                                              (double)watermark.height()));
     } else if (resize) {
-      watermark = watermark.thumbnail_image(
-          VIPS_MAX_COORD, VImage::option()->set("height", page_height));
+      watermark =
+          watermark.resize((double)page_height / (double)watermark.height());
     }
 
     vector<VImage> img;
@@ -120,65 +121,6 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
         type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
     vips_thread_shutdown();
-
-    /*list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    Image watermark;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    string merged = basePath + water;
-    watermark.read(merged);
-    if (resize && append) {
-      string query(to_string(frames.front().baseColumns()) + "x");
-      watermark.scale(Geometry(query));
-    } else if (resize && yscale) {
-      string query(to_string(frames.front().baseColumns()) + "x" +
-                   to_string(frames.front().baseRows() * yscale) + "!");
-      watermark.resize(Geometry(query));
-    } else if (resize) {
-      string query("x" + to_string(frames.front().baseRows()));
-      watermark.scale(Geometry(query));
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      Image final;
-      if (append) {
-        list<Image> to_append;
-        to_append.push_back(image);
-        to_append.push_back(watermark);
-        appendImages(&final, to_append.begin(), to_append.end(), true);
-        final.repage();
-      } else if (mc) {
-        image.backgroundColor("white");
-        image.extent(Geometry(image.columns(), image.rows() + 15));
-        image.composite(watermark, gravity, Magick::OverCompositeOp);
-        final = image;
-      } else {
-        image.composite(watermark, gravity, Magick::OverCompositeOp);
-        final = image;
-      }
-      image.magick(type);
-      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      mid.push_back(final);
-    }
-
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-        image.quantize();
-      }
-    }
-
-    writeImages(mid.begin(), mid.end(), &blob);*/
 
     Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));

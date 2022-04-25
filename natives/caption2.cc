@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;

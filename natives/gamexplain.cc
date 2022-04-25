@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -37,13 +35,12 @@ Napi::Value Gamexplain(const Napi::CallbackInfo &info) {
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
-      VImage resized =
-          img_frame
-              .thumbnail_image(1181, VImage::option()
-                                         ->set("height", 571)
-                                         ->set("size", VIPS_SIZE_FORCE))
-              .embed(10, 92, 1200, 675,
-                     VImage::option()->set("extend", "white"));
+      VImage resized = img_frame
+                           .resize(1181.0 / (double)width,
+                                   VImage::option()->set(
+                                       "vscale", 571.0 / (double)page_height))
+                           .embed(10, 92, 1200, 675,
+                                  VImage::option()->set("extend", "white"));
       VImage composited = resized.composite2(tmpl, VIPS_BLEND_MODE_OVER);
       img.push_back(composited);
     }

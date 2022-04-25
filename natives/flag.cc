@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -32,18 +30,24 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     string assetPath = basePath + overlay;
-    VImage overlayImage = VImage::new_from_file(assetPath.c_str()).thumbnail_image(width, VImage::option()->set("height", page_height)->set("size", VIPS_SIZE_FORCE));
+    VImage overlayInput = VImage::new_from_file(assetPath.c_str());
+    VImage overlayImage = overlayInput.resize(
+        (double)width / (double)overlayInput.width(),
+        VImage::option()->set(
+            "vscale", (double)page_height / (double)overlayInput.height()));
     if (!overlayImage.has_alpha()) {
       overlayImage = overlayImage.bandjoin(127);
     } else {
-      overlayImage = overlayImage * vector<double>{ 1, 1, 1, 0.5 }; // this is a pretty cool line, just saying
+      // this is a pretty cool line, just saying
+      overlayImage = overlayImage * vector<double>{1, 1, 1, 0.5};
     }
 
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
-      VImage composited = img_frame.composite2(overlayImage, VIPS_BLEND_MODE_OVER);
+      VImage composited =
+          img_frame.composite2(overlayImage, VIPS_BLEND_MODE_OVER);
       img.push_back(composited);
     }
 
@@ -58,8 +62,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
         type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf,
-                                                length));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -46,7 +44,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
 
     if (dividedWidth >= 1) {
       altMask = VImage::black(dividedWidth * 2 + 1, dividedWidth * 2 + 1) + 128;
-      altMask.draw_circle({255}, dividedWidth, dividedWidth, dividedWidth, VImage::option()->set("fill", true));
+      altMask.draw_circle({255}, dividedWidth, dividedWidth, dividedWidth,
+                          VImage::option()->set("fill", true));
     }
 
     VImage topText;
@@ -66,7 +65,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
           topIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
               .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
       if (dividedWidth >= 1) {
-        topOutline = topOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
+        topOutline =
+            topOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
       }
       topOutline = (topOutline == (vector<double>){0, 0, 0, 0});
       VImage topInvert = topOutline.extract_band(3).invert();
@@ -93,7 +93,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
           bottomIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
               .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
       if (dividedWidth >= 1) {
-        bottomOutline = bottomOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
+        bottomOutline =
+            bottomOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
       }
       bottomOutline = (bottomOutline == (vector<double>){0, 0, 0, 0});
       VImage bottomInvert = bottomOutline.extract_band(3).invert();

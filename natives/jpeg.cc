@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -30,22 +28,14 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
               .colourspace(VIPS_INTERPRETATION_sRGB);
       if (!in.has_alpha()) in = in.bandjoin(255);
 
-      int width = in.width();
       int page_height = vips_image_get_page_height(in.get_image());
-      int n_pages = vips_image_get_n_pages(in.get_image());
 
-      vector<VImage> img;
-      for (int i = 0; i < n_pages; i++) {
-        VImage img_frame = in.crop(0, i * page_height, width, page_height);
-        void *buf;
-        size_t length;
-        img_frame.write_to_buffer(
-            ".jpg", &buf, &length,
-            VImage::option()->set("Q", quality)->set("strip", true));
-        VImage jpeg = VImage::new_from_buffer(buf, length, "");
-        img.push_back(jpeg);
-      }
-      VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+      void *jpgBuf;
+      size_t jpgLength;
+      in.write_to_buffer(
+          ".jpg", &jpgBuf, &jpgLength,
+          VImage::option()->set("Q", quality)->set("strip", true));
+      VImage final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
       final.set(VIPS_META_PAGE_HEIGHT, page_height);
       if (delay) final.set("delay", delay);
 

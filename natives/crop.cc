@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -37,8 +35,10 @@ Napi::Value Crop(const Napi::CallbackInfo &info) {
       int frameHeight = img_frame.height();
       bool widthOrHeight = frameWidth / frameHeight >= 1;
       int size = widthOrHeight ? frameHeight : frameWidth;
-      //img_frame.crop(frameWidth - size, frameHeight - size, size, size);
-      VImage result = img_frame.smartcrop(size, size, VImage::option()->set("interesting", VIPS_INTERESTING_CENTRE));
+      // img_frame.crop(frameWidth - size, frameHeight - size, size, size);
+      VImage result = img_frame.smartcrop(
+          size, size,
+          VImage::option()->set("interesting", VIPS_INTERESTING_CENTRE));
       finalHeight = size;
       img.push_back(result);
     }

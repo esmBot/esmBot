@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -40,7 +38,6 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
       mask = VImage::black(dividedWidth * 2 + 1, dividedWidth * 2 + 1) + 128;
       mask.draw_circle({255}, dividedWidth, dividedWidth, dividedWidth,
                        VImage::option()->set("fill", true));
-      mask.write_to_file("/home/esm/mask.png");
     } else {
       mask = VImage::black(rad * 2 + 1, rad * 2 + 1) + 128;
       mask.draw_circle({255}, rad, rad, rad,

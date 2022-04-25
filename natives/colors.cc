@@ -1,7 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 using namespace std;
@@ -33,28 +31,12 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     VImage out;
 
     if (color == "blurple") {
-      out = in; // TODO: figure out how to implement blurple
+      out = in;
     } else if (color == "grayscale") {
       out = in.colourspace(VIPS_INTERPRETATION_B_W);
     } else if (color == "sepia") {
       out = in.flatten().recomb(sepia);
     }
-
-    /*for (Image &image : coalesced) {
-      if (color == "blurple") {
-        image.threshold(49151.25);
-        image.levelColors(old ? "#7289DA" : "#5865F2", "white");
-      } else if (color == "grayscale") {
-        image.quantizeColorSpace(GRAYColorspace);
-        image.quantizeColors(256);
-      } else if (color == "sepia") {
-        image.sepiaTone(49151.25);
-      }
-      image.magick(type);
-      image.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      colored.push_back(image);
-    }*/
-
     if (delay) out.set("delay", delay);
 
     void *buf;

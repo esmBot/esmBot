@@ -1,14 +1,9 @@
 #include <napi.h>
 
-#include <iostream>
 #include <vips/vips8>
 
 using namespace std;
 using namespace vips;
-
-/*void finalizer(Napi::Env env, char* data) {
-    free(data);
-}*/
 
 Napi::Value Caption(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -79,7 +74,6 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
-    cerr << "Error: " << err.what() << endl;
     throw Napi::Error::New(env, err.what());
   } catch (...) {
     throw Napi::Error::New(env, "Unknown error");

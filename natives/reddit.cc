@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Reddit(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -18,62 +16,58 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    Image watermark;
-    Image text_image;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
+
+    string assetPath = basePath + "assets/images/reddit.png";
+    VImage tmpl = VImage::new_from_file(assetPath.c_str());
+
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+
+    string captionText = "<span foreground=\"white\">" + text + "</span>";
+
+    VImage textImage =
+        VImage::text(captionText.c_str(), VImage::option()
+                                              ->set("rgba", true)
+                                              ->set("font", "Roboto 62")
+                                              ->set("align", VIPS_ALIGN_LOW));
+
+    VImage composited =
+        tmpl.composite2(textImage, VIPS_BLEND_MODE_OVER,
+                        VImage::option()->set("x", 375)->set(
+                            "y", (tmpl.height() - textImage.height()) - 64));
+    VImage watermark =
+        composited.resize((double)width / (double)composited.width());
+
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+      VImage frame = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
+                                    VImage::option()->set("expand", true));
+      img.push_back(frame);
     }
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height + watermark.height());
+    if (delay) final.set("delay", delay);
 
-    watermark.read(basePath + "assets/images/reddit.png");
-    text_image.textGravity(Magick::WestGravity);
-    text_image.font("Roboto");
-    text_image.fontPointsize(47);
-    text_image.backgroundColor("none");
-    text_image.read("pango:<span foreground='white'>" + text + "</span>");
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-    watermark.composite(text_image, Geometry("+375+46"),
-                        Magick::OverCompositeOp);
-
-    string query(to_string(frames.front().baseColumns()) + "x");
-    watermark.scale(Geometry(query));
-
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      Image final;
-      list<Image> to_append;
-      to_append.push_back(image);
-      to_append.push_back(watermark);
-      appendImages(&final, to_append.begin(), to_append.end(), true);
-      final.repage();
-      image.magick(type);
-      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      mid.push_back(final);
-    }
-
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-        image.quantize();
-      }
-    }
-
-    writeImages(mid.begin(), mid.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
