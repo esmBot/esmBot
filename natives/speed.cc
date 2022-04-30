@@ -1,17 +1,45 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 void *memset16(void *m, uint16_t val, size_t count) {
   uint16_t *buf = (uint16_t *)m;
 
   while (count--) *buf++ = val;
   return m;
+}
+
+void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
+                int speed) {
+  VOption *options = VImage::option()->set("access", "sequential");
+
+  VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                      options->set("n", -1))
+                  .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha()) in = in.bandjoin(255);
+
+  int width = in.width();
+  int page_height = vips_image_get_page_height(in.get_image());
+  int n_pages = vips_image_get_n_pages(in.get_image());
+
+  vector<VImage> img;
+  for (int i = 0; i < n_pages; i += speed) {
+    VImage img_frame = in.crop(0, i * page_height, width, page_height);
+    img.push_back(img_frame);
+  }
+  VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  out.set(VIPS_META_PAGE_HEIGHT, page_height);
+
+  void *buf;
+  size_t length;
+  out.write_to_buffer(".gif", &buf, &length);
+
+  vips_thread_shutdown();
+
+  result->Set("data", Napi::Buffer<char>::Copy(*env, (char *)buf, length));
 }
 
 Napi::Value Speed(const Napi::CallbackInfo &info) {
@@ -80,37 +108,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
       result.Set("data",
                  Napi::Buffer<char>::Copy(env, fileData, data.Length()));
 
-      if (removeFrames) {
-        Blob blob;
-
-        list<Image> frames;
-        try {
-          readImages(&frames, Blob(data.Data(), data.Length()));
-        } catch (Magick::WarningCoder &warning) {
-          cerr << "Coder Warning: " << warning.what() << endl;
-        } catch (Magick::Warning &warning) {
-          cerr << "Warning: " << warning.what() << endl;
-        }
-
-        for (list<Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
-          int index = distance(frames.begin(), i);
-          if (index >= (int)old_delays.size()) {
-            old_delays.resize(index+1);
-            old_delays[index] = old_delays[index-1];
-          }
-          i->animationDelay(old_delays[index]);
-        }
-
-        for (int i = 0; i < speed - 1; ++i) {
-          auto it = frames.begin();
-          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
-        }
-
-        for_each(frames.begin(), frames.end(), magickImage(type));
-        writeImages(frames.begin(), frames.end(), &blob);
-        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                    blob.length()));
-      }
+      if (removeFrames) vipsRemove(&env, &result, data, speed);
     } else {
       char *lastPos;
 
@@ -133,26 +131,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
       }
 
       if (removeFrames) {
-        Blob blob;
-
-        list<Image> frames;
-        try {
-          readImages(&frames, Blob(data.Data(), data.Length()));
-        } catch (Magick::WarningCoder &warning) {
-          cerr << "Coder Warning: " << warning.what() << endl;
-        } catch (Magick::Warning &warning) {
-          cerr << "Warning: " << warning.what() << endl;
-        }
-
-        for (int i = 0; i < speed - 1; ++i) {
-          auto it = frames.begin();
-          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
-        }
-
-        for_each(frames.begin(), frames.end(), magickImage(type));
-        writeImages(frames.begin(), frames.end(), &blob);
-        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                    blob.length()));
+        vipsRemove(&env, &result, data, speed);
       } else {
         while (lastPos != NULL) {
           if (memcmp(lastPos, match, 4) != 0) {

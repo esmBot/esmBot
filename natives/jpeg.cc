@@ -37,7 +37,11 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
           VImage::option()->set("Q", quality)->set("strip", true));
       VImage final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
       final.set(VIPS_META_PAGE_HEIGHT, page_height);
-      if (delay) final.set("delay", delay);
+      if (delay) {
+        final.set("delay", delay);
+      } else if (type == "gif") {
+        final.set("delay", in.get_array_int("delay"));
+      }
 
       void *buf;
       size_t length;
