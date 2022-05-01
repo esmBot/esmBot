@@ -2,41 +2,43 @@ import database from "../../utils/database.js";
 import paginator from "../../utils/pagination/pagination.js";
 import { random } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
+const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
 
 class TagsCommand extends Command {
-  // todo: find a way to split this into subcommands
+  // todo: attempt to not make this file the worst thing that human eyes have ever seen
   async run() {
     if (!this.channel.guild) return "This command only works in servers!";
+    const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.optionsArray[0].name;
+    if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
+    const tagName = this.type === "classic" ? this.args.slice(1)[0] : (this.optionsArray[0].options[0] ?? {}).value;
 
-    if (this.args.length === 0) return "You need to provide the name of the tag you want to view!";
-    const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
-    if (this.args[0].toLowerCase() === "create" || this.args[0].toLowerCase() === "add") {
-      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to add!";
-      if (blacklist.includes(this.args[1].toLowerCase())) return "You can't make a tag with that name!";
-      const getResult = await database.getTag(this.channel.guild.id, this.args[1].toLowerCase());
+    if (cmd === "create" || cmd === "add") {
+      if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";
+      if (blacklist.includes(tagName)) return "You can't make a tag with that name!";
+      const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (getResult) return "This tag already exists!";
-      const result = await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message);
+      const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
       if (result) return result;
-      return `The tag \`${this.args[1].toLowerCase()}\` has been added!`;
-    } else if (this.args[0].toLowerCase() === "delete" || this.args[0].toLowerCase() === "remove") {
-      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to delete!";
-      const getResult = await database.getTag(this.channel.guild.id, this.args[1].toLowerCase());
+      return `The tag \`${tagName}\` has been added!`;
+    } else if (cmd === "delete" || cmd === "remove") {
+      if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to delete!";
+      const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
-      await database.removeTag(this.args[1].toLowerCase(), this.channel.guild);
-      return `The tag \`${this.args[1].toLowerCase()}\` has been deleted!`;
-    } else if (this.args[0].toLowerCase() === "edit") {
-      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to edit!";
-      const getResult = await database.getTag(this.channel.guild.id, this.args[1].toLowerCase());
+      await database.removeTag(tagName, this.channel.guild);
+      return `The tag \`${tagName}\` has been deleted!`;
+    } else if (cmd === "edit") {
+      if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to edit!";
+      const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
-      await this.setTag(this.args.slice(2).join(" "), this.args[1].toLowerCase(), this.message, true);
-      return `The tag \`${this.args[1].toLowerCase()}\` has been edited!`;
-    } else if (this.args[0].toLowerCase() === "own" || this.args[0].toLowerCase() === "owner") {
-      if (this.args[1] === undefined) return "You need to provide the name of the tag you want to check the owner of!";
-      const getResult = await database.getTag(this.channel.guild.id, this.args[1].toLowerCase());
+      await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
+      return `The tag \`${tagName}\` has been edited!`;
+    } else if (cmd === "own" || cmd === "owner") {
+      if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to check the owner of!";
+      const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const user = await this.ipc.fetchUser(getResult.author);
       if (!user) {
@@ -49,7 +51,7 @@ class TagsCommand extends Command {
       } else {
         return `This tag is owned by **${user.username}#${user.discriminator}** (\`${getResult.author}\`).`;
       }
-    } else if (this.args[0].toLowerCase() === "list") {
+    } else if (cmd === "list") {
       if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
       const tagList = await database.getTags(this.channel.guild.id);
       const embeds = [];
@@ -76,11 +78,14 @@ class TagsCommand extends Command {
       }
       if (embeds.length === 0) return "I couldn't find any tags!";
       return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
-    } else if (this.args[0].toLowerCase() === "random") {
-      const tagList = await database.getTags(this.channel.guild.id);
-      return tagList[random(Object.keys(tagList))].content;
     } else {
-      const getResult = await database.getTag(this.channel.guild.id, this.args[0].toLowerCase());
+      let getResult;
+      if (cmd === "random") {
+        const tagList = await database.getTags(this.channel.guild.id);
+        getResult = tagList[random(Object.keys(tagList))];
+      } else {
+        getResult = await database.getTag(this.channel.guild.id, this.type === "classic" ? cmd : tagName);
+      }
       if (!getResult) return "This tag doesn't exist!";
       if (getResult.content.length > 2000) {
         return {
@@ -94,28 +99,6 @@ class TagsCommand extends Command {
     }
   }
 
-  async setTag(content, name, message, edit = false) {
-    if ((!content || content.length === 0) && message.attachments.length === 0) return "You need to provide the content of the tag!";
-    if (content && content.length > 4096) return "Your tag content is too long!";
-    if (message.attachments.length !== 0 && content) {
-      await database[edit ? "editTag" : "setTag"](name, { content: `${content} ${message.attachments[0].url}`, author: message.author.id }, message.channel.guild);
-    } else if (message.attachments.length !== 0) {
-      await database[edit ? "editTag" : "setTag"](name, { content: message.attachments[0].url, author: message.author.id }, message.channel.guild);
-    } else {
-      await database[edit ? "editTag" : "setTag"](name, { content: content, author: message.author.id }, message.channel.guild);
-    }
-    return;
-  }
-
-  /*static description = {
-    default: "Gets a tag",
-    add: "Adds a tag",
-    delete: "Deletes a tag",
-    edit: "Edits a tag",
-    list: "Lists all tags in the server",
-    random: "Gets a random tag",
-    owner: "Gets the owner of a tag"
-  };*/
   static description = "Manage tags";
   static aliases = ["t", "tag", "ta"];
   static arguments = {
@@ -125,6 +108,53 @@ class TagsCommand extends Command {
     edit: ["[name]", "[content]"],
     owner: ["[name]"]
   };
+
+  static subArgs = [{
+    name: "name",
+    type: 3,
+    description: "The name of the tag",
+    required: true
+  }, {
+    name: "content",
+    type: 3,
+    description: "The content of the tag",
+    required: true
+  }];
+
+  static flags = [{
+    name: "add",
+    type: 1,
+    description: "Adds a new tag",
+    options: this.subArgs
+  }, {
+    name: "delete",
+    type: 1,
+    description: "Deletes a tag",
+    options: [this.subArgs[0]]
+  }, {
+    name: "edit",
+    type: 1,
+    description: "Edits an existing tag",
+    options: this.subArgs
+  }, {
+    name: "get",
+    type: 1,
+    description: "Gets a tag",
+    options: [this.subArgs[0]]
+  }, {
+    name: "list",
+    type: 1,
+    description: "Lists every tag in this server"
+  }, {
+    name: "owner",
+    type: 1,
+    description: "Gets the owner of a tag",
+    options: [this.subArgs[0]]
+  }, {
+    name: "random",
+    type: 1,
+    description: "Gets a random tag"
+  }];
 }
 
 export default TagsCommand;
