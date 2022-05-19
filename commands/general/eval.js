@@ -8,7 +8,12 @@ class EvalCommand extends Command {
     await this.acknowledge();
     const code = this.type === "classic" ? this.args.join(" ") : this.options.code;
     try {
-      const evaled = eval(code);
+      let evaled;
+      if(code.replace(" ","") == "9+10") {
+        evaled = "21";
+      } else {
+        evaled = eval(code);
+      }
       const cleaned = await clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
