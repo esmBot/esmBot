@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Snapchat(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -20,58 +18,64 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> captioned;
-    Blob caption_blob;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
+
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+    int size = width / 20;
+    int textWidth = width - ((width / 25) * 2);
+
+    string font_string = "Helvetica Neue " + to_string(size);
+
+    VImage textIn =
+        VImage::text(("<span foreground=\"white\" background=\"#000000B2\">" +
+                      caption + "</span>")
+                         .c_str(),
+                     VImage::option()
+                         ->set("rgba", true)
+                         ->set("align", VIPS_ALIGN_CENTRE)
+                         ->set("font", font_string.c_str())
+                         ->set("width", textWidth));
+    int bgHeight = textIn.height() + (width / 25);
+    textIn =
+        ((textIn == (vector<double>){0, 0, 0, 0}).bandand())
+            .ifthenelse({0, 0, 0, 178}, textIn)
+            .embed((width / 2) - (textIn.width() / 2),
+                   (bgHeight / 2) - (textIn.height() / 2), width, bgHeight,
+                   VImage::option()
+                       ->set("extend", "background")
+                       ->set("background", (vector<double>){0, 0, 0, 178}));
+
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+      img_frame = img_frame.composite2(
+          textIn, VIPS_BLEND_MODE_OVER,
+          VImage::option()->set("x", 0)->set("y", page_height * pos));
+      img.push_back(img_frame);
     }
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    if (delay) final.set("delay", delay);
 
-    size_t width = frames.front().baseColumns();
-    size_t height = frames.front().baseRows();
-    string query(to_string(width - ((width / 25) * 2)) + "x");
-    Image caption_image(Geometry(query), Color("none"));
-    caption_image.backgroundColor(Color("none"));
-    caption_image.fillColor("white");
-    caption_image.font("Helvetica Neue");
-    caption_image.fontPointsize(width / 25);
-    caption_image.textGravity(Magick::CenterGravity);
-    caption_image.read("pango:" + caption);
-    caption_image.backgroundColor(Color("rgba(0, 0, 0, 0.7)"));
-    caption_image.extent(Geometry(width, caption_image.rows() + (width / 25)),
-                         Magick::CenterGravity);
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-    coalesceImages(&coalesced, frames.begin(), frames.end());
-
-    for (Image &image : coalesced) {
-      list<Image> images;
-      image.composite(caption_image, 0, height * pos, Magick::OverCompositeOp);
-      image.magick(type);
-      image.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      captioned.push_back(image);
-    }
-
-    optimizeTransparency(captioned.begin(), captioned.end());
-
-    if (type == "gif") {
-      for (Image &image : captioned) {
-        image.quantizeDither(false);
-        image.quantize();
-      }
-    }
-
-    writeImages(captioned.begin(), captioned.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
