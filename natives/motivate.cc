@@ -44,7 +44,6 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
             ->set("align", VIPS_ALIGN_CENTRE)
             ->set("font", (font_string + " " + to_string(size)).c_str())
             ->set("width", textWidth));
-    topImage.write_to_file("/home/esm/motivatetext2.png");
 
     VImage bottomImage;
     if (bottom_text != "") {
