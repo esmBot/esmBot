@@ -1,7 +1,6 @@
 #include <napi.h>
 
 #include <vips/vips8>
-#include <gperftools/profiler.h>
 
 using namespace std;
 using namespace vips;
