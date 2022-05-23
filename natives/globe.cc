@@ -26,22 +26,29 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int page_height = vips_image_get_page_height(in.get_image());
-    int n_pages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 29;
+    int n_pages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
     double size = min(width, page_height);
 
     string diffPath = basePath + "assets/images/globediffuse.png";
     VImage diffuse =
-        VImage::new_from_file(diffPath.c_str()).resize(size / 500.0) / 255;
+        VImage::new_from_file(diffPath.c_str())
+            .resize(size / 500.0,
+                    VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
+        255;
 
     string specPath = basePath + "assets/images/globespec.png";
     VImage specular =
-        VImage::new_from_file(specPath.c_str()).resize(size / 500.0);
+        VImage::new_from_file(specPath.c_str())
+            .resize(size / 500.0,
+                    VImage::option()->set("kernel", VIPS_KERNEL_CUBIC));
 
     string distortPath = basePath + "assets/images/spheremap.png";
     VImage distort =
-        (VImage::new_from_file(distortPath.c_str()).resize(size / 500.0) /
-         255) *
+        (VImage::new_from_file(distortPath.c_str())
+             .resize(size / 500.0,
+                     VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
+         65535) *
         size;
 
     vector<VImage> img;
@@ -51,8 +58,8 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
       VImage resized = img_frame.resize(
           size / (double)width,
           VImage::option()->set("vscale", size / (double)page_height));
-      VImage rolled = resized.wrap(
-          VImage::option()->set("x", page_height * i / n_pages)->set("y", 0));
+      VImage rolled = img_frame.wrap(
+          VImage::option()->set("x", width * i / n_pages)->set("y", 0));
       VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
       VImage mapped = extracted.mapim(distort);
       VImage composited = mapped * diffuse + specular;
@@ -60,7 +67,7 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
       img.push_back(frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    final.set(VIPS_META_PAGE_HEIGHT, size);
     if (type != "gif") {
       vector<int> delay(30, 50);
       final.set("delay", delay);
