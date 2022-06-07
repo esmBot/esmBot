@@ -16,7 +16,6 @@
 #include "homebrew.h"
 #include "invert.h"
 #include "jpeg.h"
-#include "leak.h"
 #include "magik.h"
 #include "meme.h"
 #include "mirror.h"
@@ -32,7 +31,6 @@
 #include "sonic.h"
 #include "spin.h"
 #include "tile.h"
-#include "trump.h"
 #include "uncaption.h"
 #include "wall.h"
 #include "watermark.h"
@@ -43,12 +41,15 @@
 #ifdef _WIN32
 #include <Magick++.h>
 #endif
+#include <vips/vips8>
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
 #ifdef _WIN32
   Magick::InitializeMagick("");
 #endif
+  if (vips_init(""))
+        vips_error_exit(NULL);
   exports.Set(Napi::String::New(env, "blur"), Napi::Function::New(env, Blur));
   exports.Set(Napi::String::New(env, "colors"), Napi::Function::New(env, Colors));
   exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
@@ -65,7 +66,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "homebrew"), Napi::Function::New(env, Homebrew));
   exports.Set(Napi::String::New(env, "invert"), Napi::Function::New(env, Invert));
   exports.Set(Napi::String::New(env, "jpeg"), Napi::Function::New(env, Jpeg));
-  exports.Set(Napi::String::New(env, "leak"), Napi::Function::New(env, Leak));
   exports.Set(Napi::String::New(env, "magik"), Napi::Function::New(env, Magik));
   exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
   exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
@@ -81,7 +81,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "spin"), Napi::Function::New(env, Spin));
   exports.Set(Napi::String::New(env, "swirl"), Napi::Function::New(env, Swirl));
   exports.Set(Napi::String::New(env, "tile"), Napi::Function::New(env, Tile));
-  exports.Set(Napi::String::New(env, "trump"), Napi::Function::New(env, Trump));
   exports.Set(Napi::String::New(env, "uncaption"), Napi::Function::New(env, Uncaption));
   exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
@@ -91,4 +90,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   return exports;
 }
 
-NODE_API_MODULE(addon, Init);
+NODE_API_MODULE(addon, Init)

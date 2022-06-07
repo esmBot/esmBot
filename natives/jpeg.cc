@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Jpeg(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -13,61 +11,58 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    int quality =
-        obj.Has("quality") ? obj.Get("quality").As<Napi::Number>().Int32Value() : 0;
+    int quality = obj.Has("quality")
+                      ? obj.Get("quality").As<Napi::Number>().Int32Value()
+                      : 0;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
-
     Napi::Object result = Napi::Object::New(env);
 
     if (type == "gif") {
-      list<Image> frames;
-      list<Image> coalesced;
-      list<Image> jpeged;
-      try {
-        readImages(&frames, Blob(data.Data(), data.Length()));
-      } catch (Magick::WarningCoder &warning) {
-        cerr << "Coder Warning: " << warning.what() << endl;
-      } catch (Magick::Warning &warning) {
-        cerr << "Warning: " << warning.what() << endl;
-      }
-      coalesceImages(&coalesced, frames.begin(), frames.end());
+      VImage in =
+          VImage::new_from_buffer(
+              data.Data(), data.Length(), "",
+              VImage::option()->set("access", "sequential")->set("n", -1))
+              .colourspace(VIPS_INTERPRETATION_sRGB);
+      if (!in.has_alpha()) in = in.bandjoin(255);
 
-      for (Image &image : coalesced) {
-        Blob temp;
-        image.quality(quality);
-        image.magick("JPEG");
-        image.write(&temp);
-        Image newImage(temp);
-        newImage.magick(type);
-        newImage.animationDelay(delay == 0 ? image.animationDelay() : delay);
-        jpeged.push_back(newImage);
-      }
+      int page_height = vips_image_get_page_height(in.get_image());
 
-      optimizeTransparency(jpeged.begin(), jpeged.end());
-
-      for (Image &image : jpeged) {
-        image.quantizeDither(false);
-        image.quantize();
+      void *jpgBuf;
+      size_t jpgLength;
+      in.write_to_buffer(
+          ".jpg", &jpgBuf, &jpgLength,
+          VImage::option()->set("Q", quality)->set("strip", true));
+      VImage final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
+      final.set(VIPS_META_PAGE_HEIGHT, page_height);
+      if (delay) {
+        final.set("delay", delay);
+      } else if (type == "gif") {
+        final.set("delay", in.get_array_int("delay"));
       }
 
-      writeImages(jpeged.begin(), jpeged.end(), &blob);
+      void *buf;
+      size_t length;
+      final.write_to_buffer(("." + type).c_str(), &buf, &length,
+                            VImage::option()->set("dither", 0));
 
-      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                  blob.length()));
+      vips_thread_shutdown();
+
+      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
       result.Set("type", type);
     } else {
-      Image image;
-      image.read(Blob(data.Data(), data.Length()));
-      image.quality(1);
-      image.magick("JPEG");
-      image.write(&blob);
+      VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "");
+      void *buf;
+      size_t length;
+      in.write_to_buffer(
+          ".jpg", &buf, &length,
+          VImage::option()->set("Q", quality)->set("strip", true));
 
-      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                  blob.length()));
+      vips_thread_shutdown();
+
+      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
       result.Set("type", "jpg");
     }
 

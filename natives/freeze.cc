@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Freeze(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -54,29 +52,30 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
         result.Set("data",
                    Napi::Buffer<char>::Copy(env, newData, data.Length()));
     } else if (frame >= 0 && !loop) {
-      Blob blob;
+      VOption *options = VImage::option()->set("access", "sequential");
 
-      list<Image> frames;
-      try {
-        readImages(&frames, Blob(data.Data(), data.Length()));
-      } catch (Magick::WarningCoder &warning) {
-        cerr << "Coder Warning: " << warning.what() << endl;
-      } catch (Magick::Warning &warning) {
-        cerr << "Warning: " << warning.what() << endl;
-      }
-      size_t frameSize = frames.size();
-      int framePos = clamp(frame, 0, (int)frameSize);
-      frames.resize(framePos + 1);
+      VImage in = VImage::new_from_buffer(
+                      data.Data(), data.Length(), "",
+                      type == "gif" ? options->set("n", -1) : options)
+                      .colourspace(VIPS_INTERPRETATION_sRGB);
+      if (!in.has_alpha()) in = in.bandjoin(255);
 
-      for_each(frames.begin(), frames.end(),
-               animationIterationsImage(loop ? 0 : 1));
-      for_each(frames.begin(), frames.end(), magickImage(type));
+      int page_height = vips_image_get_page_height(in.get_image());
+      int n_pages = vips_image_get_n_pages(in.get_image());
+      int framePos = clamp(frame, 0, (int)n_pages);
+      VImage out = in.crop(0, 0, in.width(), page_height * (framePos + 1));
+      out.set(VIPS_META_PAGE_HEIGHT, page_height);
+      out.set("loop", loop ? 0 : 1);
 
-      if (delay != 0)
-        for_each(frames.begin(), frames.end(), animationDelayImage(delay));
-      writeImages(frames.begin(), frames.end(), &blob);
-      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                  blob.length()));
+      if (delay) out.set("delay", delay);
+
+      void *buf;
+      size_t length;
+      out.write_to_buffer(("." + type).c_str(), &buf, &length);
+
+      vips_thread_shutdown();
+
+      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     } else {
       lastPos = (char *)memchr(fileData, '\x21', data.Length());
       while (lastPos != NULL) {

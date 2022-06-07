@@ -1,12 +1,25 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeechBubbleCommand extends ImageCommand {
-  params = {
-    water: "assets/images/speechbubble.png",
-    gravity: "north",
-    resize: true,
-    yscale: 0.2,
-  };
+  params() {
+    return {
+      water: this.specialArgs.alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
+      gravity: "north",
+      resize: true,
+      yscale: 0.2,
+      alpha: this.specialArgs.alpha
+    };
+  }
+
+  static init() {
+    super.init();
+    this.flags.push({
+      name: "alpha",
+      description: "Make the top of the speech bubble transparent",
+      type: 5
+    });
+    return this;
+  }
 
   static description = "Adds a speech bubble to an image";
   static aliases = ["speech", "sb"];

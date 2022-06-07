@@ -1,11 +1,11 @@
-import wrap from "../../utils/wrap.js";
+//import wrap from "../../utils/wrap.js";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SonicCommand extends ImageCommand {
   params() {
     const cleanedMessage = (this.type === "classic" ? this.args.join(" ") : this.options.text).replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%");
     return {
-      text: wrap(cleanedMessage, {width: 15, indent: ""})
+      text: cleanedMessage
     };
   }
 
