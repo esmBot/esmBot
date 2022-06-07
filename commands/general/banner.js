@@ -1,34 +1,44 @@
 import Command from "../../classes/command.js";
+const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 
 class BannerCommand extends Command {
   async run() {
-    if (this.message.mentions[0]) {
-      return this.message.mentions[0].banner ? this.message.mentions[0].dynamicBannerURL(null, 1024) : "This user doesn't have a banner!";
-    } else if (await this.ipc.fetchUser(this.args[0])) {
-      const user = await this.ipc.fetchUser(this.args[0]);
-      return user.banner ? this.client._formatImage(`/banners/${user.id}/${user.banner}`, null, 1024) : "This user doesn't have a banner!";
-    } else if (this.args[0] && this.args[0].match(/^<?[@#]?[&!]?\d+>?$/) && this.args[0] >= 21154535154122752n) {
+    const member = this.specialArgs.member ?? this.args[0];
+    const self = await this.client.getRESTUser(this.author.id);
+    if (this.type === "classic" && this.message.mentions[0]) {
+      return this.message.mentions[0].dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
+    } else if (await this.ipc.fetchUser(member)) {
+      const user = await this.client.getRESTUser(member);
+      return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
+    } else if (mentionRegex.test(member)) {
+      const id = member.match(mentionRegex)[1];
+      if (id < 21154535154122752n) return "That's not a valid mention!";
       try {
-        const user = await this.client.getRESTUser(this.args[0]);
-        return user.banner ? this.client._formatImage(`/banners/${user.id}/${user.banner}`, null, 1024) : "This user doesn't have a banner!";
+        const user = await this.client.getRESTUser(id);
+        return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
       } catch {
-        return this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
+        return self.dynamicBannerURL(null, 512) ?? "You don't have a banner!";
       }
     } else if (this.args.join(" ") !== "" && this.channel.guild) {
-      const userRegex = new RegExp(this.args.join("|"), "i");
-      const member = this.channel.guild.members.find(element => {
-        return userRegex.test(element.nick) ?? userRegex.test(element.username);
-      });
-      return member && member.user.banner ? member.user.dynamicBannerURL(null, 1024) : (this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "This user doesn't have a banner!");
+      const searched = await this.channel.guild.searchMembers(this.args.join(" "));
+      if (searched.length === 0) return self.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
+      const user = await this.client.getRESTUser(searched[0].user.id);
+      return user.dynamicBannerURL(null, 512) ?? (self.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!");
     } else {
-      return this.author.banner ? this.author.dynamicBannerURL(null, 1024) : "You don't have a banner!";
+      
+      return self.dynamicBannerURL(null, 512) ?? "You don't have a banner!";
     }
   }
 
   static description = "Gets a user's banner";
   static aliases = ["userbanner"];
   static arguments = ["{mention/id}"];
-  static slashAllowed = false;
+  static flags = [{
+    name: "member",
+    type: 6,
+    description: "The member to get the banner from",
+    required: false
+  }];
 }
 
 export default BannerCommand;
