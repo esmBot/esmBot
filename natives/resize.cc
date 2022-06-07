@@ -17,8 +17,6 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
     bool wide =
         obj.Has("wide") ? obj.Get("wide").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -47,7 +45,6 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
       finalHeight = page_height;
     }
     out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

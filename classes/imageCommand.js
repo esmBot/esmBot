@@ -68,7 +68,6 @@ class ImageCommand extends Command {
         magickParams.path = image.path;
         magickParams.params.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
-        magickParams.params.delay = image.delay ?? 0;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.author.id);
@@ -77,7 +76,7 @@ class ImageCommand extends Command {
     }
 
     if (this.constructor.requiresText) {
-      const text = this.type === "classic" ? this.args : this.options.text;
+      const text = this.options.text ?? this.args;
       if (text.length === 0 || !await this.criteria(text)) {
         runningCommands.delete(this.author.id);
         return this.constructor.noText;
@@ -86,7 +85,7 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        Object.assign(magickParams.params, this.params(magickParams.url, magickParams.delay));
+        Object.assign(magickParams.params, this.params(magickParams.url));
         break;
       case "object":
         Object.assign(magickParams.params, this.params);

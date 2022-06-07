@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class SlowCommand extends ImageCommand {
   params() {
-    const speed = parseInt(this.type === "classic" ? this.args[0] : this.options.multiplier);
+    const speed = parseInt(this.options.multiplier ?? this.args[0]);
     return {
       slow: true,
       speed: isNaN(speed) ? 2 : speed

@@ -5,7 +5,7 @@ import Command from "../../classes/command.js";
 class LengthenCommand extends Command {
   async run() {
     await this.acknowledge();
-    const input = this.type === "classic" ? this.args.join(" ") : this.options.url;
+    const input = this.options.url ?? this.args.join(" ");
     if (!input || !input.trim() || !urlCheck(input)) return "You need to provide a short URL to lengthen!";
     if (urlCheck(input)) {
       const url = await fetch(encodeURI(input), { redirect: "manual" });

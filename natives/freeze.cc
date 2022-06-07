@@ -14,8 +14,6 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     bool loop =
         obj.Has("loop") ? obj.Get("loop").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
     int frame = obj.Has("frame")
                     ? obj.Get("frame").As<Napi::Number>().Int32Value()
                     : -1;
@@ -66,8 +64,6 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
       VImage out = in.crop(0, 0, in.width(), page_height * (framePos + 1));
       out.set(VIPS_META_PAGE_HEIGHT, page_height);
       out.set("loop", loop ? 0 : 1);
-
-      if (delay) out.set("delay", delay);
 
       void *buf;
       size_t length;

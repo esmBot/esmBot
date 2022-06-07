@@ -15,8 +15,6 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     float pos =
         obj.Has("pos") ? obj.Get("pos").As<Napi::Number>().FloatValue() : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -64,7 +62,6 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     final.set(VIPS_META_PAGE_HEIGHT, page_height);
-    if (delay) final.set("delay", delay);
 
     void *buf;
     size_t length;

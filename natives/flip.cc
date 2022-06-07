@@ -14,8 +14,6 @@ Napi::Value Flip(const Napi::CallbackInfo &info) {
     bool flop =
         obj.Has("flop") ? obj.Get("flop").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -43,8 +41,6 @@ Napi::Value Flip(const Napi::CallbackInfo &info) {
     } else {
       out = in.flip(VIPS_DIRECTION_VERTICAL);
     }
-
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

@@ -13,7 +13,7 @@ class Command {
       this.author = options.message.author;
       this.member = options.message.member;
       this.content = options.content;
-      this.specialArgs = options.specialArgs;
+      this.specialArgs = this.options = options.specialArgs;
       this.reference = {
         messageReference: {
           channelID: this.channel.id,
@@ -27,6 +27,7 @@ class Command {
       };
     } else if (options.type === "application") {
       this.interaction = options.interaction;
+      this.args = [];
       this.channel = options.interaction.channel;
       this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       if (options.interaction.data.options) {

@@ -13,8 +13,6 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     string text = obj.Get("caption").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -56,7 +54,6 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     final.set(VIPS_META_PAGE_HEIGHT, page_height + watermark.height());
-    if (delay) final.set("delay", delay);
 
     void *buf;
     size_t length;

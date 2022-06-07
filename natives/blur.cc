@@ -15,8 +15,6 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool sharp = obj.Get("sharp").As<Napi::Boolean>().Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -30,8 +28,6 @@ Napi::Value Blur(const Napi::CallbackInfo &info) {
     // splitting frames
     VImage out = sharp ? in.sharpen(VImage::option()->set("sigma", 3))
                        : in.gaussblur(15);
-
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

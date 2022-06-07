@@ -9,7 +9,7 @@ class ExecCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) return "Only the bot owner can use exec!";
     await this.acknowledge();
-    const code = this.type === "classic" ? this.args.join(" ") : this.options.cmd;
+    const code = this.options.cmd ?? this.args.join(" ");
     try {
       const execed = await exec(code);
       if (execed.stderr) return `\`ERROR\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;

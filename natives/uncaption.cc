@@ -15,8 +15,6 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
                           ? obj.Get("tolerance").As<Napi::Number>().FloatValue()
                           : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option();
 
@@ -44,7 +42,6 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     final.set(VIPS_META_PAGE_HEIGHT, page_height - top);
-    if (delay) final.set("delay", delay);
 
     void *buf;
     size_t length;

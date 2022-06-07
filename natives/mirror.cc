@@ -17,8 +17,6 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
     bool first =
         obj.Has("first") ? obj.Get("first").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -66,8 +64,6 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
         out = VImage::arrayjoin({flipped, cropped});
       }
     }
-
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

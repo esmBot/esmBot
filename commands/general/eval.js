@@ -6,7 +6,7 @@ class EvalCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) return "Only the bot owner can use eval!";
     await this.acknowledge();
-    const code = this.type === "classic" ? this.args.join(" ") : this.options.code;
+    const code = this.options.code ?? this.args.join(" ");
     try {
       const evaled = eval(code);
       const cleaned = await clean(evaled);

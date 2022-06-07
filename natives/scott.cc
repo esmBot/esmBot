@@ -15,8 +15,6 @@ Napi::Value Scott(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     Blob blob;
 
@@ -46,7 +44,7 @@ Napi::Value Scott(const Napi::CallbackInfo &info) {
       watermark_new.composite(image, Geometry("-110+83"),
                               Magick::OverCompositeOp);
       watermark_new.magick(type);
-      watermark_new.animationDelay(delay == 0 ? image.animationDelay() : delay);
+      watermark_new.animationDelay(image.animationDelay());
       mid.push_back(watermark_new);
     }
 

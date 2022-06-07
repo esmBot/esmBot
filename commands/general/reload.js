@@ -6,7 +6,7 @@ class ReloadCommand extends Command {
     return new Promise((resolve) => {
       const owners = process.env.OWNER.split(",");
       if (!owners.includes(this.author.id)) return resolve("Only the bot owner can reload commands!");
-      const commandName = this.type === "classic" ? this.args.join(" ") : this.options.cmd;
+      const commandName = this.options.cmd ?? this.args.join(" ");
       if (!commandName || !commandName.trim()) return resolve("You need to provide a command to reload!");
       this.acknowledge().then(() => {
         this.ipc.broadcast("reload", commandName);

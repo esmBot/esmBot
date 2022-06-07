@@ -16,8 +16,6 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string color = obj.Get("color").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -35,7 +33,6 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     } else if (color == "sepia") {
       out = in.flatten().recomb(sepia);
     }
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

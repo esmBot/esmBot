@@ -3,7 +3,7 @@ const allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto"
 
 class MotivateCommand extends ImageCommand {
   params(url) {
-    const newArgs = this.type === "classic" ? this.args.filter(item => !item.includes(url)).join(" ") : this.options.text;
+    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     const [topText, bottomText] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
     return {
       top: topText.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),

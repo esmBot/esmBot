@@ -3,7 +3,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 class HomebrewCommand extends ImageCommand {
   params() {
     return {
-      caption: (this.type === "classic" ? this.args.join(" ") : this.options.text).toLowerCase().replaceAll("\n", " ")
+      caption: (this.options.text ?? this.args.join(" ")).toLowerCase().replaceAll("\n", " ")
     };
   }
 

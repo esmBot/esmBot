@@ -10,7 +10,7 @@ class SeekCommand extends MusicCommand {
     const player = this.connection.player;
     const track = await Rest.decode(player.node, player.track);
     if (!track.isSeekable) return "This track isn't seekable!";
-    const seconds = parseFloat(this.type === "classic" ? this.args[0] : this.options.position);
+    const seconds = parseFloat(this.options.position ?? this.args[0]);
     if (isNaN(seconds) || (seconds * 1000) > track.length || (seconds * 1000) < 0) return "That's not a valid position!";
     await player.seek(seconds * 1000);
     return `🔊 Seeked track to ${seconds} second(s).`;

@@ -12,8 +12,6 @@ Napi::Value Invert(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -27,8 +25,6 @@ Napi::Value Invert(const Napi::CallbackInfo &info) {
         in.extract_band(0, VImage::option()->set("n", in.bands() - 1));
     VImage inverted = noAlpha.invert();
     VImage out = inverted.bandjoin(in.extract_band(3));
-
-    if (delay) out.set("delay", delay);
 
     void *buf;
     size_t length;

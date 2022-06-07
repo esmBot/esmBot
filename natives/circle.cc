@@ -14,8 +14,6 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
     Blob blob;
 
@@ -43,7 +41,6 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
       for (Image &image : blurred) {
         image.quantizeDitherMethod(FloydSteinbergDitherMethod);
         image.quantize();
-        if (delay != 0) image.animationDelay(delay);
       }
     }
 
