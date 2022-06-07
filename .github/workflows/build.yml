@@ -18,7 +18,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
     - name: Install ImageMagick # necessary because ubuntu doesn't include IM7 in its repository
-      run: git clone https://github.com/ImageMagick/ImageMagick && cd ImageMagick && ./configure --with-magick-plus-plus=yes && make -j`nproc` && sudo make install && sudo ldconfig /usr/local/lib
+      run: sudo apt install libvips-dev libmagick++-dev
     - name: Build
       run: npm install && npm run build
 
@@ -42,6 +42,6 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
     - name: Install ImageMagick
-      run: brew install imagemagick
+      run: brew install imagemagick vips
     - name: Build
       run: npm install && npm run build
