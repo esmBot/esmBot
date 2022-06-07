@@ -18,11 +18,11 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     int delay =
         obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    VOption *options = VImage::option()->set("access", "sequential");
+    VOption *options = VImage::option();
 
     VImage in =
         VImage::new_from_buffer(data.Data(), data.Length(), "",
-                                type == "gif" ? options->set("n", -1) : options)
+                                type == "gif" ? options->set("n", -1)->set("access", "sequential") : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
 

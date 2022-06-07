@@ -17,10 +17,12 @@ Napi::Value Deepfry(const Napi::CallbackInfo &info) {
 
     Napi::Object result = Napi::Object::New(env);
 
-    VImage in = VImage::new_from_buffer(
-                    data.Data(), data.Length(), "",
-                    VImage::option()->set("access", "sequential")->set("n", -1))
-                    .colourspace(VIPS_INTERPRETATION_sRGB);
+    VOption *options = VImage::option()->set("access", "sequential");
+
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int page_height = vips_image_get_page_height(in.get_image());

@@ -14,8 +14,6 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    bool old =
-        obj.Has("old") ? obj.Get("old").As<Napi::Boolean>().Value() : false;
     string color = obj.Get("color").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =
