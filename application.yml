@@ -28,6 +28,23 @@ lavalink:
   plugins:
     - dependency: "com.github.esmBot:lava-xm-plugin:v0.1.0"
       repository: "https://jitpack.io"
+    - dependency: "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers-Plugin:v2.0.6"
+      repository: "https://jitpack.io"
+
+plugins:
+  topissourcemanagers:
+    providers:
+      - "ytsearch:\"%ISRC%\""
+      - "ytsearch:%QUERY%"
+    sources:
+      spotify: false
+      applemusic: true
+    spotify:
+        clientId: "your client id"
+        clientSecret: "your client secret"
+        countryCode: "US"
+    applemusic:
+        countryCode: "US"
 
 metrics:
   prometheus:
