@@ -1,8 +1,5 @@
 import fetch from "node-fetch";
 import { getType } from "./image.js";
-import { exec } from "child_process";
-import { promisify } from "util";
-const execPromise = promisify(exec);
 
 const tenorURLs = [
   "tenor.com",
@@ -47,8 +44,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
       const host = new URL(image2).host;
       if (tenorURLs.includes(host)) {
         // Tenor doesn't let us access a raw GIF without going through their API,
-        // so we use that if there's a key in the config and fall back to using the MP4 if there isn't
-        // Note that MP4 conversion requires an ImageMagick build that supports MPEG decoding
+        // so we use that if there's a key in the config
         if (process.env.TENOR !== "") {
           const data = await fetch(`https://g.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&media_filter=minimal&limit=1&key=${process.env.TENOR}`);
           if (data.status === 429) {
@@ -62,9 +58,6 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
           const json = await data.json();
           if (json.error) throw Error(json.error);
           payload.path = json.results[0].media[0].gif.url;
-        } else {
-          const delay = (await execPromise(`ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=r_frame_rate ${image}`)).stdout.replace("\n", "");
-          payload.delay = (100 / delay.split("/")[0]) * delay.split("/")[1];
         }
       } else if (giphyURLs.includes(host)) {
         // Can result in an HTML page instead of a GIF
@@ -133,7 +126,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     // we can get a raw attachment or a URL in the interaction itself
     if (options) {
       if (options.image) {
-        const result = await getImage(interaction.data.resolved.attachments[options.image].proxy_url, interaction.data.resolved.attachments[options.image].url, video);
+        const attachment = interaction.data.resolved.attachments.get(options.image);
+        const result = await getImage(attachment.proxyUrl, attachment.url, video);
         if (result !== false) return result;
       } else if (options.link) {
         const result = await getImage(options.link, options.link, video);
