@@ -39,7 +39,7 @@
     "node-emoji": "^1.10.0",
     "node-fetch": "^3.2.0",
     "qrcode": "^1.4.4",
-    "sharp": "^0.30.2",
+    "sharp": "^0.30.6",
     "winston": "^3.3.3"
   },
   "devDependencies": {
