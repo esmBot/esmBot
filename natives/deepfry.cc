@@ -32,7 +32,7 @@ Napi::Value Deepfry(const Napi::CallbackInfo &info) {
                           VImage::option()->set("Q", 1)->set("strip", true));
     VImage final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
     final.set(VIPS_META_PAGE_HEIGHT, page_height);
-    final.set("delay", fried.get_array_int("delay"));
+    if (type == "gif") final.set("delay", fried.get_array_int("delay"));
 
     void *buf;
     size_t length;

@@ -26,9 +26,7 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
 
     VImage out;
 
-    if (color == "blurple") {
-      out = in;
-    } else if (color == "grayscale") {
+    if (color == "grayscale") {
       out = in.colourspace(VIPS_INTERPRETATION_B_W);
     } else if (color == "sepia") {
       out = in.flatten().recomb(sepia);
