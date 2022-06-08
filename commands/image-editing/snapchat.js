@@ -5,7 +5,7 @@ class SnapchatCommand extends ImageCommand {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     const position = parseFloat(this.specialArgs.position);
     return {
-      caption: newArgs.replaceAll("&", "\\&amp;").replaceAll(">", "\\&gt;").replaceAll("<", "\\&lt;").replaceAll("\"", "\\&quot;").replaceAll("'", "\\&apos;").replaceAll("%", "\\%"),
+      caption: newArgs.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n"),
       pos: isNaN(position) ? 0.5 : position
     };
   }
