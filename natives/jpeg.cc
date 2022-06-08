@@ -39,8 +39,9 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
 
       void *buf;
       size_t length;
-      final.write_to_buffer(("." + type).c_str(), &buf, &length,
-                            VImage::option()->set("dither", 0));
+      final.write_to_buffer(
+          ("." + type).c_str(), &buf, &length,
+          type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
       vips_thread_shutdown();
 
