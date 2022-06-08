@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <list>
 #include "blur.h"
 #include "colors.h"
 #include "caption.h"
@@ -23,7 +22,6 @@
 #include "motivate.h"
 #include "reddit.h"
 #include "resize.h"
-#include "retro.h"
 #include "reverse.h"
 #include "scott.h"
 #include "snapchat.h"
@@ -34,7 +32,6 @@
 #include "uncaption.h"
 #include "wall.h"
 #include "watermark.h"
-#include "wdt.h"
 #include "whisper.h"
 #include "zamn.h"
 
@@ -72,7 +69,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
   exports.Set(Napi::String::New(env, "reddit"), Napi::Function::New(env, Reddit));
   exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
-  exports.Set(Napi::String::New(env, "retro"), Napi::Function::New(env, Retro));
   exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
   exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
   exports.Set(Napi::String::New(env, "snapchat"), Napi::Function::New(env, Snapchat));
@@ -84,7 +80,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "uncaption"), Napi::Function::New(env, Uncaption));
   exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
-  exports.Set(Napi::String::New(env, "wdt"), Napi::Function::New(env, Wdt));
   exports.Set(Napi::String::New(env, "whisper"), Napi::Function::New(env, Whisper));
   exports.Set(Napi::String::New(env, "zamn"), Napi::Function::New(env, Zamn));
   return exports;
