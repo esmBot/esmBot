@@ -109,7 +109,8 @@ const Admiral = new Fleet({
     ],
     stats: {
       requestTimeout: 30000
-    }
+    },
+    connectionTimeout: 30000
   },
   useCentralRequestHandler: process.env.DEBUG_LOG ? false : true, // workaround for eris-fleet weirdness
   services: [
