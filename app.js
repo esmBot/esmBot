@@ -174,35 +174,31 @@ if (isMaster) {
     });
   }
 
-  //process the threshold into bytes early
-  if (process.env.TEMPDIR&&process.env.THRESHOLD) {
+  // process the threshold into bytes early
+  if (process.env.TEMPDIR && process.env.THRESHOLD) {
     const matched = process.env.THRESHOLD.match(/(\d+)([KMGT])/);
     const sizes = {
-      "K":1024,
-      "M":1048576,
-      "G":1073741824,
-      "T":1099511627776
+      K: 1024,
+      M: 1048576,
+      G: 1073741824,
+      T: 1099511627776
     };
-    if (matched&&matched[1]&&matched[2]) {
-      process.env.THRESHOLD=matched[1]*sizes[matched[2]];
+    if (matched && matched[1] && matched[2]) {
+      process.env.THRESHOLD = matched[1] * sizes[matched[2]];
     } else {
       logger.error("Invalid THRESHOLD config.");
       process.env.THRESHOLD = undefined;
     }
-    let dirstat = (await promises.readdir(process.env.TEMPDIR))
-      .map(async (file)=>{
-          return new Promise((resolve,reject) =>{
-            promises.stat(`${process.env.TEMPDIR}/${file}`)
-              .then((stats)=>{
-                resolve(stats.size)
-              })
-          })
+    const dirstat = (await promises.readdir(process.env.TEMPDIR)).map(async (file) => {
+      return new Promise((resolve) => {
+        promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
+          resolve(stats.size);
+        });
       });
-    Promise.all(dirstat)
-      .then((size)=>{
-        process.env.DIRSIZECACHE = size.reduce((a,b)=>{
-          return a+b
-        },0)
-      })
+    });
+    const size = await Promise.all(dirstat);
+    process.env.DIRSIZECACHE = size.reduce((a, b)=>{
+      return a + b;
+    }, 0);
   }
 }
