@@ -17,13 +17,14 @@ export async function generateList() {
     const description = info.get(command).description;
     const params = info.get(command).params;
     if (category === "tags") {
-      const subCommands = [...Object.keys(description)];
+      const subCommands = info.get(command).flags;
+      categories.tags.push(`**tags** ${params.default} - ${description}`);
       for (const subCommand of subCommands) {
-        categories.tags.push(`**tags${subCommand !== "default" ? ` ${subCommand}` : ""}**${params[subCommand] ? ` ${params[subCommand]}` : ""} - ${description[subCommand]}`);
+        categories.tags.push(`**tags ${subCommand.name}**${params[subCommand.name] ? ` ${params[subCommand.name].join(" ")}` : ""} - ${subCommand.description}`);
       }
     } else {
       if (!categories[category]) categories[category] = [];
-      categories[category].push(`**${command}**${params ? ` ${params}` : ""} - ${description}`);
+      categories[category].push(`**${command}**${params ? ` ${params.join(" ")}` : ""} - ${description}`);
     }
   }
   generated = true;

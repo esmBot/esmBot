@@ -44,6 +44,7 @@ class CountCommand extends Command {
 
   static description = "Gets how many times every command was used";
   static arguments = ["{mention/id}"];
+  static aliases = ["counts"];
 }
 
 export default CountCommand;

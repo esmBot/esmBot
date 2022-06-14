@@ -6,7 +6,7 @@ class Base64Command extends Command {
     if (this.type === "classic" && this.args.length === 0) return "You need to provide whether you want to encode or decode the text!";
     const command = this.type === "classic" ? this.args[0].toLowerCase() : this.optionsArray[0].name.toLowerCase();
     if (command !== "decode" && command !== "encode") return "You need to provide whether you want to encode or decode the text!";
-    const string = this.type === "classic" ? this.args.slice(1).join(" ") : this.options.text;
+    const string = this.options.text ?? this.args.slice(1).join(" ");
     if (!string || !string.trim()) return `You need to provide a string to ${command}!`;
     if (command === "decode") {
       const b64Decoded = Buffer.from(string, "base64").toString("utf8");

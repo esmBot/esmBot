@@ -1,9 +1,10 @@
 import { play } from "../../utils/soundplayer.js";
 import MusicCommand from "../../classes/musicCommand.js";
+const prefixes = ["ytsearch:", "ytmsearch:", "scsearch:", "spsearch:", "amsearch:"];
 
 class PlayCommand extends MusicCommand {
   async run() {
-    const input = this.type === "classic" ? this.args.join(" ") : this.options.query;
+    const input = this.options.query ?? this.args.join(" ");
     if (!input && (this.type === "classic" ? (!this.message || this.message.attachments.length <= 0) : !this.options.file)) return "You need to provide what you want to play!";
     let query = input ? input.trim() : "";
     const attachment = this.type === "classic" ? this.message.attachments[0] : (this.options.file ? this.interaction.data.resolved.attachments[this.options.file] : null);
@@ -17,7 +18,7 @@ class PlayCommand extends MusicCommand {
       const url = new URL(query);
       return await play(this.client, url, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
     } catch {
-      const search = query.startsWith("ytsearch:") ? query : !query && attachment ? attachment.url : `ytsearch:${query}`;
+      const search = prefixes.some(v => query.startsWith(v)) ? query : !query && attachment ? attachment.url : `ytsearch:${query}`;
       return await play(this.client, search, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
     }
   }

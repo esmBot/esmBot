@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Flip(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -16,44 +14,42 @@ Napi::Value Flip(const Napi::CallbackInfo &info) {
     bool flop =
         obj.Has("flop") ? obj.Get("flop").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    for (Image &image : coalesced) {
-      flop ? image.flop() : image.flip();
-      image.magick(type);
-      mid.push_back(image);
-    }
-
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
+    VImage out;
+    if (flop) {
+      out = in.flip(VIPS_DIRECTION_HORIZONTAL);
+    } else if (type == "gif") {
+      // libvips gif handling is both a blessing and a curse
+      vector<VImage> img;
+      int page_height = vips_image_get_page_height(in.get_image());
+      int n_pages = vips_image_get_n_pages(in.get_image());
+      for (int i = 0; i < n_pages; i++) {
+        VImage img_frame = in.crop(0, i * page_height, in.width(), page_height);
+        VImage flipped = img_frame.flip(VIPS_DIRECTION_VERTICAL);
+        img.push_back(flipped);
       }
+      out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+      out.set(VIPS_META_PAGE_HEIGHT, page_height);
+    } else {
+      out = in.flip(VIPS_DIRECTION_VERTICAL);
     }
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    void *buf;
+    size_t length;
+    out.write_to_buffer(("." + type).c_str(), &buf, &length);
+
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

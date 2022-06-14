@@ -2,7 +2,7 @@ import Command from "../../classes/command.js";
 
 class DiceCommand extends Command {
   async run() {
-    const max = this.type === "classic" ? parseInt(this.args[0]) : this.options.max;
+    const max = this.options.max ?? parseInt(this.args[0]);
     if (!max) {
       return `🎲 The dice landed on ${Math.floor(Math.random() * 6) + 1}.`;
     } else {

@@ -142,6 +142,30 @@ export default async (client, cluster, worker, ipc, message) => {
               },
             }]
           }, reference));
+          if (process.env.THRESHOLD) {
+            process.env.DIRSIZECACHE += result.file.length;
+            if (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
+              const files = (await promises.readdir(process.env.TEMPDIR)).map((file) => {
+                return new Promise((resolve, reject) => {
+                  promises.stat(`${process.env.TEMPDIR}/${file}`).then((fstats)=>{
+                    resolve({
+                      name: file,
+                      size: fstats.size,
+                      ctime: fstats.ctime
+                    });
+                  }).catch(reject);
+                });
+              });
+              Promise.all(files).then((files) => {
+                process.env.DIRSIZECACHE = files.reduce((a, b)=>{
+                  return a+b.size;
+                }, 0);
+                const oldestFile = files.sort((a, b) => a.ctime - b.ctime)[0].name;
+                promises.rm(`${process.env.TEMPDIR}/${oldestFile}`);
+                log(`Removed oldest image file: ${oldestFile}`);
+              });
+            }
+          }
         } else {
           await client.createMessage(message.channel.id, "The resulting image was more than 8MB in size, so I can't upload it.");
         }

@@ -3,16 +3,6 @@ import WebSocket from "ws";
 import * as logger from "./logger.js";
 import { setTimeout } from "timers/promises";
 
-/*
-Rerror 0x01
-Tqueue 0x02
-Rqueue 0x03
-Tcancel 0x04
-Rcancel 0x05
-Twait 0x06
-Rwait 0x07
-Rinit 0x08
-*/
 const Rerror = 0x01;
 const Tqueue = 0x02;
 const Rqueue = 0x03;
@@ -30,7 +20,7 @@ class ImageConnection {
     }
     this.host = host;
     this.auth = auth;
-    this.tag = null;
+    this.tag = 0;
     this.disconnected = false;
     this.njobs = 0;
     this.max = 0;

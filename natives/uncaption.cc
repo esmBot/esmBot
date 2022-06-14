@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Uncaption(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -13,61 +11,48 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    float tolerance = obj.Has("tolerance") ? obj.Get("tolerance").As<Napi::Number>().FloatValue() : 0.95;
+    float tolerance = obj.Has("tolerance")
+                          ? obj.Get("tolerance").As<Napi::Number>().FloatValue()
+                          : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option();
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1)->set("access", "sequential") : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
+
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+
+    VImage first =
+        in.crop(0, 0, 3, page_height).colourspace(VIPS_INTERPRETATION_B_W) >
+        (255 * tolerance);
+    int top, captionWidth, captionHeight;
+    first.find_trim(&top, &captionWidth, &captionHeight);
+
+    vector<VImage> img;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          in.crop(0, (i * page_height) + top, width, page_height - top);
+      img.push_back(img_frame);
     }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height - top);
 
-    Image firstImage = coalesced.front();
-    ssize_t columns = firstImage.columns();
-    ssize_t rows = firstImage.rows();
-    ssize_t row;
-    for (row = 0; row < rows; ++row) {
-      ColorGray color = firstImage.pixelColor(0, row);
-      if (color.shade() < tolerance) {
-        break;
-      }
-    }
-    Geometry geom = Geometry(columns, row == rows ? rows : rows - row, 0,
-                             row == rows ? 0 : row);
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-    for (Image &image : coalesced) {
-      image.virtualPixelMethod(Magick::TransparentVirtualPixelMethod);
-      image.backgroundColor("none");
-      image.extent(geom);
-      image.magick(type);
-      mid.push_back(image);
-    }
-
-    optimizeTransparency(mid.begin(), mid.end());
-
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
-    }
-
-    writeImages(mid.begin(), mid.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

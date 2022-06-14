@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Crop(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -14,52 +12,48 @@ Napi::Value Crop(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
 
-    for (Image &image : coalesced) {
-      image.extent(Geometry(to_string(image.columns() / image.rows() >= 1
-                                          ? image.rows()
-                                          : image.columns()) +
-                            "x"),
-                   Magick::CenterGravity);
-      image.extent(Geometry("x" + to_string(image.columns() / image.rows() <= 1
-                                                ? image.columns()
-                                                : image.rows())),
-                   Magick::CenterGravity);
-      image.magick(type);
-      mid.push_back(image);
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+
+    vector<VImage> img;
+    int finalHeight = 0;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+      int frameWidth = img_frame.width();
+      int frameHeight = img_frame.height();
+      bool widthOrHeight = frameWidth / frameHeight >= 1;
+      int size = widthOrHeight ? frameHeight : frameWidth;
+      // img_frame.crop(frameWidth - size, frameHeight - size, size, size);
+      VImage result = img_frame.smartcrop(
+          size, size,
+          VImage::option()->set("interesting", VIPS_INTERESTING_CENTRE));
+      finalHeight = size;
+      img.push_back(result);
     }
 
-    optimizeTransparency(mid.begin(), mid.end());
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
-    }
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

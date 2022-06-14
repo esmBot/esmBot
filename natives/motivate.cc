@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Motivate(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -17,88 +15,101 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     string bottom_text = obj.Get("bottom").As<Napi::String>().Utf8Value();
     string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    Image top;
-    Image bottom;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    top.size(Geometry("600"));
-    top.backgroundColor("black");
-    top.font("Times");
-    top.textGravity(Magick::CenterGravity);
-    top.fontPointsize(56);
-    top.read("pango:<span font_family=\"" +
-                       (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" foreground='white'>" + top_text + "</span>");
-    top.extent(Geometry(bottom_text != "" ? to_string(top.columns()) + "x" +
-                                                to_string(top.rows())
-                                          : to_string(top.columns()) + "x" +
-                                                to_string(top.rows() + 20)),
-               "black", Magick::NorthGravity);
+    int width = in.width();
+    int size = width / 5;
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+    int textWidth = width - ((width / 25) * 2);
 
+    string font_string = font == "roboto" ? "Roboto Condensed" : font;
+
+    string topText = "<span foreground=\"white\" background=\"black\">" +
+                     top_text + "</span>";
+
+    VImage topImage = VImage::text(
+        topText.c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", (font_string + " " + to_string(size)).c_str())
+            ->set("width", textWidth));
+
+    VImage bottomImage;
     if (bottom_text != "") {
-      bottom.size(Geometry("600"));
-      bottom.backgroundColor("black");
-      bottom.font("Times");
-      bottom.textGravity(Magick::CenterGravity);
-      bottom.fontPointsize(28);
-      bottom.read("pango:<span font_family=\"" +
-                       (font == "roboto" ? "Roboto Condensed" : font) +
-                       "\" foreground='white'>" + bottom_text + "</span>");
-      bottom.extent(Geometry(to_string(bottom.columns()) + "x" +
-                             to_string(bottom.rows() + 20)),
-                    "black", Magick::NorthGravity);
+      string bottomText = "<span foreground=\"white\" background=\"black\">" +
+                          bottom_text + "</span>";
+
+      bottomImage = VImage::text(
+          bottomText.c_str(),
+          VImage::option()
+              ->set("rgba", true)
+              ->set("align", VIPS_ALIGN_CENTRE)
+              ->set("font", (font_string + " " + to_string(size * 0.4)).c_str())
+              ->set("width", textWidth));
     }
 
-    for (Image &image : coalesced) {
-      Image final;
-      image.scale(Geometry(500, 500));
-      image.borderColor("black");
-      image.border(Geometry(5, 5));
-      image.borderColor("white");
-      image.border(Geometry(3, 3));
-      image.backgroundColor("black");
-      image.extent(Geometry(600, image.rows() + 50), Magick::CenterGravity);
+    vector<VImage> img;
+    int height;
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame =
+          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
 
-      list<Image> to_append;
-      to_append.push_back(image);
-      to_append.push_back(top);
-      if (bottom_text != "") to_append.push_back(bottom);
-      appendImages(&final, to_append.begin(), to_append.end(), true);
-      final.repage();
-      final.magick(type);
-      final.animationDelay(delay == 0 ? image.animationDelay() : delay);
-      mid.push_back(final);
-    }
+      int borderSize = max(2, width / 66);
+      int borderSize2 = borderSize * 0.5;
+      VImage bordered =
+          img_frame.embed(borderSize, borderSize, width + (borderSize * 2),
+                          page_height + (borderSize * 2),
+                          VImage::option()->set("extend", "black"));
+      VImage bordered2 = bordered.embed(
+          borderSize2, borderSize2, bordered.width() + (borderSize2 * 2),
+          bordered.height() + (borderSize2 * 2),
+          VImage::option()->set("extend", "white"));
 
-    optimizeTransparency(mid.begin(), mid.end());
+      int addition = width / 8;
+      int sideAddition = page_height * 0.4;
 
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDither(false);
-        image.quantize();
+      VImage bordered3 = bordered2.embed(
+          sideAddition / 2, addition / 2, bordered2.width() + sideAddition,
+          bordered2.height() + addition,
+          VImage::option()->set("extend", "black"));
+      VImage frame = bordered3.join(
+          topImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
+                           topImage.height() + (size / 4),
+                           VImage::option()->set("extend", "black")),
+          VIPS_DIRECTION_VERTICAL,
+          VImage::option()->set("background", 0x000000)->set("expand", true));
+      if (bottom_text != "") {
+        frame = frame.join(
+            bottomImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
+                                bottomImage.height() + (size / 4),
+                                VImage::option()->set("extend", "black")),
+            VIPS_DIRECTION_VERTICAL,
+            VImage::option()->set("background", 0x000000)->set("expand", true));
       }
+      height = frame.height();
+      img.push_back(frame);
     }
+    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1))
+                       .extract_band(0, VImage::option()->set("n", 3));
+    final.set(VIPS_META_PAGE_HEIGHT, height);
 
-    writeImages(mid.begin(), mid.end(), &blob);
+    void *buf;
+    size_t length;
+    final.write_to_buffer(
+        ("." + type).c_str(), &buf, &length,
+        type == "gif" ? VImage::option()->set("dither", 1) : 0);
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {

@@ -26,7 +26,6 @@ class SkipCommand extends MusicCommand {
     } else {
       await player.player.stop(this.channel.guild.id);
       if (this.type === "application") return "🔊 The current song has been skipped.";
-      return;
     }
   }
 

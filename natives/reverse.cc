@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Reverse(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -15,47 +13,54 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool soos =
         obj.Has("soos") ? obj.Get("soos").As<Napi::Boolean>().Value() : false;
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options =
+        VImage::option()->set("access", "sequential")->set("n", -1);
 
-    list<Image> frames;
-    list<Image> coalesced;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+    VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "", options)
+                    .colourspace(VIPS_INTERPRETATION_sRGB);
+
+    int width = in.width();
+    int page_height = vips_image_get_page_height(in.get_image());
+    int n_pages = vips_image_get_n_pages(in.get_image());
+
+    vector<VImage> split;
+    // todo: find a better way of getting individual frames (or at least getting the frames in reverse order)
+    for (int i = 0; i < n_pages; i++) {
+      VImage img_frame = in.crop(0, i * page_height, width, page_height);
+      split.push_back(img_frame);
     }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
 
+    vector<int> delays = in.get_array_int("delay");
     if (soos) {
-      list<Image> copy = coalesced;
-      copy.reverse();
+      vector<VImage> copy = split;
+      vector<int> copy2 = delays;
+      reverse(copy.begin(), copy.end());
+      reverse(copy2.begin(), copy2.end());
       copy.pop_back();
-      copy.pop_front();
-      coalesced.insert(coalesced.end(), copy.begin(), copy.end());
+      copy2.pop_back();
+      copy.erase(copy.begin());
+      copy2.erase(copy2.begin());
+      split.insert(split.end(), copy.begin(), copy.end());
+      delays.insert(delays.end(), copy2.begin(), copy2.end());
     } else {
-      coalesced.reverse();
+      reverse(split.begin(), split.end());
+      reverse(delays.begin(), delays.end());
     }
 
-    for_each(coalesced.begin(), coalesced.end(), magickImage("GIF"));
+    VImage final = VImage::arrayjoin(split, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    final.set("delay", delays);
 
-    optimizeTransparency(coalesced.begin(), coalesced.end());
+    void *buf;
+    size_t length;
+    final.write_to_buffer(".gif", &buf, &length,
+                          VImage::option()->set("dither", 0));
 
-    for (Image &image : coalesced) {
-      image.quantizeDither(false);
-      image.quantize();
-      if (delay != 0) image.animationDelay(delay);
-    }
-
-    writeImages(coalesced.begin(), coalesced.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", "gif");
     return result;
   } catch (std::exception const &err) {

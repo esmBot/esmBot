@@ -1,10 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Homebrew(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -14,23 +13,31 @@ Napi::Value Homebrew(const Napi::CallbackInfo &info) {
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
     string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
-    Blob blob;
-
-    Image image;
     string assetPath = basePath + "assets/images/hbc.png";
-    image.read(assetPath);
-    image.textGravity(Magick::CenterGravity);
-    image.font("./assets/hbc.ttf");
-    image.textKerning(-5);
-    image.fillColor("white");
-    image.fontPointsize(96);
-    image.draw(DrawableText(0, 0, caption));
-    image.magick("PNG");
-    image.write(&blob);
+    VImage bg = VImage::new_from_file(assetPath.c_str());
+
+    VImage text =
+        VImage::text(("<span letter_spacing=\"-5120\" color=\"white\">" +
+                      caption + "</span>")
+                         .c_str(),
+                     VImage::option()
+                         ->set("rgba", true)
+                         ->set("align", VIPS_ALIGN_CENTRE)
+                         ->set("font", "PF Square Sans Pro 96"));
+
+    VImage out = bg.composite2(text, VIPS_BLEND_MODE_OVER,
+                               VImage::option()
+                                   ->set("x", 400 - (text.width() / 2))
+                                   ->set("y", 300 - (text.height() / 2) - 8));
+
+    void *buf;
+    size_t length;
+    out.write_to_buffer(".png", &buf, &length);
+
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", "png");
     return result;
   } catch (std::exception const &err) {

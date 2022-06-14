@@ -41,7 +41,6 @@ The job object is formatted like this:
   "url": string,      // original image URL, used for message filtering
   "params": {         // content varies depending on the command, some common parameters are listed here
     "type": string,   // mime type of output, should usually be the same as input
-    "delay": integer, // for manually specifying GIF frame delay, set to 0 to use the default delay
     ...
   }
 }

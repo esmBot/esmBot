@@ -8,7 +8,7 @@ import Command from "../../classes/command.js";
 class ImageSearchCommand extends Command {
   async run() {
     if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
-    const query = this.type === "classic" ? this.args.join(" ") : this.options.query;
+    const query = this.options.query ?? this.args.join(" ");
     if (!query || !query.trim()) return "You need to provide something to search for!";
     await this.acknowledge();
     const embeds = [];

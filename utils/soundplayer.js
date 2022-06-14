@@ -152,7 +152,6 @@ export async function nextSong(client, options, connection, track, info, music, 
   connection.removeAllListeners("error");
   connection.removeAllListeners("end");
   await connection.play(track);
-  await connection.volume(75);
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
   connection.once("error", async (error) => {
     try {
@@ -172,7 +171,12 @@ export async function nextSong(client, options, connection, track, info, music, 
     players.delete(voiceChannel.guild.id);
     queues.delete(voiceChannel.guild.id);
     logger.error(error);
-    await (options.type === "classic" ? options.channel.createMessage : options.interaction.createMessage)(`🔊 Looks like there was an error regarding sound playback:\n\`\`\`${error.type}: ${error.error}\`\`\``);
+    const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${error.type}: ${error.error}\`\`\``;
+    if (options.type === "classic") {
+      await client.createMessage(options.channel.id, content);
+    } else {
+      await options.interaction.createMessage(content);
+    }
   });
   connection.on("end", async (data) => {
     if (data.reason === "REPLACED") return;
@@ -213,7 +217,12 @@ export async function nextSong(client, options, connection, track, info, music, 
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
       skipVotes.delete(voiceChannel.guild.id);
-      if (music) await (options.type === "classic" ? options.channel.createMessage : options.interaction.createMessage)("🔊 The current voice channel session has ended.");
+      const content = "🔊 The current voice channel session has ended.";
+      if (options.type === "classic") {
+        await client.createMessage(options.channel.id, content);
+      } else {
+        await options.interaction.createMessage(content);
+      }
       try {
         if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
         if (player && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();

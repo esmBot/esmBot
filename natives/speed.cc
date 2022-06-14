@@ -1,17 +1,45 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 void *memset16(void *m, uint16_t val, size_t count) {
   uint16_t *buf = (uint16_t *)m;
 
   while (count--) *buf++ = val;
   return m;
+}
+
+void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
+                int speed) {
+  VOption *options = VImage::option()->set("access", "sequential");
+
+  VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                      options->set("n", -1))
+                  .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha()) in = in.bandjoin(255);
+
+  int width = in.width();
+  int page_height = vips_image_get_page_height(in.get_image());
+  int n_pages = vips_image_get_n_pages(in.get_image());
+
+  vector<VImage> img;
+  for (int i = 0; i < n_pages; i += speed) {
+    VImage img_frame = in.crop(0, i * page_height, width, page_height);
+    img.push_back(img_frame);
+  }
+  VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  out.set(VIPS_META_PAGE_HEIGHT, page_height);
+
+  void *buf;
+  size_t length;
+  out.write_to_buffer(".gif", &buf, &length);
+
+  vips_thread_shutdown();
+
+  result->Set("data", Napi::Buffer<char>::Copy(*env, (char *)buf, length));
 }
 
 Napi::Value Speed(const Napi::CallbackInfo &info) {
@@ -23,8 +51,6 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
     bool slow =
         obj.Has("slow") ? obj.Get("slow").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
     int speed =
         obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().Int32Value() : 2;
 
@@ -34,142 +60,50 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
     char *match = (char *)"\x00\x21\xF9\x04";
 
-    // if passed a delay, use that. otherwise iterate over every frame.
-    if (delay == 0) {
-      vector<uint16_t> old_delays;
-      bool removeFrames = false;
-      char *lastPos;
+    vector<uint16_t> old_delays;
+    bool removeFrames = false;
+    char *lastPos;
 
-      int amount = 0;
+    int amount = 0;
 
-      lastPos = (char *)memchr(fileData, '\x00', data.Length());
-      while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 4) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                   (data.Length() - (lastPos - fileData)) - 1);
-          continue;
-        }
-        ++amount;
-        uint16_t old_delay;
-        memcpy(&old_delay, lastPos + 5, 2);
-        old_delays.push_back(old_delay);
+    lastPos = (char *)memchr(fileData, '\x00', data.Length());
+    while (lastPos != NULL) {
+      if (memcmp(lastPos, match, 4) != 0) {
         lastPos = (char *)memchr(lastPos + 1, '\x00',
                                  (data.Length() - (lastPos - fileData)) - 1);
+        continue;
       }
+      ++amount;
+      uint16_t old_delay;
+      memcpy(&old_delay, lastPos + 5, 2);
+      old_delays.push_back(old_delay);
+      lastPos = (char *)memchr(lastPos + 1, '\x00',
+                               (data.Length() - (lastPos - fileData)) - 1);
+    }
 
-      int currentFrame = 0;
-      lastPos = (char *)memchr(fileData, '\x00', data.Length());
-      while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 4) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                   (data.Length() - (lastPos - fileData)) - 1);
-          continue;
-        }
-        uint16_t new_delay = slow ? old_delays[currentFrame] * speed
-                                  : old_delays[currentFrame] / speed;
-        if (!slow && new_delay <= 1) {
-          removeFrames = true;
-          break;
-        }
-        memset16(lastPos + 5, new_delay, 1);
+    int currentFrame = 0;
+    lastPos = (char *)memchr(fileData, '\x00', data.Length());
+    while (lastPos != NULL) {
+      if (memcmp(lastPos, match, 4) != 0) {
         lastPos = (char *)memchr(lastPos + 1, '\x00',
                                  (data.Length() - (lastPos - fileData)) - 1);
-        ++currentFrame;
+        continue;
       }
-
-      result.Set("data",
-                 Napi::Buffer<char>::Copy(env, fileData, data.Length()));
-
-      if (removeFrames) {
-        Blob blob;
-
-        list<Image> frames;
-        try {
-          readImages(&frames, Blob(data.Data(), data.Length()));
-        } catch (Magick::WarningCoder &warning) {
-          cerr << "Coder Warning: " << warning.what() << endl;
-        } catch (Magick::Warning &warning) {
-          cerr << "Warning: " << warning.what() << endl;
-        }
-
-        for (list<Image>::iterator i = frames.begin(); i != frames.end(); ++i) {
-          int index = distance(frames.begin(), i);
-          if (index >= (int)old_delays.size()) {
-            old_delays.resize(index+1);
-            old_delays[index] = old_delays[index-1];
-          }
-          i->animationDelay(old_delays[index]);
-        }
-
-        for (int i = 0; i < speed - 1; ++i) {
-          auto it = frames.begin();
-          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
-        }
-
-        for_each(frames.begin(), frames.end(), magickImage(type));
-        writeImages(frames.begin(), frames.end(), &blob);
-        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                    blob.length()));
-      }
-    } else {
-      char *lastPos;
-
-      bool removeFrames = false;
-
-      lastPos = (char *)memchr(fileData, '\x00', data.Length());
-      while (lastPos != NULL) {
-        if (memcmp(lastPos, match, 4) != 0) {
-          lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                   (data.Length() - (lastPos - fileData)) - 1);
-          continue;
-        }
-        uint16_t old_delay;
-        memcpy(&old_delay, lastPos + 5, 2);
-        int new_delay = slow ? delay * speed : delay / speed;
-        if (!slow && new_delay <= 1) {
-          removeFrames = true;
-        }
+      uint16_t new_delay = slow ? old_delays[currentFrame] * speed
+                                : old_delays[currentFrame] / speed;
+      if (!slow && new_delay <= 1) {
+        removeFrames = true;
         break;
       }
-
-      if (removeFrames) {
-        Blob blob;
-
-        list<Image> frames;
-        try {
-          readImages(&frames, Blob(data.Data(), data.Length()));
-        } catch (Magick::WarningCoder &warning) {
-          cerr << "Coder Warning: " << warning.what() << endl;
-        } catch (Magick::Warning &warning) {
-          cerr << "Warning: " << warning.what() << endl;
-        }
-
-        for (int i = 0; i < speed - 1; ++i) {
-          auto it = frames.begin();
-          while(it != frames.end() && ++it != frames.end()) it = frames.erase(it);
-        }
-
-        for_each(frames.begin(), frames.end(), magickImage(type));
-        writeImages(frames.begin(), frames.end(), &blob);
-        result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                    blob.length()));
-      } else {
-        while (lastPos != NULL) {
-          if (memcmp(lastPos, match, 4) != 0) {
-            lastPos =
-                (char *)memchr(lastPos + 1, '\x00',
+      memset16(lastPos + 5, new_delay, 1);
+      lastPos = (char *)memchr(lastPos + 1, '\x00',
                                (data.Length() - (lastPos - fileData)) - 1);
-            continue;
-          }
-          uint16_t old_delay;
-          memcpy(&old_delay, lastPos + 5, 2);
-          int new_delay = slow ? delay * speed : delay / speed;
-          memset16(lastPos + 5, new_delay, 1);
-          lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                   (data.Length() - (lastPos - fileData)) - 1);
-        }
-      }
+      ++currentFrame;
     }
+
+    result.Set("data", Napi::Buffer<char>::Copy(env, fileData, data.Length()));
+
+    if (removeFrames) vipsRemove(&env, &result, data, speed);
 
     result.Set("type", type);
     return result;

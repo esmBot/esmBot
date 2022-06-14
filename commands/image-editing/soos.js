@@ -1,9 +1,8 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SooSCommand extends ImageCommand {
-  params(url, delay) {
+  params() {
     return {
-      delay: delay ? (100 / delay.split("/")[0]) * delay.split("/")[1] : 0,
       soos: true
     };
   }

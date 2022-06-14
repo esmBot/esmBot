@@ -1,11 +1,9 @@
-#include <Magick++.h>
 #include <napi.h>
 
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
 Napi::Value Invert(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
@@ -14,46 +12,28 @@ Napi::Value Invert(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
 
-    Blob blob;
+    VOption *options = VImage::option()->set("access", "sequential");
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> mid;
-    try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
-    }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+    VImage in =
+        VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
-    for_each(coalesced.begin(), coalesced.end(), negateImage());
-    for (Image &image : coalesced) {
-      image.negateChannel(Magick::AlphaChannel);
-      mid.push_back(image);
-    }
-    // Magick::ChannelType(Magick::CompositeChannels ^ Magick::AlphaChannel)
-    for_each(mid.begin(), mid.end(), magickImage(type));
+    VImage noAlpha =
+        in.extract_band(0, VImage::option()->set("n", in.bands() - 1));
+    VImage inverted = noAlpha.invert();
+    VImage out = inverted.bandjoin(in.extract_band(3));
 
-    optimizeTransparency(mid.begin(), mid.end());
+    void *buf;
+    size_t length;
+    out.write_to_buffer(("." + type).c_str(), &buf, &length);
 
-    if (type == "gif") {
-      for (Image &image : mid) {
-        image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
-    }
-
-    writeImages(mid.begin(), mid.end(), &blob);
+    vips_thread_shutdown();
 
     Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
+    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
     return result;
   } catch (std::exception const &err) {
