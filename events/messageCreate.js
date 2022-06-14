@@ -43,7 +43,7 @@ export default async (client, cluster, worker, ipc, message) => {
       prefix = prefixCandidate;
     }
   } else {
-    prefix = "";
+    prefix = process.env.PREFIX;
   }
 
   // ignore other stuff
