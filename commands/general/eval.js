@@ -8,8 +8,7 @@ class EvalCommand extends Command {
     await this.acknowledge();
     const code = this.options.code ?? this.args.join(" ");
     try {
-      let evaled;
-      evaled = eval(code);
+      const evaled = eval(code);
       const cleaned = await clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
