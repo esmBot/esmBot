@@ -3,7 +3,7 @@ import Command from "../../classes/command.js";
 
 class PrefixCommand extends Command {
   async run() {
-    if (!this.channel.guild) return "This command only works in servers!";
+    if (!this.channel.guild) return `The current prefix is \`${process.env.PREFIX}\``;
     const guild = await database.getGuild(this.channel.guild.id);
     if (this.args.length !== 0) {
       const owners = process.env.OWNER.split(",");
