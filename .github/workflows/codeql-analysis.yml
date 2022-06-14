@@ -78,7 +78,7 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       npm install
+       npm install --legacy-peer-deps
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: sudo apt install libvips-dev libmagick++-dev
     - name: Build
-      run: npm install && npm run build
+      run: npm install --legacy-peer-deps && npm run build
 
   win32:
     runs-on: windows-latest
@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       run: choco install imagemagick -PackageParameters InstallDevelopmentHeaders=true
     - name: Build
-      run: npm install && npm run build
+      run: npm install --legacy-peer-deps && npm run build
 
   darwin:
     runs-on: macos-latest
@@ -44,4 +44,4 @@ jobs:
     - name: Install dependencies
       run: brew install imagemagick vips
     - name: Build
-      run: npm install && npm run build
+      run: npm install --legacy-peer-deps && npm run build
