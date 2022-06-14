@@ -1,6 +1,6 @@
 {
   "lava": [
-    { "id": "1", "host": "localhost", "port": 2333, "password": "youshallnotpass", "local": true }
+    { "name": "localhost", "url": "localhost:2333", "auth": "youshallnotpass", "local": true }
   ],
   "image": [
     { "server": "localhost", "auth": "verycoolpass100", "tls": false }

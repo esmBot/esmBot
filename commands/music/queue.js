@@ -1,6 +1,6 @@
-//import { Rest } from "lavacord";
 import fetch from "node-fetch";
 import format from "format-duration";
+import { nodes } from "../../utils/soundplayer.js";
 import paginator from "../../utils/pagination/pagination.js";
 import MusicCommand from "../../classes/musicCommand.js";
 
@@ -11,8 +11,8 @@ class QueueCommand extends MusicCommand {
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
-    //const tracks = await Rest.decode(player.player.node, queue);
-    const tracks = await fetch(`http://${player.player.node.host}:${player.player.node.port}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { Authorization: player.player.node.password, "Content-Type": "application/json" } }).then(res => res.json());
+    const node = nodes.filter((val) => { return val.name === player.player.node.name })[0];
+    const tracks = await fetch(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { Authorization: node.auth, "Content-Type": "application/json" } }).then(res => res.json());
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {

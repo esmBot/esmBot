@@ -1,4 +1,3 @@
-import { Rest } from "lavacord";
 import format from "format-duration";
 import MusicCommand from "../../classes/musicCommand.js";
 
@@ -9,8 +8,8 @@ class NowPlayingCommand extends MusicCommand {
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     const player = this.connection.player;
     if (!player) return "I'm not playing anything!";
-    const track = await Rest.decode(player.node, player.track);
-    const parts = Math.floor((player.state.position / track.length) * 10);
+    const track = await player.node.rest.decode(player.track);
+    const parts = Math.floor((player.position / track.length) * 10);
     return {
       embeds: [{
         color: 16711680,
@@ -32,7 +31,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          value: `${format(player.state.position)}/${track.isStream ? "∞" : format(track.length)}`
+          value: `${format(player.position)}/${track.isStream ? "∞" : format(track.length)}`
         }]
       }]
     };

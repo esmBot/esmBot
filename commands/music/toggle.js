@@ -7,7 +7,7 @@ class ToggleCommand extends MusicCommand {
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     if (this.connection.host !== this.author.id && !this.member.permissions.has("manageChannels")) return "Only the current voice session host can pause/resume the music!";
     const player = this.connection.player;
-    await player.pause(!player.paused ? true : false);
+    player.setPaused(!player.paused ? true : false);
     return `🔊 The player has been ${player.paused ? "paused" : "resumed"}.`;
   }
 

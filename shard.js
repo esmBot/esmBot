@@ -10,7 +10,7 @@ import { log, error } from "./utils/logger.js";
 // initialize command loader
 import { load, update } from "./utils/handler.js";
 // lavalink stuff
-import { checkStatus, connect, status, connected } from "./utils/soundplayer.js";
+import { checkStatus, connect, reload, status, connected, manager } from "./utils/soundplayer.js";
 // database stuff
 import database from "./utils/database.js";
 // command collections
@@ -83,7 +83,7 @@ class Shard extends BaseClusterWorker {
     this.ipc.register("soundreload", async () => {
       const soundStatus = await checkStatus();
       if (!soundStatus) {
-        const length = await connect(this.bot);
+        const length = reload();
         return this.ipc.broadcast("soundReloadSuccess", { length });
       } else {
         return this.ipc.broadcast("soundReloadFail");
