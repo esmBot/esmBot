@@ -76,24 +76,6 @@ const Admiral = new Fleet({
     blacklist: ["stats_update"]
   },
   clientOptions: {
-    disableEvents: {
-      CHANNEL_DELETE: true,
-      GUILD_BAN_REMOVE: true,
-      TYPING_START: true,
-      MESSAGE_DELETE_BULK: true,
-      WEBHOOKS_UPDATE: true,
-      STAGE_INSTANCE_CREATE: true,
-      STAGE_INSTANCE_DELETE: true,
-      STAGE_INSTANCE_UPDATE: true,
-      MESSAGE_REACTION_ADD: true,
-      MESSAGE_REACTION_REMOVE: true,
-      MESSAGE_REACTION_REMOVE_ALL: true,
-      MESSAGE_REACTION_REMOVE_EMOJI: true,
-      INVITE_CREATE: true,
-      INVITE_DELETE: true,
-      THREAD_UPDATE: true,
-      THREAD_DELETE: true
-    },
     allowedMentions: {
       everyone: false,
       roles: false,

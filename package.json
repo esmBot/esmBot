@@ -28,7 +28,7 @@
     "cmake-js": "^6.3.0",
     "dotenv": "^16.0.0",
     "emoji-regex": "^10.0.0",
-    "eris": "github:DonovanDMC/eris#everything",
+    "eris": "^0.17.0",
     "eris-fleet": "^1.0.2",
     "file-type": "^17.1.1",
     "format-duration": "^2.0.0",
