@@ -35,13 +35,18 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     first.find_trim(&top, &captionWidth, &captionHeight);
 
     vector<VImage> img;
+    int newHeight = page_height - top;
+    if (top == page_height) {
+      newHeight = page_height;
+      top = 0;
+    }
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          in.crop(0, (i * page_height) + top, width, page_height - top);
+          in.crop(0, (i * page_height) + top, width, newHeight);
       img.push_back(img_frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height - top);
+    final.set(VIPS_META_PAGE_HEIGHT, newHeight);
 
     void *buf;
     size_t length;
