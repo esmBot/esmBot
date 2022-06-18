@@ -34,7 +34,7 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 
 ### Job Object
 The job object is formatted like this:
-```json
+```js
 {
   "cmd": string,      // name of internal image command, e.g. caption
   "path": string,     // canonical image URL, used for getting the actual image

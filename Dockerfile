@@ -4,8 +4,12 @@ FROM node:alpine
 RUN apk --no-cache upgrade
 RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmpeg wget rpm2cpio \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
-    libtool libwebp-dev libxml2-dev pango-dev freetype fontconfig \
-	vips vips-dev grep
+    libtool libwebp-dev libxml2-dev freetype fontconfig \
+		vips vips-dev grep libc6-compat
+
+# install pnpm
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
+  npm install -g pnpm@6.27.1
 
 # gets latest version of twemoji
 RUN mkdir /tmp/twemoji \
@@ -25,7 +29,7 @@ RUN git clone https://github.com/carlobaldassi/liblqr \
 		&& make install
 
 # install imagemagick from source rather than using the package
-# since the alpine package does not include pango support.
+# since the alpine package does not include liblqr support.
 RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
     && cd ImageMagick \
     && ./configure \
@@ -54,26 +58,27 @@ COPY ./assets/caption.otf /usr/share/fonts/caption.otf
 COPY ./assets/caption2.ttf /usr/share/fonts/caption2.ttf
 COPY ./assets/hbc.ttf /usr/share/fonts/hbc.ttf
 COPY ./assets/reddit.ttf /usr/share/fonts/reddit.ttf
+COPY ./assets/whisper.otf /usr/share/fonts/whisper.otf
 RUN fc-cache -fv
 
 COPY --chown=node:node ./package.json package.json
-COPY --chown=node:node ./package-lock.json package-lock.json
-RUN npm install
+COPY --chown=node:node ./pnpm-lock.yaml pnpm-lock.yaml
+RUN pnpm install
 COPY . .
 RUN rm .env
-RUN npm run build
+RUN pnpm run build
 
-RUN mkdir /home/esmBot/help
-RUN chown esmBot:esmBot /home/esmBot/help
-RUN chmod 666 /home/esmBot/help
+RUN mkdir /home/esmBot/help \
+		&& chown esmBot:esmBot /home/esmBot/help \
+		&& chmod 777 /home/esmBot/help
 
-RUN mkdir /home/esmBot/temp
-RUN chown esmBot:esmBot /home/esmBot/temp
-RUN chmod 666 /home/esmBot/temp
+RUN mkdir /home/esmBot/temp \
+		&& chown esmBot:esmBot /home/esmBot/temp \
+		&& chmod 777 /home/esmBot/temp
 
-RUN mkdir /home/esmBot/.internal/logs
-RUN chown esmBot:esmBot /home/esmBot/.internal/logs
-RUN chmod 666 /home/esmBot/.internal/logs
+RUN mkdir /home/esmBot/.internal/logs \
+		&& chown esmBot:esmBot /home/esmBot/.internal/logs \
+		&& chmod 777 /home/esmBot/.internal/logs
 
 USER esmBot
 

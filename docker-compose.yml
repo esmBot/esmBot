@@ -4,7 +4,6 @@ services:
   bot:
     build:
       context: .
-      dockerfile: Dockerfile.bot
     image: esmbot
     restart: unless-stopped
     volumes:
