@@ -34,7 +34,7 @@ const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "lar
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 // gets the proper image paths
-const getImage = async (image, image2, video, extraReturnTypes, gifv = false) => {
+const getImage = async (image, image2, video, extraReturnTypes, gifv = false, type = null) => {
   try {
     const payload = {
       url: image2,
@@ -73,10 +73,10 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false) =>
       }
       payload.type = "image/gif";
     } else if (video) {
-      payload.type = await getType(payload.path, extraReturnTypes);
+      payload.type = type ?? await getType(payload.path, extraReturnTypes);
       if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
     } else {
-      payload.type = await getType(payload.path, extraReturnTypes);
+      payload.type = type ?? await getType(payload.path, extraReturnTypes);
       if (!payload.type || !imageFormats.includes(payload.type)) return;
     }
     return payload;
@@ -126,8 +126,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     // we can get a raw attachment or a URL in the interaction itself
     if (options) {
       if (options.image) {
-        const attachment = interaction.data.resolved.attachments.get(options.image);
-        const result = await getImage(attachment.proxyUrl, attachment.url, video);
+        const attachment = interaction.data.resolved.attachments[options.image];
+        const result = await getImage(attachment.proxy_url, attachment.url, video, attachment.content_type);
         if (result !== false) return result;
       } else if (options.link) {
         const result = await getImage(options.link, options.link, video);
