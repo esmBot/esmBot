@@ -28,21 +28,21 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
     VImage out;
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
 
     int finalHeight;
     if (stretch) {
       out = in.resize(
           512.0 / (double)width,
-          VImage::option()->set("vscale", 512.0 / (double)page_height));
+          VImage::option()->set("vscale", 512.0 / (double)pageHeight));
       finalHeight = 512;
     } else if (wide) {
       out = in.resize(9.5, VImage::option()->set("vscale", 0.5));
-      finalHeight = page_height / 2;
+      finalHeight = pageHeight / 2;
     } else {
       out = in.resize(0.1).resize(
           10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
-      finalHeight = page_height;
+      finalHeight = pageHeight;
     }
     out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 

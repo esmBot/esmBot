@@ -26,17 +26,17 @@ Napi::Value Gamexplain(const Napi::CallbackInfo &info) {
     VImage tmpl = VImage::new_from_file(assetPath.c_str());
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage resized = img_frame
                            .resize(1181.0 / (double)width,
                                    VImage::option()->set(
-                                       "vscale", 571.0 / (double)page_height))
+                                       "vscale", 571.0 / (double)pageHeight))
                            .embed(10, 92, 1200, 675,
                                   VImage::option()->set("extend", "white"));
       VImage composited = resized.composite2(tmpl, VIPS_BLEND_MODE_OVER);

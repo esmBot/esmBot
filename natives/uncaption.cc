@@ -25,24 +25,24 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     VImage first =
-        in.crop(0, 0, 3, page_height).colourspace(VIPS_INTERPRETATION_B_W) >
+        in.crop(0, 0, 3, pageHeight).colourspace(VIPS_INTERPRETATION_B_W) >
         (255 * tolerance);
     int top, captionWidth, captionHeight;
     first.find_trim(&top, &captionWidth, &captionHeight);
 
     vector<VImage> img;
-    int newHeight = page_height - top;
-    if (top == page_height) {
-      newHeight = page_height;
+    int newHeight = pageHeight - top;
+    if (top == pageHeight) {
+      newHeight = pageHeight;
       top = 0;
     }
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          in.crop(0, (i * page_height) + top, width, newHeight);
+          in.crop(0, (i * pageHeight) + top, width, newHeight);
       img.push_back(img_frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));

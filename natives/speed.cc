@@ -22,16 +22,16 @@ void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
-  int page_height = vips_image_get_page_height(in.get_image());
+  int pageHeight = vips_image_get_page_height(in.get_image());
   int n_pages = vips_image_get_n_pages(in.get_image());
 
   vector<VImage> img;
   for (int i = 0; i < n_pages; i += speed) {
-    VImage img_frame = in.crop(0, i * page_height, width, page_height);
+    VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
     img.push_back(img_frame);
   }
   VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-  out.set(VIPS_META_PAGE_HEIGHT, page_height);
+  out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
   void *buf;
   size_t length;

@@ -26,7 +26,7 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int size = width / 13;
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
     int textWidth = width - ((width / 25) * 2);
 
@@ -50,7 +50,7 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage frame =
           (top ? captionImage : img_frame)
               .join(top ? img_frame : captionImage, VIPS_DIRECTION_VERTICAL,
@@ -60,7 +60,7 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
       img.push_back(frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height + captionImage.height());
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());
 
     void *buf;
     size_t length;

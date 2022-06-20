@@ -26,7 +26,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     VImage tmpl = VImage::new_from_file(assetPath.c_str());
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     string captionText = "<span foreground=\"white\">" + text + "</span>";
@@ -47,13 +47,13 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage frame = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
                                     VImage::option()->set("expand", true));
       img.push_back(frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height + watermark.height());
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight + watermark.height());
 
     void *buf;
     size_t length;

@@ -23,7 +23,7 @@ Napi::Value Zamn(const Napi::CallbackInfo &info) {
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     string assetPath = basePath + "assets/images/zamn.png";
@@ -32,11 +32,11 @@ Napi::Value Zamn(const Napi::CallbackInfo &info) {
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage composited = tmpl.insert(
           img_frame.extract_band(0, VImage::option()->set("n", 3)).bandjoin(255).resize(
               303.0 / (double)width,
-              VImage::option()->set("vscale", 438.0 / (double)page_height)),
+              VImage::option()->set("vscale", 438.0 / (double)pageHeight)),
           310, 76);
       img.push_back(composited);
     }

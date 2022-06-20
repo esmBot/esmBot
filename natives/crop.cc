@@ -21,14 +21,14 @@ Napi::Value Crop(const Napi::CallbackInfo &info) {
             .colourspace(VIPS_INTERPRETATION_sRGB);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     vector<VImage> img;
     int finalHeight = 0;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       int frameWidth = img_frame.width();
       int frameHeight = img_frame.height();
       bool widthOrHeight = frameWidth / frameHeight >= 1;

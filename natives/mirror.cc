@@ -32,12 +32,12 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
       if (type == "gif") {
         // once again, libvips gif handling is both a blessing and a curse
         vector<VImage> img;
-        int page_height = vips_image_get_page_height(in.get_image());
+        int pageHeight = vips_image_get_page_height(in.get_image());
         int n_pages = vips_image_get_n_pages(in.get_image());
-        bool isOdd = page_height % 2;
+        bool isOdd = pageHeight % 2;
         for (int i = 0; i < n_pages; i++) {
-          int x = (i * page_height) + (first ? 0 : (page_height / 2));
-          VImage cropped = in.crop(0, x, in.width(), page_height / 2);
+          int x = (i * pageHeight) + (first ? 0 : (pageHeight / 2));
+          VImage cropped = in.crop(0, x, in.width(), pageHeight / 2);
           VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
           VImage final = VImage::arrayjoin(
               {first ? cropped : flipped, first ? flipped : cropped},
@@ -45,7 +45,7 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
           img.push_back(final);
         }
         out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-        out.set(VIPS_META_PAGE_HEIGHT, page_height - (isOdd ? 1 : 0));
+        out.set(VIPS_META_PAGE_HEIGHT, pageHeight - (isOdd ? 1 : 0));
       } else {
         VImage cropped = in.extract_area(0, 0, in.width(), in.height() / 2);
         VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);

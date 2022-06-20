@@ -21,13 +21,13 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
                     .colourspace(VIPS_INTERPRETATION_sRGB);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     vector<VImage> split;
     // todo: find a better way of getting individual frames (or at least getting the frames in reverse order)
     for (int i = 0; i < n_pages; i++) {
-      VImage img_frame = in.crop(0, i * page_height, width, page_height);
+      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
       split.push_back(img_frame);
     }
 
@@ -49,7 +49,7 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
     }
 
     VImage final = VImage::arrayjoin(split, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     final.set("delay", delays);
 
     void *buf;

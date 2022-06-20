@@ -26,7 +26,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int size = width / 5;
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
     int textWidth = width - ((width / 25) * 2);
 
@@ -61,13 +61,13 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     int height;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
 
       int borderSize = max(2, width / 66);
       int borderSize2 = borderSize * 0.5;
       VImage bordered =
           img_frame.embed(borderSize, borderSize, width + (borderSize * 2),
-                          page_height + (borderSize * 2),
+                          pageHeight + (borderSize * 2),
                           VImage::option()->set("extend", "black"));
       VImage bordered2 = bordered.embed(
           borderSize2, borderSize2, bordered.width() + (borderSize2 * 2),
@@ -75,7 +75,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
           VImage::option()->set("extend", "white"));
 
       int addition = width / 8;
-      int sideAddition = page_height * 0.4;
+      int sideAddition = pageHeight * 0.4;
 
       VImage bordered3 = bordered2.embed(
           sideAddition / 2, addition / 2, bordered2.width() + sideAddition,

@@ -29,15 +29,15 @@ Napi::Value Flip(const Napi::CallbackInfo &info) {
     } else if (type == "gif") {
       // libvips gif handling is both a blessing and a curse
       vector<VImage> img;
-      int page_height = vips_image_get_page_height(in.get_image());
+      int pageHeight = vips_image_get_page_height(in.get_image());
       int n_pages = vips_image_get_n_pages(in.get_image());
       for (int i = 0; i < n_pages; i++) {
-        VImage img_frame = in.crop(0, i * page_height, in.width(), page_height);
+        VImage img_frame = in.crop(0, i * pageHeight, in.width(), pageHeight);
         VImage flipped = img_frame.flip(VIPS_DIRECTION_VERTICAL);
         img.push_back(flipped);
       }
       out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-      out.set(VIPS_META_PAGE_HEIGHT, page_height);
+      out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     } else {
       out = in.flip(VIPS_DIRECTION_VERTICAL);
     }

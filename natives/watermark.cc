@@ -40,7 +40,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     VImage watermark = VImage::new_from_file(merged.c_str());
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
 
     if (resize && append) {
@@ -48,11 +48,11 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     } else if (resize && yscale) {
       watermark = watermark.resize(
           (double)width / (double)watermark.width(),
-          VImage::option()->set("vscale", (double)(page_height * yscale) /
+          VImage::option()->set("vscale", (double)(pageHeight * yscale) /
                                               (double)watermark.height()));
     } else if (resize) {
       watermark =
-          watermark.resize((double)page_height / (double)watermark.height());
+          watermark.resize((double)pageHeight / (double)watermark.height());
     }
 
     int x = 0, y = 0;
@@ -67,19 +67,19 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
         break;
       case 5:
         x = (width / 2) - (watermark.width() / 2);
-        y = (page_height / 2) - (watermark.height() / 2);
+        y = (pageHeight / 2) - (watermark.height() / 2);
         break;
       case 6:
         x = width - watermark.width();
-        y = (page_height / 2) - (watermark.height() / 2);
+        y = (pageHeight / 2) - (watermark.height() / 2);
         break;
       case 8:
         x = (width / 2) - (watermark.width() / 2);
-        y = page_height - watermark.height();
+        y = pageHeight - watermark.height();
         break;
       case 9:
         x = width - watermark.width();
-        y = page_height - watermark.height();
+        y = pageHeight - watermark.height();
         break;
     }
 
@@ -91,7 +91,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     VImage frame;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       if (append) {
         VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
                                          VImage::option()->set("expand", true));
@@ -99,7 +99,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
         img.push_back(appended);
       } else if (mc) {
         VImage padded =
-            img_frame.embed(0, 0, width, page_height + 15,
+            img_frame.embed(0, 0, width, pageHeight + 15,
                             VImage::option()->set("background", 0xffffff));
         VImage composited =
             padded.composite2(watermark, VIPS_BLEND_MODE_OVER,
@@ -113,10 +113,10 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
         if (alpha) {
           if (i == 0) {
             contentAlpha = watermark.extract_band(0).embed(
-                x, y, width, page_height,
+                x, y, width, pageHeight,
                 VImage::option()->set("extend", "white"));
             frameAlpha = watermark.extract_band(1).embed(
-                x, y, width, page_height,
+                x, y, width, pageHeight,
                 VImage::option()->set("extend", "black"));
             bg =
                 frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
@@ -142,7 +142,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
       }
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height + addedHeight);
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight + addedHeight);
 
     void *buf;
     size_t length;

@@ -23,7 +23,7 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = vips_image_get_n_pages(in.get_image());
     int size = width / 6;
     int dividedWidth = width / 175;
@@ -66,16 +66,16 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       img_frame = img_frame.composite2(
           textImg, VIPS_BLEND_MODE_OVER,
           VImage::option()
               ->set("x", (width / 2) - (textImg.width() / 2))
-              ->set("y", (page_height / 2) - (textImg.height() / 2)));
+              ->set("y", (pageHeight / 2) - (textImg.height() / 2)));
       img.push_back(img_frame);
     }
     VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, page_height);
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
     void *buf;
     size_t length;

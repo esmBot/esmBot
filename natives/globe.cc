@@ -25,10 +25,10 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int width = in.width();
-    int page_height = vips_image_get_page_height(in.get_image());
+    int pageHeight = vips_image_get_page_height(in.get_image());
     int n_pages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
-    double size = min(width, page_height);
+    double size = min(width, pageHeight);
 
     string diffPath = basePath + "assets/images/globediffuse.png";
     VImage diffuse =
@@ -54,10 +54,10 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
     vector<VImage> img;
     for (int i = 0; i < n_pages; i++) {
       VImage img_frame =
-          type == "gif" ? in.crop(0, i * page_height, width, page_height) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage resized = img_frame.resize(
           size / (double)width,
-          VImage::option()->set("vscale", size / (double)page_height));
+          VImage::option()->set("vscale", size / (double)pageHeight));
       VImage rolled = img_frame.wrap(
           VImage::option()->set("x", width * i / n_pages)->set("y", 0));
       VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
