@@ -28,8 +28,8 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
     VImage out;
 
     int width = in.width();
-    int totalHeight = in.height();
     int pageHeight = vips_image_get_page_height(in.get_image());
+    int nPages = vips_image_get_n_pages(in.get_image());
 
     int finalHeight;
     if (stretch) {
@@ -41,13 +41,17 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
       out = in.resize(9.5, VImage::option()->set("vscale", 0.5));
       finalHeight = pageHeight / 2;
     } else {
-      VImage small = in.resize(0.1);
-      out =
-          small.resize((double)width / small.width(),
-                       VImage::option()
-                           ->set("vscale", (double)totalHeight / small.height())
-                           ->set("kernel", VIPS_KERNEL_NEAREST));
-      finalHeight = pageHeight;
+      // Pain. Pain. Pain. Pain. Pain.
+      vector<VImage> img;
+      for (int i = 0; i < nPages; i++) {
+        VImage img_frame =
+            type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        VImage resized = img_frame.resize(0.1).resize(
+            10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
+        img.push_back(resized);
+        finalHeight = resized.height();
+      }
+      out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     }
     out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
