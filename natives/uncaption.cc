@@ -26,7 +26,7 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
-    int n_pages = vips_image_get_n_pages(in.get_image());
+    int nPages = vips_image_get_n_pages(in.get_image());
 
     VImage first =
         in.crop(0, 0, 3, pageHeight).colourspace(VIPS_INTERPRETATION_B_W) >
@@ -40,7 +40,7 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
       newHeight = pageHeight;
       top = 0;
     }
-    for (int i = 0; i < n_pages; i++) {
+    for (int i = 0; i < nPages; i++) {
       VImage img_frame =
           in.crop(0, (i * pageHeight) + top, width, newHeight);
       img.push_back(img_frame);

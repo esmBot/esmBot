@@ -26,7 +26,7 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
-    int n_pages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
+    int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
     double size = min(width, pageHeight);
 
@@ -52,14 +52,14 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
         size;
 
     vector<VImage> img;
-    for (int i = 0; i < n_pages; i++) {
+    for (int i = 0; i < nPages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage resized = img_frame.resize(
           size / (double)width,
           VImage::option()->set("vscale", size / (double)pageHeight));
       VImage rolled = img_frame.wrap(
-          VImage::option()->set("x", width * i / n_pages)->set("y", 0));
+          VImage::option()->set("x", width * i / nPages)->set("y", 0));
       VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
       VImage mapped = extracted.mapim(distort);
       VImage composited = mapped * diffuse + specular;

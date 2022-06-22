@@ -6,6 +6,6 @@
     { "server": "localhost", "auth": "verycoolpass100", "tls": false }
   ],
   "searx": [
-    "https://searx.xyz"
+    "https://searx.projectlounge.pw"
   ]
 }

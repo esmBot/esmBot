@@ -41,7 +41,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
-    int n_pages = vips_image_get_n_pages(in.get_image());
+    int nPages = vips_image_get_n_pages(in.get_image());
 
     if (resize && append) {
       watermark = watermark.resize((double)width / (double)watermark.width());
@@ -89,7 +89,7 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     VImage frameAlpha;
     VImage bg;
     VImage frame;
-    for (int i = 0; i < n_pages; i++) {
+    for (int i = 0; i < nPages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       if (append) {

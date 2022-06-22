@@ -28,6 +28,7 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
     VImage out;
 
     int width = in.width();
+    int totalHeight = in.height();
     int pageHeight = vips_image_get_page_height(in.get_image());
 
     int finalHeight;
@@ -40,8 +41,12 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
       out = in.resize(9.5, VImage::option()->set("vscale", 0.5));
       finalHeight = pageHeight / 2;
     } else {
-      out = in.resize(0.1).resize(
-          10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
+      VImage small = in.resize(0.1);
+      out =
+          small.resize((double)width / small.width(),
+                       VImage::option()
+                           ->set("vscale", (double)totalHeight / small.height())
+                           ->set("kernel", VIPS_KERNEL_NEAREST));
       finalHeight = pageHeight;
     }
     out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
