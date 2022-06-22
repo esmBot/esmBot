@@ -22,7 +22,7 @@ class SpeechBubbleCommand extends ImageCommand {
   }
 
   static description = "Adds a speech bubble to an image";
-  static aliases = ["speech", "sb"];
+  static aliases = ["speech"];
 
   static noImage = "You need to provide an image/GIF to add a speech bubble!";
   static command = "watermark";
