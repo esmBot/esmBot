@@ -33,6 +33,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
       with:
@@ -42,8 +44,10 @@ jobs:
       with:
         version: 7
     - name: Install dependencies
-      run: choco install imagemagick -PackageParameters InstallDevelopmentHeaders=true
+      shell: msys2 {0}
+      run: pacman -S mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Build
+      shell: msys2 {0}
       run: pnpm install && pnpm run build
 
   darwin:
