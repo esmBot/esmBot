@@ -45,7 +45,7 @@ jobs:
         version: 7
     - name: Install dependencies
       shell: msys2 {0}
-      run: pacman -S mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
+      run: pacman -S --noconfirm mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Build
       shell: msys2 {0}
       run: pnpm install && pnpm run build
