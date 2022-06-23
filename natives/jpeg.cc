@@ -30,13 +30,13 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
       int width = in.width();
       int pageHeight = vips_image_get_page_height(in.get_image());
       int totalHeight = in.height();
-      int n_pages = vips_image_get_n_pages(in.get_image());
+      int nPages = vips_image_get_n_pages(in.get_image());
 
       VImage final;
 
       if (totalHeight > 65500) {
         vector<VImage> img;
-        for (int i = 0; i < n_pages; i++) {
+        for (int i = 0; i < nPages; i++) {
           VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
           void *jpgBuf;
           size_t jpgLength;

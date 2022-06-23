@@ -33,9 +33,9 @@ Napi::Value Mirror(const Napi::CallbackInfo &info) {
         // once again, libvips gif handling is both a blessing and a curse
         vector<VImage> img;
         int pageHeight = vips_image_get_page_height(in.get_image());
-        int n_pages = vips_image_get_n_pages(in.get_image());
+        int nPages = vips_image_get_n_pages(in.get_image());
         bool isOdd = pageHeight % 2;
-        for (int i = 0; i < n_pages; i++) {
+        for (int i = 0; i < nPages; i++) {
           int x = (i * pageHeight) + (first ? 0 : (pageHeight / 2));
           VImage cropped = in.crop(0, x, in.width(), pageHeight / 2);
           VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);

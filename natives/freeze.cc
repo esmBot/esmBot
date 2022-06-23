@@ -59,8 +59,8 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
       if (!in.has_alpha()) in = in.bandjoin(255);
 
       int pageHeight = vips_image_get_page_height(in.get_image());
-      int n_pages = vips_image_get_n_pages(in.get_image());
-      int framePos = clamp(frame, 0, (int)n_pages);
+      int nPages = vips_image_get_n_pages(in.get_image());
+      int framePos = clamp(frame, 0, (int)nPages);
       VImage out = in.crop(0, 0, in.width(), pageHeight * (framePos + 1));
       out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       out.set("loop", loop ? 0 : 1);

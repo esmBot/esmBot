@@ -26,13 +26,15 @@ jobs:
     - name: Install dependencies
       run: sudo apt install libvips-dev libmagick++-dev
     - name: Build
-      run: pnpm install && pnpm run build
+      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
 
   win32:
     runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
       with:
@@ -42,9 +44,11 @@ jobs:
       with:
         version: 7
     - name: Install dependencies
-      run: choco install imagemagick -PackageParameters InstallDevelopmentHeaders=true
+      shell: msys2 {0}
+      run: pacman -S --noconfirm mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Build
-      run: pnpm install && pnpm run build
+      shell: msys2 {0}
+      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
 
   darwin:
     runs-on: macos-latest
@@ -62,4 +66,4 @@ jobs:
     - name: Install dependencies
       run: brew install imagemagick vips
     - name: Build
-      run: pnpm install && pnpm run build
+      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build

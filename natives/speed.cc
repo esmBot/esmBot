@@ -23,10 +23,10 @@ void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int n_pages = vips_image_get_n_pages(in.get_image());
+  int nPages = vips_image_get_n_pages(in.get_image());
 
   vector<VImage> img;
-  for (int i = 0; i < n_pages; i += speed) {
+  for (int i = 0; i < nPages; i += speed) {
     VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
     img.push_back(img_frame);
   }

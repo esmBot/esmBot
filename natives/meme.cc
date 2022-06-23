@@ -26,7 +26,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
-    int n_pages = vips_image_get_n_pages(in.get_image());
+    int nPages = vips_image_get_n_pages(in.get_image());
     int size = width / 9;
     int dividedWidth = width / 1000;
     int rad = 1;
@@ -104,7 +104,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     }
 
     vector<VImage> img;
-    for (int i = 0; i < n_pages; i++) {
+    for (int i = 0; i < nPages; i++) {
       VImage img_frame =
           type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       if (top != "") {
