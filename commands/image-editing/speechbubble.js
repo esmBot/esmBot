@@ -7,7 +7,8 @@ class SpeechBubbleCommand extends ImageCommand {
       gravity: "north",
       resize: true,
       yscale: 0.2,
-      alpha: this.specialArgs.alpha
+      alpha: this.specialArgs.alpha,
+      flip: this.specialArgs.flip
     };
   }
 
@@ -16,6 +17,10 @@ class SpeechBubbleCommand extends ImageCommand {
     this.flags.push({
       name: "alpha",
       description: "Make the top of the speech bubble transparent",
+      type: 5
+    }, {
+      name: "flip",
+      description: "Flips the speech bubble",
       type: 5
     });
     return this;
