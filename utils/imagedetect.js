@@ -46,7 +46,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
         // Tenor doesn't let us access a raw GIF without going through their API,
         // so we use that if there's a key in the config
         if (process.env.TENOR !== "") {
-          const data = await fetch(`https://g.tenor.com/v1/gifs?ids=${image2.split("-").pop()}&media_filter=minimal&limit=1&key=${process.env.TENOR}`);
+          const data = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${image2.split("-").pop()}&media_filter=minimal&limit=1&key=${process.env.TENOR}`);
           if (data.status === 429) {
             if (extraReturnTypes) {
               payload.type = "tenorlimit";
@@ -57,7 +57,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
           }
           const json = await data.json();
           if (json.error) throw Error(json.error);
-          payload.path = json.results[0].media[0].gif.url;
+          payload.path = json.results[0].media_formats.gif.url;
         }
       } else if (giphyURLs.includes(host)) {
         // Can result in an HTML page instead of a GIF
