@@ -48,7 +48,7 @@ jobs:
       run: pacman -S --noconfirm mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Build
       shell: msys2 {0}
-      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
+      run: $PNPM_HOME/pnpm install --config.strict-peer-dependencies=false && $PNPM_HOME/pnpm run build
 
   darwin:
     runs-on: macos-latest
