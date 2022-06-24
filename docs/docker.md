@@ -1,0 +1,26 @@
+# Docker
+You can run the bot as well as its dependencies as a series of Docker containers. However, the manual setup is still recommended if you want more control over the bot.  
+To start, install Docker on your system via the instructions here: https://docs.docker.com/engine/install/#server
+
+Once you've installed Docker, you should clone the esmBot repo:
+```sh
+cd ~
+git clone --recurse-submodules https://github.com/esmBot/esmBot
+cd esmBot
+```
+Modify the `.env` file as described in step 5 of the manual setup. Make sure to change the `DB` option to this, however:
+```
+DB=postgresql://esmbot:verycoolpass100@postgres:5432/esmbot
+```
+You should then modify the `servers.json` file to change the IP addresses of the servers to match the Docker containers. Example:
+```json
+{
+  "lava": [
+    { "name": "localhost", "url": "localhost:2333", "auth": "youshallnotpass", "local": true }
+  ],
+  "image": [
+    { "server": "api", "auth": "verycoolpass100", "tls": false }
+  ]
+}
+```
+Finally, start the bot by running `docker-compose up -d`.

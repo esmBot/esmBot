@@ -35,6 +35,10 @@ jobs:
       uses: actions/checkout@v1
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: git mingw-w64-x86_64-cc mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
       with:
@@ -43,9 +47,6 @@ jobs:
       uses: pnpm/action-setup@v2.2.2
       with:
         version: 7
-    - name: Install dependencies
-      shell: msys2 {0}
-      run: pacman -S --noconfirm mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Build
       shell: msys2 {0}
       run: $PNPM_HOME/pnpm install --config.strict-peer-dependencies=false && $PNPM_HOME/pnpm run build
