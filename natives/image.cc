@@ -29,6 +29,7 @@
 #include "sonic.h"
 #include "spin.h"
 #include "tile.h"
+#include "togif.h"
 #include "uncaption.h"
 #include "wall.h"
 #include "watermark.h"
@@ -77,6 +78,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "spin"), Napi::Function::New(env, Spin));
   exports.Set(Napi::String::New(env, "swirl"), Napi::Function::New(env, Swirl));
   exports.Set(Napi::String::New(env, "tile"), Napi::Function::New(env, Tile));
+  exports.Set(Napi::String::New(env, "togif"), Napi::Function::New(env, ToGif));
   exports.Set(Napi::String::New(env, "uncaption"), Napi::Function::New(env, Uncaption));
   exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
   exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
