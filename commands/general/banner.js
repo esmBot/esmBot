@@ -3,7 +3,7 @@ const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 
 class BannerCommand extends Command {
   async run() {
-    const member = this.specialArgs.member ?? this.args[0];
+    const member = this.options.member ?? this.args[0];
     const self = await this.client.getRESTUser(this.author.id);
     if (this.type === "classic" && this.message.mentions[0]) {
       return this.message.mentions[0].dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";

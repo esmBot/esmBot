@@ -13,7 +13,7 @@ class StatsCommand extends Command {
   async run() {
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
-    const owner = await this.ipc.fetchUser(process.env.OWNER.split(",")[0]);
+    const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
     const stats = await this.ipc.getStats();
     return {
       embeds: [{

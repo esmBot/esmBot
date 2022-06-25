@@ -13,7 +13,7 @@ class Command {
       this.author = options.message.author;
       this.member = options.message.member;
       this.content = options.content;
-      this.specialArgs = this.options = options.specialArgs;
+      this.options = options.specialArgs;
       this.reference = {
         messageReference: {
           channelID: this.channel.id,
@@ -31,13 +31,13 @@ class Command {
       this.channel = options.interaction.channel;
       this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       if (options.interaction.data.options) {
-        this.specialArgs = this.options = options.interaction.data.options.reduce((obj, item) => {
+        this.options = options.interaction.data.options.reduce((obj, item) => {
           obj[item.name] = item.value;
           return obj;
         }, {});
         this.optionsArray = options.interaction.data.options;
       } else {
-        this.specialArgs = this.options = {};
+        this.options = {};
       }
     }
   }
