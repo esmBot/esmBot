@@ -9,7 +9,7 @@ Recommended system requirements:
 
 If you want to run the bot on Windows, [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
 
-If you have any further questions regarding setup, feel free to ask in the #self-hosting channel on the [esmBot Support server](https://projectlounge.pw/support).
+If you have any further questions regarding setup, feel free to ask in the #self-hosting-support channel on the [esmBot Support server](https://projectlounge.pw/support).
 
 ## Setup
 #### 1. Install the required native dependencies.
@@ -202,4 +202,4 @@ Make sure Lavalink is running and started up completely. The bot skips loading s
 
 ***
 
-If you have any further questions regarding self-hosting, feel free to ask in the #self-hosting channel on the [esmBot Support server](https://projectlounge.pw/support).
+If you have any further questions regarding self-hosting, feel free to ask in the #self-hosting-support channel on the [esmBot Support server](https://projectlounge.pw/support).

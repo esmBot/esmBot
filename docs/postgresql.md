@@ -2,14 +2,15 @@
 Here are some instructions for setting up PostgreSQL for use with esmBot.
 
 **1. Install PostgreSQL.**
-#### Alpine
-```sh
-sudo apk add postgresql
-```
 
 #### Debian/Ubuntu
 ```sh
 sudo apt-get install postgresql postgresql-client
+```
+
+#### Alpine
+```sh
+doas apk add postgresql
 ```
 
 #### Arch/Manjaro

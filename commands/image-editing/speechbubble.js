@@ -3,12 +3,12 @@ import ImageCommand from "../../classes/imageCommand.js";
 class SpeechBubbleCommand extends ImageCommand {
   params() {
     return {
-      water: this.specialArgs.alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
+      water: this.options.alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
       gravity: "north",
       resize: true,
       yscale: 0.2,
-      alpha: this.specialArgs.alpha,
-      flip: this.specialArgs.flip
+      alpha: this.options.alpha,
+      flip: this.options.flip
     };
   }
 

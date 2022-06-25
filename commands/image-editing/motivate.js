@@ -8,7 +8,7 @@ class MotivateCommand extends ImageCommand {
     return {
       top: topText.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n"),
       bottom: bottomText ? bottomText.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n") : "",
-      font: this.specialArgs.font && allowedFonts.includes(this.specialArgs.font.toLowerCase()) ? this.specialArgs.font.toLowerCase() : "times"
+      font: this.options.font && allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "times"
     };
   }
 
