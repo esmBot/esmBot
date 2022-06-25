@@ -25,6 +25,7 @@ build/
 # Dependency directories
 node_modules/
 jspm_packages/
+libvips/
 
 # Optional npm cache directory
 .npm
