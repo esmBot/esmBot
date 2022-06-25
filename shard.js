@@ -10,7 +10,7 @@ import { log, error } from "./utils/logger.js";
 // initialize command loader
 import { load, update } from "./utils/handler.js";
 // lavalink stuff
-import { checkStatus, connect, reload, status, connected, manager } from "./utils/soundplayer.js";
+import { checkStatus, connect, reload, status, connected } from "./utils/soundplayer.js";
 // database stuff
 import database from "./utils/database.js";
 // command collections
