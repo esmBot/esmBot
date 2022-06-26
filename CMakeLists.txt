@@ -18,7 +18,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror=format-security -Wno-cast-function-ty
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
-add_definitions(-DNAPI_VERSION=5)
+add_definitions(-DNAPI_VERSION=3)
 
 execute_process(COMMAND node -p "require('node-addon-api').include"
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

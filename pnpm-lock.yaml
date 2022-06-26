@@ -25,9 +25,9 @@ specifiers:
   pg: ^8.7.3
   qrcode: ^1.5.0
   sharp: ^0.30.7
-  shoukaku: ^3.1.0
+  shoukaku: ^3.1.2
   uuid: ^8.3.2
-  winston: ^3.7.2
+  winston: ^3.8.0
   ws: ^8.8.0
   zlib-sync: ^0.1.7
 
@@ -46,8 +46,8 @@ dependencies:
   node-fetch: 3.2.6
   qrcode: 1.5.0
   sharp: 0.30.7
-  shoukaku: 3.1.0_bufferutil@4.0.6
-  winston: 3.7.2
+  shoukaku: 3.1.2_bufferutil@4.0.6
+  winston: 3.8.0
 
 optionalDependencies:
   better-sqlite3: 7.5.3
@@ -73,7 +73,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/gen-mapping': 0.1.1
-      '@jridgewell/trace-mapping': 0.3.13
+      '@jridgewell/trace-mapping': 0.3.14
     dev: true
 
   /@babel/code-frame/7.16.7:
@@ -142,7 +142,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/types': 7.18.4
-      '@jridgewell/gen-mapping': 0.3.1
+      '@jridgewell/gen-mapping': 0.3.2
       jsesc: 2.5.2
     dev: true
 
@@ -408,38 +408,38 @@ packages:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      '@jridgewell/set-array': 1.1.1
-      '@jridgewell/sourcemap-codec': 1.4.13
+      '@jridgewell/set-array': 1.1.2
+      '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@jridgewell/gen-mapping/0.3.1:
-    resolution: {integrity: sha512-GcHwniMlA2z+WFPWuY8lp3fsza0I8xPFMWL5+n8LYyP6PSvPrXf4+n8stDHZY2DM0zy9sVkRDy1jDI4XGzYVqg==}
+  /@jridgewell/gen-mapping/0.3.2:
+    resolution: {integrity: sha512-mh65xKQAzI6iBcFzwv28KVWSmCkdRBWoOh+bYQGW3+6OZvbbN3TqMGo5hqYxQniRcH9F2VZIoJCm4pa3BPDK/A==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      '@jridgewell/set-array': 1.1.1
-      '@jridgewell/sourcemap-codec': 1.4.13
-      '@jridgewell/trace-mapping': 0.3.13
+      '@jridgewell/set-array': 1.1.2
+      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/trace-mapping': 0.3.14
     dev: true
 
-  /@jridgewell/resolve-uri/3.0.7:
-    resolution: {integrity: sha512-8cXDaBBHOr2pQ7j77Y6Vp5VDT2sIqWyWQ56TjEq4ih/a4iST3dItRe8Q9fp0rrIl9DoKhWQtUQz/YpOxLkXbNA==}
+  /@jridgewell/resolve-uri/3.0.8:
+    resolution: {integrity: sha512-YK5G9LaddzGbcucK4c8h5tWFmMPBvRZ/uyWmN1/SbBdIvqGUdWGkJ5BAaccgs6XbzVLsqbPJrBSFwKv3kT9i7w==}
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /@jridgewell/set-array/1.1.1:
-    resolution: {integrity: sha512-Ct5MqZkLGEXTVmQYbGtx9SVqD2fqwvdubdps5D3djjAkgkKwT918VNOz65pEHFaYTeWcukmJmH5SwsA9Tn2ObQ==}
+  /@jridgewell/set-array/1.1.2:
+    resolution: {integrity: sha512-xnkseuNADM0gt2bs+BvhO0p78Mk762YnZdsuzFV018NoG1Sj1SCQvpSqa7XUaTam5vAGasABV9qXASMKnFMwMw==}
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /@jridgewell/sourcemap-codec/1.4.13:
-    resolution: {integrity: sha512-GryiOJmNcWbovBxTfZSF71V/mXbgcV3MewDe3kIMCLyIh5e7SKAeUZs+rMnJ8jkMolZ/4/VsdBmMrw3l+VdZ3w==}
+  /@jridgewell/sourcemap-codec/1.4.14:
+    resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
     dev: true
 
-  /@jridgewell/trace-mapping/0.3.13:
-    resolution: {integrity: sha512-o1xbKhp9qnIAoHJSWd6KlCZfqslL4valSF81H8ImioOAxluWYWOpWkpyktY2vnt4tbrX9XYaxovq6cgowaJp2w==}
+  /@jridgewell/trace-mapping/0.3.14:
+    resolution: {integrity: sha512-bJWEfQ9lPTvm3SneWwRFVLzrh6nhjwqw7TUFFBEMzwvg7t7PCDenf2lDwqo4NQXzdpgBXyFgDWnQA+2vkruksQ==}
     dependencies:
-      '@jridgewell/resolve-uri': 3.0.7
-      '@jridgewell/sourcemap-codec': 1.4.13
+      '@jridgewell/resolve-uri': 3.0.8
+      '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
   /@tokenizer/token/0.3.0:
@@ -593,10 +593,10 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001358
-      electron-to-chromium: 1.4.167
+      caniuse-lite: 1.0.30001359
+      electron-to-chromium: 1.4.170
       node-releases: 2.0.5
-      update-browserslist-db: 1.0.3_browserslist@4.21.0
+      update-browserslist-db: 1.0.4_browserslist@4.21.0
     dev: true
 
   /buffer-indexof-polyfill/1.0.2:
@@ -659,8 +659,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /caniuse-lite/1.0.30001358:
-    resolution: {integrity: sha512-hvp8PSRymk85R20bsDra7ZTCpSVGN/PAz9pSAjPSjKC+rNmnUk5vCRgJwiTT/O4feQ/yu/drvZYpKxxhbFuChw==}
+  /caniuse-lite/1.0.30001359:
+    resolution: {integrity: sha512-Xln/BAsPzEuiVLgJ2/45IaqD9jShtk3Y33anKb4+yLwQzws3+v6odKfpgES/cDEaZMLzSChpIGdbOYtH9MyuHw==}
     dev: true
 
   /chainsaw/0.1.0:
@@ -888,8 +888,8 @@ packages:
       readable-stream: 2.1.5
     dev: false
 
-  /electron-to-chromium/1.4.167:
-    resolution: {integrity: sha512-lPHuHXBwpkr4RcfaZBKm6TKOWG/1N9mVggUpP4fY3l1JIUU2x4fkM8928smYdZ5lF+6KCTAxo1aK9JmqT+X71Q==}
+  /electron-to-chromium/1.4.170:
+    resolution: {integrity: sha512-rZ8PZLhK4ORPjFqLp9aqC4/S1j4qWFsPPz13xmWdrbBkU/LlxMcok+f+6f8YnQ57MiZwKtOaW15biZZsY5Igvw==}
     dev: true
 
   /emoji-regex/10.1.0:
@@ -2175,8 +2175,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shoukaku/3.1.0_bufferutil@4.0.6:
-    resolution: {integrity: sha512-W9YPlx814W7fj4/kwilfpC/f5wpIOaxwShysNPV0paCCLY5o7pwa7pMvvOT1yHR1ZWXYwCsZ39OHzJETogTXKA==}
+  /shoukaku/3.1.2_bufferutil@4.0.6:
+    resolution: {integrity: sha512-p3dqnKx0cv2BlVi2tvi++JilVRu5wBGG6Q0GHlrpNhiEe7kxZotSJom/smodUTGr+QaEYCY3e1j3JL+TO1NRkg==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
       petitio: 1.4.0
@@ -2465,8 +2465,8 @@ packages:
       setimmediate: 1.0.5
     dev: false
 
-  /update-browserslist-db/1.0.3_browserslist@4.21.0:
-    resolution: {integrity: sha512-ufSazemeh9Gty0qiWtoRpJ9F5Q5W3xdIPm1UZQqYQv/q0Nyb9EMHUB2lu+O9x1re9WsorpMAUu4Y6Lxcs5n+XQ==}
+  /update-browserslist-db/1.0.4_browserslist@4.21.0:
+    resolution: {integrity: sha512-jnmO2BEGUjsMOe/Fg9u0oczOe/ppIDZPebzccl1yDWGLFP16Pa1/RM5wEoKYPG2zstNcDuAStejyxsOuKINdGA==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
@@ -2558,8 +2558,8 @@ packages:
       triple-beam: 1.3.0
     dev: false
 
-  /winston/3.7.2:
-    resolution: {integrity: sha512-QziIqtojHBoyzUOdQvQiar1DH0Xp9nF1A1y7NVy2DGEsz82SBDtOalS0ulTRGVT14xPX3WRWkCsdcJKqNflKng==}
+  /winston/3.8.0:
+    resolution: {integrity: sha512-Iix1w8rIq2kBDkGvclO0db2CVOHYVamCIkVWcUbs567G9i2pdB+gvqLgDgxx4B4HXHYD6U4Zybh6ojepUOqcFQ==}
     engines: {node: '>= 12.0.0'}
     dependencies:
       '@dabh/diagnostics': 2.0.3
