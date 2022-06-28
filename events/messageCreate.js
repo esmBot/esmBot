@@ -189,7 +189,7 @@ export default async (client, cluster, worker, ipc, message) => {
         content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size."
       }, reference));
     } else {
-      _error(`Error occurred with command message ${message.cleanContent}: ${error.toString()}`);
+      _error(`Error occurred with command message ${message.cleanContent}: ${typeof error === "object" ? JSON.stringify(error) : error.toString()}`);
       try {
         await client.createMessage(message.channel.id, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"
