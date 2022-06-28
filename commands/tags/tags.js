@@ -155,6 +155,7 @@ class TagsCommand extends Command {
     type: 1,
     description: "Gets a random tag"
   }];
+  static directAllowed = false;
 }
 
 export default TagsCommand;

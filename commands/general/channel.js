@@ -43,6 +43,7 @@ class ChannelCommand extends Command {
   static description = "Enables/disables me in a channel (does not work with slash commands)";
   static arguments = ["[enable/disable]", "{id}"];
   static slashAllowed = false;
+  static directAllowed = false;
 }
 
 export default ChannelCommand;

@@ -9,6 +9,7 @@ class SoundboardCommand extends Command {
 
   static requires = ["sound"];
   static slashAllowed = false;
+  static directAllowed = false;
 }
 
 export default SoundboardCommand;

@@ -75,6 +75,7 @@ static flags = [{
 }];
 ```
 - `slashAllowed`: Specifies whether or not the command is available via slash commands.
+- `directAllowed`: Specifies whether or not a command is available in direct messages.
 
 ## The `run` Function
 The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.

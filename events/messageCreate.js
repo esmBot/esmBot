@@ -84,6 +84,9 @@ export default async (client, cluster, worker, ipc, message) => {
   const cmd = commands.get(aliased ?? command);
   if (!cmd) return;
 
+  // block certain commands from running in DMs
+  if (!cmd.directAllowed && !message.channel.guild) return;
+
   // actually run the command
   log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
   const reference = {

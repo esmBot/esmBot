@@ -49,6 +49,7 @@ class ServerInfoCommand extends Command {
 
   static description = "Gets some info about the server";
   static aliases = ["server"];
+  static directAllowed = false;
 }
 
 export default ServerInfoCommand;

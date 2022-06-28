@@ -34,6 +34,8 @@ class CommandCommand extends Command {
   static description = "Enables/disables a command for a server";
   static aliases = ["cmd"];
   static arguments = ["[enable/disable]", "[command]"];
+  static slashAllowed = false;
+  static directAllowed = false;
 }
 
 export default CommandCommand;

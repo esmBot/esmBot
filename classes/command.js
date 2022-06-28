@@ -64,6 +64,7 @@ class Command {
   static flags = [];
   static requires = [];
   static slashAllowed = true;
+  static directAllowed = true;
 }
 
 export default Command;
