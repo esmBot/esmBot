@@ -36,7 +36,7 @@ export async function connect(client) {
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });
-  manager.once("ready", (name) => {
+  manager.once("ready", () => {
     logger.log(`Successfully connected to ${manager.nodes.size} Lavalink node(s).`);
     connected = true;
   });
@@ -66,7 +66,7 @@ export async function play(client, sound, options, music = false) {
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
   const player = players.get(options.channel.guild.id);
-  if (!music && manager.players().has(options.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
+  if (!music && manager.players.has(options.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
   let node = manager.getNode();
   if (!node) {
     const status = await checkStatus();
