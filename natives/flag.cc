@@ -56,7 +56,7 @@ Napi::Value Flag(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0) : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
 
     Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
