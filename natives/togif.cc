@@ -20,8 +20,9 @@ Napi::Value ToGif(const Napi::CallbackInfo &info) {
     } else {
       VOption *options = VImage::option()->set("access", "sequential");
 
-      VImage in =
-          VImage::new_from_buffer(data.Data(), data.Length(), "", options);
+      VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                          type == "webp" ? options->set("n", -1)
+                                                         : options);
 
       void *buf;
       size_t length;
