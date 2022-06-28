@@ -10,6 +10,7 @@ VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
 
 Napi::Value Colors(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -36,15 +37,15 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     size_t length;
     out.write_to_buffer(("." + type).c_str(), &buf, &length);
 
-    vips_thread_shutdown();
-
-    Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

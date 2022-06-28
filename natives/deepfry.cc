@@ -7,13 +7,12 @@ using namespace vips;
 
 Napi::Value Deepfry(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-
-    Napi::Object result = Napi::Object::New(env);
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -34,20 +33,20 @@ Napi::Value Deepfry(const Napi::CallbackInfo &info) {
     VImage final;
     if (totalHeight > 65500 && type == "gif") {
       vector<VImage> img;
-        for (int i = 0; i < nPages; i++) {
-          VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
-          void *jpgBuf;
-          size_t jpgLength;
-          img_frame.write_to_buffer(
-              ".jpg", &jpgBuf, &jpgLength,
-              VImage::option()->set("Q", 1)->set("strip", true));
-          VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "");
-          jpeged.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-          jpeged.set("delay", in.get_array_int("delay"));
-          img.push_back(jpeged);
-        }
-        final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-        final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+      for (int i = 0; i < nPages; i++) {
+        VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+        void *jpgBuf;
+        size_t jpgLength;
+        img_frame.write_to_buffer(
+            ".jpg", &jpgBuf, &jpgLength,
+            VImage::option()->set("Q", 1)->set("strip", true));
+        VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "");
+        jpeged.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+        jpeged.set("delay", in.get_array_int("delay"));
+        img.push_back(jpeged);
+      }
+      final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+      final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     } else {
       void *jpgBuf;
       size_t jpgLength;
@@ -65,14 +64,15 @@ Napi::Value Deepfry(const Napi::CallbackInfo &info) {
                           type == "gif" ? VImage::option()->set("dither", 0)
                                         : 0);
 
-    vips_thread_shutdown();
-
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

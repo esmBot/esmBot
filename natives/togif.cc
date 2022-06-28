@@ -7,6 +7,7 @@ using namespace vips;
 
 Napi::Value ToGif(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -14,30 +15,28 @@ Napi::Value ToGif(const Napi::CallbackInfo &info) {
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
 
     if (type == "gif") {
-      Napi::Object result = Napi::Object::New(env);
       result.Set("data", data);
       result.Set("type", "gif");
-      return result;
+    } else {
+      VOption *options = VImage::option()->set("access", "sequential");
+
+      VImage in =
+          VImage::new_from_buffer(data.Data(), data.Length(), "", options);
+
+      void *buf;
+      size_t length;
+      in.write_to_buffer(".gif", &buf, &length);
+
+      result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
+      result.Set("type", "gif");
     }
-
-    VOption *options = VImage::option()->set("access", "sequential");
-
-    VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "", options);
-
-    void *buf;
-    size_t length;
-    in.write_to_buffer(".gif", &buf, &length);
-
-    vips_thread_shutdown();
-
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", "gif");
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

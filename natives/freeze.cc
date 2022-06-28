@@ -7,6 +7,7 @@ using namespace vips;
 
 Napi::Value Freeze(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -17,8 +18,6 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     int frame = obj.Has("frame")
                     ? obj.Get("frame").As<Napi::Number>().Int32Value()
                     : -1;
-
-    Napi::Object result = Napi::Object::New(env);
 
     char *fileData = data.Data();
     char *match = (char *)"\x21\xFF\x0BNETSCAPE2.0\x03\x01";
@@ -69,8 +68,6 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
       size_t length;
       out.write_to_buffer(("." + type).c_str(), &buf, &length);
 
-      vips_thread_shutdown();
-
       result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     } else {
       lastPos = (char *)memchr(fileData, '\x21', data.Length());
@@ -93,10 +90,13 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     }
 
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

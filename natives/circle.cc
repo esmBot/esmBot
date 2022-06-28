@@ -9,6 +9,7 @@ using namespace Magick;
 
 Napi::Value Circle(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -46,14 +47,14 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
 
     writeImages(blurred.begin(), blurred.end(), &blob);
 
-    Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
                                                 blob.length()));
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  return result;
 }

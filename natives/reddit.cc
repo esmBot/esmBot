@@ -7,6 +7,8 @@ using namespace vips;
 
 Napi::Value Reddit(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
+  
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
@@ -61,15 +63,15 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
         ("." + type).c_str(), &buf, &length,
         type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
 
-    vips_thread_shutdown();
-
-    Napi::Object result = Napi::Object::New(env);
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

@@ -7,6 +7,7 @@ using namespace vips;
 
 Napi::Value Jpeg(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -15,8 +16,6 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
                       ? obj.Get("quality").As<Napi::Number>().Int32Value()
                       : 0;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-
-    Napi::Object result = Napi::Object::New(env);
 
     if (type == "gif") {
       VImage in =
@@ -67,8 +66,6 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
                             type == "gif" ? VImage::option()->set("dither", 0)
                                           : 0);
 
-      vips_thread_shutdown();
-
       result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
       result.Set("type", type);
     } else {
@@ -79,16 +76,16 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
           ".jpg", &buf, &length,
           VImage::option()->set("Q", quality)->set("strip", true));
 
-      vips_thread_shutdown();
-
       result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
       result.Set("type", "jpg");
     }
-
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }

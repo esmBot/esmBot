@@ -37,13 +37,12 @@ void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
   size_t length;
   out.write_to_buffer(".gif", &buf, &length);
 
-  vips_thread_shutdown();
-
   result->Set("data", Napi::Buffer<char>::Copy(*env, (char *)buf, length));
 }
 
 Napi::Value Speed(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
 
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
@@ -53,8 +52,6 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int speed =
         obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().Int32Value() : 2;
-
-    Napi::Object result = Napi::Object::New(env);
 
     char *fileData = data.Data();
 
@@ -106,10 +103,13 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
     if (removeFrames) vipsRemove(&env, &result, data, speed);
 
     result.Set("type", type);
-    return result;
   } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
+  return result;
 }
