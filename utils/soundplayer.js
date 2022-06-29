@@ -93,7 +93,7 @@ export async function play(client, sound, options, music = false) {
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
-  const connection = player && player.player ? player.player : await node.joinChannel({
+  const connection = player && player.player && player.player.connection.state !== 3 ? player.player : await node.joinChannel({
     guildId: voiceChannel.guild.id,
     channelId: voiceChannel.id,
     shardId: voiceChannel.guild.shard.id,
@@ -163,7 +163,7 @@ export async function nextSong(client, options, connection, track, info, music, 
   connection.removeAllListeners("error");
   connection.removeAllListeners("end");
   connection.playTrack({ track });
-  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop: loop, shuffle: shuffle, playMessage: playingMessage });
+  players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", async (exception) => {
     try {
       if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
