@@ -160,7 +160,7 @@ export async function nextSong(client, options, connection, track, info, music, 
       // no-op
     }
   }
-  connection.removeAllListeners("error");
+  connection.removeAllListeners("exception");
   connection.removeAllListeners("end");
   connection.playTrack({ track });
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
