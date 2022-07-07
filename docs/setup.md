@@ -15,17 +15,18 @@ If you have any further questions regarding setup, feel free to ask in the #self
 #### 1. Install the required native dependencies.
 **Debian (bookworm)/Ubuntu (22.04 or later)**  
 ```sh
-sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libcgif-dev libgirepository1.0-dev fonts-noto-color-emoji python3-pip libimagequant-dev
+sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libcgif-dev libgirepository1.0-dev fonts-noto-color-emoji libimagequant-dev meson
 ```
+On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 
-**Alpine**
+**Alpine (3.16 or later)**
 ```sh
-doas apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev font-noto-emoji py3-pip gobject-introspection-dev cgif-dev libimagequant-dev
+doas apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev font-noto-emoji gobject-introspection-dev cgif-dev libimagequant-dev meson
 ```
 
 **Arch/Manjaro**
 ```sh
-sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl noto-fonts-emoji python-pip gobject-introspection libcgif libimagequant
+sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl noto-fonts-emoji gobject-introspection libcgif libimagequant meson
 ```
 Arch/Manjaro users: you'll also need to install [`ttf-ms-fonts`](https://aur.archlinux.org/packages/ttf-ms-fonts/) from the AUR.
 
@@ -35,11 +36,7 @@ Arch/Manjaro users: you'll also need to install [`ttf-ms-fonts`](https://aur.arc
 
 [libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. The latest version as of writing this (8.12.2) is recommended because it contains fixes to GIF handling; however, there's also a missing feature in this version that is needed for the freeze command to work (see [libvips pull request #2709](https://github.com/libvips/libvips/pull/2709)). To fix this, you'll need to build libvips from source.
 
-Start by installing the Meson build system:
-```sh
-pip install meson
-```
-Then, download the source and move into it:
+First, download the source and move into it:
 ```sh
 git clone https://github.com/libvips/libvips
 cd libvips
@@ -52,7 +49,7 @@ If that command finishes with no errors, you can compile and install it:
 ```sh
 cd build
 meson compile
-meson install
+sudo meson install
 ```
 
 ***
@@ -106,7 +103,7 @@ cd ~
 git clone --recurse-submodules https://github.com/esmBot/esmBot
 cd esmBot
 pnpm install
-pnpm run build
+pnpm build
 ```
 You'll also need to copy over some fonts for the image commands:
 ```sh
@@ -187,7 +184,7 @@ If you wish to update the bot to the latest version/commit at any time, just run
 ### Error: Cannot find module './build/Release/image.node'
 The native image functions haven't been built. Run `pnpm run build` to build them.
 
-### PNpm fails with error 'ELIFECYCLE  Command failed.'
+### pnpm fails with error 'ELIFECYCLE  Command failed.'
 You seem to be missing node-gyp, this can be fixed by running:
 ```sh
 pnpm -g install node-gyp
