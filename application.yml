@@ -28,7 +28,7 @@ lavalink:
   plugins:
     - dependency: "com.github.esmBot:lava-xm-plugin:v0.1.0"
       repository: "https://jitpack.io"
-    - dependency: "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers-Plugin:v2.0.6"
+    - dependency: "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers-Plugin:v2.0.7"
       repository: "https://jitpack.io"
 
 plugins:
