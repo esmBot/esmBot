@@ -8,7 +8,7 @@ class FlagCommand extends ImageCommand {
 
   async criteria() {
     const text = this.options.text ?? this.args[0];
-    if (!text.match(emojiRegex)) return false;
+    if (!text.match(emojiRegex())) return false;
     const flag = emoji.unemojify(text).replaceAll(":", "").replace("flag-", "");
     let path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
     if (flag === "pirate_flag") path = "assets/images/pirateflag.png";
