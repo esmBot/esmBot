@@ -171,12 +171,8 @@ if (isMaster) {
       logger.error("Invalid THRESHOLD config.");
       process.env.THRESHOLD = undefined;
     }
-    const dirstat = (await promises.readdir(process.env.TEMPDIR)).map(async (file) => {
-      return new Promise((resolve) => {
-        promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
-          resolve(stats.size);
-        });
-      });
+    const dirstat = (await promises.readdir(process.env.TEMPDIR)).map((file) => {
+      return promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => stats.size);
     });
     const size = await Promise.all(dirstat);
     process.env.DIRSIZECACHE = size.reduce((a, b)=>{

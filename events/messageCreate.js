@@ -149,24 +149,25 @@ export default async (client, cluster, worker, ipc, message) => {
             process.env.DIRSIZECACHE += result.file.length;
             if (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
               const files = (await promises.readdir(process.env.TEMPDIR)).map((file) => {
-                return new Promise((resolve, reject) => {
-                  promises.stat(`${process.env.TEMPDIR}/${file}`).then((fstats)=>{
-                    resolve({
-                      name: file,
-                      size: fstats.size,
-                      ctime: fstats.ctime
-                    });
-                  }).catch(reject);
+                return promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
+                  return {
+                    name: file,
+                    size: stats.size,
+                    ctime: stats.ctime
+                  };
                 });
               });
-              Promise.all(files).then((files) => {
-                process.env.DIRSIZECACHE = files.reduce((a, b)=>{
-                  return a+b.size;
-                }, 0);
-                const oldestFile = files.sort((a, b) => a.ctime - b.ctime)[0].name;
-                promises.rm(`${process.env.TEMPDIR}/${oldestFile}`);
-                log(`Removed oldest image file: ${oldestFile}`);
-              });
+              const resolvedFiles = await Promise.all(files);
+              process.env.DIRSIZECACHE = resolvedFiles.reduce((a, b)=>{
+                return a + b.size;
+              }, 0);
+              const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
+              while (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
+                await promises.rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
+                process.env.DIRSIZECACHE -= oldestFiles[0].size;
+                log(`Removed oldest image file: ${oldestFiles[0].name}`);
+                oldestFiles.shift();
+              }
             }
           }
         } else {
