@@ -1,9 +1,9 @@
-import { promises } from "fs";
 import database from "../utils/database.js";
 import * as logger from "../utils/logger.js";
 import { commands } from "../utils/collections.js";
 import { CommandInteraction } from "eris";
 import { clean } from "../utils/misc.js";
+import { upload } from "../utils/tempimages.js";
 
 // run when a slash command is executed
 export default async (client, cluster, worker, ipc, interaction) => {
@@ -39,47 +39,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
       }
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-          await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-          const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
-          await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]({
-            embeds: [{
-              color: 16711680,
-              title: "Here's your image!",
-              url: imageURL,
-              image: {
-                url: imageURL
-              },
-              footer: {
-                text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
-              },
-            }]
-          });
-          if (process.env.THRESHOLD) {
-            process.env.DIRSIZECACHE += result.file.length;
-            if (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
-              const files = (await promises.readdir(process.env.TEMPDIR)).map((file) => {
-                return promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
-                  return {
-                    name: file,
-                    size: stats.size,
-                    ctime: stats.ctime
-                  };
-                });
-              });
-              const resolvedFiles = await Promise.all(files);
-              process.env.DIRSIZECACHE = resolvedFiles.reduce((a, b)=>{
-                return a + b.size;
-              }, 0);
-              const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
-              while (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
-                await promises.rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
-                process.env.DIRSIZECACHE -= oldestFiles[0].size;
-                logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
-                oldestFiles.shift();
-              }
-            }
-          }
+          await upload(client, result, interaction, true);
         } else {
           await interaction[interaction.acknowledged ? "editOriginalMessage" : "createMessage"]("The resulting image was more than 8MB in size, so I can't upload it.");
         }
