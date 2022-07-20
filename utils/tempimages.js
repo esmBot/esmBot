@@ -34,6 +34,7 @@ export async function upload(client, result, context, interaction = false) {
     }));
   }
   if (process.env.THRESHOLD) {
+    process.env.DIRSIZECACHE = parseInt(process.env.DIRSIZECACHE) + result.file.length;
     await removeOldImages();
   }
 }
@@ -52,12 +53,13 @@ export async function removeOldImages() {
     }).filter(Boolean);
     const resolvedFiles = await Promise.all(files);
     process.env.DIRSIZECACHE = resolvedFiles.reduce((a, b)=>{
-      return a.size + b.size;
+      return a + b.size;
     }, 0);
     const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
     while (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
+      if (!oldestFiles[0]) break;
       await rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
-      process.env.DIRSIZECACHE -= oldestFiles[0].size;
+      process.env.DIRSIZECACHE = parseInt(process.env.DIRSIZECACHE) - oldestFiles[0].size;
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
       oldestFiles.shift();
     }
