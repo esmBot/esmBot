@@ -34,7 +34,6 @@ export async function upload(client, result, context, interaction = false) {
     }));
   }
   if (process.env.THRESHOLD) {
-    process.env.DIRSIZECACHE += result.file.length;
     await removeOldImages();
   }
 }
@@ -53,7 +52,7 @@ export async function removeOldImages() {
     }).filter(Boolean);
     const resolvedFiles = await Promise.all(files);
     process.env.DIRSIZECACHE = resolvedFiles.reduce((a, b)=>{
-      return a + b.size;
+      return a.size + b.size;
     }, 0);
     const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
     while (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
