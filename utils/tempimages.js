@@ -34,8 +34,8 @@ export async function upload(client, ipc, result, context, interaction = false) 
     }));
   }
   if (process.env.THRESHOLD) {
-    const size = ipc.centralStore.get("dirSizeCache") + result.file.length;
-    ipc.centralStore.set("dirSizeCache", size);
+    const size = await ipc.centralStore.get("dirSizeCache") + result.file.length;
+    await ipc.centralStore.set("dirSizeCache", size);
     await removeOldImages(ipc, size);
   }
 }
@@ -61,7 +61,7 @@ export async function removeOldImages(ipc, size) {
       if (!oldestFiles[0]) break;
       await rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
       newSize -= oldestFiles[0].size;
-      ipc.centralStore.set("dirSizeCache", newSize);
+      await ipc.centralStore.set("dirSizeCache", newSize);
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
       oldestFiles.shift();
     }
