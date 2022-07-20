@@ -1,9 +1,9 @@
-import { promises } from "fs";
 import database from "../utils/database.js";
 import { log, error as _error } from "../utils/logger.js";
 import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "../utils/collections.js";
 import parseCommand from "../utils/parseCommand.js";
 import { clean } from "../utils/misc.js";
+import { upload } from "../utils/tempimages.js";
 
 // run when someone sends a message
 export default async (client, cluster, worker, ipc, message) => {
@@ -129,46 +129,7 @@ export default async (client, cluster, worker, ipc, message) => {
       }
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-          await promises.writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
-          const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
-          await client.createMessage(message.channel.id, Object.assign({
-            embeds: [{
-              color: 16711680,
-              title: "Here's your image!",
-              url: imageURL,
-              image: {
-                url: imageURL
-              },
-              footer: {
-                text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
-              },
-            }]
-          }, reference));
-          if (process.env.THRESHOLD) {
-            process.env.DIRSIZECACHE += result.file.length;
-            if (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
-              const files = (await promises.readdir(process.env.TEMPDIR)).map((file) => {
-                return new Promise((resolve, reject) => {
-                  promises.stat(`${process.env.TEMPDIR}/${file}`).then((fstats)=>{
-                    resolve({
-                      name: file,
-                      size: fstats.size,
-                      ctime: fstats.ctime
-                    });
-                  }).catch(reject);
-                });
-              });
-              Promise.all(files).then((files) => {
-                process.env.DIRSIZECACHE = files.reduce((a, b)=>{
-                  return a+b.size;
-                }, 0);
-                const oldestFile = files.sort((a, b) => a.ctime - b.ctime)[0].name;
-                promises.rm(`${process.env.TEMPDIR}/${oldestFile}`);
-                log(`Removed oldest image file: ${oldestFile}`);
-              });
-            }
-          }
+          await upload(client, ipc, result, message);
         } else {
           await client.createMessage(message.channel.id, "The resulting image was more than 8MB in size, so I can't upload it.");
         }

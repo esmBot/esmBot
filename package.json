@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "A Discord bot with miscellaneous features",
   "exports": "./app.js",
   "bin": "./app.js",
@@ -27,34 +27,34 @@
     "cmake-js": "^6.3.2",
     "dotenv": "^16.0.1",
     "emoji-regex": "^10.1.0",
-    "eris": "^0.17.0",
+    "eris": "github:esmBot/eris#dev",
     "eris-fleet": "^1.0.2",
     "file-type": "^17.1.2",
     "format-duration": "^2.0.0",
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.0.0",
     "node-emoji": "^1.11.0",
-    "node-fetch": "^3.2.6",
-    "qrcode": "^1.5.0",
+    "node-fetch": "^3.2.9",
+    "qrcode": "^1.5.1",
     "sharp": "^0.30.7",
     "shoukaku": "^3.1.2",
-    "winston": "^3.8.0"
+    "winston": "^3.8.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/eslint-parser": "^7.18.2",
+    "@babel/core": "^7.18.9",
+    "@babel/eslint-parser": "^7.18.9",
     "@babel/eslint-plugin": "^7.17.7",
-    "@babel/plugin-proposal-class-properties": "^7.17.12",
-    "eslint": "^8.18.0",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "eslint": "^8.20.0",
     "eslint-plugin-unicorn": "^42.0.0"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^7.5.3",
+    "better-sqlite3": "^7.6.2",
     "bufferutil": "^4.0.6",
     "erlpack": "github:abalabahaha/erlpack",
     "pg": "^8.7.3",
     "uuid": "^8.3.2",
-    "ws": "^8.8.0",
+    "ws": "^8.8.1",
     "zlib-sync": "^0.1.7"
   }
 }
