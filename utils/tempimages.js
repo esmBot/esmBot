@@ -42,6 +42,7 @@ export async function upload(client, ipc, result, context, interaction = false) 
 
 export async function removeOldImages(ipc, size) {
   if (size > process.env.THRESHOLD) {
+    
     const files = (await readdir(process.env.TEMPDIR)).map((file) => {
       return lstat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
         if (stats.isSymbolicLink()) return;
@@ -51,19 +52,23 @@ export async function removeOldImages(ipc, size) {
           ctime: stats.ctime
         };
       });
-    }).filter(Boolean);
+    });
+    
     const resolvedFiles = await Promise.all(files);
-    let newSize = resolvedFiles.filter(Boolean).reduce((a, b) => {
-      return a + b.size;
-    }, 0);
-    const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
-    while (newSize > process.env.THRESHOLD) {
+    const oldestFiles = resolvedFiles.filter(Boolean).sort((a, b) => a.ctime - b.ctime);
+
+    do {
       if (!oldestFiles[0]) break;
       await rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
-      newSize -= oldestFiles[0].size;
-      await ipc.centralStore.set("dirSizeCache", newSize);
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
+      size -= oldestFiles[0].csize;
       oldestFiles.shift();
-    }
+    } while ( size > process.env.THRESHOLD )
+
+    let newSize = oldestFiles.reduce((a, b) => {
+      return a + b.size;
+    }, 0);
+    await ipc.centralStore.set("dirSizeCache", newSize);
+
   }
 }
