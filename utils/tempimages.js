@@ -53,7 +53,7 @@ export async function removeOldImages(ipc, size) {
       });
     }).filter(Boolean);
     const resolvedFiles = await Promise.all(files);
-    let newSize = resolvedFiles.reduce((a, b)=>{
+    let newSize = resolvedFiles.filter(Boolean).reduce((a, b) => {
       return a + b.size;
     }, 0);
     const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
