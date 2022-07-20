@@ -175,8 +175,9 @@ if (isMaster) {
       return promises.stat(`${process.env.TEMPDIR}/${file}`).then((stats) => stats.size);
     });
     const size = await Promise.all(dirstat);
-    process.env.DIRSIZECACHE = size.reduce((a, b)=>{
+    const reduced = size.reduce((a, b) => {
       return a + b;
     }, 0);
+    Admiral.centralStore.set("dirSizeCache", reduced);
   }
 }

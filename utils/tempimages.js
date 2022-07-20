@@ -1,7 +1,7 @@
 import * as logger from "../utils/logger.js";
 import { readdir, lstat, rm, writeFile } from "fs/promises";
 
-export async function upload(client, result, context, interaction = false) {
+export async function upload(client, ipc, result, context, interaction = false) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.file);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.projectlounge.pw"}/${filename}`;
@@ -34,13 +34,14 @@ export async function upload(client, result, context, interaction = false) {
     }));
   }
   if (process.env.THRESHOLD) {
-    process.env.DIRSIZECACHE = parseInt(process.env.DIRSIZECACHE) + result.file.length;
-    await removeOldImages();
+    const size = ipc.centralStore.get("dirSizeCache") + result.file.length;
+    ipc.centralStore.set("dirSizeCache", size);
+    await removeOldImages(ipc, size);
   }
 }
 
-export async function removeOldImages() {
-  if (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
+export async function removeOldImages(ipc, size) {
+  if (size > process.env.THRESHOLD) {
     const files = (await readdir(process.env.TEMPDIR)).map((file) => {
       return lstat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
         if (stats.isSymbolicLink()) return;
@@ -52,14 +53,15 @@ export async function removeOldImages() {
       });
     }).filter(Boolean);
     const resolvedFiles = await Promise.all(files);
-    process.env.DIRSIZECACHE = resolvedFiles.reduce((a, b)=>{
+    let newSize = resolvedFiles.reduce((a, b)=>{
       return a + b.size;
     }, 0);
     const oldestFiles = resolvedFiles.sort((a, b) => a.ctime - b.ctime);
-    while (process.env.DIRSIZECACHE > process.env.THRESHOLD) {
+    while (newSize > process.env.THRESHOLD) {
       if (!oldestFiles[0]) break;
       await rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
-      process.env.DIRSIZECACHE = parseInt(process.env.DIRSIZECACHE) - oldestFiles[0].size;
+      newSize -= oldestFiles[0].size;
+      ipc.centralStore.set("dirSizeCache", newSize);
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
       oldestFiles.shift();
     }

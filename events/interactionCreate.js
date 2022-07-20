@@ -40,7 +40,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
       }
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, result, interaction, true);
+          await upload(client, ipc, result, interaction, true);
         } else {
           await interaction[replyMethod]("The resulting image was more than 8MB in size, so I can't upload it.");
         }

@@ -129,7 +129,7 @@ export default async (client, cluster, worker, ipc, message) => {
       }
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, result, message);
+          await upload(client, ipc, result, message);
         } else {
           await client.createMessage(message.channel.id, "The resulting image was more than 8MB in size, so I can't upload it.");
         }
