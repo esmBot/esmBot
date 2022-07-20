@@ -30,18 +30,20 @@ const gfycatURLs = [
   "giant.gfycat.com"
 ];
 
+const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...imgurURLs, ...gfycatURLs];
+
 const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 // gets the proper image paths
-const getImage = async (image, image2, video, extraReturnTypes, gifv = false, type = null) => {
+const getImage = async (image, image2, video, extraReturnTypes, gifv = false, type = null, link = false) => {
   try {
     const payload = {
       url: image2,
       path: image
     };
-    if (gifv) {
-      const host = new URL(image2).host;
+    const host = new URL(image2).host;
+    if (gifv || (link && combined.includes(host))) {
       if (tenorURLs.includes(host)) {
         // Tenor doesn't let us access a raw GIF without going through their API,
         // so we use that if there's a key in the config
@@ -130,7 +132,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
         const result = await getImage(attachment.proxy_url, attachment.url, video, attachment.content_type);
         if (result !== false) return result;
       } else if (options.link) {
-        const result = await getImage(options.link, options.link, video);
+        const result = await getImage(options.link, options.link, video, extraReturnTypes, false, null, true);
         if (result !== false) return result;
       }
     }
