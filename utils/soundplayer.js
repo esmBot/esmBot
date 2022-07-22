@@ -31,7 +31,7 @@ export async function checkStatus() {
 }
 
 export async function connect(client) {
-  manager = new Shoukaku(new Connectors.Eris(client), nodes);
+  manager = new Shoukaku(new Connectors.Eris(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
   client.emit("ready"); // workaround
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
@@ -83,7 +83,8 @@ export async function play(client, sound, options, music = false) {
     response = await node.rest.resolve(sound);
     if (!response) return "🔊 I couldn't get a response from the audio server.";
     if (response.loadType === "NO_MATCHES" || response.loadType === "LOAD_FAILED") return "I couldn't find that song!";
-  } catch {
+  } catch (e) {
+    logger.error(e);
     return "🔊 Hmmm, seems that all of the audio servers are down. Try again in a bit.";
   }
   const oldQueue = queues.get(voiceChannel.guild.id);
@@ -145,6 +146,10 @@ export async function nextSong(client, options, connection, track, info, music, 
             value: voiceChannel.name
           },
           {
+            name: "🌐 Node:",
+            value: connection.node.name
+          },
+          {
             name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
             value: `0:00/${info.isStream ? "∞" : format(info.length)}`
           }]
@@ -161,6 +166,7 @@ export async function nextSong(client, options, connection, track, info, music, 
     }
   }
   connection.removeAllListeners("exception");
+  connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
   connection.playTrack({ track });
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
@@ -177,6 +183,7 @@ export async function nextSong(client, options, connection, track, info, music, 
     } catch {
       // no-op
     }
+    connection.removeAllListeners("stuck");
     connection.removeAllListeners("end");
     players.delete(voiceChannel.guild.id);
     queues.delete(voiceChannel.guild.id);
@@ -187,6 +194,11 @@ export async function nextSong(client, options, connection, track, info, music, 
     } else {
       await options.interaction.createMessage(content);
     }
+  });
+  connection.on("stuck", () => {
+    const nodeName = manager.getNode().name;
+    connection.move(nodeName);
+    connection.resume();
   });
   connection.on("end", async (data) => {
     if (data.reason === "REPLACED") return;

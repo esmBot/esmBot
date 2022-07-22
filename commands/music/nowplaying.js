@@ -30,6 +30,10 @@ class NowPlayingCommand extends MusicCommand {
           value: this.channel.guild.channels.get(this.member.voiceState.channelID).name
         },
         {
+          name: "🌐 Node:",
+          value: player.node.name
+        },
+        {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
           value: `${format(player.position)}/${track.isStream ? "∞" : format(track.length)}`
         }]

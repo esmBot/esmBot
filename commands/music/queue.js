@@ -11,7 +11,7 @@ class QueueCommand extends MusicCommand {
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
     if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
-    const node = nodes.filter((val) => { return val.name === player.player.node.name })[0];
+    const node = nodes.filter((val) => val.name === player.player.node.name)[0];
     const tracks = await fetch(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { Authorization: node.auth, "Content-Type": "application/json" } }).then(res => res.json());
     const trackList = [];
     const firstTrack = tracks.shift();
@@ -41,6 +41,9 @@ class QueueCommand extends MusicCommand {
           }, {
             name: "🔁 Looping?",
             value: player.loop ? "Yes" : "No"
+          }, {
+            name: "🌐 Node",
+            value: player.node.name
           }, {
             name: "🗒️ Queue",
             value: value !== "del" ? value.join("\n") : "There's nothing in the queue!"
