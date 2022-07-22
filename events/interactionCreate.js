@@ -57,7 +57,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
     } else if (error.toString().includes("Timed out")) {
       await interaction[replyMethod]("The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.");
     } else {
-      logger.error(`Error occurred with slash command ${command} with arguments ${JSON.stringify(interaction.data.options)}: ${typeof error === "object" ? JSON.stringify(error) : error.toString()}`);
+      logger.error(`Error occurred with slash command ${command} with arguments ${JSON.stringify(interaction.data.options)}: ${error.stack || error}`);
       try {
         await interaction[replyMethod]("Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>", {
           file: `Message: ${await clean(error)}\n\nStack Trace: ${await clean(error.stack)}`,
