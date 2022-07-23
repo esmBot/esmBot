@@ -94,7 +94,7 @@ export async function play(client, sound, options, music = false) {
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
-  const connection = player && player.player && player.player.connection.state !== 3 ? player.player : await node.joinChannel({
+  const connection = player && player.player && player.player.connection.state !== 3 && player.player.connection.state !== 1 ? player.player : await node.joinChannel({
     guildId: voiceChannel.guild.id,
     channelId: voiceChannel.id,
     shardId: voiceChannel.guild.shard.id,
