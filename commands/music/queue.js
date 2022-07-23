@@ -43,7 +43,7 @@ class QueueCommand extends MusicCommand {
             value: player.loop ? "Yes" : "No"
           }, {
             name: "🌐 Node",
-            value: player.node ? player.node.name : "Unknown"
+            value: player.player.node ? player.player.node.name : "Unknown"
           }, {
             name: "🗒️ Queue",
             value: value !== "del" ? value.join("\n") : "There's nothing in the queue!"
