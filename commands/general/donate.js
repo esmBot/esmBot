@@ -5,7 +5,7 @@ class DonateCommand extends Command {
   async run() {
     await this.acknowledge();
     let prefix = "";
-    const controller = new AbortController(); // eslint-disable-line no-undef
+    const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
     }, 5000);

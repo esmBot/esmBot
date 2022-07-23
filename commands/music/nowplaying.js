@@ -31,7 +31,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           name: "🌐 Node:",
-          value: player.node.name
+          value: player.node ? player.node.name : "Unknown"
         },
         {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,

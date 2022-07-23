@@ -52,6 +52,10 @@ class ImageCommand extends Command {
       params: {}
     };
 
+    if (this.type === "application") {
+      await this.acknowledge();
+    }
+
     if (this.constructor.requiresImage) {
       try {
         const image = await imageDetect(this.client, this.message, this.interaction, this.options, true);
@@ -95,8 +99,6 @@ class ImageCommand extends Command {
     let status;
     if (magickParams.params.type === "image/gif" && this.type === "classic") {
       status = await this.processMessage(this.message);
-    } else {
-      await this.acknowledge();
     }
 
     try {

@@ -4,7 +4,7 @@ import Command from "../../classes/command.js";
 class AncientCommand extends Command {
   async run() {
     await this.acknowledge();
-    const controller = new AbortController(); // eslint-disable-line no-undef
+    const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
     }, 15000);

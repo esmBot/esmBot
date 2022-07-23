@@ -147,7 +147,7 @@ export async function nextSong(client, options, connection, track, info, music, 
           },
           {
             name: "🌐 Node:",
-            value: connection.node.name
+            value: connection.node ? connection.node.name : "Unknown"
           },
           {
             name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
