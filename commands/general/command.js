@@ -18,12 +18,12 @@ class CommandCommand extends Command {
 
     if (this.args[0].toLowerCase() === "disable") {
       if (command === "command") return "You can't disable that command!";
-      if (disabled && disabled.includes(command)) return "That command is already disabled!";
+      if (disabled?.includes(command)) return "That command is already disabled!";
 
       await db.disableCommand(this.channel.guild.id, command);
       return `The command has been disabled. To re-enable it, just run \`${guildDB.prefix}command enable ${command}\`.`;
     } else if (this.args[0].toLowerCase() === "enable") {
-      if (disabled && !disabled.includes(command)) return "That command isn't disabled!";
+      if (!disabled?.includes(command)) return "That command isn't disabled!";
 
       await db.enableCommand(this.channel.guild.id, command);
       return `The command \`${command}\` has been re-enabled.`;

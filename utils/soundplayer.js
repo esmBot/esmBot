@@ -65,8 +65,8 @@ export async function play(client, sound, options, music = false) {
   if (!options.channel.guild.permissionsOf(client.user.id).has("voiceConnect")) return "I can't join this voice channel!";
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
-  const player = players.get(options.channel.guild.id);
-  if (!music && manager.players.has(options.channel.guild.id) && (player && player.type === "music")) return "I can't play a sound effect while playing music!";
+  const playerMeta = players.get(options.channel.guild.id);
+  if (!music && manager.players.has(options.channel.guild.id) && (playerMeta?.type === "music")) return "I can't play a sound effect while playing music!";
   let node = manager.getNode();
   if (!node) {
     const status = await checkStatus();
@@ -94,17 +94,26 @@ export async function play(client, sound, options, music = false) {
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
-  const connection = player && player.player && player.player.connection.state !== 3 && player.player.connection.state !== 1 ? player.player : await node.joinChannel({
+  let player;
+  if (node.players.has(voiceChannel.guild.id)) {
+    player = node.players.get(voiceChannel.guild.id);
+  } else if (playerMeta?.player) {
+    const storedState = playerMeta?.player?.connection.state;
+    if (storedState && storedState === 1) {
+      player = playerMeta?.player;
+    }
+  }
+  const connection = player ?? await node.joinChannel({
     guildId: voiceChannel.guild.id,
     channelId: voiceChannel.id,
     shardId: voiceChannel.guild.shard.id,
     deaf: true
   });
 
-  if (oldQueue && oldQueue.length !== 0 && music) {
+  if (oldQueue?.length && music) {
     return `Your ${response.playlistInfo.name ? "playlist" : "tune"} \`${response.playlistInfo.name ? response.playlistInfo.name.trim() : (response.tracks[0].info.title !== "" ? response.tracks[0].info.title.trim() : "(blank)")}\` has been added to the queue!`;
   } else {
-    nextSong(client, options, connection, response.tracks[0].track, response.tracks[0].info, music, voiceChannel, player ? player.host : options.member.id, player ? player.loop : false, player ? player.shuffle : false);
+    nextSong(client, options, connection, response.tracks[0].track, response.tracks[0].info, music, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
     return;
   }
 }
@@ -135,11 +144,11 @@ export async function nextSong(client, options, connection, track, info, music, 
           },
           fields: [{
             name: "ℹ️ Title:",
-            value: info.title && info.title.trim() !== "" ? info.title : "(blank)"
+            value: info.title?.trim() !== "" ? info.title : "(blank)"
           },
           {
             name: "🎤 Artist:",
-            value: info.title && info.author.trim() !== "" ? info.author : "(blank)"
+            value: info.author?.trim() !== "" ? info.author : "(blank)"
           },
           {
             name: "💬 Channel:",
@@ -147,7 +156,7 @@ export async function nextSong(client, options, connection, track, info, music, 
           },
           {
             name: "🌐 Node:",
-            value: connection.node ? connection.node.name : "Unknown"
+            value: connection.node?.name ?? "Unknown"
           },
           {
             name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
@@ -209,7 +218,7 @@ export async function nextSong(client, options, connection, track, info, music, 
       players.set(voiceChannel.guild.id, player);
     }
     let newQueue;
-    if (player && player.shuffle) {
+    if (player?.shuffle) {
       if (player.loop) {
         queue.push(queue.shift());
       } else {
@@ -217,7 +226,7 @@ export async function nextSong(client, options, connection, track, info, music, 
       }
       queue.unshift(queue.splice(Math.floor(Math.random() * queue.length), 1)[0]);
       newQueue = queue;
-    } else if (player && player.loop) {
+    } else if (player?.loop) {
       queue.push(queue.shift());
       newQueue = queue;
     } else {
@@ -246,14 +255,14 @@ export async function nextSong(client, options, connection, track, info, music, 
       }
       try {
         if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-        if (player && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
+        if (player?.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }
     } else {
       try {
         if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-        if (player && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
+        if (player?.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }

@@ -6,7 +6,7 @@ class RedditCommand extends ImageCommand {
   params(url) {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
-      caption: newArgs && newArgs.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names)
+      caption: newArgs?.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names)
     };
   }
 

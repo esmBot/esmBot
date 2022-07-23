@@ -29,7 +29,7 @@ class InfoCommand extends Command {
         },
         {
           name: "💬 Total Servers:",
-          value: stats && stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`
+          value: stats?.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`
         },
         {
           name: "✅ Official Server:",

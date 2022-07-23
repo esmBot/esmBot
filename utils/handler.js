@@ -75,7 +75,7 @@ export async function update() {
       };
       info.set(name, cmdInfo);
     }
-    if (cmdInfo && cmdInfo.slashAllowed) commandArray.push({
+    if (cmdInfo?.slashAllowed) commandArray.push({
       name,
       type: 1,
       description: cmdInfo.description,
