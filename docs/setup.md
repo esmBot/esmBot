@@ -23,7 +23,7 @@ On older Debian/Ubuntu versions, you may need to install some of these packages 
 Some of these packages require that you add the RPM Fusion repository. You can find instructions on how to add it here: https://rpmfusion.org/Configuration 
 RHEL users may also need to add the EPEL repository. Instructions for adding it can be found here: https://docs.fedoraproject.org/en-US/epel/
 ```sh
-sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel twitter-twemoji-fonts meson
+sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel google-noto-emoji-color-fonts meson
 ```
 On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add [Remi's RPM Repository](https://rpms.remirepo.net) for the vips package.
 
@@ -217,7 +217,9 @@ Tenor GIFs are actually stored as MP4s, which libvips can't decode most of the t
 ### Emojis are missing in some commands
 Your system doesn't have an emoji font installed. You can install Google's emoji set with `sudo apt-get install fonts-noto-color-emoji` on Debian/Ubuntu systems, `doas apk add font-noto-emoji` on Alpine, and `sudo pacman -S noto-fonts-emoji` on Arch/Manjaro.
 
-If you want to use the same set that Discord and the main bot uses (Twemoji) then it's slightly more difficult. Go to https://koji.fedoraproject.org/koji/packageinfo?packageID=26306 and choose the latest build, then download the `noarch` RPM file. You'll then have to extract this file; most graphical tools (e.g. 7-Zip, Ark, The Unarchiver) should be able to extract this just fine, but on the command line you'll have to use the `rpm2cpio` tool. The font file should be inside the archive at `usr/share/fonts/Twemoji/Twemoji.ttf`; copy this to `/usr/share/fonts/Twemoji.ttf` (note the / at the beginning). After this, run `fc-cache -fv` and you should be good to go!
+If you want to use the same set that Discord and the main bot uses (Twemoji) on Fedora, then you can run `sudo dnf remove google-noto-emoji-color-fonts && sudo dnf install twitter-twemoji-fonts`.
+
+If you want to install Twemoji on another distro then it's slightly more difficult. Go to https://koji.fedoraproject.org/koji/packageinfo?packageID=26306 and choose the latest build, then download the `noarch` RPM file. You'll then have to extract this file; most graphical tools (e.g. 7-Zip, Ark, The Unarchiver) should be able to extract this just fine, but on the command line you'll have to use the `rpm2cpio` tool. The font file should be inside the archive at `usr/share/fonts/Twemoji/Twemoji.ttf`; copy this to `/usr/share/fonts/Twemoji.ttf` (note the / at the beginning). After this, run `fc-cache -fv` and you should be good to go!
 
 ### Sound/music commands do nothing
 Make sure Lavalink is running and started up completely. The bot skips loading sound commands if Lavalink is not present, so make sure it's running when the bot starts as well.
