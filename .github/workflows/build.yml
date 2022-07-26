@@ -65,6 +65,6 @@ jobs:
       with:
         version: 7
     - name: Install dependencies
-      run: brew install imagemagick vips pkg-config
+      run: brew install imagemagick vips
     - name: Build
       run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
