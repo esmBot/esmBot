@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { readFileSync } from "fs";
-const { searx } = JSON.parse(readFileSync(new URL("../../servers.json", import.meta.url)));
+const { searx } = JSON.parse(readFileSync(new URL("../../config/servers.json", import.meta.url)));
 import { random } from "../../utils/misc.js";
 import paginator from "../../utils/pagination/pagination.js";
 import Command from "../../classes/command.js";

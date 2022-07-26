@@ -23,7 +23,7 @@ class ImageWorker extends BaseServiceWorker {
 
     if (process.env.API_TYPE === "ws") {
       this.connections = new Map();
-      this.servers = JSON.parse(fs.readFileSync(new URL("../../servers.json", import.meta.url), { encoding: "utf8" })).image;
+      this.servers = JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image;
       this.nextID = 0;
     } else if (process.env.API_TYPE === "azure") {
       this.jobs = new Map();
@@ -115,7 +115,7 @@ class ImageWorker extends BaseServiceWorker {
   }
 
   async repopulate() {
-    const data = await fs.promises.readFile(new URL("../../servers.json", import.meta.url), { encoding: "utf8" });
+    const data = await fs.promises.readFile(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" });
     this.servers = JSON.parse(data).image;
     return;
   }

@@ -24,7 +24,7 @@ export async function clean(text) {
     .replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   const { parsed } = config();
-  const imageServers = JSON.parse(fs.readFileSync(new URL("../servers.json", import.meta.url), { encoding: "utf8" })).image;
+  const imageServers = JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image;
 
   if (imageServers?.length !== 0) {
     for (const { server, auth } of imageServers) {

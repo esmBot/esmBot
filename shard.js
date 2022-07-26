@@ -16,7 +16,7 @@ import database from "./utils/database.js";
 // command collections
 import { paths } from "./utils/collections.js";
 // playing messages
-const { messages } = JSON.parse(readFileSync(new URL("./messages.json", import.meta.url)));
+const { messages } = JSON.parse(readFileSync(new URL("./config/messages.json", import.meta.url)));
 // other stuff
 import { random } from "./utils/misc.js";
 // generate help page

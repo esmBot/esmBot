@@ -14,7 +14,7 @@ export let status = false;
 export let connected = false;
 
 export async function checkStatus() {
-  const json = await fs.promises.readFile(new URL("../servers.json", import.meta.url), { encoding: "utf8" });
+  const json = await fs.promises.readFile(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" });
   nodes = JSON.parse(json).lava;
   const newNodes = [];
   for (const node of nodes) {

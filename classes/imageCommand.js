@@ -2,7 +2,7 @@ import Command from "./command.js";
 import imageDetect from "../utils/imagedetect.js";
 import { runningCommands } from "../utils/collections.js";
 import { readFileSync } from "fs";
-const { emotes } = JSON.parse(readFileSync(new URL("../messages.json", import.meta.url)));
+const { emotes } = JSON.parse(readFileSync(new URL("../config/messages.json", import.meta.url)));
 import { random } from "../utils/misc.js";
 
 class ImageCommand extends Command {
