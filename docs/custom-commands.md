@@ -4,7 +4,7 @@ esmBot has a flexible command handler, allowing you to create new commands and c
 ## Directory Structure
 The bot loads commands from subdirectories inside of the `commands` directory, which looks something like this by default:
 ```
-commands
+commands/
   - fun
     > cat.js
     > ...
@@ -40,6 +40,7 @@ As you can see, the first thing we do is import the Command class. We then creat
 The default command name is the same as the filename that you save it as, excluding the `.js` file extension. If you ever want to change the name of the command, just rename the file.
 
 The parameters available to your command consist of the following:
+
 - `this.client`: An instance of an Eris [`Client`](https://abal.moe/Eris/docs/Client), useful for getting info or performing lower-level communication with the Discord API.
 - `this.cluster`: The ID of the eris-fleet cluster that the command is being run from. This should be a number greater than or equal to 0.
 - `this.worker`: The ID of the current eris-fleet worker. This should be a number greater than or equal to 0.
@@ -52,16 +53,19 @@ The parameters available to your command consist of the following:
 - `this.options`: When run as a "classic" command, this is an object of special arguments (e.g. `--argument=true`) passed to the command. These arguments are stored in a key/value format, so following the previous example, `this.options.argument` would return true. When run as a slash command, this is an object of every argument passed to the command.
 
 Some options are only available depending on the context/original message type, which can be checked with `this.type`. The options only available with "classic" messages are listed below:
+
 - `this.message`: An Eris [`Message`](https://abal.moe/Eris/docs/Message) object of the message that the command was run from, useful for interaction.
 - `this.args`: An array of text arguments passed to the command.
 - `this.content`: A string of the raw content of the command message, excluding the prefix and command name.
 - `this.reference`: An object that's useful if you ever decide to reply to a user inside the command. You can use [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) to combine your message content with this parameter.
 
 The options only available with "application"/slash commands are listed below:
+
 - `this.interaction`: An Eris [`CommandInteraction`](https://abal.moe/Eris/docs/CommandInteraction) object of the incoming slash command data. 
 - `this.optionsArray`: A raw array of command options. Should rarely be used.
 
 Some static fields are also available and can be set depending on your command. These fields are listed below:
+
 - `description`: Your command's description, which is shown in the help command.
 - `aliases`: An array of command aliases. People will be able to run the command using these as well as the normal command name.
 - `arguments`: An array of command argument types, which are shown in the help command.

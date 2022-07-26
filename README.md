@@ -1,4 +1,4 @@
-# <img src="https://github.com/esmBot/esmBot/raw/master/esmbot.png" width="128"> esmBot
+# <img src="https://github.com/esmBot/esmBot/raw/master/docs/assets/esmbot.png" width="128"> esmBot
 [![esmBot Support](https://discordapp.com/api/guilds/592399417676529688/embed.png)](https://discord.gg/vfFM7YT) ![GitHub license](https://img.shields.io/github/license/esmBot/esmBot.svg)
 
 
