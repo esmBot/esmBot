@@ -34,8 +34,8 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.0.0",
     "node-emoji": "^1.11.0",
-    "node-fetch": "^3.2.9"
-    "node-gyp": "^9.1.0",,
+    "node-fetch": "^3.2.9",
+    "node-gyp": "^9.1.0",
     "qrcode": "^1.5.1",
     "sharp": "^0.30.7",
     "shoukaku": "^3.1.2",
