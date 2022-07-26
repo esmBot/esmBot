@@ -22,6 +22,7 @@ specifiers:
   node-addon-api: ^5.0.0
   node-emoji: ^1.11.0
   node-fetch: ^3.2.9
+  node-gyp: ^9.1.0
   pg: ^8.7.3
   qrcode: ^1.5.1
   sharp: ^0.30.7
@@ -44,6 +45,7 @@ dependencies:
   node-addon-api: 5.0.0
   node-emoji: 1.11.0
   node-fetch: 3.2.9
+  node-gyp: ^9.1.0
   qrcode: 1.5.1
   sharp: 0.30.7
   shoukaku: 3.1.2_bufferutil@4.0.6
@@ -1662,6 +1664,25 @@ packages:
   /node-gyp-build/4.5.0:
     resolution: {integrity: sha512-2iGbaQBV+ITgCz76ZEjmhUKAKVf7xfY1sRl4UiKQspfZMH2h06SyhNsnSVy50cwkFQDGLyif6m/6uFXHkOZ6rg==}
     hasBin: true
+    dev: false
+  /node-gyp/9.1.0:
+    resolution: {integrity: sha512-HkmN0ZpQJU7FLbJauJTHkHlSVAXlNGDAzH/VYFZGDOnFyn/Na3GlNJfkudmufOdS6/jNFhy88ObzL7ERz9es1g==}
+    engines: {node: ^12.22 || ^14.13 || >=16}
+    hasBin: true
+    dependencies:
+      env-paths: 2.2.1
+      glob: 7.2.3
+      graceful-fs: 4.2.10
+      make-fetch-happen: 10.2.0
+      nopt: 5.0.0
+      npmlog: 6.0.2
+      rimraf: 3.0.2
+      semver: 7.3.7
+      tar: 6.1.11
+      which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
+      - supports-color
     dev: false
 
   /node-releases/2.0.6:
