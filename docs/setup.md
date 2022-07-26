@@ -200,14 +200,6 @@ If you wish to update the bot to the latest version/commit at any time, just run
 ### Error: Cannot find module './build/Release/image.node'
 The native image functions haven't been built. Run `pnpm run build` to build them.
 
-### pnpm fails with error 'ELIFECYCLE  Command failed.'
-You seem to be missing node-gyp, this can be fixed by running:
-```sh
-pnpm -g install node-gyp
-rm -r node_modules
-pnpm install
-```
-
 ### Error: connect ECONNREFUSED 127.0.0.1:5432
 PostgreSQL isn't running, you should be able to start it with `sudo systemctl start postgresql`. If you don't intend to use PostgreSQL, you should take another look at your `DB` variable in the .env file.
 
