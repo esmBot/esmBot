@@ -19,7 +19,15 @@ sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefon
 ```
 On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 
-**Alpine (3.16 or later)**
+**Fedora/RHEL**
+Some of these packages require that you add the RPM Fusion repository. You can find instructions on how to add it here: https://rpmfusion.org/Configuration 
+RHEL users may also need to add the EPEL repository. Instructions for adding it can be found here: https://docs.fedoraproject.org/en-US/epel/
+```sh
+sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel twitter-twemoji-fonts meson
+```
+On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add [Remi's RPM Repository](https://rpms.remirepo.net) for the vips package.
+
+**Alpine (edge)**
 ```sh
 doas apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev font-noto-emoji gobject-introspection-dev cgif-dev libimagequant-dev meson
 ```
@@ -35,6 +43,8 @@ Arch/Manjaro users: you'll also need to install [`ttf-ms-fonts`](https://aur.arc
 #### 2. Install libvips.
 
 [libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. The latest version as of writing this (8.12.2) is recommended because it contains fixes to GIF handling; however, there's also a missing feature in this version that is needed for the freeze command to work (see [libvips pull request #2709](https://github.com/libvips/libvips/pull/2709)). To fix this, you'll need to build libvips from source.
+
+**Alpine and Arch users can skip this step, since both distros now have 8.13.0 packaged.**
 
 First, download the source and move into it:
 ```sh
@@ -75,6 +85,11 @@ After that, you can install Node.js with this command:
 sudo apt-get install nodejs
 ```
 
+**Fedora/RHEL**
+```sh
+sudo dnf install nodejs
+```
+
 **Alpine**
 ```sh
 doas apk add nodejs
@@ -102,6 +117,7 @@ If you would like to use the PostgreSQL database, view the setup instructions [h
 cd ~
 git clone --recurse-submodules https://github.com/esmBot/esmBot
 cd esmBot
+pnpm i -g node-gyp
 pnpm install
 pnpm build
 ```

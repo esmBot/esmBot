@@ -8,6 +8,11 @@ Here are some instructions for setting up PostgreSQL for use with esmBot.
 sudo apt-get install postgresql postgresql-client
 ```
 
+#### Fedora
+```sh
+sudo dnf install postgresql postgresql-server
+```
+
 #### Alpine
 ```sh
 doas apk add postgresql
