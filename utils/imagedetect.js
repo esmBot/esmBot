@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import { getType } from "./image.js";
+import { warn } from "../logger.js";
 
 const tenorURLs = [
   "tenor.com",
@@ -47,6 +48,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
       if (tenorURLs.includes(host)) {
         // Tenor doesn't let us access a raw GIF without going through their API,
         // so we use that if there's a key in the config
+        if (process.env.TENOR == "undefined") { warn("No Tenor API key found. Tenor GIFs will not be available."); return}
         if (process.env.TENOR !== "") {
           const data = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${image2.split("-").pop()}&media_filter=gif&limit=1&key=${process.env.TENOR}`);
           if (data.status === 429) {
@@ -56,6 +58,9 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
             } else {
               return;
             }
+          } else if (data.status !== 200) {
+            warn(`Tenor API error: ${data.status}. Please check if you have a valid V2 API key.`);
+            return;
           }
           const json = await data.json();
           if (json.error) throw Error(json.error);
