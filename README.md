@@ -11,7 +11,7 @@ You can invite the bot to your server using this link: https://projectlounge.pw/
 
 A command list can be found [here](https://projectlounge.pw/esmBot/help.html).
 
-If you want to self-host the bot, a guide can be found [here](https://github.com/esmBot/esmBot/blob/master/docs/setup.md).
+If you want to self-host the bot, a guide can be found [here](https://esmbot.github.io/esmBot/setup).
 
 ## Credits
 Icon by [Steel](https://twitter.com/MintBurrow).
