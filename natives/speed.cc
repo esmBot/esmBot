@@ -1,4 +1,5 @@
 #include <napi.h>
+#include <math.h>
 
 #include <vips/vips8>
 
@@ -13,7 +14,7 @@ void *memset16(void *m, uint16_t val, size_t count) {
 }
 
 void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
-                int speed) {
+                float speed) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "",
@@ -26,9 +27,11 @@ void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
   int nPages = vips_image_get_n_pages(in.get_image());
 
   vector<VImage> img;
-  for (int i = 0; i < nPages; i += speed) {
-    VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
-    img.push_back(img_frame);
+  for (int i = 0; i < nPages; i++) {
+    if (fmod((float) i, speed) < 0.001) {
+      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+      img.push_back(img_frame);
+    }
   }
   VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
@@ -50,8 +53,8 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
     bool slow =
         obj.Has("slow") ? obj.Get("slow").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int speed =
-        obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().Int32Value() : 2;
+    float speed =
+        obj.Has("speed") ? obj.Get("speed").As<Napi::Number>().FloatValue() : 2.0;
 
     char *fileData = data.Data();
 
