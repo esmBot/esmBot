@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 void *memset16(void *m, uint16_t val, size_t count) {
-  uint16_t *buf = (uint16_t *)m;
+  uint16_t  *buf = (uint16_t  *)m;
 
   while (count--) *buf++ = val;
   return m;
@@ -28,7 +28,8 @@ void vipsRemove(Napi::Env *env, Napi::Object *result, Napi::Buffer<char> data,
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    if (fmod((float) i, speed) < 0.001) {
+    printf("%f\n",speed);
+    if (fmod((float) i, speed) == 0) {
       VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
       img.push_back(img_frame);
     }
@@ -60,49 +61,52 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
 
     char *match = (char *)"\x00\x21\xF9\x04";
 
-    vector<uint16_t> old_delays;
     bool removeFrames = false;
-    char *lastPos;
+    
+    if (fmod(speed, 1) == 0) {
+      char *lastPos;
+      vector<uint16_t> old_delays;
+      int amount = 0;
 
-    int amount = 0;
-
-    lastPos = (char *)memchr(fileData, '\x00', data.Length());
-    while (lastPos != NULL) {
-      if (memcmp(lastPos, match, 4) != 0) {
+      lastPos = (char *)memchr(fileData, '\x00', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 4) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
+                                  (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        ++amount;
+        uint16_t old_delay;
+        memcpy(&old_delay, lastPos + 5, 2);
+        old_delays.push_back(old_delay);
         lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                 (data.Length() - (lastPos - fileData)) - 1);
-        continue;
+                                (data.Length() - (lastPos - fileData)) - 1);
       }
-      ++amount;
-      uint16_t old_delay;
-      memcpy(&old_delay, lastPos + 5, 2);
-      old_delays.push_back(old_delay);
-      lastPos = (char *)memchr(lastPos + 1, '\x00',
-                               (data.Length() - (lastPos - fileData)) - 1);
-    }
 
-    int currentFrame = 0;
-    lastPos = (char *)memchr(fileData, '\x00', data.Length());
-    while (lastPos != NULL) {
-      if (memcmp(lastPos, match, 4) != 0) {
+      int currentFrame = 0;
+      lastPos = (char *)memchr(fileData, '\x00', data.Length());
+      while (lastPos != NULL) {
+        if (memcmp(lastPos, match, 4) != 0) {
+          lastPos = (char *)memchr(lastPos + 1, '\x00',
+                                  (data.Length() - (lastPos - fileData)) - 1);
+          continue;
+        }
+        uint16_t new_delay = slow ? old_delays[currentFrame] * speed
+                                  : old_delays[currentFrame] / speed;
+        if (!slow && new_delay <= 1) {
+          removeFrames = true;
+          break;
+        }
+        memset16(lastPos + 5, new_delay, 1);
         lastPos = (char *)memchr(lastPos + 1, '\x00',
-                                 (data.Length() - (lastPos - fileData)) - 1);
-        continue;
+                                (data.Length() - (lastPos - fileData)) - 1);
+        ++currentFrame;
       }
-      uint16_t new_delay = slow ? old_delays[currentFrame] * speed
-                                : old_delays[currentFrame] / speed;
-      if (!slow && new_delay <= 1) {
-        removeFrames = true;
-        break;
-      }
-      memset16(lastPos + 5, new_delay, 1);
-      lastPos = (char *)memchr(lastPos + 1, '\x00',
-                               (data.Length() - (lastPos - fileData)) - 1);
-      ++currentFrame;
+    } else {
+      removeFrames = true;
     }
-
     result.Set("data", Napi::Buffer<char>::Copy(env, fileData, data.Length()));
-
+    
     if (removeFrames) vipsRemove(&env, &result, data, speed);
 
     result.Set("type", type);
