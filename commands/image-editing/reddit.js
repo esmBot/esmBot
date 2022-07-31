@@ -10,6 +10,8 @@ class RedditCommand extends ImageCommand {
     };
   }
 
+  static textOptional = true;
+
   static description = "Adds a Reddit watermark to an image";
   static arguments = ["{text}"];
 

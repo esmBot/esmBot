@@ -17,7 +17,7 @@ class UncannyCommand extends ImageCommand {
     return {
       caption: text1?.trim() ? text1.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n") : random(prompts),
       caption2: text2.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n"),
-      path: `./assets/images/uncanny/${typeof this.options.phase === "string" && names.includes(this.options.phase.toLowerCase()) ? this.options.phase.toLowerCase() : random(names)}.png`,
+      path: `./assets/images/uncanny/${typeof this.options.phase === "string" && names.includes(this.options.phase.toLowerCase()) ? this.options.phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "helvetica"
     };
   }
@@ -49,6 +49,8 @@ class UncannyCommand extends ImageCommand {
     });
     return this;
   }
+
+  static textOptional = true;
 
   static description = "Makes a Mr. Incredible Becomes Uncanny image (separate left/right text with a comma)";
   static aliases = ["canny", "incredible", "pain"];
