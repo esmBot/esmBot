@@ -72,6 +72,7 @@ class ImageCommand extends Command {
         magickParams.path = image.path;
         magickParams.params.type = image.type;
         magickParams.url = image.url; // technically not required but can be useful for text filtering
+        magickParams.name = image.name;
         if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.author.id);
@@ -89,7 +90,7 @@ class ImageCommand extends Command {
 
     switch (typeof this.params) {
       case "function":
-        Object.assign(magickParams.params, this.params(magickParams.url));
+        Object.assign(magickParams.params, this.params(magickParams.url, magickParams.name));
         break;
       case "object":
         Object.assign(magickParams.params, this.params);

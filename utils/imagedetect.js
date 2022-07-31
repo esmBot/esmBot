@@ -38,9 +38,13 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 // gets the proper image paths
 const getImage = async (image, image2, video, extraReturnTypes, gifv = false, type = null, link = false) => {
   try {
+    const fileNameSplit = new URL(image).pathname.split("/");
+    const fileName = fileNameSplit[fileNameSplit.length - 1];
+    const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
     const payload = {
       url: image2,
-      path: image
+      path: image,
+      name: fileNameNoExtension
     };
     const host = new URL(image2).host;
     if (gifv || (link && combined.includes(host))) {
