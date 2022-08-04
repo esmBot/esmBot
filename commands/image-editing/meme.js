@@ -1,9 +1,18 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class MemeCommand extends ImageCommand {
+  async criteria(text, url) {
+    const [topText, bottomText] = text.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
+    if (topText === "" && bottomText === "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   params(url) {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
-    const [topText, bottomText] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
+    const newArgs = this.options.text ?? this.args.join(" ");
+    const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     return {
       top: (this.options.case ? topText : topText.toUpperCase()).replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n"),
       bottom: bottomText ? (this.options.case ? bottomText : bottomText.toUpperCase()).replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n") : "",

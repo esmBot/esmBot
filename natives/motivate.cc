@@ -23,7 +23,8 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     int width = in.width();
     int size = width / 5;
@@ -33,16 +34,19 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
 
     string font_string = font == "roboto" ? "Roboto Condensed" : font;
 
-    string topText = "<span foreground=\"white\" background=\"black\">" +
-                     top_text + "</span>";
+    VImage topImage;
+    if (top_text != "") {
+      string topText = "<span foreground=\"white\" background=\"black\">" +
+                       top_text + "</span>";
 
-    VImage topImage = VImage::text(
-        topText.c_str(),
-        VImage::option()
-            ->set("rgba", true)
-            ->set("align", VIPS_ALIGN_CENTRE)
-            ->set("font", (font_string + " " + to_string(size)).c_str())
-            ->set("width", textWidth));
+      topImage = VImage::text(
+          topText.c_str(),
+          VImage::option()
+              ->set("rgba", true)
+              ->set("align", VIPS_ALIGN_CENTRE)
+              ->set("font", (font_string + " " + to_string(size)).c_str())
+              ->set("width", textWidth));
+    }
 
     VImage bottomImage;
     if (bottom_text != "") {
@@ -82,13 +86,17 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
           sideAddition / 2, addition / 2, bordered2.width() + sideAddition,
           bordered2.height() + addition,
           VImage::option()->set("extend", "black"));
-      VImage frame = bordered3.join(
-          topImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
-                           topImage.height() + (size / 4),
-                           VImage::option()->set("extend", "black")),
-          VIPS_DIRECTION_VERTICAL,
-          VImage::option()->set("background", 0x000000)->set("expand", true));
+      VImage frame;
+      if (top_text != "") {
+        frame = bordered3.join(
+            topImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
+                             topImage.height() + (size / 4),
+                             VImage::option()->set("extend", "black")),
+            VIPS_DIRECTION_VERTICAL,
+            VImage::option()->set("background", 0x000000)->set("expand", true));
+      }
       if (bottom_text != "") {
+        if (top_text == "") frame = bordered3;
         frame = frame.join(
             bottomImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
                                 bottomImage.height() + (size / 4),
@@ -105,9 +113,9 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
 
     void *buf;
     size_t length;
-    final.write_to_buffer(
-        ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 1) : 0);
+    final.write_to_buffer(("." + type).c_str(), &buf, &length,
+                          type == "gif" ? VImage::option()->set("dither", 1)
+                                        : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

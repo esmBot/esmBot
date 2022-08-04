@@ -24,6 +24,7 @@ import PrometheusWorker from "./utils/services/prometheus.js";
 // some utils
 import { promises, readFileSync } from "fs";
 import winston from "winston";
+import "winston-daily-rotate-file";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
 
@@ -113,8 +114,8 @@ if (isMaster) {
     },
     transports: [
       new winston.transports.Console({ format: winston.format.colorize({ all: true }), stderrLevels: ["error", "warn"] }),
-      new winston.transports.File({ filename: "logs/error.log", level: "error" }),
-      new winston.transports.File({ filename: "logs/main.log" })
+      new winston.transports.DailyRotateFile({ filename: "logs/error-%DATE%.log", level: "error", zippedArchive: true, maxSize: 4194304, maxFiles: 8 }),
+      new winston.transports.DailyRotateFile({ filename: "logs/main-%DATE%.log", zippedArchive: true, maxSize: 4194304, maxFiles: 8 })
     ],
     level: process.env.DEBUG_LOG ? "debug" : "main",
     format: winston.format.combine(

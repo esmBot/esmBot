@@ -10,9 +10,9 @@ const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../.
 
 class UncannyCommand extends ImageCommand {
   params(url, name = "unknown") {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const newArgs = this.options.text ?? this.args.join(" ");
     // eslint-disable-next-line prefer-const
-    let [text1, text2] = newArgs.split(/(?<!\\),/).map(elem => elem.trim());
+    let [text1, text2] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     if (!text2?.trim()) text2 = name;
     return {
       caption: text1?.trim() ? text1.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n") : random(prompts),

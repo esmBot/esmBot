@@ -81,20 +81,17 @@ class ImageCommand extends Command {
     }
 
     if (this.constructor.requiresText) {
-      const text = this.options.text ?? this.args;
-      if (text.length === 0 || !await this.criteria(text)) {
+      const text = this.options.text ?? this.args.join(" ").trim();
+      if (text.length === 0 || !await this.criteria(text, magickParams.url)) {
         runningCommands.delete(this.author.id);
         return this.constructor.noText;
       }
     }
 
-    switch (typeof this.params) {
-      case "function":
-        Object.assign(magickParams.params, this.params(magickParams.url, magickParams.name));
-        break;
-      case "object":
-        Object.assign(magickParams.params, this.params);
-        break;
+    if (typeof this.params === "function") {
+      Object.assign(magickParams.params, this.params(magickParams.url, magickParams.name));
+    } else if (typeof this.params === "object") {
+      Object.assign(magickParams.params, this.params);
     }
 
     let status;

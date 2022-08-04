@@ -66,7 +66,7 @@ export async function play(client, sound, options, music = false) {
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
   const playerMeta = players.get(options.channel.guild.id);
-  if (!music && manager.players.has(options.channel.guild.id) && (playerMeta?.type === "music")) return "I can't play a sound effect while playing music!";
+  if (!music && manager.players.has(options.channel.guild.id)) return "I can't play a sound effect while other audio is playing!";
   let node = manager.getNode();
   if (!node) {
     const status = await checkStatus();
@@ -122,15 +122,6 @@ export async function nextSong(client, options, connection, track, info, music, 
   skipVotes.delete(voiceChannel.guild.id);
   const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
-  if (!music && players.has(voiceChannel.guild.id)) {
-    const playMessage = players.get(voiceChannel.guild.id).playMessage;
-    try {
-      players.delete(voiceChannel.guild.id);
-      await playMessage.delete();
-    } catch {
-      // no-op
-    }
-  }
   if (music && lastTrack === track && players.has(voiceChannel.guild.id)) {
     playingMessage = players.get(voiceChannel.guild.id).playMessage;
   } else {

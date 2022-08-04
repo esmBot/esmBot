@@ -1,11 +1,9 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SepiaCommand extends ImageCommand {
-  params() {
-    return {
-      color: "sepia"
-    };
-  }
+  params = {
+    color: "sepia"
+  };
 
   static description = "Adds a sepia filter";
 

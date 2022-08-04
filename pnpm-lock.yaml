@@ -25,9 +25,10 @@ specifiers:
   pg: ^8.7.3
   qrcode: ^1.5.1
   sharp: ^0.30.7
-  shoukaku: ^3.1.2
+  shoukaku: github:TheEssem/shoukaku
   uuid: ^8.3.2
   winston: ^3.8.1
+  winston-daily-rotate-file: ^4.7.1
   ws: ^8.8.1
   zlib-sync: ^0.1.7
 
@@ -36,7 +37,7 @@ dependencies:
   cmake-js: 6.3.2
   dotenv: 16.0.1
   emoji-regex: 10.1.0
-  eris: github.com/esmBot/eris/828a57e7e8f52ec1b0b50d4f7f302f25705e46cc_bufferutil@4.0.6
+  eris: github.com/esmBot/eris/128cd6c99086d33afda7eef4b2f9ef8d9b5bea8c_bufferutil@4.0.6
   eris-fleet: 1.0.2_eris@0.17.2-dev
   file-type: 17.1.2
   format-duration: 2.0.0
@@ -46,8 +47,9 @@ dependencies:
   node-fetch: 3.2.9
   qrcode: 1.5.1
   sharp: 0.30.7
-  shoukaku: 3.1.2_bufferutil@4.0.6
+  shoukaku: github.com/TheEssem/shoukaku/7f1aa66df448354898a78da1ff5ed88d20c8d562_bufferutil@4.0.6
   winston: 3.8.1
+  winston-daily-rotate-file: 4.7.1_winston@3.8.1
 
 optionalDependencies:
   better-sqlite3: 7.6.2
@@ -885,7 +887,7 @@ packages:
   /duplexer2/0.1.4:
     resolution: {integrity: sha512-asLFVfWWtJ90ZyOUHMqk7/S2w2guQKxUI2itj3d92ADHhxUSbCMGi1f1cBcJ7xM1To+pE/Khbwo1yuNbMEPKeA==}
     dependencies:
-      readable-stream: 2.1.5
+      readable-stream: 2.3.7
     dev: false
 
   /electron-to-chromium/1.4.195:
@@ -919,7 +921,7 @@ packages:
     peerDependencies:
       eris: ~0.16.0
     dependencies:
-      eris: github.com/esmBot/eris/828a57e7e8f52ec1b0b50d4f7f302f25705e46cc_bufferutil@4.0.6
+      eris: github.com/esmBot/eris/128cd6c99086d33afda7eef4b2f9ef8d9b5bea8c_bufferutil@4.0.6
     dev: false
 
   /error-ex/1.3.2:
@@ -1124,6 +1126,12 @@ packages:
     dependencies:
       flat-cache: 3.0.4
     dev: true
+
+  /file-stream-rotator/0.6.1:
+    resolution: {integrity: sha512-u+dBid4PvZw17PmDeRcNOtCP9CCK/9lRN2w+r1xIS7yOL9JFrIBKTvrYsxT4P0pGtThYTn++QS5ChHaUov3+zQ==}
+    dependencies:
+      moment: 2.29.4
+    dev: false
 
   /file-type/17.1.2:
     resolution: {integrity: sha512-3thBUSfa9YEUEGO/NAAiQGvjujZxZiJTF6xNwyDn6kB0NcEtwMn5ttkGG9jGwm/Nt/t8U1bpBNqyBNZCz4F4ig==}
@@ -1596,6 +1604,10 @@ packages:
       minimist: 1.2.6
     dev: false
 
+  /moment/2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: false
+
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
@@ -1688,6 +1700,11 @@ packages:
   /number-is-nan/1.0.1:
     resolution: {integrity: sha512-4jbtZXNAsfZbAHiiqjLPBiCl16dES1zI4Hpzzxw61Tk+loF+sBDBKx1ICKKKwIqQ7M0mFn1TmkN7euSncWgHiQ==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /object-hash/2.2.0:
+    resolution: {integrity: sha512-gScRMn0bS5fH+IuwyIFgnh9zBdo4DV+6GhygmWM9HyNJSgS0hScp1f5vjtm7oIIOiT9trXrShAkLFSc2IqKNgw==}
+    engines: {node: '>= 6'}
     dev: false
 
   /once/1.4.0:
@@ -1784,11 +1801,6 @@ packages:
   /peek-readable/5.0.0-alpha.5:
     resolution: {integrity: sha512-pJohF/tDwV3ntnT5+EkUo4E700q/j/OCDuPxtM+5/kFGjyOai/sK4/We4Cy1MB2OiTQliWU5DxPvYIKQAdPqAA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dev: false
-
-  /petitio/1.4.0:
-    resolution: {integrity: sha512-9LaVd/5BLmbNU8Q4Ax8NezihiPt2ISNqi2vKilEchSSf+YSOXxfsLUb0SUmDskm1WkBOVTsqdyuyYI0RYKqr0Q==}
-    engines: {node: '>=12.3.0'}
     dev: false
 
   /pg-connection-string/2.5.0:
@@ -2162,17 +2174,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shoukaku/3.1.2_bufferutil@4.0.6:
-    resolution: {integrity: sha512-p3dqnKx0cv2BlVi2tvi++JilVRu5wBGG6Q0GHlrpNhiEe7kxZotSJom/smodUTGr+QaEYCY3e1j3JL+TO1NRkg==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-    dependencies:
-      petitio: 1.4.0
-      ws: 8.8.1_bufferutil@4.0.6
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
   /simple-concat/1.0.1:
     resolution: {integrity: sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==}
     dev: false
@@ -2536,6 +2537,19 @@ packages:
     hasBin: true
     dev: false
 
+  /winston-daily-rotate-file/4.7.1_winston@3.8.1:
+    resolution: {integrity: sha512-7LGPiYGBPNyGHLn9z33i96zx/bd71pjBn9tqQzO3I4Tayv94WPmBNwKC7CO1wPHdP9uvu+Md/1nr6VSH9h0iaA==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      winston: ^3
+    dependencies:
+      file-stream-rotator: 0.6.1
+      object-hash: 2.2.0
+      triple-beam: 1.3.0
+      winston: 3.8.1
+      winston-transport: 4.5.0
+    dev: false
+
   /winston-transport/4.5.0:
     resolution: {integrity: sha512-YpZzcUzBedhlTAfJg6vJDlyEai/IFMIVcaEZZyl3UXIl4gmqRpU7AE89AHLkbzLUsv0NVmw7ts+iztqKxxPW1Q==}
     engines: {node: '>= 6.4.0'}
@@ -2667,6 +2681,21 @@ packages:
     dev: false
     optional: true
 
+  github.com/TheEssem/shoukaku/7f1aa66df448354898a78da1ff5ed88d20c8d562_bufferutil@4.0.6:
+    resolution: {tarball: https://codeload.github.com/TheEssem/shoukaku/tar.gz/7f1aa66df448354898a78da1ff5ed88d20c8d562}
+    id: github.com/TheEssem/shoukaku/7f1aa66df448354898a78da1ff5ed88d20c8d562
+    name: shoukaku
+    version: 3.1.3
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    prepare: true
+    requiresBuild: true
+    dependencies:
+      ws: 8.8.1_bufferutil@4.0.6
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   github.com/abalabahaha/erlpack/f7d730debe32c416d1b55b4217f8aef2ade05874:
     resolution: {tarball: https://codeload.github.com/abalabahaha/erlpack/tar.gz/f7d730debe32c416d1b55b4217f8aef2ade05874}
     name: erlpack
@@ -2678,9 +2707,9 @@ packages:
     dev: false
     optional: true
 
-  github.com/esmBot/eris/828a57e7e8f52ec1b0b50d4f7f302f25705e46cc_bufferutil@4.0.6:
-    resolution: {tarball: https://codeload.github.com/esmBot/eris/tar.gz/828a57e7e8f52ec1b0b50d4f7f302f25705e46cc}
-    id: github.com/esmBot/eris/828a57e7e8f52ec1b0b50d4f7f302f25705e46cc
+  github.com/esmBot/eris/128cd6c99086d33afda7eef4b2f9ef8d9b5bea8c_bufferutil@4.0.6:
+    resolution: {tarball: https://codeload.github.com/esmBot/eris/tar.gz/128cd6c99086d33afda7eef4b2f9ef8d9b5bea8c}
+    id: github.com/esmBot/eris/128cd6c99086d33afda7eef4b2f9ef8d9b5bea8c
     name: eris
     version: 0.17.2-dev
     engines: {node: '>=10.4.0'}
