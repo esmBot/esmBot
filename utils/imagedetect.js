@@ -62,7 +62,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
             }
           }
           const json = await data.body.json();
-          if (json.error) throw Error(json.error);
+          if (json.error) throw Error(json.error.message);
           payload.path = json.results[0].media_formats.gif.url;
         }
       } else if (giphyURLs.includes(host)) {
