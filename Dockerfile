@@ -1,11 +1,12 @@
 # Docker/Kubernetes file for running the bot
-FROM node:alpine
+#FROM node:alpine
+FROM alpine:edge
 
 RUN apk --no-cache upgrade
 RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmpeg wget rpm2cpio \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
     libtool libwebp-dev libxml2-dev freetype fontconfig \
-		vips vips-dev grep libc6-compat
+		vips vips-dev grep libc6-compat nodejs-current nodejs-current-dev npm
 
 # install pnpm
 RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
