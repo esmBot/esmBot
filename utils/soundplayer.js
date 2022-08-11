@@ -65,7 +65,6 @@ export async function play(client, sound, options, music = false) {
   if (!options.channel.guild.permissionsOf(client.user.id).has("voiceConnect")) return "I can't join this voice channel!";
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
-  const playerMeta = players.get(options.channel.guild.id);
   if (!music && manager.players.has(options.channel.guild.id)) return "I can't play a sound effect while other audio is playing!";
   let node = manager.getNode();
   if (!node) {
@@ -94,6 +93,7 @@ export async function play(client, sound, options, music = false) {
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guild.id, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
+  const playerMeta = players.get(options.channel.guild.id);
   let player;
   if (node.players.has(voiceChannel.guild.id)) {
     player = node.players.get(voiceChannel.guild.id);

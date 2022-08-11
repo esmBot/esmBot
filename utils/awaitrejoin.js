@@ -9,7 +9,7 @@ class AwaitRejoin extends EventEmitter {
     this.channel = channel;
     this.rejoined = false;
     this.ended = false;
-    this.bot = channel.guild ? channel.guild.shard.client : channel._client;
+    this.bot = channel.guild ? channel.guild.shard._client : channel._client;
     this.listener = (member, newChannel) => this.verify(member, newChannel);
     this.bot.on("voiceChannelJoin", this.listener);
     this.bot.on("voiceChannelSwitch", this.listener);
