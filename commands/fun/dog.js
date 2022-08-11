@@ -1,19 +1,23 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class DogCommand extends Command {
   async run() {
     await this.acknowledge();
-    const imageData = await fetch("https://dog.ceo/api/breeds/image/random");
-    const json = await imageData.json();
-    return {
-      embeds: [{
-        color: 16711680,
-        image: {
-          url: json.message
-        }
-      }]
-    };
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+    try {
+      const imageData = await request("https://dog.ceo/api/breeds/image/random", { signal: controller.signal });
+      clearTimeout(timeout);
+      const json = await imageData.body.json();
+      return json.message;
+    } catch (e) {
+      if (e.name === "AbortError") {
+        return "I couldn't get a dog image in time. Maybe try again?";
+      }
+    }
   }
 
   static description = "Gets a random dog picture";

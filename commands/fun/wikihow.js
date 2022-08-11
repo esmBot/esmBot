@@ -1,24 +1,28 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class WikihowCommand extends Command {
   async run() {
     await this.acknowledge();
-    const request = await fetch("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6");
-    const json = await request.json();
-    const id = Object.keys(json.query.pages)[0];
-    const data = json.query.pages[id];
-    if (data.imageinfo) {
-      return {
-        embeds: [{
-          color: 16711680,
-          image: {
-            url: json.query.pages[id].imageinfo[0].url
-          }
-        }]
-      };
-    } else {
-      return await this.run();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+    try {
+      const req = await request("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6", { signal: controller.signal });
+      clearTimeout(timeout);
+      const json = await req.body.json();
+      const id = Object.keys(json.query.pages)[0];
+      const data = json.query.pages[id];
+      if (data.imageinfo) {
+        return json.query.pages[id].imageinfo[0].url;
+      } else {
+        return await this.run();
+      }
+    } catch (e) {
+      if (e.name === "AbortError") {
+        return "I couldn't get a WikiHow image in time. Maybe try again?";
+      }
     }
   }
 

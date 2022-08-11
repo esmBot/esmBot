@@ -1,5 +1,5 @@
 import * as logger from "./logger.js";
-import fetch from "node-fetch";
+import { request } from "undici";
 import fs from "fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
@@ -19,7 +19,7 @@ export async function checkStatus() {
   const newNodes = [];
   for (const node of nodes) {
     try {
-      const response = await fetch(`http://${node.url}/version`, { headers: { Authorization: node.auth } }).then(res => res.text());
+      const response = await request(`http://${node.url}/version`, { headers: { authorization: node.auth } }).then(res => res.body.text());
       if (response) newNodes.push(node);
     } catch {
       logger.error(`Failed to get status of Lavalink node ${node.host}.`);

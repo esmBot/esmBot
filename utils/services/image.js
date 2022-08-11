@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
 import { createRequire } from "module";
 import { createServer } from "http";
-import fetch from "node-fetch";
+import { request } from "undici";
 import EventEmitter from "events";
 
 // only requiring this to work around an issue regarding worker threads
@@ -219,7 +219,7 @@ class ImageWorker extends BaseServiceWorker {
       }
     } else if (process.env.API_TYPE === "azure") {
       object.callback = `${process.env.AZURE_CALLBACK_URL}:${this.port}/callback`;
-      const response = await fetch(`${process.env.AZURE_URL}/api/orchestrators/ImageOrchestrator`, { method: "POST", body: JSON.stringify(object) }).then(r => r.json());
+      const response = await request(`${process.env.AZURE_URL}/api/orchestrators/ImageOrchestrator`, { method: "POST", body: JSON.stringify(object) }).then(r => r.body.json());
       const event = new EventEmitter();
       this.jobs.set(response.id, event);
       return await this.waitForAzure(event);

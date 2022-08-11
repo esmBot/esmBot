@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import WebSocket from "ws";
 import * as logger from "./logger.js";
 import { setTimeout } from "timers/promises";
@@ -125,12 +125,12 @@ class ImageConnection {
   }
 
   async getOutput(jobid) {
-    const req = await fetch(`${this.httpurl}?id=${jobid}`, {
+    const req = await request(`${this.httpurl}?id=${jobid}`, {
       headers: {
-        "Authentication": this.auth || undefined
+        authentication: this.auth || undefined
       }
     });
-    const contentType = req.headers.get("Content-Type");
+    const contentType = req.headers["content-type"];
     let type;
     switch (contentType) {
       case "image/gif":
@@ -149,7 +149,7 @@ class ImageConnection {
         type = contentType;
         break;
     }
-    return { buffer: Buffer.from(await req.arrayBuffer()), type };
+    return { buffer: Buffer.from(await req.body.arrayBuffer()), type };
   }
 
   async do(op, id, data) {

@@ -1,6 +1,6 @@
 import { createRequire } from "module";
 import { isMainThread, parentPort, workerData } from "worker_threads";
-import fetch from "node-fetch";
+import { request } from "undici";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -31,7 +31,7 @@ export default function run(object) {
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      promise = fetch(object.path).then(res => res.arrayBuffer()).then(buf => Buffer.from(buf));
+      promise = request(object.path).then(res => res.body.arrayBuffer()).then(buf => Buffer.from(buf));
     }
     // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.

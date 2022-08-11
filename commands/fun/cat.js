@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class CatCommand extends Command {
@@ -9,16 +9,9 @@ class CatCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://projectlounge.pw/cta/", { redirect: "manual", signal: controller.signal });
+      const data = await request("https://projectlounge.pw/cta/", { method: "HEAD", signal: controller.signal });
       clearTimeout(timeout);
-      return {
-        embeds: [{
-          color: 16711680,
-          image: {
-            url: data.headers.get("location")
-          }
-        }]
-      };
+      return data.headers.location;
     } catch (e) {
       if (e.name === "AbortError") {
         return "I couldn't get a cat image in time. Maybe try again?";

@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class AncientCommand extends Command {
@@ -9,16 +9,9 @@ class AncientCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://projectlounge.pw/meme/", { redirect: "manual", signal: controller.signal });
+      const data = await request("https://projectlounge.pw/meme/", { method: "HEAD", signal: controller.signal });
       clearTimeout(timeout);
-      return {
-        embeds: [{
-          color: 16711680,
-          image: {
-            url: data.headers.get("location")
-          }
-        }]
-      };
+      return data.headers.location;
     } catch (e) {
       if (e.name === "AbortError") {
         return "I couldn't get a meme in time. Maybe try again?";

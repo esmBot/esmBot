@@ -34,10 +34,10 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.0.0",
     "node-emoji": "^1.11.0",
-    "node-fetch": "^3.2.10",
     "qrcode": "^1.5.1",
     "sharp": "^0.30.7",
     "shoukaku": "github:Deivu/shoukaku",
+    "undici": "^5.8.2",
     "winston": "^3.8.1",
     "winston-daily-rotate-file": "^4.7.1"
   },

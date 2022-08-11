@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import format from "format-duration";
 import { nodes } from "../../utils/soundplayer.js";
 import paginator from "../../utils/pagination/pagination.js";
@@ -12,7 +12,7 @@ class QueueCommand extends MusicCommand {
     if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
     const node = nodes.filter((val) => val.name === player.player.node.name)[0];
-    const tracks = await fetch(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { Authorization: node.auth, "Content-Type": "application/json" } }).then(res => res.json());
+    const tracks = await request(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.body.json());
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {
