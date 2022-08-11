@@ -11,7 +11,7 @@ env:
 
 jobs:
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -28,7 +28,7 @@ jobs:
     - name: Build
       run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
 
-  win32:
+  win64:
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -37,6 +37,7 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW64
+        path-type: inherit
         update: true
         install: git mingw-w64-x86_64-cc mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
     - name: Setup Node.js environment
