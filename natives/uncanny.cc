@@ -1,7 +1,5 @@
-#include <iostream>
 #include <napi.h>
 
-#include <vips/image.h>
 #include <vips/vips8>
 
 using namespace std;
