@@ -67,6 +67,7 @@ const Admiral = new Fleet({
   BotWorker: Shard,
   token: `Bot ${process.env.TOKEN}`,
   fetchTimeout: 900000,
+  maxConcurrencyOverride: 1,
   startingStatus: {
     status: "idle",
     game: {
