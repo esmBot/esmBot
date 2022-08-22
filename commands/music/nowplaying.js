@@ -42,7 +42,7 @@ class NowPlayingCommand extends MusicCommand {
   }
 
   static description = "Shows the currently playing song";
-  static aliases = ["playing", "np"];
+  static aliases = ["playing", "np", "current"];
 }
 
 export default NowPlayingCommand;

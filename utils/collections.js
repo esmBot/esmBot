@@ -16,7 +16,7 @@ class TimedMap extends Map {
 
 export const runningCommands = new TimedMap();
 
-/*class Cache extends Map {
+class Cache extends Map {
   constructor(values) {
     super(values);
     this.maxValues = 2048;
@@ -26,8 +26,8 @@ export const runningCommands = new TimedMap();
     super.set(key, value);
     if (this.size > this.maxValues) this.delete(this.keys().next().value);
   }
-}*/
+}
 
-export const prefixCache = new Map();
-export const disabledCache = new Map();
-export const disabledCmdCache = new Map();
+export const prefixCache = new Cache();
+export const disabledCache = new Cache();
+export const disabledCmdCache = new Cache();

@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const nodeRequire = createRequire(import.meta.url);
 
 const relPath = `../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`;
-const magick = nodeRequire(relPath);
+const img = nodeRequire(relPath);
 
 const enumMap = {
   "forget": 0,
@@ -33,7 +33,7 @@ export default function run(object) {
       });
       promise = request(object.path).then(res => res.body.arrayBuffer()).then(buf => Buffer.from(buf));
     }
-    // Convert from a MIME type (e.g. "image/png") to something ImageMagick understands (e.g. "png").
+    // Convert from a MIME type (e.g. "image/png") to something the image processor understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.
     // If no image type is given (say, the command generates its own image), make it a PNG.
     const fileExtension = object.params.type ? object.params.type.split("/")[1] : "png";
@@ -47,7 +47,7 @@ export default function run(object) {
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
       try {
-        const result = magick[object.cmd](objectWithFixedType);
+        const result = img[object.cmd](objectWithFixedType);
         const returnObject = {
           buffer: result.data,
           fileExtension: result.type
