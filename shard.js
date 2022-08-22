@@ -17,6 +17,8 @@ import database from "./utils/database.js";
 import { paths } from "./utils/collections.js";
 // playing messages
 const { messages } = JSON.parse(readFileSync(new URL("./config/messages.json", import.meta.url)));
+// command config
+const { types } = JSON.parse(readFileSync(new URL("./config/commands.json", import.meta.url)));
 // other stuff
 import { random } from "./utils/misc.js";
 // generate help page
@@ -33,6 +35,11 @@ class Shard extends BaseClusterWorker {
   }
 
   async init() {
+    if (!types.classic && !types.application) {
+      error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
+      this.ipc.totalShutdown(true);
+      return;
+    }
     // register commands and their info
     const soundStatus = await checkStatus();
     log("info", "Attempting to load commands...");
@@ -44,11 +51,17 @@ class Shard extends BaseClusterWorker {
         error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
-    const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
+    if (types.application) {
+      const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
+      try {
+        await this.bot.bulkEditCommands(commandArray);
+      } catch {
+        log("error", "Failed to send command data to Discord, slash commands may be unavailable.");
+      }
+    }
     log("info", "Finished loading commands.");
 
     await database.setup(this.ipc);
-    await this.bot.bulkEditCommands(commandArray);
 
     // register events
     log("info", "Attempting to load events...");
@@ -56,6 +69,13 @@ class Shard extends BaseClusterWorker {
       log("log", `Loading event from ${file}...`);
       const eventArray = file.split("/");
       const eventName = eventArray[eventArray.length - 1].split(".")[0];
+      if (eventName === "messageCreate" && !types.classic) {
+        log("warn", `Skipped loading event from ${file} because classic commands are disabled...`);
+        continue;
+      } else if (eventName === "interactionCreate" && !types.application) {
+        log("warn", `Skipped loading event from ${file} because application commands are disabled`);
+        continue;
+      }
       const { default: event } = await import(file);
       this.bot.on(eventName, event.bind(null, this.bot, this.clusterID, this.workerID, this.ipc));
     }
@@ -77,8 +97,6 @@ class Shard extends BaseClusterWorker {
       if (result !== message) return this.ipc.broadcast("reloadFail", { result });
       return this.ipc.broadcast("reloadSuccess");
     });
-
-    this.bot.privateChannels.limit = 0;
 
     this.ipc.register("soundreload", async () => {
       const soundStatus = await checkStatus();

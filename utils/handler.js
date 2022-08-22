@@ -1,6 +1,10 @@
 import { paths, commands, info, sounds, categories, aliases as _aliases } from "./collections.js";
 import { log } from "./logger.js";
 
+import { readFileSync } from "fs";
+
+const { blacklist } = JSON.parse(readFileSync(new URL("../config/commands.json", import.meta.url)));
+
 let queryValue = 0;
 
 // load command into memory
@@ -13,6 +17,11 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
   }
   const commandArray = command.split("/");
   const commandName = commandArray[commandArray.length - 1].split(".")[0];
+
+  if (blacklist.includes(commandName)) {
+    log("warn", `Skipped loading blacklisted command ${command}...`);
+    return;
+  }
 
   props.init();
   
