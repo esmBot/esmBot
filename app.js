@@ -63,6 +63,12 @@ esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").then(output => outp
 `);
 }
 
+const services = [
+  { name: "image", ServiceWorker: ImageWorker }
+];
+
+if (process.env.METRICS && process.env.METRICS !== "") services.push({ name: "prometheus", ServiceWorker: PrometheusWorker });
+
 const Admiral = new Fleet({
   BotWorker: Shard,
   token: `Bot ${process.env.TOKEN}`,
@@ -98,10 +104,7 @@ const Admiral = new Fleet({
     connectionTimeout: 30000
   },
   useCentralRequestHandler: process.env.DEBUG_LOG ? false : true, // workaround for eris-fleet weirdness
-  services: [
-    { name: "prometheus", ServiceWorker: PrometheusWorker },
-    { name: "image", ServiceWorker: ImageWorker }
-  ]
+  services
 });
 
 if (isMaster) {
