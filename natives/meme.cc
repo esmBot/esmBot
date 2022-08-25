@@ -31,6 +31,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     int size = width / 9;
     int dividedWidth = width / 1000;
     int rad = 1;
+    vector<double> zeroVec = {0, 0, 0, 0};
 
     string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
                          (font != "impact" ? "bold" : "normal") + " " +
@@ -67,7 +68,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
         topOutline =
             topOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
       }
-      topOutline = (topOutline == (vector<double>){0, 0, 0, 0});
+      topOutline = (topOutline == zeroVec);
       VImage topInvert = topOutline.extract_band(3).invert();
       topOutline = topOutline
                        .extract_band(0, VImage::option()->set(
@@ -95,7 +96,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
         bottomOutline =
             bottomOutline.morph(altMask, VIPS_OPERATION_MORPHOLOGY_DILATE);
       }
-      bottomOutline = (bottomOutline == (vector<double>){0, 0, 0, 0});
+      bottomOutline = (bottomOutline == zeroVec);
       VImage bottomInvert = bottomOutline.extract_band(3).invert();
       bottomOutline = bottomOutline
                           .extract_band(0, VImage::option()->set(

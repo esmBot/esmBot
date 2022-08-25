@@ -18,19 +18,19 @@ class NowPlayingCommand extends MusicCommand {
           icon_url: this.client.user.avatarURL
         },
         fields: [{
-          name: "ℹ️ Title:",
+          name: "ℹ️ Title",
           value: track.title ? track.title : "Unknown"
         },
         {
-          name: "🎤 Artist:",
+          name: "🎤 Artist",
           value: track.author ? track.author : "Unknown"
         },
         {
-          name: "💬 Channel:",
+          name: "💬 Channel",
           value: this.channel.guild.channels.get(this.member.voiceState.channelID).name
         },
         {
-          name: "🌐 Node:",
+          name: "🌐 Node",
           value: player.node ? player.node.name : "Unknown"
         },
         {

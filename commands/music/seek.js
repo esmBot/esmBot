@@ -9,7 +9,13 @@ class SeekCommand extends MusicCommand {
     const player = this.connection.player;
     const track = await player.node.rest.decode(player.track);
     if (!track.isSeekable) return "This track isn't seekable!";
-    const seconds = parseFloat(this.options.position ?? this.args[0]);
+    const pos = this.options.position ?? this.args[0];
+    let seconds;
+    if (pos.includes(":")) {
+      seconds = +(pos.split(":").reduce((acc, time) => (60 * acc) + +time));
+    } else {
+      seconds = parseFloat(pos);
+    }
     if (isNaN(seconds) || (seconds * 1000) > track.length || (seconds * 1000) < 0) return "That's not a valid position!";
     player.seekTo(seconds * 1000);
     return `🔊 Seeked track to ${seconds} second(s).`;
@@ -17,10 +23,9 @@ class SeekCommand extends MusicCommand {
 
   static flags = [{
     name: "position",
-    type: 10,
+    type: 3,
     description: "Seek to this position",
-    required: true,
-    min_value: 0
+    required: true
   }];
   static description = "Seeks to a different position in the music";
   static aliases = ["pos"];

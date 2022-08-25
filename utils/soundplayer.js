@@ -134,19 +134,19 @@ export async function nextSong(client, options, connection, track, info, music, 
             icon_url: client.user.avatarURL
           },
           fields: [{
-            name: "ℹ️ Title:",
+            name: "ℹ️ Title",
             value: info.title?.trim() !== "" ? info.title : "(blank)"
           },
           {
-            name: "🎤 Artist:",
+            name: "🎤 Artist",
             value: info.author?.trim() !== "" ? info.author : "(blank)"
           },
           {
-            name: "💬 Channel:",
+            name: "💬 Channel",
             value: voiceChannel.name
           },
           {
-            name: "🌐 Node:",
+            name: "🌐 Node",
             value: connection.node?.name ?? "Unknown"
           },
           {
@@ -168,6 +168,7 @@ export async function nextSong(client, options, connection, track, info, music, 
   connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
+  connection.setVolume(0.70);
   connection.playTrack({ track });
   players.set(voiceChannel.guild.id, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", async (exception) => {
