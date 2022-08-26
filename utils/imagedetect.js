@@ -75,7 +75,14 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
         payload.path = image.replace(".mp4", ".gif");
       } else if (gfycatURLs.includes(host)) {
         // iirc Gfycat also seems to sometimes make GIFs static
-        payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
+        if (link) {
+          const data = await request(`https://api.gfycat.com/v1/gfycats/${image.split("/").pop().split(".mp4")[0]}`);
+          const json = await data.body.json();
+          if (json.errorMessage) throw Error(json.errorMessage);
+          payload.path = json.gfyItem.gifUrl;
+        } else {
+          payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
+        }
       }
       payload.type = "image/gif";
     } else if (video) {
