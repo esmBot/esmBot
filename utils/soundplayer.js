@@ -3,6 +3,7 @@ import { request } from "undici";
 import fs from "fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
+import { setTimeout } from "timers/promises";
 
 export const players = new Map();
 export const queues = new Map();
@@ -235,6 +236,7 @@ export async function nextSong(client, options, connection, track, info, music, 
         // no-op
       }
     } else if (process.env.STAYVC !== "true") {
+      await setTimeout(400);
       connection.node.leaveChannel(voiceChannel.guild.id);
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
