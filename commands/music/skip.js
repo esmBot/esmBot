@@ -30,7 +30,7 @@ class SkipCommand extends MusicCommand {
   }
 
   static description = "Skips the current song";
-  static aliases = ["forceskip"];
+  static aliases = ["forceskip", "s"];
 }
 
 export default SkipCommand;

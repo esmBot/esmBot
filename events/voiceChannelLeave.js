@@ -2,19 +2,32 @@ import { players, queues, skipVotes } from "../utils/soundplayer.js";
 import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
 
+const isWaiting = new Map();
+
 export default async (client, cluster, worker, ipc, member, oldChannel) => {
   if (!oldChannel) return;
   const connection = players.get(oldChannel.guild.id);
   if (oldChannel.id === connection?.voiceChannel.id) {
     if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
+      if (isWaiting.has(oldChannel.id)) return;
+      isWaiting.set(oldChannel.id, true);
       connection.player.setPaused(true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for someone to return...");
-      const awaitRejoin = new AwaitRejoin(oldChannel, true);
-      awaitRejoin.on("end", async (rejoined, member) => {
+      const awaitRejoin = new AwaitRejoin(oldChannel, true, member.id);
+      awaitRejoin.on("end", async (rejoined, newMember) => {
+        isWaiting.delete(oldChannel.id);
         if (rejoined) {
           connection.player.setPaused(false);
-          players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: member.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
-          waitMessage.edit(`🔊 ${member.mention} is the new voice channel host.`);
+          if (member.id !== newMember.id) {
+            players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
+            waitMessage.edit(`🔊 ${newMember.mention} is the new voice channel host.`);
+          } else {
+            try {
+              await waitMessage.delete();
+            } catch {
+              // no-op
+            }
+          }
         } else {
           try {
             if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
@@ -33,9 +46,12 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
         }
       });
     } else if (member.id === connection.host) {
+      if (isWaiting.has(oldChannel.id)) return;
+      isWaiting.set(oldChannel.id, true);
       const waitMessage = await client.createMessage(connection.originalChannel.id, "🔊 Waiting 10 seconds for the host to return...");
       const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
       awaitRejoin.on("end", async (rejoined) => {
+        isWaiting.delete(oldChannel.id);
         if (rejoined) {
           try {
             if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
@@ -67,6 +83,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
         }
       });
     } else if (member.id === client.user.id) {
+      isWaiting.delete(oldChannel.id);
       try {
         connection.player.node.leaveChannel(connection.originalChannel.guild.id);
       } catch {

@@ -26,7 +26,7 @@ lavalink:
       #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
       #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
   plugins:
-    - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.0"
+    - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.1"
       repository: "https://jitpack.io"
     - dependency: "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers-Plugin:v2.0.7"
       repository: "https://jitpack.io"
