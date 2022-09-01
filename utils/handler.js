@@ -43,6 +43,7 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
     flags: props.flags,
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
+    adminOnly: props.adminOnly,
     type: 1
   };
 
@@ -84,6 +85,7 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
 
 export async function update() {
   const commandArray = [];
+  const privateCommandArray = [];
   const merged = new Map([...commands, ...messageCommands]);
   for (const [name, command] of merged.entries()) {
     let cmdInfo = info.get(name);
@@ -97,18 +99,19 @@ export async function update() {
         flags: cmd.flags,
         slashAllowed: cmd.slashAllowed,
         directAllowed: cmd.directAllowed,
+        adminOnly: cmd.adminOnly,
         type: cmdInfo.type
       };
       info.set(name, cmdInfo);
     }
     if (cmdInfo?.type === 3) {
-      commandArray.push({
+      (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         type: cmdInfo.type,
         dm_permission: cmdInfo.directAllowed
       });
     } else if (cmdInfo?.slashAllowed) {
-      commandArray.push({
+      (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name,
         type: cmdInfo.type,
         description: cmdInfo.description,
@@ -117,5 +120,8 @@ export async function update() {
       });
     }
   }
-  return commandArray;
+  return {
+    main: commandArray,
+    private: privateCommandArray
+  };
 }

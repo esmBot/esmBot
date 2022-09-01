@@ -28,6 +28,7 @@ class SoundReloadCommand extends Command {
 
   static description = "Attempts to reconnect to all available Lavalink nodes";
   static aliases = ["lava", "lavalink", "lavaconnect", "soundconnect"];
+  static adminOnly = true;
 }
 
 export default SoundReloadCommand;

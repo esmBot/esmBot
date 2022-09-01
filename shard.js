@@ -26,6 +26,8 @@ import { generateList, createPage } from "./utils/help.js";
 // whether a broadcast is currently in effect
 let broadcast = false;
 
+const playingSuffix = !types.classic ? ` | @${this.bot.user.username} help` : "";
+
 class Shard extends BaseClusterWorker {
   constructor(bot) {
     super(bot);
@@ -54,7 +56,14 @@ class Shard extends BaseClusterWorker {
     if (types.application) {
       const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
       try {
-        await this.bot.bulkEditCommands(commandArray);
+        log("info", "Sending application command data to Discord...");
+        let cmdArray = commandArray.main;
+        if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
+          await this.bot.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
+        } else {
+          cmdArray = [...commandArray.main, ...commandArray.private];
+        }
+        await this.bot.bulkEditCommands(cmdArray);
       } catch (e) {
         log("error", e);
         log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
@@ -111,7 +120,7 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("playbroadcast", (message) => {
       this.bot.editStatus("dnd", {
-        name: `${message} | @${this.bot.user.username} help`,
+        name: message + playingSuffix,
       });
       broadcast = true;
       return this.ipc.broadcast("broadcastSuccess");
@@ -119,7 +128,7 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("broadcastend", () => {
       this.bot.editStatus("dnd", {
-        name: `${random(messages)} | @${this.bot.user.username} help`,
+        name: random(messages) + playingSuffix,
       });
       broadcast = false;
       return this.ipc.broadcast("broadcastEnd");
@@ -132,7 +141,7 @@ class Shard extends BaseClusterWorker {
     if (broadcastMessage) {
       broadcast = true;
       this.bot.editStatus("dnd", {
-        name: `${broadcastMessage} | @${this.bot.user.username} help`,
+        name: broadcastMessage + playingSuffix,
       });
     }
 
@@ -145,7 +154,7 @@ class Shard extends BaseClusterWorker {
   activityChanger() {
     if (!broadcast) {
       this.bot.editStatus("dnd", {
-        name: `${random(messages)} | @${this.bot.user.username} help`,
+        name: random(messages) + playingSuffix,
       });
     }
     setTimeout(this.activityChanger.bind(this), 900000);

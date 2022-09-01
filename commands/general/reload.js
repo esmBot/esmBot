@@ -33,6 +33,7 @@ class ReloadCommand extends Command {
 
   static description = "Reloads a command";
   static arguments = ["[command]"];
+  static adminOnly = true;
 }
 
 export default ReloadCommand;

@@ -40,8 +40,7 @@ theme:
         name: Switch to light mode
 plugins:
   - glightbox
-  - git-revision-date-localized:
-      enable_creation_date: true
+  - git-revision-date-localized
 extra:
   social:
     - icon: fontawesome/brands/twitter 

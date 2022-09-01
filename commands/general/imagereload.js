@@ -16,7 +16,7 @@ class ImageReloadCommand extends Command {
   }
 
   static description = "Attempts to reconnect to all available image processing servers";
-  static aliases = ["magickconnect", "magick"];
+  static adminOnly = true;
 }
 
 export default ImageReloadCommand;

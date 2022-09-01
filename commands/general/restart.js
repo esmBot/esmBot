@@ -16,6 +16,7 @@ class RestartCommand extends Command {
 
   static description = "Restarts me";
   static aliases = ["reboot"];
+  static adminOnly = true;
 }
 
 export default RestartCommand;

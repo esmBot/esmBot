@@ -22,3 +22,4 @@ Here's an overview of the variables that are not necessarily required for the bo
 - `API`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `servers.json`, or "azure" to use the Azure Functions-based API.
 - `AZURE_URL`: Your Azure webhook URL. Only applies if `API` is set to "azure".
 - `AZURE_PASS`: An optional password used for Azure requests. Only applies if `API` is set to "azure".
+- `ADMIN_SERVER`: A server to limit owner-only commands to.

@@ -8,6 +8,7 @@ class BroadcastCommand extends Command {
       if (!owners.includes(this.author.id)) {
         this.success = false;
         resolve("Only the bot owner can broadcast messages!");
+        return;
       }
       const message = this.options.message ?? this.args.join(" ");
       if (message?.trim()) {
@@ -35,6 +36,7 @@ class BroadcastCommand extends Command {
   }];
 
   static description = "Broadcasts a playing message until the command is run again or the bot restarts";
+  static adminOnly = true;
 }
 
 export default BroadcastCommand;

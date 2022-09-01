@@ -66,6 +66,7 @@ class Command {
   static requires = [];
   static slashAllowed = true;
   static directAllowed = true;
+  static adminOnly = false;
 }
 
 export default Command;

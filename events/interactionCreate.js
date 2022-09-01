@@ -36,17 +36,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
         flags: result.flags ?? (commandClass.success ? 0 : 64)
       }));
     } else if (typeof result === "object" && result.file) {
-      let fileSize = 8388119;
-      if (interaction.channel.guild) {
-        switch (interaction.channel.guild.premiumTier) {
-          case 2:
-            fileSize = 52428308;
-            break;
-          case 3:
-            fileSize = 104856616;
-            break;
-        }
-      }
+      const fileSize = 8388119;
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
           await upload(client, ipc, result, interaction, true);
