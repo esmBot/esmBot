@@ -142,7 +142,7 @@ Initial setup is like this:
 cd ~
 mkdir Lavalink
 cd Lavalink
-wget https://github.com/Cog-Creators/Lavalink-Jars/releases/latest/download/Lavalink.jar
+curl -OL https://github.com/Cog-Creators/Lavalink-Jars/releases/latest/download/Lavalink.jar
 cp ~/esmBot/application.yml .
 ln -s ~/esmBot/assets assets
 ```
