@@ -5,7 +5,10 @@ class SoundReloadCommand extends Command {
   run() {
     return new Promise((resolve) => {
       const owners = process.env.OWNER.split(",");
-      if (!owners.includes(this.author.id)) return "Only the bot owner can reload Lavalink!";
+      if (!owners.includes(this.author.id)) {
+        this.success = false;
+        return "Only the bot owner can reload Lavalink!";
+      }
       this.acknowledge().then(() => {
         this.ipc.broadcast("soundreload");
         this.ipc.register("soundReloadSuccess", (msg) => {

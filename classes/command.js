@@ -1,4 +1,5 @@
 class Command {
+  success = true;
   constructor(client, cluster, worker, ipc, options) {
     this.client = client;
     this.cluster = cluster;

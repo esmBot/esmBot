@@ -15,6 +15,7 @@ class BirdCommand extends Command {
       return json[0];
     } catch (e) {
       if (e.name === "AbortError") {
+        this.success = false;
         return "I couldn't get a bird image in time. Maybe try again?";
       }
     }

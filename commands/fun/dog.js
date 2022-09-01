@@ -15,6 +15,7 @@ class DogCommand extends Command {
       return json.message;
     } catch (e) {
       if (e.name === "AbortError") {
+        this.success = false;
         return "I couldn't get a dog image in time. Maybe try again?";
       }
     }

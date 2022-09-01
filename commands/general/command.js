@@ -4,6 +4,7 @@ import * as collections from "../../utils/collections.js";
 
 class CommandCommand extends Command {
   async run() {
+    this.success = false;
     if (!this.channel.guild) return "This command only works in servers!";
     const owners = process.env.OWNER.split(",");
     if (!this.member.permissions.has("administrator") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
@@ -21,16 +22,18 @@ class CommandCommand extends Command {
       if (disabled?.includes(command)) return "That command is already disabled!";
 
       await db.disableCommand(this.channel.guild.id, command);
+      this.success = true;
       return `The command has been disabled. To re-enable it, just run \`${guildDB.prefix}command enable ${command}\`.`;
     } else if (this.args[0].toLowerCase() === "enable") {
       if (!disabled?.includes(command)) return "That command isn't disabled!";
 
       await db.enableCommand(this.channel.guild.id, command);
+      this.success = true;
       return `The command \`${command}\` has been re-enabled.`;
     }
   }
 
-  static description = "Enables/disables a command for a server";
+  static description = "Enables/disables a classic command for a server (use server settings for slash commands)";
   static aliases = ["cmd"];
   static arguments = ["[enable/disable]", "[command]"];
   static slashAllowed = false;

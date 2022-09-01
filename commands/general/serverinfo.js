@@ -2,7 +2,10 @@ import Command from "../../classes/command.js";
 
 class ServerInfoCommand extends Command {
   async run() {
-    if (!this.channel.guild) return "This command only works in servers!";
+    if (!this.channel.guild) {
+      this.success = false;
+      return "This command only works in servers!";
+    }
     const owner = await this.channel.guild.members.get(this.channel.guild.ownerID);
     return {
       embeds: [{

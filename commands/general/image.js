@@ -7,6 +7,7 @@ import Command from "../../classes/command.js";
 
 class ImageSearchCommand extends Command {
   async run() {
+    this.success = false;
     if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
     const query = this.options.query ?? this.args.join(" ");
     if (!query || !query.trim()) return "You need to provide something to search for!";
@@ -34,6 +35,7 @@ class ImageSearchCommand extends Command {
         }]
       });
     }
+    this.success = true;
     return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
   }
 

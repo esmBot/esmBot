@@ -4,7 +4,10 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+    if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     const counts = await database.getCounts();
     const countArray = [];
     for (const entry of Object.entries(counts)) {

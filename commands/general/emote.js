@@ -4,8 +4,7 @@ import Command from "../../classes/command.js";
 class EmoteCommand extends Command {
   async run() {
     const emoji = this.options.emoji ?? this.content;
-    if (!emoji || !emoji.trim()) return "You need to provide an emoji!";
-    if (emoji.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
+    if (emoji && emoji.trim() && emoji.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
       return `https://cdn.discordapp.com/emojis/${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
     } else if (emoji.match(emojiRegex)) {
       const codePoints = [];
@@ -14,6 +13,7 @@ class EmoteCommand extends Command {
       }
       return `https://twemoji.maxcdn.com/v/latest/72x72/${codePoints.join("-").replace("-fe0f", "")}.png`;
     } else {
+      this.success = false;
       return "You need to provide a valid emoji to get an image!";
     }
   }

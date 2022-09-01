@@ -60,13 +60,13 @@ export function reload() {
 }
 
 export async function play(client, sound, options, music = false) {
-  if (!manager) return "The sound commands are still starting up!";
-  if (!options.channel.guild) return "This command only works in servers!";
-  if (!options.member.voiceState.channelID) return "You need to be in a voice channel first!";
-  if (!options.channel.guild.permissionsOf(client.user.id).has("voiceConnect")) return "I can't join this voice channel!";
+  if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
+  if (!options.channel.guild) return { content: "This command only works in servers!", flags: 64 };
+  if (!options.member.voiceState.channelID) return { content: "You need to be in a voice channel first!", flags: 64 };
+  if (!options.channel.guild.permissionsOf(client.user.id).has("voiceConnect")) return { content: "I can't join this voice channel!", flags: 64 };
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
-  if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return "I don't have permission to join this voice channel!";
-  if (!music && manager.players.has(options.channel.guild.id)) return "I can't play a sound effect while other audio is playing!";
+  if (!voiceChannel.permissionsOf(client.user.id).has("voiceConnect")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
+  if (!music && manager.players.has(options.channel.guild.id)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
   let node = manager.getNode();
   if (!node) {
     const status = await checkStatus();
@@ -81,14 +81,14 @@ export async function play(client, sound, options, music = false) {
   let response;
   try {
     response = await node.rest.resolve(sound);
-    if (!response) return "🔊 I couldn't get a response from the audio server.";
-    if (response.loadType === "NO_MATCHES" || response.loadType === "LOAD_FAILED") return "I couldn't find that song!";
+    if (!response) return { content: "🔊 I couldn't get a response from the audio server.", flags: 64 };
+    if (response.loadType === "NO_MATCHES" || response.loadType === "LOAD_FAILED") return { content: "I couldn't find that song!", flags: 64 };
   } catch (e) {
     logger.error(e);
-    return "🔊 Hmmm, seems that all of the audio servers are down. Try again in a bit.";
+    return { content: "🔊 Hmmm, seems that all of the audio servers are down. Try again in a bit.", flags: 64 };
   }
   const oldQueue = queues.get(voiceChannel.guild.id);
-  if (!response.tracks || response.tracks.length === 0) return "I couldn't find that song!";
+  if (!response.tracks || response.tracks.length === 0) return { content: "I couldn't find that song!", flags: 64 };
   if (music) {
     const sortedTracks = response.tracks.map((val) => { return val.track; });
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];

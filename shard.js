@@ -55,8 +55,9 @@ class Shard extends BaseClusterWorker {
       const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
       try {
         await this.bot.bulkEditCommands(commandArray);
-      } catch {
-        log("error", "Failed to send command data to Discord, slash commands may be unavailable.");
+      } catch (e) {
+        log("error", e);
+        log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
       }
     }
     log("info", "Finished loading commands.");
@@ -126,6 +127,14 @@ class Shard extends BaseClusterWorker {
 
     // connect to lavalink
     if (!status && !connected) connect(this.bot);
+
+    const broadcastMessage = await this.ipc.centralStore.get("broadcast");
+    if (broadcastMessage) {
+      broadcast = true;
+      this.bot.editStatus("dnd", {
+        name: `${broadcastMessage} | @${this.bot.user.username} help`,
+      });
+    }
 
     this.activityChanger();
 

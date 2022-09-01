@@ -5,9 +5,12 @@ const prefixes = ["ytsearch:", "ytmsearch:", "scsearch:", "spsearch:", "amsearch
 class PlayCommand extends MusicCommand {
   async run() {
     const input = this.options.query ?? this.args.join(" ");
-    if (!input && (this.type === "classic" ? (!this.message || this.message.attachments.length <= 0) : !this.options.file)) return "You need to provide what you want to play!";
+    if (!input && ((!this.message || this.message?.attachments.length <= 0))) {
+      this.success = false;
+      return "You need to provide what you want to play!";
+    }
     let query = input ? input.trim() : "";
-    const attachment = this.type === "classic" ? this.message.attachments[0] : (this.options.file ? this.interaction.data.resolved.attachments[this.options.file] : null);
+    const attachment = this.type === "classic" ? this.message.attachments[0] : null;
     if (query.startsWith("||") && query.endsWith("||")) {
       query = query.substring(2, query.length - 2);
     }
@@ -24,13 +27,10 @@ class PlayCommand extends MusicCommand {
   }
 
   static flags = [{
-    name: "file",
-    type: 11,
-    description: "An audio file attachment"
-  }, {
     name: "query",
     type: 3,
-    description: "An audio search query or URL"
+    description: "An audio search query or URL",
+    required: true
   }];
   static description = "Plays a song or adds it to the queue";
   static aliases = ["p"];

@@ -4,40 +4,15 @@ import { runningCommands } from "../utils/collections.js";
 import { readFileSync } from "fs";
 const { emotes } = JSON.parse(readFileSync(new URL("../config/messages.json", import.meta.url)));
 import { random } from "../utils/misc.js";
+import { selectedImages } from "../utils/collections.js";
 
 class ImageCommand extends Command {
-  /*this.embed = {
-      "title": "Your image is being generated! (PRELIMINARY EMBED)",
-      "description": "The current progress is outlined below:",
-      "color": 16711680,
-      "footer": {
-        "text": "Step 2/3"
-      },
-      "author": {
-        "name": "Processing...",
-        "icon_url": "https://cdn.discordapp.com/avatars/429305856241172480/a20f739886ae47cfb10fa069416e8ed3.jpg"
-      },
-      "fields": [
-        {
-          "name": "Downloading...",
-          "value": "✅ Done!"
-        },
-        {
-          "name": "Processing...",
-          "value": "<a:processing:818243325891051581> In progress"
-        },
-        {
-          "name": "Uploading...",
-          "value": "<a:processing:818243325891051581> Waiting for previous steps to complete"
-        }
-      ]
-    };*/
-
   async criteria() {
     return true;
   }
 
   async run() {
+    this.success = false;
     const timestamp = this.type === "classic" ? this.message.createdAt : Math.floor((this.interaction.id / 4194304) + 1420070400000);
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
@@ -58,7 +33,9 @@ class ImageCommand extends Command {
 
     if (this.constructor.requiresImage) {
       try {
-        const image = await imageDetect(this.client, this.message, this.interaction, this.options, true);
+        const selection = selectedImages.get(this.author.id);
+        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, this.options, true);
+        if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
           return this.constructor.noImage;
@@ -101,7 +78,10 @@ class ImageCommand extends Command {
 
     try {
       const { buffer, type } = await this.ipc.serviceCommand("image", { type: "run", obj: magickParams }, true, 9000000);
-      if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
+      if (type === "nogif" && this.constructor.requiresGIF) {
+        return "That isn't a GIF!";
+      }
+      this.success = true;
       return {
         file: Buffer.from(buffer.data),
         name: `${this.constructor.command}.${type}`

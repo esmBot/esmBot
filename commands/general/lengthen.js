@@ -6,9 +6,11 @@ class LengthenCommand extends Command {
   async run() {
     await this.acknowledge();
     const input = this.options.url ?? this.args.join(" ");
+    this.success = false;
     if (!input || !input.trim() || !urlCheck(input)) return "You need to provide a short URL to lengthen!";
     if (urlCheck(input)) {
       const url = await request(encodeURI(input), { method: "HEAD" });
+      this.success = true;
       return url.headers.location || input;
     } else {
       return "That isn't a URL!";

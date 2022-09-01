@@ -7,6 +7,7 @@ const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random"
 class TagsCommand extends Command {
   // todo: attempt to not make this file the worst thing that human eyes have ever seen
   async run() {
+    this.success = false;
     if (!this.channel.guild) return "This command only works in servers!";
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.optionsArray[0].name;
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
@@ -18,6 +19,7 @@ class TagsCommand extends Command {
       const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (getResult) return "This tag already exists!";
       const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
+      this.success = true;
       if (result) return result;
       return `The tag \`${tagName}\` has been added!`;
     } else if (cmd === "delete" || cmd === "remove") {
@@ -27,6 +29,7 @@ class TagsCommand extends Command {
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
       await database.removeTag(tagName, this.channel.guild);
+      this.success = true;
       return `The tag \`${tagName}\` has been deleted!`;
     } else if (cmd === "edit") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to edit!";
@@ -35,12 +38,14 @@ class TagsCommand extends Command {
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
       await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
+      this.success = true;
       return `The tag \`${tagName}\` has been edited!`;
     } else if (cmd === "own" || cmd === "owner") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to check the owner of!";
       const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const user = await this.ipc.fetchUser(getResult.author);
+      this.success = true;
       if (!user) {
         try {
           const restUser = await this.client.getRESTUser(getResult.author);
@@ -77,6 +82,7 @@ class TagsCommand extends Command {
         });
       }
       if (embeds.length === 0) return "I couldn't find any tags!";
+      this.success = true;
       return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
     } else {
       let getResult;
@@ -87,6 +93,7 @@ class TagsCommand extends Command {
         getResult = await database.getTag(this.channel.guild.id, this.type === "classic" ? cmd : tagName);
       }
       if (!getResult) return "This tag doesn't exist!";
+      this.success = true;
       if (getResult.content.length > 2000) {
         return {
           embeds: [{

@@ -8,12 +8,14 @@ import imageDetect from "../../utils/imagedetect.js";
 class QrReadCommand extends Command {
   async run() {
     const image = await imageDetect(this.client, this.message, this.interaction, this.options);
+    this.success = false;
     if (image === undefined) return "You need to provide an image/GIF with a QR code to read!";
     await this.acknowledge();
     const data = Buffer.from(await (await request(image.path)).body.arrayBuffer());
     const rawData = await sharp(data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
     if (!qrBuffer) return "I couldn't find a QR code!";
+    this.success = true;
     return `\`\`\`\n${await clean(qrBuffer.data)}\n\`\`\``;
   }
 

@@ -7,7 +7,10 @@ class PrefixCommand extends Command {
     const guild = await database.getGuild(this.channel.guild.id);
     if (this.args.length !== 0) {
       const owners = process.env.OWNER.split(",");
-      if (!this.member.permissions.has("administrator") && !owners.includes(this.member.id)) return "You need to be an administrator to change the bot prefix!";
+      if (!this.member.permissions.has("administrator") && !owners.includes(this.member.id)) {
+        this.success = false;
+        return "You need to be an administrator to change the bot prefix!";
+      }
       await database.setPrefix(this.args[0], this.channel.guild);
       return `The prefix has been changed to ${this.args[0]}.`;
     } else {

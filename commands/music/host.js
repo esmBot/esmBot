@@ -3,6 +3,7 @@ import MusicCommand from "../../classes/musicCommand.js";
 
 class HostCommand extends MusicCommand {
   async run() {
+    this.success = false;
     if (!this.channel.guild) return "This command only works in servers!";
     if (!this.member.voiceState.channelID) return "You need to be in a voice channel first!";
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
@@ -37,9 +38,11 @@ class HostCommand extends MusicCommand {
       const object = this.connection;
       object.host = member.id;
       players.set(this.channel.guild.id, object);
+      this.success = true;
       return `🔊 ${member.mention} is the new voice channel host.`;
     } else {
       const member = this.channel.guild ? this.channel.guild.members.get(players.get(this.channel.guild.id).host) : undefined;
+      this.success = true;
       return `🔊 The current voice channel host is **${member?.username}#${member?.discriminator}**.`;
     }
   }

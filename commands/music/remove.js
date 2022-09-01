@@ -3,6 +3,7 @@ import MusicCommand from "../../classes/musicCommand.js";
 
 class RemoveCommand extends MusicCommand {
   async run() {
+    this.success = false;
     if (!this.channel.guild) return "This command only works in servers!";
     if (!this.member.voiceState.channelID) return "You need to be in a voice channel first!";
     if (!this.channel.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
@@ -13,6 +14,7 @@ class RemoveCommand extends MusicCommand {
     if (removed.length === 0) return "That's not a valid position!";
     const track = await this.connection.player.node.rest.decode(removed[0]);
     queues.set(this.channel.guild.id, this.queue);
+    this.success = true;
     return `🔊 The song \`${track.title ? track.title : "(blank)"}\` has been removed from the queue.`;
   }
 

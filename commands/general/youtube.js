@@ -8,6 +8,7 @@ import Command from "../../classes/command.js";
 class YouTubeCommand extends Command {
   async run() {
     const query = this.options.query ?? this.args.join(" ");
+    this.success = false;
     if (!query || !query.trim()) return "You need to provide something to search for!";
     await this.acknowledge();
     const messages = [];
@@ -16,6 +17,7 @@ class YouTubeCommand extends Command {
     for (const [i, value] of videos.results.entries()) {
       messages.push({ content: `Page ${i + 1} of ${videos.results.length}\n<:youtube:637020823005167626> **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
+    this.success = true;
     return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, messages);
   }
 

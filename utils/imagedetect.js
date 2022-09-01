@@ -133,7 +133,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
 };
 
 // this checks for the latest message containing an image and returns the url of the image
-export default async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false) => {
+export default async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false, singleMessage = false) => {
   // we start by determining whether or not we're dealing with an interaction or a message
   if (interaction) {
     // we can get a raw attachment or a URL in the interaction itself
@@ -147,7 +147,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
         if (result !== false) return result;
       }
     }
-  } else {
+  }
+  if (cmdMessage) {
     // check if the message is a reply to another message
     if (cmdMessage.messageReference) {
       const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
@@ -160,15 +161,17 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     const result = await checkImages(cmdMessage, extraReturnTypes, video, sticker);
     if (result !== false) return result;
   }
-  // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
-  const messages = await client.getMessages((interaction ? interaction : cmdMessage).channel.id);
-  // iterate over each message
-  for (const message of messages) {
-    const result = await checkImages(message, extraReturnTypes, video, sticker);
-    if (result === false) {
-      continue;
-    } else {
-      return result;
+  if (!singleMessage) {
+    // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
+    const messages = await client.getMessages((interaction ? interaction : cmdMessage).channel.id);
+    // iterate over each message
+    for (const message of messages) {
+      const result = await checkImages(message, extraReturnTypes, video, sticker);
+      if (result === false) {
+        continue;
+      } else {
+        return result;
+      }
     }
   }
 };

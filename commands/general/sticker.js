@@ -4,10 +4,13 @@ import imagedetect from "../../utils/imagedetect.js";
 class StickerCommand extends Command {
   async run() {
     const result = await imagedetect(this.client, this.message, this.interaction, this.options, false, false, true);
+    this.success = false;
     if (!result) return "You need to provide a sticker!";
     if (result.format_type === 1) { // PNG
+      this.success = true;
       return `https://cdn.discordapp.com/stickers/${result.id}.png`;
     } else if (result.format_type === 2) { // APNG
+      this.success = true;
       return {
         embeds: [{
           color: 16711680,
@@ -18,6 +21,7 @@ class StickerCommand extends Command {
         }]
       };
     } else if (result.format_type === 3) { // Lottie
+      this.success = true;
       return `I can't display this sticker because it uses the Lottie animation format; however, I can give you the raw JSON link to it: https://cdn.discordapp.com/stickers/${result.id}.json`;
     } else {
       return "I don't recognize that sticker format!";

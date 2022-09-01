@@ -14,6 +14,7 @@ class AncientCommand extends Command {
       return data.headers.location;
     } catch (e) {
       if (e.name === "AbortError") {
+        this.success = false;
         return "I couldn't get a meme in time. Maybe try again?";
       }
     } 

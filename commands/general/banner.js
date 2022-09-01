@@ -12,7 +12,10 @@ class BannerCommand extends Command {
       return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
     } else if (mentionRegex.test(member)) {
       const id = member.match(mentionRegex)[1];
-      if (id < 21154535154122752n) return "That's not a valid mention!";
+      if (id < 21154535154122752n) {
+        this.success = false;
+        return "That's not a valid mention!";
+      }
       try {
         const user = await this.client.getRESTUser(id);
         return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";

@@ -54,7 +54,10 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
-      if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+      if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) {
+        this.success = false;
+        return "I don't have the `Embed Links` permission!";
+      }
       const pages = [];
       if (help.categories === help.categoryTemplate && !help.generated) await help.generateList();
       for (const category of Object.keys(help.categories)) {

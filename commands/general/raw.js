@@ -5,7 +5,10 @@ class RawCommand extends Command {
   async run() {
     await this.acknowledge();
     const image = await imageDetect(this.client, this.message, this.interaction, this.options);
-    if (image === undefined) return "You need to provide an image/GIF to get a raw URL!";
+    if (image === undefined) {
+      this.success = false;
+      return "You need to provide an image/GIF to get a raw URL!";
+    }
     return image.path;
   }
 

@@ -4,7 +4,10 @@ import Command from "../../classes/command.js";
 class EvalCommand extends Command {
   async run() {
     const owners = process.env.OWNER.split(",");
-    if (!owners.includes(this.author.id)) return "Only the bot owner can use eval!";
+    if (!owners.includes(this.author.id)) {
+      this.success = false;
+      return "Only the bot owner can use eval!";
+    }
     await this.acknowledge();
     const code = this.options.code ?? this.args.join(" ");
     try {
