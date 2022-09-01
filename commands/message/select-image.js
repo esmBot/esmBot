@@ -15,7 +15,6 @@ class SelectImageCommand extends Command {
       return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
     }
     selectedImages.set(this.author.id, image);
-    this.success = true;
     return "The image has been selected for your next command.";
   }
 }

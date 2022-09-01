@@ -26,13 +26,12 @@ import { generateList, createPage } from "./utils/help.js";
 // whether a broadcast is currently in effect
 let broadcast = false;
 
-const playingSuffix = !types.classic ? ` | @${this.bot.user.username} help` : "";
-
 class Shard extends BaseClusterWorker {
   constructor(bot) {
     super(bot);
 
     console.info = (str) => this.ipc.sendToAdmiral("info", str);
+    this.playingSuffix = types.classic ? ` | @${this.bot.user.username} help` : "";
     this.init();
   }
 
@@ -120,7 +119,7 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("playbroadcast", (message) => {
       this.bot.editStatus("dnd", {
-        name: message + playingSuffix,
+        name: message + this.playingSuffix,
       });
       broadcast = true;
       return this.ipc.broadcast("broadcastSuccess");
@@ -128,7 +127,7 @@ class Shard extends BaseClusterWorker {
 
     this.ipc.register("broadcastend", () => {
       this.bot.editStatus("dnd", {
-        name: random(messages) + playingSuffix,
+        name: random(messages) + this.playingSuffix,
       });
       broadcast = false;
       return this.ipc.broadcast("broadcastEnd");
@@ -141,7 +140,7 @@ class Shard extends BaseClusterWorker {
     if (broadcastMessage) {
       broadcast = true;
       this.bot.editStatus("dnd", {
-        name: broadcastMessage + playingSuffix,
+        name: broadcastMessage + this.playingSuffix,
       });
     }
 
@@ -154,7 +153,7 @@ class Shard extends BaseClusterWorker {
   activityChanger() {
     if (!broadcast) {
       this.bot.editStatus("dnd", {
-        name: random(messages) + playingSuffix,
+        name: random(messages) + this.playingSuffix,
       });
     }
     setTimeout(this.activityChanger.bind(this), 900000);
