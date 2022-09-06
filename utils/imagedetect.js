@@ -52,7 +52,14 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
         // Tenor doesn't let us access a raw GIF without going through their API,
         // so we use that if there's a key in the config
         if (process.env.TENOR !== "") {
-          const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${image2.split("-").pop()}&media_filter=gif&limit=1&key=${process.env.TENOR}`);
+          let id;
+          if (image2.includes("tenor.com/view/")) {
+            id = image2.split("-").pop();
+          } else if (image2.endsWith(".gif")) {
+            const redirect = (await request(image2, { method: "HEAD" })).headers.location;
+            id = redirect.split("-").pop();
+          }
+          const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&key=${process.env.TENOR}`);
           if (data.statusCode === 429) {
             if (extraReturnTypes) {
               payload.type = "tenorlimit";
