@@ -37,7 +37,7 @@ Choose the distro you're using below for insallation instructions.
     ```sh
     sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl noto-fonts-emoji gobject-introspection libcgif libimagequant meson
     ```
-    You'll also need to install [`ttf-ms-fonts`](https://aur.archlinux.org/packages/ttf-ms-fonts/) from the AUR.
+    You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 
 ***
 

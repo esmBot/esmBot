@@ -42,7 +42,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
           players.delete(connection.originalChannel.guild.id);
           queues.delete(connection.originalChannel.guild.id);
           skipVotes.delete(connection.originalChannel.guild.id);
-          client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
+          client.createMessage(connection.originalChannel.id, `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`);
         }
       });
     } else if (member.id === connection.host) {
@@ -74,7 +74,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
             players.delete(connection.originalChannel.guild.id);
             queues.delete(connection.originalChannel.guild.id);
             skipVotes.delete(connection.originalChannel.guild.id);
-            client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
+            client.createMessage(connection.originalChannel.id, `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`);
           } else {
             const randomMember = random(members);
             players.set(connection.voiceChannel.guild.id, { player: connection.player, type: connection.type, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
@@ -92,7 +92,7 @@ export default async (client, cluster, worker, ipc, member, oldChannel) => {
       players.delete(connection.originalChannel.guild.id);
       queues.delete(connection.originalChannel.guild.id);
       skipVotes.delete(connection.originalChannel.guild.id);
-      await client.createMessage(connection.originalChannel.id, "🔊 The current voice channel session has ended.");
+      await client.createMessage(connection.originalChannel.id, `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`);
     }
   }
 };

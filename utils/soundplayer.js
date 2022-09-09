@@ -23,7 +23,7 @@ export async function checkStatus() {
       const response = await request(`http://${node.url}/version`, { headers: { authorization: node.auth } }).then(res => res.body.text());
       if (response) newNodes.push(node);
     } catch {
-      logger.error(`Failed to get status of Lavalink node ${node.host}.`);
+      logger.error(`Failed to get status of Lavalink node ${node.url}.`);
     }
   }
   nodes = newNodes;
@@ -230,8 +230,10 @@ export async function nextSong(client, options, connection, track, info, music, 
       const newTrack = await connection.node.rest.decode(newQueue[0]);
       nextSong(client, options, connection, newQueue[0], newTrack, music, voiceChannel, host, player.loop, player.shuffle, track);
       try {
-        if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-        if (newQueue[0] !== track && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
+        if (options.type === "classic") {
+          if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+          if (newQueue[0] !== track && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
+        }
       } catch {
         // no-op
       }
@@ -241,19 +243,14 @@ export async function nextSong(client, options, connection, track, info, music, 
       players.delete(voiceChannel.guild.id);
       queues.delete(voiceChannel.guild.id);
       skipVotes.delete(voiceChannel.guild.id);
-      const content = "🔊 The current voice channel session has ended.";
+      const content = `🔊 The voice channel session in \`${voiceChannel.name}\` has ended.`;
       if (options.type === "classic") {
         await client.createMessage(options.channel.id, content);
       } else {
         await options.interaction.createMessage(content);
       }
-      try {
-        if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-        if (player?.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
-      } catch {
-        // no-op
-      }
-    } else {
+    }
+    if (options.type === "classic") {
       try {
         if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
         if (player?.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();

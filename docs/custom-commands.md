@@ -1,5 +1,5 @@
 # Custom Commands
-esmBot has a flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.
+esmBot has a powerful and flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.
 
 ## Directory Structure
 The bot loads commands from subdirectories inside of the `commands` directory, which looks something like this by default:
@@ -18,6 +18,9 @@ commands/
     > ...
 ```
 As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the `commands` directory, and to create a new command, you can create a new JS file under one of those subdirectories.
+
+!!! tip
+    The `message` category is special; commands in here act as right-click context menu message commands instead of "classic" or slash commands.
 
 ## Commnand Structure
 It's recommended to use the `Command` class located in `classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
@@ -46,7 +49,7 @@ The parameters available to your command consist of the following:
 - `this.worker`: The ID of the current eris-fleet worker. This should be a number greater than or equal to 0.
 - `this.ipc`: An eris-fleet [`IPC`](https://danclay.github.io/eris-fleet/classes/IPC.html) instance, useful for communication between worker processes.
 - `this.origOptions`: The raw options object provided to the command by the command handler.
-- `this.type`: The type of message that activated the command. Can be "classic" (a regular message) or "application" (slash commands).
+- `this.type`: The type of message that activated the command. Can be "classic" (a regular message) or "application" (slash/context menu commands).
 - `this.channel`: An Eris [`TextChannel`](https://abal.moe/Eris/docs/TextChannel) object of the channel that the command was run in, useful for getting info about a server and how to respond to a message.
 - `this.author`: An Eris [`User`](https://abal.moe/Eris/docs/User) object of the user who ran the command, or a [`Member`](https://abal.moe/Eris/docs/Member) object identical to `this.member` if run in a server as a slash command.
 - `this.member`: An Eris [`Member`](https://abal.moe/Eris/docs/Member) object of the server member who ran the command. When running the command outside of a server, this parameter is undefined when run as a "classic" command or a [`User`](https://abal.moe/Eris/docs/User) object identical to `this.author` when run as a slash command.
@@ -59,10 +62,11 @@ Some options are only available depending on the context/original message type, 
 - `this.content`: A string of the raw content of the command message, excluding the prefix and command name.
 - `this.reference`: An object that's useful if you ever decide to reply to a user inside the command. You can use [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) to combine your message content with this parameter.
 
-The options only available with "application"/slash commands are listed below:
+The options only available with application (slash and context menu) commands are listed below:
 
 - `this.interaction`: An Eris [`CommandInteraction`](https://abal.moe/Eris/docs/CommandInteraction) object of the incoming slash command data. 
 - `this.optionsArray`: A raw array of command options. Should rarely be used.
+- `this.success`: A boolean value that causes the bot to respond with a normal message when `true`, or an "ephemeral" message (a message that's only visible to the person who ran the command) when `false`.
 
 Some static fields are also available and can be set depending on your command. These fields are listed below:
 
@@ -80,6 +84,7 @@ static flags = [{
 ```
 - `slashAllowed`: Specifies whether or not the command is available via slash commands.
 - `directAllowed`: Specifies whether or not a command is available in direct messages.
+- `adminOnly`: Specifies whether or not a command should be limited to the bot owner(s).
 
 ## The `run` Function
 The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.

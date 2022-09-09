@@ -1,15 +1,18 @@
 # Config
-esmBot uses environment variables for configuration. To make managing them easier, a `.env` file is included with the bot and can be used to load the variables on bot startup.
+esmBot uses a mix of environment variables and JSON for configuration.
 
-Here's an overview of the environment variables required to run the bot:
+## Environment Variables (.env)
+To make managing environment variables easier, an example `.env` file is included with the bot at `.env.example` and can be used to load the variables on startup.
 
+### Required
 - `NODE_ENV`: Used for tuning the bot to different environments. If you don't know what to set it to, leave it as is.
 - `TOKEN`: Your bot's token. You can find this [here](https://discord.com/developers/applications) under your application's Bot tab.
 - `DB`: The database connection string. By default the `sqlite` and `postgresql` protocols are available, but this can be expanded by putting proper DB driver scripts into `utils/database/`. You can also set this to `dummy` to make the bot not use a database at all.
 - `OWNER`: Your Discord user ID. This is used for granting yourself access to certain management commands. Adding multiple users is supported by separating the IDs with a comma; however, this is not recommended for security purposes.
-- `PREFIX`: The bot's default command prefix. Note that servers can set their own individual prefixes via the `prefix` command.
+- `PREFIX`: The bot's default command prefix for classic commands. Note that servers can set their own individual prefixes via the `prefix` command.
 
-Here's an overview of the variables that are not necessarily required for the bot to run, but can greatly enhance its functionality:
+### Optional
+These variables that are not necessarily required for the bot to run, but can greatly enhance its functionality:
 
 - `STAYVC`: Set this to true if you want the bot to stay in voice chat after playing music/a sound effect. You can make it leave by using the stop command.
 - `DBL`: An API token from [Top.gg](https://top.gg/). Unnecessary for most users since Top.gg tends to ban forks of bots like esmBot from their list.
@@ -19,7 +22,60 @@ Here's an overview of the variables that are not necessarily required for the bo
 - `TMP_DOMAIN`: The root domain/directory that the images larger than 8MB are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
 - `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
-- `API`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `servers.json`, or "azure" to use the Azure Functions-based API.
+- `API_TYPE`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `config/servers.json`, or "azure" to use the Azure Functions-based API.
 - `AZURE_URL`: Your Azure webhook URL. Only applies if `API` is set to "azure".
 - `AZURE_PASS`: An optional password used for Azure requests. Only applies if `API` is set to "azure".
-- `ADMIN_SERVER`: A server to limit owner-only commands to.
+- `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
+
+## JSON
+The JSON-based configuration files are located in `config/`.
+
+### commands.json
+```js
+{
+  "types": {
+    "classic": false, // Enable/disable "classic" (prefixed) commands, note that classic commands in direct messages will still work
+    "application": true // Enable/disable application commands (slash and context menu commands)
+  },
+  "blacklist": [
+    // Names of commands that you don't want the bot to load
+  ]
+}
+```
+
+### messages.json
+```js
+{
+  "emotes": [
+    // Discord emote strings to use in the "Processing... this may take a while" messages, e.g. "<a:processing:818243325891051581>" or "⚙️"
+  ],
+  "messages": [
+    // Strings to use in the bot's activity message/playing status
+  ]
+}
+```
+
+### servers.json
+```js
+{
+  "lava": [ // Objects containing info for connecting to Lavalink audio server(s)
+    {
+      "name": "test", // A human-friendly name for the server
+      "url": "localhost:2333", // IP address/domain name and port for the server
+      "auth": "youshallnotpass", // Password/authorization code for the server
+      "local": false // Whether or not the esmBot "assets" folder is located next to the Lavalink jar file
+    }
+  ],
+  "image": [ // Objects containing info for connecting to WS image server(s)
+    {
+      "server": "localhost", // IP address or domain name for the server
+      "auth": "verycoolpass100", // Password/authorization code for the server
+      "tls": false // Whether or not this is a secure TLS/wss connection
+    }
+  ],
+  "searx": [
+    // URLs for Searx/SearXNG instances used for image/YouTube searches, e.g. "https://searx.projectlounge.pw"
+    // Note: instances must support getting results over JSON
+  ]
+}
+```

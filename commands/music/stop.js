@@ -18,7 +18,7 @@ class StopCommand extends MusicCommand {
     players.delete(this.channel.guild.id);
     queues.delete(this.channel.guild.id);
     this.success = true;
-    return "🔊 The current voice channel session has ended.";
+    return `🔊 The voice channel session in \`${this.connection.voiceChannel.name}\` has ended.`;
   }
 
   static description = "Stops the music";

@@ -78,10 +78,7 @@ class Shard extends BaseClusterWorker {
       log("log", `Loading event from ${file}...`);
       const eventArray = file.split("/");
       const eventName = eventArray[eventArray.length - 1].split(".")[0];
-      if (eventName === "messageCreate" && !types.classic) {
-        log("warn", `Skipped loading event from ${file} because classic commands are disabled...`);
-        continue;
-      } else if (eventName === "interactionCreate" && !types.application) {
+      if (eventName === "interactionCreate" && !types.application) {
         log("warn", `Skipped loading event from ${file} because application commands are disabled`);
         continue;
       }

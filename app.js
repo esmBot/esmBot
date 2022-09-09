@@ -71,12 +71,14 @@ const services = [
 if (process.env.METRICS && process.env.METRICS !== "") services.push({ name: "prometheus", ServiceWorker: PrometheusWorker });
 
 const intents = [
-  "guilds",
   "guildVoiceStates",
-  "guildMessages",
   "directMessages"
 ];
-if (types.classic) intents.push("messageContent");
+if (types.classic) {
+  intents.push("guilds");
+  intents.push("guildMessages");
+  intents.push("messageContent");
+}
 
 const Admiral = new Fleet({
   BotWorker: Shard,
