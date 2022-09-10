@@ -1,4 +1,4 @@
-import { prefixCache, disabledCmdCache, disabledCache, commands } from "../collections.js";
+import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "../collections.js";
 import * as logger from "../logger.js";
 
 import Postgres from "pg";
@@ -21,13 +21,15 @@ export async function setup() {
     counts = { rows: [] };
   }
 
+  const merged = new Map([...commands, ...messageCommands]);
+
   if (!counts.rows[0]) {
-    for (const command of commands.keys()) {
+    for (const command of merged.keys()) {
       await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
     }
   } else {
     const exists = [];
-    for (const command of commands.keys()) {
+    for (const command of merged.keys()) {
       const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
       if (!count.rows[0]) {
         await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);

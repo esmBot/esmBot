@@ -12,13 +12,15 @@ const sqliteUpdates = [
 
 export async function setup() {
   const counts = connection.prepare("SELECT * FROM counts").all();
+  const merged = new Map([...collections.commands, ...collections.messageCommands]);
+
   if (!counts) {
-    for (const command of collections.commands.keys()) {
+    for (const command of merged.keys()) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
     }
   } else {
     const exists = [];
-    for (const command of collections.commands.keys()) {
+    for (const command of merged.keys()) {
       const count = connection.prepare("SELECT * FROM counts WHERE command = ?").get(command);
       if (!count) {
         connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
