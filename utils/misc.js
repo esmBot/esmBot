@@ -13,9 +13,7 @@ const optionalReplace = (token) => {
 };
 
 // clean(text) to clean message of any private info or mentions
-export async function clean(text) {
-  if (text?.constructor?.name == "Promise")
-    text = await text;
+export function clean(text) {
   if (typeof text !== "string")
     text = util.inspect(text, { depth: 1 });
 

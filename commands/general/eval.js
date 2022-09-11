@@ -11,8 +11,9 @@ class EvalCommand extends Command {
     await this.acknowledge();
     const code = this.options.code ?? this.args.join(" ");
     try {
-      const evaled = eval(code);
-      const cleaned = await clean(evaled);
+      let evaled = eval(code);
+      if (evaled?.constructor?.name == "Promise") evaled = await evaled;
+      const cleaned = clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
         return {
@@ -24,7 +25,9 @@ class EvalCommand extends Command {
         return sendString;
       }
     } catch (err) {
-      return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
+      let error = err;
+      if (err?.constructor?.name == "Promise") error = await err;
+      return `\`ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``;
     }
   }
 

@@ -10,7 +10,7 @@ export let categories = categoryTemplate;
 
 export let generated = false;
 
-export async function generateList() {
+export function generateList() {
   categories = categoryTemplate;
   for (const [command] of commands) {
     const category = info.get(command).category;

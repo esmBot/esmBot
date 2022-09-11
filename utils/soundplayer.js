@@ -31,7 +31,7 @@ export async function checkStatus() {
   return status;
 }
 
-export async function connect(client) {
+export function connect(client) {
   manager = new Shoukaku(new Connectors.Eris(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
   client.emit("ready"); // workaround
   manager.on("error", (node, error) => {
@@ -71,7 +71,7 @@ export async function play(client, sound, options, music = false) {
   if (!node) {
     const status = await checkStatus();
     if (!status) {
-      await connect(client);
+      connect(client);
       node = manager.getNode();
     }
   }

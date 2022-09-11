@@ -61,8 +61,10 @@ export default async (client, cluster, worker, ipc, interaction) => {
     } else {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options)}: ${error.stack || error}`);
       try {
+        let err = error;
+        if (error?.constructor?.name == "Promise") err = await error;
         await interaction[replyMethod]("Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>", {
-          file: `Message: ${await clean(error)}\n\nStack Trace: ${await clean(error.stack)}`,
+          file: `Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`,
           name: "error.txt"
         });
       } catch { /* silently ignore */ }

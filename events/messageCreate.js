@@ -155,10 +155,12 @@ export default async (client, cluster, worker, ipc, message) => {
     } else {
       _error(`Error occurred with command message ${message.cleanContent}: ${error.stack || error}`);
       try {
+        let err = error;
+        if (error?.constructor?.name == "Promise") err = await error;
         await client.createMessage(message.channel.id, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>"
         }, reference), [{
-          file: `Message: ${await clean(error)}\n\nStack Trace: ${await clean(error.stack)}`,
+          file: `Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`,
           name: "error.txt"
         }]);
       } catch { /* silently ignore */ }

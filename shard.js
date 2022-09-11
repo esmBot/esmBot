@@ -81,7 +81,7 @@ class Shard extends BaseClusterWorker {
 
     // generate docs
     if (process.env.OUTPUT && process.env.OUTPUT !== "") {
-      await generateList();
+      generateList();
       if (this.clusterID === 0) {
         await createPage(process.env.OUTPUT);
         log("info", "The help docs have been generated.");

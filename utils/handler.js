@@ -74,7 +74,7 @@ export async function load(client, command, soundStatus, slashReload = false) {
   return commandName;
 }
 
-export async function update() {
+export function update() {
   const commandArray = [];
   const privateCommandArray = [];
   const merged = new Map([...commands, ...messageCommands]);
@@ -118,7 +118,7 @@ export async function update() {
 }
 
 export async function send(bot) {
-  const commandArray = await update();
+  const commandArray = update();
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;
   if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
