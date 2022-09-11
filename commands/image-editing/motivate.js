@@ -1,4 +1,5 @@
 import ImageCommand from "../../classes/imageCommand.js";
+import { textEncode } from "../../utils/misc.js";
 
 class MotivateCommand extends ImageCommand {
   async criteria(text, url) {
@@ -14,8 +15,8 @@ class MotivateCommand extends ImageCommand {
     const newArgs = this.options.text ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     return {
-      top: topText.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n"),
-      bottom: bottomText ? bottomText.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n") : "",
+      top: textEncode(topText),
+      bottom: bottomText ? textEncode(bottomText) : "",
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "times"
     };
   }
