@@ -16,11 +16,9 @@ Napi::Value Flip(const Napi::CallbackInfo &info) {
         obj.Has("flop") ? obj.Get("flop").As<Napi::Boolean>().Value() : false;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
 
-    VOption *options = VImage::option()->set("access", "sequential");
-
     VImage in =
         VImage::new_from_buffer(data.Data(), data.Length(), "",
-                                type == "gif" ? options->set("n", -1) : options)
+                                type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential") : 0)
             .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
 
