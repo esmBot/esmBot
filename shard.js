@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 // fancy loggings
 import { log, error } from "./utils/logger.js";
 // initialize command loader
-import { load, update } from "./utils/handler.js";
+import { load, send } from "./utils/handler.js";
 // lavalink stuff
 import { checkStatus, connect, reload, status, connected } from "./utils/soundplayer.js";
 // database stuff
@@ -47,22 +47,14 @@ class Shard extends BaseClusterWorker {
     for await (const commandFile of this.getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
       log("log", `Loading command from ${commandFile}...`);
       try {
-        await load(this.bot, this.clusterID, this.workerID, this.ipc, commandFile, soundStatus);
+        await load(this.bot, commandFile, soundStatus);
       } catch (e) {
         error(`Failed to register command from ${commandFile}: ${e}`);
       }
     }
     if (types.application) {
-      const commandArray = await update(this.bot, this.clusterID, this.workerID, this.ipc, soundStatus);
       try {
-        log("info", "Sending application command data to Discord...");
-        let cmdArray = commandArray.main;
-        if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
-          await this.bot.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
-        } else {
-          cmdArray = [...commandArray.main, ...commandArray.private];
-        }
-        await this.bot.bulkEditCommands(cmdArray);
+        await send(this.bot);
       } catch (e) {
         log("error", e);
         log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
@@ -99,9 +91,13 @@ class Shard extends BaseClusterWorker {
     this.ipc.register("reload", async (message) => {
       const path = paths.get(message);
       if (!path) return this.ipc.broadcast("reloadFail", { result: "I couldn't find that command!" });
-      const result = await load(this.bot, this.clusterID, this.workerID, this.ipc, path, await checkStatus(), true);
-      if (result !== message) return this.ipc.broadcast("reloadFail", { result });
-      return this.ipc.broadcast("reloadSuccess");
+      try {
+        const result = await load(this.bot, path, await checkStatus(), true);
+        if (result !== message) return this.ipc.broadcast("reloadFail", { result });
+        return this.ipc.broadcast("reloadSuccess");
+      } catch (result) {
+        return this.ipc.broadcast("reloadFail", { result });
+      }
     });
 
     this.ipc.register("soundreload", async () => {

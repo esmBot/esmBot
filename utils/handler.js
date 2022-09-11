@@ -8,7 +8,7 @@ const { blacklist } = JSON.parse(readFileSync(new URL("../config/commands.json",
 let queryValue = 0;
 
 // load command into memory
-export async function load(client, cluster, worker, ipc, command, soundStatus, slashReload = false) {
+export async function load(client, command, soundStatus, slashReload = false) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   if (props.requires.includes("sound") && soundStatus) {
@@ -52,19 +52,10 @@ export async function load(client, cluster, worker, ipc, command, soundStatus, s
     commandInfo.type = 3;
   } else {
     commands.set(commandName, props);
+  }
 
-    if (slashReload && props.slashAllowed) {
-      const commandList = await client.getCommands();
-      const oldCommand = commandList.filter((item) => {
-        return item.name === commandName;
-      })[0];
-      await client.editCommand(oldCommand.id, {
-        name: commandName,
-        type: 1,
-        description: props.description,
-        options: props.flags
-      });
-    }
+  if (slashReload && props.slashAllowed) {
+    await send(client);
   }
 
   if (Object.getPrototypeOf(props).name === "SoundboardCommand") sounds.set(commandName, props.file);
@@ -124,4 +115,16 @@ export async function update() {
     main: commandArray,
     private: privateCommandArray
   };
+}
+
+export async function send(bot) {
+  const commandArray = await update();
+  log("info", "Sending application command data to Discord...");
+  let cmdArray = commandArray.main;
+  if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
+    await bot.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
+  } else {
+    cmdArray = [...commandArray.main, ...commandArray.private];
+  }
+  await bot.bulkEditCommands(cmdArray);
 }

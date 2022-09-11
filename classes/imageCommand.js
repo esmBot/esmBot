@@ -27,9 +27,7 @@ class ImageCommand extends Command {
       params: {}
     };
 
-    if (this.type === "application") {
-      await this.acknowledge();
-    }
+    if (this.type === "application") await this.acknowledge();
 
     if (this.constructor.requiresImage) {
       try {
