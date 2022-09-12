@@ -1,11 +1,8 @@
 import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "../collections.js";
 import * as logger from "../logger.js";
 
-import Postgres from "pg";
-const connection = new Postgres.Pool({
-  connectionString: process.env.DB,
-  statement_timeout: 10000
-});
+import Postgres from "postgres";
+const sql = Postgres(process.env.DB);
 
 const psqlUpdates = [
   "", // reserved
@@ -16,30 +13,30 @@ const psqlUpdates = [
 export async function setup() {
   let counts;
   try {
-    counts = await connection.query("SELECT * FROM counts");
+    counts = await sql`SELECT * FROM counts`;
   } catch {
-    counts = { rows: [] };
+    counts = [];
   }
 
   const merged = new Map([...commands, ...messageCommands]);
 
-  if (!counts.rows[0]) {
+  if (!counts.length) {
     for (const command of merged.keys()) {
-      await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+      await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
     }
   } else {
     const exists = [];
     for (const command of merged.keys()) {
-      const count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-      if (!count.rows[0]) {
-        await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
+      const count = await sql`SELECT * FROM counts WHERE command = ${command}`;
+      if (!count.length) {
+        await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
       }
       exists.push(command);
     }
 
-    for (const { command } of counts.rows) {
+    for (const { command } of counts) {
       if (!exists.includes(command)) {
-        await connection.query("DELETE FROM counts WHERE command = $1", [command]);
+        await sql`DELETE FROM counts WHERE command = ${command}`;
       }
     }
   }
@@ -48,24 +45,24 @@ export async function setup() {
 export async function upgrade(logger) {
   let version;
   try {
-    version = (await connection.query("SELECT version FROM settings WHERE id = 1")).rows[0].version;
+    version = (await sql`SELECT version FROM settings WHERE id = 1`)[0].version;
   } catch {
     version = 0;
   }
   if (version < (psqlUpdates.length - 1)) {
     logger.warn(`Migrating PostgreSQL database, which is currently at version ${version}...`);
-    await connection.query("BEGIN");
     try {
-      while (version < (psqlUpdates.length - 1)) {
-        version++;
-        logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
-        await connection.query(psqlUpdates[version]);
-      }
-      await connection.query("COMMIT");
-      await connection.query("INSERT INTO settings (id, version) VALUES (1, $1) ON CONFLICT (id) DO UPDATE SET version = $1", [psqlUpdates.length - 1]);
+      await sql.begin(async (db) => {
+        while (version < (psqlUpdates.length - 1)) {
+          version++;
+          logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
+          await db`${psqlUpdates[version]}`;
+        }
+      });
+      const ver = psqlUpdates.length - 1;
+      await sql`INSERT INTO settings ${sql({ id: 1, version: ver })} ON CONFLICT (id) DO UPDATE SET version = ${ver}`;
     } catch (e) {
       logger.error(`PostgreSQL migration failed: ${e}`);
-      await connection.query("ROLLBACK");
       logger.error("Unable to start the bot, quitting now.");
       return 1;
     }
@@ -73,21 +70,21 @@ export async function upgrade(logger) {
 }
 
 export async function getGuild(query) {
-  return (await connection.query("SELECT * FROM guilds WHERE guild_id = $1", [query])).rows[0];
+  return (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
 }
 
 export async function setPrefix(prefix, guild) {
-  await connection.query("UPDATE guilds SET prefix = $1 WHERE guild_id = $2", [prefix, guild.id]);
+  await sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild.id}`;
   prefixCache.set(guild.id, prefix);
 }
 
 export async function getTag(guild, tag) {
-  const tagResult = (await connection.query("SELECT * FROM tags WHERE guild_id = $1 AND name = $2", [guild, tag])).rows;
+  const tagResult = await sql`SELECT * FROM tags WHERE guild_id = ${guild} AND name = ${tag}`;
   return tagResult[0] ? { content: tagResult[0].content, author: tagResult[0].author } : undefined;
 }
 
 export async function getTags(guild) {
-  const tagArray = (await connection.query("SELECT * FROM tags WHERE guild_id = $1", [guild])).rows;
+  const tagArray = await sql`SELECT * FROM tags WHERE guild_id = ${guild}`;
   const tags = {};
   for (const tag of tagArray) {
     tags[tag.name] = { content: tag.content, author: tag.author };
@@ -96,67 +93,61 @@ export async function getTags(guild) {
 }
 
 export async function setTag(name, content, guild) {
-  await connection.query("INSERT INTO tags (guild_id, name, content, author) VALUES ($1, $2, $3, $4)", [guild.id, name, content.content, content.author]);
+  await sql`INSERT INTO tags ${sql({ guild_id: guild.id, name, content: content.content, author: content.author }, "guild_id", "name", "content", "author")}`;
 }
 
 export async function editTag(name, content, guild) {
-  await connection.query("UPDATE tags SET content = $1, author = $2 WHERE guild_id = $3 AND name = $4", [content.content, content.author, guild.id, name]);
+  await sql`UPDATE tags SET content = ${content.content}, author = ${content.author} WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
 export async function removeTag(name, guild) {
-  await connection.query("DELETE FROM tags WHERE guild_id = $1 AND name = $2", [guild.id, name]);
+  await sql`DELETE FROM tags WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
 export async function disableCommand(guild, command) {
   const guildDB = await this.getGuild(guild);
-  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v), guild]);
+  await sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
 }
 
 export async function enableCommand(guild, command) {
   const guildDB = await this.getGuild(guild);
   const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
-  await connection.query("UPDATE guilds SET disabled_commands = $1 WHERE guild_id = $2", [newDisabled, guild]);
+  await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, newDisabled);
 }
 
 export async function disableChannel(channel) {
   const guildDB = await this.getGuild(channel.guild.id);
-  await connection.query("UPDATE guilds SET disabled = $1 WHERE guild_id = $2", [[...guildDB.disabled, channel.id], channel.guild.id]);
+  await sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guild.id}`;
   disabledCache.set(channel.guild.id, [...guildDB.disabled, channel.id]);
 }
 
 export async function enableChannel(channel) {
   const guildDB = await this.getGuild(channel.guild.id);
   const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
-  await connection.query("UPDATE guilds SET disabled = $1 WHERE guild_id = $2", [newDisabled, channel.guild.id]);
+  await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guild.id}`;
   disabledCache.set(channel.guild.id, newDisabled);
 }
 
 export async function getCounts() {
-  const counts = await connection.query("SELECT * FROM counts");
-  //const countArray = [];
+  const counts = await sql`SELECT * FROM counts`;
   const countObject = {};
-  for (const { command, count } of counts.rows) {
+  for (const { command, count } of counts) {
     countObject[command] = count;
   }
   return countObject;
 }
 
 export async function addCount(command) {
-  let count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-  if (!count.rows[0]) {
-    await connection.query("INSERT INTO counts (command, count) VALUES ($1, $2)", [command, 0]);
-    count = await connection.query("SELECT * FROM counts WHERE command = $1", [command]);
-  }
-  await connection.query("UPDATE counts SET count = $1 WHERE command = $2", [count.rows[0].count ? count.rows[0].count + 1 : 1, command]);
+  await sql`INSERT INTO counts ${sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
 }
 
 export async function addGuild(guild) {
   const query = await this.getGuild(guild);
   if (query) return query;
   try {
-    await connection.query("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($1, $2, $3, $4)", [guild.id, process.env.PREFIX, [], []]);
+    await sql`INSERT INTO guilds ${sql({ guild_id: guild.id, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] })}`;
   } catch (e) {
     logger.error(`Failed to register guild ${guild.id}: ${e}`);
   }
@@ -164,13 +155,13 @@ export async function addGuild(guild) {
 }
 
 export async function fixGuild(guild) {
-  const guildDB = await connection.query("SELECT exists(SELECT 1 FROM guilds WHERE guild_id = $1)", [guild.id]);
-  if (!guildDB.rows[0].exists) {
+  const guildDB = await sql`SELECT exists(SELECT 1 FROM guilds WHERE guild_id = ${guild.id})`;
+  if (!guildDB[0].exists) {
     logger.log(`Registering guild database entry for guild ${guild.id}...`);
     return await this.addGuild(guild);
   }
 }
 
 export async function stop() {
-  await connection.end();
+  await sql.end();
 }

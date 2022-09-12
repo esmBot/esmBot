@@ -10,11 +10,15 @@
   },
   "scripts": {
     "build": "cmake-js compile",
+    "build:debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host esmbot-api",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev",
-    "start": "node app.js"
+    "start": "node app.js",
+    "start:debug": "DEBUG=true node app.js",
+    "start-api": "node api/index.js",
+    "start-api:debug": "DEBUG=true node app.js"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
@@ -53,7 +57,7 @@
     "better-sqlite3": "^7.6.2",
     "bufferutil": "^4.0.6",
     "erlpack": "github:abalabahaha/erlpack",
-    "pg": "^8.8.0",
+    "postgres": "^3.2.4",
     "uuid": "^8.3.2",
     "ws": "^8.8.1",
     "zlib-sync": "^0.1.7"

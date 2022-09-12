@@ -6,7 +6,7 @@ class PingCommand extends Command {
       const pingMessage = await this.client.createMessage(this.channel.id, Object.assign({
         content: "🏓 Ping?"
       }, this.reference));
-      pingMessage.edit(`🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.channel.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.channel.guild.id]).latency)}ms` : ""}\n\`\`\``);
+      await pingMessage.edit(`🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.channel.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.channel.guild.id]).latency)}ms` : ""}\n\`\`\``);
     } else {
       await this.interaction.createMessage("🏓 Ping?");
       const pingMessage = await this.interaction.getOriginalMessage();
