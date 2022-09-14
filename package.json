@@ -32,7 +32,7 @@
     "dotenv": "^16.0.2",
     "emoji-regex": "^10.1.0",
     "eris": "github:esmBot/eris#dev",
-    "eris-fleet": "github:esmBot/eris-fleet#dev",
+    "eris-fleet": "github:esmBot/eris-fleet#a19920f",
     "file-type": "^17.1.6",
     "format-duration": "^2.0.0",
     "jsqr": "^1.4.0",
@@ -42,15 +42,15 @@
     "sharp": "^0.30.7",
     "shoukaku": "github:Deivu/shoukaku",
     "undici": "^5.10.0",
-    "winston": "^3.8.1",
+    "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.13",
+    "@babel/core": "^7.19.0",
     "@babel/eslint-parser": "^7.18.9",
     "@babel/eslint-plugin": "^7.18.10",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "eslint": "^8.23.0",
+    "eslint": "^8.23.1",
     "eslint-plugin-unicorn": "^42.0.0"
   },
   "optionalDependencies": {
