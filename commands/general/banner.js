@@ -7,20 +7,24 @@ class BannerCommand extends Command {
     const self = await this.client.getRESTUser(this.author.id);
     if (this.type === "classic" && this.message.mentions[0]) {
       return this.message.mentions[0].dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
-    } else if (await this.ipc.fetchUser(member)) {
+    } else if (member) {
       const user = await this.client.getRESTUser(member);
-      return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
-    } else if (mentionRegex.test(member)) {
-      const id = member.match(mentionRegex)[1];
-      if (id < 21154535154122752n) {
-        this.success = false;
-        return "That's not a valid mention!";
-      }
-      try {
-        const user = await this.client.getRESTUser(id);
+      if (user) {
         return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
-      } catch {
-        return self.dynamicBannerURL(null, 512) ?? "You don't have a banner!";
+      } else if (mentionRegex.text(member)) {
+        const id = member.match(mentionRegex)[1];
+        if (id < 21154535154122752n) {
+          this.success = false;
+          return "That's not a valid mention!";
+        }
+        try {
+          const user = await this.client.getRESTUser(id);
+          return user.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
+        } catch {
+          return self.dynamicBannerURL(null, 512) ?? "You don't have a banner!";
+        }
+      } else {
+        return "This user doesn't have a banner!";
       }
     } else if (this.args.join(" ") !== "" && this.channel.guild) {
       const searched = await this.channel.guild.searchMembers(this.args.join(" "));

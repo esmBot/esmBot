@@ -10,8 +10,7 @@ class RestartCommand extends Command {
     await this.client.createMessage(this.channel.id, Object.assign({
       content: "esmBot is restarting."
     }, this.reference));
-    this.ipc.restartAllClusters(true);
-    //this.ipc.broadcast("restart");
+    process.exit(1);
   }
 
   static description = "Restarts me";

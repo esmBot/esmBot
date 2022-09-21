@@ -1,6 +1,13 @@
 import util from "util";
 import fs from "fs";
+import pm2 from "pm2";
 import { config } from "dotenv";
+
+// playing messages
+const { messages } = JSON.parse(fs.readFileSync(new URL("../config/messages.json", import.meta.url)));
+const { types } = JSON.parse(fs.readFileSync(new URL("../config/commands.json", import.meta.url)));
+
+let broadcast = false;
 
 // random(array) to select a random entry in array
 export function random(array) {
@@ -41,4 +48,62 @@ export function clean(text) {
 // textEncode(string) to encode characters for image processing
 export function textEncode(string) {
   return string.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n").replaceAll("\\:", ":");
+}
+
+// set activity (a.k.a. the gamer code)
+export function activityChanger(bot) {
+  if (!broadcast) {
+    bot.editStatus("dnd", {
+      name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
+    });
+  }
+  setTimeout(() => activityChanger(bot), 900000);
+}
+
+export function checkBroadcast(bot) {
+  /*if () {
+    startBroadcast(bot, message);
+  }*/
+}
+
+export function startBroadcast(bot, message) {
+  bot.editStatus("dnd", {
+    name: message + (types.classic ? ` | @${bot.user.username} help` : ""),
+  });
+  broadcast = true;
+}
+
+export function endBroadcast(bot) {
+  bot.editStatus("dnd", {
+    name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
+  });
+  broadcast = false;
+}
+
+export function getServers() {
+  return new Promise((resolve, reject) => {
+    if (process.env.PM2_USAGE) {
+      pm2.launchBus((err, pm2Bus) => {
+        const listener = (packet) => {
+          if (packet.data?.type === "countResponse") {
+            resolve(packet.data.serverCount);
+            pm2Bus.off("process:msg");
+          }
+        };
+        pm2Bus.on("process:msg", listener);
+      });
+      pm2.sendDataToProcessId(0, {
+        id: 0,
+        type: "process:msg",
+        data: {
+          type: "getCount"
+        },
+        topic: true
+      }, (err) => {
+        if (err) reject(err);
+      });
+    } else {
+      resolve(0);
+    }
+  });
 }

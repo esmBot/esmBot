@@ -12,7 +12,7 @@ class HostCommand extends MusicCommand {
     if (input?.trim()) {
       let user;
       if (this.type === "classic") {
-        const getUser = this.message.mentions.length >= 1 ? this.message.mentions[0] : (await this.ipc.fetchUser(input));
+        const getUser = this.message.mentions.length >= 1 ? this.message.mentions[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
         } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && input >= 21154535154122752n) {

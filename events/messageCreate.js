@@ -6,7 +6,7 @@ import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 
 // run when someone sends a message
-export default async (client, cluster, worker, ipc, message) => {
+export default async (client, message) => {
   // ignore other bots
   if (message.author.bot) return;
 
@@ -104,7 +104,7 @@ export default async (client, cluster, worker, ipc, message) => {
     await database.addCount(aliases.get(command) ?? command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, cluster, worker, ipc, { type: "classic", message, args: parsed._, content: message.content.substring(prefix.length).trim().replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: message.content.substring(prefix.length).trim().replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
@@ -129,7 +129,7 @@ export default async (client, cluster, worker, ipc, message) => {
       }
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, ipc, result, message);
+          await upload(client, result, message);
         } else {
           await client.createMessage(message.channel.id, "The resulting image was more than 8MB in size, so I can't upload it.");
         }

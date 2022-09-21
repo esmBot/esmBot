@@ -22,9 +22,7 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `TMP_DOMAIN`: The root domain/directory that the images larger than 8MB are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
 - `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
-- `API_TYPE`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `config/servers.json`, or "azure" to use the Azure Functions-based API.
-- `AZURE_URL`: Your Azure webhook URL. Only applies if `API` is set to "azure".
-- `AZURE_PASS`: An optional password used for Azure requests. Only applies if `API` is set to "azure".
+- `API_TYPE`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `config/servers.json`.
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
 
 ## JSON

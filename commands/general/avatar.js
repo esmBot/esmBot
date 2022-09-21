@@ -7,20 +7,23 @@ class AvatarCommand extends Command {
     const self = await this.client.getRESTUser(this.author.id);
     if (this.type === "classic" && this.message.mentions[0]) {
       return this.message.mentions[0].dynamicAvatarURL(null, 512);
-    } else if (await this.ipc.fetchUser(member)) {
-      let user = await this.ipc.fetchUser(member);
-      if (!user) user = await this.client.getRESTUser(member);
-      return user?.avatar ? this.client._formatImage(`/avatars/${user.id}/${user.avatar}`, null, 512) : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`; // hacky "solution"
-    } else if (mentionRegex.test(member)) {
-      const id = member.match(mentionRegex)[1];
-      if (id < 21154535154122752n) {
-        this.success = false;
-        return "That's not a valid mention!";
-      }
-      try {
-        const user = await this.client.getRESTUser(id);
-        return user.avatar ? this.client._formatImage(`/avatars/${user.id}/${user.avatar}`, null, 512) : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`; // repeat of hacky "solution" from above
-      } catch {
+    } else if (member) {
+      const user = await this.client.getRESTUser(member);
+      if (user) {
+        return user?.avatar ? this.client._formatImage(`/avatars/${user.id}/${user.avatar}`, null, 512) : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`; // hacky "solution"
+      } else if (mentionRegex.text(member)) {
+        const id = member.match(mentionRegex)[1];
+        if (id < 21154535154122752n) {
+          this.success = false;
+          return "That's not a valid mention!";
+        }
+        try {
+          const user = await this.client.getRESTUser(id);
+          return user.avatar ? this.client._formatImage(`/avatars/${user.id}/${user.avatar}`, null, 512) : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`; // repeat of hacky "solution" from above
+        } catch {
+          return self.dynamicAvatarURL(null, 512);
+        }
+      } else {
         return self.dynamicAvatarURL(null, 512);
       }
     } else if (this.args.join(" ") !== "" && this.channel.guild) {

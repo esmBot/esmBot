@@ -1,5 +1,6 @@
 import Command from "./command.js";
 import imageDetect from "../utils/imagedetect.js";
+import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
 import { readFileSync } from "fs";
 const { emotes } = JSON.parse(readFileSync(new URL("../config/messages.json", import.meta.url)));
@@ -22,7 +23,7 @@ class ImageCommand extends Command {
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
 
-    const magickParams = {
+    const imageParams = {
       cmd: this.constructor.command,
       params: {}
     };
@@ -36,7 +37,7 @@ class ImageCommand extends Command {
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return this.constructor.noImage;
+          return `${this.constructor.noImage} (Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)`;
         } else if (image.type === "large") {
           runningCommands.delete(this.author.id);
           return "That image is too large (>= 25MB)! Try using a smaller image.";
@@ -44,11 +45,12 @@ class ImageCommand extends Command {
           runningCommands.delete(this.author.id);
           return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
         }
-        magickParams.path = image.path;
-        magickParams.params.type = image.type;
-        magickParams.url = image.url; // technically not required but can be useful for text filtering
-        magickParams.name = image.name;
-        if (this.constructor.requiresGIF) magickParams.onlyGIF = true;
+        imageParams.path = image.path;
+        imageParams.params.type = image.type;
+        imageParams.url = image.url; // technically not required but can be useful for text filtering
+        imageParams.name = image.name;
+        imageParams.id = (this.interaction ?? this.message).id;
+        if (this.constructor.requiresGIF) imageParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.author.id);
         throw e;
@@ -57,31 +59,31 @@ class ImageCommand extends Command {
 
     if (this.constructor.requiresText) {
       const text = this.options.text ?? this.args.join(" ").trim();
-      if (text.length === 0 || !await this.criteria(text, magickParams.url)) {
+      if (text.length === 0 || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author.id);
         return this.constructor.noText;
       }
     }
 
     if (typeof this.params === "function") {
-      Object.assign(magickParams.params, this.params(magickParams.url, magickParams.name));
+      Object.assign(imageParams.params, this.params(imageParams.url, imageParams.name));
     } else if (typeof this.params === "object") {
-      Object.assign(magickParams.params, this.params);
+      Object.assign(imageParams.params, this.params);
     }
 
     let status;
-    if (magickParams.params.type === "image/gif" && this.type === "classic") {
+    if (imageParams.params.type === "image/gif" && this.type === "classic") {
       status = await this.processMessage(this.message);
     }
 
     try {
-      const { buffer, type } = await this.ipc.serviceCommand("image", { type: "run", obj: magickParams }, true, 9000000);
+      const { arrayBuffer, type } = await runImageJob(imageParams);
       if (type === "nogif" && this.constructor.requiresGIF) {
         return "That isn't a GIF!";
       }
       this.success = true;
       return {
-        file: Buffer.from(buffer.data),
+        file: Buffer.from(arrayBuffer),
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {

@@ -5,13 +5,14 @@ const { version } = JSON.parse(readFileSync(new URL("../../package.json", import
 import Command from "../../classes/command.js";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
+import { getServers } from "../../utils/misc.js";
 const exec = promisify(baseExec);
 
 class InfoCommand extends Command {
   async run() {
-    let owner = await this.ipc.fetchUser(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
-    const stats = await this.ipc.getStats();
+    const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    const servers = await getServers();
+    await this.acknowledge();
     return {
       embeds: [{
         color: 16711680,
@@ -30,7 +31,7 @@ class InfoCommand extends Command {
         },
         {
           name: "💬 Total Servers:",
-          value: stats?.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`
+          value: servers ? servers : `${this.client.guilds.size} (for this process only)`
         },
         {
           name: "✅ Official Server:",

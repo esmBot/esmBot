@@ -44,7 +44,7 @@ class TagsCommand extends Command {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to check the owner of!";
       const getResult = await database.getTag(this.channel.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
-      const user = await this.ipc.fetchUser(getResult.author);
+      const user = this.client.users.get(getResult.author);
       this.success = true;
       if (!user) {
         try {

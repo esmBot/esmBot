@@ -107,8 +107,8 @@ wss.on("connection", (ws, request) => {
     const tag = msg.slice(1, 3);
     const req = msg.toString().slice(3);
     if (opcode == Tqueue) {
-      const id = msg.readUInt32LE(3);
-      const obj = msg.slice(7);
+      const id = msg.readBigInt64LE(3);
+      const obj = msg.slice(11);
       const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
       jobs.set(id, job);
       queue.push(id);
@@ -128,7 +128,7 @@ wss.on("connection", (ws, request) => {
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
       ws.send(cancelResponse);
     } else if (opcode == Twait) {
-      const id = msg.readUInt32LE(3);
+      const id = msg.readBigUInt64LE(3);
       const job = jobs.get(id);
       if (!job) {
         const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from("Invalid job ID")]);
@@ -178,7 +178,7 @@ httpServer.on("request", async (req, res) => {
       res.statusCode = 400;
       return res.end("400 Bad Request");
     }
-    const id = parseInt(reqUrl.searchParams.get("id"));
+    const id = BigInt(reqUrl.searchParams.get("id"));
     if (!jobs.has(id)) {
       res.statusCode = 410;
       return res.end("410 Gone");
@@ -206,6 +206,11 @@ httpServer.on("request", async (req, res) => {
     const data = jobs.get(id).data;
     jobs.delete(id);
     return res.end(data, (err) => {
+      if (err) error(err);
+    });
+  } else if (reqUrl.pathname === "/count" && req.method === "GET") {
+    log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
+    return res.end(jobAmount.toString(), (err) => {
       if (err) error(err);
     });
   } else {
