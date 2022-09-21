@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: "esmBot-manager",
-    script: "ext.js",
+    script: "utils/pm2/ext.js",
     autorestart: true,
     exp_backoff_restart_delay: 1000,
     watch: false,
