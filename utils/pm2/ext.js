@@ -66,6 +66,10 @@ process.on("message", (packet) => {
 });
 
 function updateStats() {
+  serverCount = 0;
+  shardCount = 0;
+  clusterCount = 0;
+  responseCount = 0;
   return new Promise((resolve, reject) => {
     pm2.list((err, list) => {
       if (err) reject(err);
@@ -105,10 +109,6 @@ function updateStats() {
 
 async function dblPost() {
   logger.main("Posting stats to Top.gg...");
-  serverCount = 0;
-  shardCount = 0;
-  clusterCount = 0;
-  responseCount = 0;
   try {
     //await updateStats();
     await dbl.postStats({
