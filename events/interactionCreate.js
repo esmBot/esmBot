@@ -5,7 +5,7 @@ import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 
 // run when a slash command is executed
-export default async (client, cluster, worker, ipc, interaction) => {
+export default async (client, interaction) => {
   if (interaction?.type !== 2) return;
 
   // check if command exists and if it's enabled
@@ -23,7 +23,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
   try {
     await database.addCount(command);
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, cluster, worker, ipc, { type: "application", interaction });
+    const commandClass = new cmd(client, { type: "application", interaction });
     const result = await commandClass.run();
     const replyMethod = interaction.acknowledged ? "editOriginalMessage" : "createMessage";
     if (typeof result === "string") {
@@ -39,7 +39,7 @@ export default async (client, cluster, worker, ipc, interaction) => {
       const fileSize = 8388119;
       if (result.file.length > fileSize) {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, ipc, result, interaction, true);
+          await upload(client, result, interaction, true);
         } else {
           await interaction[replyMethod]({
             content: "The resulting image was more than 8MB in size, so I can't upload it.",

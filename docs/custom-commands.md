@@ -45,9 +45,6 @@ The default command name is the same as the filename that you save it as, exclud
 The parameters available to your command consist of the following:
 
 - `this.client`: An instance of an Eris [`Client`](https://abal.moe/Eris/docs/Client), useful for getting info or performing lower-level communication with the Discord API.
-- `this.cluster`: The ID of the eris-fleet cluster that the command is being run from. This should be a number greater than or equal to 0.
-- `this.worker`: The ID of the current eris-fleet worker. This should be a number greater than or equal to 0.
-- `this.ipc`: An eris-fleet [`IPC`](https://danclay.github.io/eris-fleet/classes/IPC.html) instance, useful for communication between worker processes.
 - `this.origOptions`: The raw options object provided to the command by the command handler.
 - `this.type`: The type of message that activated the command. Can be "classic" (a regular message) or "application" (slash/context menu commands).
 - `this.channel`: An Eris [`TextChannel`](https://abal.moe/Eris/docs/TextChannel) object of the channel that the command was run in, useful for getting info about a server and how to respond to a message.

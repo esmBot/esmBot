@@ -4,7 +4,7 @@ import { random } from "../utils/misc.js";
 
 const isWaiting = new Map();
 
-export default async (client, cluster, worker, ipc, member, oldChannel) => {
+export default async (client, member, oldChannel) => {
   if (!oldChannel) return;
   const connection = players.get(oldChannel.guild.id);
   if (oldChannel.id === connection?.voiceChannel.id) {

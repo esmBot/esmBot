@@ -2,7 +2,7 @@ import Command from "../../classes/command.js";
 
 class UserInfoCommand extends Command {
   async run() {
-    const getUser = this.message.mentions.length >= 1 ? this.message.mentions[0] : (this.args.length !== 0 ? await this.ipc.fetchUser(this.args[0]) : this.author);
+    const getUser = this.message.mentions.length >= 1 ? this.message.mentions[0] : (this.args.length !== 0 ? this.client.users.get(this.args[0]) : this.author);
     let user;
     if (getUser) {
       user = getUser;

@@ -6,6 +6,9 @@ The esmBot image API is a combined HTTP and WebSocket API. The default port to a
 ### GET `/image/?id=<job id>`
 Get image data after job is finished running. The Content-Type header is properly set.
 
+### GET `/count`
+Get the current amount of running jobs. Response is a plaintext number value.
+
 ## WebSockets
 A client sends *requests* (T-messages) to a server, which subsequently *replies* (R-messages) to the client.
 ### Message IDs
@@ -24,11 +27,11 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 [j] means JSON data that goes until the end of the message.
 `tag` is used to identify a request/response pair, like `lock` in the original API. `jid` is used to identify a job. `job` is a job object.
 - Rerror tag[2] error[s]
-- Tqueue tag[2] jid[4] job[j]
+- Tqueue tag[2] jid[8] job[j]
 - Rqueue tag[2]
-- Tcancel tag[2] jid[4]
+- Tcancel tag[2] jid[8]
 - Rcancel tag[2]
-- Twait tag[2] jid[4]
+- Twait tag[2] jid[8]
 - Rwait tag[2]
 - Rinit tag[2] max_jobs[2] running_jobs[2] formats[j]
 
@@ -42,6 +45,7 @@ The job object is formatted like this:
   "params": {         // content varies depending on the command, some common parameters are listed here
     "type": string,   // mime type of output, should usually be the same as input
     ...
-  }
+  },
+  "name": string      // filename of the image, without extension
 }
 ```

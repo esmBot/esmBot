@@ -15,7 +15,7 @@ class MusicAIOCommand extends Command {
     if (aliases.has(cmd)) cmd = aliases.get(cmd);
     if (commands.has(cmd) && info.get(cmd).category === "music") {
       const command = commands.get(cmd);
-      const inst = new command(this.client, this.cluster, this.worker, this.ipc, this.origOptions);
+      const inst = new command(this.client, this.origOptions);
       const result =  await inst.run();
       this.success = inst.success;
       return result;

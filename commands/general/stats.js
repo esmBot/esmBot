@@ -7,6 +7,8 @@ import Command from "../../classes/command.js";
 import { VERSION } from "eris";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
+import pm2 from "pm2";
+import { getServers } from "../../utils/misc.js";
 const exec = promisify(baseExec);
 
 class StatsCommand extends Command {
@@ -14,7 +16,7 @@ class StatsCommand extends Command {
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
     const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
-    const stats = await this.ipc.getStats();
+    const servers = await getServers();
     return {
       embeds: [{
         "author": {
@@ -28,13 +30,13 @@ class StatsCommand extends Command {
           "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD", { cwd: dirname(fileURLToPath(import.meta.url)) })).stdout.substring(0, 7)})` : ""}`
         },
         {
-          "name": "Cluster Memory Usage",
-          "value": stats?.clusters[this.cluster] ? `${stats.clusters[this.cluster].ram.toFixed(2)} MB` : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+          "name": "Process Memory Usage",
+          "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
           "inline": true
         },
         {
           "name": "Total Memory Usage",
-          "value": stats?.totalRam ? `${stats.totalRam.toFixed(2)} MB` : "Unknown",
+          "value": process.env.PM2_USAGE ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB` : "Unknown",
           "inline": true
         },
         {
@@ -66,18 +68,22 @@ class StatsCommand extends Command {
           "inline": true
         },
         {
-          "name": "Cluster",
-          "value": this.cluster,
-          "inline": true
-        },
-        {
           "name": "Servers",
-          "value": stats?.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`,
+          "value": servers ? servers : `${this.client.guilds.size} (for this process only)`,
           "inline": true
         }
         ]
       }]
     };
+  }
+
+  list() {
+    return new Promise((resolve, reject) => {
+      pm2.list((err, list) => {
+        if (err) return reject(err);
+        resolve(list.filter((v) => v.name === "esmBot"));
+      });
+    });
   }
 
   static description = "Gets some statistics about me";

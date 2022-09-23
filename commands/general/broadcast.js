@@ -1,32 +1,38 @@
 import Command from "../../classes/command.js";
+import { endBroadcast, startBroadcast } from "../../utils/misc.js";
 
 class BroadcastCommand extends Command {
-  // yet another very hacky command
-  run() {
-    return new Promise((resolve) => {
-      const owners = process.env.OWNER.split(",");
-      if (!owners.includes(this.author.id)) {
-        this.success = false;
-        resolve("Only the bot owner can broadcast messages!");
-        return;
-      }
-      const message = this.options.message ?? this.args.join(" ");
-      if (message?.trim()) {
-        this.ipc.centralStore.set("broadcast", message);
-        this.ipc.broadcast("playbroadcast", message);
-        this.ipc.register("broadcastSuccess", () => {
-          this.ipc.unregister("broadcastSuccess");
-          resolve("Successfully broadcasted message.");
-        });
-      } else {
-        this.ipc.centralStore.delete("broadcast");
-        this.ipc.broadcast("broadcastend");
-        this.ipc.register("broadcastEnd", () => {
-          this.ipc.unregister("broadcastEnd");
-          resolve("Successfully ended broadcast.");
+  async run() {
+    const owners = process.env.OWNER.split(",");
+    if (!owners.includes(this.author.id)) {
+      this.success = false;
+      return "Only the bot owner can broadcast messages!";
+    }
+    const message = this.options.message ?? this.args.join(" ");
+    if (message?.trim()) {
+      startBroadcast(this.client, message);
+      if (process.env.PM2_USAGE) {
+        process.send({
+          type: "process:msg",
+          data: {
+            type: "broadcastStart",
+            message
+          }
         });
       }
-    });
+      return "Started broadcast.";
+    } else {
+      endBroadcast(this.client);
+      if (process.env.PM2_USAGE) {
+        process.send({
+          type: "process:msg",
+          data: {
+            type: "broadcastEnd"
+          }
+        });
+      }
+      return "Ended broadcast.";
+    }
   }
 
   static flags = [{

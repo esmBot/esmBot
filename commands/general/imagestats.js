@@ -1,9 +1,9 @@
 import Command from "../../classes/command.js";
+import { connections } from "../../utils/image.js";
 
 class ImageStatsCommand extends Command {
   async run() {
     await this.acknowledge();
-    const servers = await this.ipc.serviceCommand("image", { type: "stats" }, true);
     const embed = {
       embeds: [{
         "author": {
@@ -11,14 +11,17 @@ class ImageStatsCommand extends Command {
           "icon_url": this.client.user.avatarURL
         },
         "color": 16711680,
-        "description": `The bot is currently connected to ${servers.length} image server(s).`,
+        "description": `The bot is currently connected to ${connections.size} image server(s).`,
         "fields": []
       }]
     };
-    for (let i = 0; i < servers.length; i++) {
+    let i = 0;
+    for (const connection of connections.values()) {
+      const count = await connection.getCount();
+      if (!count) continue;
       embed.embeds[0].fields.push({
-        name: `Server ${i + 1}`,
-        value: `Running Jobs: ${Math.min(servers[i].runningJobs, servers[i].max)}\nQueued: ${Math.max(0, servers[i].runningJobs - servers[i].max)}\nMax Jobs: ${servers[i].max}`
+        name: `Server ${i++}`,
+        value: `Running Jobs: ${count}`
       });
     }
     return embed;

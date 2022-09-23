@@ -1,10 +1,7 @@
 class Command {
   success = true;
-  constructor(client, cluster, worker, ipc, options) {
+  constructor(client, options) {
     this.client = client;
-    this.cluster = cluster;
-    this.worker = worker;
-    this.ipc = ipc;
     this.origOptions = options;
     this.type = options.type;
     this.args = options.args;
@@ -50,7 +47,7 @@ class Command {
   async acknowledge() {
     if (this.type === "classic") {
       await this.client.sendChannelTyping(this.channel.id);
-    } else {
+    } else if (!this.interaction.acknowledged) {
       await this.interaction.acknowledge();
     }
   }
