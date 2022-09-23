@@ -30,8 +30,7 @@ Napi::Value Uncanny(const Napi::CallbackInfo &info) {
 
     VImage base = VImage::black(1280, 720, VImage::option()->set("bands", 3));
 
-    string font_string = "Twemoji Color Font, " +
-                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
+    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + ", Twemoji Color Font " +
                          (font != "impact" ? "bold" : "normal") + " 72";
 
     string captionText = "<span background=\"black\" foreground=\"white\">" +

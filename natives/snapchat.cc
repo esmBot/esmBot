@@ -34,7 +34,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     int textWidth = width - ((width / 25) * 2);
 
     string font_string =
-        "Twemoji Color Font, Helvetica Neue " + to_string(size);
+        "Helvetica Neue, Twemoji Color Font " + to_string(size);
 
     VImage textIn = VImage::text(
         ".", VImage::option()->set(

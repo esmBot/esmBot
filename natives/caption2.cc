@@ -34,9 +34,8 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     int nPages = vips_image_get_n_pages(in.get_image());
     int textWidth = width - ((width / 25) * 2);
 
-    string font_string = "Twemoji Color Emoji, " +
-                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
-                         to_string(size);
+    string font_string = (font == "roboto" ? "Roboto Condensed" : font) +
+                         ", Twemoji Color Emoji " + to_string(size);
 
     string captionText = "<span background=\"white\">" + caption + "</span>";
 

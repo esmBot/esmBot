@@ -163,7 +163,9 @@ export default async (client, message) => {
           file: `Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`,
           name: "error.txt"
         }]);
-      } catch { /* silently ignore */ }
+      } catch (e) {
+        _error(`While attempting to send the previous error message, another error occurred: ${e.stack || e}`);
+      }
     }
   }
 };

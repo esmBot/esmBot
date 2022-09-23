@@ -35,7 +35,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     int textWidth = width - ((width / 25) * 2);
 
     string font_string =
-        "Twemoji Color Font, " + (font == "roboto" ? "Roboto Condensed" : font);
+        (font == "roboto" ? "Roboto Condensed" : font) + ", Twemoji Color Font";
 
     auto findResult = fontPaths.find(font);
     if (findResult != fontPaths.end()) {

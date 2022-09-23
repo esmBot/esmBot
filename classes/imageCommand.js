@@ -25,7 +25,8 @@ class ImageCommand extends Command {
 
     const imageParams = {
       cmd: this.constructor.command,
-      params: {}
+      params: {},
+      id: (this.interaction ?? this.message).id
     };
 
     if (this.type === "application") await this.acknowledge();
@@ -49,7 +50,6 @@ class ImageCommand extends Command {
         imageParams.params.type = image.type;
         imageParams.url = image.url; // technically not required but can be useful for text filtering
         imageParams.name = image.name;
-        imageParams.id = (this.interaction ?? this.message).id;
         if (this.constructor.requiresGIF) imageParams.onlyGIF = true;
       } catch (e) {
         runningCommands.delete(this.author.id);

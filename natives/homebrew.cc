@@ -27,7 +27,7 @@ Napi::Value Homebrew(const Napi::CallbackInfo &info) {
         VImage::option()
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
-            ->set("font", "Twemoji Color Font, PF Square Sans Pro 96")
+            ->set("font", "PF Square Sans Pro, Twemoji Color Font 96")
             ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str()));
 
     VImage out = bg.composite2(text, VIPS_BLEND_MODE_OVER,

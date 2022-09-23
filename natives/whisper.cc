@@ -32,7 +32,7 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     int dividedWidth = width / 175;
     int rad = 1;
 
-    string font_string = "Twemoji Color Font, Upright " + to_string(size);
+    string font_string = "Upright, Twemoji Color Font " + to_string(size);
 
     VImage mask;
     if (dividedWidth >= 1) {

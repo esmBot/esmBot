@@ -28,7 +28,8 @@ export function clean(text) {
     .replaceAll("`", `\`${String.fromCharCode(8203)}`)
     .replaceAll("@", `@${String.fromCharCode(8203)}`);
 
-  const { parsed } = config();
+  let { parsed } = config();
+  if (!parsed) parsed = process.env;
   const imageServers = JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image;
 
   if (imageServers?.length !== 0) {

@@ -36,10 +36,9 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     int rad = 1;
     vector<double> zeroVec = {0, 0, 0, 0};
 
-    string font_string = "Twemoji Color Font, " +
-                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
-                         (font != "impact" ? "bold" : "normal") + " " +
-                         to_string(size);
+    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + ", Twemoji Color Font " +
+                         (font != "impact" ? "bold" : "normal") +
+                         " " + to_string(size);
 
     VImage mask = VImage::black(rad * 2 + 1, rad * 2 + 1) + 128;
     mask.draw_circle({255}, rad, rad, rad, VImage::option()->set("fill", true));

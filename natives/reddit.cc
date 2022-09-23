@@ -41,7 +41,7 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
         captionText.c_str(),
         VImage::option()
             ->set("rgba", true)
-            ->set("font", "Twemoji Color Font, Roboto 62")
+            ->set("font", "Roboto, Twemoji Color Font 62")
             ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
             ->set("align", VIPS_ALIGN_LOW));
 
