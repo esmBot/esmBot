@@ -1,3 +1,4 @@
+#include "common.h"
 #include <napi.h>
 
 #include <vips/vips8>
@@ -17,6 +18,7 @@ Napi::Value Uncanny(const Napi::CallbackInfo &info) {
     string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     string path = obj.Get("path").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -28,7 +30,8 @@ Napi::Value Uncanny(const Napi::CallbackInfo &info) {
 
     VImage base = VImage::black(1280, 720, VImage::option()->set("bands", 3));
 
-    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
+    string font_string = "Twemoji Color Font, " +
+                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
                          (font != "impact" ? "bold" : "normal") + " 72";
 
     string captionText = "<span background=\"black\" foreground=\"white\">" +
@@ -36,25 +39,36 @@ Napi::Value Uncanny(const Napi::CallbackInfo &info) {
     string caption2Text =
         "<span background=\"black\" foreground=\"red\">" + caption2 + "</span>";
 
-    VImage text =
-        VImage::text(captionText.c_str(), VImage::option()
-                                              ->set("rgba", true)
-                                              ->set("align", VIPS_ALIGN_CENTRE)
-                                              ->set("font", font_string.c_str())
-                                              ->set("width", 588)
-                                              ->set("height", 90));
+    auto findResult = fontPaths.find(font);
+    if (findResult != fontPaths.end()) {
+      VImage::text(
+          ".", VImage::option()->set("fontfile",
+                                     (basePath + findResult->second).c_str()));
+    }
+
+    VImage text = VImage::text(
+        captionText.c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", font_string.c_str())
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("width", 588)
+            ->set("height", 90));
     VImage captionImage =
         text.extract_band(0, VImage::option()->set("n", 3))
             .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40,
                      VImage::option()->set("extend", "black"));
 
-    VImage text2 = VImage::text(caption2Text.c_str(),
-                                VImage::option()
-                                    ->set("rgba", true)
-                                    ->set("align", VIPS_ALIGN_CENTRE)
-                                    ->set("font", font_string.c_str())
-                                    ->set("width", 588)
-                                    ->set("height", 90));
+    VImage text2 = VImage::text(
+        caption2Text.c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", font_string.c_str())
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("width", 588)
+            ->set("height", 90));
     VImage caption2Image =
         text2.extract_band(0, VImage::option()->set("n", 3))
             .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40,
@@ -66,7 +80,7 @@ Napi::Value Uncanny(const Napi::CallbackInfo &info) {
     int pageHeight = vips_image_get_page_height(in.get_image());
     int nPages = vips_image_get_n_pages(in.get_image());
 
-    VImage uncanny = VImage::new_from_file(path.c_str());
+    VImage uncanny = VImage::new_from_file((basePath + path).c_str());
 
     base = base.insert(uncanny, 0, 130);
 

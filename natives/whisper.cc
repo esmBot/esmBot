@@ -14,6 +14,7 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -21,7 +22,8 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -30,7 +32,7 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     int dividedWidth = width / 175;
     int rad = 1;
 
-    string font_string = "Upright " + to_string(size);
+    string font_string = "Twemoji Color Font, Upright " + to_string(size);
 
     VImage mask;
     if (dividedWidth >= 1) {
@@ -44,11 +46,15 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     }
 
     VImage textIn = VImage::text(
+        ".", VImage::option()->set(
+                 "fontfile", (basePath + "assets/fonts/whisper.otf").c_str()));
+    textIn = VImage::text(
         ("<span foreground=\"white\">" + caption + "</span>").c_str(),
         VImage::option()
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
             ->set("font", font_string.c_str())
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
             ->set("width", width));
 
     textIn = textIn.embed(rad + 10, rad + 10, (textIn.width() + 2 * rad) + 20,
@@ -82,7 +88,8 @@ Napi::Value Whisper(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                      : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

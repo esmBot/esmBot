@@ -1,3 +1,4 @@
+#include "common.h"
 #include <napi.h>
 
 #include <vips/vips8>
@@ -15,6 +16,7 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
     string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -31,17 +33,27 @@ Napi::Value Caption(const Napi::CallbackInfo &info) {
     int nPages = vips_image_get_n_pages(in.get_image());
     int textWidth = width - ((width / 25) * 2);
 
-    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
+    string font_string = "Twemoji Color Emoji, " +
+                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
                          (font != "impact" ? "bold" : "normal") + " " +
                          to_string(size);
 
     string captionText = "<span background=\"white\">" + caption + "</span>";
 
-    VImage text =
-        VImage::text(captionText.c_str(), VImage::option()
+    VImage text;
+    auto findResult = fontPaths.find(font);
+    if (findResult != fontPaths.end()) {
+      text = VImage::text(
+          ".", VImage::option()->set("fontfile",
+                                     (basePath + findResult->second).c_str()));
+    }
+    text = VImage::text(
+        captionText.c_str(),
+        VImage::option()
                                               ->set("rgba", true)
                                               ->set("align", VIPS_ALIGN_CENTRE)
                                               ->set("font", font_string.c_str())
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
                                               ->set("width", textWidth));
     VImage captionImage =
         ((text == (vector<double>){0, 0, 0, 0}).bandand())

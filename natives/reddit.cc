@@ -8,7 +8,7 @@ using namespace vips;
 Napi::Value Reddit(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   Napi::Object result = Napi::Object::New(env);
-  
+
   try {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
@@ -22,7 +22,8 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     string assetPath = basePath + "assets/images/reddit.png";
     VImage tmpl = VImage::new_from_file(assetPath.c_str());
@@ -33,11 +34,16 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
 
     string captionText = "<span foreground=\"white\">" + text + "</span>";
 
-    VImage textImage =
-        VImage::text(captionText.c_str(), VImage::option()
-                                              ->set("rgba", true)
-                                              ->set("font", "Roboto 62")
-                                              ->set("align", VIPS_ALIGN_LOW));
+    VImage textImage = VImage::text(
+        ".", VImage::option()->set(
+                 "fontfile", (basePath + "assets/fonts/reddit.ttf").c_str()));
+    textImage = VImage::text(
+        captionText.c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("font", "Twemoji Color Font, Roboto 62")
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("align", VIPS_ALIGN_LOW));
 
     VImage composited =
         tmpl.composite2(textImage, VIPS_BLEND_MODE_OVER,
@@ -61,7 +67,8 @@ Napi::Value Reddit(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                      : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

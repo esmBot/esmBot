@@ -16,6 +16,7 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     float pos =
         obj.Has("pos") ? obj.Get("pos").As<Napi::Number>().FloatValue() : 0.5;
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -23,7 +24,8 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -31,17 +33,22 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     int size = width / 20;
     int textWidth = width - ((width / 25) * 2);
 
-    string font_string = "Helvetica Neue " + to_string(size);
+    string font_string =
+        "Twemoji Color Font, Helvetica Neue " + to_string(size);
 
-    VImage textIn =
-        VImage::text(("<span foreground=\"white\" background=\"#000000B2\">" +
-                      caption + "</span>")
-                         .c_str(),
-                     VImage::option()
-                         ->set("rgba", true)
-                         ->set("align", VIPS_ALIGN_CENTRE)
-                         ->set("font", font_string.c_str())
-                         ->set("width", textWidth));
+    VImage textIn = VImage::text(
+        ".", VImage::option()->set(
+                 "fontfile", (basePath + "assets/fonts/caption2.ttf").c_str()));
+    textIn = VImage::text(
+        ("<span foreground=\"white\" background=\"#000000B2\">" + caption +
+         "</span>")
+            .c_str(),
+        VImage::option()
+            ->set("rgba", true)
+            ->set("align", VIPS_ALIGN_CENTRE)
+            ->set("font", font_string.c_str())
+            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("width", textWidth));
     int bgHeight = textIn.height() + (width / 25);
     textIn =
         ((textIn == (vector<double>){0, 0, 0, 0}).bandand())
@@ -68,7 +75,8 @@ Napi::Value Snapchat(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                      : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

@@ -140,7 +140,7 @@ class ImageConnection {
         type = contentType;
         break;
     }
-    return { arrayBuffer: await req.body.arrayBuffer(), type };
+    return { buffer: Buffer.from(await req.body.arrayBuffer()), type };
   }
 
   async getCount() {

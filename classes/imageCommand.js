@@ -77,13 +77,13 @@ class ImageCommand extends Command {
     }
 
     try {
-      const { arrayBuffer, type } = await runImageJob(imageParams);
+      const { buffer, type } = await runImageJob(imageParams);
       if (type === "nogif" && this.constructor.requiresGIF) {
         return "That isn't a GIF!";
       }
       this.success = true;
       return {
-        file: Buffer.from(arrayBuffer),
+        file: buffer,
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {

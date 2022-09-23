@@ -1,3 +1,4 @@
+#include "common.h"
 #include <napi.h>
 
 #include <vips/vips8>
@@ -16,6 +17,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     string bottom_text = obj.Get("bottom").As<Napi::String>().Utf8Value();
     string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -32,7 +34,15 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
     int nPages = vips_image_get_n_pages(in.get_image());
     int textWidth = width - ((width / 25) * 2);
 
-    string font_string = font == "roboto" ? "Roboto Condensed" : font;
+    string font_string =
+        "Twemoji Color Font, " + (font == "roboto" ? "Roboto Condensed" : font);
+
+    auto findResult = fontPaths.find(font);
+    if (findResult != fontPaths.end()) {
+      VImage::text(
+          ".", VImage::option()->set("fontfile",
+                                     (basePath + findResult->second).c_str()));
+    }
 
     VImage topImage;
     if (top_text != "") {
@@ -45,6 +55,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
               ->set("rgba", true)
               ->set("align", VIPS_ALIGN_CENTRE)
               ->set("font", (font_string + " " + to_string(size)).c_str())
+              ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
               ->set("width", textWidth));
     }
 
@@ -59,6 +70,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
               ->set("rgba", true)
               ->set("align", VIPS_ALIGN_CENTRE)
               ->set("font", (font_string + " " + to_string(size * 0.4)).c_str())
+              ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
               ->set("width", textWidth));
     }
 
@@ -96,7 +108,8 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
             VImage::option()->set("background", 0x000000)->set("expand", true));
       }
       if (bottom_text != "") {
-        if (top_text == "") frame = bordered3;
+        if (top_text == "")
+          frame = bordered3;
         frame = frame.join(
             bottomImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
                                 bottomImage.height() + (size / 4),

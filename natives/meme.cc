@@ -1,3 +1,4 @@
+#include "common.h"
 #include <napi.h>
 
 #include <vips/vips8>
@@ -16,6 +17,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     string bottom = obj.Get("bottom").As<Napi::String>().Utf8Value();
     string font = obj.Get("font").As<Napi::String>().Utf8Value();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -23,7 +25,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -33,7 +36,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     int rad = 1;
     vector<double> zeroVec = {0, 0, 0, 0};
 
-    string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
+    string font_string = "Twemoji Color Font, " +
+                         (font == "roboto" ? "Roboto Condensed" : font) + " " +
                          (font != "impact" ? "bold" : "normal") + " " +
                          to_string(size);
 
@@ -48,6 +52,13 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
                           VImage::option()->set("fill", true));
     }
 
+    auto findResult = fontPaths.find(font);
+    if (findResult != fontPaths.end()) {
+      VImage::text(
+          ".", VImage::option()->set("fontfile",
+                                     (basePath + findResult->second).c_str()));
+    }
+
     VImage topText;
     if (top != "") {
       VImage topIn = VImage::text(
@@ -56,6 +67,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
               ->set("rgba", true)
               ->set("align", VIPS_ALIGN_CENTRE)
               ->set("font", font_string.c_str())
+              ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
               ->set("width", width));
 
       topIn = topIn.embed(rad + 10, rad + 10, (topIn.width() + 2 * rad) + 20,
@@ -70,10 +82,11 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
       }
       topOutline = (topOutline == zeroVec);
       VImage topInvert = topOutline.extract_band(3).invert();
-      topOutline = topOutline
-                       .extract_band(0, VImage::option()->set(
-                                            "n", topOutline.bands() - 1))
-                       .bandjoin(topInvert);
+      topOutline =
+          topOutline
+              .extract_band(0,
+                            VImage::option()->set("n", topOutline.bands() - 1))
+              .bandjoin(topInvert);
       topText = topOutline.composite2(topIn, VIPS_BLEND_MODE_OVER);
     }
 
@@ -85,6 +98,7 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
               ->set("rgba", true)
               ->set("align", VIPS_ALIGN_CENTRE)
               ->set("font", font_string.c_str())
+              ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
               ->set("width", width));
       bottomIn =
           bottomIn.embed(rad + 10, rad + 10, (bottomIn.width() + 2 * rad) + 20,
@@ -130,7 +144,8 @@ Napi::Value Meme(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                      : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

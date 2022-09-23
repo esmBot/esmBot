@@ -17,7 +17,7 @@ class UncannyCommand extends ImageCommand {
     return {
       caption: text1?.trim() ? textEncode(text1) : random(prompts),
       caption2: textEncode(text2),
-      path: `./assets/images/uncanny/${typeof this.options.phase === "string" && names.includes(this.options.phase.toLowerCase()) ? this.options.phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
+      path: `assets/images/uncanny/${typeof this.options.phase === "string" && names.includes(this.options.phase.toLowerCase()) ? this.options.phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "helvetica"
     };
   }
