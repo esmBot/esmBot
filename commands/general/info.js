@@ -1,17 +1,12 @@
 import { readFileSync } from "fs";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
 import Command from "../../classes/command.js";
-import { exec as baseExec } from "child_process";
-import { promisify } from "util";
 import { getServers } from "../../utils/misc.js";
-const exec = promisify(baseExec);
 
 class InfoCommand extends Command {
   async run() {
     const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
-    const servers = await getServers();
+    const servers = await getServers(this.client);
     await this.acknowledge();
     return {
       embeds: [{
@@ -23,7 +18,7 @@ class InfoCommand extends Command {
         description: `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
         fields: [{
           name: "ℹ️ Version:",
-          value: `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD", { cwd: dirname(fileURLToPath(import.meta.url)) })).stdout.substring(0, 7)})` : ""}`
+          value: `v${version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
           name: "📝 Credits:",

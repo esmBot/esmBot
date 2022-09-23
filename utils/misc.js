@@ -81,7 +81,7 @@ export function endBroadcast(bot) {
   broadcast = false;
 }
 
-export function getServers() {
+export function getServers(bot) {
   return new Promise((resolve, reject) => {
     if (process.env.PM2_USAGE) {
       pm2.launchBus((err, pm2Bus) => {
@@ -104,7 +104,7 @@ export function getServers() {
         if (err) reject(err);
       });
     } else {
-      resolve(0);
+      resolve(bot.guilds.size);
     }
   });
 }

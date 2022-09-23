@@ -1,22 +1,18 @@
 import { readFileSync } from "fs";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
 import os from "os";
 import Command from "../../classes/command.js";
 import { VERSION } from "eris";
-import { exec as baseExec } from "child_process";
-import { promisify } from "util";
 import pm2 from "pm2";
 import { getServers } from "../../utils/misc.js";
-const exec = promisify(baseExec);
 
 class StatsCommand extends Command {
   async run() {
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
     const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
-    const servers = await getServers();
+    const servers = await getServers(this.client);
+    const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
     return {
       embeds: [{
         "author": {
@@ -27,16 +23,16 @@ class StatsCommand extends Command {
         "color": 16711680,
         "fields": [{
           "name": "Version",
-          "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${(await exec("git rev-parse HEAD", { cwd: dirname(fileURLToPath(import.meta.url)) })).stdout.substring(0, 7)})` : ""}`
+          "value": `v${version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
           "name": "Process Memory Usage",
-          "value": `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+          "value": processMem,
           "inline": true
         },
         {
           "name": "Total Memory Usage",
-          "value": process.env.PM2_USAGE ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB` : "Unknown",
+          "value": process.env.PM2_USAGE ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB` : processMem,
           "inline": true
         },
         {
