@@ -55,8 +55,8 @@ export function textEncode(string) {
 export async function activityChanger(bot) {
   if (!broadcast) {
     await bot.editStatus("dnd", [{
-      type: "GAME",
-      name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
+      type: 0,
+      name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : "")
     }]);
   }
   setTimeout(() => activityChanger(bot), 900000);
@@ -70,16 +70,16 @@ export function checkBroadcast(bot) {
 
 export function startBroadcast(bot, message) {
   bot.editStatus("dnd", [{
-    type: "GAME",
-    name: message + (types.classic ? ` | @${bot.user.username} help` : ""),
+    type: 0,
+    name: message + (types.classic ? ` | @${bot.user.username} help` : "")
   }]);
   broadcast = true;
 }
 
 export function endBroadcast(bot) {
   bot.editStatus("dnd", [{
-    type: "GAME",
-    name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
+    type: 0,
+    name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : "")
   }]);
   broadcast = false;
 }

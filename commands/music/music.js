@@ -10,7 +10,7 @@ class MusicAIOCommand extends Command {
     if (this.type === "classic") {
       this.origOptions.args.shift();
     } else {
-      this.origOptions.interaction.data.options = this.origOptions.interaction.data.options[0].options;
+      this.origOptions.interaction.data.options.raw = this.origOptions.interaction.data.options.raw[0].options;
     }
     if (aliases.has(cmd)) cmd = aliases.get(cmd);
     if (commands.has(cmd) && info.get(cmd).category === "music") {

@@ -132,7 +132,7 @@ export async function nextSong(client, options, connection, track, info, music, 
           color: 16711680,
           author: {
             name: "Now Playing",
-          iconURL: client.user.avatarURL()
+            iconURL: client.user.avatarURL()
           },
           fields: [{
             name: "ℹ️ Title",
@@ -159,8 +159,8 @@ export async function nextSong(client, options, connection, track, info, music, 
       if (options.type === "classic") {
         playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
       } else {
-        await options.interaction[options.interaction.acknowledged ? "editOriginalMessage" : "createMessage"](content);
-        playingMessage = await options.interaction.getOriginalMessage();
+        await options.interaction[options.interaction.acknowledged ? "editOriginal" : "createMessage"](content);
+        playingMessage = await options.interaction.getOriginal();
       }
     } catch {
       // no-op
@@ -190,11 +190,15 @@ export async function nextSong(client, options, connection, track, info, music, 
     players.delete(voiceChannel.guildID);
     queues.delete(voiceChannel.guildID);
     logger.error(exception.error);
-    const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.error}\`\`\``;
-    if (options.type === "classic") {
-      await client.rest.channels.createMessage(options.channel.id, { content });
-    } else {
-      await options.interaction.createMessage({ content });
+    try {
+      const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.error}\`\`\``;
+      if (options.type === "classic") {
+        await client.rest.channels.createMessage(options.channel.id, { content });
+      } else {
+        await options.interaction.createFollowup({ content });
+      }
+    } catch {
+      // no-op
     }
   });
   connection.on("stuck", () => {
@@ -243,11 +247,15 @@ export async function nextSong(client, options, connection, track, info, music, 
       players.delete(voiceChannel.guildID);
       queues.delete(voiceChannel.guildID);
       skipVotes.delete(voiceChannel.guildID);
-      const content = `🔊 The voice channel session in \`${voiceChannel.name}\` has ended.`;
-      if (options.type === "classic") {
-        await client.rest.channels.createMessage(options.channel.id, { content });
-      } else {
-        await options.interaction.createMessage({ content });
+      try {
+        const content = `🔊 The voice channel session in \`${voiceChannel.name}\` has ended.`;
+        if (options.type === "classic") {
+          await client.rest.channels.createMessage(options.channel.id, { content });
+        } else {
+          await options.interaction.createFollowup({ content });
+        }
+      } catch {
+        // no-op
       }
     }
     if (options.type === "classic") {
