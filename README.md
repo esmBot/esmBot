@@ -2,7 +2,7 @@
 [![esmBot Support](https://discordapp.com/api/guilds/592399417676529688/embed.png)](https://discord.gg/esmbot) ![GitHub license](https://img.shields.io/github/license/esmBot/esmBot.svg)
 
 
-esmBot is an easily-extendable, multipurpose, and entertainment-focused Discord bot made using [Eris](https://abal.moe/Eris/) with image, music, and utility commands, alongside many others.
+esmBot is an easily-extendable, multipurpose, and entertainment-focused Discord bot made using [Oceanic](https://oceanic.ws) with image, music, and utility commands, alongside many others.
 
 [![Top.gg](https://top.gg/api/widget/429305856241172480.svg)](https://top.gg/bot/429305856241172480)
 

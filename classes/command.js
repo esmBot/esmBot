@@ -8,15 +8,16 @@ class Command {
     if (options.type === "classic") {
       this.message = options.message;
       this.channel = options.message.channel;
+      this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
       this.content = options.content;
       this.options = options.specialArgs;
       this.reference = {
         messageReference: {
-          channelID: this.channel.id,
+          channelID: this.message.channelID,
           messageID: this.message.id,
-          guildID: this.channel.guild ? this.channel.guild.id : undefined,
+          guildID: this.message.guildID ?? undefined,
           failIfNotExists: false
         },
         allowedMentions: {
@@ -27,13 +28,14 @@ class Command {
       this.interaction = options.interaction;
       this.args = [];
       this.channel = options.interaction.channel;
+      this.guild = options.interaction.guild;
       this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       if (options.interaction.data.options) {
-        this.options = options.interaction.data.options.reduce((obj, item) => {
+        this.options = options.interaction.data.options.raw.reduce((obj, item) => {
           obj[item.name] = item.value;
           return obj;
         }, {});
-        this.optionsArray = options.interaction.data.options;
+        this.optionsArray = options.interaction.data.options.raw;
       } else {
         this.options = {};
       }
@@ -46,9 +48,10 @@ class Command {
 
   async acknowledge() {
     if (this.type === "classic") {
-      await this.client.sendChannelTyping(this.channel.id);
+      const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
+      await channel.sendTyping();
     } else if (!this.interaction.acknowledged) {
-      await this.interaction.acknowledge();
+      await this.interaction.defer();
     }
   }
 

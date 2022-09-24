@@ -26,8 +26,8 @@ class BannerCommand extends Command {
       } else {
         return "This user doesn't have a banner!";
       }
-    } else if (this.args.join(" ") !== "" && this.channel.guild) {
-      const searched = await this.channel.guild.searchMembers(this.args.join(" "));
+    } else if (this.args.join(" ") !== "" && this.guild) {
+      const searched = await this.guild.searchMembers(this.args.join(" "));
       if (searched.length === 0) return self.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!";
       const user = await this.client.getRESTUser(searched[0].user.id);
       return user.dynamicBannerURL(null, 512) ?? (self.dynamicBannerURL(null, 512) ?? "This user doesn't have a banner!");

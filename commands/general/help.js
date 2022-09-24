@@ -1,4 +1,4 @@
-import { Constants } from "eris";
+import { Constants } from "oceanic.js";
 import database from "../../utils/database.js";
 import * as collections from "../../utils/collections.js";
 import { random } from "../../utils/misc.js";
@@ -10,7 +10,7 @@ const argTypes = Object.keys(Constants.ApplicationCommandOptionTypes);
 
 class HelpCommand extends Command {
   async run() {
-    const { prefix } = this.channel.guild ? await database.getGuild(this.channel.guild.id) : "N/A";
+    const { prefix } = this.guild ? await database.getGuild(this.guild.id) : "N/A";
     if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
@@ -19,9 +19,9 @@ class HelpCommand extends Command {
         embeds: [{
           author: {
             name: "esmBot Help",
-            icon_url: this.client.user.avatarURL
+            iconURL: this.client.user.avatarURL()
           },
-          title: `${this.channel.guild ? prefix : ""}${command}`,
+          title: `${this.guild ? prefix : ""}${command}`,
           url: "https://projectlounge.pw/esmBot/help.html",
           description: command === "tags" ? "The main tags command. Check the help page for more info: https://projectlounge.pw/esmBot/help.html" : info.description,
           color: 16711680,
@@ -54,12 +54,12 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
-      if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) {
+      if (this.guild && !this.channel.permissionsOf(this.client.user.id).has("EMBED_LINKS")) {
         this.success = false;
         return "I don't have the `Embed Links` permission!";
       }
       const pages = [];
-      if (help.categories === help.categoryTemplate && !help.generated) await help.generateList();
+      if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
       for (const category of Object.keys(help.categories)) {
         const splitPages = help.categories[category].map((item, index) => {
           return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
@@ -83,7 +83,7 @@ class HelpCommand extends Command {
           embeds: [{
             author: {
               name: "esmBot Help",
-              icon_url: this.client.user.avatarURL
+              iconURL: this.client.user.avatarURL()
             },
             title: value.title,
             description: value.page.join("\n"),
@@ -93,7 +93,7 @@ class HelpCommand extends Command {
             },
             fields: [{
               name: "Prefix",
-              value: this.channel.guild ? prefix : "N/A"
+              value: this.guild ? prefix : "N/A"
             }, {
               name: "Tip",
               value: random(tips)
@@ -101,7 +101,7 @@ class HelpCommand extends Command {
           }]
         });
       }
-      return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
+      return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
     }
   }
 

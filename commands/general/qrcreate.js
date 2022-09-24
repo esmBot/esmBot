@@ -13,7 +13,7 @@ class QrCreateCommand extends Command {
     qrcode.toFileStream(writable, this.content, { margin: 1 });
     const file = await this.streamToBuf(writable);
     return {
-      file: file,
+      contents: file,
       name: "qr.png"
     };
   }

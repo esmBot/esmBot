@@ -8,7 +8,7 @@ class ImageStatsCommand extends Command {
       embeds: [{
         "author": {
           "name": "esmBot Image Statistics",
-          "icon_url": this.client.user.avatarURL
+          "iconURL": this.client.user.avatarURL
         },
         "color": 16711680,
         "description": `The bot is currently connected to ${connections.size} image server(s).`,

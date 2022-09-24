@@ -4,7 +4,7 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    if (this.channel.guild && !this.channel.permissionsOf(this.client.user.id).has("embedLinks")) {
+    if (this.guild && !this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) {
       this.success = false;
       return "I don't have the `Embed Links` permission!";
     }
@@ -37,7 +37,7 @@ class CountCommand extends Command {
           description: value.join("\n"),
           author: {
             name: this.author.username,
-            icon_url: this.author.avatarURL
+            iconURL: this.author.avatarURL()
           }
         }]
       });

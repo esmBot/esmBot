@@ -21,7 +21,7 @@ import { generateList, createPage } from "./utils/help.js";
 import { reloadImageConnections } from "./utils/image.js";
 
 // main services
-import Eris from "eris";
+import { Client } from "oceanic.js";
 import pm2 from "pm2";
 // some utils
 import { promises, readFileSync } from "fs";
@@ -71,13 +71,13 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
 });
 
 const intents = [
-  "guildVoiceStates",
-  "directMessages"
+  "GUILD_VOICE_STATES",
+  "DIRECT_MESSAGES"
 ];
 if (types.classic) {
-  intents.push("guilds");
-  intents.push("guildMessages");
-  intents.push("messageContent");
+  intents.push("GUILDS");
+  intents.push("GUILD_MESSAGES");
+  intents.push("MESSAGE_CONTENT");
 }
 
 // PM2-specific handling
@@ -92,7 +92,7 @@ if (process.env.PM2_USAGE) {
       switch (packet.data?.type) {
         case "reload":
           var path = paths.get(packet.data.message);
-          await load(bot, path, await checkStatus(), true);
+          await load(client, path, await checkStatus(), true);
           break;
         case "soundreload":
           var soundStatus = await checkStatus();
@@ -104,10 +104,10 @@ if (process.env.PM2_USAGE) {
           await reloadImageConnections();
           break;
         case "broadcastStart":
-          startBroadcast(bot, packet.data.message);
+          startBroadcast(client, packet.data.message);
           break;
         case "broadcastEnd":
-          endBroadcast(bot);
+          endBroadcast(client);
           break;
         case "serverCounts":
           pm2.sendDataToProcessId(0, {
@@ -115,8 +115,8 @@ if (process.env.PM2_USAGE) {
             type: "process:msg",
             data: {
               type: "serverCounts",
-              guilds: bot.guilds.size,
-              shards: bot.shards.size
+              guilds: client.guilds.size,
+              shards: client.shards.size
             },
             topic: true
           }, (err) => {
@@ -142,35 +142,46 @@ if (!types.classic && !types.application) {
   process.exit(1);
 }
 
-const bot = new Eris(`Bot ${process.env.TOKEN}`, {
+const client = new Client({
+  auth: `Bot ${process.env.TOKEN}`,
   allowedMentions: {
     everyone: false,
     roles: false,
     users: true,
     repliedUser: true
   },
-  restMode: true,
-  maxShards: "auto",
-  messageLimit: 50,
-  intents,
-  connectionTimeout: 30000
+  gateway: {
+    concurrency: "auto",
+    maxShards: "auto",
+    presence: {
+      status: "dnd",
+      activities: [{
+        type: "GAME",
+        name: "Starting esmBot..."
+      }]
+    },
+    intents
+  },
+  collectionLimits: {
+    messages: 50
+  }
 });
 
-bot.once("ready", async () => {
+client.once("ready", async () => {
   // register commands and their info
   const soundStatus = await checkStatus();
   logger.log("info", "Attempting to load commands...");
   for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
     logger.log("main", `Loading command from ${commandFile}...`);
     try {
-      await load(bot, commandFile, soundStatus);
+      await load(client, commandFile, soundStatus);
     } catch (e) {
       logger.error(`Failed to register command from ${commandFile}: ${e}`);
     }
   }
   if (types.application) {
     try {
-      await send(bot);
+      await send(client);
     } catch (e) {
       logger.log("error", e);
       logger.log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
@@ -192,7 +203,7 @@ bot.once("ready", async () => {
       continue;
     }
     const { default: event } = await import(file);
-    bot.on(eventName, event.bind(null, bot));
+    client.on(eventName, event.bind(null, client));
   }
   logger.log("info", "Finished loading events.");
   
@@ -204,10 +215,10 @@ bot.once("ready", async () => {
   }
   
   // connect to lavalink
-  if (!status && !connected) connect(bot);
+  if (!status && !connected) connect(client);
 
-  checkBroadcast(bot);
-  activityChanger(bot);
+  checkBroadcast(client);
+  activityChanger(client);
   
   logger.log("info", "Started esmBot.");
 });
@@ -224,4 +235,4 @@ async function* getFiles(dir) {
   }
 }
 
-bot.connect();
+client.connect();

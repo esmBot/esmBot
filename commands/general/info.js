@@ -5,7 +5,8 @@ import { getServers } from "../../utils/misc.js";
 
 class InfoCommand extends Command {
   async run() {
-    const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
+    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);
     await this.acknowledge();
     return {
@@ -13,7 +14,7 @@ class InfoCommand extends Command {
         color: 16711680,
         author: {
           name: "esmBot Info/Credits",
-          icon_url: this.client.user.avatarURL
+          iconURL: this.client.user.avatarURL()
         },
         description: `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
         fields: [{

@@ -7,7 +7,6 @@ esmBot uses the following user-related info:
 + User IDs (needed for many reasons such as the tag commands and replying to users)
 + Avatars (needed for some embeds and the avatar command)
 + Usernames (for embeds and avatar command)
-+ Discriminators (userinfo command)
 + Permissions (for checking if a user has perms to run some commands)
 + Whether the user is a bot (needed to prevent other bots from running commands)
 
@@ -17,8 +16,6 @@ esmBot uses the following guild-related info:
 + Guild IDs (for guild-specific settings)
 + Guild channel IDs (for getting where to send a message, storing disabled channels)
 + List of members (for getting permissions and obtaining user objects by ID)
-+ Guild names (for embeds)
-+ Icons (embeds)
 
 Out of these, **only guild and channel IDs are stored in the database** for configuration info and storing disabled channels/commands, prefixes, and tags.
 

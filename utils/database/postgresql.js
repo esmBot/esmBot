@@ -118,16 +118,16 @@ export async function enableCommand(guild, command) {
 }
 
 export async function disableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guild.id);
-  await sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guild.id}`;
-  disabledCache.set(channel.guild.id, [...guildDB.disabled, channel.id]);
+  const guildDB = await this.getGuild(channel.guildID);
+  await sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guildID}`;
+  disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
 }
 
 export async function enableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guild.id);
+  const guildDB = await this.getGuild(channel.guildID);
   const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
-  await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guild.id}`;
-  disabledCache.set(channel.guild.id, newDisabled);
+  await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guildID}`;
+  disabledCache.set(channel.guildID, newDisabled);
 }
 
 export async function getCounts() {

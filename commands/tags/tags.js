@@ -8,7 +8,7 @@ class TagsCommand extends Command {
   // todo: attempt to not make this file the worst thing that human eyes have ever seen
   async run() {
     this.success = false;
-    if (!this.channel.guild) return "This command only works in servers!";
+    if (!this.guild) return "This command only works in servers!";
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.optionsArray[0].name;
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
     const tagName = this.type === "classic" ? this.args.slice(1)[0] : (this.optionsArray[0].options[0] ?? {}).value;
@@ -16,33 +16,33 @@ class TagsCommand extends Command {
     if (cmd === "create" || cmd === "add") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";
       if (blacklist.includes(tagName)) return "You can't make a tag with that name!";
-      const getResult = await database.getTag(this.channel.guild.id, tagName);
+      const getResult = await database.getTag(this.guild.id, tagName);
       if (getResult) return "This tag already exists!";
-      const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
+      const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.guild);
       this.success = true;
       if (result) return result;
       return `The tag \`${tagName}\` has been added!`;
     } else if (cmd === "delete" || cmd === "remove") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to delete!";
-      const getResult = await database.getTag(this.channel.guild.id, tagName);
+      const getResult = await database.getTag(this.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
-      await database.removeTag(tagName, this.channel.guild);
+      await database.removeTag(tagName, this.guild);
       this.success = true;
       return `The tag \`${tagName}\` has been deleted!`;
     } else if (cmd === "edit") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to edit!";
-      const getResult = await database.getTag(this.channel.guild.id, tagName);
+      const getResult = await database.getTag(this.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("manageMessages") && !owners.includes(this.author.id)) return "You don't own this tag!";
-      await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.channel.guild);
+      await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.guild);
       this.success = true;
       return `The tag \`${tagName}\` has been edited!`;
     } else if (cmd === "own" || cmd === "owner") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to check the owner of!";
-      const getResult = await database.getTag(this.channel.guild.id, tagName);
+      const getResult = await database.getTag(this.guild.id, tagName);
       if (!getResult) return "This tag doesn't exist!";
       const user = this.client.users.get(getResult.author);
       this.success = true;
@@ -58,7 +58,7 @@ class TagsCommand extends Command {
       }
     } else if (cmd === "list") {
       if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
-      const tagList = await database.getTags(this.channel.guild.id);
+      const tagList = await database.getTags(this.guild.id);
       const embeds = [];
       const groups = Object.keys(tagList).map((item, index) => {
         return index % 15 === 0 ? Object.keys(tagList).slice(index, index + 15) : null;
@@ -76,7 +76,7 @@ class TagsCommand extends Command {
             description: value.join("\n"),
             author: {
               name: this.author.username,
-              icon_url: this.author.avatarURL
+              iconURL: this.author.avatarURL
             }
           }]
         });
@@ -87,10 +87,10 @@ class TagsCommand extends Command {
     } else {
       let getResult;
       if (cmd === "random") {
-        const tagList = await database.getTags(this.channel.guild.id);
+        const tagList = await database.getTags(this.guild.id);
         getResult = tagList[random(Object.keys(tagList))];
       } else {
-        getResult = await database.getTag(this.channel.guild.id, this.type === "classic" ? cmd : tagName);
+        getResult = await database.getTag(this.guild.id, this.type === "classic" ? cmd : tagName);
       }
       if (!getResult) return "This tag doesn't exist!";
       this.success = true;

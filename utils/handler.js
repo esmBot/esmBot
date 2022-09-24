@@ -122,9 +122,9 @@ export async function send(bot) {
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;
   if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
-    await bot.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
+    await bot.application.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
   } else {
     cmdArray = [...commandArray.main, ...commandArray.private];
   }
-  await bot.bulkEditCommands(cmdArray);
+  await bot.application.bulkEditGlobalCommands(cmdArray);
 }

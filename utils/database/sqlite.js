@@ -106,16 +106,16 @@ export async function enableCommand(guild, command) {
 }
 
 export async function disableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guild.id);
-  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify([...JSON.parse(guildDB.disabled), channel.id]), channel.guild.id);
-  collections.disabledCache.set(channel.guild.id, [...JSON.parse(guildDB.disabled), channel.id]);
+  const guildDB = await this.getGuild(channel.guildID);
+  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify([...JSON.parse(guildDB.disabled), channel.id]), channel.guildID);
+  collections.disabledCache.set(channel.guildID, [...JSON.parse(guildDB.disabled), channel.id]);
 }
 
 export async function enableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guild.id);
+  const guildDB = await this.getGuild(channel.guildID);
   const newDisabled = JSON.parse(guildDB.disabled).filter(item => item !== channel.id);
-  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), channel.guild.id);
-  collections.disabledCache.set(channel.guild.id, newDisabled);
+  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), channel.guildID);
+  collections.disabledCache.set(channel.guildID, newDisabled);
 }
 
 export async function getTag(guild, tag) {

@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
 import os from "os";
 import Command from "../../classes/command.js";
-import { VERSION } from "eris";
+import { VERSION } from "oceanic.js";
 import pm2 from "pm2";
 import { getServers } from "../../utils/misc.js";
 
@@ -10,14 +10,15 @@ class StatsCommand extends Command {
   async run() {
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
-    const owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
+    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);
     const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
     return {
       embeds: [{
         "author": {
           "name": "esmBot Statistics",
-          "icon_url": this.client.user.avatarURL
+          "iconURL": this.client.user.avatarURL()
         },
         "description": `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
         "color": 16711680,
@@ -50,7 +51,7 @@ class StatsCommand extends Command {
         },
         {
           "name": "Library",
-          "value": `Eris ${VERSION}`,
+          "value": `Oceanic ${VERSION}`,
           "inline": true
         },
         {
@@ -60,7 +61,7 @@ class StatsCommand extends Command {
         },
         {
           "name": "Shard",
-          "value": this.channel.guild ? this.client.guildShardMap[this.channel.guild.id] : "N/A",
+          "value": this.guild ? this.client.guildShardMap[this.guild.id] : "N/A",
           "inline": true
         },
         {

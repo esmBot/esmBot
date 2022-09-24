@@ -5,7 +5,7 @@ import * as collections from "../../utils/collections.js";
 class CommandCommand extends Command {
   async run() {
     this.success = false;
-    if (!this.channel.guild) return "This command only works in servers!";
+    if (!this.guild) return "This command only works in servers!";
     const owners = process.env.OWNER.split(",");
     if (!this.member.permissions.has("administrator") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
     if (this.args.length === 0) return "You need to provide whether you want to enable/disable a command!";
@@ -13,7 +13,7 @@ class CommandCommand extends Command {
     if (!this.args[1]) return "You need to provide what command to enable/disable!";
     if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase())) return "That isn't a command!";
 
-    const guildDB = await db.getGuild(this.channel.guild.id);
+    const guildDB = await db.getGuild(this.guild.id);
     const disabled = guildDB.disabled_commands ?? guildDB.disabledCommands;
     const command = collections.aliases.get(this.args[1].toLowerCase()) ?? this.args[1].toLowerCase();
 
@@ -21,13 +21,13 @@ class CommandCommand extends Command {
       if (command === "command") return "You can't disable that command!";
       if (disabled?.includes(command)) return "That command is already disabled!";
 
-      await db.disableCommand(this.channel.guild.id, command);
+      await db.disableCommand(this.guild.id, command);
       this.success = true;
       return `The command has been disabled. To re-enable it, just run \`${guildDB.prefix}command enable ${command}\`.`;
     } else if (this.args[0].toLowerCase() === "enable") {
       if (!disabled?.includes(command)) return "That command isn't disabled!";
 
-      await db.enableCommand(this.channel.guild.id, command);
+      await db.enableCommand(this.guild.id, command);
       this.success = true;
       return `The command \`${command}\` has been re-enabled.`;
     }

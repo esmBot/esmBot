@@ -52,11 +52,12 @@ export function textEncode(string) {
 }
 
 // set activity (a.k.a. the gamer code)
-export function activityChanger(bot) {
+export async function activityChanger(bot) {
   if (!broadcast) {
-    bot.editStatus("dnd", {
+    await bot.editStatus("dnd", [{
+      type: "GAME",
       name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
-    });
+    }]);
   }
   setTimeout(() => activityChanger(bot), 900000);
 }
@@ -68,16 +69,18 @@ export function checkBroadcast(bot) {
 }
 
 export function startBroadcast(bot, message) {
-  bot.editStatus("dnd", {
+  bot.editStatus("dnd", [{
+    type: "GAME",
     name: message + (types.classic ? ` | @${bot.user.username} help` : ""),
-  });
+  }]);
   broadcast = true;
 }
 
 export function endBroadcast(bot) {
-  bot.editStatus("dnd", {
+  bot.editStatus("dnd", [{
+    type: "GAME",
     name: random(messages) + (types.classic ? ` | @${bot.user.username} help` : ""),
-  });
+  }]);
   broadcast = false;
 }
 
@@ -107,4 +110,47 @@ export function getServers(bot) {
       resolve(bot.guilds.size);
     }
   });
+}
+
+// copied from eris
+export function cleanMessage(message) {
+  let cleanContent = message.content && message.content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
+
+  let authorName = message.author.username;
+  if (message.guildID) {
+    const member = message.guild.members.get(message.author.id);
+    if (member && member.nick) {
+      authorName = member.nick;
+    }
+  }
+  cleanContent = cleanContent.replace(new RegExp(`<@!?${message.author.id}>`, "g"), `@\u200b${authorName}`);
+
+  if (message.mentions) {
+    for (const mention of message.mentions.members) {
+      if (message.guildID) {
+        const member = message.guild.members.get(mention.id);
+        if (member && member.nick) {
+          cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@\u200b${member.nick}`);
+        }
+      }
+      cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@\u200b${mention.username}`);
+    }
+
+    if (message.guildID && message.mentions.roles) {
+      for (const roleID of message.mentions.roles) {
+        const role = message.guild.roles.get(roleID);
+        const roleName = role ? role.name : "deleted-role";
+        cleanContent = cleanContent.replace(new RegExp(`<@&${roleID}>`, "g"), `@\u200b${roleName}`);
+      }
+    }
+
+    for (const id of message.mentions.channels) {
+      const channel = message.client.getChannel(id);
+      if (channel && channel.name && channel.mention) {
+        cleanContent = cleanContent.replace(channel.mention, `#${channel.name}`);
+      }
+    }
+  }
+
+  return cleanContent.replace(/@everyone/g, "@\u200beveryone").replace(/@here/g, "@\u200bhere");
 }

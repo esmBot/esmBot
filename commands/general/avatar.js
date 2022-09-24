@@ -26,8 +26,8 @@ class AvatarCommand extends Command {
       } else {
         return self.dynamicAvatarURL(null, 512);
       }
-    } else if (this.args.join(" ") !== "" && this.channel.guild) {
-      const searched = await this.channel.guild.searchMembers(this.args.join(" "));
+    } else if (this.args.join(" ") !== "" && this.guild) {
+      const searched = await this.guild.searchMembers(this.args.join(" "));
       if (searched.length === 0) return self.dynamicAvatarURL(null, 512);
       const user = await this.client.getRESTUser(searched[0].user.id);
       return user ? user.dynamicAvatarURL(null, 512) : self.dynamicAvatarURL(null, 512);

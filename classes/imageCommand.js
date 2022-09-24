@@ -73,7 +73,7 @@ class ImageCommand extends Command {
 
     let status;
     if (imageParams.params.type === "image/gif" && this.type === "classic") {
-      status = await this.processMessage(this.message);
+      status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
     try {
@@ -83,7 +83,7 @@ class ImageCommand extends Command {
       }
       this.success = true;
       return {
-        file: buffer,
+        contents: buffer,
         name: `${this.constructor.command}.${type}`
       };
     } catch (e) {
@@ -92,14 +92,17 @@ class ImageCommand extends Command {
       if (e === "No available servers") return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
       throw e;
     } finally {
-      if (status && (status.channel.messages ? status.channel.messages.has(status.id) : await this.client.getMessage(status.channel.id, status.id).catch(() => undefined))) await status.delete();
+      const statusChannel = status.channel ?? await this.client.rest.channels.get(status.channelID);
+      if (status && (statusChannel.messages ? statusChannel.messages.has(status.id) : await this.client.getMessage(statusChannel.id, status.id).catch(() => undefined))) await status.delete();
       runningCommands.delete(this.author.id);
     }
 
   }
 
-  processMessage(message) {
-    return this.client.createMessage(message.channel.id, `${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`);
+  processMessage(channel) {
+    return channel.createMessage({
+      content: `${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`
+    });
   }
 
   static init() {

@@ -4,9 +4,9 @@ import { players, queues } from "../utils/soundplayer.js";
 class MusicCommand extends Command {
   constructor(client, options) {
     super(client, options);
-    if (this.channel.guild) {
-      this.connection = players.get(this.channel.guild.id);
-      this.queue = queues.get(this.channel.guild.id);
+    if (this.guild) {
+      this.connection = players.get(this.guild.id);
+      this.queue = queues.get(this.guild.id);
     }
   }
 

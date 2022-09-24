@@ -1,4 +1,4 @@
-// eris doesn't come with a method to wait for interactions by default, so we make our own
+// oceanic doesn't come with a method to wait for interactions by default, so we make our own
 import { EventEmitter } from "events";
 
 class InteractionCollector extends EventEmitter {

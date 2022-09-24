@@ -131,8 +131,8 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
         }
       }
       // then check the attachments
-    } else if (message.attachments.length !== 0 && message.attachments[0].width) {
-      type = await getImage(message.attachments[0].proxy_url, message.attachments[0].url, video);
+    } else if (message.attachments.size !== 0 && message.attachments.first().width) {
+      type = await getImage(message.attachments.first().proxyURL, message.attachments.first().url, video);
     }
   }
   // if the return value exists then return it
@@ -147,7 +147,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     if (options) {
       if (options.image) {
         const attachment = interaction.data.resolved.attachments.get(options.image);
-        const result = await getImage(attachment.proxyUrl, attachment.url, video, attachment.contentType);
+        const result = await getImage(attachment.proxyURL, attachment.url, video, attachment.contentType);
         if (result !== false) return result;
       } else if (options.link) {
         const result = await getImage(options.link, options.link, video, extraReturnTypes, false, null, true);
@@ -171,7 +171,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   if (!singleMessage) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
     try {
-      const messages = await client.getMessages((interaction ? interaction : cmdMessage).channel.id);
+      const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
+      const messages = await channel.getMessages();
       // iterate over each message
       for (const message of messages) {
         const result = await checkImages(message, extraReturnTypes, video, sticker);
@@ -180,7 +181,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
         } else {
           return result;
         }
-      } 
+      }
     } catch {
       // no-op
     }
