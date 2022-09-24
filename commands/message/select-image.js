@@ -4,7 +4,7 @@ import { selectedImages } from "../../utils/collections.js";
 
 class SelectImageCommand extends Command {
   async run() {
-    const message = this.interaction.data.resolved.messages.get(this.interaction.data.target_id);
+    const message = this.interaction.data.target;
     const image = await imageDetect(this.client, message, this.interaction, this.options, true, false, false, true);
     this.success = false;
     if (image === undefined) {

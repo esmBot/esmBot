@@ -6,7 +6,7 @@ class EmoteCommand extends Command {
     const emoji = this.options.emoji ?? this.content;
     if (emoji && emoji.trim() && emoji.split(" ")[0].match(/^<a?:.+:\d+>$/)) {
       return `https://cdn.discordapp.com/emojis/${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$2")}.${emoji.split(" ")[0].replace(/^<(a)?:.+:(\d+)>$/, "$1") === "a" ? "gif" : "png"}`;
-    } else if (emoji.match(emojiRegex)) {
+    } else if (emoji.match(emojiRegex())) {
       const codePoints = [];
       for (const codePoint of emoji) {
         codePoints.push(codePoint.codePointAt(0).toString(16));
