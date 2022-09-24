@@ -11,7 +11,7 @@ class StatsCommand extends Command {
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);
     const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
     return {

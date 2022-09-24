@@ -12,7 +12,7 @@ class StopCommand extends MusicCommand {
       this.success = true;
       return "🔊 The current voice channel session has ended.";
     }
-    if (this.connection.host !== this.author.id && !this.member.permissions.has("manageChannels")) return "Only the current voice session host can stop the music!";
+    if (this.connection.host !== this.author.id && !this.member.permissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can stop the music!";
     const connection = this.connection.player;
     connection.node.leaveChannel(this.guild.id);
     players.delete(this.guild.id);
