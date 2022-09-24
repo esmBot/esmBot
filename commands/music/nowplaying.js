@@ -17,7 +17,7 @@ class NowPlayingCommand extends MusicCommand {
         color: 16711680,
         author: {
           name: "Now Playing",
-          iconURL: this.client.user.avatarURL
+          iconURL: this.client.user.avatarURL()
         },
         fields: [{
           name: "ℹ️ Title",

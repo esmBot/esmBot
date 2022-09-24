@@ -10,7 +10,7 @@ class QueueCommand extends MusicCommand {
     if (!this.guild) return "This command only works in servers!";
     if (!this.member.voiceState.channelID) return "You need to be in a voice channel first!";
     if (!this.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
-    if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+    if (!this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
     const node = nodes.filter((val) => val.name === player.player.node.name)[0];
     const tracks = await request(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.body.json());
@@ -30,7 +30,7 @@ class QueueCommand extends MusicCommand {
         embeds: [{
           author: {
             name: "Queue",
-            iconURL: this.client.user.avatarURL
+            iconURL: this.client.user.avatarURL()
           },
           color: 16711680,
           footer: {

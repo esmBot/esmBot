@@ -92,8 +92,11 @@ class ImageCommand extends Command {
       if (e === "No available servers") return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
       throw e;
     } finally {
-      const statusChannel = status.channel ?? await this.client.rest.channels.get(status.channelID);
-      if (status && (statusChannel.messages ? statusChannel.messages.has(status.id) : await this.client.getMessage(statusChannel.id, status.id).catch(() => undefined))) await status.delete();
+      try {
+        if (status) await status.delete();
+      } catch {
+        // no-op
+      }
       runningCommands.delete(this.author.id);
     }
 

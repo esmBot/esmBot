@@ -57,7 +57,7 @@ class TagsCommand extends Command {
         return `This tag is owned by **${user.username}#${user.discriminator}** (\`${getResult.author}\`).`;
       }
     } else if (cmd === "list") {
-      if (!this.channel.permissionsOf(this.client.user.id).has("embedLinks")) return "I don't have the `Embed Links` permission!";
+      if (!this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
       const tagList = await database.getTags(this.guild.id);
       const embeds = [];
       const groups = Object.keys(tagList).map((item, index) => {
@@ -76,7 +76,7 @@ class TagsCommand extends Command {
             description: value.join("\n"),
             author: {
               name: this.author.username,
-              iconURL: this.author.avatarURL
+              iconURL: this.author.avatarURL()
             }
           }]
         });

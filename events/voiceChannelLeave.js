@@ -47,7 +47,7 @@ export default async (client, member, oldChannel) => {
           queues.delete(connection.originalChannel.guildID);
           skipVotes.delete(connection.originalChannel.guildID);
           client.rest.channels.createMessage(connection.originalChannel.id, {
-            content: `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`
+            content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
           });
         }
       });
@@ -83,7 +83,7 @@ export default async (client, member, oldChannel) => {
             queues.delete(connection.originalChannel.guildID);
             skipVotes.delete(connection.originalChannel.guildID);
             client.rest.channels.createMessage(connection.originalChannel.id, {
-              content: `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`
+              content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
             });
           } else {
             const randomMember = random(members);
@@ -105,7 +105,7 @@ export default async (client, member, oldChannel) => {
       queues.delete(connection.originalChannel.guildID);
       skipVotes.delete(connection.originalChannel.guildID);
       await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: `🔊 The voice channel session in \`${connection.originalChannel.name}\` has ended.`
+        content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
       });
     }
   }

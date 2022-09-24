@@ -5,12 +5,12 @@ const prefixes = ["ytsearch:", "ytmsearch:", "scsearch:", "spsearch:", "amsearch
 class PlayCommand extends MusicCommand {
   async run() {
     const input = this.options.query ?? this.args.join(" ");
-    if (!input && ((!this.message || this.message?.attachments.length <= 0))) {
+    if (!input && ((!this.message || this.message?.attachments.size <= 0))) {
       this.success = false;
       return "You need to provide what you want to play!";
     }
     let query = input ? input.trim() : "";
-    const attachment = this.type === "classic" ? this.message.attachments[0] : null;
+    const attachment = this.type === "classic" ? this.message.attachments.first() : null;
     if (query.startsWith("||") && query.endsWith("||")) {
       query = query.substring(2, query.length - 2);
     }
