@@ -5,8 +5,8 @@ class SkipCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
-    if (!this.member.voiceState.channelID) return "You need to be in a voice channel first!";
-    if (!this.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
+    if (!this.member.voiceState) return "You need to be in a voice channel first!";
+    if (!this.guild.members.get(this.client.user.id).voiceState) return "I'm not in a voice channel!";
     const player = this.connection;
     if (player.host !== this.author.id && !this.member.permissions.has("MANAGE_CHANNELS")) {
       const votes = skipVotes.get(this.guild.id) ?? { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) };

@@ -11,6 +11,7 @@ class SoundboardAIOCommand extends Command {
       return "You need to provide a sound to play!";
     }
     const name = sounds.get(soundName);
+    await this.acknowledge();
     return await play(this.client, name, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction });
   }
   

@@ -121,13 +121,13 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
         type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, extraReturnTypes, true);
         // then we check for other image types
       } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
-        type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
+        type = await getImage(message.embeds[0].thumbnail.proxyURL, message.embeds[0].thumbnail.url, video, extraReturnTypes);
         // finally we check both possible image fields for "generic" embeds
       } else if (message.embeds[0].type === "rich" || message.embeds[0].type === "article") {
         if (message.embeds[0].thumbnail) {
-          type = await getImage(message.embeds[0].thumbnail.proxy_url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
+          type = await getImage(message.embeds[0].thumbnail.proxyURL, message.embeds[0].thumbnail.url, video, extraReturnTypes);
         } else if (message.embeds[0].image) {
-          type = await getImage(message.embeds[0].image.proxy_url, message.embeds[0].image.url, video, extraReturnTypes);
+          type = await getImage(message.embeds[0].image.proxyURL, message.embeds[0].image.url, video, extraReturnTypes);
         }
       }
       // then check the attachments
@@ -158,7 +158,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   if (cmdMessage) {
     // check if the message is a reply to another message
     if (cmdMessage.messageReference) {
-      const replyMessage = await client.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
+      const replyMessage = await client.rest.channels.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
       if (replyMessage) {
         const replyResult = await checkImages(replyMessage, extraReturnTypes, video, sticker);
         if (replyResult !== false) return replyResult;

@@ -23,11 +23,11 @@ export async function upload(client, result, context, interaction = false) {
   if (interaction) {
     await context[context.acknowledged ? "editOriginal" : "createMessage"](payload);
   } else {
-    await client.rest.channels.createMessage(context.channel.id, Object.assign(payload, {
+    await client.rest.channels.createMessage(context.channelID, Object.assign(payload, {
       messageReference: {
-        channelID: context.channel.id,
+        channelID: context.channelID,
         messageID: context.id,
-        guildID: context.channel.guildID ?? undefined,
+        guildID: context.guildID ?? undefined,
         failIfNotExists: false
       },
       allowedMentions: {

@@ -5,14 +5,14 @@ class HostCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
-    if (!this.member.voiceState.channelID) return "You need to be in a voice channel first!";
-    if (!this.guild.members.get(this.client.user.id).voiceState.channelID) return "I'm not in a voice channel!";
+    if (!this.member.voiceState) return "You need to be in a voice channel first!";
+    if (!this.guild.members.get(this.client.user.id).voiceState) return "I'm not in a voice channel!";
     if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return "Only the current voice session host can choose another host!";
     const input = this.options.user ?? this.args.join(" ");
     if (input?.trim()) {
       let user;
       if (this.type === "classic") {
-        const getUser = this.message.mentions.length >= 1 ? this.message.mentions[0] : this.client.users.get(input);
+        const getUser = this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
         } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && input >= 21154535154122752n) {

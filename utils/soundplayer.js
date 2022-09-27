@@ -33,7 +33,6 @@ export async function checkStatus() {
 
 export function connect(client) {
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
-  client.emit("ready"); // workaround
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });

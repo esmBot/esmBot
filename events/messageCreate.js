@@ -4,6 +4,7 @@ import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from 
 import parseCommand from "../utils/parseCommand.js";
 import { clean, cleanMessage } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
+import { ThreadChannel } from "oceanic.js";
 
 // run when someone sends a message
 export default async (client, message) => {
@@ -11,7 +12,15 @@ export default async (client, message) => {
   if (message.author.bot) return;
 
   // don't run command if bot can't send messages
-  if (message.guildID && !message.channel.permissionsOf(client.user.id.toString()).has("SEND_MESSAGES")) return;
+  let permChannel = message.channel;
+  if (permChannel instanceof ThreadChannel && !permChannel.parent) {
+    try {
+      permChannel = await client.rest.channels.get(message.channel.parentID);
+    } catch {
+      return;
+    }
+  }
+  if (message.guildID && !permChannel.permissionsOf(client.user.id.toString()).has("SEND_MESSAGES")) return;
 
   let prefixCandidate;
   let guildDB;
