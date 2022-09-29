@@ -23,7 +23,7 @@ export async function editTag() {}
 export async function setPrefix() {}
 export async function addGuild(guild) {
   return {
-    id: guild.id,
+    id: guild,
     tags: {},
     prefix: process.env.PREFIX,
     disabled: [],

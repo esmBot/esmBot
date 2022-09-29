@@ -69,12 +69,12 @@ export async function upgrade(logger) {
 export async function fixGuild(guild) {
   let guildDB;
   try {
-    guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild.id);
+    guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild);
   } catch {
     connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
   }
   if (!guildDB) {
-    logger.log(`Registering guild database entry for guild ${guild.id}...`);
+    logger.log(`Registering guild database entry for guild ${guild}...`);
     return await this.addGuild(guild);
   }
 }
@@ -160,7 +160,7 @@ export async function addGuild(guild) {
   const query = await this.getGuild(guild);
   if (query) return query;
   const guildObject = {
-    id: guild.id,
+    id: guild,
     prefix: process.env.PREFIX,
     disabled: "[]",
     disabledCommands: "[]"

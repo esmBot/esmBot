@@ -155,9 +155,9 @@ export async function addGuild(guild) {
 }
 
 export async function fixGuild(guild) {
-  const guildDB = await sql`SELECT exists(SELECT 1 FROM guilds WHERE guild_id = ${guild.id})`;
+  const guildDB = await sql`SELECT exists(SELECT 1 FROM guilds WHERE guild_id = ${guild})`;
   if (!guildDB[0].exists) {
-    logger.log(`Registering guild database entry for guild ${guild.id}...`);
+    logger.log(`Registering guild database entry for guild ${guild}...`);
     return await this.addGuild(guild);
   }
 }

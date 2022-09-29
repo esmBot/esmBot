@@ -154,9 +154,9 @@ const client = new Client({
     concurrency: "auto",
     maxShards: "auto",
     presence: {
-      status: "dnd",
+      status: "idle",
       activities: [{
-        type: "GAME",
+        type: 0,
         name: "Starting esmBot..."
       }]
     },

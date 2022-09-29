@@ -5,5 +5,5 @@ import { log } from "../utils/logger.js";
 export default async (client, guild) => {
   log(`[GUILD JOIN] ${guild.name} (${guild.id}) added the bot.`);
   const guildDB = await db.getGuild(guild.id);
-  if (!guildDB) await db.addGuild(guild);
+  if (!guildDB) await db.addGuild(guild.id);
 };
