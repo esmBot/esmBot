@@ -46,26 +46,26 @@ const { types } = JSON.parse(readFileSync(new URL("./config/commands.json", impo
 const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
 exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o).then(() => {
   console.log(`
-  ,*\`$                    z\`"v       
- F zBw\`%                 A ,W "W     
-,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T    
-M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1   
-F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E  
-F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k  
-#  BFBBBBBBBBBBBBF"      "RBBBW    F  
-V ' 4BBBBBBBBBBM            TBBL  F   
-F  BBBBBBBBBBF              JBB  L   
-F  FBBBBBBBEB                BBL 4   
-E  [BB4BBBBEBL               BBL 4   
-I   #BBBBBBBEB              4BBH  *w 
-A   4BBBBBBBBBEW,         ,BBBB  W  [
+     ,*\`$                    z\`"v       
+    F zBw\`%                 A ,W "W     
+  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T    
+  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1   
+ F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E  
+ F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k  
+ #  BFBBBBBBBBBBBBF"      "RBBBW    F  
+  V ' 4BBBBBBBBBBM            TBBL  F   
+   F  BBBBBBBBBBF              JBB  L   
+   F  FBBBBBBBEB                BBL 4   
+   E  [BB4BBBBEBL               BBL 4   
+   I   #BBBBBBBEB              4BBH  *w 
+   A   4BBBBBBBBBEW,         ,BBBB  W  [
 .A  ,k  4BBBBBBBBBBBEBW####BBBBBBM BF  F
 k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  # 
-5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F  
-*w  \`*4BBW\`"FF#F##FFFF"\` , *   +"    
-   *+,   " F'"'*^~~~^"^\`  V+*^       
-       \`"""                          
-       
+ 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F  
+   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"    
+      *+,   " F'"'*^~~~^"^\`  V+*^       
+          \`"""                          
+          
 esmBot ${esmBotVersion} (${process.env.GIT_REV})
 `);
 });
