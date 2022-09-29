@@ -17,7 +17,6 @@ import { fileURLToPath } from "url";
 import { config } from "dotenv";
 config({ path: resolve(dirname(fileURLToPath(import.meta.url)), ".env") });
 
-import { generateList, createPage } from "./utils/help.js";
 import { reloadImageConnections } from "./utils/image.js";
 
 // main services
@@ -30,21 +29,44 @@ import { exec as baseExec } from "child_process";
 import { promisify } from "util";
 const exec = promisify(baseExec);
 // initialize command loader
-import { load, send } from "./utils/handler.js";
+import { load } from "./utils/handler.js";
 // command collections
 import { paths } from "./utils/collections.js";
 // database stuff
 import database from "./utils/database.js";
 // lavalink stuff
-import { checkStatus, connect, reload, status, connected } from "./utils/soundplayer.js";
+import { checkStatus, reload } from "./utils/soundplayer.js";
 // events
-import { endBroadcast, startBroadcast, activityChanger, checkBroadcast } from "./utils/misc.js";
+import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
 
 const { types } = JSON.parse(readFileSync(new URL("./config/commands.json", import.meta.url)));
-
 const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
-exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o).then(() => {
+
+const intents = [
+  "GUILD_VOICE_STATES",
+  "DIRECT_MESSAGES"
+];
+if (types.classic) {
+  intents.push("GUILDS");
+  intents.push("GUILD_MESSAGES");
+  intents.push("MESSAGE_CONTENT");
+}
+
+async function* getFiles(dir) {
+  const dirents = await promises.readdir(dir, { withFileTypes: true });
+  for (const dirent of dirents) {
+    const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
+    if (dirent.isDirectory()) {
+      yield* getFiles(name);
+    } else if (dirent.name.endsWith(".js")) {
+      yield name;
+    }
+  }
+}
+
+async function init() {
+  await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o);
   console.log(`
      ,*\`$                    z\`"v       
     F zBw\`%                 A ,W "W     
@@ -68,130 +90,63 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
           
 esmBot ${esmBotVersion} (${process.env.GIT_REV})
 `);
-});
 
-const intents = [
-  "GUILD_VOICE_STATES",
-  "DIRECT_MESSAGES"
-];
-if (types.classic) {
-  intents.push("GUILDS");
-  intents.push("GUILD_MESSAGES");
-  intents.push("MESSAGE_CONTENT");
-}
-
-// PM2-specific handling
-if (process.env.PM2_USAGE) {
-  pm2.launchBus((err, pm2Bus) => {
-    if (err) {
-      logger.error(err);
-      return;
-    }
-
-    pm2Bus.on("process:msg", async (packet) => {
-      switch (packet.data?.type) {
-        case "reload":
-          var path = paths.get(packet.data.message);
-          await load(client, path, await checkStatus(), true);
-          break;
-        case "soundreload":
-          var soundStatus = await checkStatus();
-          if (!soundStatus) {
-            reload();
-          }
-          break;
-        case "imagereload":
-          await reloadImageConnections();
-          break;
-        case "broadcastStart":
-          startBroadcast(client, packet.data.message);
-          break;
-        case "broadcastEnd":
-          endBroadcast(client);
-          break;
-        case "serverCounts":
-          pm2.sendDataToProcessId(0, {
-            id: 0,
-            type: "process:msg",
-            data: {
-              type: "serverCounts",
-              guilds: client.guilds.size,
-              shards: client.shards.size
-            },
-            topic: true
-          }, (err) => {
-            if (err) logger.error(err);
-          });
-          break;
-      }
-    });
-  });
-}
-
-database.upgrade(logger).then(result => {
-  if (result === 1) return process.exit(1);
-});
-
-// process the threshold into bytes early
-if (process.env.TEMPDIR && process.env.THRESHOLD) {
-  parseThreshold();
-}
-
-if (!types.classic && !types.application) {
-  logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
-  process.exit(1);
-}
-
-const client = new Client({
-  auth: `Bot ${process.env.TOKEN}`,
-  allowedMentions: {
-    everyone: false,
-    roles: false,
-    users: true,
-    repliedUser: true
-  },
-  gateway: {
-    concurrency: "auto",
-    maxShards: "auto",
-    presence: {
-      status: "idle",
-      activities: [{
-        type: 0,
-        name: "Starting esmBot..."
-      }]
-    },
-    intents
-  },
-  collectionLimits: {
-    messages: 50
+  if (!types.classic && !types.application) {
+    logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
+    return process.exit(1);
   }
-});
 
-client.once("ready", async () => {
+  // database handling
+  const dbResult = await database.upgrade(logger);
+  if (dbResult === 1) return process.exit(1);
+  await database.setup();
+
+  // process the threshold into bytes early
+  if (process.env.TEMPDIR && process.env.THRESHOLD) {
+    await parseThreshold();
+  }
+
   // register commands and their info
   const soundStatus = await checkStatus();
   logger.log("info", "Attempting to load commands...");
   for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
     logger.log("main", `Loading command from ${commandFile}...`);
     try {
-      await load(client, commandFile, soundStatus);
+      await load(null, commandFile, soundStatus);
     } catch (e) {
       logger.error(`Failed to register command from ${commandFile}: ${e}`);
-    }
-  }
-  if (types.application) {
-    try {
-      await send(client);
-    } catch (e) {
-      logger.log("error", e);
-      logger.log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
     }
   }
   logger.log("info", "Finished loading commands.");
   
   if (process.env.API_TYPE === "ws") await reloadImageConnections();
-  await database.setup();
-  
+
+  // create the oceanic client
+  const client = new Client({
+    auth: `Bot ${process.env.TOKEN}`,
+    allowedMentions: {
+      everyone: false,
+      roles: false,
+      users: true,
+      repliedUser: true
+    },
+    gateway: {
+      concurrency: "auto",
+      maxShards: "auto",
+      presence: {
+        status: "idle",
+        activities: [{
+          type: 0,
+          name: "Starting esmBot..."
+        }]
+      },
+      intents
+    },
+    collectionLimits: {
+      messages: 50
+    }
+  });
+
   // register events
   logger.log("info", "Attempting to load events...");
   for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
@@ -206,33 +161,56 @@ client.once("ready", async () => {
     client.on(eventName, event.bind(null, client));
   }
   logger.log("info", "Finished loading events.");
-  
-  // generate docs
-  if (process.env.OUTPUT && process.env.OUTPUT !== "") {
-    generateList();
-    await createPage(process.env.OUTPUT);
-    logger.log("info", "The help docs have been generated.");
-  }
-  
-  // connect to lavalink
-  if (!status && !connected) connect(client);
 
-  checkBroadcast(client);
-  activityChanger(client);
-  
-  logger.log("info", "Started esmBot.");
-});
+  // PM2-specific handling
+  if (process.env.PM2_USAGE) {
+    pm2.launchBus((err, pm2Bus) => {
+      if (err) {
+        logger.error(err);
+        return;
+      }
 
-async function* getFiles(dir) {
-  const dirents = await promises.readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
-    if (dirent.isDirectory()) {
-      yield* getFiles(name);
-    } else if (dirent.name.endsWith(".js")) {
-      yield name;
-    }
+      pm2Bus.on("process:msg", async (packet) => {
+        switch (packet.data?.type) {
+          case "reload":
+            var path = paths.get(packet.data.message);
+            await load(client, path, await checkStatus(), true);
+            break;
+          case "soundreload":
+            var soundStatus = await checkStatus();
+            if (!soundStatus) {
+              reload();
+            }
+            break;
+          case "imagereload":
+            await reloadImageConnections();
+            break;
+          case "broadcastStart":
+            startBroadcast(client, packet.data.message);
+            break;
+          case "broadcastEnd":
+            endBroadcast(client);
+            break;
+          case "serverCounts":
+            pm2.sendDataToProcessId(0, {
+              id: 0,
+              type: "process:msg",
+              data: {
+                type: "serverCounts",
+                guilds: client.guilds.size,
+                shards: client.shards.size
+              },
+              topic: true
+            }, (err) => {
+              if (err) logger.error(err);
+            });
+            break;
+        }
+      });
+    });
   }
+
+  client.connect();
 }
 
-client.connect();
+init();
