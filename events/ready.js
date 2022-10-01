@@ -6,8 +6,12 @@ import { logger } from "../utils/logger.js";
 import { readFileSync } from "fs";
 
 const { types } = JSON.parse(readFileSync(new URL("../config/commands.json", import.meta.url)));
+let ready = false;
 
 export default async (client) => {
+  if (ready) return;
+
+  // send slash command data
   if (types.application) {
     try {
       await send(client);
@@ -29,6 +33,8 @@ export default async (client) => {
 
   checkBroadcast(client);
   activityChanger(client);
+
+  ready = true;
   
   logger.log("info", "Started esmBot.");
 };
