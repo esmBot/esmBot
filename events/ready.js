@@ -1,5 +1,4 @@
 import { activityChanger, checkBroadcast } from "../utils/misc.js";
-import { connect, status, connected } from "../utils/soundplayer.js";
 import { send } from "../utils/handler.js";
 import { generateList, createPage } from "../utils/help.js";
 import { logger } from "../utils/logger.js";
@@ -27,9 +26,6 @@ export default async (client) => {
     await createPage(process.env.OUTPUT);
     logger.log("info", "The help docs have been generated.");
   }
-  
-  // connect to lavalink
-  if (!status && !connected) connect(client);
 
   checkBroadcast(client);
   activityChanger(client);

@@ -35,7 +35,7 @@ import { paths } from "./utils/collections.js";
 // database stuff
 import database from "./utils/database.js";
 // lavalink stuff
-import { checkStatus, reload } from "./utils/soundplayer.js";
+import { checkStatus, reload, connect, status, connected } from "./utils/soundplayer.js";
 // events
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
@@ -209,6 +209,9 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
       });
     });
   }
+
+  // connect to lavalink
+  if (!status && !connected) connect(client);
 
   client.connect();
 }
