@@ -22,8 +22,8 @@ export async function checkStatus() {
     try {
       const response = await request(`http://${node.url}/version`, { headers: { authorization: node.auth } }).then(res => res.body.text());
       if (response) newNodes.push(node);
-    } catch {
-      logger.error(`Failed to get status of Lavalink node ${node.url}.`);
+    } catch (e) {
+      logger.error(`Failed to get status of Lavalink node ${node.url}: ${e}`);
     }
   }
   nodes = newNodes;

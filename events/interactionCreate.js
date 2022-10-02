@@ -59,7 +59,7 @@ export default async (client, interaction) => {
     } else if (error.toString().includes("Timed out")) {
       await interaction[replyMethod]({ content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.", flags: 64 });
     } else {
-      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options)}: ${error.stack || error}`);
+      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.optionsArray)}: ${error.stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name == "Promise") err = await error;

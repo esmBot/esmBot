@@ -17,8 +17,6 @@ jobs:
       uses: actions/checkout@v1
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
-      with:
-        cache: 'pnpm'
     - name: Setup pnpm
       uses: pnpm/action-setup@v2.2.2
       with:
@@ -33,23 +31,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        path-type: inherit
-        update: true
-        install: git mingw-w64-x86_64-cc mingw-w64-x86_64-libvips mingw-w64-x86_64-imagemagick
+    - name: Setup Scoop
+      uses: MinoruSekine/setup-scoop@v1
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
-      with:
-        cache: 'pnpm'
     - name: Setup pnpm
       uses: pnpm/action-setup@v2.2.2
       with:
         version: 7
+    - name: Install Dependencies
+      run: scoop install libvips imagemagick
     - name: Build
-      shell: msys2 {0}
       run: $PNPM_HOME/pnpm install --config.strict-peer-dependencies=false && $PNPM_HOME/pnpm run build
 
   darwin:
@@ -59,8 +51,6 @@ jobs:
       uses: actions/checkout@v1
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.2
-      with:
-        cache: 'pnpm'
     - name: Setup pnpm
       uses: pnpm/action-setup@v2.2.2
       with:

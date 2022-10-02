@@ -140,7 +140,9 @@ export default async (client, message) => {
         if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
           await upload(client, result, message);
         } else {
-          await client.rest.channels.createMessage(message.channelID, "The resulting image was more than 8MB in size, so I can't upload it.");
+          await client.rest.channels.createMessage(message.channelID, {
+            content: "The resulting image was more than 8MB in size, so I can't upload it."
+          });
         }
       } else {
         await client.rest.channels.createMessage(message.channelID, Object.assign({
