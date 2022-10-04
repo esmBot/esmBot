@@ -19,10 +19,10 @@ class PlayCommand extends MusicCommand {
     }
     try {
       const url = new URL(query);
-      return await play(this.client, url, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
+      return play(this.client, url, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
     } catch {
       const search = prefixes.some(v => query.startsWith(v)) ? query : !query && attachment ? attachment.url : `ytsearch:${query}`;
-      return await play(this.client, search, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
+      return play(this.client, search, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
     }
   }
 

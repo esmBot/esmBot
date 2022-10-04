@@ -61,7 +61,7 @@ export function reload() {
 export async function play(client, sound, options, music = false) {
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
   if (!options.channel.guild) return { content: "This command only works in servers!", flags: 64 };
-  if (!options.member.voiceState.channelID) return { content: "You need to be in a voice channel first!", flags: 64 };
+  if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
   if (!options.channel.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };

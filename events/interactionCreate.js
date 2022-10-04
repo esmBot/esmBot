@@ -31,23 +31,25 @@ export default async (client, interaction) => {
         content: result,
         flags: commandClass.success ? 0 : 64
       });
-    } else if (typeof result === "object" && result.embeds) {
-      await interaction[replyMethod](Object.assign(result, {
-        flags: result.flags ?? (commandClass.success ? 0 : 64)
-      }));
-    } else if (typeof result === "object" && result.contents) {
-      const fileSize = 8388119;
-      if (result.contents.length > fileSize) {
-        if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, result, interaction, true);
+    } else if (typeof result === "object") {
+      if (result.contents && result.name) {
+        const fileSize = 8388119;
+        if (result.contents.length > fileSize) {
+          if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
+            await upload(client, result, interaction, true);
+          } else {
+            await interaction[replyMethod]({
+              content: "The resulting image was more than 8MB in size, so I can't upload it.",
+              flags: 64
+            });
+          }
         } else {
-          await interaction[replyMethod]({
-            content: "The resulting image was more than 8MB in size, so I can't upload it.",
-            flags: 64
-          });
+          await interaction[replyMethod](result.text ? result.text : { files: [result] });
         }
       } else {
-        await interaction[replyMethod](result.text ? result.text : { files: [result] });
+        await interaction[replyMethod](Object.assign({
+          flags: result.flags ?? (commandClass.success ? 0 : 64)
+        }, result));
       }
     }
   } catch (error) {
