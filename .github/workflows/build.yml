@@ -27,7 +27,7 @@ jobs:
       run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
 
   win64:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
     - name: Checkout
       uses: actions/checkout@v1

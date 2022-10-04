@@ -10,7 +10,11 @@ import { createServer } from "http";
 import { config } from "dotenv";
 config({ path: resolve(dirname(fileURLToPath(import.meta.url)), "../../.env") });
 
+// oceanic client used for getting shard counts
+import { Client } from "oceanic.js";
+
 import database from "../database.js";
+import { cpus } from "os";
 
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
 
@@ -164,3 +168,78 @@ if (dbl) setInterval(dblPost, 1800000);
 setTimeout(updateStats, 10000);
 
 logger.info("Started esmBot management process.");
+
+// from eris-fleet
+function calcShards(shards, procs) {
+  if (procs < 2) return [shards];
+
+  const length = shards.length;
+  const r = [];
+  let i = 0;
+  let size;
+
+  if (length % procs === 0) {
+    size = Math.floor(length / procs);
+    while (i < length) {
+      r.push(shards.slice(i, (i += size)));
+    }
+  } else {
+    while (i < length) {
+      size = Math.ceil((length - i) / procs--);
+      r.push(shards.slice(i, (i += size)));
+    }
+  }
+
+  return r;
+}
+
+(async function init() {
+  logger.main("Getting gateway connection data...");
+  const client = new Client({
+    auth: `Bot ${process.env.TOKEN}`,
+    gateway: {
+      concurrency: "auto",
+      maxShards: "auto",
+      presence: {
+        status: "idle",
+        activities: [{
+          type: 0,
+          name: "Starting esmBot..."
+        }]
+      },
+      intents: []
+    }
+  });
+
+  const connectionData = await client.rest.getBotGateway();
+  const cpuAmount = cpus().length;
+  const procAmount = Math.min(connectionData.shards, cpuAmount);
+  logger.main(`Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
+
+  const lastShard = connectionData.shards - 1;
+  const shardArray = [];
+  for (let i = 0; i <= lastShard; i++) {
+    shardArray.push(i);
+  }
+  const shardArrays = calcShards(shardArray, procAmount);
+
+  pm2.start({
+    name: "esmBot",
+    script: "app.js",
+    autorestart: true,
+    exp_backoff_restart_delay: 1000,
+    watch: false,
+    exec_mode: "cluster",
+    instances: shardArrays.length,
+    env: {
+      "SHARDS": JSON.stringify(shardArrays)
+    }
+  }, (err) => {
+    if (err) {
+      logger.error(`Failed to start esmBot: ${err}`);
+      process.exit(0);
+    } else {
+      logger.info("Started esmBot processes.");
+    }
+  });
+})();

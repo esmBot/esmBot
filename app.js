@@ -133,6 +133,7 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
     gateway: {
       concurrency: "auto",
       maxShards: "auto",
+      shardIDs: process.env.SHARDS ? JSON.parse(process.env.SHARDS)[process.env.pm_id - 1] : null,
       presence: {
         status: "idle",
         activities: [{
