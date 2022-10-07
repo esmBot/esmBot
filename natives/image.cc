@@ -25,9 +25,10 @@
 #include "reverse.h"
 #include "scott.h"
 #include "snapchat.h"
-#include "speed.h"
 #include "sonic.h"
+#include "speed.h"
 #include "spin.h"
+#include "squish.h"
 #include "tile.h"
 #include "togif.h"
 #include "uncanny.h"
@@ -74,9 +75,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
   exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
   exports.Set(Napi::String::New(env, "snapchat"), Napi::Function::New(env, Snapchat));
-  exports.Set(Napi::String::New(env, "speed"), Napi::Function::New(env, Speed));
   exports.Set(Napi::String::New(env, "sonic"), Napi::Function::New(env, Sonic));
+  exports.Set(Napi::String::New(env, "speed"), Napi::Function::New(env, Speed));
   exports.Set(Napi::String::New(env, "spin"), Napi::Function::New(env, Spin));
+  exports.Set(Napi::String::New(env, "squish"), Napi::Function::New(env, Squish));
   exports.Set(Napi::String::New(env, "swirl"), Napi::Function::New(env, Swirl));
   exports.Set(Napi::String::New(env, "tile"), Napi::Function::New(env, Tile));
   exports.Set(Napi::String::New(env, "togif"), Napi::Function::New(env, ToGif));
