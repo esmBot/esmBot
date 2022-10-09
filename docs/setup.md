@@ -10,7 +10,7 @@ Here are some instructions to get esmBot up and running from source.
 !!! warning
     If you want to run the bot on Windows, [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
 
-If you have any further questions regarding setup, feel free to ask in the #self-hosting-support channel on the [esmBot Support server](https://projectlounge.pw/support).
+If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://projectlounge.pw/support).
 
 !!! tip
     You can run the bot using Docker for a somewhat simpler setup experience. [Click here to go to the Docker setup guide.](https://esmbot.github.io/esmBot/docker)
@@ -228,4 +228,4 @@ pm2 start app.js
 
 ***
 
-If you have any further questions regarding self-hosting, feel free to ask in the #self-hosting-support channel on the [esmBot Support server](https://projectlounge.pw/support).
+If you have any further questions regarding self-hosting, feel free to ask in the #support channel on the [esmBot Support server](https://projectlounge.pw/support).
