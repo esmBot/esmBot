@@ -88,6 +88,7 @@ export async function play(client, sound, options, music = false) {
   }
   const oldQueue = queues.get(voiceChannel.guildID);
   if (!response.tracks || response.tracks.length === 0) return { content: "I couldn't find that song!", flags: 64 };
+  if (process.env.YT_DISABLED === "true" && response.tracks[0].info.sourceName === "youtube") return "YouTube playback is disabled on this instance.";
   if (music) {
     const sortedTracks = response.tracks.map((val) => { return val.track; });
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
