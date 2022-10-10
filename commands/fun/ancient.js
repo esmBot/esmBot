@@ -11,7 +11,7 @@ class AncientCommand extends Command {
     try {
       const data = await request("https://files.projectlounge.pw/meme/", { method: "HEAD", signal: controller.signal });
       clearTimeout(timeout);
-      return data.headers.location;
+      return `https://files.projectlounge.pw${data.headers.location}`;
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;
