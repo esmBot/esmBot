@@ -1,5 +1,4 @@
 import * as logger from "./logger.js";
-import { request } from "undici";
 import fs from "fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
@@ -10,26 +9,8 @@ export const queues = new Map();
 export const skipVotes = new Map();
 
 export let manager;
-export let nodes;
-export let status = false;
+export let nodes = JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).lava;
 export let connected = false;
-
-export async function checkStatus() {
-  const json = await fs.promises.readFile(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" });
-  nodes = JSON.parse(json).lava;
-  const newNodes = [];
-  for (const node of nodes) {
-    try {
-      const response = await request(`http://${node.url}/version`, { headers: { authorization: node.auth } }).then(res => res.body.text());
-      if (response) newNodes.push(node);
-    } catch (e) {
-      logger.error(`Failed to get status of Lavalink node ${node.url}: ${e}`);
-    }
-  }
-  nodes = newNodes;
-  status = newNodes.length === 0 ? true : false;
-  return status;
-}
 
 export function connect(client) {
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
@@ -42,8 +23,11 @@ export function connect(client) {
   });
 }
 
-export function reload() {
+export async function reload(client) {
+  if (!manager) connect(client);
   const activeNodes = manager.nodes;
+  const json = await fs.promises.readFile(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" });
+  nodes = JSON.parse(json).lava;
   const names = nodes.map((a) => a.name);
   for (const name in activeNodes) {
     if (!names.includes(name)) {
@@ -55,10 +39,12 @@ export function reload() {
       manager.addNode(node);
     }
   }
+  if (!manager.nodes.size) connected = false;
   return manager.nodes.size;
 }
 
 export async function play(client, sound, options, music = false) {
+  if (!connected) return { content: "I'm not connected to any audio servers!", flags: 64 };
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
   if (!options.channel.guild) return { content: "This command only works in servers!", flags: 64 };
   if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
@@ -66,14 +52,7 @@ export async function play(client, sound, options, music = false) {
   const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   if (!music && manager.players.has(options.channel.guildID)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
-  let node = manager.getNode();
-  if (!node) {
-    const status = await checkStatus();
-    if (!status) {
-      connect(client);
-      node = manager.getNode();
-    }
-  }
+  const node = manager.getNode();
   if (!music && !nodes.filter(obj => obj.name === node.name)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }

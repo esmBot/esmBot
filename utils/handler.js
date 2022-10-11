@@ -8,13 +8,9 @@ const { blacklist } = JSON.parse(readFileSync(new URL("../config/commands.json",
 let queryValue = 0;
 
 // load command into memory
-export async function load(client, command, soundStatus, slashReload = false) {
+export async function load(client, command, slashReload = false) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
-  if (props.requires.includes("sound") && soundStatus) {
-    log("warn", `Failed to connect to some Lavalink nodes, skipped loading command ${command}...`);
-    return;
-  }
   const commandArray = command.split("/");
   let commandName = commandArray[commandArray.length - 1].split(".")[0];
   const category = commandArray[commandArray.length - 2];

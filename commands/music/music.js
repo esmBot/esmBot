@@ -41,7 +41,6 @@ class MusicAIOCommand extends Command {
   }
 
   static description = "Handles music playback";
-  static requires = ["sound"];
   static aliases = ["m"];
   static directAllowed = false;
 }

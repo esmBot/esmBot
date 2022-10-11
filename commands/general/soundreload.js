@@ -1,5 +1,5 @@
 import Command from "../../classes/command.js";
-import { checkStatus, reload } from "../../utils/soundplayer.js";
+import { reload } from "../../utils/soundplayer.js";
 
 class SoundReloadCommand extends Command {
   async run() {
@@ -9,17 +9,16 @@ class SoundReloadCommand extends Command {
       return "Only the bot owner can reload Lavalink!";
     }
     await this.acknowledge();
-    const soundStatus = await checkStatus();
-    if (!soundStatus) {
-      const length = reload();
-      if (process.env.PM2_USAGE) {
-        process.send({
-          type: "process:msg",
-          data: {
-            type: "soundreload"
-          }
-        });
-      }
+    const length = await reload();
+    if (process.env.PM2_USAGE) {
+      process.send({
+        type: "process:msg",
+        data: {
+          type: "soundreload"
+        }
+      });
+    }
+    if (length) {
       return `Successfully connected to ${length} Lavalink node(s).`;
     } else {
       return "I couldn't connect to any Lavalink nodes!";

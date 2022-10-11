@@ -35,7 +35,7 @@ import { paths } from "./utils/collections.js";
 // database stuff
 import database from "./utils/database.js";
 // lavalink stuff
-import { checkStatus, reload, connect, status, connected } from "./utils/soundplayer.js";
+import { reload, connect, connected } from "./utils/soundplayer.js";
 // events
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
@@ -106,12 +106,11 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
   }
 
   // register commands and their info
-  const soundStatus = await checkStatus();
   logger.log("info", "Attempting to load commands...");
   for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
     logger.log("main", `Loading command from ${commandFile}...`);
     try {
-      await load(null, commandFile, soundStatus);
+      await load(null, commandFile);
     } catch (e) {
       logger.error(`Failed to register command from ${commandFile}: ${e}`);
     }
@@ -175,13 +174,10 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
         switch (packet.data?.type) {
           case "reload":
             var path = paths.get(packet.data.message);
-            await load(client, path, await checkStatus(), true);
+            await load(client, path, true);
             break;
           case "soundreload":
-            var soundStatus = await checkStatus();
-            if (!soundStatus) {
-              reload();
-            }
+            await reload(client);
             break;
           case "imagereload":
             await reloadImageConnections();
@@ -212,7 +208,7 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
   }
 
   // connect to lavalink
-  if (!status && !connected) connect(client);
+  if (!connected) connect(client);
 
   client.connect();
 }
