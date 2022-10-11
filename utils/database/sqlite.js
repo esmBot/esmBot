@@ -14,7 +14,7 @@ export async function setup() {
   const counts = connection.prepare("SELECT * FROM counts").all();
   const merged = new Map([...collections.commands, ...collections.messageCommands]);
 
-  if (!counts) {
+  if (!counts || counts.length === 0) {
     for (const command of merged.keys()) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
     }

@@ -117,7 +117,6 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
   // database handling
   const dbResult = await database.upgrade(logger);
   if (dbResult === 1) return process.exit(1);
-  await database.setup();
 
   // process the threshold into bytes early
   if (process.env.TEMPDIR && process.env.THRESHOLD) {
@@ -139,6 +138,7 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
   }
   logger.log("info", "Finished loading commands.");
 
+  await database.setup();
   if (process.env.API_TYPE === "ws") await reloadImageConnections();
 
   // create the oceanic client
