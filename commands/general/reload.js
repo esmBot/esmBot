@@ -1,6 +1,5 @@
 import Command from "../../classes/command.js";
 import { load } from "../../utils/handler.js";
-import { checkStatus } from "../../utils/soundplayer.js";
 import { paths } from "../../utils/collections.js";
 
 class ReloadCommand extends Command {
@@ -12,7 +11,7 @@ class ReloadCommand extends Command {
     await this.acknowledge();
     const path = paths.get(commandName);
     if (!path) return "I couldn't find that command!";
-    const result = await load(this.client, path, await checkStatus(), true);
+    const result = await load(this.client, path, true);
     if (result !== commandName) return "I couldn't reload that command!";
     if (process.env.PM2_USAGE) {
       process.send({
