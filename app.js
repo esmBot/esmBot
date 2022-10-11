@@ -45,10 +45,10 @@ const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.m
 
 const intents = [
   "GUILD_VOICE_STATES",
-  "DIRECT_MESSAGES"
+  "DIRECT_MESSAGES",
+  "GUILDS"
 ];
 if (types.classic) {
-  intents.push("GUILDS");
   intents.push("GUILD_MESSAGES");
   intents.push("MESSAGE_CONTENT");
 }
