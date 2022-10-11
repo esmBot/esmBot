@@ -122,33 +122,35 @@ export default async (client, message) => {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
         content: result
       }, reference));
-    } else if (typeof result === "object" && result.embeds) {
-      await client.rest.channels.createMessage(message.channelID, Object.assign(result, reference));
-    } else if (typeof result === "object" && result.contents) {
-      let fileSize = 8388119;
-      if (message.guildID) {
-        switch (message.guild.premiumTier) {
-          case 2:
-            fileSize = 52428308;
-            break;
-          case 3:
-            fileSize = 104856616;
-            break;
+    } else if (typeof result === "object") {
+      if (result.contents && result.name) {
+        let fileSize = 8388119;
+        if (message.guildID) {
+          switch (message.guild.premiumTier) {
+            case 2:
+              fileSize = 52428308;
+              break;
+            case 3:
+              fileSize = 104856616;
+              break;
+          }
         }
-      }
-      if (result.contents.length > fileSize) {
-        if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-          await upload(client, result, message);
+        if (result.contents.length > fileSize) {
+          if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
+            await upload(client, result, message);
+          } else {
+            await client.rest.channels.createMessage(message.channelID, {
+              content: "The resulting image was more than 8MB in size, so I can't upload it."
+            });
+          }
         } else {
-          await client.rest.channels.createMessage(message.channelID, {
-            content: "The resulting image was more than 8MB in size, so I can't upload it."
-          });
+          await client.rest.channels.createMessage(message.channelID, Object.assign({
+            content: result.text ? result.text : undefined,
+            files: [result]
+          }, reference));
         }
       } else {
-        await client.rest.channels.createMessage(message.channelID, Object.assign({
-          content: result.text ? result.text : undefined,
-          files: [result]
-        }, reference));
+        await client.rest.channels.createMessage(message.channelID, Object.assign(result, reference));
       }
     }
   } catch (error) {

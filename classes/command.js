@@ -63,7 +63,6 @@ class Command {
   static aliases = [];
   static arguments = [];
   static flags = [];
-  static requires = [];
   static slashAllowed = true;
   static directAllowed = true;
   static adminOnly = false;

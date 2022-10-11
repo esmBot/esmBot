@@ -10,7 +10,6 @@ class MusicCommand extends Command {
     }
   }
 
-  static requires = ["sound"];
   static slashAllowed = false;
   static directAllowed = false;
 }

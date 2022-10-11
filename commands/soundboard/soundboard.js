@@ -28,7 +28,6 @@ class SoundboardAIOCommand extends Command {
   }
 
   static description = "Plays a sound effect";
-  static requires = ["sound"];
   static aliases = ["sound", "sb"];
   static directAllowed = false;
 }
