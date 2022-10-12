@@ -12,6 +12,7 @@ class QueueCommand extends MusicCommand {
     if (!this.guild.members.get(this.client.user.id).voiceState) return "I'm not in a voice channel!";
     if (!this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
+    if (!player) return "I haven't completely connected yet!";
     const node = nodes.filter((val) => val.name === player.player.node.name)[0];
     const tracks = await request(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.body.json());
     const trackList = [];
