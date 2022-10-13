@@ -157,7 +157,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   }
   if (cmdMessage) {
     // check if the message is a reply to another message
-    if (cmdMessage.messageReference) {
+    if (cmdMessage.messageReference && !singleMessage) {
       const replyMessage = await client.rest.channels.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
       if (replyMessage) {
         const replyResult = await checkImages(replyMessage, extraReturnTypes, video, sticker);
