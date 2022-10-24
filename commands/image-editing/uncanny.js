@@ -1,5 +1,5 @@
 import ImageCommand from "../../classes/imageCommand.js";
-import { random, textEncode } from "../../utils/misc.js";
+import { random, cleanMessage } from "../../utils/misc.js";
 import { readdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -17,8 +17,8 @@ class UncannyCommand extends ImageCommand {
     let [text1, text2] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     if (!text2?.trim()) text2 = name;
     return {
-      caption: text1?.trim() ? textEncode(text1) : random(prompts),
-      caption2: textEncode(text2),
+      caption: text1?.trim() ? cleanMessage(this.message, text1) : random(prompts),
+      caption2: cleanMessage(this.message, text2),
       path: `assets/images/uncanny/${typeof this.options.phase === "string" && names.includes(this.options.phase.toLowerCase()) ? this.options.phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "helvetica"
     };

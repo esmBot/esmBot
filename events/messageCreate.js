@@ -2,9 +2,11 @@ import database from "../utils/database.js";
 import { log, error as _error } from "../utils/logger.js";
 import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "../utils/collections.js";
 import parseCommand from "../utils/parseCommand.js";
-import { clean, cleanMessage } from "../utils/misc.js";
+import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { ThreadChannel } from "oceanic.js";
+
+let mentionRegex;
 
 // run when someone sends a message
 export default async (client, message) => {
@@ -22,76 +24,62 @@ export default async (client, message) => {
   }
   if (message.guildID && !permChannel.permissionsOf(client.user.id.toString()).has("SEND_MESSAGES")) return;
 
-  let prefixCandidate;
+  if (!mentionRegex) mentionRegex = new RegExp(`^<@!?${client.user.id}> `);
+
   let guildDB;
-  if (message.guildID) {
+  let text;
+  const mentionResult = message.content.match(mentionRegex);
+  if (mentionResult) {
+    text = message.content.substring(mentionResult[0].length).trim();
+  } else if (message.guildID) {
     const cachedPrefix = prefixCache.get(message.guildID);
-    if (cachedPrefix) {
-      prefixCandidate = cachedPrefix;
+    if (cachedPrefix && message.content.startsWith(cachedPrefix)) {
+      text = message.content.substring(cachedPrefix.length).trim();
     } else {
       guildDB = await database.getGuild(message.guildID);
       if (!guildDB) {
         guildDB = await database.fixGuild(message.guildID);
       }
-      prefixCandidate = guildDB.prefix;
-      prefixCache.set(message.guildID, guildDB.prefix);
+      if (message.content.startsWith(guildDB.prefix)) {
+        text = message.content.substring(guildDB.prefix.length).trim();
+        prefixCache.set(message.guildID, guildDB.prefix);
+      } else {
+        return;
+      }
     }
-  }
-
-  let prefix;
-  let isMention = false;
-  if (message.guildID) {
-    const user = message.guild.members.get(client.user.id);
-    if (message.content.startsWith(user.mention)) {
-      prefix = `${user.mention} `;
-      isMention = true;
-    } else if (message.content.startsWith(`<@${client.user.id}>`)) { // workaround for member.mention not accounting for both mention types
-      prefix = `<@${client.user.id}> `;
-      isMention = true;
-    } else {
-      prefix = prefixCandidate;
-    }
+  } else if (message.content.startsWith(process.env.PREFIX)) {
+    text = message.content.substring(process.env.PREFIX.length).trim();
   } else {
-    prefix = process.env.PREFIX;
+    return;
   }
-
-  // ignore other stuff
-  if (!message.content.startsWith(prefix)) return;
 
   // separate commands and args
-  const replace = isMention ? `@${(message.guild ? message.guild.members.get(client.user.id).nick : client.user.username) ?? client.user.username} ` : prefix;
-  const content = cleanMessage(message).substring(replace.length).trim();
-  const rawContent = message.content.substring(prefix.length).trim();
-  const preArgs = content.split(/\s+/g);
-  preArgs.shift();
-  const command = rawContent.split(/\s+/g).shift().toLowerCase();
-  const parsed = parseCommand(preArgs);
+  const preArgs = text.split(/\s+/g);
+  const command = preArgs.shift().toLowerCase();
   const aliased = aliases.get(command);
-
-  // don't run if message is in a disabled channel
-  if (message.guildID) {
-    const disabled = disabledCache.get(message.guildID);
-    if (disabled) {
-      if (disabled.includes(message.channelID) && command != "channel") return;
-    } else {
-      guildDB = await database.getGuild(message.guildID);
-      disabledCache.set(message.guildID, guildDB.disabled);
-      if (guildDB.disabled.includes(message.channelID) && command !== "channel") return;
-    }
-
-    const disabledCmds = disabledCmdCache.get(message.guildID);
-    if (disabledCmds) {
-      if (disabledCmds.includes(aliased ?? command)) return;
-    } else {
-      guildDB = await database.getGuild(message.guildID);
-      disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
-      if ((guildDB.disabled_commands ?? guildDB.disabledCommands).includes(aliased ?? command)) return;
-    }
-  }
 
   // check if command exists and if it's enabled
   const cmd = commands.get(aliased ?? command);
   if (!cmd) return;
+
+  // don't run if message is in a disabled channel
+  if (message.guildID) {
+    let disabled = disabledCache.get(message.guildID);
+    if (!disabled) {
+      if (!guildDB) guildDB = await database.getGuild(message.guildID);
+      disabledCache.set(message.guildID, guildDB.disabled);
+      disabled = guildDB.disabled;
+    }
+    if (disabled.includes(message.channelID) && command != "channel") return;
+
+    let disabledCmds = disabledCmdCache.get(message.guildID);
+    if (!disabledCmds) {
+      if (!guildDB) guildDB = await database.getGuild(message.guildID);
+      disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
+      disabledCmds = guildDB.disabled_commands ?? guildDB.disabledCommands;
+    }
+    if (disabledCmds.includes(aliased ?? command)) return;
+  }
 
   // block certain commands from running in DMs
   if (!cmd.directAllowed && !message.guildID) return;
@@ -110,10 +98,12 @@ export default async (client, message) => {
     }
   };
   try {
+    // parse args
+    const parsed = parseCommand(preArgs);
     await database.addCount(aliases.get(command) ?? command);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: message.content.substring(prefix.length).trim().replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;

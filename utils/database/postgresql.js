@@ -147,11 +147,11 @@ export async function addGuild(guild) {
   const query = await this.getGuild(guild);
   if (query) return query;
   try {
-    await sql`INSERT INTO guilds ${sql({ guild_id: guild.id, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] })}`;
+    await sql`INSERT INTO guilds ${sql({ guild_id: guild, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] })}`;
   } catch (e) {
-    logger.error(`Failed to register guild ${guild.id}: ${e}`);
+    logger.error(`Failed to register guild ${guild}: ${e}`);
   }
-  return await this.getGuild(guild.id);
+  return await this.getGuild(guild);
 }
 
 export async function fixGuild(guild) {

@@ -1,11 +1,11 @@
 import ImageCommand from "../../classes/imageCommand.js";
-import { textEncode } from "../../utils/misc.js";
+import { cleanMessage } from "../../utils/misc.js";
 
 class WhisperCommand extends ImageCommand {
   params(url) {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
-      caption: textEncode(newArgs)
+      caption: cleanMessage(this.message, newArgs)
     };
   }
 

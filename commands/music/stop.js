@@ -6,7 +6,7 @@ class StopCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
     if (!this.member.voiceState) return "You need to be in a voice channel first!";
-    if (!this.guild.members.get(this.client.user.id).voiceState) return "I'm not in a voice channel!";
+    if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
     if (!this.connection) {
       await manager.getNode().leaveChannel(this.guild.id);
       this.success = true;

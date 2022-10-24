@@ -113,34 +113,28 @@ export function getServers(bot) {
 }
 
 // copied from eris
-export function cleanMessage(message) {
-  let cleanContent = message.content && message.content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
+export function cleanMessage(message, content) {
+  let cleanContent = content && content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
   let authorName = message.author.username;
-  if (message.guildID) {
-    const member = message.guild.members.get(message.author.id);
-    if (member && member.nick) {
-      authorName = member.nick;
-    }
+  if (message.member?.nick) {
+    authorName = message.member.nick;
   }
-  cleanContent = cleanContent.replace(new RegExp(`<@!?${message.author.id}>`, "g"), `@\u200b${authorName}`);
+  cleanContent = cleanContent.replace(new RegExp(`<@!?${message.author.id}>`, "g"), `@${authorName}`);
 
   if (message.mentions) {
     for (const mention of message.mentions.members) {
-      if (message.guildID) {
-        const member = message.guild.members.get(mention.id);
-        if (member && member.nick) {
-          cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@\u200b${member.nick}`);
-        }
+      if (mention.nick) {
+        cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.nick}`);
       }
-      cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@\u200b${mention.username}`);
+      cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.username}`);
     }
 
     if (message.guildID && message.mentions.roles) {
       for (const roleID of message.mentions.roles) {
         const role = message.guild.roles.get(roleID);
         const roleName = role ? role.name : "deleted-role";
-        cleanContent = cleanContent.replace(new RegExp(`<@&${roleID}>`, "g"), `@\u200b${roleName}`);
+        cleanContent = cleanContent.replace(new RegExp(`<@&${roleID}>`, "g"), `@${roleName}`);
       }
     }
 
@@ -152,5 +146,5 @@ export function cleanMessage(message) {
     }
   }
 
-  return cleanContent.replace(/@everyone/g, "@\u200beveryone").replace(/@here/g, "@\u200bhere");
+  return textEncode(cleanContent);
 }

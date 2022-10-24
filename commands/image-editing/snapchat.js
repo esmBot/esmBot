@@ -1,12 +1,12 @@
 import ImageCommand from "../../classes/imageCommand.js";
-import { textEncode } from "../../utils/misc.js";
+import { cleanMessage } from "../../utils/misc.js";
 
 class SnapchatCommand extends ImageCommand {
   params(url) {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     const position = parseFloat(this.options.position);
     return {
-      caption: textEncode(newArgs),
+      caption: cleanMessage(this.message, newArgs),
       pos: isNaN(position) ? 0.5 : position
     };
   }

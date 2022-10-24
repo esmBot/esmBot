@@ -1,10 +1,10 @@
 //import wrap from "../../utils/wrap.js";
 import ImageCommand from "../../classes/imageCommand.js";
-import { textEncode } from "../../utils/misc.js";
+import { cleanMessage } from "../../utils/misc.js";
 
 class SonicCommand extends ImageCommand {
   params() {
-    const cleanedMessage = textEncode(this.options.text ?? this.args.join(" "));
+    const cleanedMessage = cleanMessage(this.message, this.options.text ?? this.args.join(" "));
     return {
       text: cleanedMessage
     };
