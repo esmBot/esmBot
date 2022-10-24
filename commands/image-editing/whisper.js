@@ -5,7 +5,7 @@ class WhisperCommand extends ImageCommand {
   params(url) {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
-      caption: cleanMessage(this.message, newArgs)
+      caption: cleanMessage(this.message ?? this.interaction, newArgs)
     };
   }
 

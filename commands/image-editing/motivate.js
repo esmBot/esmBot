@@ -15,8 +15,8 @@ class MotivateCommand extends ImageCommand {
     const newArgs = this.options.text ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     return {
-      top: cleanMessage(this.message, topText),
-      bottom: bottomText ? cleanMessage(this.message, bottomText) : "",
+      top: cleanMessage(this.message ?? this.interaction, topText),
+      bottom: bottomText ? cleanMessage(this.message ?? this.interaction, bottomText) : "",
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "times"
     };
   }

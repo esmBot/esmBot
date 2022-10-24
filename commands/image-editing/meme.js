@@ -15,8 +15,8 @@ class MemeCommand extends ImageCommand {
     const newArgs = this.options.text ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     return {
-      top: cleanMessage(this.message, this.options.case ? topText : topText.toUpperCase()),
-      bottom: bottomText ? cleanMessage(this.message, this.options.case ? bottomText : bottomText.toUpperCase()) : "",
+      top: cleanMessage(this.message ?? this.interaction, this.options.case ? topText : topText.toUpperCase()),
+      bottom: bottomText ? cleanMessage(this.message ?? this.interaction, this.options.case ? bottomText : bottomText.toUpperCase()) : "",
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "impact"
     };
   }

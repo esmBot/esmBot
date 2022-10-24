@@ -116,11 +116,12 @@ export function getServers(bot) {
 export function cleanMessage(message, content) {
   let cleanContent = content && content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
-  let authorName = message.author.username;
+  const author = message.author ?? message.member;
+  let authorName = author.username;
   if (message.member?.nick) {
     authorName = message.member.nick;
   }
-  cleanContent = cleanContent.replace(new RegExp(`<@!?${message.author.id}>`, "g"), `@${authorName}`);
+  cleanContent = cleanContent.replace(new RegExp(`<@!?${author.id}>`, "g"), `@${authorName}`);
 
   if (message.mentions) {
     for (const mention of message.mentions.members) {
