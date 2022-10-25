@@ -34,7 +34,7 @@ class HostCommand extends MusicCommand {
       }
       if (!user) return "I can't find that user!";
       if (user.bot) return "This is illegal, you know.";
-      const member = this.guild ? this.guild.members.get(user.id) : undefined;
+      const member = this.guild.members.get(user.id);
       if (!member) return "That user isn't in this server!";
       const object = this.connection;
       object.host = member.id;
@@ -42,7 +42,7 @@ class HostCommand extends MusicCommand {
       this.success = true;
       return `🔊 ${member.mention} is the new voice channel host.`;
     } else {
-      const member = this.guild ? this.guild.members.get(players.get(this.guild.id).host) : undefined;
+      const member = this.guild.members.get(players.get(this.guild.id).host);
       this.success = true;
       return `🔊 The current voice channel host is **${member?.username}#${member?.discriminator}**.`;
     }
