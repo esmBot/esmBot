@@ -27,7 +27,7 @@ export default async (client) => {
     logger.log("info", "The help docs have been generated.");
   }
 
-  checkBroadcast(client);
+  await checkBroadcast(client);
   activityChanger(client);
 
   ready = true;

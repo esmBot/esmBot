@@ -6,6 +6,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE counts ( command VARCHAR NOT NULL PRIMARY KEY, count integer NOT NULL );
     CREATE TABLE tags ( guild_id VARCHAR(30) NOT NULL, name text NOT NULL, content text NOT NULL, author VARCHAR(30) NOT NULL, UNIQUE(guild_id, name) );
 
-    CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );
+    CREATE TABLE settings ( id smallint PRIMARY KEY, version integer NOT NULL, broadcast VARCHAR, CHECK(id = 1) );
     INSERT INTO settings (id, version) VALUES (1, 2) ON CONFLICT (id) DO NOTHING;
 EOSQL

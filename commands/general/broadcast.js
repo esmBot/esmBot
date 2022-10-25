@@ -1,4 +1,5 @@
 import Command from "../../classes/command.js";
+import database from "../../utils/database.js";
 import { endBroadcast, startBroadcast } from "../../utils/misc.js";
 
 class BroadcastCommand extends Command {
@@ -10,6 +11,7 @@ class BroadcastCommand extends Command {
     }
     const message = this.options.message ?? this.args.join(" ");
     if (message?.trim()) {
+      await database.setBroadcast(message);
       startBroadcast(this.client, message);
       if (process.env.PM2_USAGE) {
         process.send({
@@ -22,6 +24,7 @@ class BroadcastCommand extends Command {
       }
       return "Started broadcast.";
     } else {
+      await database.setBroadcast(null);
       endBroadcast(this.client);
       if (process.env.PM2_USAGE) {
         process.send({

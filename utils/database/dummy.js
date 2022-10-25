@@ -20,6 +20,8 @@ export async function getTag() {}
 export async function setTag() {}
 export async function removeTag() {}
 export async function editTag() {}
+export async function setBroadcast() {}
+export async function getBroadcast() {}
 export async function setPrefix() {}
 export async function addGuild(guild) {
   return {

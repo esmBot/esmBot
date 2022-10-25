@@ -2,6 +2,7 @@ import util from "util";
 import fs from "fs";
 import pm2 from "pm2";
 import { config } from "dotenv";
+import db from "./database.js";
 
 // playing messages
 const { messages } = JSON.parse(fs.readFileSync(new URL("../config/messages.json", import.meta.url)));
@@ -62,10 +63,11 @@ export async function activityChanger(bot) {
   setTimeout(() => activityChanger(bot), 900000);
 }
 
-export function checkBroadcast(bot) {
-  /*if () {
+export async function checkBroadcast(bot) {
+  const message = await db.getBroadcast();
+  if (message) {
     startBroadcast(bot, message);
-  }*/
+  }
 }
 
 export function startBroadcast(bot, message) {
@@ -116,7 +118,7 @@ export function getServers(bot) {
 export function cleanMessage(message, content) {
   let cleanContent = content && content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
-  const author = message.author ?? message.member;
+  const author = message.author ?? message.member ?? message.user;
   let authorName = author.username;
   if (message.member?.nick) {
     authorName = message.member.nick;
