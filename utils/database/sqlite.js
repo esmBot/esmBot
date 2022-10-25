@@ -54,7 +54,9 @@ export async function upgrade(logger) {
       while (version < (sqliteUpdates.length - 1)) {
         version++;
         logger.warn(`Running version ${version} update script (${sqliteUpdates[version]})...`);
-        connection.prepare(sqliteUpdates[version]).run();
+        for (const statement of sqliteUpdates[version].split("\n")) {
+          connection.prepare(statement).run();
+        }
       }
       connection.pragma(`user_version = ${version}`); // insecure, but the normal templating method doesn't seem to work here
       connection.prepare("COMMIT").run();
