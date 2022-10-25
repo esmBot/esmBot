@@ -17,6 +17,9 @@ export function connect(client) {
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });
+  manager.on("debug", (node, info) => {
+    logger.debug(`Debug event from Lavalink node ${node}: ${info}`);
+  });
   manager.once("ready", () => {
     logger.log(`Successfully connected to ${manager.nodes.size} Lavalink node(s).`);
     connected = true;
@@ -150,36 +153,8 @@ export async function nextSong(client, options, connection, track, info, music, 
   connection.removeAllListeners("end");
   connection.setVolume(0.70);
   connection.playTrack({ track });
-  players.set(voiceChannel.guildID, { player: connection, type: music ? "music" : "sound", host: host, voiceChannel: voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
-  connection.once("exception", async (exception) => {
-    try {
-      if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-      const playMessage = players.get(voiceChannel.guildID).playMessage;
-      if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
-    } catch {
-      // no-op
-    }
-    try {
-      connection.node.leaveChannel(voiceChannel.guildID);
-    } catch {
-      // no-op
-    }
-    connection.removeAllListeners("stuck");
-    connection.removeAllListeners("end");
-    players.delete(voiceChannel.guildID);
-    queues.delete(voiceChannel.guildID);
-    logger.error(exception.error);
-    try {
-      const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.error}\`\`\``;
-      if (options.type === "classic") {
-        await client.rest.channels.createMessage(options.channel.id, { content });
-      } else {
-        await options.interaction.createFollowup({ content });
-      }
-    } catch {
-      // no-op
-    }
-  });
+  players.set(voiceChannel.guildID, { player: connection, type: music ? "music" : "sound", host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
+  connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", () => {
     const nodeName = manager.getNode().name;
     connection.move(nodeName);
@@ -246,4 +221,36 @@ export async function nextSong(client, options, connection, track, info, music, 
       }
     }
   });
+}
+
+export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options, closed) {
+  try {
+    if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+    const playMessage = players.get(voiceChannel.guildID).playMessage;
+    if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
+  } catch {
+    // no-op
+  }
+  players.delete(voiceChannel.guildID);
+  queues.delete(voiceChannel.guildID);
+  skipVotes.delete(voiceChannel.guildID);
+  logger.error(exception);
+  try {
+    connection.node.leaveChannel(voiceChannel.guildID);
+  } catch {
+    // no-op
+  }
+  if (closed) connection.removeAllListeners("exception");
+  connection.removeAllListeners("stuck");
+  connection.removeAllListeners("end");
+  try {
+    const content = closed ? `🔊 I got disconnected by Discord and tried to reconnect; however, I got this error instead:\n\`\`\`${exception}\`\`\`` : `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.error}\`\`\``;
+    if (options.type === "classic") {
+      await client.rest.channels.createMessage(playingMessage.channel.id, { content });
+    } else {
+      await options.interaction.createFollowup({ content });
+    }
+  } catch {
+    // no-op
+  }
 }
