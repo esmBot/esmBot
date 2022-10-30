@@ -49,7 +49,7 @@ Choose the distro you're using below for insallation instructions.
 [libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. Version 8.13.0 or higher is recommended because it contains fixes to GIF handling and support for the freeze command; however, this version isn't packaged for most distros yet. To fix this, you'll need to build libvips from source.
 
 !!! note
-    Alpine, Arch, and RHEL **(not Fedora!)** users can skip this step, since these distros now have 8.13.0 packaged.
+    Alpine, Arch, RHEL **(not Fedora!)**, and Ubuntu 22.10 (Kinetic Kudu) users can skip this step, since these distros now have 8.13.0 packaged.
 
 First, download the source and move into it:
 ```sh
@@ -71,7 +71,7 @@ sudo meson install
 
 ### 3. Install Node.js.
 
-Node.js is the runtime that esmBot is built on top of. The bot requires version 15 or above to run.
+Node.js is the runtime that esmBot is built on top of. The bot requires version 16 or above to run.
 
 First things first, we'll need to install pnpm, the package manager used by the bot. Run the following to install it:
 ```sh
@@ -108,6 +108,9 @@ Once you've done that, continue with the instructions for your operating system 
 
 esmBot officially supports two database systems: SQLite and PostgreSQL. While SQLite is smaller and requires no initial setup, PostgreSQL has better performance (especially in large environments).
 
+!!! tip
+    If you're new to databases and self-hosting, choose SQLite.
+
 If you would like to use the SQLite database, no configuration is needed and you can move on to the next step.
 
 If you would like to use the PostgreSQL database, view the setup instructions [here](https://esmbot.github.io/esmBot/postgresql) and come back here when you're finished.
@@ -117,7 +120,7 @@ If you would like to use the PostgreSQL database, view the setup instructions [h
 ### 5. Clone the repo and install the required Node modules.
 ```sh
 cd ~
-git clone --recurse-submodules https://github.com/esmBot/esmBot
+git clone --recursive https://github.com/esmBot/esmBot
 cd esmBot
 pnpm i -g node-gyp
 pnpm install
@@ -130,7 +133,10 @@ pnpm build
 
 Lavalink is the audio server used by esmBot for soundboard commands and music playback. If you do not plan on using these features, you can safely skip this step.
 
-Lavalink requires a Java (11 or 13) installation. You can use [SDKMAN](https://sdkman.io) to install Eclipse Temurin, a popular Java distribution:
+!!! warning
+    There are websites out there providing lists of public Lavalink instances that can be used with the bot. However, these are not recommended due to performance/security concerns and missing features, and it is highly recommended to set one up yourself instead using the steps below.
+
+Lavalink requires a Java (11 or later) installation. You can use [SDKMAN](https://sdkman.io) to install Eclipse Temurin, a popular Java distribution:
 ```sh
 sdk install java 11.0.15-tem
 ```
@@ -148,6 +154,9 @@ To run Lavalink, you can use this command:
 ```sh
 java -Djdk.tls.client.protocols=TLSv1.2 -jar Lavalink.jar
 ```
+
+!!! info
+    You'll need to run Lavalink alongside the bot in order to use it. There are a few methods to do this, such as the `screen` command, creating a new systemd service, or simply just opening a new terminal session alongside your current one.
 
 ***
 
@@ -197,7 +206,7 @@ pnpm add -g pm2
 
 Once you've done that, you can start the bot using the following command:
 ```sh
-pm2 start app.js
+pm2 start ecosystem.config.cjs
 ```
 
 !!! tip
@@ -209,7 +218,7 @@ pm2 start app.js
 ??? faq "Error: Cannot find module './build/Release/image.node'"
     The native image functions haven't been built. Run `pnpm run build` to build them.
 
-??? faq "pnpm fails with error 'ELIFECYCLE  Command failed.'"
+??? faq "`pnpm install` or `pnpm build` fails with error 'ELIFECYCLE  Command failed.'"
     You seem to be missing node-gyp. This can be fixed by running:
     ```sh
     pnpm i -g node-gyp
@@ -222,9 +231,6 @@ pm2 start app.js
 
 ??? faq "Gifs from Tenor result in a "no decode delegate for this image format" or "improper image header" error"
     Tenor GIFs are actually stored as MP4s, which libvips can't decode most of the time. You'll need to get a Tenor API key from [here](https://developers.google.com/tenor/guides/quickstart) and put it in the `TENOR` variable in .env.
-
-??? faq "Sound/music commands do nothing"
-    Make sure Lavalink is running and started up completely. The bot skips loading sound commands if Lavalink is not present, so make sure it's running when the bot starts as well.
 
 ***
 
