@@ -8,7 +8,7 @@ const psqlUpdates = [
   "", // reserved
   "CREATE TABLE IF NOT EXISTS settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
   "ALTER TABLE guilds DROP COLUMN accessed",
-  "ALTER TABLE settings ADD COLUMN broadcast text"
+  "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text"
 ];
 
 export async function setup() {

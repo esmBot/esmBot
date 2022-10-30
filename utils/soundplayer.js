@@ -141,8 +141,14 @@ export async function nextSong(client, options, connection, track, info, music, 
       if (options.type === "classic") {
         playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
       } else {
-        await options.interaction[options.interaction.acknowledged ? "editOriginal" : "createMessage"](content);
-        playingMessage = await options.interaction.getOriginal();
+        if ((Date.now() - options.interaction.createdAt) >= 900000) { // discord interactions are only valid for 15 minutes
+          playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
+        } else if (lastTrack && lastTrack !== track) {
+          playingMessage = await options.interaction.createFollowup(content);
+        } else {
+          playingMessage = await options.interaction[options.interaction.acknowledged ? "editOriginal" : "createMessage"](content);
+          if (!playingMessage) playingMessage = await options.interaction.getOriginal();
+        }
       }
     } catch {
       // no-op
@@ -206,7 +212,11 @@ export async function nextSong(client, options, connection, track, info, music, 
         if (options.type === "classic") {
           await client.rest.channels.createMessage(options.channel.id, { content });
         } else {
-          await options.interaction.createFollowup({ content });
+          if ((Date.now() - options.interaction.createdAt) >= 900000) {
+            await client.rest.channels.createMessage(options.channel.id, { content });
+          } else {
+            await options.interaction.createFollowup({ content });
+          }
         }
       } catch {
         // no-op
@@ -240,7 +250,7 @@ export async function errHandle(exception, client, connection, playingMessage, v
   } catch {
     // no-op
   }
-  if (closed) connection.removeAllListeners("exception");
+  connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
   try {
@@ -248,7 +258,11 @@ export async function errHandle(exception, client, connection, playingMessage, v
     if (options.type === "classic") {
       await client.rest.channels.createMessage(playingMessage.channel.id, { content });
     } else {
-      await options.interaction.createFollowup({ content });
+      if ((Date.now() - options.interaction.createdAt) >= 900000) {
+        await client.rest.channels.createMessage(options.channel.id, { content });
+      } else {
+        await options.interaction.createFollowup({ content });
+      }
     }
   } catch {
     // no-op
