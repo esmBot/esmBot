@@ -224,8 +224,14 @@ function calcShards(shards, procs) {
   const shardArrays = calcShards(shardArray, procAmount);
 
   for (let i = 0; i < shardArrays.length; i++) {
+    await awaitStart(i, shardArrays);
+  }
+})();
+
+function awaitStart(i, shardArrays) {
+  return new Promise((resolve) => {
     pm2.start({
-      name: "esmBot",
+      name: `esmBot-${i}`,
       script: "app.js",
       autorestart: true,
       exp_backoff_restart_delay: 1000,
@@ -243,7 +249,8 @@ function calcShards(shards, procs) {
         process.exit(0);
       } else {
         logger.info(`Started esmBot process ${i}.`);
+        resolve();
       }
     });
-  }
-})();
+  });
+}
