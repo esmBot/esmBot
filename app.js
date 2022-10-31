@@ -164,45 +164,52 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
 
   // PM2-specific handling
   if (process.env.PM2_USAGE) {
+    // callback hell :)
     pm2.launchBus((err, pm2Bus) => {
       if (err) {
         logger.error(err);
         return;
       }
-
-      pm2Bus.on("process:msg", async (packet) => {
-        switch (packet.data?.type) {
-          case "reload":
-            var path = paths.get(packet.data.message);
-            await load(client, path, true);
-            break;
-          case "soundreload":
-            await reload(client);
-            break;
-          case "imagereload":
-            await reloadImageConnections();
-            break;
-          case "broadcastStart":
-            startBroadcast(client, packet.data.message);
-            break;
-          case "broadcastEnd":
-            endBroadcast(client);
-            break;
-          case "serverCounts":
-            pm2.sendDataToProcessId(0, {
-              id: 0,
-              type: "process:msg",
-              data: {
-                type: "serverCounts",
-                guilds: client.guilds.size,
-                shards: client.shards.size
-              },
-              topic: true
-            }, (err) => {
-              if (err) logger.error(err);
-            });
-            break;
+      pm2.list((err, list) => {
+        if (err) {
+          logger.error(err);
+          return;
         }
+        const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+        pm2Bus.on("process:msg", async (packet) => {
+          switch (packet.data?.type) {
+            case "reload":
+              var path = paths.get(packet.data.message);
+              await load(client, path, true);
+              break;
+            case "soundreload":
+              await reload(client);
+              break;
+            case "imagereload":
+              await reloadImageConnections();
+              break;
+            case "broadcastStart":
+              startBroadcast(client, packet.data.message);
+              break;
+            case "broadcastEnd":
+              endBroadcast(client);
+              break;
+            case "serverCounts":
+              pm2.sendDataToProcessId(managerProc.pm_id, {
+                id: managerProc.pm_id,
+                type: "process:msg",
+                data: {
+                  type: "serverCounts",
+                  guilds: client.guilds.size,
+                  shards: client.shards.size
+                },
+                topic: true
+              }, (err) => {
+                if (err) logger.error(err);
+              });
+              break;
+          }
+        });
       });
     });
   }

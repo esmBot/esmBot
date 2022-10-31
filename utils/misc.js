@@ -98,15 +98,22 @@ export function getServers(bot) {
         };
         pm2Bus.on("process:msg", listener);
       });
-      pm2.sendDataToProcessId(0, {
-        id: 0,
-        type: "process:msg",
-        data: {
-          type: "getCount"
-        },
-        topic: true
-      }, (err) => {
-        if (err) reject(err);
+      pm2.list((err, list) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+        pm2.sendDataToProcessId(managerProc.pm_id, {
+          id: managerProc.pm_id,
+          type: "process:msg",
+          data: {
+            type: "getCount"
+          },
+          topic: true
+        }, (err) => {
+          if (err) reject(err);
+        });
       });
     } else {
       resolve(bot.guilds.size);
