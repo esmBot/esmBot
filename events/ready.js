@@ -31,6 +31,8 @@ export default async (client) => {
   activityChanger(client);
 
   ready = true;
+
+  process.send("ready");
   
   logger.log("info", "Started esmBot.");
 };

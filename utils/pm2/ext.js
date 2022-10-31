@@ -223,23 +223,27 @@ function calcShards(shards, procs) {
   }
   const shardArrays = calcShards(shardArray, procAmount);
 
-  pm2.start({
-    name: "esmBot",
-    script: "app.js",
-    autorestart: true,
-    exp_backoff_restart_delay: 1000,
-    watch: false,
-    exec_mode: "cluster",
-    instances: shardArrays.length,
-    env: {
-      "SHARDS": JSON.stringify(shardArrays)
-    }
-  }, (err) => {
-    if (err) {
-      logger.error(`Failed to start esmBot: ${err}`);
-      process.exit(0);
-    } else {
-      logger.info("Started esmBot processes.");
-    }
-  });
+  for (let i = 0; i < shardArrays.length; i++) {
+    pm2.start({
+      name: "esmBot",
+      script: "app.js",
+      autorestart: true,
+      exp_backoff_restart_delay: 1000,
+      wait_ready: true,
+      listen_timeout: 60000,
+      watch: false,
+      exec_mode: "cluster",
+      instances: 1,
+      env: {
+        "SHARDS": JSON.stringify(shardArrays)
+      }
+    }, (err) => {
+      if (err) {
+        logger.error(`Failed to start esmBot process ${i}: ${err}`);
+        process.exit(0);
+      } else {
+        logger.info(`Started esmBot process ${i}.`);
+      }
+    });
+  }
 })();
