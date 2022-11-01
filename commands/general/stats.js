@@ -78,7 +78,7 @@ class StatsCommand extends Command {
     return new Promise((resolve, reject) => {
       pm2.list((err, list) => {
         if (err) return reject(err);
-        resolve(list.filter((v) => v.name === "esmBot"));
+        resolve(list.filter((v) => v.name.includes("esmBot-proc")));
       });
     });
   }

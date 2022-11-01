@@ -77,7 +77,7 @@ function updateStats() {
   return new Promise((resolve, reject) => {
     pm2.list((err, list) => {
       if (err) reject(err);
-      const clusters = list.filter((v) => v.name === "esmBot");
+      const clusters = list.filter((v) => v.name.includes("esmBot-proc"));
       clusterCount = clusters.length;
       const listener = (packet) => {
         if (packet.data?.type === "serverCounts") {
@@ -231,7 +231,7 @@ function calcShards(shards, procs) {
 function awaitStart(i, shardArrays) {
   return new Promise((resolve) => {
     pm2.start({
-      name: `esmBot-${i}`,
+      name: `esmBot-proc${i}`,
       script: "app.js",
       autorestart: true,
       exp_backoff_restart_delay: 1000,
