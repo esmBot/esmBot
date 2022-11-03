@@ -1,6 +1,8 @@
 name: Publish docs via GitHub Pages
 on:
   push:
+    paths:
+      - 'docs/**'
     branches:
       - master
 
