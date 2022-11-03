@@ -10,18 +10,18 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  linux:
-    runs-on: ubuntu-22.04
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.2
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2.2.2
-      with:
-        version: 7
-    - name: Install dependencies
-      run: sudo apt install libvips-dev libmagick++-dev
-    - name: Build
-      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
+      - name: Checkout
+        uses: actions/checkout@v2.5.0
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+      - name: Build
+        run: >
+          nix develop --command bash -c
+          "pnpm install --config.strict-peer-dependencies=false &&
+          pnpm run build"
