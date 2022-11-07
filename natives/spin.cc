@@ -11,7 +11,7 @@ Napi::Value Spin(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
     int delay =

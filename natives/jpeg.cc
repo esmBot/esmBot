@@ -10,7 +10,7 @@ Napi::Value Jpeg(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     int quality = obj.Has("quality")
                       ? obj.Get("quality").As<Napi::Number>().Int32Value()

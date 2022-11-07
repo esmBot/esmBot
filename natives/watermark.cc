@@ -1,40 +1,32 @@
-#include <napi.h>
+#include "common.h"
 
 #include <vips/vips8>
+#include <map>
 
 using namespace std;
 using namespace vips;
 
-Napi::Value Watermark(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
+char* Watermark(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string water = obj.Get("water").As<Napi::String>().Utf8Value();
-    int gravity = obj.Get("gravity").As<Napi::Number>().Int64Value();
-    bool resize = obj.Has("resize")
-                      ? obj.Get("resize").As<Napi::Boolean>().Value()
-                      : false;
-    float yscale = obj.Has("yscale")
-                       ? obj.Get("yscale").As<Napi::Number>().FloatValue()
-                       : false;
-    bool append = obj.Has("append")
-                      ? obj.Get("append").As<Napi::Boolean>().Value()
-                      : false;
-    bool alpha =
-        obj.Has("alpha") ? obj.Get("alpha").As<Napi::Boolean>().Value() : false;
-    bool flip =
-        obj.Has("flip") ? obj.Get("flip").As<Napi::Boolean>().Value() : false;
-    bool mc = obj.Has("mc") ? obj.Get("mc").As<Napi::Boolean>().Value() : false;
-    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string water = Arguments["water"];
+    int gravity = stoi(Arguments["gravity"]);
+
+    bool resize = MAP_HAS(Arguments, "resize") ? Arguments["resize"] == "true" : false;;
+    float yscale = MAP_HAS(Arguments, "yscale") ? stof(Arguments["yscale"]) : false;
+
+    bool append = MAP_HAS(Arguments, "append") ? Arguments["append"] == "true" : false;
+
+    bool alpha = MAP_HAS(Arguments, "alpha") ? Arguments["alpha"] == "true" : false;
+    bool flip = MAP_HAS(Arguments, "flip") ? Arguments["flip"] == "true" : false;
+    
+    bool mc = MAP_HAS(Arguments, "mc");
+
+    string basePath = Arguments["basePath"];
 
     VOption *options = VImage::option()->set("access", "sequential");
 
     VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "",
+        VImage::new_from_buffer(BufferData, BufferLength, "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
@@ -152,20 +144,11 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight + addedHeight);
 
     void *buf;
-    size_t length;
     final.write_to_buffer(
-        ("." + type).c_str(), &buf, &length,
+        ("." + type).c_str(), &buf, DataSize,
         type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
-
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
 
   vips_error_clear();
   vips_thread_shutdown();
-  return result;
+  return (char*) buf;
 }

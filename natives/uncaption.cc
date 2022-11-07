@@ -1,26 +1,21 @@
-#include <napi.h>
+#include "common.h"
 
 #include <vips/vips8>
+#include <map>
 
 using namespace std;
 using namespace vips;
 
-Napi::Value Uncaption(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
+char* Uncaption(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    float tolerance = obj.Has("tolerance")
-                          ? obj.Get("tolerance").As<Napi::Number>().FloatValue()
+    float tolerance = MAP_HAS(Arguments, "tolerance")
+                          ? stof(Arguments["tolerance"])
                           : 0.5;
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
 
     VOption *options = VImage::option();
 
     VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "",
+        VImage::new_from_buffer(BufferData, BufferLength, "",
                                 type == "gif" ? options->set("n", -1)->set("access", "sequential") : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
@@ -50,20 +45,12 @@ Napi::Value Uncaption(const Napi::CallbackInfo &info) {
     final.set(VIPS_META_PAGE_HEIGHT, newHeight);
 
     void *buf;
-    size_t length;
     final.write_to_buffer(
-        ("." + type).c_str(), &buf, &length,
+        ("." + type).c_str(), &buf, DataSize,
         type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
 
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
 
   vips_error_clear();
   vips_thread_shutdown();
-  return result;
+  return (char*) buf;
 }

@@ -1,6 +1,8 @@
 #include <napi.h>
 
 #include <vips/vips8>
+#include <map>
+#include <string>
 
 using namespace std;
 using namespace vips;
@@ -8,20 +10,14 @@ using namespace vips;
 VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
                                    0.1140, 0.2392, 0.4696, 0.0912);
 
-Napi::Value Colors(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
+char* Colors(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string color = obj.Get("color").As<Napi::String>().Utf8Value();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+	string color = Arguments["color"];
 
     VOption *options = VImage::option()->set("access", "sequential");
 
     VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "",
+        VImage::new_from_buffer(BufferData, BufferLength, "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -34,18 +30,10 @@ Napi::Value Colors(const Napi::CallbackInfo &info) {
     }
 
     void *buf;
-    size_t length;
-    out.write_to_buffer(("." + type).c_str(), &buf, &length);
+    out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
 
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
+	vips_error_clear();
+	vips_thread_shutdown();
 
-  vips_error_clear();
-  vips_thread_shutdown();
-  return result;
+	return (char*) buf;
 }

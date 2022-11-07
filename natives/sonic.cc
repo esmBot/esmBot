@@ -10,7 +10,7 @@ Napi::Value Sonic(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     string text = obj.Get("text").As<Napi::String>().Utf8Value();
     string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
 

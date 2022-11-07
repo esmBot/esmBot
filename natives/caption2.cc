@@ -1,30 +1,27 @@
 #include "common.h"
-#include <napi.h>
 
+#include "common.h"
+#include <string>
+#include <map>
 #include <vips/vips8>
 
 using namespace std;
 using namespace vips;
 
-Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
+char* CaptionTwo(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string caption = obj.Get("caption").As<Napi::String>().Utf8Value();
-    bool top = obj.Get("top").As<Napi::Boolean>().Value();
-    string font = obj.Get("font").As<Napi::String>().Utf8Value();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
+    bool top = MAP_GET(Arguments, "top") == "true";
+  	string caption = Arguments["caption"];
+    string font = MAP_GET(Arguments, "font");
+    string basePath = MAP_GET(Arguments, "basePath");
 
     VOption *options = VImage::option()->set("access", "sequential");
 
     VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "",
-                                type == "gif" ? options->set("n", -1) : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
+      VImage::new_from_buffer(BufferData, BufferLength, "",
+            type == "gif" ? options->set("n", -1) : options)
+              .colourspace(VIPS_INTERPRETATION_sRGB);
+	
     if (!in.has_alpha())
       in = in.bandjoin(255);
 
@@ -76,21 +73,13 @@ Napi::Value CaptionTwo(const Napi::CallbackInfo &info) {
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());
 
     void *buf;
-    size_t length;
     final.write_to_buffer(
-        ("." + type).c_str(), &buf, &length,
+        ("." + type).c_str(), &buf, DataSize,
         type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
                       : 0);
-
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
-
-  vips_error_clear();
-  vips_thread_shutdown();
-  return result;
+  
+	vips_error_clear();
+  	vips_thread_shutdown();
+	
+  	return (char*) buf;
 }

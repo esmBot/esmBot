@@ -10,7 +10,7 @@ Napi::Value Reverse(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool soos =
         obj.Has("soos") ? obj.Get("soos").As<Napi::Boolean>().Value() : false;

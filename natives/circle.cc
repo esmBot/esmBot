@@ -2,27 +2,22 @@
 #include <napi.h>
 
 #include <iostream>
+#include <string>
+#include <map>
 #include <list>
 
 using namespace std;
 using namespace Magick;
 
-Napi::Value Circle(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
-
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
-
+char* Circle(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
+	
     Blob blob;
 
     list<Image> frames;
     list<Image> coalesced;
     list<Image> blurred;
     try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
+      readImages(&frames, Blob(BufferData, BufferLength));
     } catch (Magick::WarningCoder &warning) {
       cerr << "Coder Warning: " << warning.what() << endl;
     } catch (Magick::Warning &warning) {
@@ -47,14 +42,7 @@ Napi::Value Circle(const Napi::CallbackInfo &info) {
 
     writeImages(blurred.begin(), blurred.end(), &blob);
 
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
+    *DataSize = blob.length();
 
-  return result;
+  	return (char*) blob.data();
 }

@@ -10,7 +10,7 @@ Napi::Value Resize(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool stretch = obj.Has("stretch")
                        ? obj.Get("stretch").As<Napi::Boolean>().Value()

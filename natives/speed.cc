@@ -45,7 +45,7 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     bool slow =
         obj.Has("slow") ? obj.Get("slow").As<Napi::Boolean>().Value() : false;
@@ -92,7 +92,9 @@ Napi::Value Speed(const Napi::CallbackInfo &info) {
         removeFrames = true;
         break;
       }
+
       memset16(lastPos + 5, new_delay, 1);
+
       lastPos = (char *)memchr(lastPos + 1, '\x00',
                                (data.Length() - (lastPos - fileData)) - 1);
       ++currentFrame;

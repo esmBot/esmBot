@@ -11,7 +11,7 @@ Napi::Value Motivate(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    Napi::Object obj = info[0].As<Napi::Object>();
+    Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string top_text = obj.Get("top").As<Napi::String>().Utf8Value();
     string bottom_text = obj.Get("bottom").As<Napi::String>().Utf8Value();

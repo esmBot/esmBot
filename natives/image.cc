@@ -1,4 +1,9 @@
+#include "common.h"
+
 #include <napi.h>
+#include <map>
+#include <string>
+
 #include "blur.h"
 #include "colors.h"
 #include "caption.h"
@@ -43,52 +48,116 @@
 #endif
 #include <vips/vips8>
 
-Napi::Object Init(Napi::Env env, Napi::Object exports)
-{
+using namespace std;
+
+std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize)> FunctionMap = {
+	{"caption", &Caption},
+	{"caption2", &CaptionTwo},
+	{"blur", &Blur},
+	{"circle", &Circle},
+	{"colors", &Colors},
+	{"crop", &Crop},
+	{"deepfry", &Deepfry},
+	{"explode", &Explode},
+	{"flag", &Flag},
+  {"flip", &Flip},
+  {"watermark", &Watermark},
+	{"uncaption", &Uncaption}
+};
+
+std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
+  {"speed", Speed},
+	{"freeze", Freeze},
+  {"gamexplain", Gamexplain},
+  {"globe", Globe},
+  {"homebrew", Homebrew},
+  {"invert", Invert},
+  {"jpeg", Jpeg},
+  {"magik", Magik},
+  {"meme", Meme},
+  {"mirror", Mirror},
+  {"motivate", Motivate},
+  {"reddit", Reddit},
+  {"resize", Resize},
+  {"reverse", Reverse},
+  {"scott", Scott},
+  {"snapchat", Snapchat},
+  {"sonic", Sonic},
+  {"spin", Spin},
+  {"swirl", Swirl},
+  {"tile", Tile},
+  {"togif", ToGif},
+  {"uncanny", Uncanny},
+  {"wall", Wall},
+  {"whisper", Whisper},
+  {"zamn", Zamn}
+};
+
+Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  Napi::Object result = Napi::Object::New(env);
+
+  try {
+    string command = info[1].As<Napi::String>().Utf8Value();
+    Napi::Object obj = info[1].As<Napi::Object>();
+    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
+    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+
+    Napi::Array properties = obj.GetPropertyNames();
+
+    std::map<string, string> Arguments;
+
+    for (unsigned int i = 0; i < properties.Length(); i++) {
+      string property = properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
+
+      if (property == "data") {
+        continue;
+      }
+
+      Arguments[property] = obj.Get(property).ToString().As<Napi::String>().Utf8Value();
+    }
+
+    size_t length = 0;
+    char* buf = FunctionMap.at(command)(type, data.Data(), data.Length(), Arguments, &length);
+
+    result.Set("data", Napi::Buffer<char>::New(env, buf, length));
+    result.Set("type", type);
+  } catch (std::exception const &err) {
+    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
+  } catch (...) {
+    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
+  }
+
+  return result;
+}
+
+Napi::Value OldProcessImage(std::string FunctionName, const Napi::CallbackInfo &info) {
+  return OldFunctionMap.at(FunctionName)(info);
+}
+
+Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for gradual adoption
+  Napi::Env env = info.Env();
+
+  string command = info[0].As<Napi::String>().Utf8Value();
+  
+  if (MAP_HAS(FunctionMap, command)) {
+    return NewProcessImage(info);
+  } else if (MAP_HAS(OldFunctionMap, command)) {
+    return OldProcessImage(command, info);
+  } else {
+    Napi::Error::New(env, "Invalid command").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports){
 #ifdef _WIN32
   Magick::InitializeMagick("");
 #endif
   if (vips_init(""))
         vips_error_exit(NULL);
-  exports.Set(Napi::String::New(env, "blur"), Napi::Function::New(env, Blur));
-  exports.Set(Napi::String::New(env, "colors"), Napi::Function::New(env, Colors));
-  exports.Set(Napi::String::New(env, "caption"), Napi::Function::New(env, Caption));
-  exports.Set(Napi::String::New(env, "captionTwo"), Napi::Function::New(env, CaptionTwo));
-  exports.Set(Napi::String::New(env, "circle"), Napi::Function::New(env, Circle));
-  exports.Set(Napi::String::New(env, "crop"), Napi::Function::New(env, Crop));
-  exports.Set(Napi::String::New(env, "deepfry"), Napi::Function::New(env, Deepfry));
-  exports.Set(Napi::String::New(env, "explode"), Napi::Function::New(env, Explode));
-  exports.Set(Napi::String::New(env, "flag"), Napi::Function::New(env, Flag));
-  exports.Set(Napi::String::New(env, "flip"), Napi::Function::New(env, Flip));
-  exports.Set(Napi::String::New(env, "freeze"), Napi::Function::New(env, Freeze));
-  exports.Set(Napi::String::New(env, "gamexplain"), Napi::Function::New(env, Gamexplain));
-  exports.Set(Napi::String::New(env, "globe"), Napi::Function::New(env, Globe));
-  exports.Set(Napi::String::New(env, "homebrew"), Napi::Function::New(env, Homebrew));
-  exports.Set(Napi::String::New(env, "invert"), Napi::Function::New(env, Invert));
-  exports.Set(Napi::String::New(env, "jpeg"), Napi::Function::New(env, Jpeg));
-  exports.Set(Napi::String::New(env, "magik"), Napi::Function::New(env, Magik));
-  exports.Set(Napi::String::New(env, "meme"), Napi::Function::New(env, Meme));
-  exports.Set(Napi::String::New(env, "mirror"), Napi::Function::New(env, Mirror));
-  exports.Set(Napi::String::New(env, "motivate"), Napi::Function::New(env, Motivate));
-  exports.Set(Napi::String::New(env, "reddit"), Napi::Function::New(env, Reddit));
-  exports.Set(Napi::String::New(env, "resize"), Napi::Function::New(env, Resize));
-  exports.Set(Napi::String::New(env, "reverse"), Napi::Function::New(env, Reverse));
-  exports.Set(Napi::String::New(env, "scott"), Napi::Function::New(env, Scott));
-  exports.Set(Napi::String::New(env, "snapchat"), Napi::Function::New(env, Snapchat));
-  exports.Set(Napi::String::New(env, "sonic"), Napi::Function::New(env, Sonic));
-  exports.Set(Napi::String::New(env, "speed"), Napi::Function::New(env, Speed));
-  exports.Set(Napi::String::New(env, "spin"), Napi::Function::New(env, Spin));
-  exports.Set(Napi::String::New(env, "squish"), Napi::Function::New(env, Squish));
-  exports.Set(Napi::String::New(env, "swirl"), Napi::Function::New(env, Swirl));
-  exports.Set(Napi::String::New(env, "tile"), Napi::Function::New(env, Tile));
-  exports.Set(Napi::String::New(env, "togif"), Napi::Function::New(env, ToGif));
-  exports.Set(Napi::String::New(env, "uncanny"), Napi::Function::New(env, Uncanny));
-  exports.Set(Napi::String::New(env, "uncaption"), Napi::Function::New(env, Uncaption));
-  exports.Set(Napi::String::New(env, "wall"), Napi::Function::New(env, Wall));
-  exports.Set(Napi::String::New(env, "watermark"), Napi::Function::New(env, Watermark));
-  exports.Set(Napi::String::New(env, "whisper"), Napi::Function::New(env, Whisper));
-  exports.Set(Napi::String::New(env, "zamn"), Napi::Function::New(env, Zamn));
-  return exports;
+    exports.Set(Napi::String::New(env, "image"), Napi::Function::New(env, ProcessImage)); // new function handler
+
+    return exports;
 }
 
 NODE_API_MODULE(addon, Init)
