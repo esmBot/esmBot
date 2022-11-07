@@ -98,7 +98,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
   Napi::Object result = Napi::Object::New(env);
 
   try {
-    string command = info[1].As<Napi::String>().Utf8Value();
+    string command = info[0].As<Napi::String>().Utf8Value();
     Napi::Object obj = info[1].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string type = obj.Get("type").As<Napi::String>().Utf8Value();
@@ -122,6 +122,8 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
 
     result.Set("data", Napi::Buffer<char>::New(env, buf, length));
     result.Set("type", type);
+ 
+    free(buf);
   } catch (std::exception const &err) {
     Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
