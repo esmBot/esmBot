@@ -42,6 +42,7 @@
 #include "watermark.h"
 #include "whisper.h"
 #include "zamn.h"
+#include <iostream>
 
 #ifdef _WIN32
 #include <Magick++.h>
@@ -119,11 +120,10 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
 
     size_t length = 0;
     char* buf = FunctionMap.at(command)(type, data.Data(), data.Length(), Arguments, &length);
-
-    result.Set("data", Napi::Buffer<char>::New(env, buf, length));
+    result.Set("data", Napi::Buffer<char>::New(env, buf, length, [](Napi::Env env, void* data) {
+      free(data);
+    }));
     result.Set("type", type);
- 
-    free(buf);
   } catch (std::exception const &err) {
     Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {
