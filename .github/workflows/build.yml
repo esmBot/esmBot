@@ -26,36 +26,15 @@ jobs:
     - name: Build
       run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
 
-  win64:
-    runs-on: windows-2019
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup Scoop
-      uses: MinoruSekine/setup-scoop@v1
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.2
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2.2.2
-      with:
-        version: 7
-    - name: Install Dependencies
-      run: scoop install libvips imagemagick
-    - name: Build
-      run: $PNPM_HOME/pnpm install --config.strict-peer-dependencies=false && $PNPM_HOME/pnpm run build
-
   darwin:
     runs-on: macos-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.2
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2.2.2
-      with:
-        version: 7
+      uses: actions/checkout@v2
     - name: Install dependencies
-      run: brew install imagemagick vips
+      run: |
+        brew install imagemagick vips node pnpm npm
+        pnpm install --config.strict-peer-dependencies=false
     - name: Build
-      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
+      run: pnpm run build
+

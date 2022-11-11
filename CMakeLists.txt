@@ -29,7 +29,7 @@ target_link_libraries(${PROJECT_NAME} ${ImageMagick_LIBRARIES})
 pkg_check_modules(VIPS REQUIRED vips-cpp)
 include_directories(${VIPS_INCLUDE_DIRS})
 link_directories(${VIPS_LIBRARY_DIRS})
-target_link_libraries(${PROJECT_NAME} ${VIPS_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${VIPS_LDFLAGS})
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
   # Generate node.lib
