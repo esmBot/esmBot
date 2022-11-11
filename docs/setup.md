@@ -13,7 +13,7 @@ Here are some instructions to get esmBot up and running from source.
 If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://projectlounge.pw/support).
 
 !!! tip
-    You can run the bot using Docker for a somewhat simpler setup experience. [Click here to go to the Docker setup guide.](https://esmbot.github.io/esmBot/docker)
+    You can run the bot using Docker for a somewhat simpler setup experience. [Click here to go to the Docker setup guide.](https://docs.esmbot.net/docker)
 
 ### 1. Install the required native dependencies.
 Choose the distro you're using below for insallation instructions.
@@ -113,7 +113,7 @@ esmBot officially supports two database systems: SQLite and PostgreSQL. While SQ
 
 If you would like to use the SQLite database, no configuration is needed and you can move on to the next step.
 
-If you would like to use the PostgreSQL database, view the setup instructions [here](https://esmbot.github.io/esmBot/postgresql) and come back here when you're finished.
+If you would like to use the PostgreSQL database, view the setup instructions [here](https://docs.esmbot.net/postgresql) and come back here when you're finished.
 
 ***
 
@@ -178,7 +178,7 @@ This will launch a text editor with the file ready to go. Create a Discord appli
 
 When you're finished editing the file, press Ctrl + X, then Y and Enter.
 
-An overview of each of the variables in the `.env` file can be found [here](https://esmbot.github.io/esmBot/config).
+An overview of each of the variables in the `.env` file can be found [here](https://docs.esmbot.net/config).
 
 ***
 
