@@ -31,7 +31,7 @@ class InfoCommand extends Command {
         },
         {
           name: "✅ Official Server:",
-          value: "[Click here!](https://projectlounge.pw/support)"
+          value: "[Click here!](https://esmbot.net/support)"
         },
         {
           name: "💻 Source Code:",
@@ -39,7 +39,7 @@ class InfoCommand extends Command {
         },
         {
           name: "🛡️ Privacy Policy:",
-          value: "[Click here!](https://projectlounge.pw/esmBot/privacy.html)"
+          value: "[Click here!](https://esmbot.net/privacy.html)"
         },
         {
           name: "🐦 Twitter:",

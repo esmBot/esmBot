@@ -21,4 +21,4 @@ Out of these, **only guild and channel IDs are stored in the database** for conf
 
 If you want this data removed on the main instance, you can DM me on Discord (Essem#9261) or email me at [data@essem.space](mailto:data@essem.space).
 
-Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact me via the [esmBot Support](https://projectlounge.pw/support) server.
+Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact me via the [esmBot Support](https://esmbot.net/support) server.
