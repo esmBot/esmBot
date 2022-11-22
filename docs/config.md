@@ -7,7 +7,7 @@ To make managing environment variables easier, an example `.env` file is include
 ### Required
 - `NODE_ENV`: Used for tuning the bot to different environments. If you don't know what to set it to, leave it as is.
 - `TOKEN`: Your bot's token. You can find this [here](https://discord.com/developers/applications) under your application's Bot tab.
-- `DB`: The database connection string. By default the `sqlite` and `postgresql` protocols are available, but this can be expanded by putting proper DB driver scripts into `utils/database/`. You can also set this to `dummy` to make the bot not use a database at all.
+- `DB`: The database connection string. By default the `sqlite` and `postgresql` protocols are available, but this can be expanded by putting proper DB driver scripts into `utils/database/`.
 - `OWNER`: Your Discord user ID. This is used for granting yourself access to certain management commands. Adding multiple users is supported by separating the IDs with a comma; however, this is not recommended for security purposes.
 - `PREFIX`: The bot's default command prefix for classic commands. Note that servers can set their own individual prefixes via the `prefix` command.
 
