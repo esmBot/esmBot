@@ -31,7 +31,7 @@ export default async (client, message) => {
   const mentionResult = message.content.match(mentionRegex);
   if (mentionResult) {
     text = message.content.substring(mentionResult[0].length).trim();
-  } else if (message.guildID) {
+  } else if (message.guildID && database) {
     const cachedPrefix = prefixCache.get(message.guildID);
     if (cachedPrefix && message.content.startsWith(cachedPrefix)) {
       text = message.content.substring(cachedPrefix.length).trim();
@@ -46,8 +46,10 @@ export default async (client, message) => {
     }
   } else if (message.content.startsWith(process.env.PREFIX)) {
     text = message.content.substring(process.env.PREFIX.length).trim();
-  } else {
+  } else if (!message.guildID) {
     text = message.content;
+  } else {
+    return;
   }
 
   // separate commands and args
@@ -59,8 +61,18 @@ export default async (client, message) => {
   const cmd = commands.get(aliased ?? command);
   if (!cmd) return;
 
+  // block certain commands from running in DMs
+  if (!cmd.directAllowed && !message.guildID) return;
+
+  if (cmd.dbRequired && !database) {
+    await client.rest.channels.createMessage(message.channelID, {
+      content: "This command is unavailable on stateless instances of esmBot."
+    })
+    return;
+  };
+
   // don't run if message is in a disabled channel
-  if (message.guildID) {
+  if (message.guildID && database) {
     let disabled = disabledCache.get(message.guildID);
     if (!disabled) {
       if (!guildDB) guildDB = await database.getGuild(message.guildID);
@@ -78,9 +90,6 @@ export default async (client, message) => {
     if (disabledCmds.includes(aliased ?? command)) return;
   }
 
-  // block certain commands from running in DMs
-  if (!cmd.directAllowed && !message.guildID) return;
-
   // actually run the command
   log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
   const reference = {
@@ -97,7 +106,9 @@ export default async (client, message) => {
   try {
     // parse args
     const parsed = parseCommand(preArgs);
-    await database.addCount(aliases.get(command) ?? command);
+    if (database) {
+      await database.addCount(aliases.get(command) ?? command);
+    }
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy

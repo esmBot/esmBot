@@ -6,6 +6,9 @@ class PrefixCommand extends Command {
     if (!this.guild) return `The current prefix is \`${process.env.PREFIX}\`.`;
     const guild = await database.getGuild(this.guild.id);
     if (this.args.length !== 0) {
+      if (!database) {
+        return "Setting a per-guild prefix is not possible on a stateless instance of esmBot!"
+      }
       const owners = process.env.OWNER.split(",");
       if (!this.member.permissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) {
         this.success = false;

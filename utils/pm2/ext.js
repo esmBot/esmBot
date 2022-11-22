@@ -131,9 +131,11 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 # HELP esmbot_shard_count Number of shards the bot has
 # TYPE esmbot_shard_count gauge
 `);
-    const counts = await database.getCounts();
-    for (const [i, w] of Object.entries(counts)) {
-      res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
+    if (database) {
+      const counts = await database.getCounts();
+      for (const [i, w] of Object.entries(counts)) {
+        res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
+      }
     }
 
     res.write(`esmbot_server_count ${serverCount}\n`);

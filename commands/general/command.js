@@ -38,6 +38,7 @@ class CommandCommand extends Command {
   static arguments = ["[enable/disable]", "[command]"];
   static slashAllowed = false;
   static directAllowed = false;
+  static dbRequired = true;
 }
 
 export default CommandCommand;

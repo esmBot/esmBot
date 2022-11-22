@@ -163,6 +163,7 @@ class TagsCommand extends Command {
     description: "Gets a random tag"
   }];
   static directAllowed = false;
+  static dbRequired = true;
 }
 
 export default TagsCommand;
