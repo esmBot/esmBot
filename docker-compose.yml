@@ -52,7 +52,6 @@ services:
     restart: unless-stopped
     volumes:
       - pg-data:/var/lib/postgresql/data
-      - ./utils/psqlinit.sh:/docker-entrypoint-initdb.d/psqlinit.sh
     environment:
       POSTGRES_PASSWORD: verycoolpass100
       POSTGRES_USER: esmbot
