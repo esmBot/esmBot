@@ -5,7 +5,6 @@ export async function setup() {
   warn("Using dummy database adapter. If this isn't what you wanted, check your DB variable.");
 }
 export async function stop() {}
-export async function fixGuild() {}
 export async function addCount() {}
 export async function getCounts() {
   return {};
@@ -23,7 +22,7 @@ export async function editTag() {}
 export async function setBroadcast() {}
 export async function getBroadcast() {}
 export async function setPrefix() {}
-export async function addGuild(guild) {
+export async function getGuild(guild) {
   return {
     id: guild,
     tags: {},
@@ -32,4 +31,3 @@ export async function addGuild(guild) {
     disabled_commands: []
   };
 }
-export const getGuild = addGuild;

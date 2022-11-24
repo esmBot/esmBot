@@ -110,7 +110,15 @@ export async function upgrade(logger) {
 }
 
 export async function getGuild(query) {
-  return (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
+  let guild;
+  await sql.begin(async (sql) => {
+    guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
+    if (guild == undefined) {
+      guild = { guild_id: query, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] };
+      await sql`INSERT INTO guilds ${sql(guild)}`;
+    };
+  });
+  return guild;
 }
 
 export async function setPrefix(prefix, guild) {
@@ -190,25 +198,6 @@ export async function getCounts() {
 
 export async function addCount(command) {
   await sql`INSERT INTO counts ${sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
-}
-
-export async function addGuild(guild) {
-  const query = await this.getGuild(guild);
-  if (query) return query;
-  try {
-    await sql`INSERT INTO guilds ${sql({ guild_id: guild, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] })}`;
-  } catch (e) {
-    logger.error(`Failed to register guild ${guild}: ${e}`);
-  }
-  return await this.getGuild(guild);
-}
-
-export async function fixGuild(guild) {
-  const guildDB = await sql`SELECT exists(SELECT 1 FROM guilds WHERE guild_id = ${guild})`;
-  if (!guildDB[0].exists) {
-    logger.log(`Registering guild database entry for guild ${guild}...`);
-    return await this.addGuild(guild);
-  }
 }
 
 export async function stop() {

@@ -37,9 +37,6 @@ export default async (client, message) => {
       text = message.content.substring(cachedPrefix.length).trim();
     } else {
       guildDB = await database.getGuild(message.guildID);
-      if (!guildDB) {
-        guildDB = await database.fixGuild(message.guildID);
-      }
       if (message.content.startsWith(guildDB.prefix)) {
         text = message.content.substring(guildDB.prefix.length).trim();
         prefixCache.set(message.guildID, guildDB.prefix);

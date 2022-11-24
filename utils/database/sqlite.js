@@ -102,19 +102,6 @@ export async function upgrade(logger) {
   connection.exec("COMMIT");
 }
 
-export async function fixGuild(guild) {
-  let guildDB;
-  try {
-    guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild);
-  } catch {
-    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
-  }
-  if (!guildDB) {
-    logger.log(`Registering guild database entry for guild ${guild}...`);
-    return await this.addGuild(guild);
-  }
-}
-
 export async function addCount(command) {
   connection.prepare("UPDATE counts SET count = count + 1 WHERE command = ?").run(command);
 }
@@ -201,23 +188,19 @@ export async function setPrefix(prefix, guild) {
   collections.prefixCache.set(guild.id, prefix);
 }
 
-export async function addGuild(guild) {
-  const query = await this.getGuild(guild);
-  if (query) return query;
-  const guildObject = {
-    id: guild,
-    prefix: process.env.PREFIX,
-    disabled: "[]",
-    disabledCommands: "[]"
-  };
-  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guildObject);
-  return guildObject;
-}
-
 export async function getGuild(query) {
-  try {
-    return connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query);
-  } catch {
-    return;
-  }
+  let guild;
+  connection.transaction(() => {   
+    guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query);
+    if (!guild) {
+      guild = {
+        id: query,
+        prefix: process.env.PREFIX,
+        disabled: "[]",
+        disabledCommands: "[]"
+      };
+      connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guild);
+    }
+  })();
+  return guild;
 }
