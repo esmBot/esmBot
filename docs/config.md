@@ -15,7 +15,6 @@ To make managing environment variables easier, an example `.env` file is include
 These variables that are not necessarily required for the bot to run, but can greatly enhance its functionality:
 
 - `STAYVC`: Set this to true if you want the bot to stay in voice chat after playing music/a sound effect. You can make it leave by using the stop command.
-- `DBL`: An API token from [Top.gg](https://top.gg/). Unnecessary for most users since Top.gg tends to ban forks of bots like esmBot from their list.
 - `TENOR`: An API token from [Tenor](https://tenor.com/gifapi). This is required for using GIFs from Tenor.
 - `OUTPUT`: A directory to output the help documentation in Markdown format to. It's recommended to set this to a directory being served by a web server.
 - `TEMPDIR`: A directory that will store generated images larger than 8MB. It's recommended to set this to a directory being served by a web server.

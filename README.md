@@ -4,8 +4,6 @@
 
 esmBot is a free and open-source Discord bot designed to entertain your server. It's made using [Oceanic](https://oceanic.ws) and comes with image, music, and utility commands out of the box.
 
-[![Top.gg](https://top.gg/api/widget/429305856241172480.svg)](https://top.gg/bot/429305856241172480)
-
 ## Features
 - Powerful, efficient, and performant image processing powered by [libvips](https://github.com/libvips/libvips)
 - Lots of image manipulation and processing commands out of the box
