@@ -49,11 +49,7 @@ Once you're inside the shell, you'll need to make sure the bot owns the database
 ```sql
 ALTER DATABASE esmbot OWNER TO esmbot;
 ```
-The database is now accessible by the bot, but the bot may not function yet as the tables to add/get data are still missing. To fix that, you'll need to add them. Luckily, the bot comes with a script to automate this. First, exit the PostgreSQL shell by typing `\q`, then make the script executable and run it by entering the following commands:
-```sh
-chmod +x utils/psqlinit.sh
-POSTGRES_USER=esmbot POSTGRES_DB=esmbot utils/psqlinit.sh
-```
+
 You're done!
 
 ***
