@@ -52,7 +52,7 @@ export async function play(client, sound, options, music = false) {
   if (!options.channel.guild) return { content: "This command only works in servers!", flags: 64 };
   if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
   if (!options.channel.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
-  const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID);
+  const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   if (!music && manager.players.has(options.channel.guildID)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
   const node = manager.getNode();

@@ -30,7 +30,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           name: "💬 Channel",
-          value: this.guild.channels.get(this.member.voiceState.channelID).name
+          value: (this.guild.channels.get(this.member.voiceState.channelID) ?? await this.client.rest.channels.get(this.member.voiceState.channelID)).name
         },
         {
           name: "🌐 Node",

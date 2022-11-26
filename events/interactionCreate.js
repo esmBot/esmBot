@@ -51,6 +51,11 @@ export default async (client, interaction) => {
           flags: result.flags ?? (commandClass.success ? 0 : 64)
         }, result));
       }
+    } else {
+      logger.warn(`Unknown return type for command ${command}: ${result} (${typeof result})`);
+      await interaction[replyMethod](Object.assign({
+        flags: commandClass.success ? 0 : 64
+      }, result));
     }
   } catch (error) {
     const replyMethod = interaction.acknowledged ? "editOriginal" : "createMessage";
@@ -58,8 +63,6 @@ export default async (client, interaction) => {
       await interaction[replyMethod]({ content: "The resulting file was too large to upload. Try again with a smaller image if possible.", flags: 64 });
     } else if (error.toString().includes("Job ended prematurely")) {
       await interaction[replyMethod]({ content: "Something happened to the image servers before I could receive the image. Try running your command again.", flags: 64 });
-    } else if (error.toString().includes("Timed out")) {
-      await interaction[replyMethod]({ content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.", flags: 64 });
     } else {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.optionsArray)}: ${error.stack || error}`);
       try {

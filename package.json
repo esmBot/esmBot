@@ -35,11 +35,11 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.0.0",
     "node-emoji": "^1.11.0",
-    "oceanic.js": "1.3.0",
+    "oceanic.js": "1.3.1",
     "qrcode": "^1.5.1",
     "sharp": "^0.31.2",
     "shoukaku": "^3.2.2",
-    "undici": "^5.12.0",
+    "undici": "^5.13.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },
@@ -49,7 +49,7 @@
     "@babel/eslint-plugin": "^7.19.1",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "cmake-js": "^7.0.0",
-    "eslint": "^8.27.0",
+    "eslint": "^8.28.0",
     "eslint-plugin-unicorn": "^44.0.2"
   },
   "optionalDependencies": {
@@ -57,7 +57,7 @@
     "bufferutil": "^4.0.7",
     "erlpack": "^0.1.4",
     "pm2": "^5.2.2",
-    "postgres": "^3.3.1",
+    "postgres": "^3.3.2",
     "uuid": "^9.0.0",
     "ws": "^8.11.0",
     "zlib-sync": "^0.1.7"

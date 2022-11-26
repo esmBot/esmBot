@@ -6,7 +6,7 @@ import { getServers } from "../../utils/misc.js";
 class InfoCommand extends Command {
   async run() {
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);
     await this.acknowledge();
     return {
