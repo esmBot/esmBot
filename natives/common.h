@@ -1,8 +1,34 @@
 #pragma once
 
-#include <any>
+#include <variant>
 #include <string>
+#include <map>
 #include <unordered_map>
+
+using std::string;
+using std::variant;
+using std::map;
+
+typedef variant<string, float, bool, int> ArgumentVariant;
+typedef map<string, ArgumentVariant> ArgumentMap;
+
+template <typename T>
+T GetArgument(ArgumentMap map, string key) {
+  try {
+    return std::get<T>(map.at(key));
+  } catch (std::bad_variant_access&) {
+    throw "Invalid requested type from variant.";
+  }
+}
+
+template <typename T>
+T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
+  try {
+    return std::get<T>(map.at(key));
+  } catch (...) { // this is, not great...
+    return fallback;
+  }
+}
 
 #define MAP_HAS(ARRAY, KEY) (ARRAY.count(KEY) > 0)
 #define MAP_GET(ARRAY, KEY, TYPE) (MAP_HAS(ARRAY, KEY) ? any_cast<TYPE>(ARRAY.at(KEY)) : NULL) // C++ has forced my hand

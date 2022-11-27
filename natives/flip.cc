@@ -8,9 +8,9 @@ using namespace std;
 using namespace vips;
 
 char *Flip(string type, char *BufferData, size_t BufferLength,
-           map<string, any> Arguments, size_t *DataSize) {
+           ArgumentMap Arguments, size_t *DataSize) {
 
-  bool flop = MAP_GET(Arguments, "flop", bool);
+  bool flop = GetArgument<bool>(Arguments, "flop");
 
   VImage in = VImage::new_from_buffer(BufferData, BufferLength, "",
                                       type == "gif"

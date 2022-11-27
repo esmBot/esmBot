@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 char *Crop(string type, char *BufferData, size_t BufferLength,
-           map<string, any> Arguments, size_t *DataSize) {
+           ArgumentMap Arguments, size_t *DataSize) {
 
   VOption *options = VImage::option()->set("access", "sequential");
 

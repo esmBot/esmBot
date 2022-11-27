@@ -8,10 +8,10 @@ using namespace std;
 using namespace vips;
 
 char *Flag(string type, char *BufferData, size_t BufferLength,
-           map<string, any> Arguments, size_t *DataSize) {
+           ArgumentMap Arguments, size_t *DataSize) {
 
-  string overlay = MAP_GET(Arguments, "overlay", string);
-  string basePath = MAP_GET(Arguments, "basePath", string);
+  string overlay = GetArgument<string>(Arguments, "overlay");
+  string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
