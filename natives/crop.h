@@ -1,5 +1,10 @@
 #pragma once
 
 #include <napi.h>
+#include <map>
+#include <string>
 
-Napi::Value Crop(const Napi::CallbackInfo& info);
+using std::map;
+using std::string;
+
+char* Crop(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+#include <string>
 #include <napi.h>
 
-Napi::Value CaptionTwo(const Napi::CallbackInfo& info);
+char* CaptionTwo(std::string type, char* BufferData, size_t BufferLength, std::map<std::string, std::string> Arguments, size_t* DataSize);

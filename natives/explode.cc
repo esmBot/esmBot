@@ -1,22 +1,19 @@
+#include "common.h"
+
 #include <Magick++.h>
-#include <napi.h>
 
 #include <iostream>
+#include <string>
+#include <map>
 #include <list>
 
 using namespace std;
 using namespace Magick;
 
-Napi::Value Explode(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
+char* Explode(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    int amount = obj.Get("amount").As<Napi::Number>().Int32Value();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    int delay =
-        obj.Has("delay") ? obj.Get("delay").As<Napi::Number>().Int32Value() : 0;
+  	int amount = stoi(Arguments.at("amount"));
+    int delay = MAP_HAS(Arguments, "delay") ? stoi(Arguments.at("delay")) : 0;
 
     Blob blob;
 
@@ -24,7 +21,7 @@ Napi::Value Explode(const Napi::CallbackInfo &info) {
     list<Image> coalesced;
     list<Image> blurred;
     try {
-      readImages(&frames, Blob(data.Data(), data.Length()));
+      readImages(&frames, Blob(BufferData, BufferLength));
     } catch (Magick::WarningCoder &warning) {
       cerr << "Coder Warning: " << warning.what() << endl;
     } catch (Magick::Warning &warning) {
@@ -50,14 +47,7 @@ Napi::Value Explode(const Napi::CallbackInfo &info) {
 
     writeImages(blurred.begin(), blurred.end(), &blob);
 
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)blob.data(),
-                                                blob.length()));
-    result.Set("type", type);
-    return result;
-  } catch (std::exception const &err) {
-    throw Napi::Error::New(env, err.what());
-  } catch (...) {
-    throw Napi::Error::New(env, "Unknown error");
-  }
+	*DataSize = blob.length();
+
+	return (char*) blob.data();
 }

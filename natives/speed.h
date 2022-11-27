@@ -2,4 +2,4 @@
 
 #include <napi.h>
 
-Napi::Value Speed(const Napi::CallbackInfo& info);
+Napi::Value Speed(const Napi::CallbackInfo &info);

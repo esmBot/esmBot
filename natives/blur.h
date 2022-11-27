@@ -2,4 +2,7 @@
 
 #include <napi.h>
 
-Napi::Value Blur(const Napi::CallbackInfo& info);
+using std::string;
+using std::map;
+
+char* Blur(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize);

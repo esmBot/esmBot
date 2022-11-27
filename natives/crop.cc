@@ -1,25 +1,19 @@
 #include <napi.h>
-
+#include <map>
+#include <string>
 #include <vips/vips8>
 
 using namespace std;
 using namespace vips;
 
-Napi::Value Crop(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
-
-  try {
-    Napi::Object obj = info[0].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+char* Crop(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
 
     VOption *options = VImage::option()->set("access", "sequential");
 
     VImage in =
-        VImage::new_from_buffer(data.Data(), data.Length(), "",
-                                type == "gif" ? options->set("n", -1) : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
+      VImage::new_from_buffer(BufferData, BufferLength, "",
+            type == "gif" ? options->set("n", -1) : options)
+              .colourspace(VIPS_INTERPRETATION_sRGB);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -46,21 +40,13 @@ Napi::Value Crop(const Napi::CallbackInfo &info) {
     final.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
     void *buf;
-    size_t length;
     final.write_to_buffer(
-        ("." + type).c_str(), &buf, &length,
+        ("." + type).c_str(), &buf, DataSize,
         type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
                       : 0);
 
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", type);
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
-  }
+	vips_error_clear();
+	vips_thread_shutdown();
 
-  vips_error_clear();
-  vips_thread_shutdown();
-  return result;
+	return (char*) buf;
 }
