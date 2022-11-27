@@ -15,16 +15,19 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.2
     - name: Setup pnpm
       uses: pnpm/action-setup@v2.2.2
       with:
         version: 7
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.2
+      with:
+        node-version: 18
+        cache: pnpm
     - name: Install dependencies
-      run: sudo apt install libvips-dev libmagick++-dev
+      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev
     - name: Build
-      run: pnpm install --config.strict-peer-dependencies=false && pnpm run build
+      run: pnpm install --frozen-lockfile && pnpm run build
 
   darwin:
     runs-on: macos-latest

@@ -18,7 +18,7 @@ class HostCommand extends MusicCommand {
           user = getUser;
         } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && input >= 21154535154122752n) {
           try {
-            user = await this.client.getRESTUser(input);
+            user = await this.client.rest.users.get(input);
           } catch {
             // no-op
           }

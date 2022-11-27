@@ -48,7 +48,7 @@ class TagsCommand extends Command {
       this.success = true;
       if (!user) {
         try {
-          const restUser = await this.client.getRESTUser(getResult.author);
+          const restUser = await this.client.rest.users.get(getResult.author);
           return `This tag is owned by **${restUser.username}#${restUser.discriminator}** (\`${getResult.author}\`).`;
         } catch {
           return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${getResult.author}\``;

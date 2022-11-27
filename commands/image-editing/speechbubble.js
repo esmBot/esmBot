@@ -7,8 +7,8 @@ class SpeechBubbleCommand extends ImageCommand {
       gravity: "north",
       resize: true,
       yscale: 0.2,
-      alpha: this.options.alpha,
-      flip: this.options.flip
+      alpha: this.options.alpha ? true : false,
+      flip: this.options.flip ? true : false
     };
   }
 

@@ -2,9 +2,39 @@ import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands
 import * as logger from "../logger.js";
 
 import Postgres from "postgres";
-const sql = Postgres(process.env.DB);
+const sql = Postgres(process.env.DB, {
+  onnotice: () => {}
+});
 
-const psqlUpdates = [
+const settingsSchema = `
+CREATE TABLE IF NOT EXISTS settings (
+  id smallint PRIMARY KEY,
+  version integer NOT NULL, CHECK(id = 1)
+);
+`;
+
+const schema = `
+ALTER TABLE settings ADD COLUMN broadcast text;
+CREATE TABLE guilds (
+  guild_id VARCHAR(30) NOT NULL PRIMARY KEY,
+  prefix VARCHAR(15) NOT NULL,
+  disabled text ARRAY NOT NULL,
+  disabled_commands text ARRAY NOT NULL
+);
+CREATE TABLE counts (
+  command VARCHAR NOT NULL PRIMARY KEY,
+  count integer NOT NULL
+);
+CREATE TABLE tags (
+  guild_id VARCHAR(30) NOT NULL,
+  name text NOT NULL,
+  content text NOT NULL,
+  author VARCHAR(30) NOT NULL,
+  UNIQUE(guild_id, name)
+);
+`;
+
+const updates = [
   "", // reserved
   "CREATE TABLE IF NOT EXISTS settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
   "ALTER TABLE guilds DROP COLUMN accessed",
@@ -44,29 +74,38 @@ export async function setup() {
 }
 
 export async function upgrade(logger) {
-  let version;
   try {
-    version = (await sql`SELECT version FROM settings WHERE id = 1`)[0].version;
-  } catch {
-    version = 0;
-  }
-  if (version < (psqlUpdates.length - 1)) {
-    logger.warn(`Migrating PostgreSQL database, which is currently at version ${version}...`);
-    try {
-      await sql.begin(async (db) => {
-        while (version < (psqlUpdates.length - 1)) {
+    await sql.begin(async (tx) => {
+      await tx.unsafe(settingsSchema);
+      let version;
+      const settingsrow = (await tx`SELECT version FROM settings WHERE id = 1`);
+      if (settingsrow.length == 0) {
+        version = 0;
+      } else {
+        version = settingsrow[0].version;
+      };
+      const latestVersion = updates.length - 1;
+      if (version === 0) {
+        logger.info(`Initializing PostgreSQL database...`);
+        await tx.unsafe(schema);
+      } else if (version < latestVersion) {
+        logger.info(`Migrating PostgreSQL database, which is currently at version ${version}...`);
+        while (version < latestVersion) {
           version++;
-          logger.warn(`Running version ${version} update script (${psqlUpdates[version]})...`);
-          await db.unsafe(psqlUpdates[version]);
+          logger.info(`Running version ${version} update script...`);
+          await tx.unsafe(updates[version]);
         }
-      });
-      const ver = psqlUpdates.length - 1;
-      await sql`INSERT INTO settings ${sql({ id: 1, version: ver })} ON CONFLICT (id) DO UPDATE SET version = ${ver}`;
-    } catch (e) {
-      logger.error(`PostgreSQL migration failed: ${e}`);
-      logger.error("Unable to start the bot, quitting now.");
-      return 1;
-    }
+      } else if (version > latestVersion) {
+        throw new Error(`PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
+      } else {
+        return;
+      }
+      await tx`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
+    });
+  } catch (e) {
+    logger.error(`PostgreSQL migration failed: ${e}`);
+    logger.error("Unable to start the bot, quitting now.");
+    return 1;
   }
 }
 

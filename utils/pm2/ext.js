@@ -1,5 +1,4 @@
 import pm2 from "pm2";
-import { Api } from "@top-gg/sdk";
 import winston from "winston";
 
 // load config from .env file
@@ -15,8 +14,6 @@ import { Client } from "oceanic.js";
 
 import database from "../database.js";
 import { cpus } from "os";
-
-const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
 
 const logger = winston.createLogger({
   levels: {
@@ -111,20 +108,6 @@ function updateStats() {
   });
 }
 
-async function dblPost() {
-  logger.main("Posting stats to Top.gg...");
-  try {
-    //await updateStats();
-    await dbl.postStats({
-      serverCount,
-      shardCount
-    });
-    logger.main("Stats posted.");
-  } catch (e) {
-    logger.error(e);
-  }
-}
-
 if (process.env.METRICS && process.env.METRICS !== "") {
   const servers = [];
   if (process.env.API_TYPE === "ws") {
@@ -163,7 +146,6 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 }
 
 setInterval(updateStats, 300000);
-if (dbl) setInterval(dblPost, 1800000);
 
 setTimeout(updateStats, 10000);
 

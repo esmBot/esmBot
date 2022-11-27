@@ -6,7 +6,7 @@ import { getServers } from "../../utils/misc.js";
 class InfoCommand extends Command {
   async run() {
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.getRESTUser(process.env.OWNER.split(",")[0]);
+    if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);
     await this.acknowledge();
     return {
@@ -31,7 +31,7 @@ class InfoCommand extends Command {
         },
         {
           name: "✅ Official Server:",
-          value: "[Click here!](https://projectlounge.pw/support)"
+          value: "[Click here!](https://esmbot.net/support)"
         },
         {
           name: "💻 Source Code:",
@@ -39,7 +39,7 @@ class InfoCommand extends Command {
         },
         {
           name: "🛡️ Privacy Policy:",
-          value: "[Click here!](https://projectlounge.pw/esmBot/privacy.html)"
+          value: "[Click here!](https://esmbot.net/privacy.html)"
         },
         {
           name: "🐦 Twitter:",
