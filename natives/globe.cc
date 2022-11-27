@@ -23,7 +23,8 @@ Napi::Value Globe(const Napi::CallbackInfo &info) {
             type == "gif" ? options->set("n", -1)->set("access", "sequential")
                           : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());

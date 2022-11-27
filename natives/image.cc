@@ -3,6 +3,8 @@
 #include <napi.h>
 #include <map>
 #include <string>
+#include <iostream>
+#include <any>
 
 #include "blur.h"
 #include "colors.h"
@@ -42,7 +44,6 @@
 #include "watermark.h"
 #include "whisper.h"
 #include "zamn.h"
-#include <iostream>
 
 #ifdef _WIN32
 #include <Magick++.h>
@@ -51,10 +52,10 @@
 
 using namespace std;
 
-std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize)> FunctionMap = {
+std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, any> Arguments, size_t* DataSize)> FunctionMap = {
+  {"blur", &Blur},
 	{"caption", &Caption},
-	{"caption2", &CaptionTwo},
-	{"blur", &Blur},
+	{"captionTwo", &CaptionTwo},
 	{"circle", &Circle},
 	{"colors", &Colors},
 	{"crop", &Crop},
@@ -62,8 +63,8 @@ std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLeng
 	{"explode", &Explode},
 	{"flag", &Flag},
   {"flip", &Flip},
-  {"watermark", &Watermark},
-	{"uncaption", &Uncaption}
+	{"uncaption", &Uncaption},
+  {"watermark", &Watermark}
 };
 
 std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
@@ -94,6 +95,17 @@ std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFuncti
   {"zamn", Zamn}
 };
 
+bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
+  return env.Global()
+      .Get("Number")
+      .ToObject()
+      .Get("isInteger")
+      .As<Napi::Function>()
+      .Call({num})
+      .ToBoolean()
+      .Value();
+}
+
 Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   Napi::Object result = Napi::Object::New(env);
@@ -106,7 +118,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
 
     Napi::Array properties = obj.GetPropertyNames();
 
-    std::map<string, string> Arguments;
+    std::map<string, any> Arguments;
 
     for (unsigned int i = 0; i < properties.Length(); i++) {
       string property = properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
@@ -115,7 +127,21 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
         continue;
       }
 
-      Arguments[property] = obj.Get(property).ToString().As<Napi::String>().Utf8Value();
+      auto val = obj.Get(property);
+      if (val.IsBoolean()) {
+        Arguments[property] = val.ToBoolean().Value();
+      } else if (val.IsString()) {
+        Arguments[property] = val.ToString().As<Napi::String>().Utf8Value();
+      } else if (val.IsNumber()) {
+        auto num = val.ToNumber();
+        if (isNapiValueInt(env, num)) {
+          Arguments[property] = num.Int32Value();
+        } else {
+          Arguments[property] = num.FloatValue();
+        }
+      } else {
+        Arguments[property] = val;
+      }
     }
 
     size_t length = 0;
@@ -158,6 +184,21 @@ Napi::Object Init(Napi::Env env, Napi::Object exports){
   if (vips_init(""))
         vips_error_exit(NULL);
     exports.Set(Napi::String::New(env, "image"), Napi::Function::New(env, ProcessImage)); // new function handler
+
+    Napi::Array arr = Napi::Array::New(env);
+    size_t i = 0;
+    for (auto const& imap: FunctionMap) {
+      Napi::HandleScope scope(env);
+      arr[i] = Napi::String::New(env, imap.first);
+      i++;
+    }
+    for(auto const& imap: OldFunctionMap) {
+      Napi::HandleScope scope(env);
+      arr[i] = Napi::String::New(env, imap.first);
+      i++;
+    }
+
+    exports.Set(Napi::String::New(env, "funcs"), arr);
 
     return exports;
 }

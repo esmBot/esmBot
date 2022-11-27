@@ -21,7 +21,8 @@ Napi::Value Gamexplain(const Napi::CallbackInfo &info) {
         VImage::new_from_buffer(data.Data(), data.Length(), "",
                                 type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+    if (!in.has_alpha())
+      in = in.bandjoin(255);
 
     string assetPath = basePath + "assets/images/gamexplain.png";
     VImage tmpl = VImage::new_from_file(assetPath.c_str());
@@ -50,7 +51,8 @@ Napi::Value Gamexplain(const Napi::CallbackInfo &info) {
     size_t length;
     final.write_to_buffer(
         ("." + type).c_str(), &buf, &length,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
+        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                      : 0);
 
     result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
     result.Set("type", type);

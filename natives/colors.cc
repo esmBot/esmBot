@@ -1,8 +1,8 @@
-#include <napi.h>
+#include "common.h"
 
-#include <vips/vips8>
 #include <map>
 #include <string>
+#include <vips/vips8>
 
 using namespace std;
 using namespace vips;
@@ -10,30 +10,31 @@ using namespace vips;
 VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
                                    0.1140, 0.2392, 0.4696, 0.0912);
 
-char* Colors(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
+char *Colors(string type, char *BufferData, size_t BufferLength,
+             map<string, any> Arguments, size_t *DataSize) {
 
-	string color = Arguments["color"];
+  string color = MAP_GET(Arguments, "color", string);
 
-    VOption *options = VImage::option()->set("access", "sequential");
+  VOption *options = VImage::option()->set("access", "sequential");
 
-    VImage in =
-        VImage::new_from_buffer(BufferData, BufferLength, "",
-                                type == "gif" ? options->set("n", -1) : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in =
+      VImage::new_from_buffer(BufferData, BufferLength, "",
+                              type == "gif" ? options->set("n", -1) : options)
+          .colourspace(VIPS_INTERPRETATION_sRGB);
 
-    VImage out;
+  VImage out;
 
-    if (color == "grayscale") {
-      out = in.colourspace(VIPS_INTERPRETATION_B_W);
-    } else if (color == "sepia") {
-      out = in.flatten().recomb(sepia);
-    }
+  if (color == "grayscale") {
+    out = in.colourspace(VIPS_INTERPRETATION_B_W);
+  } else if (color == "sepia") {
+    out = in.flatten().recomb(sepia);
+  }
 
-    void *buf;
-    out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
+  void *buf;
+  out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
 
-	vips_error_clear();
-	vips_thread_shutdown();
+  vips_error_clear();
+  vips_thread_shutdown();
 
-	return (char*) buf;
+  return (char *)buf;
 }

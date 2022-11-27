@@ -2,52 +2,57 @@
 
 #include <Magick++.h>
 
+#include <cstring>
 #include <iostream>
-#include <string>
-#include <map>
 #include <list>
+#include <map>
+#include <string>
 
 using namespace std;
 using namespace Magick;
 
-char* Explode(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
+char *Explode(string type, char *BufferData, size_t BufferLength,
+              map<string, any> Arguments, size_t *DataSize) {
 
-  	int amount = stoi(Arguments.at("amount"));
-    int delay = MAP_HAS(Arguments, "delay") ? stoi(Arguments.at("delay")) : 0;
+  int amount = MAP_GET(Arguments, "amount", int);
+  int delay = MAP_GET_FALLBACK(Arguments, "delay", int, 0);
 
-    Blob blob;
+  Blob blob;
 
-    list<Image> frames;
-    list<Image> coalesced;
-    list<Image> blurred;
-    try {
-      readImages(&frames, Blob(BufferData, BufferLength));
-    } catch (Magick::WarningCoder &warning) {
-      cerr << "Coder Warning: " << warning.what() << endl;
-    } catch (Magick::Warning &warning) {
-      cerr << "Warning: " << warning.what() << endl;
+  list<Image> frames;
+  list<Image> coalesced;
+  list<Image> blurred;
+  try {
+    readImages(&frames, Blob(BufferData, BufferLength));
+  } catch (Magick::WarningCoder &warning) {
+    cerr << "Coder Warning: " << warning.what() << endl;
+  } catch (Magick::Warning &warning) {
+    cerr << "Warning: " << warning.what() << endl;
+  }
+  coalesceImages(&coalesced, frames.begin(), frames.end());
+
+  for (Image &image : coalesced) {
+    image.implode(amount);
+    image.magick(type);
+    blurred.push_back(image);
+  }
+
+  optimizeTransparency(blurred.begin(), blurred.end());
+
+  if (type == "gif") {
+    for (Image &image : blurred) {
+      image.quantizeDither(false);
+      image.quantize();
+      if (delay != 0) image.animationDelay(delay);
     }
-    coalesceImages(&coalesced, frames.begin(), frames.end());
+  }
 
-    for (Image &image : coalesced) {
-      image.implode(amount);
-      image.magick(type);
-      blurred.push_back(image);
-    }
+  writeImages(blurred.begin(), blurred.end(), &blob);
 
-    optimizeTransparency(blurred.begin(), blurred.end());
+  *DataSize = blob.length();
 
-    if (type == "gif") {
-      for (Image &image : blurred) {
-        image.quantizeDither(false);
-        image.quantize();
-        if (delay != 0) image.animationDelay(delay);
-      }
-    }
-
-    writeImages(blurred.begin(), blurred.end(), &blob);
-
-	*DataSize = blob.length();
-
-	return (char*) blob.data();
+  // workaround because the data is tied to the blob
+  char *data = (char *)malloc(*DataSize);
+  memcpy(data, blob.data(), *DataSize);
+  return data;
 }

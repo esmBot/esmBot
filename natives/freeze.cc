@@ -51,11 +51,12 @@ Napi::Value Freeze(const Napi::CallbackInfo &info) {
     } else if (frame >= 0 && !loop) {
       VOption *options = VImage::option()->set("access", "sequential");
 
-      VImage in = VImage::new_from_buffer(
-                      data.Data(), data.Length(), "",
-                      type == "gif" ? options->set("n", -1) : options)
+      VImage in = VImage::new_from_buffer(data.Data(), data.Length(), "",
+                                          type == "gif" ? options->set("n", -1)
+                                                        : options)
                       .colourspace(VIPS_INTERPRETATION_sRGB);
-      if (!in.has_alpha()) in = in.bandjoin(255);
+      if (!in.has_alpha())
+        in = in.bandjoin(255);
 
       int pageHeight = vips_image_get_page_height(in.get_image());
       int nPages = vips_image_get_n_pages(in.get_image());

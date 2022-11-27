@@ -1,10 +1,11 @@
 #pragma once
 
-#include <napi.h>
-#include <string>
+#include <any>
 #include <map>
+#include <string>
 
-using std::string;
+using std::any;
 using std::map;
+using std::string;
 
-char* Circle(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize);
+char* Circle(string type, char* BufferData, size_t BufferLength, map<string, any> Arguments, size_t* DataSize);

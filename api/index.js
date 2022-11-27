@@ -11,7 +11,7 @@ import { createRequire } from "module";
 import EventEmitter from "events";
 
 const nodeRequire = createRequire(import.meta.url);
-const magick = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
@@ -92,7 +92,7 @@ wss.on("connection", (ws, request) => {
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobAmount);
   const formats = {};
-  for (const cmd of Object.keys(magick)) {
+  for (const cmd of img.funcs) {
     formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp"];
   }
   const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00]), num, cur, Buffer.from(JSON.stringify(formats))]);

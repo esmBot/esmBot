@@ -1,7 +1,11 @@
 #pragma once
 
+#include <any>
 #include <map>
 #include <string>
-#include <napi.h>
 
-char* CaptionTwo(std::string type, char* BufferData, size_t BufferLength, std::map<std::string, std::string> Arguments, size_t* DataSize);
+using std::any;
+using std::map;
+using std::string;
+
+char* CaptionTwo(string type, char* BufferData, size_t BufferLength, map<string, any> Arguments, size_t* DataSize);

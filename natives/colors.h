@@ -1,10 +1,11 @@
 #pragma once
 
-#include <napi.h>
+#include <any>
 #include <map>
 #include <string>
 
+using std::any;
 using std::map;
 using std::string;
 
-char* Colors(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize);
+char* Colors(string type, char* BufferData, size_t BufferLength, map<string, any> Arguments, size_t* DataSize);

@@ -1,56 +1,57 @@
 #include "common.h"
 
-#include <vips/vips8>
 #include <map>
+#include <vips/vips8>
 
 using namespace std;
 using namespace vips;
 
-char* Uncaption(string type, char* BufferData, size_t BufferLength, map<string, string> Arguments, size_t* DataSize) {
+char *Uncaption(string type, char *BufferData, size_t BufferLength,
+                map<string, any> Arguments, size_t *DataSize) {
 
-    float tolerance = MAP_HAS(Arguments, "tolerance")
-                          ? stof(Arguments["tolerance"])
-                          : 0.5;
+  float tolerance = MAP_GET_FALLBACK(Arguments, "tolerance", float, 0.5);
 
-    VOption *options = VImage::option();
+  VOption *options = VImage::option();
 
-    VImage in =
-        VImage::new_from_buffer(BufferData, BufferLength, "",
-                                type == "gif" ? options->set("n", -1)->set("access", "sequential") : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+  VImage in =
+      VImage::new_from_buffer(
+          BufferData, BufferLength, "",
+          type == "gif" ? options->set("n", -1)->set("access", "sequential")
+                        : options)
+          .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha())
+    in = in.bandjoin(255);
 
-    int width = in.width();
-    int pageHeight = vips_image_get_page_height(in.get_image());
-    int nPages = vips_image_get_n_pages(in.get_image());
+  int width = in.width();
+  int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = vips_image_get_n_pages(in.get_image());
 
-    VImage first =
-        in.crop(0, 0, 3, pageHeight).colourspace(VIPS_INTERPRETATION_B_W) >
-        (255 * tolerance);
-    int top, captionWidth, captionHeight;
-    first.find_trim(&top, &captionWidth, &captionHeight);
+  VImage first =
+      in.crop(0, 0, 3, pageHeight).colourspace(VIPS_INTERPRETATION_B_W) >
+      (255 * tolerance);
+  int top, captionWidth, captionHeight;
+  first.find_trim(&top, &captionWidth, &captionHeight);
 
-    vector<VImage> img;
-    int newHeight = pageHeight - top;
-    if (top == pageHeight) {
-      newHeight = pageHeight;
-      top = 0;
-    }
-    for (int i = 0; i < nPages; i++) {
-      VImage img_frame =
-          in.crop(0, (i * pageHeight) + top, width, newHeight);
-      img.push_back(img_frame);
-    }
-    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, newHeight);
+  vector<VImage> img;
+  int newHeight = pageHeight - top;
+  if (top == pageHeight) {
+    newHeight = pageHeight;
+    top = 0;
+  }
+  for (int i = 0; i < nPages; i++) {
+    VImage img_frame = in.crop(0, (i * pageHeight) + top, width, newHeight);
+    img.push_back(img_frame);
+  }
+  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  final.set(VIPS_META_PAGE_HEIGHT, newHeight);
 
-    void *buf;
-    final.write_to_buffer(
-        ("." + type).c_str(), &buf, DataSize,
-        type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)  : 0);
-
+  void *buf;
+  final.write_to_buffer(
+      ("." + type).c_str(), &buf, DataSize,
+      type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+                    : 0);
 
   vips_error_clear();
   vips_thread_shutdown();
-  return (char*) buf;
+  return (char *)buf;
 }
