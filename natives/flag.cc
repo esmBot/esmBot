@@ -8,7 +8,7 @@ using namespace std;
 using namespace vips;
 
 char *Flag(string type, char *BufferData, size_t BufferLength,
-           map<string, any> Arguments, size_t *DataSize) {
+           map<string, ARG_TYPES> Arguments, size_t *DataSize) {
 
   string overlay = MAP_GET(Arguments, "overlay", string);
   string basePath = MAP_GET(Arguments, "basePath", string);

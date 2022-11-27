@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 char *Uncaption(string type, char *BufferData, size_t BufferLength,
-                map<string, any> Arguments, size_t *DataSize) {
+                map<string, ARG_TYPES> Arguments, size_t *DataSize) {
 
   float tolerance = MAP_GET_FALLBACK(Arguments, "tolerance", float, 0.5);
 

@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 #include <iostream>
-#include <any>
 
 #include "blur.h"
 #include "colors.h"
@@ -52,7 +51,7 @@
 
 using namespace std;
 
-std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, any> Arguments, size_t* DataSize)> FunctionMap = {
+std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, ARG_TYPES> Arguments, size_t* DataSize)> FunctionMap = {
   {"blur", &Blur},
 	{"caption", &Caption},
 	{"captionTwo", &CaptionTwo},
@@ -118,7 +117,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
 
     Napi::Array properties = obj.GetPropertyNames();
 
-    std::map<string, any> Arguments;
+    std::map<string, ARG_TYPES> Arguments;
 
     for (unsigned int i = 0; i < properties.Length(); i++) {
       string property = properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
@@ -139,8 +138,6 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
         } else {
           Arguments[property] = num.FloatValue();
         }
-      } else {
-        Arguments[property] = val;
       }
     }
 
@@ -174,6 +171,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for
     return OldProcessImage(command, info);
   } else {
     Napi::Error::New(env, "Invalid command").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 

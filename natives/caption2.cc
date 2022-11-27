@@ -8,7 +8,7 @@ using namespace std;
 using namespace vips;
 
 char *CaptionTwo(string type, char *BufferData, size_t BufferLength,
-                 map<string, any> Arguments, size_t *DataSize) {
+                 map<string, ARG_TYPES> Arguments, size_t *DataSize) {
 
   bool top = MAP_GET(Arguments, "top", bool);
   string caption = MAP_GET(Arguments, "caption", string);

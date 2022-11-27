@@ -8,7 +8,7 @@ using namespace std;
 using namespace vips;
 
 char *Caption(string type, char *BufferData, size_t BufferLength,
-              map<string, any> Arguments, size_t *DataSize) {
+              map<string, ARG_TYPES> Arguments, size_t *DataSize) {
 
   string caption = MAP_GET(Arguments, "caption", string);
   string font = MAP_GET(Arguments, "font", string);

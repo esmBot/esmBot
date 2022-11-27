@@ -8,7 +8,7 @@ using namespace std;
 using namespace vips;
 
 char *Blur(string type, char *BufferData, size_t BufferLength,
-           map<string, any> Arguments, size_t *DataSize) {
+           map<string, ARG_TYPES> Arguments, size_t *DataSize) {
   bool sharp = MAP_GET(Arguments, "sharp", bool);
   VOption *options = VImage::option()->set("access", "sequential");
 

@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 char *Watermark(string type, char *BufferData, size_t BufferLength,
-                map<string, any> Arguments, size_t *DataSize) {
+                map<string, ARG_TYPES> Arguments, size_t *DataSize) {
 
   string water = MAP_GET(Arguments, "water", string);
   int gravity = MAP_GET(Arguments, "gravity", int);
