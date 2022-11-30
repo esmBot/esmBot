@@ -47,7 +47,7 @@ export default async (client, message) => {
   } else if (message.content.startsWith(process.env.PREFIX)) {
     text = message.content.substring(process.env.PREFIX.length).trim();
   } else {
-    return;
+    text = message.content;
   }
 
   // separate commands and args
