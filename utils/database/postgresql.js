@@ -75,10 +75,10 @@ export async function setup() {
 
 export async function upgrade(logger) {
   try {
-    await sql.begin(async (tx) => {
-      await tx.unsafe(settingsSchema);
+    await sql.begin(async (sql) => {
+      await sql.unsafe(settingsSchema);
       let version;
-      const settingsrow = (await tx`SELECT version FROM settings WHERE id = 1`);
+      const settingsrow = (await sql`SELECT version FROM settings WHERE id = 1`);
       if (settingsrow.length == 0) {
         version = 0;
       } else {
@@ -87,20 +87,20 @@ export async function upgrade(logger) {
       const latestVersion = updates.length - 1;
       if (version === 0) {
         logger.info(`Initializing PostgreSQL database...`);
-        await tx.unsafe(schema);
+        await sql.unsafe(schema);
       } else if (version < latestVersion) {
         logger.info(`Migrating PostgreSQL database, which is currently at version ${version}...`);
         while (version < latestVersion) {
           version++;
           logger.info(`Running version ${version} update script...`);
-          await tx.unsafe(updates[version]);
+          await sql.unsafe(updates[version]);
         }
       } else if (version > latestVersion) {
         throw new Error(`PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
       } else {
         return;
       }
-      await tx`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
+      await sql`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
     });
   } catch (e) {
     logger.error(`PostgreSQL migration failed: ${e}`);
