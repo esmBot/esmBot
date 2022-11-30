@@ -42,35 +42,18 @@ const updates = [
 ];
 
 export async function setup() {
-  let counts;
-  try {
-    counts = await sql`SELECT * FROM counts`;
-  } catch {
-    counts = [];
-  }
-
-  const merged = new Map([...commands, ...messageCommands]);
-
-  if (!counts.length) {
-    for (const command of merged.keys()) {
+  const existingCommands = (await sql`SELECT command FROM counts`).map(x => x.command);
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
+  for (const command of existingCommands) {
+    if (!commandNames.includes(command)) {
+      await sql`DELETE FROM counts WHERE command = ${command}`;
+    }
+  };
+  for (const command of commandNames) {
+    if (!existingCommands.includes(command)) {
       await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
     }
-  } else {
-    const exists = [];
-    for (const command of merged.keys()) {
-      const count = await sql`SELECT * FROM counts WHERE command = ${command}`;
-      if (!count.length) {
-        await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
-      }
-      exists.push(command);
-    }
-
-    for (const { command } of counts) {
-      if (!exists.includes(command)) {
-        await sql`DELETE FROM counts WHERE command = ${command}`;
-      }
-    }
-  }
+  };
 }
 
 export async function upgrade(logger) {

@@ -1,4 +1,4 @@
-import * as collections from "../collections.js";
+import { commands, messageCommands } from "../collections.js";
 import * as logger from "../logger.js";
 
 import sqlite3 from "better-sqlite3";
@@ -43,29 +43,18 @@ const updates = [
 ];
 
 export async function setup() {
-  const counts = connection.prepare("SELECT * FROM counts").all();
-  const merged = new Map([...collections.commands, ...collections.messageCommands]);
-
-  if (!counts || counts.length === 0) {
-    for (const command of merged.keys()) {
+  const existingCommands = connection.prepare("SELECT command FROM counts").all().map(x => x.command);
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
+  for (const command of existingCommands) {
+    if (!commandNames.includes(command)) {
+      connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
+    }
+  };
+  for (const command of commandNames) {
+    if (!existingCommands.includes(command)) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
     }
-  } else {
-    const exists = [];
-    for (const command of merged.keys()) {
-      const count = connection.prepare("SELECT * FROM counts WHERE command = ?").get(command);
-      if (!count) {
-        connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
-      }
-      exists.push(command);
-    }
-
-    for (const { command } of counts) {
-      if (!exists.includes(command)) {
-        connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
-      }
-    }
-  }
+  };
 }
 
 export async function stop() {
