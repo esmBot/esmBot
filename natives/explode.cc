@@ -12,10 +12,10 @@ using namespace std;
 using namespace Magick;
 
 char *Explode(string type, char *BufferData, size_t BufferLength,
-              map<string, ARG_TYPES> Arguments, size_t *DataSize) {
+              ArgumentMap Arguments, size_t *DataSize) {
 
-  int amount = MAP_GET(Arguments, "amount", int);
-  int delay = MAP_GET_FALLBACK(Arguments, "delay", int, 0);
+  int amount = GetArgument<int>(Arguments, "amount");
+  int delay = GetArgumentWithFallback<int>(Arguments, "delay", 0);
 
   Blob blob;
 

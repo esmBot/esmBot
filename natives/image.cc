@@ -51,7 +51,7 @@
 
 using namespace std;
 
-std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, map<string, ARG_TYPES> Arguments, size_t* DataSize)> FunctionMap = {
+std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize)> FunctionMap = {
   {"blur", &Blur},
 	{"caption", &Caption},
 	{"captionTwo", &CaptionTwo},
@@ -117,7 +117,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
 
     Napi::Array properties = obj.GetPropertyNames();
 
-    std::map<string, ARG_TYPES> Arguments;
+    ArgumentMap Arguments;
 
     for (unsigned int i = 0; i < properties.Length(); i++) {
       string property = properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
@@ -138,6 +138,9 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
         } else {
           Arguments[property] = num.FloatValue();
         }
+      } else {
+        throw "Unimplemented value type passed to image native.";
+        //Arguments[property] = val;
       }
     }
 

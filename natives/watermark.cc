@@ -7,23 +7,23 @@ using namespace std;
 using namespace vips;
 
 char *Watermark(string type, char *BufferData, size_t BufferLength,
-                map<string, ARG_TYPES> Arguments, size_t *DataSize) {
+                ArgumentMap Arguments, size_t *DataSize) {
 
-  string water = MAP_GET(Arguments, "water", string);
-  int gravity = MAP_GET(Arguments, "gravity", int);
+  string water = GetArgument<string>(Arguments, "water");
+  int gravity = GetArgument<int>(Arguments, "gravity");
 
-  bool resize = MAP_GET_FALLBACK(Arguments, "resize", bool, false);
-  ;
-  float yscale = MAP_GET_FALLBACK(Arguments, "yscale", float, false);
+  bool resize = GetArgumentWithFallback<bool>(Arguments, "resize", false);
 
-  bool append = MAP_GET_FALLBACK(Arguments, "append", bool, false);
+  float yscale = GetArgumentWithFallback<float>(Arguments, "yscale", false);
 
-  bool alpha = MAP_GET_FALLBACK(Arguments, "alpha", bool, false);
-  bool flip = MAP_GET_FALLBACK(Arguments, "flip", bool, false);
+  bool append = GetArgumentWithFallback<bool>(Arguments, "append", false);
+
+  bool alpha = GetArgumentWithFallback<bool>(Arguments, "alpha", false);
+  bool flip = GetArgumentWithFallback<bool>(Arguments, "flip", false);
 
   bool mc = MAP_HAS(Arguments, "mc");
 
-  string basePath = MAP_GET(Arguments, "basePath", string);
+  string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 

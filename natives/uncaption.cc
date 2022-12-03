@@ -7,9 +7,9 @@ using namespace std;
 using namespace vips;
 
 char *Uncaption(string type, char *BufferData, size_t BufferLength,
-                map<string, ARG_TYPES> Arguments, size_t *DataSize) {
+                ArgumentMap Arguments, size_t *DataSize) {
 
-  float tolerance = MAP_GET_FALLBACK(Arguments, "tolerance", float, 0.5);
+  float tolerance = GetArgumentWithFallback<float>(Arguments, "tolerance", 0.5);
 
   VOption *options = VImage::option();
 

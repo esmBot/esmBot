@@ -11,7 +11,7 @@ using namespace std;
 using namespace Magick;
 
 char *Circle(string type, char *BufferData, size_t BufferLength,
-             map<string, ARG_TYPES> Arguments, size_t *DataSize) {
+             ArgumentMap Arguments, size_t *DataSize) {
 
   Blob blob;
 

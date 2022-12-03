@@ -8,11 +8,11 @@ using namespace std;
 using namespace vips;
 
 char *Caption(string type, char *BufferData, size_t BufferLength,
-              map<string, ARG_TYPES> Arguments, size_t *DataSize) {
+              ArgumentMap Arguments, size_t *DataSize) {
 
-  string caption = MAP_GET(Arguments, "caption", string);
-  string font = MAP_GET(Arguments, "font", string);
-  string basePath = MAP_GET(Arguments, "basePath", string);
+  string caption = GetArgument<string>(Arguments, "caption");
+  string font = GetArgument<string>(Arguments, "font");
+  string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
