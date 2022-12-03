@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 #include <iostream>
-#include <any>
 
 #include "blur.h"
 #include "colors.h"
@@ -175,6 +174,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for
     return OldProcessImage(command, info);
   } else {
     Napi::Error::New(env, "Invalid command").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
