@@ -1,5 +1,4 @@
 import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "../collections.js";
-import * as logger from "../logger.js";
 
 import Postgres from "postgres";
 const sql = Postgres(process.env.DB, {
@@ -48,12 +47,12 @@ export async function setup() {
     if (!commandNames.includes(command)) {
       await sql`DELETE FROM counts WHERE command = ${command}`;
     }
-  };
+  }
   for (const command of commandNames) {
     if (!existingCommands.includes(command)) {
       await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
     }
-  };
+  }
 }
 
 export async function upgrade(logger) {
@@ -66,10 +65,10 @@ export async function upgrade(logger) {
         version = 0;
       } else {
         version = settingsrow[0].version;
-      };
+      }
       const latestVersion = updates.length - 1;
       if (version === 0) {
-        logger.info(`Initializing PostgreSQL database...`);
+        logger.info("Initializing PostgreSQL database...");
         await sql.unsafe(schema);
       } else if (version < latestVersion) {
         logger.info(`Migrating PostgreSQL database, which is currently at version ${version}...`);
@@ -99,7 +98,7 @@ export async function getGuild(query) {
     if (guild == undefined) {
       guild = { guild_id: query, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] };
       await sql`INSERT INTO guilds ${sql(guild)}`;
-    };
+    }
   });
   return guild;
 }

@@ -18,7 +18,7 @@ export default async (client, interaction) => {
   if (cmd.dbRequired && !database) {
     await interaction["createMessage"]({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
     return;
-  };
+  }
 
   const invoker = interaction.member ?? interaction.user;
 
