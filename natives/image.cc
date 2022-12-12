@@ -62,13 +62,13 @@ std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLeng
 	{"explode", &Explode},
 	{"flag", &Flag},
   {"flip", &Flip},
+  {"freeze", &Freeze},
+  {"speed", &Speed},
 	{"uncaption", &Uncaption},
   {"watermark", &Watermark}
 };
 
 std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
-  {"speed", Speed},
-	{"freeze", Freeze},
   {"gamexplain", Gamexplain},
   {"globe", Globe},
   {"homebrew", Homebrew},

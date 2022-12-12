@@ -1,5 +1,7 @@
 #pragma once
 
-#include <napi.h>
+#include "common.h"
 
-Napi::Value Speed(const Napi::CallbackInfo &info);
+using std::string;
+
+char* Speed(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);
