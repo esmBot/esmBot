@@ -34,25 +34,25 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.0.0",
     "node-emoji": "^1.11.0",
-    "oceanic.js": "1.3.1",
+    "oceanic.js": "1.3.2",
     "qrcode": "^1.5.1",
     "sharp": "^0.31.2",
     "shoukaku": "^3.2.2",
-    "undici": "^5.13.0",
+    "undici": "^5.14.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.5",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/eslint-plugin": "^7.19.1",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "cmake-js": "^7.0.0",
-    "eslint": "^8.28.0",
-    "eslint-plugin-unicorn": "^44.0.2"
+    "eslint": "^8.29.0",
+    "eslint-plugin-unicorn": "^45.0.2"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^7.6.2",
+    "better-sqlite3": "^8.0.1",
     "bufferutil": "^4.0.7",
     "erlpack": "^0.1.4",
     "pm2": "^5.2.2",

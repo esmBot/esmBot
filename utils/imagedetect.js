@@ -59,7 +59,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
             const redirect = (await request(image2, { method: "HEAD" })).headers.location;
             id = redirect.split("-").pop();
           }
-          const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&key=${process.env.TENOR}`);
+          const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
           if (data.statusCode === 429) {
             if (extraReturnTypes) {
               payload.type = "tenorlimit";

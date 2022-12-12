@@ -42,6 +42,7 @@ import { parseThreshold } from "./utils/tempimages.js";
 
 const { types } = JSON.parse(readFileSync(new URL("./config/commands.json", import.meta.url)));
 const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
+process.env.ESMBOT_VER = esmBotVersion;
 
 const intents = [
   "GUILD_VOICE_STATES",
