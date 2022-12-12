@@ -64,6 +64,9 @@ export async function activityChanger(bot) {
 }
 
 export async function checkBroadcast(bot) {
+  if (!db) {
+    return;
+  }
   const message = await db.getBroadcast();
   if (message) {
     startBroadcast(bot, message);

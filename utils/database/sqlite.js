@@ -1,4 +1,4 @@
-import * as collections from "../collections.js";
+import { commands, messageCommands } from "../collections.js";
 import * as logger from "../logger.js";
 
 import sqlite3 from "better-sqlite3";
@@ -43,29 +43,18 @@ const updates = [
 ];
 
 export async function setup() {
-  const counts = connection.prepare("SELECT * FROM counts").all();
-  const merged = new Map([...collections.commands, ...collections.messageCommands]);
-
-  if (!counts || counts.length === 0) {
-    for (const command of merged.keys()) {
+  const existingCommands = connection.prepare("SELECT command FROM counts").all().map(x => x.command);
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
+  for (const command of existingCommands) {
+    if (!commandNames.includes(command)) {
+      connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
+    }
+  };
+  for (const command of commandNames) {
+    if (!existingCommands.includes(command)) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
     }
-  } else {
-    const exists = [];
-    for (const command of merged.keys()) {
-      const count = connection.prepare("SELECT * FROM counts WHERE command = ?").get(command);
-      if (!count) {
-        connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
-      }
-      exists.push(command);
-    }
-
-    for (const { command } of counts) {
-      if (!exists.includes(command)) {
-        connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
-      }
-    }
-  }
+  };
 }
 
 export async function stop() {
@@ -100,19 +89,6 @@ export async function upgrade(logger) {
     return 1;
   }
   connection.exec("COMMIT");
-}
-
-export async function fixGuild(guild) {
-  let guildDB;
-  try {
-    guildDB = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(guild);
-  } catch {
-    connection.prepare("CREATE TABLE guilds ( guild_id VARCHAR(30) NOT NULL PRIMARY KEY, prefix VARCHAR(15) NOT NULL, disabled text NOT NULL, disabled_commands text NOT NULL )").run();
-  }
-  if (!guildDB) {
-    logger.log(`Registering guild database entry for guild ${guild}...`);
-    return await this.addGuild(guild);
-  }
 }
 
 export async function addCount(command) {
@@ -201,23 +177,19 @@ export async function setPrefix(prefix, guild) {
   collections.prefixCache.set(guild.id, prefix);
 }
 
-export async function addGuild(guild) {
-  const query = await this.getGuild(guild);
-  if (query) return query;
-  const guildObject = {
-    id: guild,
-    prefix: process.env.PREFIX,
-    disabled: "[]",
-    disabledCommands: "[]"
-  };
-  connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guildObject);
-  return guildObject;
-}
-
 export async function getGuild(query) {
-  try {
-    return connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query);
-  } catch {
-    return;
-  }
+  let guild;
+  connection.transaction(() => {   
+    guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query);
+    if (!guild) {
+      guild = {
+        id: query,
+        prefix: process.env.PREFIX,
+        disabled: "[]",
+        disabledCommands: "[]"
+      };
+      connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guild);
+    }
+  })();
+  return guild;
 }

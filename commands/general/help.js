@@ -9,11 +9,15 @@ const tips = ["You can change the bot's prefix using the prefix command.", "Imag
 
 class HelpCommand extends Command {
   async run() {
-    const { prefix } = this.guild ? await database.getGuild(this.guild.id) : "N/A";
+    let prefix;
+    if (this.guild && database) {
+      prefix = (await database.getGuild(this.guild.id)).prefix;
+    } else {
+      prefix = process.env.PREFIX;
+    }
     if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
-      const counts = await database.getCounts();
       const embed = {
         embeds: [{
           author: {
@@ -28,16 +32,19 @@ class HelpCommand extends Command {
             name: "Aliases",
             value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
           }, {
-            name: "Times Used",
-            value: counts[command],
-            inline: true
-          }, {
             name: "Parameters",
             value: command === "tags" ? "[name]" : (info.params ? (info.params.length !== 0 ? info.params.join(" ") : "None") : "None"),
             inline: true
           }]
         }]
       };
+      if (database) {
+        embed.embeds[0].fields.push({
+          name: "Times used",
+          value: (await database.getCounts())[command],
+          inline: true
+        });
+      }
       if (info.flags.length !== 0) {
         const flagInfo = [];
         for (const flag of info.flags) {
@@ -92,7 +99,7 @@ class HelpCommand extends Command {
             },
             fields: [{
               name: "Prefix",
-              value: this.guild ? prefix : "N/A"
+              value: prefix
             }, {
               name: "Tip",
               value: random(tips)

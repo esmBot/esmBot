@@ -47,6 +47,7 @@ class ChannelCommand extends Command {
   static arguments = ["[enable/disable]", "{id}"];
   static slashAllowed = false;
   static directAllowed = false;
+  static dbRequired = true;
 }
 
 export default ChannelCommand;

@@ -15,13 +15,19 @@ export default async (client, interaction) => {
     cmd = messageCommands.get(command);
     if (!cmd) return;
   }
+  if (cmd.dbRequired && !database) {
+    await interaction["createMessage"]({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
+    return;
+  };
 
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
   logger.log("log", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
-    await database.addCount(command);
+    if (database) {
+      await database.addCount(command);
+    }
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, { type: "application", interaction });
     const result = await commandClass.run();

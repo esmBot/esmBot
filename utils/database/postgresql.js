@@ -42,43 +42,26 @@ const updates = [
 ];
 
 export async function setup() {
-  let counts;
-  try {
-    counts = await sql`SELECT * FROM counts`;
-  } catch {
-    counts = [];
-  }
-
-  const merged = new Map([...commands, ...messageCommands]);
-
-  if (!counts.length) {
-    for (const command of merged.keys()) {
+  const existingCommands = (await sql`SELECT command FROM counts`).map(x => x.command);
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
+  for (const command of existingCommands) {
+    if (!commandNames.includes(command)) {
+      await sql`DELETE FROM counts WHERE command = ${command}`;
+    }
+  };
+  for (const command of commandNames) {
+    if (!existingCommands.includes(command)) {
       await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
     }
-  } else {
-    const exists = [];
-    for (const command of merged.keys()) {
-      const count = await sql`SELECT * FROM counts WHERE command = ${command}`;
-      if (!count.length) {
-        await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
-      }
-      exists.push(command);
-    }
-
-    for (const { command } of counts) {
-      if (!exists.includes(command)) {
-        await sql`DELETE FROM counts WHERE command = ${command}`;
-      }
-    }
-  }
+  };
 }
 
 export async function upgrade(logger) {
   try {
-    await sql.begin(async (tx) => {
-      await tx.unsafe(settingsSchema);
+    await sql.begin(async (sql) => {
+      await sql.unsafe(settingsSchema);
       let version;
-      const settingsrow = (await tx`SELECT version FROM settings WHERE id = 1`);
+      const settingsrow = (await sql`SELECT version FROM settings WHERE id = 1`);
       if (settingsrow.length == 0) {
         version = 0;
       } else {
@@ -87,20 +70,20 @@ export async function upgrade(logger) {
       const latestVersion = updates.length - 1;
       if (version === 0) {
         logger.info(`Initializing PostgreSQL database...`);
-        await tx.unsafe(schema);
+        await sql.unsafe(schema);
       } else if (version < latestVersion) {
         logger.info(`Migrating PostgreSQL database, which is currently at version ${version}...`);
         while (version < latestVersion) {
           version++;
           logger.info(`Running version ${version} update script...`);
-          await tx.unsafe(updates[version]);
+          await sql.unsafe(updates[version]);
         }
       } else if (version > latestVersion) {
         throw new Error(`PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
       } else {
         return;
       }
-      await tx`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
+      await sql`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
     });
   } catch (e) {
     logger.error(`PostgreSQL migration failed: ${e}`);
@@ -110,7 +93,15 @@ export async function upgrade(logger) {
 }
 
 export async function getGuild(query) {
-  return (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
+  let guild;
+  await sql.begin(async (sql) => {
+    guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
+    if (guild == undefined) {
+      guild = { guild_id: query, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] };
+      await sql`INSERT INTO guilds ${sql(guild)}`;
+    };
+  });
+  return guild;
 }
 
 export async function setPrefix(prefix, guild) {
@@ -190,25 +181,6 @@ export async function getCounts() {
 
 export async function addCount(command) {
   await sql`INSERT INTO counts ${sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
-}
-
-export async function addGuild(guild) {
-  const query = await this.getGuild(guild);
-  if (query) return query;
-  try {
-    await sql`INSERT INTO guilds ${sql({ guild_id: guild, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] })}`;
-  } catch (e) {
-    logger.error(`Failed to register guild ${guild}: ${e}`);
-  }
-  return await this.getGuild(guild);
-}
-
-export async function fixGuild(guild) {
-  const guildDB = await sql`SELECT exists(SELECT 1 FROM guilds WHERE guild_id = ${guild})`;
-  if (!guildDB[0].exists) {
-    logger.log(`Registering guild database entry for guild ${guild}...`);
-    return await this.addGuild(guild);
-  }
 }
 
 export async function stop() {

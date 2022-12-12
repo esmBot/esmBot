@@ -46,6 +46,7 @@ class BroadcastCommand extends Command {
 
   static description = "Broadcasts a playing message until the command is run again or the bot restarts";
   static adminOnly = true;
+  static dbRequired = true;
 }
 
 export default BroadcastCommand;
