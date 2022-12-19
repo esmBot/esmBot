@@ -43,8 +43,8 @@ plugins:
   - git-revision-date-localized
 extra:
   social:
-    - icon: fontawesome/brands/twitter 
-      link: https://twitter.com/esmBot_
+    - icon: fontawesome/brands/mastodon 
+      link: https://wetdry.world/@esmBot
     - icon: fontawesome/brands/github
       link: https://github.com/esmBot
     - icon: fontawesome/brands/patreon
