@@ -27,7 +27,7 @@ char *Colors(string type, char *BufferData, size_t BufferLength,
   if (color == "grayscale") {
     out = in.colourspace(VIPS_INTERPRETATION_B_W);
   } else if (color == "sepia") {
-    out = in.flatten().recomb(sepia);
+    out = in.extract_band(0, VImage::option()->set("n", 3)).recomb(sepia);
   }
 
   void *buf;
