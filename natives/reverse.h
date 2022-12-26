@@ -1,5 +1,7 @@
 #pragma once
 
-#include <napi.h>
+#include "common.h"
 
-Napi::Value Reverse(const Napi::CallbackInfo& info);
+using std::string;
+
+char* Reverse(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);

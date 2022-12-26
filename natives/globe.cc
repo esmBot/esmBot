@@ -1,93 +1,79 @@
-#include <napi.h>
+#include "common.h"
 
 #include <vips/vips8>
 
 using namespace std;
 using namespace vips;
 
-Napi::Value Globe(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
+char *Globe(string type, char *BufferData, size_t BufferLength,
+            ArgumentMap Arguments, size_t *DataSize) {
 
-  try {
-    Napi::Object obj = info[1].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
-    string basePath = obj.Get("basePath").As<Napi::String>().Utf8Value();
+  string basePath = GetArgument<string>(Arguments, "basePath");
 
-    VOption *options = VImage::option();
+  VOption *options = VImage::option();
 
-    VImage in =
-        VImage::new_from_buffer(
-            data.Data(), data.Length(), "",
-            type == "gif" ? options->set("n", -1)->set("access", "sequential")
-                          : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha())
-      in = in.bandjoin(255);
+  VImage in =
+      VImage::new_from_buffer(
+          BufferData, BufferLength, "",
+          type == "gif" ? options->set("n", -1)->set("access", "sequential")
+                        : options)
+          .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha())
+    in = in.bandjoin(255);
 
-    int width = in.width();
-    int pageHeight = vips_image_get_page_height(in.get_image());
-    int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
+  int width = in.width();
+  int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
-    double size = min(width, pageHeight);
+  double size = min(width, pageHeight);
 
-    string diffPath = basePath + "assets/images/globediffuse.png";
-    VImage diffuse =
-        VImage::new_from_file(diffPath.c_str())
-            .resize(size / 500.0,
-                    VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
-        255;
+  string diffPath = basePath + "assets/images/globediffuse.png";
+  VImage diffuse =
+      VImage::new_from_file(diffPath.c_str())
+          .resize(size / 500.0,
+                  VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
+      255;
 
-    string specPath = basePath + "assets/images/globespec.png";
-    VImage specular =
-        VImage::new_from_file(specPath.c_str())
-            .resize(size / 500.0,
-                    VImage::option()->set("kernel", VIPS_KERNEL_CUBIC));
+  string specPath = basePath + "assets/images/globespec.png";
+  VImage specular =
+      VImage::new_from_file(specPath.c_str())
+          .resize(size / 500.0,
+                  VImage::option()->set("kernel", VIPS_KERNEL_CUBIC));
 
-    string distortPath = basePath + "assets/images/spheremap.png";
-    VImage distort =
-        (VImage::new_from_file(distortPath.c_str())
-             .resize(size / 500.0,
-                     VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
-         65535) *
-        size;
+  string distortPath = basePath + "assets/images/spheremap.png";
+  VImage distort =
+      (VImage::new_from_file(distortPath.c_str())
+           .resize(size / 500.0,
+                   VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
+       65535) *
+      size;
 
-    vector<VImage> img;
-    for (int i = 0; i < nPages; i++) {
-      VImage img_frame =
-          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-      VImage resized = img_frame.resize(
-          size / (double)width,
-          VImage::option()->set("vscale", size / (double)pageHeight));
-      VImage rolled = img_frame.wrap(
-          VImage::option()->set("x", width * i / nPages)->set("y", 0));
-      VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
-      VImage mapped = extracted.mapim(distort);
-      VImage composited = mapped * diffuse + specular;
-      VImage frame = composited.bandjoin(diffuse > 0.0);
-      img.push_back(frame);
-    }
-    VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-    final.set(VIPS_META_PAGE_HEIGHT, size);
-    if (type != "gif") {
-      vector<int> delay(30, 50);
-      final.set("delay", delay);
-    }
-
-    void *buf;
-    size_t length;
-    final.write_to_buffer(".gif", &buf, &length);
-
-    result.Set("data", Napi::Buffer<char>::Copy(env, (char *)buf, length));
-    result.Set("type", "gif");
-  } catch (std::exception const &err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
+  vector<VImage> img;
+  for (int i = 0; i < nPages; i++) {
+    VImage img_frame =
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage resized = img_frame.resize(
+        size / (double)width,
+        VImage::option()->set("vscale", size / (double)pageHeight));
+    VImage rolled = img_frame.wrap(
+        VImage::option()->set("x", width * i / nPages)->set("y", 0));
+    VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
+    VImage mapped = extracted.mapim(distort);
+    VImage composited = mapped * diffuse + specular;
+    VImage frame = composited.bandjoin(diffuse > 0.0);
+    img.push_back(frame);
   }
+  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  final.set(VIPS_META_PAGE_HEIGHT, size);
+  if (type != "gif") {
+    vector<int> delay(30, 50);
+    final.set("delay", delay);
+  }
+
+  void *buf;
+  final.write_to_buffer(".gif", &buf, DataSize);
 
   vips_error_clear();
   vips_thread_shutdown();
-  return result;
+  return (char *)buf;
 }

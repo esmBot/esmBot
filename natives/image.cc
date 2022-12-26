@@ -63,27 +63,30 @@ std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLeng
 	{"flag", &Flag},
   {"flip", &Flip},
   {"freeze", &Freeze},
-  {"speed", &Speed},
-	{"uncaption", &Uncaption},
-  {"watermark", &Watermark}
-};
-
-std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
   {"gamexplain", Gamexplain},
   {"globe", Globe},
-  {"homebrew", Homebrew},
   {"invert", Invert},
   {"jpeg", Jpeg},
-  {"magik", Magik},
   {"meme", Meme},
   {"mirror", Mirror},
   {"motivate", Motivate},
   {"reddit", Reddit},
   {"resize", Resize},
   {"reverse", Reverse},
+  {"speed", &Speed},
+	{"uncaption", &Uncaption},
+  {"watermark", &Watermark}
+};
+
+std::map<std::string, char* (*)(string *type, ArgumentMap Arguments, size_t* DataSize)> NoInputFunctionMap = {
+  {"homebrew", Homebrew},
+  {"sonic", Sonic}
+};
+
+std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
+  {"magik", Magik},
   {"scott", Scott},
   {"snapchat", Snapchat},
-  {"sonic", Sonic},
   {"spin", Spin},
   {"swirl", Swirl},
   {"tile", Tile},
@@ -105,15 +108,14 @@ bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
       .Value();
 }
 
-Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
+Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
   Napi::Env env = info.Env();
   Napi::Object result = Napi::Object::New(env);
 
   try {
     string command = info[0].As<Napi::String>().Utf8Value();
     Napi::Object obj = info[1].As<Napi::Object>();
-    Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-    string type = obj.Get("type").As<Napi::String>().Utf8Value();
+    string type = obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : NULL;
 
     Napi::Array properties = obj.GetPropertyNames();
 
@@ -145,7 +147,13 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info) {
     }
 
     size_t length = 0;
-    char* buf = FunctionMap.at(command)(type, data.Data(), data.Length(), Arguments, &length);
+    char* buf;
+    if (input) {
+      Napi::Buffer<char> data = obj.Has("data") ? obj.Get("data").As<Napi::Buffer<char>>() : Napi::Buffer<char>::New(env, 0);
+      buf = FunctionMap.at(command)(type, data.Data(), data.Length(), Arguments, &length);
+    } else {
+      buf = NoInputFunctionMap.at(command)(&type, Arguments, &length);
+    }
     result.Set("data", Napi::Buffer<char>::New(env, buf, length, [](Napi::Env env, void* data) {
       free(data);
     }));
@@ -169,7 +177,9 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for
   string command = info[0].As<Napi::String>().Utf8Value();
   
   if (MAP_HAS(FunctionMap, command)) {
-    return NewProcessImage(info);
+    return NewProcessImage(info, true);
+  } else if (MAP_HAS(NoInputFunctionMap, command)) {
+    return NewProcessImage(info, false);
   } else if (MAP_HAS(OldFunctionMap, command)) {
     return OldProcessImage(command, info);
   } else {
@@ -189,6 +199,11 @@ Napi::Object Init(Napi::Env env, Napi::Object exports){
     Napi::Array arr = Napi::Array::New(env);
     size_t i = 0;
     for (auto const& imap: FunctionMap) {
+      Napi::HandleScope scope(env);
+      arr[i] = Napi::String::New(env, imap.first);
+      i++;
+    }
+    for (auto const& imap: NoInputFunctionMap) {
       Napi::HandleScope scope(env);
       arr[i] = Napi::String::New(env, imap.first);
       i++;

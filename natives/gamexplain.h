@@ -1,5 +1,7 @@
 #pragma once
 
-#include <napi.h>
+#include "common.h"
 
-Napi::Value Gamexplain(const Napi::CallbackInfo& info);
+using std::string;
+
+char* Gamexplain(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);
