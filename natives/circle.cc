@@ -1,4 +1,3 @@
-#include "common.h"
 #include <Magick++.h>
 
 #include <cstring>
@@ -7,12 +6,13 @@
 #include <map>
 #include <string>
 
+#include "common.h"
+
 using namespace std;
 using namespace Magick;
 
 char *Circle(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
-
   Blob blob;
 
   list<Image> frames;
@@ -45,7 +45,7 @@ char *Circle(string *type, char *BufferData, size_t BufferLength,
   writeImages(blurred.begin(), blurred.end(), &blob);
 
   *DataSize = blob.length();
-  
+
   // workaround because the data is tied to the blob
   char *data = (char *)malloc(*DataSize);
   memcpy(data, blob.data(), *DataSize);

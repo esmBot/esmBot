@@ -1,16 +1,16 @@
-#include "common.h"
 #include <Magick++.h>
 
 #include <cstring>
 #include <iostream>
 #include <list>
 
+#include "common.h"
+
 using namespace std;
 using namespace Magick;
 
 char *Tile(string *type, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
-
   Blob blob;
 
   list<Image> frames;

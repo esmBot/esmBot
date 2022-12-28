@@ -1,13 +1,12 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Uncanny(string *type, char *BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t *DataSize) {
-
   string caption = GetArgument<string>(Arguments, "caption");
   string caption2 = GetArgument<string>(Arguments, "caption2");
   string font = GetArgument<string>(Arguments, "font");
@@ -94,11 +93,9 @@ char *Uncanny(string *type, char *BufferData, size_t BufferLength,
   final.set(VIPS_META_PAGE_HEIGHT, 720);
 
   void *buf;
-  final.write_to_buffer(("." + *type).c_str(), &buf, DataSize,
-                        *type == "gif" ? VImage::option()->set("reoptimise", 1)
-                                       : 0);
+  final.write_to_buffer(
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

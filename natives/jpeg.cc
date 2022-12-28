@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -16,8 +16,7 @@ char *Jpeg(string *type, char *BufferData, size_t BufferLength,
                     BufferData, BufferLength, "",
                     VImage::option()->set("access", "sequential")->set("n", -1))
                     .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha())
-      in = in.bandjoin(255);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -53,18 +52,15 @@ char *Jpeg(string *type, char *BufferData, size_t BufferLength,
       final.set("delay", in.get_array_int("delay"));
     }
 
-    final.write_to_buffer(("." + *type).c_str(), &buf, DataSize,
-                          *type == "gif" ? VImage::option()->set("dither", 0)
-                                        : 0);
+    final.write_to_buffer(
+        ("." + *type).c_str(), &buf, DataSize,
+        *type == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
     VImage in = VImage::new_from_buffer(BufferData, BufferLength, "");
     in.write_to_buffer(".jpg", &buf, DataSize,
                        VImage::option()->set("Q", quality)->set("strip", true));
-
     *type = "jpg";
   }
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

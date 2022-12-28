@@ -4,4 +4,4 @@
 
 using std::string;
 
-char* Sonic(string *type, ArgumentMap Arguments, size_t *DataSize);
+char *Sonic(string *type, ArgumentMap Arguments, size_t *DataSize);

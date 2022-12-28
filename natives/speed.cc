@@ -1,9 +1,8 @@
-#include "common.h"
-
 #include <iostream>
 #include <map>
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -11,8 +10,7 @@ using namespace vips;
 void *memset16(void *m, uint16_t val, size_t count) {
   uint16_t *buf = (uint16_t *)m;
 
-  while (count--)
-    *buf++ = val;
+  while (count--) *buf++ = val;
   return m;
 }
 
@@ -21,8 +19,7 @@ char *vipsRemove(char *data, size_t length, size_t *DataSize, int speed) {
 
   VImage in = VImage::new_from_buffer(data, length, "", options->set("n", -1))
                   .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -44,7 +41,6 @@ char *vipsRemove(char *data, size_t length, size_t *DataSize, int speed) {
 
 char *Speed(string *type, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
-
   bool slow = GetArgumentWithFallback<bool>(Arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(Arguments, "speed", 2);
 
@@ -101,9 +97,6 @@ char *Speed(string *type, char *BufferData, size_t BufferLength,
   } else {
     *DataSize = BufferLength;
   }
-
-  vips_error_clear();
-  vips_thread_shutdown();
 
   return fileData;
 }

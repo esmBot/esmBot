@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -15,8 +15,7 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(BufferData, BufferLength, "",
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -29,13 +28,13 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage composited =
-        tmpl.insert(img_frame.extract_band(0, VImage::option()->set("n", 3))
-                        .bandjoin(255)
-                        .resize(303.0 / (double)width,
-                                VImage::option()->set(
-                                    "vscale", 438.0 / (double)pageHeight)),
-                    310, 76);
+    VImage composited = tmpl.insert(
+        img_frame.extract_band(0, VImage::option()->set("n", 3))
+            .bandjoin(255)
+            .resize(
+                303.0 / (double)width,
+                VImage::option()->set("vscale", 438.0 / (double)pageHeight)),
+        310, 76);
     img.push_back(composited);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -44,7 +43,5 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
   void *buf;
   final.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -18,8 +18,7 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(BufferData, BufferLength, "",
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int size = width / 5;
@@ -100,8 +99,7 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
           VImage::option()->set("background", 0x000000)->set("expand", true));
     }
     if (bottom_text != "") {
-      if (top_text == "")
-        frame = bordered3;
+      if (top_text == "") frame = bordered3;
       frame = frame.join(
           bottomImage.gravity(VIPS_COMPASS_DIRECTION_NORTH, bordered3.width(),
                               bottomImage.height() + (size / 4),
@@ -117,10 +115,9 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
   final.set(VIPS_META_PAGE_HEIGHT, height);
 
   void *buf;
-  final.write_to_buffer(("." + *type).c_str(), &buf, DataSize,
-                        *type == "gif" ? VImage::option()->set("dither", 1) : 0);
+  final.write_to_buffer(
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("dither", 1) : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

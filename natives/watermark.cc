@@ -1,14 +1,13 @@
-#include "common.h"
-
 #include <map>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Watermark(string *type, char *BufferData, size_t BufferLength,
                 ArgumentMap Arguments, size_t *DataSize) {
-
   string water = GetArgument<string>(Arguments, "water");
   int gravity = GetArgument<int>(Arguments, "gravity");
 
@@ -31,8 +30,7 @@ char *Watermark(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(BufferData, BufferLength, "",
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   string merged = basePath + water;
   VImage watermark = VImage::new_from_file(merged.c_str());
@@ -59,30 +57,30 @@ char *Watermark(string *type, char *BufferData, size_t BufferLength,
 
   int x = 0, y = 0;
   switch (gravity) {
-  case 1:
-    break;
-  case 2:
-    x = (width / 2) - (watermark.width() / 2);
-    break;
-  case 3:
-    x = width - watermark.width();
-    break;
-  case 5:
-    x = (width / 2) - (watermark.width() / 2);
-    y = (pageHeight / 2) - (watermark.height() / 2);
-    break;
-  case 6:
-    x = width - watermark.width();
-    y = (pageHeight / 2) - (watermark.height() / 2);
-    break;
-  case 8:
-    x = (width / 2) - (watermark.width() / 2);
-    y = pageHeight - watermark.height();
-    break;
-  case 9:
-    x = width - watermark.width();
-    y = pageHeight - watermark.height();
-    break;
+    case 1:
+      break;
+    case 2:
+      x = (width / 2) - (watermark.width() / 2);
+      break;
+    case 3:
+      x = width - watermark.width();
+      break;
+    case 5:
+      x = (width / 2) - (watermark.width() / 2);
+      y = (pageHeight / 2) - (watermark.height() / 2);
+      break;
+    case 6:
+      x = width - watermark.width();
+      y = (pageHeight / 2) - (watermark.height() / 2);
+      break;
+    case 8:
+      x = (width / 2) - (watermark.width() / 2);
+      y = pageHeight - watermark.height();
+      break;
+    case 9:
+      x = width - watermark.width();
+      y = pageHeight - watermark.height();
+      break;
   }
 
   vector<VImage> img;
@@ -149,9 +147,7 @@ char *Watermark(string *type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
+                     : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

@@ -4,4 +4,5 @@
 
 using std::string;
 
-char* ToGif(string* type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);
+char* ToGif(string* type, char* BufferData, size_t BufferLength,
+            ArgumentMap Arguments, size_t* DataSize);

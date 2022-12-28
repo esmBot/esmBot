@@ -1,14 +1,14 @@
-#include "common.h"
 #include <math.h>
 
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Bounce(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
-
   VOption *options = VImage::option();
 
   VImage in =
@@ -17,8 +17,7 @@ char *Bounce(string *type, char *BufferData, size_t BufferLength,
           *type == "gif" ? options->set("n", -1)->set("access", "sequential")
                          : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -31,7 +30,8 @@ char *Bounce(string *type, char *BufferData, size_t BufferLength,
     VImage img_frame =
         *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double height = halfHeight * ((abs(sin(i * mult)) * -1) + 1);
-    VImage embedded = img_frame.embed(0, height, width, pageHeight + halfHeight);
+    VImage embedded =
+        img_frame.embed(0, height, width, pageHeight + halfHeight);
     img.push_back(embedded);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -46,7 +46,5 @@ char *Bounce(string *type, char *BufferData, size_t BufferLength,
 
   *type = "gif";
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

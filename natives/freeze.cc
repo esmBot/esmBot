@@ -1,16 +1,14 @@
-#include "common.h"
-
 #include <algorithm>
 #include <map>
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Freeze(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
-
   bool loop = GetArgumentWithFallback<bool>(Arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(Arguments, "frame", -1);
 
@@ -42,22 +40,17 @@ char *Freeze(string *type, char *BufferData, size_t BufferLength,
       *DataSize = BufferLength + 19;
       break;
     }
-    if (none)
-      *DataSize = BufferLength;
-
-    vips_error_clear();
-    vips_thread_shutdown();
+    if (none) *DataSize = BufferLength;
 
     return newData;
   } else if (frame >= 0 && !loop) {
     VOption *options = VImage::option()->set("access", "sequential");
 
-    VImage in =
-        VImage::new_from_buffer(BufferData, BufferLength, "",
-                                *type == "gif" ? options->set("n", -1) : options)
-            .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha())
-      in = in.bandjoin(255);
+    VImage in = VImage::new_from_buffer(
+                    BufferData, BufferLength, "",
+                    *type == "gif" ? options->set("n", -1) : options)
+                    .colourspace(VIPS_INTERPRETATION_sRGB);
+    if (!in.has_alpha()) in = in.bandjoin(255);
 
     int pageHeight = vips_image_get_page_height(in.get_image());
     int nPages = vips_image_get_n_pages(in.get_image());
@@ -68,9 +61,6 @@ char *Freeze(string *type, char *BufferData, size_t BufferLength,
 
     void *buf;
     out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
-
-    vips_error_clear();
-    vips_thread_shutdown();
 
     return (char *)buf;
   } else {
@@ -86,11 +76,8 @@ char *Freeze(string *type, char *BufferData, size_t BufferLength,
       none = false;
       break;
     }
-    if (none)
-      *DataSize = BufferLength;
+    if (none) *DataSize = BufferLength;
 
-    vips_error_clear();
-    vips_thread_shutdown();
     return fileData;
   }
 }

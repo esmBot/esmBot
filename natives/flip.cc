@@ -1,15 +1,13 @@
-#include "common.h"
-
 #include <map>
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Flip(string *type, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
-
   bool flop = GetArgument<bool>(Arguments, "flop");
 
   VImage in = VImage::new_from_buffer(BufferData, BufferLength, "",
@@ -18,8 +16,7 @@ char *Flip(string *type, char *BufferData, size_t BufferLength,
                                                 "access", "sequential")
                                           : 0)
                   .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   VImage out;
   if (flop) {
@@ -44,9 +41,7 @@ char *Flip(string *type, char *BufferData, size_t BufferLength,
   out.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
+                     : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

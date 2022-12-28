@@ -1,15 +1,14 @@
-#include "common.h"
-
 #include <map>
 #include <string>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *CaptionTwo(string *type, char *BufferData, size_t BufferLength,
                  ArgumentMap Arguments, size_t *DataSize) {
-
   bool top = GetArgument<bool>(Arguments, "top");
   string caption = GetArgument<string>(Arguments, "caption");
   string font = GetArgument<string>(Arguments, "font");
@@ -22,8 +21,7 @@ char *CaptionTwo(string *type, char *BufferData, size_t BufferLength,
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int size = width / 13;
@@ -76,10 +74,7 @@ char *CaptionTwo(string *type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
-
-  vips_error_clear();
-  vips_thread_shutdown();
+                     : 0);
 
   return (char *)buf;
 }

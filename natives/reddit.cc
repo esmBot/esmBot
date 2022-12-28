@@ -1,13 +1,12 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Reddit(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
-
   string text = GetArgument<string>(Arguments, "text");
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -17,8 +16,7 @@ char *Reddit(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(BufferData, BufferLength, "",
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   string assetPath = basePath + "assets/images/reddit.png";
   VImage tmpl = VImage::new_from_file(assetPath.c_str());
@@ -62,9 +60,7 @@ char *Reddit(string *type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
+                     : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

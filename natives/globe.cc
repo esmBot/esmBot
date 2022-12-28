@@ -1,13 +1,12 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Globe(string *type, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
-
   string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option();
@@ -16,10 +15,9 @@ char *Globe(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(
           BufferData, BufferLength, "",
           *type == "gif" ? options->set("n", -1)->set("access", "sequential")
-                        : options)
+                         : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -28,17 +26,15 @@ char *Globe(string *type, char *BufferData, size_t BufferLength,
   double size = min(width, pageHeight);
 
   string diffPath = basePath + "assets/images/globediffuse.png";
-  VImage diffuse =
-      VImage::new_from_file(diffPath.c_str())
-          .resize(size / 500.0,
-                  VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
-      255;
+  VImage diffuse = VImage::new_from_file(diffPath.c_str())
+                       .resize(size / 500.0, VImage::option()->set(
+                                                 "kernel", VIPS_KERNEL_CUBIC)) /
+                   255;
 
   string specPath = basePath + "assets/images/globespec.png";
-  VImage specular =
-      VImage::new_from_file(specPath.c_str())
-          .resize(size / 500.0,
-                  VImage::option()->set("kernel", VIPS_KERNEL_CUBIC));
+  VImage specular = VImage::new_from_file(specPath.c_str())
+                        .resize(size / 500.0, VImage::option()->set(
+                                                  "kernel", VIPS_KERNEL_CUBIC));
 
   string distortPath = basePath + "assets/images/spheremap.png";
   VImage distort =
@@ -73,7 +69,5 @@ char *Globe(string *type, char *BufferData, size_t BufferLength,
   void *buf;
   final.write_to_buffer(".gif", &buf, DataSize);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

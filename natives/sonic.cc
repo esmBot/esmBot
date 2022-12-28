@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -32,7 +32,5 @@ char *Sonic(string *type, ArgumentMap Arguments, size_t *DataSize) {
 
   *type = "png";
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

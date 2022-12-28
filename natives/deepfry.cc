@@ -1,13 +1,13 @@
-#include "common.h"
 #include <map>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Deepfry(string *type, char *BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t *DataSize) {
-
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
@@ -15,8 +15,7 @@ char *Deepfry(string *type, char *BufferData, size_t BufferLength,
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -49,16 +48,13 @@ char *Deepfry(string *type, char *BufferData, size_t BufferLength,
                           VImage::option()->set("Q", 1)->set("strip", true));
     final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-    if (*type == "gif")
-      final.set("delay", fried.get_array_int("delay"));
+    if (*type == "gif") final.set("delay", fried.get_array_int("delay"));
   }
 
   void *buf;
-  final.write_to_buffer(("." + *type).c_str(), &buf, DataSize,
-                        *type == "gif" ? VImage::option()->set("dither", 0) : 0);
-
-  vips_error_clear();
-  vips_thread_shutdown();
+  final.write_to_buffer(
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   return (char *)buf;
 }

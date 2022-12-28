@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -17,8 +17,7 @@ char *Snapchat(string *type, char *BufferData, size_t BufferLength,
       VImage::new_from_buffer(BufferData, BufferLength, "",
                               *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha())
-    in = in.bandjoin(255);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -66,9 +65,7 @@ char *Snapchat(string *type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
+                     : 0);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

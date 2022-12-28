@@ -1,6 +1,6 @@
-#include "common.h"
-
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -50,7 +50,5 @@ char *Resize(string *type, char *BufferData, size_t BufferLength,
   void *buf;
   out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }

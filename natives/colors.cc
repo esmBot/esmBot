@@ -1,8 +1,8 @@
-#include "common.h"
-
 #include <map>
 #include <string>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -12,7 +12,6 @@ VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
 
 char *Colors(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
-
   string color = GetArgument<string>(Arguments, "color");
 
   VOption *options = VImage::option()->set("access", "sequential");
@@ -32,9 +31,6 @@ char *Colors(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
-
-  vips_error_clear();
-  vips_thread_shutdown();
 
   return (char *)buf;
 }

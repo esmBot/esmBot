@@ -1,9 +1,10 @@
-#include "common.h"
 #include <Magick++.h>
 
 #include <cstring>
 #include <iostream>
 #include <list>
+
+#include "common.h"
 
 using namespace std;
 using namespace Magick;
@@ -56,7 +57,7 @@ char *Scott(string *type, char *BufferData, size_t BufferLength,
   writeImages(mid.begin(), mid.end(), &blob);
 
   *DataSize = blob.length();
-  
+
   char *data = (char *)malloc(*DataSize);
   memcpy(data, blob.data(), *DataSize);
   return data;

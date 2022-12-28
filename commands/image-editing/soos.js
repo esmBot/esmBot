@@ -6,7 +6,7 @@ class SooSCommand extends ImageCommand {
   };
 
   static description = "\"Loops\" an image sequence by reversing it when it's finished";
-  static aliases = ["bounce", "boomerang"];
+  static aliases = ["boomerang"];
 
   static requiresGIF = true;
   static noImage = "You need to provide an image/GIF to loop!";

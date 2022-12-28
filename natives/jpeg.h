@@ -4,4 +4,5 @@
 
 using std::string;
 
-char* Jpeg(string* type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);
+char* Jpeg(string* type, char* BufferData, size_t BufferLength,
+           ArgumentMap Arguments, size_t* DataSize);

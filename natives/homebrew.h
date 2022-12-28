@@ -4,4 +4,4 @@
 
 using std::string;
 
-char* Homebrew(string *type, ArgumentMap Arguments, size_t *DataSize);
+char *Homebrew(string *type, ArgumentMap Arguments, size_t *DataSize);

@@ -1,14 +1,14 @@
-#include "common.h"
 #include <map>
 #include <string>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
 
 char *Crop(string *type, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
-
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
@@ -44,10 +44,7 @@ char *Crop(string *type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *type).c_str(), &buf, DataSize,
       *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                    : 0);
-
-  vips_error_clear();
-  vips_thread_shutdown();
+                     : 0);
 
   return (char *)buf;
 }

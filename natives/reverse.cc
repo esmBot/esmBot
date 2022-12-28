@@ -1,7 +1,7 @@
-#include "common.h"
-
 #include <algorithm>
 #include <vips/vips8>
+
+#include "common.h"
 
 using namespace std;
 using namespace vips;
@@ -55,7 +55,5 @@ char *Reverse(string *type, char *BufferData, size_t BufferLength,
 
   *type = "gif";
 
-  vips_error_clear();
-  vips_thread_shutdown();
   return (char *)buf;
 }
