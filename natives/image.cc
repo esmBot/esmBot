@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "blur.h"
+#include "bounce.h"
 #include "colors.h"
 #include "caption.h"
 #include "caption2.h"
@@ -53,6 +54,7 @@ using namespace std;
 
 std::map<std::string, char* (*)(string *type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize)> FunctionMap = {
   {"blur", &Blur},
+  {"bounce", &Bounce},
 	{"caption", &Caption},
 	{"captionTwo", &CaptionTwo},
 	{"circle", &Circle},
