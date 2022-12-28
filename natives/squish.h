@@ -1,5 +1,7 @@
 #pragma once
 
-#include <napi.h>
+#include "common.h"
 
-Napi::Value Squish(const Napi::CallbackInfo& info);
+using std::string;
+
+char* Squish(string* type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);

@@ -78,6 +78,7 @@ std::map<std::string, char* (*)(string *type, char* BufferData, size_t BufferLen
   {"snapchat", Snapchat},
   {"speed", &Speed},
   {"spin", Spin},
+  {"squish", Squish},
   {"swirl", Swirl},
   {"tile", Tile},
   {"togif", ToGif},
@@ -105,7 +106,7 @@ bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
       .Value();
 }
 
-Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
+Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   Napi::Object result = Napi::Object::New(env);
 
@@ -145,7 +146,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
 
     size_t length = 0;
     char* buf;
-    if (input) {
+    if (obj.Has("data")) {
       Napi::Buffer<char> data = obj.Has("data") ? obj.Get("data").As<Napi::Buffer<char>>() : Napi::Buffer<char>::New(env, 0);
       buf = FunctionMap.at(command)(&type, data.Data(), data.Length(), Arguments, &length);
     } else {
@@ -162,21 +163,6 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
   }
 
   return result;
-}
-
-Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for gradual adoption
-  Napi::Env env = info.Env();
-
-  string command = info[0].As<Napi::String>().Utf8Value();
-  
-  if (MAP_HAS(FunctionMap, command)) {
-    return NewProcessImage(info, true);
-  } else if (MAP_HAS(NoInputFunctionMap, command)) {
-    return NewProcessImage(info, false);
-  } else {
-    Napi::Error::New(env, "Invalid command").ThrowAsJavaScriptException();
-    return env.Null();
-  }
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports){
