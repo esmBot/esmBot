@@ -7,14 +7,14 @@
 using namespace std;
 using namespace vips;
 
-char *Blur(string type, char *BufferData, size_t BufferLength,
+char *Blur(string *type, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   bool sharp = GetArgument<bool>(Arguments, "sharp");
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   if (!in.has_alpha())
@@ -26,7 +26,7 @@ char *Blur(string type, char *BufferData, size_t BufferLength,
       sharp ? in.sharpen(VImage::option()->set("sigma", 3)) : in.gaussblur(15);
 
   void *buf;
-  out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
 
   vips_error_clear();
   vips_thread_shutdown();

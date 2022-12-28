@@ -10,7 +10,7 @@ using namespace vips;
 VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
                                    0.1140, 0.2392, 0.4696, 0.0912);
 
-char *Colors(string type, char *BufferData, size_t BufferLength,
+char *Colors(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
 
   string color = GetArgument<string>(Arguments, "color");
@@ -19,7 +19,7 @@ char *Colors(string type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   VImage out;
@@ -31,7 +31,7 @@ char *Colors(string type, char *BufferData, size_t BufferLength,
   }
 
   void *buf;
-  out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
 
   vips_error_clear();
   vips_thread_shutdown();

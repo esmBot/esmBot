@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-char *CaptionTwo(string type, char *BufferData, size_t BufferLength,
+char *CaptionTwo(string *type, char *BufferData, size_t BufferLength,
                  ArgumentMap Arguments, size_t *DataSize) {
 
   bool top = GetArgument<bool>(Arguments, "top");
@@ -19,7 +19,7 @@ char *CaptionTwo(string type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   if (!in.has_alpha())
@@ -60,7 +60,7 @@ char *CaptionTwo(string type, char *BufferData, size_t BufferLength,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage frame =
         (top ? captionImage : img_frame)
             .join(top ? img_frame : captionImage, VIPS_DIRECTION_VERTICAL,
@@ -74,8 +74,8 @@ char *CaptionTwo(string type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + type).c_str(), &buf, DataSize,
-      type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
                     : 0);
 
   vips_error_clear();

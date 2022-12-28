@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Reverse(string type, char *BufferData, size_t BufferLength,
+char *Reverse(string *type, char *BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t *DataSize) {
   bool soos = GetArgumentWithFallback<bool>(Arguments, "soos", false);
 
@@ -53,7 +53,7 @@ char *Reverse(string type, char *BufferData, size_t BufferLength,
   final.write_to_buffer(".gif", &buf, DataSize,
                         VImage::option()->set("dither", 0));
 
-  type = "gif";
+  *type = "gif";
 
   vips_error_clear();
   vips_thread_shutdown();

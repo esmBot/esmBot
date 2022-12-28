@@ -11,7 +11,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Explode(string type, char *BufferData, size_t BufferLength,
+char *Explode(string *type, char *BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t *DataSize) {
 
   int amount = GetArgument<int>(Arguments, "amount");
@@ -33,13 +33,13 @@ char *Explode(string type, char *BufferData, size_t BufferLength,
 
   for (Image &image : coalesced) {
     image.implode(amount);
-    image.magick(type);
+    image.magick(*type);
     blurred.push_back(image);
   }
 
   optimizeTransparency(blurred.begin(), blurred.end());
 
-  if (type == "gif") {
+  if (*type == "gif") {
     for (Image &image : blurred) {
       image.quantizeDither(false);
       image.quantize();

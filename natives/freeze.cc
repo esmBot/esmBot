@@ -8,7 +8,7 @@
 using namespace std;
 using namespace vips;
 
-char *Freeze(string type, char *BufferData, size_t BufferLength,
+char *Freeze(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
 
   bool loop = GetArgumentWithFallback<bool>(Arguments, "loop", false);
@@ -54,7 +54,7 @@ char *Freeze(string type, char *BufferData, size_t BufferLength,
 
     VImage in =
         VImage::new_from_buffer(BufferData, BufferLength, "",
-                                type == "gif" ? options->set("n", -1) : options)
+                                *type == "gif" ? options->set("n", -1) : options)
             .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha())
       in = in.bandjoin(255);
@@ -67,7 +67,7 @@ char *Freeze(string type, char *BufferData, size_t BufferLength,
     out.set("loop", 1);
 
     void *buf;
-    out.write_to_buffer(("." + type).c_str(), &buf, DataSize);
+    out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
 
     vips_error_clear();
     vips_thread_shutdown();

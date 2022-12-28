@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Watermark(string type, char *BufferData, size_t BufferLength,
+char *Watermark(string *type, char *BufferData, size_t BufferLength,
                 ArgumentMap Arguments, size_t *DataSize) {
 
   string water = GetArgument<string>(Arguments, "water");
@@ -29,7 +29,7 @@ char *Watermark(string type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              *type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha())
     in = in.bandjoin(255);
@@ -93,7 +93,7 @@ char *Watermark(string type, char *BufferData, size_t BufferLength,
   VImage frame;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     if (append) {
       VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
                                        VImage::option()->set("expand", true));
@@ -123,8 +123,8 @@ char *Watermark(string type, char *BufferData, size_t BufferLength,
           bg = frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
               "interpretation", VIPS_INTERPRETATION_sRGB));
           frame = bg.bandjoin(frameAlpha);
-          if (type == "jpg" || type == "jpeg") {
-            type = "png";
+          if (*type == "jpg" || *type == "jpeg") {
+            *type = "png";
           }
         }
         VImage content =
@@ -147,8 +147,8 @@ char *Watermark(string type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + type).c_str(), &buf, DataSize,
-      type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
                     : 0);
 
   vips_error_clear();

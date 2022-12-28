@@ -51,7 +51,7 @@
 
 using namespace std;
 
-std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize)> FunctionMap = {
+std::map<std::string, char* (*)(string *type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize)> FunctionMap = {
   {"blur", &Blur},
 	{"caption", &Caption},
 	{"captionTwo", &CaptionTwo},
@@ -67,34 +67,31 @@ std::map<std::string, char* (*)(string type, char* BufferData, size_t BufferLeng
   {"globe", Globe},
   {"invert", Invert},
   {"jpeg", Jpeg},
+  {"magik", Magik},
   {"meme", Meme},
   {"mirror", Mirror},
   {"motivate", Motivate},
   {"reddit", Reddit},
   {"resize", Resize},
   {"reverse", Reverse},
-  {"speed", &Speed},
-	{"uncaption", &Uncaption},
-  {"watermark", &Watermark}
-};
-
-std::map<std::string, char* (*)(string *type, ArgumentMap Arguments, size_t* DataSize)> NoInputFunctionMap = {
-  {"homebrew", Homebrew},
-  {"sonic", Sonic}
-};
-
-std::map<std::string, Napi::Value (*)(const Napi::CallbackInfo &info)> OldFunctionMap = {
-  {"magik", Magik},
   {"scott", Scott},
   {"snapchat", Snapchat},
+  {"speed", &Speed},
   {"spin", Spin},
   {"swirl", Swirl},
   {"tile", Tile},
   {"togif", ToGif},
   {"uncanny", Uncanny},
+	{"uncaption", &Uncaption},
   {"wall", Wall},
+  {"watermark", &Watermark},
   {"whisper", Whisper},
   {"zamn", Zamn}
+};
+
+std::map<std::string, char* (*)(string *type, ArgumentMap Arguments, size_t* DataSize)> NoInputFunctionMap = {
+  {"homebrew", Homebrew},
+  {"sonic", Sonic}
 };
 
 bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
@@ -150,7 +147,7 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
     char* buf;
     if (input) {
       Napi::Buffer<char> data = obj.Has("data") ? obj.Get("data").As<Napi::Buffer<char>>() : Napi::Buffer<char>::New(env, 0);
-      buf = FunctionMap.at(command)(type, data.Data(), data.Length(), Arguments, &length);
+      buf = FunctionMap.at(command)(&type, data.Data(), data.Length(), Arguments, &length);
     } else {
       buf = NoInputFunctionMap.at(command)(&type, Arguments, &length);
     }
@@ -167,10 +164,6 @@ Napi::Value NewProcessImage(const Napi::CallbackInfo &info, bool input) {
   return result;
 }
 
-Napi::Value OldProcessImage(std::string FunctionName, const Napi::CallbackInfo &info) {
-  return OldFunctionMap.at(FunctionName)(info);
-}
-
 Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for gradual adoption
   Napi::Env env = info.Env();
 
@@ -180,8 +173,6 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) { // janky solution for
     return NewProcessImage(info, true);
   } else if (MAP_HAS(NoInputFunctionMap, command)) {
     return NewProcessImage(info, false);
-  } else if (MAP_HAS(OldFunctionMap, command)) {
-    return OldProcessImage(command, info);
   } else {
     Napi::Error::New(env, "Invalid command").ThrowAsJavaScriptException();
     return env.Null();
@@ -204,11 +195,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports){
       i++;
     }
     for (auto const& imap: NoInputFunctionMap) {
-      Napi::HandleScope scope(env);
-      arr[i] = Napi::String::New(env, imap.first);
-      i++;
-    }
-    for(auto const& imap: OldFunctionMap) {
       Napi::HandleScope scope(env);
       arr[i] = Napi::String::New(env, imap.first);
       i++;

@@ -4,4 +4,4 @@
 
 using std::string;
 
-char* Reverse(string type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);
+char* Reverse(string* type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);

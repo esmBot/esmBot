@@ -42,7 +42,7 @@ char *vipsRemove(char *data, size_t length, size_t *DataSize, int speed) {
   return (char *)buf;
 }
 
-char *Speed(string type, char *BufferData, size_t BufferLength,
+char *Speed(string *type, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
 
   bool slow = GetArgumentWithFallback<bool>(Arguments, "slow", false);

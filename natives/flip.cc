@@ -7,13 +7,13 @@
 using namespace std;
 using namespace vips;
 
-char *Flip(string type, char *BufferData, size_t BufferLength,
+char *Flip(string *type, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
 
   bool flop = GetArgument<bool>(Arguments, "flop");
 
   VImage in = VImage::new_from_buffer(BufferData, BufferLength, "",
-                                      type == "gif"
+                                      *type == "gif"
                                           ? VImage::option()->set("n", -1)->set(
                                                 "access", "sequential")
                                           : 0)
@@ -24,7 +24,7 @@ char *Flip(string type, char *BufferData, size_t BufferLength,
   VImage out;
   if (flop) {
     out = in.flip(VIPS_DIRECTION_HORIZONTAL);
-  } else if (type == "gif") {
+  } else if (*type == "gif") {
     // libvips gif handling is both a blessing and a curse
     vector<VImage> img;
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -42,8 +42,8 @@ char *Flip(string type, char *BufferData, size_t BufferLength,
 
   void *buf;
   out.write_to_buffer(
-      ("." + type).c_str(), &buf, DataSize,
-      type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+      ("." + *type).c_str(), &buf, DataSize,
+      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
                     : 0);
 
   vips_error_clear();

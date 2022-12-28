@@ -1,5 +1,7 @@
 #pragma once
 
-#include <napi.h>
+#include "common.h"
 
-Napi::Value Spin(const Napi::CallbackInfo& info);
+using std::string;
+
+char* Spin(string* type, char* BufferData, size_t BufferLength, ArgumentMap Arguments, size_t* DataSize);

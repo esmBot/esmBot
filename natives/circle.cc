@@ -10,7 +10,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Circle(string type, char *BufferData, size_t BufferLength,
+char *Circle(string *type, char *BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t *DataSize) {
 
   Blob blob;
@@ -29,13 +29,13 @@ char *Circle(string type, char *BufferData, size_t BufferLength,
 
   for (Image &image : coalesced) {
     image.rotationalBlur(10);
-    image.magick(type);
+    image.magick(*type);
     blurred.push_back(image);
   }
 
   optimizeTransparency(blurred.begin(), blurred.end());
 
-  if (type == "gif") {
+  if (*type == "gif") {
     for (Image &image : blurred) {
       image.quantizeDitherMethod(FloydSteinbergDitherMethod);
       image.quantize();
