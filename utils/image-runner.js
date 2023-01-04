@@ -38,7 +38,7 @@ export default function run(object) {
     // If no image type is given (say, the command generates its own image), make it a PNG.
     const fileExtension = object.params.type ? object.params.type.split("/")[1] : "png";
     promise.then(buf => {
-      object.params.data = buf;
+      if (buf) object.params.data = buf;
       const objectWithFixedType = Object.assign({}, object.params, { type: fileExtension });
       if (objectWithFixedType.gravity) {
         if (isNaN(objectWithFixedType.gravity)) {

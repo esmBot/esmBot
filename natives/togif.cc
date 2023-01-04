@@ -9,7 +9,9 @@ char *ToGif(string *type, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
   if (*type == "gif") {
     *DataSize = BufferLength;
-    return BufferData;
+    char *data = (char *)malloc(BufferLength);
+    memcpy(data, BufferData, BufferLength);
+    return data;
   } else {
     VOption *options = VImage::option()->set("access", "sequential");
 

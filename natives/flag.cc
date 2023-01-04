@@ -1,5 +1,3 @@
-#include <map>
-#include <string>
 #include <vips/vips8>
 
 #include "common.h"
@@ -37,18 +35,8 @@ char *Flag(string *type, char *BufferData, size_t BufferLength,
     // this is a pretty cool line, just saying
     overlayImage = overlayImage * vector<double>{1, 1, 1, 0.5};
   }
-
-  vector<VImage> img;
-  for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage composited =
-        img_frame.composite2(overlayImage, VIPS_BLEND_MODE_OVER);
-    img.push_back(composited);
-  }
-
-  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-  final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+  VImage replicated = overlayImage.replicate(1, nPages);
+  VImage final = in.composite2(replicated, VIPS_BLEND_MODE_OVER);
 
   void *buf;
   final.write_to_buffer(
