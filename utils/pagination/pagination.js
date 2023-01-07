@@ -138,7 +138,7 @@ export default async (client, info, pages, timeout = 120000) => {
                 } catch {
                   // no-op
                 }
-                page = Number(response.data.values[0]);
+                page = Number(response.data.values.raw[0]);
                 currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
                 ended = true;
                 dropdownCollector.stop();
