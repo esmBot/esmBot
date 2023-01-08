@@ -22,7 +22,7 @@ As you can see, each command is grouped into categories, which are represented b
 !!! tip
     The `message` category is special; commands in here act as right-click context menu message commands instead of "classic" or slash commands.
 
-## Commnand Structure
+## Command Structure
 It's recommended to use the `Command` class located in `classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
 ```js
 import Command from "../../classes/command.js";
