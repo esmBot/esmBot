@@ -1,6 +1,7 @@
 import { players, queues, skipVotes } from "../utils/soundplayer.js";
 import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
+import { logger } from "../utils/logger.js";
 
 const isWaiting = new Map();
 
@@ -16,9 +17,10 @@ export default async (client, member, oldChannel) => {
         content: "🔊 Waiting 10 seconds for someone to return..."
       });
       const awaitRejoin = new AwaitRejoin(oldChannel, true, member.id);
-      awaitRejoin.on("end", async (rejoined, newMember) => {
+      awaitRejoin.once("end", async (rejoined, newMember, cancel) => {
         isWaiting.delete(oldChannel.id);
         if (rejoined) {
+          if (cancel) return;
           connection.player.setPaused(false);
           if (member.id !== newMember.id) {
             players.set(connection.voiceChannel.guildID, { player: connection.player, type: connection.type, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
@@ -29,19 +31,20 @@ export default async (client, member, oldChannel) => {
             try {
               await waitMessage.delete();
             } catch {
-              // no-op
+              logger.warn(`Failed to delete wait message ${waitMessage.id}`);
             }
           }
         } else {
           try {
             if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
           } catch {
-            // no-op
+            logger.warn(`Failed to delete wait message ${waitMessage.id}`);
           }
+          if (cancel) return;
           try {
             connection.player.node.leaveChannel(connection.originalChannel.guildID);
           } catch {
-            // no-op
+            logger.warn(`Failed to leave voice channel ${connection.originalChannel.guildID}`);
           }
           players.delete(connection.originalChannel.guildID);
           queues.delete(connection.originalChannel.guildID);
@@ -58,13 +61,13 @@ export default async (client, member, oldChannel) => {
         content: "🔊 Waiting 10 seconds for the host to return..."
       });
       const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
-      awaitRejoin.on("end", async (rejoined) => {
+      awaitRejoin.once("end", async (rejoined) => {
         isWaiting.delete(oldChannel.id);
         if (rejoined) {
           try {
             if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
           } catch {
-            // no-op
+            logger.warn(`Failed to delete wait message ${waitMessage.id}`);
           }
         } else {
           const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
@@ -72,12 +75,12 @@ export default async (client, member, oldChannel) => {
             try {
               if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
             } catch {
-              // no-op
+              logger.warn(`Failed to delete wait message ${waitMessage.id}`);
             }
             try {
               connection.player.node.leaveChannel(connection.originalChannel.guildID);
             } catch {
-              // no-op
+              logger.warn(`Failed to leave voice channel ${connection.originalChannel.guildID}`);
             }
             players.delete(connection.originalChannel.guildID);
             queues.delete(connection.originalChannel.guildID);
@@ -99,7 +102,7 @@ export default async (client, member, oldChannel) => {
       try {
         connection.player.node.leaveChannel(connection.originalChannel.guildID);
       } catch {
-        // no-op
+        logger.warn(`Failed to leave voice channel ${connection.originalChannel.guildID}`);
       }
       players.delete(connection.originalChannel.guildID);
       queues.delete(connection.originalChannel.guildID);

@@ -7,7 +7,7 @@ class RestartCommand extends Command {
       this.success = false;
       return "Only the bot owner can restart me!";
     }
-    await this.message.channel.createMessage(Object.assign({
+    await this.channel.createMessage(Object.assign({
       content: "esmBot is restarting."
     }, this.reference));
     process.exit(1);
