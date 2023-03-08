@@ -4,46 +4,7 @@
 #include <map>
 #include <string>
 
-#include "blur.h"
-#include "bounce.h"
-#include "caption.h"
-#include "caption2.h"
-#include "circle.h"
-#include "colors.h"
-#include "common.h"
-#include "crop.h"
-#include "deepfry.h"
-#include "explode.h"
-#include "flag.h"
-#include "flip.h"
-#include "freeze.h"
-#include "gamexplain.h"
-#include "globe.h"
-#include "homebrew.h"
-#include "invert.h"
-#include "jpeg.h"
-#include "magik.h"
-#include "meme.h"
-#include "mirror.h"
-#include "motivate.h"
-#include "reddit.h"
-#include "resize.h"
-#include "reverse.h"
-#include "scott.h"
-#include "snapchat.h"
-#include "sonic.h"
-#include "speed.h"
-#include "spin.h"
-#include "squish.h"
-#include "swirl.h"
-#include "tile.h"
-#include "togif.h"
-#include "uncanny.h"
-#include "uncaption.h"
-#include "wall.h"
-#include "watermark.h"
-#include "whisper.h"
-#include "zamn.h"
+#include "../common.h"
 
 #ifdef _WIN32
 #include <Magick++.h>
@@ -51,51 +12,6 @@
 #include <vips/vips8>
 
 using namespace std;
-
-std::map<std::string,
-         char* (*)(string* type, char* BufferData, size_t BufferLength,
-                   ArgumentMap Arguments, size_t* DataSize)>
-    FunctionMap = {{"blur", &Blur},
-                   {"bounce", &Bounce},
-                   {"caption", &Caption},
-                   {"captionTwo", &CaptionTwo},
-                   {"circle", &Circle},
-                   {"colors", &Colors},
-                   {"crop", &Crop},
-                   {"deepfry", &Deepfry},
-                   {"explode", &Explode},
-                   {"flag", &Flag},
-                   {"flip", &Flip},
-                   {"freeze", &Freeze},
-                   {"gamexplain", Gamexplain},
-                   {"globe", Globe},
-                   {"invert", Invert},
-                   {"jpeg", Jpeg},
-                   {"magik", Magik},
-                   {"meme", Meme},
-                   {"mirror", Mirror},
-                   {"motivate", Motivate},
-                   {"reddit", Reddit},
-                   {"resize", Resize},
-                   {"reverse", Reverse},
-                   {"scott", Scott},
-                   {"snapchat", Snapchat},
-                   {"speed", &Speed},
-                   {"spin", Spin},
-                   {"squish", Squish},
-                   {"swirl", Swirl},
-                   {"tile", Tile},
-                   {"togif", ToGif},
-                   {"uncanny", Uncanny},
-                   {"uncaption", &Uncaption},
-                   {"wall", Wall},
-                   {"watermark", &Watermark},
-                   {"whisper", Whisper},
-                   {"zamn", Zamn}};
-
-std::map<std::string,
-         char* (*)(string* type, ArgumentMap Arguments, size_t* DataSize)>
-    NoInputFunctionMap = {{"homebrew", Homebrew}, {"sonic", Sonic}};
 
 bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
   return env.Global()
@@ -165,7 +81,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 
     result.Set("data", Napi::Buffer<char>::New(
                            env, buf, length,
-                           [](Napi::Env env, void* data) { free(data); }));
+                           []([[maybe_unused]] Napi::Env env, void* data) { free(data); }));
     result.Set("type", type);
   } catch (std::exception const& err) {
     Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();

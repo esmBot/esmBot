@@ -9,7 +9,7 @@ using namespace std;
 using namespace Magick;
 
 char *Spin(string *type, char *BufferData, size_t BufferLength,
-           ArgumentMap Arguments, size_t *DataSize) {
+           [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   int delay = GetArgumentWithFallback<int>(Arguments, "delay", 0);
 
   Blob blob;

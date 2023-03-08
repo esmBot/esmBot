@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 char *Deepfry(string *type, char *BufferData, size_t BufferLength,
-              ArgumentMap Arguments, size_t *DataSize) {
+              [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =

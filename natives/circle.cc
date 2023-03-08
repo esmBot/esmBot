@@ -12,7 +12,7 @@ using namespace std;
 using namespace Magick;
 
 char *Circle(string *type, char *BufferData, size_t BufferLength,
-             ArgumentMap Arguments, size_t *DataSize) {
+             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   Blob blob;
 
   list<Image> frames;
