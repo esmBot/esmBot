@@ -29,37 +29,37 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "emoji-regex": "^10.2.1",
-    "file-type": "^18.0.0",
-    "format-duration": "^2.0.0",
+    "file-type": "^18.2.1",
+    "format-duration": "^3.0.2",
     "jsqr": "^1.4.0",
-    "node-addon-api": "^5.0.0",
+    "node-addon-api": "^5.1.0",
     "node-emoji": "^1.11.0",
-    "oceanic.js": "1.3.2",
+    "oceanic.js": "1.4.1",
     "qrcode": "^1.5.1",
-    "sharp": "^0.31.2",
-    "shoukaku": "^3.2.2",
-    "undici": "^5.14.0",
+    "sharp": "^0.31.3",
+    "shoukaku": "^3.3.1",
+    "undici": "^5.20.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
+    "@babel/core": "^7.21.0",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/eslint-plugin": "^7.19.1",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "cmake-js": "^7.0.0",
-    "eslint": "^8.29.0",
+    "cmake-js": "^7.2.1",
+    "eslint": "^8.35.0",
     "eslint-plugin-unicorn": "^45.0.2"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^8.0.1",
+    "better-sqlite3": "^8.1.0",
     "bufferutil": "^4.0.7",
     "erlpack": "^0.1.4",
     "pm2": "^5.2.2",
-    "postgres": "^3.3.2",
+    "postgres": "^3.3.4",
     "uuid": "^9.0.0",
-    "ws": "^8.11.0",
-    "zlib-sync": "^0.1.7"
+    "ws": "^8.12.1",
+    "zlib-sync": "^0.1.8"
   },
   "binary": {
     "napi_versions": [

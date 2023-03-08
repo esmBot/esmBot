@@ -2,7 +2,7 @@ site_name: esmBot
 docs_dir: docs/
 repo_name: 'esmBot/esmBot'
 repo_url: 'https://github.com/esmBot/esmBot'
-copyright: Copyright &copy; 2018 - 2022 <a href="https://essem.space">Essem</a>
+copyright: Copyright &copy; 2018 - 2023 <a href="https://essem.space">Essem</a>
 nav:
     - Home: index.md
     - setup.md
