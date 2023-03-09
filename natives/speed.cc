@@ -39,8 +39,8 @@ char *vipsRemove(char *data, size_t length, size_t *DataSize, int speed) {
   return (char *)buf;
 }
 
-char *Speed([[maybe_unused]] string *type, char *BufferData, size_t BufferLength,
-            ArgumentMap Arguments, size_t *DataSize) {
+char *Speed([[maybe_unused]] string type, string *outType, char *BufferData,
+            size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool slow = GetArgumentWithFallback<bool>(Arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(Arguments, "speed", 2);
 
@@ -53,7 +53,7 @@ char *Speed([[maybe_unused]] string *type, char *BufferData, size_t BufferLength
   bool removeFrames = false;
   char *lastPos;
 
-  int amount = 0;
+  // int amount = 0;
 
   lastPos = (char *)memchr(fileData, '\x00', BufferLength);
   while (lastPos != NULL) {
@@ -62,7 +62,7 @@ char *Speed([[maybe_unused]] string *type, char *BufferData, size_t BufferLength
                                (BufferLength - (lastPos - fileData)) - 1);
       continue;
     }
-    ++amount;
+    //++amount;
     uint16_t old_delay;
     memcpy(&old_delay, lastPos + 5, 2);
     old_delays.push_back(old_delay);

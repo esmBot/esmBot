@@ -9,7 +9,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Tile(string *type, char *BufferData, size_t BufferLength,
+char *Tile(string type, string *outType, char *BufferData, size_t BufferLength,
            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   Blob blob;
 
@@ -30,7 +30,7 @@ char *Tile(string *type, char *BufferData, size_t BufferLength,
     Image appended;
     list<Image> montage;
     Image frame;
-    image.magick(*type);
+    image.magick(*outType);
     for (int i = 0; i < 5; ++i) {
       duplicated.push_back(image);
     }
@@ -48,7 +48,7 @@ char *Tile(string *type, char *BufferData, size_t BufferLength,
 
   optimizeTransparency(mid.begin(), mid.end());
 
-  if (*type == "gif") {
+  if (*outType == "gif") {
     for (Image &image : mid) {
       image.quantizeDitherMethod(FloydSteinbergDitherMethod);
       image.quantize();

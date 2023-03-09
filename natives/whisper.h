@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Whisper(string* type, char* BufferData, size_t BufferLength,
+char* Whisper(string type, string* outType, char* BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t* DataSize);

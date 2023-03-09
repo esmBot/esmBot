@@ -6,8 +6,8 @@
 using namespace std;
 using namespace vips;
 
-char *Uncaption(string *type, char *BufferData, size_t BufferLength,
-                ArgumentMap Arguments, size_t *DataSize) {
+char *Uncaption(string type, string *outType, char *BufferData,
+                size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   float tolerance = GetArgumentWithFallback<float>(Arguments, "tolerance", 0.5);
 
   VOption *options = VImage::option();
@@ -15,8 +15,8 @@ char *Uncaption(string *type, char *BufferData, size_t BufferLength,
   VImage in =
       VImage::new_from_buffer(
           BufferData, BufferLength, "",
-          *type == "gif" ? options->set("n", -1)->set("access", "sequential")
-                         : options)
+          type == "gif" ? options->set("n", -1)->set("access", "sequential")
+                        : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -45,9 +45,10 @@ char *Uncaption(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *type).c_str(), &buf, DataSize,
-      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                     : 0);
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif"
+          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+          : 0);
 
   return (char *)buf;
 }

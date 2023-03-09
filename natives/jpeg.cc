@@ -5,13 +5,13 @@
 using namespace std;
 using namespace vips;
 
-char *Jpeg(string *type, char *BufferData, size_t BufferLength,
+char *Jpeg(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   int quality = GetArgumentWithFallback<int>(Arguments, "quality", 0);
 
   void *buf;
 
-  if (*type == "gif") {
+  if (type == "gif") {
     VImage in = VImage::new_from_buffer(
                     BufferData, BufferLength, "",
                     VImage::option()->set("access", "sequential")->set("n", -1))
@@ -53,13 +53,22 @@ char *Jpeg(string *type, char *BufferData, size_t BufferLength,
     }
 
     final.write_to_buffer(
-        ("." + *type).c_str(), &buf, DataSize,
-        *type == "gif" ? VImage::option()->set("dither", 0) : 0);
+        ("." + *outType).c_str(), &buf, DataSize,
+        *outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
     VImage in = VImage::new_from_buffer(BufferData, BufferLength, "");
-    in.write_to_buffer(".jpg", &buf, DataSize,
+    void *jpgBuf;
+    in.write_to_buffer(".jpg", &jpgBuf, DataSize,
                        VImage::option()->set("Q", quality)->set("strip", true));
-    *type = "jpg";
+    if (*outType == "gif") {
+      VImage gifIn = VImage::new_from_buffer((char *)jpgBuf, *DataSize, "");
+      gifIn.write_to_buffer(
+          ".gif", &buf, DataSize,
+          VImage::option()->set("Q", quality)->set("strip", true));
+    } else {
+      *outType = "jpg";
+      buf = jpgBuf;
+    }
   }
 
   return (char *)buf;

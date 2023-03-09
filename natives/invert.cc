@@ -5,13 +5,14 @@
 using namespace std;
 using namespace vips;
 
-char *Invert(string *type, char *BufferData, size_t BufferLength,
-             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
+char *Invert(string type, string *outType, char *BufferData,
+             size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
+             size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -21,7 +22,7 @@ char *Invert(string *type, char *BufferData, size_t BufferLength,
   VImage out = inverted.bandjoin(in.extract_band(3));
 
   void *buf;
-  out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
   return (char *)buf;
 }

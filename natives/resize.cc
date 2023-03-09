@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-char *Resize(string *type, char *BufferData, size_t BufferLength,
-             ArgumentMap Arguments, size_t *DataSize) {
+char *Resize(string type, string *outType, char *BufferData,
+             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool stretch = GetArgumentWithFallback<bool>(Arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(Arguments, "wide", false);
 
@@ -14,7 +14,7 @@ char *Resize(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   VImage out;
@@ -37,7 +37,7 @@ char *Resize(string *type, char *BufferData, size_t BufferLength,
     vector<VImage> img;
     for (int i = 0; i < nPages; i++) {
       VImage img_frame =
-          *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+          type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       VImage resized = img_frame.resize(0.1).resize(
           10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
       img.push_back(resized);
@@ -48,7 +48,7 @@ char *Resize(string *type, char *BufferData, size_t BufferLength,
   out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
   void *buf;
-  out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
   return (char *)buf;
 }

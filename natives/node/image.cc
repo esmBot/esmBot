@@ -32,7 +32,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
     string command = info[0].As<Napi::String>().Utf8Value();
     Napi::Object obj = info[1].As<Napi::Object>();
     string type =
-        obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : NULL;
+        obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : "png";
 
     Napi::Array properties = obj.GetPropertyNames();
 
@@ -64,25 +64,28 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
       }
     }
 
+    string outType = GetArgument<bool>(Arguments, "togif") ? "gif" : type;
+
     size_t length = 0;
     char* buf;
     if (obj.Has("data")) {
       Napi::Buffer<char> data = obj.Has("data")
                                     ? obj.Get("data").As<Napi::Buffer<char>>()
                                     : Napi::Buffer<char>::New(env, 0);
-      buf = FunctionMap.at(command)(&type, data.Data(), data.Length(),
+      buf = FunctionMap.at(command)(type, &outType, data.Data(), data.Length(),
                                     Arguments, &length);
     } else {
-      buf = NoInputFunctionMap.at(command)(&type, Arguments, &length);
+      buf = NoInputFunctionMap.at(command)(type, &outType, Arguments, &length);
     }
 
     vips_error_clear();
     vips_thread_shutdown();
 
-    result.Set("data", Napi::Buffer<char>::New(
-                           env, buf, length,
-                           []([[maybe_unused]] Napi::Env env, void* data) { free(data); }));
-    result.Set("type", type);
+    result.Set("data",
+               Napi::Buffer<char>::New(env, buf, length,
+                                       []([[maybe_unused]] Napi::Env env,
+                                          void* data) { free(data); }));
+    result.Set("type", outType);
   } catch (std::exception const& err) {
     Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {

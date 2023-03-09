@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Zamn(string *type, char *BufferData, size_t BufferLength,
+char *Zamn(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -13,7 +13,7 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -27,7 +27,7 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage composited = tmpl.insert(
         img_frame.extract_band(0, VImage::option()->set("n", 3))
             .bandjoin(255)
@@ -41,7 +41,7 @@ char *Zamn(string *type, char *BufferData, size_t BufferLength,
   final.set(VIPS_META_PAGE_HEIGHT, 516);
 
   void *buf;
-  final.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
+  final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
   return (char *)buf;
 }

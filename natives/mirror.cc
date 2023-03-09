@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-char *Mirror(string *type, char *BufferData, size_t BufferLength,
-             ArgumentMap Arguments, size_t *DataSize) {
+char *Mirror(string type, string *outType, char *BufferData,
+             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool vertical = GetArgumentWithFallback<bool>(Arguments, "vertical", false);
   bool first = GetArgumentWithFallback<bool>(Arguments, "first", false);
 
@@ -14,14 +14,14 @@ char *Mirror(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   VImage out;
 
   if (vertical) {
-    if (*type == "gif") {
+    if (type == "gif") {
       // once again, libvips gif handling is both a blessing and a curse
       vector<VImage> img;
       int pageHeight = vips_image_get_page_height(in.get_image());
@@ -58,7 +58,7 @@ char *Mirror(string *type, char *BufferData, size_t BufferLength,
   }
 
   void *buf;
-  out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
   return (char *)buf;
 }

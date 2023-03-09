@@ -5,13 +5,13 @@
 using namespace std;
 using namespace vips;
 
-char *Swirl(string *type, char *BufferData, size_t BufferLength,
+char *Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -54,7 +54,7 @@ char *Swirl(string *type, char *BufferData, size_t BufferLength,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
 
     VImage distort =
         img_frame
@@ -70,7 +70,7 @@ char *Swirl(string *type, char *BufferData, size_t BufferLength,
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
   void *buf;
-  final.write_to_buffer(".gif", &buf, DataSize);
+  final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
   return (char *)buf;
 }

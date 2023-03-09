@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-char *Motivate(string *type, char *BufferData, size_t BufferLength,
-               ArgumentMap Arguments, size_t *DataSize) {
+char *Motivate(string type, string *outType, char *BufferData,
+               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string top_text = GetArgument<string>(Arguments, "top");
   string bottom_text = GetArgument<string>(Arguments, "bottom");
   string font = GetArgument<string>(Arguments, "font");
@@ -16,7 +16,7 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -69,7 +69,7 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
   int height;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
 
     int borderSize = max(2, width / 66);
     int borderSize2 = borderSize * 0.5;
@@ -116,8 +116,8 @@ char *Motivate(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *type).c_str(), &buf, DataSize,
-      *type == "gif" ? VImage::option()->set("dither", 1) : 0);
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   return (char *)buf;
 }

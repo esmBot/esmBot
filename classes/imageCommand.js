@@ -25,7 +25,9 @@ class ImageCommand extends Command {
 
     const imageParams = {
       cmd: this.constructor.command,
-      params: {},
+      params: {
+        togif: !!this.options.togif
+      },
       id: (this.interaction ?? this.message).id
     };
 
@@ -129,6 +131,11 @@ class ImageCommand extends Command {
         description: "An image/GIF URL"
       });
     }
+    this.flags.push({
+      name: "togif",
+      type: 5,
+      description: "Force GIF output"
+    });
     return this;
   }
 

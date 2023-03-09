@@ -85,7 +85,7 @@ const std::unordered_map<std::string, std::string> fontPaths{
     {"roboto", "assets/fonts/reddit.ttf"}};
 
 const std::map<std::string,
-               char* (*)(string* type, char* BufferData, size_t BufferLength,
+               char* (*)(string type, string* outType, char* BufferData, size_t BufferLength,
                          ArgumentMap Arguments, size_t* DataSize)>
     FunctionMap = {{"blur", &Blur},
                    {"bounce", &Bounce},
@@ -126,5 +126,5 @@ const std::map<std::string,
                    {"zamn", Zamn}};
 
 const std::map<std::string,
-               char* (*)(string* type, ArgumentMap Arguments, size_t* DataSize)>
+               char* (*)(string type, string* outType, ArgumentMap Arguments, size_t* DataSize)>
     NoInputFunctionMap = {{"homebrew", Homebrew}, {"sonic", Sonic}};

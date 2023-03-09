@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Circle(string* type, char* BufferData, size_t BufferLength,
+char* Circle(string type, string* outType, char* BufferData, size_t BufferLength,
              ArgumentMap Arguments, size_t* DataSize);

@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-char *Uncanny(string *type, char *BufferData, size_t BufferLength,
-              ArgumentMap Arguments, size_t *DataSize) {
+char *Uncanny(string type, string *outType, char *BufferData,
+              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   string caption2 = GetArgument<string>(Arguments, "caption2");
   string font = GetArgument<string>(Arguments, "font");
@@ -17,7 +17,7 @@ char *Uncanny(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB)
           .extract_band(0, VImage::option()->set("n", 3));
 
@@ -79,7 +79,7 @@ char *Uncanny(string *type, char *BufferData, size_t BufferLength,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage resized = img_frame.resize(690.0 / (double)width);
     if (resized.height() > 590) {
       double vscale = 590.0 / (double)resized.height();
@@ -94,8 +94,8 @@ char *Uncanny(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *type).c_str(), &buf, DataSize,
-      *type == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
   return (char *)buf;
 }

@@ -7,8 +7,8 @@
 using namespace std;
 using namespace vips;
 
-char *Freeze(string *type, char *BufferData, size_t BufferLength,
-             ArgumentMap Arguments, size_t *DataSize) {
+char *Freeze(string type, string *outType, char *BufferData,
+             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool loop = GetArgumentWithFallback<bool>(Arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(Arguments, "frame", -1);
 
@@ -46,10 +46,10 @@ char *Freeze(string *type, char *BufferData, size_t BufferLength,
   } else if (frame >= 0 && !loop) {
     VOption *options = VImage::option()->set("access", "sequential");
 
-    VImage in = VImage::new_from_buffer(
-                    BufferData, BufferLength, "",
-                    *type == "gif" ? options->set("n", -1) : options)
-                    .colourspace(VIPS_INTERPRETATION_sRGB);
+    VImage in =
+        VImage::new_from_buffer(BufferData, BufferLength, "",
+                                type == "gif" ? options->set("n", -1) : options)
+            .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
 
     int pageHeight = vips_image_get_page_height(in.get_image());
@@ -60,7 +60,7 @@ char *Freeze(string *type, char *BufferData, size_t BufferLength,
     out.set("loop", 1);
 
     void *buf;
-    out.write_to_buffer(("." + *type).c_str(), &buf, DataSize);
+    out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
     return (char *)buf;
   } else {

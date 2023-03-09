@@ -9,7 +9,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Magik(string *type, char *BufferData, size_t BufferLength,
+char *Magik(string type, string *outType, char *BufferData, size_t BufferLength,
             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   Blob blob;
 
@@ -29,13 +29,13 @@ char *Magik(string *type, char *BufferData, size_t BufferLength,
     image.scale(Geometry("350x350"));
     image.liquidRescale(Geometry("175x175"));
     image.liquidRescale(Geometry("350x350"));
-    image.magick(*type);
+    image.magick(*outType);
     blurred.push_back(image);
   }
 
   optimizeTransparency(blurred.begin(), blurred.end());
 
-  if (*type == "gif") {
+  if (*outType == "gif") {
     for (Image &image : blurred) {
       image.quantizeDitherMethod(FloydSteinbergDitherMethod);
       image.quantize();

@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Crop(string* type, char* BufferData, size_t BufferLength,
+char* Crop(string type, string* outType, char* BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t* DataSize);

@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Flag(string *type, char *BufferData, size_t BufferLength,
+char *Flag(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   string overlay = GetArgument<string>(Arguments, "overlay");
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -14,7 +14,7 @@ char *Flag(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -40,9 +40,10 @@ char *Flag(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *type).c_str(), &buf, DataSize,
-      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                     : 0);
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif"
+          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+          : 0);
 
   return (char *)buf;
 }

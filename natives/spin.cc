@@ -1,14 +1,15 @@
-#include "common.h"
 #include <Magick++.h>
 
 #include <cstring>
 #include <iostream>
 #include <list>
 
+#include "common.h"
+
 using namespace std;
 using namespace Magick;
 
-char *Spin(string *type, char *BufferData, size_t BufferLength,
+char *Spin(string type, string *outType, char *BufferData, size_t BufferLength,
            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   int delay = GetArgumentWithFallback<int>(Arguments, "delay", 0);
 
@@ -26,7 +27,7 @@ char *Spin(string *type, char *BufferData, size_t BufferLength,
   }
   coalesceImages(&coalesced, frames.begin(), frames.end());
 
-  if (*type != "gif") {
+  if (type != "gif") {
     list<Image>::iterator it = coalesced.begin();
     for (int i = 0; i < 29; ++i) {
       coalesced.push_back(*it);
@@ -51,7 +52,7 @@ char *Spin(string *type, char *BufferData, size_t BufferLength,
   optimizeTransparency(mid.begin(), mid.end());
   if (delay != 0) {
     for_each(mid.begin(), mid.end(), animationDelayImage(delay));
-  } else if (*type != "gif") {
+  } else if (type != "gif") {
     for_each(mid.begin(), mid.end(), animationDelayImage(5));
   }
 
@@ -62,7 +63,7 @@ char *Spin(string *type, char *BufferData, size_t BufferLength,
 
   writeImages(mid.begin(), mid.end(), &blob);
 
-  *type = "gif";
+  *outType = "gif";
   *DataSize = blob.length();
 
   char *data = (char *)malloc(*DataSize);

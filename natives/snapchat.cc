@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-char *Snapchat(string *type, char *BufferData, size_t BufferLength,
-               ArgumentMap Arguments, size_t *DataSize) {
+char *Snapchat(string type, string *outType, char *BufferData,
+               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   float pos = GetArgumentWithFallback<float>(Arguments, "pos", 0.5);
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -15,7 +15,7 @@ char *Snapchat(string *type, char *BufferData, size_t BufferLength,
 
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              *type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -52,7 +52,7 @@ char *Snapchat(string *type, char *BufferData, size_t BufferLength,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        *type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     img_frame = img_frame.composite2(
         textIn, VIPS_BLEND_MODE_OVER,
         VImage::option()->set("x", 0)->set("y", pageHeight * pos));
@@ -63,9 +63,10 @@ char *Snapchat(string *type, char *BufferData, size_t BufferLength,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *type).c_str(), &buf, DataSize,
-      *type == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-                     : 0);
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif"
+          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
+          : 0);
 
   return (char *)buf;
 }
