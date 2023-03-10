@@ -12,13 +12,13 @@ specifiers:
   emoji-regex: ^10.2.1
   erlpack: ^0.1.4
   eslint: ^8.35.0
-  eslint-plugin-unicorn: ^45.0.2
+  eslint-plugin-unicorn: ^46.0.0
   file-type: ^18.2.1
   format-duration: ^3.0.2
   jsqr: ^1.4.0
   node-addon-api: ^5.1.0
   node-emoji: ^1.11.0
-  oceanic.js: 1.4.1
+  oceanic.js: 1.5.1
   pm2: ^5.2.2
   postgres: ^3.3.4
   qrcode: ^1.5.1
@@ -39,7 +39,7 @@ dependencies:
   jsqr: 1.4.0
   node-addon-api: 5.1.0
   node-emoji: 1.11.0
-  oceanic.js: 1.4.1_bufferutil@4.0.7
+  oceanic.js: 1.5.1_bufferutil@4.0.7
   qrcode: 1.5.1
   sharp: 0.31.3
   shoukaku: 3.3.1_bufferutil@4.0.7
@@ -64,7 +64,7 @@ devDependencies:
   '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.21.0
   cmake-js: 7.2.1
   eslint: 8.35.0
-  eslint-plugin-unicorn: 45.0.2_eslint@8.35.0
+  eslint-plugin-unicorn: 46.0.0_eslint@8.35.0
 
 packages:
 
@@ -389,8 +389,8 @@ packages:
       kuler: 2.0.0
     dev: false
 
-  /@discordjs/voice/0.13.0_bufferutil@4.0.7:
-    resolution: {integrity: sha512-ZzwDmVINaLgkoDUeTJfpN9TkjINMLfTVoLMtEygm0YC5jTTw7AvKGqhc+Ae/2kNLywd0joyFVNrLp94yCkQ9SA==}
+  /@discordjs/voice/0.14.0_bufferutil@4.0.7:
+    resolution: {integrity: sha512-/LV8LSFuJ1c4OEW1ubPg3al2QNpUpwX8ZL+KL+LORmnUFVCtehSaEh+38uDfWg1O/TgiGI5vOLj4ZKql43drcw==}
     engines: {node: '>=16.9.0'}
     requiresBuild: true
     dependencies:
@@ -1352,8 +1352,8 @@ packages:
     dev: false
     optional: true
 
-  /eslint-plugin-unicorn/45.0.2_eslint@8.35.0:
-    resolution: {integrity: sha512-Y0WUDXRyGDMcKLiwgL3zSMpHrXI00xmdyixEGIg90gHnj0PcHY4moNv3Ppje/kDivdAy5vUeUr7z211ImPv2gw==}
+  /eslint-plugin-unicorn/46.0.0_eslint@8.35.0:
+    resolution: {integrity: sha512-j07WkC+PFZwk8J33LYp6JMoHa1lXc1u6R45pbSAipjpfpb7KIGr17VE2D685zCxR5VL4cjrl65kTJflziQWMDA==}
     engines: {node: '>=14.18'}
     peerDependencies:
       eslint: '>=8.28.0'
@@ -2361,14 +2361,14 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js/1.4.1_bufferutil@4.0.7:
-    resolution: {integrity: sha512-wwL31SyGc6JrF0wXlgNapSR5Ziu3oBrETKpWvCXMG3YrM4EdcCGYRdwwsPtKp5lfrW9K0/+X6mvJonSyU6TByw==}
+  /oceanic.js/1.5.1_bufferutil@4.0.7:
+    resolution: {integrity: sha512-N4c25J8UCxYJ5BtqTc2EVmcRLyBO/ZGhMhwsIiodYBwBen9AX4ipqwAsAhoosOJi8+WrWiDzAI3mSJ4Lxt2Mww==}
     engines: {node: '>=16.16.0'}
     dependencies:
       undici: 5.20.0
       ws: 8.12.1_bufferutil@4.0.7
     optionalDependencies:
-      '@discordjs/voice': 0.13.0_bufferutil@4.0.7
+      '@discordjs/voice': 0.14.0_bufferutil@4.0.7
     transitivePeerDependencies:
       - '@discordjs/opus'
       - bufferutil
