@@ -2,7 +2,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class ImplodeCommand extends ImageCommand {
   params = {
-    amount: 1
+    implode: true
   };
 
   static description = "Implodes an image";
