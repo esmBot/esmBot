@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Watermark(string type, string *outType, char *BufferData,
+ArgumentMap Watermark(string type, string *outType, char *BufferData,
                 size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string water = GetArgument<string>(Arguments, "water");
   int gravity = GetArgument<int>(Arguments, "gravity");
@@ -150,5 +150,8 @@ char *Watermark(string type, string *outType, char *BufferData,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

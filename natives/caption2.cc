@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-char *CaptionTwo(string type, string *outType, char *BufferData,
+ArgumentMap CaptionTwo(string type, string *outType, char *BufferData,
                  size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool top = GetArgument<bool>(Arguments, "top");
   string caption = GetArgument<string>(Arguments, "caption");
@@ -77,5 +77,8 @@ char *CaptionTwo(string type, string *outType, char *BufferData,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

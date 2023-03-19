@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Reverse(string type, string *outType, char *BufferData,
+ArgumentMap Reverse(string type, string *outType, char *BufferData,
               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool soos = GetArgumentWithFallback<bool>(Arguments, "soos", false);
 
@@ -55,5 +55,8 @@ char *Reverse(string type, string *outType, char *BufferData,
 
   *outType = "gif";
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

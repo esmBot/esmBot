@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Swirl(string type, string* outType, char* BufferData, size_t BufferLength,
+ArgumentMap Swirl(string type, string* outType, char* BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t* DataSize);

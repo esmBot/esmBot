@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Globe(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Globe(string type, string *outType, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -69,5 +69,8 @@ char *Globe(string type, string *outType, char *BufferData, size_t BufferLength,
   void *buf;
   final.write_to_buffer(".gif", &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

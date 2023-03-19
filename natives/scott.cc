@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Scott(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Scott(string type, string *outType, char *BufferData, size_t BufferLength,
             ArgumentMap Arguments, size_t *DataSize) {
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -51,5 +51,9 @@ char *Scott(string type, string *outType, char *BufferData, size_t BufferLength,
   final.write_to_buffer(
       ("." + *outType).c_str(), &buf, DataSize,
       *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
-  return (char *)buf;
+
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

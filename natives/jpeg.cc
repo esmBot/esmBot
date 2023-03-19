@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Jpeg(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Jpeg(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   int quality = GetArgumentWithFallback<int>(Arguments, "quality", 0);
 
@@ -71,5 +71,8 @@ char *Jpeg(string type, string *outType, char *BufferData, size_t BufferLength,
     }
   }
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

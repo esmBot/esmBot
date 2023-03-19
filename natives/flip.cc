@@ -6,9 +6,9 @@
 using namespace std;
 using namespace vips;
 
-char *Flip(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Flip(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
-  bool flop = GetArgument<bool>(Arguments, "flop");
+  bool flop = GetArgumentWithFallback<bool>(Arguments, "flop", false);
 
   VImage in = VImage::new_from_buffer(BufferData, BufferLength, "",
                                       type == "gif"
@@ -44,5 +44,8 @@ char *Flip(string type, string *outType, char *BufferData, size_t BufferLength,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

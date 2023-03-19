@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Sonic(string type, string *outType, ArgumentMap Arguments,
+ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
             size_t *DataSize) {
   string text = GetArgument<string>(Arguments, "text");
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -31,5 +31,8 @@ char *Sonic(string type, string *outType, ArgumentMap Arguments,
   void *buf;
   out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

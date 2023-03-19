@@ -5,9 +5,9 @@
 using namespace std;
 using namespace vips;
 
-char *Reddit(string type, string *outType, char *BufferData,
+ArgumentMap Reddit(string type, string *outType, char *BufferData,
              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  string text = GetArgument<string>(Arguments, "text");
+  string text = GetArgument<string>(Arguments, "caption");
   string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
@@ -63,5 +63,8 @@ char *Reddit(string type, string *outType, char *BufferData,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

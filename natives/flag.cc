@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Flag(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Flag(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   string overlay = GetArgument<string>(Arguments, "overlay");
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -45,5 +45,8 @@ char *Flag(string type, string *outType, char *BufferData, size_t BufferLength,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

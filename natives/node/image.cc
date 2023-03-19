@@ -67,19 +67,21 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
     string outType = GetArgument<bool>(Arguments, "togif") ? "gif" : type;
 
     size_t length = 0;
-    char* buf;
+    ArgumentMap outMap;
     if (obj.Has("data")) {
       Napi::Buffer<char> data = obj.Has("data")
                                     ? obj.Get("data").As<Napi::Buffer<char>>()
                                     : Napi::Buffer<char>::New(env, 0);
-      buf = FunctionMap.at(command)(type, &outType, data.Data(), data.Length(),
+      outMap = FunctionMap.at(command)(type, &outType, data.Data(), data.Length(),
                                     Arguments, &length);
     } else {
-      buf = NoInputFunctionMap.at(command)(type, &outType, Arguments, &length);
+      outMap = NoInputFunctionMap.at(command)(type, &outType, Arguments, &length);
     }
 
     vips_error_clear();
     vips_thread_shutdown();
+
+    char* buf = GetArgument<char*>(outMap, "buf");
 
     result.Set("data",
                Napi::Buffer<char>::New(env, buf, length,

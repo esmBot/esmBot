@@ -9,7 +9,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Tile(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Tile(string type, string *outType, char *BufferData, size_t BufferLength,
            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   Blob blob;
 
@@ -61,5 +61,9 @@ char *Tile(string type, string *outType, char *BufferData, size_t BufferLength,
 
   char *data = (char *)malloc(*DataSize);
   memcpy(data, blob.data(), *DataSize);
-  return data;
+
+  ArgumentMap output;
+  output["buf"] = data;
+
+  return output;
 }

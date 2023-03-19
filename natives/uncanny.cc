@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Uncanny(string type, string *outType, char *BufferData,
+ArgumentMap Uncanny(string type, string *outType, char *BufferData,
               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   string caption2 = GetArgument<string>(Arguments, "caption2");
@@ -97,5 +97,8 @@ char *Uncanny(string type, string *outType, char *BufferData,
       ("." + *outType).c_str(), &buf, DataSize,
       *outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

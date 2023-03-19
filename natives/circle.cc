@@ -11,7 +11,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Circle(string type, string *outType, char *BufferData,
+ArgumentMap Circle(string type, string *outType, char *BufferData,
              size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
              size_t *DataSize) {
   Blob blob;
@@ -50,5 +50,9 @@ char *Circle(string type, string *outType, char *BufferData,
   // workaround because the data is tied to the blob
   char *data = (char *)malloc(*DataSize);
   memcpy(data, blob.data(), *DataSize);
-  return data;
+  
+  ArgumentMap output;
+  output["buf"] = data;
+
+  return output;
 }

@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Motivate(string type, string *outType, char *BufferData,
+ArgumentMap Motivate(string type, string *outType, char *BufferData,
                size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string top_text = GetArgument<string>(Arguments, "top");
   string bottom_text = GetArgument<string>(Arguments, "bottom");
@@ -119,5 +119,8 @@ char *Motivate(string type, string *outType, char *BufferData,
       ("." + *outType).c_str(), &buf, DataSize,
       *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

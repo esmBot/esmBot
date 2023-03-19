@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Uncaption(string type, string *outType, char *BufferData,
+ArgumentMap Uncaption(string type, string *outType, char *BufferData,
                 size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   float tolerance = GetArgumentWithFallback<float>(Arguments, "tolerance", 0.5);
 
@@ -50,5 +50,8 @@ char *Uncaption(string type, string *outType, char *BufferData,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

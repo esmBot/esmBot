@@ -22,6 +22,7 @@ pids
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/
+cli-build/
 
 # Dependency directories
 node_modules/

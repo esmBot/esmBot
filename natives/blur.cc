@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-char *Blur(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Blur(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   bool sharp = GetArgument<bool>(Arguments, "sharp");
   VOption *options = VImage::option()->set("access", "sequential");
@@ -27,5 +27,8 @@ char *Blur(string type, string *outType, char *BufferData, size_t BufferLength,
   void *buf;
   out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

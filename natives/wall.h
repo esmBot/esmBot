@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Wall(string type, string* outType, char* BufferData, size_t BufferLength,
+ArgumentMap Wall(string type, string* outType, char* BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t* DataSize);

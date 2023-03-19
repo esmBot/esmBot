@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Gamexplain(string type, string *outType, char *BufferData,
+ArgumentMap Gamexplain(string type, string *outType, char *BufferData,
                  size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -46,5 +46,8 @@ char *Gamexplain(string type, string *outType, char *BufferData,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

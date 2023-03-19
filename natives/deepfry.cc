@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-char *Deepfry(string type, string *outType, char *BufferData,
+ArgumentMap Deepfry(string type, string *outType, char *BufferData,
               size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
               size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
@@ -57,5 +57,8 @@ char *Deepfry(string type, string *outType, char *BufferData,
       ("." + *outType).c_str(), &buf, DataSize,
       *outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

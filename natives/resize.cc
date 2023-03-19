@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Resize(string type, string *outType, char *BufferData,
+ArgumentMap Resize(string type, string *outType, char *BufferData,
              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool stretch = GetArgumentWithFallback<bool>(Arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(Arguments, "wide", false);
@@ -50,5 +50,8 @@ char *Resize(string type, string *outType, char *BufferData,
   void *buf;
   out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

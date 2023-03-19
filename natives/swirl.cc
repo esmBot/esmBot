@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
 
@@ -72,5 +72,8 @@ char *Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
   void *buf;
   final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

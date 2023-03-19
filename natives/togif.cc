@@ -5,13 +5,18 @@
 using namespace std;
 using namespace vips;
 
-char *ToGif(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap ToGif(string type, string *outType, char *BufferData, size_t BufferLength,
             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   if (type == "gif") {
     *DataSize = BufferLength;
     char *data = (char *)malloc(BufferLength);
     memcpy(data, BufferData, BufferLength);
-    return data;
+
+    ArgumentMap output;
+    output["buf"] = data;
+
+    return output;
+
   } else {
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -23,6 +28,9 @@ char *ToGif(string type, string *outType, char *BufferData, size_t BufferLength,
     in.write_to_buffer(".gif", &buf, DataSize);
     *outType = "gif";
 
-    return (char *)buf;
+    ArgumentMap output;
+    output["buf"] = (char *)buf;
+
+    return output;
   }
 }

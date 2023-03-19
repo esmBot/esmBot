@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-char *Freeze(string type, string *outType, char *BufferData,
+ArgumentMap Freeze(string type, string *outType, char *BufferData,
              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool loop = GetArgumentWithFallback<bool>(Arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(Arguments, "frame", -1);
@@ -42,7 +42,10 @@ char *Freeze(string type, string *outType, char *BufferData,
     }
     if (none) *DataSize = BufferLength;
 
-    return newData;
+    ArgumentMap output;
+    output["buf"] = newData;
+
+    return output;
   } else if (frame >= 0 && !loop) {
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -62,7 +65,11 @@ char *Freeze(string type, string *outType, char *BufferData,
     void *buf;
     out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-    return (char *)buf;
+    ArgumentMap output;
+    output["buf"] = (char *)buf;
+
+    return output;
+    
   } else {
     lastPos = (char *)memchr(fileData, '\x21', BufferLength);
     while (lastPos != NULL) {
@@ -78,6 +85,9 @@ char *Freeze(string type, string *outType, char *BufferData,
     }
     if (none) *DataSize = BufferLength;
 
-    return fileData;
+    ArgumentMap output;
+    output["buf"] = fileData;
+
+    return output;
   }
 }

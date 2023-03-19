@@ -9,7 +9,7 @@
 using namespace std;
 using namespace Magick;
 
-char *Spin(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Spin(string type, string *outType, char *BufferData, size_t BufferLength,
            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   int delay = GetArgumentWithFallback<int>(Arguments, "delay", 0);
 
@@ -68,5 +68,9 @@ char *Spin(string type, string *outType, char *BufferData, size_t BufferLength,
 
   char *data = (char *)malloc(*DataSize);
   memcpy(data, blob.data(), *DataSize);
-  return data;
+  
+  ArgumentMap output;
+  output["buf"] = data;
+
+  return output;
 }

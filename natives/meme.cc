@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Meme(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Meme(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   string top = GetArgument<string>(Arguments, "top");
   string bottom = GetArgument<string>(Arguments, "bottom");
@@ -135,5 +135,8 @@ char *Meme(string type, string *outType, char *BufferData, size_t BufferLength,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

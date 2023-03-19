@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Zamn(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Zamn(string type, string *outType, char *BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t *DataSize) {
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -43,5 +43,8 @@ char *Zamn(string type, string *outType, char *BufferData, size_t BufferLength,
   void *buf;
   final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

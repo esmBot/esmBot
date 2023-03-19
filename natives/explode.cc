@@ -5,9 +5,9 @@
 using namespace std;
 using namespace vips;
 
-char *Explode(string type, string *outType, char *BufferData,
+ArgumentMap Explode(string type, string *outType, char *BufferData,
               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  bool implode = GetArgument<bool>(Arguments, "implode");
+  bool implode = GetArgumentWithFallback<bool>(Arguments, "implode", false);
   string basePath = GetArgument<string>(Arguments, "basePath");
 
   VOption *options = VImage::option();
@@ -48,5 +48,8 @@ char *Explode(string type, string *outType, char *BufferData,
   void *buf;
   final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

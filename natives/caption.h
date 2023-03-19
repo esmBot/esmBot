@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Caption(string type, string* outType, char* BufferData, size_t BufferLength,
+ArgumentMap Caption(string type, string* outType, char* BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t* DataSize);

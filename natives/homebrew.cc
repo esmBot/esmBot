@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Homebrew(string type, string *outType, ArgumentMap Arguments,
+ArgumentMap Homebrew(string type, string *outType, ArgumentMap Arguments,
                size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -33,5 +33,8 @@ char *Homebrew(string type, string *outType, ArgumentMap Arguments,
   void *buf;
   out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

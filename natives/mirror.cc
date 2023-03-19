@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-char *Mirror(string type, string *outType, char *BufferData,
+ArgumentMap Mirror(string type, string *outType, char *BufferData,
              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   bool vertical = GetArgumentWithFallback<bool>(Arguments, "vertical", false);
   bool first = GetArgumentWithFallback<bool>(Arguments, "first", false);
@@ -60,5 +60,8 @@ char *Mirror(string type, string *outType, char *BufferData,
   void *buf;
   out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

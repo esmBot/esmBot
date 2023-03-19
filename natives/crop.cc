@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-char *Crop(string type, string *outType, char *BufferData, size_t BufferLength,
+ArgumentMap Crop(string type, string *outType, char *BufferData, size_t BufferLength,
            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
   VOption *options = VImage::option()->set("access", "sequential");
 
@@ -47,5 +47,8 @@ char *Crop(string type, string *outType, char *BufferData, size_t BufferLength,
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
-  return (char *)buf;
+  ArgumentMap output;
+  output["buf"] = (char *)buf;
+
+  return output;
 }

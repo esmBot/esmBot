@@ -4,5 +4,5 @@
 
 using std::string;
 
-char* Flip(string type, string* outType, char* BufferData, size_t BufferLength,
+ArgumentMap Flip(string type, string* outType, char* BufferData, size_t BufferLength,
            ArgumentMap Arguments, size_t* DataSize);
