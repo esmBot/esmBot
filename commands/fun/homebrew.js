@@ -1,9 +1,11 @@
 import ImageCommand from "../../classes/imageCommand.js";
+import { cleanMessage } from "../../utils/misc.js";
 
 class HomebrewCommand extends ImageCommand {
-  params() {
+  params(url) {
+    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
-      caption: (this.options.text ?? this.args.join(" ")).toLowerCase().replaceAll("\n", " ")
+      caption: cleanMessage(this.message ?? this.interaction, newArgs)
     };
   }
 

@@ -10,7 +10,6 @@ lavalink:
       soundcloud: true
       twitch: true
       vimeo: true
-      mixer: true
       http: true
       local: true
     bufferDurationMs: 400
@@ -19,12 +18,6 @@ lavalink:
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
-    #ratelimit:
-      #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
-      #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
-      #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-      #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
-      #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
   plugins:
     - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.1"
       repository: "https://jitpack.io"
@@ -48,17 +41,6 @@ plugins:
         countryCode: "US"
     deezer:
         masterDecryptionKey: "go looking for this somewhere"
-
-metrics:
-  prometheus:
-    enabled: false
-    endpoint: /metrics
-
-sentry:
-  dsn: ""
-#  tags:
-#    some_key: some_value
-#    another_key: another_value
 
 logging:
   file:

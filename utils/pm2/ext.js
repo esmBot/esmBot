@@ -161,11 +161,21 @@ function calcShards(shards, procs) {
   const r = [];
   let i = 0;
   let size;
+  let remainder;
 
   if (length % procs === 0) {
     size = Math.floor(length / procs);
+    remainder = size % 16;
+    if (size > 16 && remainder) {
+      size -= remainder;
+    }
     while (i < length) {
-      r.push(shards.slice(i, (i += size)));
+      let added = 0;
+      if (remainder) {
+        added = 1;
+        remainder--;
+      }
+      r.push(shards.slice(i, (i += size + (size * added))));
     }
   } else {
     while (i < length) {
@@ -200,9 +210,8 @@ function calcShards(shards, procs) {
   const procAmount = Math.min(connectionData.shards, cpuAmount);
   logger.main(`Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
 
-  const lastShard = connectionData.shards - 1;
   const shardArray = [];
-  for (let i = 0; i <= lastShard; i++) {
+  for (let i = 0; i < connectionData.shards; i++) {
     shardArray.push(i);
   }
   const shardArrays = calcShards(shardArray, procAmount);
