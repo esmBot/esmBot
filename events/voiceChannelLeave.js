@@ -6,6 +6,9 @@ import { logger } from "../utils/logger.js";
 const isWaiting = new Map();
 
 export default async (client, member, oldChannel) => {
+  // block if client is not ready yet
+  if (!client.ready) return;
+  
   if (!oldChannel) return;
   const connection = players.get(oldChannel.guildID);
   if (oldChannel.id === connection?.voiceChannel.id) {

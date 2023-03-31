@@ -219,6 +219,8 @@ function calcShards(shards, procs) {
   for (let i = 0; i < shardArrays.length; i++) {
     await awaitStart(i, shardArrays);
   }
+  
+  await updateStats();
 })();
 
 function awaitStart(i, shardArrays) {

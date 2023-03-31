@@ -6,6 +6,10 @@ import { upload } from "../utils/tempimages.js";
 
 // run when a slash command is executed
 export default async (client, interaction) => {
+  // block if client is not ready yet
+  if (!client.ready) return;
+
+  // block non-command events
   if (interaction?.type !== 2) return;
 
   // check if command exists and if it's enabled

@@ -10,6 +10,9 @@ let mentionRegex;
 
 // run when someone sends a message
 export default async (client, message) => {
+  // block if client is not ready yet
+  if (!client.ready) return;
+
   // ignore other bots
   if (message.author.bot) return;
 
