@@ -18,7 +18,7 @@ specifiers:
   jsqr: ^1.4.0
   node-addon-api: ^5.1.0
   node-emoji: ^1.11.0
-  oceanic.js: 1.5.2-dev.df03c89
+  oceanic.js: 1.5.2-dev.9623a78
   pm2: ^5.2.2
   postgres: ^3.3.4
   qrcode: ^1.5.1
@@ -39,7 +39,7 @@ dependencies:
   jsqr: 1.4.0
   node-addon-api: 5.1.0
   node-emoji: 1.11.0
-  oceanic.js: 1.5.2-dev.df03c89_bufferutil@4.0.7
+  oceanic.js: 1.5.2-dev.9623a78_bufferutil@4.0.7
   qrcode: 1.5.1
   sharp: 0.31.3
   shoukaku: 3.3.1_bufferutil@4.0.7
@@ -2356,10 +2356,9 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js/1.5.2-dev.df03c89_bufferutil@4.0.7:
-    resolution: {integrity: sha512-QLbedU8itG1SjhU3e4q9Tb4T4uolleFhHXrPwBxJp141mCcxqaJyc1jmFNjJ74Pgv3i2vTDomc7zyXdPORA3hQ==}
+  /oceanic.js/1.5.2-dev.9623a78_bufferutil@4.0.7:
+    resolution: {integrity: sha512-sDNaBEuu3jUpmbwMoDqkbH/fXexPnGR79vdGphbzOZMGf9ift8jwt0oqg9UmCQkX1VC0W/YGnwBKHEla6YQtOg==}
     engines: {node: '>=16.16.0'}
-    deprecated: This version has been superseded by a new build, update.
     dependencies:
       undici: 5.21.0
       ws: 8.13.0_bufferutil@4.0.7

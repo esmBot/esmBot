@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "A Discord bot with miscellaneous features",
   "exports": "./app.js",
   "bin": "./app.js",
@@ -34,7 +34,7 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^5.1.0",
     "node-emoji": "^1.11.0",
-    "oceanic.js": "1.5.2-dev.df03c89",
+    "oceanic.js": "1.5.2-dev.9623a78",
     "qrcode": "^1.5.1",
     "sharp": "^0.31.3",
     "shoukaku": "^3.3.1",
