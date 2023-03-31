@@ -64,7 +64,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
       }
     }
 
-    string outType = GetArgument<bool>(Arguments, "togif") ? "gif" : type;
+    string outType = GetArgumentWithFallback<bool>(Arguments, "togif", false) ? "gif" : type;
 
     size_t length = 0;
     ArgumentMap outMap;
