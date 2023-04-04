@@ -20,9 +20,11 @@ class ExecCommand extends Command {
       const sendString = `\`\`\`bash\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
         return {
-          text: "The result was too large, so here it is as a file:",
-          file: cleaned,
-          name: "result.txt"
+          content: "The result was too large, so here it is as a file:",
+          files: [{
+            contents: cleaned,
+            name: "result.txt"
+          }]
         };
       } else {
         return sendString;
