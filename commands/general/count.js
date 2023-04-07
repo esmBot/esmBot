@@ -4,7 +4,7 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    if (this.guild && !this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) {
+    if (this.guild && !this.permissions.has("EMBED_LINKS")) {
       this.success = false;
       return "I don't have the `Embed Links` permission!";
     }
@@ -42,7 +42,7 @@ class CountCommand extends Command {
         }]
       });
     }
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "Gets how many times every command was used";

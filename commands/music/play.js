@@ -20,10 +20,10 @@ class PlayCommand extends MusicCommand {
     }
     try {
       const url = new URL(query);
-      return play(this.client, url, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
+      return play(this.client, url, { channel: this.channel, guild: this.guild, member: this.member, type: this.type, interaction: this.interaction }, true);
     } catch {
       const search = prefixes.some(v => query.startsWith(v)) ? query : !query && attachment ? attachment.url : (process.env.YT_DISABLED !== "true" ? `ytsearch:${query}` : `dzsearch:${query}`);
-      return play(this.client, search, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction }, true);
+      return play(this.client, search, { channel: this.channel, guild: this.guild, member: this.member, type: this.type, interaction: this.interaction }, true);
     }
   }
 

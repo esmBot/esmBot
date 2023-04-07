@@ -10,7 +10,7 @@ class QueueCommand extends MusicCommand {
     if (!this.guild) return "This command only works in servers!";
     if (!this.member.voiceState) return "You need to be in a voice channel first!";
     if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
-    if (!this.channel.permissionsOf(this.client.user.id.toString()).has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
     const node = nodes.filter((val) => val.name === player.player.node.name)[0];
@@ -55,7 +55,7 @@ class QueueCommand extends MusicCommand {
     }
     if (embeds.length === 0) return "There's nothing in the queue!";
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, embeds);
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "Shows the current queue";

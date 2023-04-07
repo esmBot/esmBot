@@ -18,7 +18,7 @@ class YouTubeCommand extends Command {
       messages.push({ content: `Page ${i + 1} of ${videos.results.length}\n<:youtube:637020823005167626> **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, channel: this.channel, author: this.author }, messages);
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, messages);
   }
 
   static flags = [{

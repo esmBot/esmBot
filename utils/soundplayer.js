@@ -49,12 +49,12 @@ export async function reload(client) {
 export async function play(client, sound, options, music = false) {
   if (!connected) return { content: "I'm not connected to any audio servers!", flags: 64 };
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
-  if (!options.channel.guild) return { content: "This command only works in servers!", flags: 64 };
+  if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
   if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
-  if (!options.channel.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
-  const voiceChannel = options.channel.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID);
+  if (!options.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
+  const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID);
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
-  if (!music && manager.players.has(options.channel.guildID)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
+  if (!music && manager.players.has(options.guild.id)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
   const node = manager.getNode();
   if (!music && !nodes.filter(obj => obj.name === node.name)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
@@ -76,7 +76,7 @@ export async function play(client, sound, options, music = false) {
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
     queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...playlistTracks] : playlistTracks);
   }
-  const playerMeta = players.get(options.channel.guildID);
+  const playerMeta = players.get(options.guild.id);
   let player;
   if (node.players.has(voiceChannel.guildID)) {
     player = node.players.get(voiceChannel.guildID);

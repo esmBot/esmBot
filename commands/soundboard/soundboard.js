@@ -12,7 +12,7 @@ class SoundboardAIOCommand extends Command {
     }
     const name = sounds.get(soundName);
     await this.acknowledge();
-    return await play(this.client, name, { channel: this.channel, member: this.member, type: this.type, interaction: this.interaction });
+    return await play(this.client, name, { channel: this.channel, guild: this.guild, member: this.member, type: this.type, interaction: this.interaction });
   }
   
   static postInit() {

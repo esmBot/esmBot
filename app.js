@@ -150,7 +150,8 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
       intents
     },
     collectionLimits: {
-      messages: 50
+      messages: 50,
+      channels: !types.classic ? 0 : Infinity
     }
   });
 

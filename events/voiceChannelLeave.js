@@ -10,16 +10,17 @@ export default async (client, member, oldChannel) => {
   if (!client.ready) return;
   
   if (!oldChannel) return;
-  const connection = players.get(oldChannel.guildID);
+  const connection = players.get(member.guildID);
   if (oldChannel.id === connection?.voiceChannel.id) {
-    if (oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
+    const fullChannel = await client.rest.channels.get(oldChannel.id);
+    if (fullChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
       if (isWaiting.has(oldChannel.id)) return;
       isWaiting.set(oldChannel.id, true);
       connection.player.setPaused(true);
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
         content: "🔊 Waiting 10 seconds for someone to return..."
       });
-      const awaitRejoin = new AwaitRejoin(oldChannel, true, member.id);
+      const awaitRejoin = new AwaitRejoin(fullChannel, true, member.id);
       awaitRejoin.once("end", async (rejoined, newMember, cancel) => {
         isWaiting.delete(oldChannel.id);
         if (rejoined) {
@@ -63,7 +64,7 @@ export default async (client, member, oldChannel) => {
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
         content: "🔊 Waiting 10 seconds for the host to return..."
       });
-      const awaitRejoin = new AwaitRejoin(oldChannel, false, member.id);
+      const awaitRejoin = new AwaitRejoin(fullChannel, false, member.id);
       awaitRejoin.once("end", async (rejoined) => {
         isWaiting.delete(oldChannel.id);
         if (rejoined) {
@@ -73,7 +74,7 @@ export default async (client, member, oldChannel) => {
             logger.warn(`Failed to delete wait message ${waitMessage.id}`);
           }
         } else {
-          const members = oldChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
+          const members = fullChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot);
           if (members.length === 0) {
             try {
               if (waitMessage.channel.messages.has(waitMessage.id)) await waitMessage.delete();
