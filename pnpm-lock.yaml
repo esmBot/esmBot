@@ -24,7 +24,7 @@ dependencies:
     version: 1.11.0
   oceanic.js:
     specifier: 1.6.0
-    version: 1.6.0(bufferutil@4.0.7)
+    version: 1.6.0
   qrcode:
     specifier: ^1.5.1
     version: 1.5.1
@@ -33,7 +33,7 @@ dependencies:
     version: 0.31.3
   shoukaku:
     specifier: ^3.3.1
-    version: 3.3.1(bufferutil@4.0.7)
+    version: 3.3.1
   undici:
     specifier: ^5.21.0
     version: 5.21.0
@@ -48,21 +48,15 @@ optionalDependencies:
   better-sqlite3:
     specifier: ^8.2.0
     version: 8.2.0
-  bufferutil:
-    specifier: ^4.0.7
-    version: 4.0.7
   pm2:
     specifier: ^5.2.2
-    version: 5.2.2(bufferutil@4.0.7)
+    version: 5.2.2
   postgres:
     specifier: ^3.3.4
     version: 3.3.4
-  uuid:
-    specifier: ^9.0.0
-    version: 9.0.0
   ws:
     specifier: ^8.13.0
-    version: 8.13.0(bufferutil@4.0.7)
+    version: 8.13.0
   zlib-sync:
     specifier: ^0.1.8
     version: 0.1.8
@@ -413,7 +407,7 @@ packages:
       kuler: 2.0.0
     dev: false
 
-  /@discordjs/voice@0.16.0(bufferutil@4.0.7):
+  /@discordjs/voice@0.16.0:
     resolution: {integrity: sha512-ToGCvHD1cBscuW3p+C7zOF5+L7MJmU4GjdOARfNk9mkHyFFZq4grK+Sxr3QXKbp27DtfDBc9uqD4GUOYgxngfA==}
     engines: {node: '>=16.9.0'}
     requiresBuild: true
@@ -422,7 +416,7 @@ packages:
       discord-api-types: 0.37.37
       prism-media: 1.3.5
       tslib: 2.5.0
-      ws: 8.13.0(bufferutil@4.0.7)
+      ws: 8.13.0
     transitivePeerDependencies:
       - '@discordjs/opus'
       - bufferutil
@@ -588,7 +582,7 @@ packages:
     dev: false
     optional: true
 
-  /@pm2/agent@2.0.1(bufferutil@4.0.7):
+  /@pm2/agent@2.0.1:
     resolution: {integrity: sha512-QKHMm6yexcvdDfcNE7PL9D6uEjoQPGRi+8dh+rc4Hwtbpsbh5IAvZbz3BVGjcd4HaX6pt2xGpOohG7/Y2L4QLw==}
     dependencies:
       async: 3.2.4
@@ -603,7 +597,7 @@ packages:
       pm2-axon-rpc: 0.7.1
       proxy-agent: 5.0.0
       semver: 7.2.3
-      ws: 7.4.6(bufferutil@4.0.7)
+      ws: 7.4.6
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -630,7 +624,7 @@ packages:
     dev: false
     optional: true
 
-  /@pm2/js-api@0.6.7(bufferutil@4.0.7):
+  /@pm2/js-api@0.6.7:
     resolution: {integrity: sha512-jiJUhbdsK+5C4zhPZNnyA3wRI01dEc6a2GhcQ9qI38DyIk+S+C8iC3fGjcjUbt/viLYKPjlAaE+hcT2/JMQPXw==}
     engines: {node: '>=4.0'}
     dependencies:
@@ -638,7 +632,7 @@ packages:
       axios: 0.21.4(debug@4.3.4)
       debug: 4.3.4
       eventemitter2: 6.4.9
-      ws: 7.5.9(bufferutil@4.0.7)
+      ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -925,14 +919,6 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-    dev: false
-
-  /bufferutil@4.0.7:
-    resolution: {integrity: sha512-kukuqc39WOHtdxtw4UScxF/WVnMFVSQVKhtx3AjZJzhd0RGZZldcrfSEbVsWWe6KNH253574cq5F+wpv0G9pJw==}
-    engines: {node: '>=6.14.2'}
-    requiresBuild: true
-    dependencies:
-      node-gyp-build: 4.6.0
     dev: false
 
   /builtin-modules@3.3.0:
@@ -2323,11 +2309,6 @@ packages:
       whatwg-url: 5.0.0
     dev: false
 
-  /node-gyp-build@4.6.0:
-    resolution: {integrity: sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ==}
-    hasBin: true
-    dev: false
-
   /node-releases@2.0.10:
     resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
     dev: true
@@ -2371,14 +2352,14 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js@1.6.0(bufferutil@4.0.7):
+  /oceanic.js@1.6.0:
     resolution: {integrity: sha512-u2aDoGm6MeEqGa8s6tN+UImsBREvGQCviXxvLAcGJKcUiRKXr+NSA6bTCaf2GZHufetLgWtC9L196Gkmv88xPw==}
     engines: {node: '>=16.16.0'}
     dependencies:
       undici: 5.21.0
-      ws: 8.13.0(bufferutil@4.0.7)
+      ws: 8.13.0
     optionalDependencies:
-      '@discordjs/voice': 0.16.0(bufferutil@4.0.7)
+      '@discordjs/voice': 0.16.0
     transitivePeerDependencies:
       - '@discordjs/opus'
       - bufferutil
@@ -2609,15 +2590,15 @@ packages:
     dev: false
     optional: true
 
-  /pm2@5.2.2(bufferutil@4.0.7):
+  /pm2@5.2.2:
     resolution: {integrity: sha512-mASxgh/MZhtVze/wijGf+tE6JKdA3lEq64FOfXVhhArkuk9Qxl4ePw9XgFJaArOXnU3bde+KbeAJHYxppVvYBQ==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@pm2/agent': 2.0.1(bufferutil@4.0.7)
+      '@pm2/agent': 2.0.1
       '@pm2/io': 5.0.0
-      '@pm2/js-api': 0.6.7(bufferutil@4.0.7)
+      '@pm2/js-api': 0.6.7
       '@pm2/pm2-version-check': 1.0.4
       async: 3.2.4
       blessed: 0.1.81
@@ -3001,12 +2982,12 @@ packages:
     dev: false
     optional: true
 
-  /shoukaku@3.3.1(bufferutil@4.0.7):
+  /shoukaku@3.3.1:
     resolution: {integrity: sha512-oyM+fs+6CFjzIsespf6Ajp7780ZwKwMDV1mRnFzCex22MK4ydbIK3IlCY4KjWurgxJz+8DvLVL/8/Xw4NmpdqQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
       node-fetch: 2.6.9
-      ws: 8.13.0(bufferutil@4.0.7)
+      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3384,13 +3365,6 @@ packages:
     dev: false
     optional: true
 
-  /uuid@9.0.0:
-    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
-    hasBin: true
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
     dependencies:
@@ -3512,7 +3486,7 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  /ws@7.4.6(bufferutil@4.0.7):
+  /ws@7.4.6:
     resolution: {integrity: sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
@@ -3523,12 +3497,10 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dependencies:
-      bufferutil: 4.0.7
     dev: false
     optional: true
 
-  /ws@7.5.9(bufferutil@4.0.7):
+  /ws@7.5.9:
     resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
@@ -3539,12 +3511,10 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dependencies:
-      bufferutil: 4.0.7
     dev: false
     optional: true
 
-  /ws@8.13.0(bufferutil@4.0.7):
+  /ws@8.13.0:
     resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -3555,8 +3525,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dependencies:
-      bufferutil: 4.0.7
     dev: false
 
   /xregexp@2.0.0:

@@ -53,10 +53,8 @@
   },
   "optionalDependencies": {
     "better-sqlite3": "^8.2.0",
-    "bufferutil": "^4.0.7",
     "pm2": "^5.2.2",
     "postgres": "^3.3.4",
-    "uuid": "^9.0.0",
     "ws": "^8.13.0",
     "zlib-sync": "^0.1.8"
   },
