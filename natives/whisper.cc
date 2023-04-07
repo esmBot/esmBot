@@ -54,7 +54,7 @@ ArgumentMap Whisper(string type, string *outType, char *BufferData,
 
   VImage outline = textIn.morph(mask, VIPS_OPERATION_MORPHOLOGY_DILATE)
                        .gaussblur(0.5, VImage::option()->set("min_ampl", 0.1));
-  outline = (outline == (vector<double>){0, 0, 0, 0});
+  outline = (outline == zeroVec);
   VImage invert = outline.extract_band(3).invert();
   outline =
       outline.extract_band(0, VImage::option()->set("n", outline.bands() - 1))

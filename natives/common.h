@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <variant>
+#include <vector>
 
 using std::map;
 using std::string;
@@ -79,14 +80,17 @@ T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
 
 #define ARG_TYPES std::variant<string, bool, int, float>
 
+const std::vector<double> zeroVec = {0, 0, 0, 0};
+
 const std::unordered_map<std::string, std::string> fontPaths{
     {"futura", "assets/fonts/caption.otf"},
     {"helvetica", "assets/fonts/caption2.ttf"},
     {"roboto", "assets/fonts/reddit.ttf"}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType, char* BufferData, size_t BufferLength,
-                         ArgumentMap Arguments, size_t* DataSize)>
+               ArgumentMap (*)(string type, string* outType, char* BufferData,
+                               size_t BufferLength, ArgumentMap Arguments,
+                               size_t* DataSize)>
     FunctionMap = {{"blur", &Blur},
                    {"bounce", &Bounce},
                    {"caption", &Caption},
@@ -126,5 +130,6 @@ const std::map<std::string,
                    {"zamn", Zamn}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType, ArgumentMap Arguments, size_t* DataSize)>
+               ArgumentMap (*)(string type, string* outType,
+                               ArgumentMap Arguments, size_t* DataSize)>
     NoInputFunctionMap = {{"homebrew", Homebrew}, {"sonic", Sonic}};

@@ -5,8 +5,11 @@
 using namespace std;
 using namespace vips;
 
+const vector<double> zeroVec178 = {0, 0, 0, 178};
+
 ArgumentMap Snapchat(string type, string *outType, char *BufferData,
-               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                     size_t BufferLength, ArgumentMap Arguments,
+                     size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   float pos = GetArgumentWithFallback<float>(Arguments, "pos", 0.5);
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -41,13 +44,13 @@ ArgumentMap Snapchat(string type, string *outType, char *BufferData,
           ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
           ->set("width", textWidth));
   int bgHeight = textIn.height() + (width / 25);
-  textIn = ((textIn == (vector<double>){0, 0, 0, 0}).bandand())
-               .ifthenelse({0, 0, 0, 178}, textIn)
+  textIn = ((textIn == zeroVec).bandand())
+               .ifthenelse(zeroVec178, textIn)
                .embed((width / 2) - (textIn.width() / 2),
                       (bgHeight / 2) - (textIn.height() / 2), width, bgHeight,
                       VImage::option()
                           ->set("extend", "background")
-                          ->set("background", (vector<double>){0, 0, 0, 178}));
+                          ->set("background", zeroVec178));
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {

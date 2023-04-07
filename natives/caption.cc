@@ -7,7 +7,8 @@ using namespace std;
 using namespace vips;
 
 ArgumentMap Caption(string type, string *outType, char *BufferData,
-              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                    size_t BufferLength, ArgumentMap Arguments,
+                    size_t *DataSize) {
   string caption = GetArgument<string>(Arguments, "caption");
   string font = GetArgument<string>(Arguments, "font");
   string basePath = GetArgument<string>(Arguments, "basePath");
@@ -49,7 +50,7 @@ ArgumentMap Caption(string type, string *outType, char *BufferData,
           ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
           ->set("width", textWidth));
   VImage captionImage =
-      ((text == (vector<double>){0, 0, 0, 0}).bandand())
+      ((text == zeroVec).bandand())
           .ifthenelse(255, text)
           .gravity(VIPS_COMPASS_DIRECTION_CENTRE, width, text.height() + size,
                    VImage::option()->set("extend", "white"));

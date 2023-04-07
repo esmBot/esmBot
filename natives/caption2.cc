@@ -50,7 +50,7 @@ ArgumentMap CaptionTwo(string type, string *outType, char *BufferData,
           ->set("align", VIPS_ALIGN_LOW)
           ->set("width", textWidth));
   VImage captionImage =
-      ((text == (vector<double>){0, 0, 0, 0}).bandand())
+      ((text == zeroVec).bandand())
           .ifthenelse(255, text)
           .embed(width / 25, width / 25, width, text.height() + size,
                  VImage::option()->set("extend", "white"));
