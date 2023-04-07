@@ -81,6 +81,7 @@ T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
 #define ARG_TYPES std::variant<string, bool, int, float>
 
 const std::vector<double> zeroVec = {0, 0, 0, 0};
+const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
 
 const std::unordered_map<std::string, std::string> fontPaths{
     {"futura", "assets/fonts/caption.otf"},

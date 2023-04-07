@@ -5,8 +5,6 @@
 using namespace std;
 using namespace vips;
 
-const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
-
 VImage genText(string text, string font, string basePath, int width,
                VImage mask, int radius) {
   VImage in = VImage::text(

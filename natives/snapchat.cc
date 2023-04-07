@@ -52,17 +52,11 @@ ArgumentMap Snapchat(string type, string *outType, char *BufferData,
                           ->set("extend", "background")
                           ->set("background", zeroVec178));
 
-  vector<VImage> img;
-  for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    img_frame = img_frame.composite2(
-        textIn, VIPS_BLEND_MODE_OVER,
-        VImage::option()->set("x", 0)->set("y", pageHeight * pos));
-    img.push_back(img_frame);
-  }
-  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-  final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+  VImage replicated = textIn.embed(0, pageHeight * pos, width, pageHeight)
+                          .copy(VImage::option()->set("interpretation",
+                                                      VIPS_INTERPRETATION_sRGB))
+                          .replicate(1, nPages);
+  VImage final = in.composite(replicated, VIPS_BLEND_MODE_OVER);
 
   void *buf;
   final.write_to_buffer(
