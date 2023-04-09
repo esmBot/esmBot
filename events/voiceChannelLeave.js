@@ -12,7 +12,7 @@ export default async (client, member, oldChannel) => {
   if (!oldChannel) return;
   const connection = players.get(member.guildID);
   if (oldChannel.id === connection?.voiceChannel.id) {
-    const fullChannel = await client.rest.channels.get(oldChannel.id);
+    const fullChannel = oldChannel.voiceMembers ? oldChannel : await client.rest.channels.get(oldChannel.id);
     if (fullChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
       if (isWaiting.has(oldChannel.id)) return;
       isWaiting.set(oldChannel.id, true);

@@ -48,12 +48,12 @@ class Command {
     return "It works!";
   }
 
-  async acknowledge() {
+  async acknowledge(flags) {
     if (this.type === "classic") {
       const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
       await channel.sendTyping();
     } else if (!this.interaction.acknowledged) {
-      await this.interaction.defer();
+      await this.interaction.defer(flags);
     }
   }
 

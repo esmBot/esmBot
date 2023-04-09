@@ -78,6 +78,7 @@ export default async (client, interaction) => {
       try {
         let err = error;
         if (error?.constructor?.name == "Promise") err = await error;
+        if (!interaction.acknowledged) await interaction.defer(); // Files can't be uploaded without deferring first
         await interaction[replyMethod]({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
           files: [{
