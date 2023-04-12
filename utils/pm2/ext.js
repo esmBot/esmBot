@@ -94,14 +94,14 @@ async function updateStats() {
       } else {
         timeout = setTimeout(() => {
           process.removeListener("message", listener);
-          throw new Error("Timed out while waiting for stats");
+          logger.error("Timed out while waiting for stats");
         }, 5000);
       }
     }
   };
   timeout = setTimeout(() => {
     process.removeListener("message", listener);
-    throw new Error("Timed out while waiting for stats");
+    logger.error("Timed out while waiting for stats");
   }, 5000);
   process.on("message", listener);
   process.send({
