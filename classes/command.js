@@ -1,3 +1,5 @@
+import { Constants } from "oceanic.js";
+
 class Command {
   success = true;
   constructor(client, options) {
@@ -11,7 +13,7 @@ class Command {
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
-      this.permissions = this.channel.permissionsOf(client.user.id.toString());
+      this.permissions = this.channel ? this.channel.permissionsOf(client.user.id.toString()) : Constants.AllTextPermissions;
       this.content = options.content;
       this.options = options.specialArgs;
       this.reference = {
