@@ -1,6 +1,7 @@
 import { createRequire } from "module";
 import { isMainThread, parentPort, workerData } from "worker_threads";
-import { request } from "undici";
+import * as http from "http";
+import * as https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -31,7 +32,21 @@ export default function run(object) {
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      promise = request(object.path).then(res => res.body.arrayBuffer()).then(buf => Buffer.from(buf));
+      promise = new Promise((res, rej) => {
+        const req = (object.path.startsWith("https") ? https.request : http.request)(object.path);
+        req.once("response", (resp) => {
+          const buffers = [];
+          resp.on("data", (chunk) => {
+            buffers.push(chunk);
+          });
+          resp.once("end", () => {
+            res(Buffer.concat(buffers));
+          });
+          resp.once("error", rej);
+        });
+        req.once("error", rej);
+        req.end();
+      });
     }
     // Convert from a MIME type (e.g. "image/png") to something the image processor understands (e.g. "png").
     // Don't set `type` directly on the object we are passed as it will be read afterwards.
@@ -64,7 +79,6 @@ if (!isMainThread) {
   run(workerData)
     .then(returnObject => {
       parentPort.postMessage(returnObject);
-      process.exit();
     })
     .catch(err => {
       // turn promise rejection into normal error
