@@ -1,8 +1,3 @@
-#include <Magick++.h>
-
-#include <cstring>
-#include <iostream>
-#include <list>
 #include <vips/vips8>
 
 #include "common.h"
