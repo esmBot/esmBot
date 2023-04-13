@@ -3,67 +3,50 @@
 #include <cstring>
 #include <iostream>
 #include <list>
+#include <vips/vips8>
 
 #include "common.h"
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
-ArgumentMap Tile(string type, string *outType, char *BufferData, size_t BufferLength,
-           [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
-  Blob blob;
+ArgumentMap Tile(string type, string *outType, char *BufferData,
+                 size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
+                 size_t *DataSize) {
+  VOption *options = VImage::option();
 
-  list<Image> frames;
-  list<Image> coalesced;
-  list<Image> mid;
-  try {
-    readImages(&frames, Blob(BufferData, BufferLength));
-  } catch (Magick::WarningCoder &warning) {
-    cerr << "Coder Warning: " << warning.what() << endl;
-  } catch (Magick::Warning &warning) {
-    cerr << "Warning: " << warning.what() << endl;
+  VImage in =
+      VImage::new_from_buffer(BufferData, BufferLength, "",
+                              type == "gif" ? options->set("n", -1) : options)
+          .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha()) in = in.bandjoin(255);
+
+  int width = in.width();
+  int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = vips_image_get_n_pages(in.get_image());
+
+  vector<VImage> img;
+  int finalHeight;
+  for (int i = 0; i < nPages; i++) {
+    VImage img_frame =
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage replicated = img_frame.replicate(5, 5);
+    double scale = 800.0 / replicated.height();
+    if (scale > 1) scale = 800.0 / replicated.width();
+    if (scale < 1) replicated = replicated.resize(scale);
+    finalHeight = replicated.height();
+    img.push_back(replicated);
   }
-  coalesceImages(&coalesced, frames.begin(), frames.end());
+  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  final.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
-  for (Image &image : coalesced) {
-    list<Image> duplicated;
-    Image appended;
-    list<Image> montage;
-    Image frame;
-    image.magick(*outType);
-    for (int i = 0; i < 5; ++i) {
-      duplicated.push_back(image);
-    }
-    appendImages(&appended, duplicated.begin(), duplicated.end());
-    appended.repage();
-    for (int i = 0; i < 5; ++i) {
-      montage.push_back(appended);
-    }
-    appendImages(&frame, montage.begin(), montage.end(), true);
-    frame.repage();
-    frame.scale(Geometry("800x800>"));
-    frame.animationDelay(image.animationDelay());
-    mid.push_back(frame);
-  }
-
-  optimizeTransparency(mid.begin(), mid.end());
-
-  if (*outType == "gif") {
-    for (Image &image : mid) {
-      image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-      image.quantize();
-    }
-  }
-
-  writeImages(mid.begin(), mid.end(), &blob);
-
-  *DataSize = blob.length();
-
-  char *data = (char *)malloc(*DataSize);
-  memcpy(data, blob.data(), *DataSize);
+  void *buf;
+  final.write_to_buffer(
+      ("." + *outType).c_str(), &buf, DataSize,
+      *outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
-  output["buf"] = data;
+  output["buf"] = (char *)buf;
 
   return output;
 }

@@ -47,7 +47,6 @@ ArgumentMap Whisper(string type, string *outType, char *BufferData,
                         textIn.height() + 2 * rad);
 
   VImage newText = textIn.convsep(mask);
-  newText.write_to_file("/home/esm/whispertext2.png");
   VImage outline = newText.cast(VIPS_FORMAT_UCHAR) * zeroVecOneAlpha;
   VImage composited = outline.composite2(textIn, VIPS_BLEND_MODE_OVER);
   VImage textImg = composited.embed(
