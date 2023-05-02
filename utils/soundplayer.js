@@ -52,7 +52,8 @@ export async function play(client, sound, options, music = false) {
   if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
   if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
   if (!options.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
-  const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID);
+  const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID).catch(e => logger.warn(`Failed to get a voice channel: ${e}`));
+  if (!voiceChannel) return { content: "I can't join this voice channel! Make sure I have the right permissions.", flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   if (!music && manager.players.has(options.guild.id)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
   const node = manager.getNode();
@@ -70,7 +71,7 @@ export async function play(client, sound, options, music = false) {
   }
   const oldQueue = queues.get(voiceChannel.guildID);
   if (!response.tracks || response.tracks.length === 0) return { content: "I couldn't find that song!", flags: 64 };
-  if (process.env.YT_DISABLED === "true" && response.tracks[0].info.sourceName === "youtube") return "YouTube playback is disabled on this instance.";
+  if (process.env.YT_DISABLED === "true" && response.tracks[0].info.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
   if (music) {
     const sortedTracks = response.tracks.map((val) => { return val.track; });
     const playlistTracks = response.playlistInfo.selectedTrack ? sortedTracks : [sortedTracks[0]];
