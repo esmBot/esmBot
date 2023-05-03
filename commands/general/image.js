@@ -13,7 +13,7 @@ class ImageSearchCommand extends Command {
     if (!query || !query.trim()) return "You need to provide something to search for!";
     await this.acknowledge();
     const embeds = [];
-    const rawImages = await request(`${random(searx)}/search?format=json&safesearch=2&categories=images&q=!goi%20!ddi%20${encodeURIComponent(query)}`).then(res => res.body.json());
+    const rawImages = await request(`${random(searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`).then(res => res.body.json());
     if (rawImages.results.length === 0) return "I couldn't find any results!";
     const images = rawImages.results.filter((val) => !val.img_src.startsWith("data:"));
     for (const [i, value] of images.entries()) {
@@ -24,7 +24,7 @@ class ImageSearchCommand extends Command {
           footer: {
             text: `Page ${i + 1} of ${images.length}`
           },
-          description: value.title,
+          description: `[${value.title.replaceAll("/", `/${String.fromCharCode(8203)}`)}](${value.url})`,
           image: {
             url: encodeURI(value.img_src)
           },
