@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "cmake-js compile",
-    "build:debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug",
+    "build:debug": "cmake-js compile -BDebug",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host esmbot-api",

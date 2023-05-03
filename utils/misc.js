@@ -126,7 +126,7 @@ export function getServers(bot) {
 
 // copied from eris
 export function cleanMessage(message, content) {
-  let cleanContent = content && content.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
+  let cleanContent = content?.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
   const author = message.author ?? message.member ?? message.user;
   let authorName = author.username;
@@ -153,7 +153,7 @@ export function cleanMessage(message, content) {
 
     for (const id of message.mentions.channels) {
       const channel = message.client.getChannel(id);
-      if (channel && channel.name && channel.mention) {
+      if (channel?.name && channel.mention) {
         cleanContent = cleanContent.replace(channel.mention, `#${channel.name}`);
       }
     }

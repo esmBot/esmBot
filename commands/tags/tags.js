@@ -11,7 +11,7 @@ class TagsCommand extends Command {
     if (!this.guild) return "This command only works in servers!";
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.optionsArray[0].name;
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
-    const tagName = this.type === "classic" ? this.args.slice(1)[0] : (this.optionsArray[0].options[0] ?? {}).value;
+    const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.optionsArray[0].options[0]?.value;
 
     if (cmd === "create" || cmd === "add") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";

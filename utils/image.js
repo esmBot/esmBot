@@ -152,9 +152,7 @@ export async function runImageJob(params) {
         const output = await currentServer.getOutput(params.id);
         return output;
       } catch (e) {
-        if (i < 2 && e === "Request ended prematurely due to a closed connection") {
-          continue;
-        } else {
+        if (i >= 2 && e !== "Request ended prematurely due to a closed connection") {
           if (e === "No available servers" && i >= 2) throw "Request ended prematurely due to a closed connection";
           throw e;
         }

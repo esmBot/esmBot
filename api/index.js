@@ -106,7 +106,7 @@ wss.on("connection", (ws, request) => {
     const opcode = msg.readUint8(0);
     const tag = msg.slice(1, 3);
     const req = msg.toString().slice(3);
-    if (opcode == Tqueue) {
+    if (opcode === Tqueue) {
       const id = msg.readBigInt64LE(3);
       const obj = msg.slice(11);
       const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
@@ -122,12 +122,12 @@ wss.on("connection", (ws, request) => {
       } else {
         log(`Got WS request for job ${job.msg} with id ${id}, queued in position ${queue.indexOf(id)}`, job.num);
       }
-    } else if (opcode == Tcancel) {
+    } else if (opcode === Tcancel) {
       delete queue[queue.indexOf(req) - 1];
       jobs.delete(req);
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
       ws.send(cancelResponse);
-    } else if (opcode == Twait) {
+    } else if (opcode === Twait) {
       const id = msg.readBigUInt64LE(3);
       const job = jobs.get(id);
       if (!job) {
