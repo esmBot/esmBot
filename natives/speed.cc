@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <cinttypes>
 #include <vips/vips8>
 
 #include "common.h"

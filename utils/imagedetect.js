@@ -170,20 +170,12 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   }
   if (!singleMessage) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
-    try {
-      const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
-      const messages = await channel.getMessages();
-      // iterate over each message
-      for (const message of messages) {
-        const result = await checkImages(message, extraReturnTypes, video, sticker);
-        if (result === false) {
-          continue;
-        } else {
-          return result;
-        }
-      }
-    } catch {
-      // no-op
+    const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
+    const messages = await channel.getMessages();
+    // iterate over each message
+    for (const message of messages) {
+      const result = await checkImages(message, extraReturnTypes, video, sticker);
+      if (result !== false) return result;
     }
   }
 };

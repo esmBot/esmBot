@@ -46,10 +46,7 @@ Choose the distro you're using below for insallation instructions.
 
 ### 2. Install libvips.
 
-[libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. Version 8.13.0 or higher is recommended because it contains fixes to GIF handling and support for the freeze command; however, this version isn't packaged for most distros yet. To fix this, you'll need to build libvips from source.
-
-!!! note
-    Alpine, Arch, RHEL **(not Fedora!)**, and Ubuntu 22.10 (Kinetic Kudu) users can skip this step, since these distros now have 8.13.0 packaged.
+[libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. Version 8.13.0 or higher is required and should be packaged for most distros; however, you may want to build from source to take advantage of the `nsgif` GIF decoder and its improved performance over the default ImageMagick decoder.
 
 First, download the source and move into it:
 ```sh
