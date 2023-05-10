@@ -125,7 +125,7 @@ export default async (client, message) => {
       }, reference));
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        let fileSize = 8388119;
+        let fileSize = 26214400;
         if (message.guildID) {
           switch (message.guild.premiumTier) {
             case 2:
