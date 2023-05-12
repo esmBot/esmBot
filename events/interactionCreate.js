@@ -43,7 +43,7 @@ export default async (client, interaction) => {
       });
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        const fileSize = 8388119;
+        const fileSize = 26214400;
         if (result.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
             await upload(client, result, interaction, true);
