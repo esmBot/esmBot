@@ -40,6 +40,7 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "scott.h"
 #include "snapchat.h"
 #include "sonic.h"
+#include "spotify.h"
 #include "speed.h"
 #include "spin.h"
 #include "squish.h"
@@ -118,6 +119,7 @@ const std::map<std::string,
                    {"scott", Scott},
                    {"snapchat", Snapchat},
                    {"speed", &Speed},
+                   {"spotify", &Spotify},
                    {"spin", Spin},
                    {"squish", Squish},
                    {"swirl", Swirl},
