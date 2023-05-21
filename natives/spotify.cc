@@ -33,8 +33,10 @@ ArgumentMap Spotify(string type, string *outType, char *BufferData,
           ->set("rgba", true)
           ->set("fontfile", (basePath + "assets/fonts/Circular.ttf").c_str())
           ->set("font", "Circular Bold")
-          ->set("dpi", 800)
-          ->set("align", VIPS_ALIGN_LOW));
+	  ->set("height", 75)
+	  ->set("width", 500)
+	  ->set("wrap", VIPS_TEXT_WRAP_NONE)
+          ->set("align", VIPS_ALIGN_CENTRE));
 
   VImage composited =
       tmpl.composite2(textImage, VIPS_BLEND_MODE_OVER,
