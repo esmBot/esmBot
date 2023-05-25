@@ -21,7 +21,7 @@ export async function upload(client, result, context, interaction = false) {
     }]
   };
   if (interaction) {
-    await context[context.acknowledged ? "editOriginal" : "createMessage"](payload);
+    await context[context.acknowledged ? "createFollowup" : "createMessage"](payload);
   } else {
     await client.rest.channels.createMessage(context.channelID, Object.assign(payload, {
       messageReference: {
