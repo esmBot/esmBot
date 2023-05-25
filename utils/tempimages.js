@@ -16,7 +16,7 @@ export async function upload(client, result, context, interaction = false) {
         url: imageURL
       },
       footer: {
-        text: "The result image was more than 8MB in size, so it was uploaded to an external site instead."
+        text: "The result image was more than 25MB in size, so it was uploaded to an external site instead."
       },
     }]
   };
