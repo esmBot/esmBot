@@ -64,7 +64,7 @@ export async function getType(image, extraReturnTypes) {
     }
   } catch (error) {
     if (error.name === "AbortError") {
-      throw Error("Timed out");
+      throw Error(`Timed out when requesting ${image}`);
     } else {
       throw error;
     }

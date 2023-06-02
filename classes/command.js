@@ -1,12 +1,13 @@
 import { Constants } from "oceanic.js";
 
 class Command {
-  success = true;
   constructor(client, options) {
     this.client = client;
     this.origOptions = options;
     this.type = options.type;
     this.args = options.args;
+    this.success = true;
+    this.edit = false;
     if (options.type === "classic") {
       this.message = options.message;
       this.channel = options.message.channel;

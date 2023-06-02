@@ -82,7 +82,7 @@ export default async (client, message) => {
       disabledCache.set(message.guildID, guildDB.disabled);
       disabled = guildDB.disabled;
     }
-    if (disabled.includes(message.channelID) && command != "channel") return;
+    if (disabled.includes(message.channelID) && command !== "channel") return;
 
     let disabledCmds = disabledCmdCache.get(message.guildID);
     if (!disabledCmds) {
@@ -171,7 +171,7 @@ export default async (client, message) => {
       _error(`Error occurred with command message ${message.content}: ${error.stack || error}`);
       try {
         let err = error;
-        if (error?.constructor?.name == "Promise") err = await error;
+        if (error?.constructor?.name === "Promise") err = await error;
         await client.rest.channels.createMessage(message.channelID, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
           files: [{
