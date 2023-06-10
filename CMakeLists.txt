@@ -3,6 +3,8 @@ cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0042 NEW)
 project(image)
 
+include(FindPkgConfig)
+
 file(GLOB SOURCE_FILES "natives/*.cc" "natives/*.h")
 
 if (CMAKE_JS_VERSION)
@@ -30,11 +32,16 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(ImageMagick REQUIRED COMPONENTS Magick++ MagickCore)
-add_definitions(-DMAGICKCORE_QUANTUM_DEPTH=16)
-add_definitions(-DMAGICKCORE_HDRI_ENABLE=0)
-include_directories(${ImageMagick_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${ImageMagick_LIBRARIES})
+option(WITH_MAGICK "Build the functions that still depend on ImageMagick" OFF)
+
+if (WITH_MAGICK)
+  find_package(ImageMagick COMPONENTS Magick++ MagickCore)
+  add_definitions(-DMAGICK_ENABLED)
+  add_definitions(-DMAGICKCORE_QUANTUM_DEPTH=16)
+  add_definitions(-DMAGICKCORE_HDRI_ENABLE=0)
+  include_directories(${ImageMagick_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} ${ImageMagick_LIBRARIES})
+endif()
 
 pkg_check_modules(VIPS REQUIRED vips-cpp)
 include_directories(${VIPS_INCLUDE_DIRS})
