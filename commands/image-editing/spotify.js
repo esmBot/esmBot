@@ -9,7 +9,7 @@ class SpotifyCommand extends ImageCommand {
     };
   }
 
-  static description = "Create a spotify \"This is\" message with your image and inputted name.";
+  static description = "Adds a Spotify \"This is\" header to an image";
   static arguments = ["[name]"];
 
   static requiresText = true;
