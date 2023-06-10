@@ -19,18 +19,18 @@ class ImageSearchCommand extends Command {
     for (const [i, value] of images.entries()) {
       embeds.push({
         embeds: [{
-          title: "Search Results",
+          title: value.title,
+          url: value.url,
           color: 16711680,
           footer: {
             text: `Page ${i + 1} of ${images.length}`
           },
-          description: `[${value.title.replaceAll("/", `/${String.fromCharCode(8203)}`)}](${value.url})`,
           image: {
             url: encodeURI(value.img_src)
           },
           author: {
-            name: this.author.username,
-            iconURL: this.author.avatarURL()
+            name: "Search Results",
+            iconURL: this.client.user.avatarURL()
           }
         }]
       });

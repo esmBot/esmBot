@@ -44,7 +44,7 @@ class HostCommand extends MusicCommand {
     } else {
       const member = this.guild.members.get(players.get(this.guild.id).host);
       this.success = true;
-      return `🔊 The current voice channel host is **${member?.username}#${member?.discriminator}**.`;
+      return `🔊 The current voice channel host is **${member?.username}${member?.discriminator === 0 ? `#${member?.discriminator}` : ""}**`;
     }
   }
 

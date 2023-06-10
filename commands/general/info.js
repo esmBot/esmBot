@@ -16,7 +16,7 @@ class InfoCommand extends Command {
           name: "esmBot Info/Credits",
           iconURL: this.client.user.avatarURL()
         },
-        description: `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
+        description: `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
         fields: [{
           name: "ℹ️ Version:",
           value: `v${version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`

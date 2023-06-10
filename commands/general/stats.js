@@ -20,7 +20,7 @@ class StatsCommand extends Command {
           "name": "esmBot Statistics",
           "iconURL": this.client.user.avatarURL()
         },
-        "description": `This instance is managed by **${owner.username}#${owner.discriminator}**.`,
+        "description": `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
         "color": 16711680,
         "fields": [{
           "name": "Version",
