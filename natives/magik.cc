@@ -1,3 +1,4 @@
+#ifdef MAGICK_ENABLED
 #include <Magick++.h>
 
 #include <cstring>
@@ -54,3 +55,4 @@ ArgumentMap Magik(string type, string *outType, char *BufferData, size_t BufferL
 
   return output;
 }
+#endif

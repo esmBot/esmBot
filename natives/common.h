@@ -40,9 +40,9 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "scott.h"
 #include "snapchat.h"
 #include "sonic.h"
-#include "spotify.h"
 #include "speed.h"
 #include "spin.h"
+#include "spotify.h"
 #include "squish.h"
 #include "swirl.h"
 #include "tile.h"
@@ -96,7 +96,9 @@ const std::map<std::string,
                    {"bounce", &Bounce},
                    {"caption", &Caption},
                    {"captionTwo", &CaptionTwo},
+#ifdef MAGICK_ENABLED
                    {"circle", &Circle},
+#endif
                    {"colors", &Colors},
                    {"crop", &Crop},
                    {"deepfry", &Deepfry},
@@ -108,7 +110,9 @@ const std::map<std::string,
                    {"globe", Globe},
                    {"invert", Invert},
                    {"jpeg", Jpeg},
+#ifdef MAGICK_ENABLED
                    {"magik", Magik},
+#endif
                    {"meme", Meme},
                    {"mirror", Mirror},
                    {"motivate", Motivate},
@@ -118,15 +122,19 @@ const std::map<std::string,
                    {"scott", Scott},
                    {"snapchat", Snapchat},
                    {"speed", &Speed},
-                   {"spotify", &Spotify},
+#ifdef MAGICK_ENABLED
                    {"spin", Spin},
+#endif
+                   {"spotify", &Spotify},
                    {"squish", Squish},
                    {"swirl", Swirl},
                    {"tile", Tile},
                    {"togif", ToGif},
                    {"uncanny", Uncanny},
                    {"uncaption", &Uncaption},
+#if MAGICK_ENABLED
                    {"wall", Wall},
+#endif
                    {"watermark", &Watermark},
                    {"whisper", Whisper}};
 

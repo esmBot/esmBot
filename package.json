@@ -9,8 +9,10 @@
     "node": ">=15"
   },
   "scripts": {
-    "build": "cmake-js compile",
-    "build:debug": "cmake-js compile -BDebug",
+    "build": "cmake-js compile --CDWITH_MAGICK=ON",
+    "build:debug": "cmake-js compile -BDebug --CDWITH_MAGICK=ON",
+    "build:no-magick": "cmake-js compile --CDWITH_MAGICK=OFF",
+    "build:debug-no-magick": "cmake-js compile -BDebug --CDWITH_MAGICK=OFF",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host esmbot-api",

@@ -1,3 +1,4 @@
+#ifdef MAGICK_ENABLED
 #include <Magick++.h>
 
 #include <cstring>
@@ -56,3 +57,4 @@ ArgumentMap Circle(string type, string *outType, char *BufferData,
 
   return output;
 }
+#endif

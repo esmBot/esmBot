@@ -6,7 +6,8 @@ using namespace std;
 using namespace vips;
 
 ArgumentMap Spotify(string type, string *outType, char *BufferData,
-             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                    size_t BufferLength, ArgumentMap Arguments,
+                    size_t *DataSize) {
   string text = GetArgument<string>(Arguments, "caption");
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -27,20 +28,22 @@ ArgumentMap Spotify(string type, string *outType, char *BufferData,
 
   string captionText = "<span foreground=\"black\">" + text + "</span>";
 
-    VImage textImage = VImage::text(
+  VImage textImage = VImage::text(
       captionText.c_str(),
       VImage::option()
           ->set("rgba", true)
           ->set("fontfile", (basePath + "assets/fonts/Circular.ttf").c_str())
           ->set("font", "Circular Bold")
-	  ->set("height", 75)
-	  ->set("width", 500)
-	  ->set("wrap", VIPS_TEXT_WRAP_NONE)
+          ->set("height", 75)
+          ->set("width", 500)
+          ->set("wrap", VIPS_TEXT_WRAP_NONE)
           ->set("align", VIPS_ALIGN_CENTRE));
 
-  VImage composited =
-      tmpl.composite2(textImage, VIPS_BLEND_MODE_OVER,
-                      VImage::option()->set("x", (tmpl.width() / 2) - (textImage.width() / 2))->set("y", 195));
+  VImage composited = tmpl.composite2(
+      textImage, VIPS_BLEND_MODE_OVER,
+      VImage::option()
+          ->set("x", (tmpl.width() / 2) - (textImage.width() / 2))
+          ->set("y", 195));
   VImage watermark =
       composited.resize((double)width / (double)composited.width());
 

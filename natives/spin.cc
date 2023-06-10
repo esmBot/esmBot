@@ -1,3 +1,4 @@
+#ifdef MAGICK_ENABLED
 #include <Magick++.h>
 
 #include <cstring>
@@ -74,3 +75,4 @@ ArgumentMap Spin(string type, string *outType, char *BufferData, size_t BufferLe
 
   return output;
 }
+#endif

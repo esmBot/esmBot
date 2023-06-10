@@ -6,7 +6,7 @@
 
 #include "../common.h"
 
-#ifdef _WIN32
+#if defined(WIN32) && defined(MAGICK_ENABLED)
 #include <Magick++.h>
 #endif
 #include <vips/vips8>
@@ -98,7 +98,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-#ifdef _WIN32
+#if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
   if (vips_init("")) vips_error_exit(NULL);
