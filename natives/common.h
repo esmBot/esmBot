@@ -52,7 +52,6 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "wall.h"
 #include "watermark.h"
 #include "whisper.h"
-#include "zamn.h"
 
 template <typename T>
 T GetArgument(ArgumentMap map, string key) {
@@ -129,8 +128,7 @@ const std::map<std::string,
                    {"uncaption", &Uncaption},
                    {"wall", Wall},
                    {"watermark", &Watermark},
-                   {"whisper", Whisper},
-                   {"zamn", Zamn}};
+                   {"whisper", Whisper}};
 
 const std::map<std::string,
                ArgumentMap (*)(string type, string* outType,
