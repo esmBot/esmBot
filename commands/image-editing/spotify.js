@@ -4,16 +4,17 @@ import { cleanMessage } from "../../utils/misc.js";
 class SpotifyCommand extends ImageCommand {
   params(url) {
     const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
-    let newCaption = cleanMessage(this.message ?? this.interaction, newArgs);
     return {
-      caption: newCaption.toUpperCase(),
+      caption: cleanMessage(this.message ?? this.interaction, newArgs),
     };
   }
 
   static description = "Create a spotify \"This is\" message with your image and inputted name.";
-  static arguments = ["{name}"];
+  static arguments = ["[name]"];
 
-  static noText = "You need to provide some text to add a Spotify \"This is\"!";
+  static requiresText = true;
+  static noText = "You need to provide some text to add a Spotify \"This is\" header!";
+  static noImage = "You need to provide an image/GIF to add a Spotify \"This is\" header!";
   static command = "spotify";
 }
 
