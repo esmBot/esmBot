@@ -23,6 +23,7 @@ class ImageConnection {
     this.tag = 0;
     this.disconnected = false;
     this.formats = {};
+    this.funcs = [];
     this.wsproto = null;
     if (tls) {
       this.wsproto = "wss";
@@ -51,6 +52,7 @@ class ImageConnection {
     const op = msg.readUint8(0);
     if (op === Rinit) {
       this.formats = JSON.parse(msg.toString("utf8", 7));
+      this.funcs = Object.keys(this.formats);
       return;
     }
     const tag = msg.readUint16LE(1);

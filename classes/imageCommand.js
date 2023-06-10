@@ -89,9 +89,8 @@ class ImageCommand extends Command {
 
     try {
       const { buffer, type } = await runImageJob(imageParams);
-      if (type === "nogif" && this.constructor.requiresGIF) {
-        return "That isn't a GIF!";
-      }
+      if (type === "nocmd") return "That command isn't supported on this instance of esmBot.";
+      if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
       this.success = true;
       return {
         contents: buffer,
