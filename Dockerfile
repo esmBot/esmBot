@@ -10,7 +10,7 @@ RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmp
 
 # install pnpm
 RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
-  npm install -g pnpm@6.27.1
+  npm install -g pnpm@8.6.2
 
 # liblqr needs to be built manually for magick to work
 # and because alpine doesn't have it in their repos
