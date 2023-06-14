@@ -4,13 +4,14 @@ import Command from "../../classes/command.js";
 
 class QrCreateCommand extends Command {
   async run() {
-    if (this.args.length === 0) {
+    const text = this.options.text ?? this.content;
+    if (!text || !text.trim()) {
       this.success = false;
       return "You need to provide some text to generate a QR code!";
     }
     await this.acknowledge();
     const writable = new PassThrough();
-    qrcode.toFileStream(writable, this.content, { margin: 1 });
+    qrcode.toFileStream(writable, text, { margin: 1 });
     const file = await this.streamToBuf(writable);
     return {
       contents: file,
@@ -32,6 +33,13 @@ class QrCreateCommand extends Command {
       });
     });
   }
+
+  static flags = [{
+    name: "text",
+    type: 3,
+    description: "The text to generate a QR code from",
+    required: true
+  }];
 
   static description = "Generates a QR code";
   static arguments = ["[text]"];
