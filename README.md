@@ -7,7 +7,7 @@ esmBot is a free and open-source Discord bot designed to entertain your server. 
 ## Features
 - Powerful, efficient, and performant image processing powered by [libvips](https://github.com/libvips/libvips)
 - Lots of image manipulation and processing commands out of the box
-- Handling of output images larger than 8MB via a local web server
+- Handling of output images larger than 25MB via a local web server
 - Optional WebSocket/HTTP-based external image API with load balancing
 - Music and sound playback from many different configurable sources via [Lavalink](https://github.com/freyacodes/Lavalink)
 - Server tags system for saving/retrieving content

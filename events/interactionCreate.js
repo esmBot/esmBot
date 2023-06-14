@@ -49,7 +49,7 @@ export default async (client, interaction) => {
             await upload(client, result, interaction, true);
           } else {
             await interaction[replyMethod]({
-              content: "The resulting image was more than 8MB in size, so I can't upload it.",
+              content: "The resulting image was more than 25MB in size, so I can't upload it.",
               flags: 64
             });
           }
