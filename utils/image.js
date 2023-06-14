@@ -38,7 +38,7 @@ export async function getType(image, extraReturnTypes) {
     });
     clearTimeout(timeout);
     const size = imageRequest.headers["content-range"] ? imageRequest.headers["content-range"].split("/")[1] : imageRequest.headers["content-length"];
-    if (parseInt(size) > 26214400 && extraReturnTypes) { // 25 MB
+    if (parseInt(size) > 41943040 && extraReturnTypes) { // 40 MB
       type = "large";
       return type;
     }

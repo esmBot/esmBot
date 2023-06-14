@@ -17,7 +17,7 @@ class SelectImageCommand extends Command {
     if (image === undefined) {
       return "I couldn't find an image in that message!";
     } else if (image.type === "large") {
-      return "That image is too large (>= 25MB)! Try using a smaller image.";
+      return "That image is too large (>= 40MB)! Try using a smaller image.";
     } else if (image.type === "tenorlimit") {
       return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
     } else if (image.type === "timeout") {
