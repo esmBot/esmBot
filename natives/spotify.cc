@@ -29,14 +29,14 @@ ArgumentMap Spotify(string type, string *outType, char *BufferData,
   string captionText = "<span foreground=\"black\">" + text + "</span>";
 
   VImage textImage = VImage::text(
+      ".", VImage::option()->set(
+               "fontfile", (basePath + "assets/fonts/twemoji.otf").c_str()));
+  textImage = VImage::text(
       captionText.c_str(),
       VImage::option()
           ->set("rgba", true)
           ->set("fontfile", (basePath + "assets/fonts/Circular.ttf").c_str())
-          ->set("font", "Circular Bold")
-          ->set("height", 75)
-          ->set("width", 500)
-          ->set("wrap", VIPS_TEXT_WRAP_NONE)
+          ->set("font", "Circular Bold, Twemoji Color Font 78")
           ->set("align", VIPS_ALIGN_CENTRE));
 
   VImage composited = tmpl.composite2(
