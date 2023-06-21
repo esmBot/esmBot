@@ -36,7 +36,7 @@
     "jsqr": "^1.4.0",
     "node-addon-api": "^6.1.0",
     "node-emoji": "^1.11.0",
-    "oceanic.js": "1.7.0",
+    "oceanic.js": "1.7.1-dev.428b714",
     "qrcode": "^1.5.3",
     "sharp": "^0.32.1",
     "shoukaku": "^3.4.0",

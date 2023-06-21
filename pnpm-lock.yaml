@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -27,8 +27,8 @@ dependencies:
     specifier: ^1.11.0
     version: 1.11.0
   oceanic.js:
-    specifier: 1.7.0
-    version: 1.7.0
+    specifier: 1.7.1-dev.428b714
+    version: 1.7.1-dev.428b714
   qrcode:
     specifier: ^1.5.3
     version: 1.5.3
@@ -2348,8 +2348,8 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js@1.7.0:
-    resolution: {integrity: sha512-gjmfcofqQ0wgr0WM9VsYnkMBmu5jvMTfVl79tVq+9sJFakfwMGO66pkaUNFULPQOUahUI1giUAe/nZTA784/4A==}
+  /oceanic.js@1.7.1-dev.428b714:
+    resolution: {integrity: sha512-Z/BL9aOyCk9LNJjnTJvrZprHJIx7mEXMeB7dRR0/CXZTKkWiTFj4C2lBTa9OuitHCffjbIc8zbI8v+1VvwG6/g==}
     engines: {node: '>=16.16.0'}
     dependencies:
       tslib: 2.5.3
