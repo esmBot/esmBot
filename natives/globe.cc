@@ -69,6 +69,8 @@ ArgumentMap Globe(string type, string *outType, char *BufferData, size_t BufferL
   void *buf;
   final.write_to_buffer(".gif", &buf, DataSize);
 
+  *outType = "gif";
+
   ArgumentMap output;
   output["buf"] = (char *)buf;
 
