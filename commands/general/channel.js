@@ -22,6 +22,7 @@ class ChannelCommand extends Command {
         if (guildDB.disabled.includes(this.channel.id)) return "I'm already disabled in this channel!";
         channel = this.channel;
       }
+      if (channel.guildID !== this.guild.id) return "That channel isn't in this server!";
 
       await db.disableChannel(channel);
       this.success = true;
@@ -36,6 +37,7 @@ class ChannelCommand extends Command {
         if (!guildDB.disabled.includes(this.channel.id)) return "I'm not disabled in this channel!";
         channel = this.channel;
       }
+      if (channel.guildID !== this.guild.id) return "That channel isn't in this server!";
 
       await db.enableChannel(channel);
       this.success = true;
