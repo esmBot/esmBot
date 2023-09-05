@@ -23,14 +23,8 @@ const imgurURLs = [
   "www.imgur.com",
   "i.imgur.com"
 ];
-const gfycatURLs = [
-  "gfycat.com",
-  "www.gfycat.com",
-  "thumbs.gfycat.com",
-  "giant.gfycat.com"
-];
 
-const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...imgurURLs, ...gfycatURLs];
+const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...imgurURLs];
 
 const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
@@ -79,16 +73,6 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
     } else if (imgurURLs.includes(host)) {
       // Seems that Imgur has a possibility of making GIFs static
       payload.path = image.replace(".mp4", ".gif");
-    } else if (gfycatURLs.includes(host)) {
-      // iirc Gfycat also seems to sometimes make GIFs static
-      if (link) {
-        const data = await request(`https://api.gfycat.com/v1/gfycats/${image.split("/").pop().split(".mp4")[0]}`);
-        const json = await data.body.json();
-        if (json.errorMessage) throw Error(json.errorMessage);
-        payload.path = json.gfyItem.gifUrl;
-      } else {
-        payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
-      }
     }
     payload.type = "image/gif";
   } else if (video) {
