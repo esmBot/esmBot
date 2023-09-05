@@ -8,7 +8,8 @@ using namespace std;
 using namespace vips;
 
 ArgumentMap CaptionTwo(string type, string *outType, char *BufferData,
-                 size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                       size_t BufferLength, ArgumentMap Arguments,
+                       size_t *DataSize) {
   bool top = GetArgument<bool>(Arguments, "top");
   string caption = GetArgument<string>(Arguments, "caption");
   string font = GetArgument<string>(Arguments, "font");
@@ -29,24 +30,21 @@ ArgumentMap CaptionTwo(string type, string *outType, char *BufferData,
   int nPages = vips_image_get_n_pages(in.get_image());
   int textWidth = width - ((width / 25) * 2);
 
-  string font_string = (font == "roboto" ? "Roboto Condensed" : font) +
-                       ", Twemoji Color Emoji " + to_string(size);
+  string font_string =
+      (font == "roboto" ? "Roboto Condensed" : font) + " " + to_string(size);
 
   string captionText = "<span background=\"white\">" + caption + "</span>";
 
-  VImage text;
+  loadFonts(basePath);
   auto findResult = fontPaths.find(font);
-  if (findResult != fontPaths.end()) {
-    text = VImage::text(
-        ".", VImage::option()->set("fontfile",
-                                   (basePath + findResult->second).c_str()));
-  }
-  text = VImage::text(
+  VImage text = VImage::text(
       captionText.c_str(),
       VImage::option()
           ->set("rgba", true)
           ->set("font", font_string.c_str())
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+          ->set("fontfile", findResult != fontPaths.end()
+                                ? (basePath + findResult->second).c_str()
+                                : NULL)
           ->set("align", VIPS_ALIGN_LOW)
           ->set("width", textWidth));
   VImage captionImage =

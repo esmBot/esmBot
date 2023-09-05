@@ -25,22 +25,20 @@ ArgumentMap Whisper(string type, string *outType, char *BufferData,
   int size = width / 6;
   double rad = (double)size / 24;
 
-  string font_string = "Upright, Twemoji Color Font " + to_string(size);
+  string font_string = "Upright " + to_string(size);
 
   VImage mask =
       VImage::gaussmat(rad / 2, 0.1, VImage::option()->set("separable", true)) *
       8;
 
+  loadFonts(basePath);
   VImage textIn = VImage::text(
-      ".", VImage::option()->set(
-               "fontfile", (basePath + "assets/fonts/whisper.otf").c_str()));
-  textIn = VImage::text(
       ("<span foreground=\"white\">" + caption + "</span>").c_str(),
       VImage::option()
           ->set("rgba", true)
           ->set("align", VIPS_ALIGN_CENTRE)
           ->set("font", font_string.c_str())
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+          ->set("fontfile", (basePath + "assets/fonts/whisper.otf").c_str())
           ->set("width", width));
 
   textIn = textIn.embed(rad, rad, textIn.width() + 2 * rad,

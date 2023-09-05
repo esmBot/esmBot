@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!-- Custom fontconfig to help with using local fonts -->
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+  <!-- Load fonts from current directory -->
+  <dir prefix="default" salt="">.</dir>
+
+  <!-- Append Twemoji to all font lists -->
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>emoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test name="family">
+      <string>sans</string>
+    </test>
+    <edit name="family" mode="append">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test name="family">
+      <string>serif</string>
+    </test>
+    <edit name="family" mode="append">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test name="family">
+      <string>sans-serif</string>
+    </test>
+    <edit name="family" mode="append">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test name="family">
+      <string>monospace</string>
+    </test>
+    <edit name="family" mode="append">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <!-- Do not use emoji-like glyphs from DejaVu -->
+  <match target="scan">
+    <test name="family" compare="contains">
+      <string>DejaVu</string>
+    </test>
+    <edit name="charset" mode="assign" binding="same">
+      <minus>
+        <name>charset</name>
+        <charset>
+          <range>
+            <int>0x1f600</int>
+            <int>0x1f640</int>
+          </range>
+        </charset>
+      </minus>
+    </edit>
+  </match>
+
+  <!-- Override other emoji fonts -->
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>Twitter Color Emoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>Twemoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>Noto Color Emoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>NotoColorEmoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family">
+      <string>Noto Emoji</string>
+    </test>
+    <edit name="family" mode="assign" binding="same">
+      <string>Twemoji Color Emoji</string>
+    </edit>
+  </match>
+
+</fontconfig>

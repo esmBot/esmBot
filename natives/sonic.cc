@@ -13,14 +13,14 @@ ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
   string assetPath = basePath + "assets/images/sonic.jpg";
   VImage bg = VImage::new_from_file(assetPath.c_str());
 
+  loadFonts(basePath);
   VImage textImage =
       VImage::text(
           ("<span foreground=\"white\">" + text + "</span>").c_str(),
           VImage::option()
               ->set("rgba", true)
               ->set("align", VIPS_ALIGN_CENTRE)
-              ->set("font", "Verdana, Twemoji Color Font")
-              ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+              ->set("font", "Verdana")
               ->set("width", 542)
               ->set("height", 390))
           .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 542, 390);

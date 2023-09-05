@@ -27,14 +27,13 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
   int textWidth = width - ((width / 25) * 2);
 
   string font_string =
-      (font == "roboto" ? "Roboto Condensed" : font) + ", Twemoji Color Font";
+      font == "roboto" ? "Roboto Condensed" : font;
 
   auto findResult = fontPaths.find(font);
-  if (findResult != fontPaths.end()) {
-    VImage::text(".", VImage::option()->set(
-                          "fontfile", (basePath + findResult->second).c_str()));
-  }
+  string fontResult =
+      findResult != fontPaths.end() ? basePath + findResult->second : "";
 
+  loadFonts(basePath);
   VImage topImage;
   if (top_text != "") {
     string topText = "<span foreground=\"white\" background=\"black\">" +
@@ -46,7 +45,7 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
             ->set("font", (font_string + " " + to_string(size)).c_str())
-            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("fontfile", fontResult.c_str())
             ->set("width", textWidth));
   }
 
@@ -61,7 +60,7 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
             ->set("font", (font_string + " " + to_string(size * 0.4)).c_str())
-            ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+            ->set("fontfile", fontResult.c_str())
             ->set("width", textWidth));
   }
 

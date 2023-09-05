@@ -28,12 +28,10 @@ ArgumentMap Snapchat(string type, string *outType, char *BufferData,
   int size = width / 20;
   int textWidth = width - ((width / 25) * 2);
 
-  string font_string = "Helvetica Neue, Twemoji Color Font " + to_string(size);
+  string font_string = "Helvetica Neue " + to_string(size);
 
+  loadFonts(basePath);
   VImage textIn = VImage::text(
-      ".", VImage::option()->set(
-               "fontfile", (basePath + "assets/fonts/caption2.ttf").c_str()));
-  textIn = VImage::text(
       ("<span foreground=\"white\" background=\"#000000B2\">" + caption +
        "</span>")
           .c_str(),
@@ -41,7 +39,7 @@ ArgumentMap Snapchat(string type, string *outType, char *BufferData,
           ->set("rgba", true)
           ->set("align", VIPS_ALIGN_CENTRE)
           ->set("font", font_string.c_str())
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+          ->set("fontfile", (basePath + "assets/fonts/caption2.ttf").c_str())
           ->set("width", textWidth));
   int bgHeight = textIn.height() + (width / 25);
   textIn = ((textIn == zeroVec).bandand())

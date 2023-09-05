@@ -34,20 +34,17 @@ ArgumentMap Caption(string type, string *outType, char *BufferData,
 
   string captionText = "<span background=\"white\">" + caption + "</span>";
 
-  VImage text;
+  loadFonts(basePath);
   auto findResult = fontPaths.find(font);
-  if (findResult != fontPaths.end()) {
-    text = VImage::text(
-        ".", VImage::option()->set("fontfile",
-                                   (basePath + findResult->second).c_str()));
-  }
-  text = VImage::text(
+  VImage text = VImage::text(
       captionText.c_str(),
       VImage::option()
           ->set("rgba", true)
           ->set("align", VIPS_ALIGN_CENTRE)
           ->set("font", font_string.c_str())
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+          ->set("fontfile", findResult != fontPaths.end()
+                                ? (basePath + findResult->second).c_str()
+                                : NULL)
           ->set("width", textWidth));
   VImage captionImage =
       ((text == zeroVec).bandand())

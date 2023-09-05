@@ -6,7 +6,8 @@ using namespace std;
 using namespace vips;
 
 ArgumentMap Reddit(string type, string *outType, char *BufferData,
-             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                   size_t BufferLength, ArgumentMap Arguments,
+                   size_t *DataSize) {
   string text = GetArgument<string>(Arguments, "caption");
   string basePath = GetArgument<string>(Arguments, "basePath");
 
@@ -27,15 +28,13 @@ ArgumentMap Reddit(string type, string *outType, char *BufferData,
 
   string captionText = "<span foreground=\"white\">" + text + "</span>";
 
+  loadFonts(basePath);
   VImage textImage = VImage::text(
-      ".", VImage::option()->set(
-               "fontfile", (basePath + "assets/fonts/reddit.ttf").c_str()));
-  textImage = VImage::text(
       captionText.c_str(),
       VImage::option()
           ->set("rgba", true)
-          ->set("font", "Roboto, Twemoji Color Font 62")
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
+          ->set("font", "Roboto 62")
+          ->set("fontfile", (basePath + "assets/fonts/reddit.ttf").c_str())
           ->set("align", VIPS_ALIGN_LOW));
 
   VImage composited =

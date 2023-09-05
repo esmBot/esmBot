@@ -5,16 +5,16 @@
 using namespace std;
 using namespace vips;
 
-VImage genText(string text, string font, string basePath, int width,
+VImage genText(string text, string font, const char *fontfile, int width,
                VImage mask, int radius) {
-  VImage in = VImage::text(
-      ("<span foreground=\"white\">" + text + "</span>").c_str(),
-      VImage::option()
-          ->set("rgba", true)
-          ->set("align", VIPS_ALIGN_CENTRE)
-          ->set("font", font.c_str())
-          ->set("fontfile", (basePath + "assets/fonts/twemoji.otf").c_str())
-          ->set("width", width));
+  VImage in =
+      VImage::text(("<span foreground=\"white\">" + text + "</span>").c_str(),
+                   VImage::option()
+                       ->set("rgba", true)
+                       ->set("align", VIPS_ALIGN_CENTRE)
+                       ->set("font", font.c_str())
+                       ->set("fontfile", fontfile)
+                       ->set("width", width));
 
   in = in.embed(radius, radius * 2, in.width() + 2 * radius,
                 (in.height() + 2 * radius) + (radius * 2));
@@ -45,27 +45,27 @@ ArgumentMap Meme(string type, string *outType, char *BufferData,
   int size = width / 9;
   double radius = (double)size / 18;
 
-  string font_string =
-      (font == "roboto" ? "Roboto Condensed" : font) + ", Twemoji Color Font " +
-      (font != "impact" ? "bold" : "normal") + " " + to_string(size);
+  string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
+                       (font != "impact" ? "bold" : "normal") + " " +
+                       to_string(size);
 
   VImage mask = VImage::gaussmat(radius / 2, 0.1,
                                  VImage::option()->set("separable", true)) *
                 8;
 
   auto findResult = fontPaths.find(font);
-  if (findResult != fontPaths.end()) {
-    VImage::text(".", VImage::option()->set(
-                          "fontfile", (basePath + findResult->second).c_str()));
-  }
+  string fontResult =
+      findResult != fontPaths.end() ? basePath + findResult->second : "";
 
+  loadFonts(basePath);
   VImage combinedText =
       VImage::black(width, pageHeight, VImage::option()->set("bands", 3))
           .bandjoin(0)
           .copy(VImage::option()->set("interpretation",
                                       VIPS_INTERPRETATION_sRGB));
   if (top != "") {
-    VImage topText = genText(top, font_string, basePath, width, mask, radius);
+    VImage topText =
+        genText(top, font_string, fontResult.c_str(), width, mask, radius);
     combinedText = combinedText.composite(
         topText, VIPS_BLEND_MODE_OVER,
         VImage::option()
@@ -75,7 +75,7 @@ ArgumentMap Meme(string type, string *outType, char *BufferData,
 
   if (bottom != "") {
     VImage bottomText =
-        genText(bottom, font_string, basePath, width, mask, radius);
+        genText(bottom, font_string, fontResult.c_str(), width, mask, radius);
     combinedText = combinedText.composite(
         bottomText, VIPS_BLEND_MODE_OVER,
         VImage::option()
