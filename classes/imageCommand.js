@@ -37,7 +37,7 @@ class ImageCommand extends Command {
       try {
         const selection = selectedImages.get(this.author.id);
         const image = selection ?? await imageDetect(this.client, this.message, this.interaction, this.options, true).catch(e => {
-          if (e === "Timed out") {
+          if (e.name === "AbortError") {
             return { type: "timeout" };
           } else {
             throw e;

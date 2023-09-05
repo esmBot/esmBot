@@ -37,76 +37,68 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 // gets the proper image paths
 const getImage = async (image, image2, video, extraReturnTypes, gifv = false, type = null, link = false) => {
-  try {
-    const fileNameSplit = new URL(image).pathname.split("/");
-    const fileName = fileNameSplit[fileNameSplit.length - 1];
-    const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
-    const payload = {
-      url: image2,
-      path: image,
-      name: fileNameNoExtension
-    };
-    const host = new URL(image2).host;
-    if (gifv || (link && combined.includes(host))) {
-      if (tenorURLs.includes(host)) {
-        // Tenor doesn't let us access a raw GIF without going through their API,
-        // so we use that if there's a key in the config
-        if (process.env.TENOR !== "") {
-          let id;
-          if (image2.includes("tenor.com/view/")) {
-            id = image2.split("-").pop();
-          } else if (image2.endsWith(".gif")) {
-            const redirect = (await request(image2, { method: "HEAD" })).headers.location;
-            id = redirect.split("-").pop();
-          }
-          const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
-          if (data.statusCode === 429) {
-            if (extraReturnTypes) {
-              payload.type = "tenorlimit";
-              return payload;
-            } else {
-              return;
-            }
-          }
-          const json = await data.body.json();
-          if (json.error) throw Error(json.error.message);
-          payload.path = json.results[0].media_formats.gif.url;
+  const fileNameSplit = new URL(image).pathname.split("/");
+  const fileName = fileNameSplit[fileNameSplit.length - 1];
+  const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
+  const payload = {
+    url: image2,
+    path: image,
+    name: fileNameNoExtension
+  };
+  const host = new URL(image2).host;
+  if (gifv || (link && combined.includes(host))) {
+    if (tenorURLs.includes(host)) {
+      // Tenor doesn't let us access a raw GIF without going through their API,
+      // so we use that if there's a key in the config
+      if (process.env.TENOR !== "") {
+        let id;
+        if (image2.includes("tenor.com/view/")) {
+          id = image2.split("-").pop();
+        } else if (image2.endsWith(".gif")) {
+          const redirect = (await request(image2, { method: "HEAD" })).headers.location;
+          id = redirect.split("-").pop();
         }
-      } else if (giphyURLs.includes(host)) {
-        // Can result in an HTML page instead of a GIF
-        payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.gif`;
-      } else if (giphyMediaURLs.includes(host)) {
-        payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
-      } else if (imgurURLs.includes(host)) {
-        // Seems that Imgur has a possibility of making GIFs static
-        payload.path = image.replace(".mp4", ".gif");
-      } else if (gfycatURLs.includes(host)) {
-        // iirc Gfycat also seems to sometimes make GIFs static
-        if (link) {
-          const data = await request(`https://api.gfycat.com/v1/gfycats/${image.split("/").pop().split(".mp4")[0]}`);
-          const json = await data.body.json();
-          if (json.errorMessage) throw Error(json.errorMessage);
-          payload.path = json.gfyItem.gifUrl;
-        } else {
-          payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
+        const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
+        if (data.statusCode === 429) {
+          if (extraReturnTypes) {
+            payload.type = "tenorlimit";
+            return payload;
+          } else {
+            return;
+          }
         }
+        const json = await data.body.json();
+        if (json.error) throw Error(json.error.message);
+        payload.path = json.results[0].media_formats.gif.url;
       }
-      payload.type = "image/gif";
-    } else if (video) {
-      payload.type = type ?? await getType(payload.path, extraReturnTypes);
-      if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
-    } else {
-      payload.type = type ?? await getType(payload.path, extraReturnTypes);
-      if (!payload.type || !imageFormats.includes(payload.type)) return;
+    } else if (giphyURLs.includes(host)) {
+      // Can result in an HTML page instead of a GIF
+      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.gif`;
+    } else if (giphyMediaURLs.includes(host)) {
+      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
+    } else if (imgurURLs.includes(host)) {
+      // Seems that Imgur has a possibility of making GIFs static
+      payload.path = image.replace(".mp4", ".gif");
+    } else if (gfycatURLs.includes(host)) {
+      // iirc Gfycat also seems to sometimes make GIFs static
+      if (link) {
+        const data = await request(`https://api.gfycat.com/v1/gfycats/${image.split("/").pop().split(".mp4")[0]}`);
+        const json = await data.body.json();
+        if (json.errorMessage) throw Error(json.errorMessage);
+        payload.path = json.gfyItem.gifUrl;
+      } else {
+        payload.path = `https://thumbs.gfycat.com/${image.split("/").pop().split(".mp4")[0]}-size_restricted.gif`;
+      }
     }
-    return payload;
-  } catch (error) {
-    if (error.name === "AbortError") {
-      throw Error("Timed out");
-    } else {
-      throw error;
-    }
+    payload.type = "image/gif";
+  } else if (video) {
+    payload.type = type ?? await getType(payload.path, extraReturnTypes);
+    if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
+  } else {
+    payload.type = type ?? await getType(payload.path, extraReturnTypes);
+    if (!payload.type || !imageFormats.includes(payload.type)) return;
   }
+  return payload;
 };
 
 const checkImages = async (message, extraReturnTypes, video, sticker) => {

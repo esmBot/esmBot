@@ -7,7 +7,7 @@ class SelectImageCommand extends Command {
     await this.acknowledge(64);
     const message = this.interaction.data.target;
     const image = await imageDetect(this.client, message, this.interaction, this.options, true, false, false, true).catch(e => {
-      if (e === "Timed out") {
+      if (e.name === "AbortError") {
         return { type: "timeout" };
       } else {
         throw e;
