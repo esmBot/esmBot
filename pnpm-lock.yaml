@@ -556,7 +556,7 @@ packages:
     dependencies:
       continuation-local-storage: 3.2.1
       log-driver: 1.2.7
-      semver: 5.7.1
+      semver: 5.7.2
       shimmer: 1.2.1
       uuid: 3.4.0
     dev: false
@@ -568,7 +568,7 @@ packages:
     dependencies:
       continuation-local-storage: 3.2.1
       log-driver: 1.2.7
-      semver: 5.7.1
+      semver: 5.7.2
       shimmer: 1.2.1
       uuid: 3.4.0
     dev: false
@@ -797,7 +797,7 @@ packages:
     resolution: {integrity: sha512-gpuo6xOyF4D5DE5WvyqZdPA3NGhiT6Qf07l7DCB0wwDEsLvDIbCr6j9S5aj5Ch96dLace5tXVzWBZkxU/c5ohw==}
     engines: {node: <=0.11.8 || >0.11.10}
     dependencies:
-      semver: 5.7.1
+      semver: 5.7.2
       shimmer: 1.2.1
     dev: false
     optional: true
@@ -2314,7 +2314,7 @@ packages:
     dependencies:
       hosted-git-info: 2.8.9
       resolve: 1.22.2
-      semver: 5.7.1
+      semver: 5.7.2
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -2917,8 +2917,8 @@ packages:
     dev: false
     optional: true
 
-  /semver@5.7.1:
-    resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
 
   /semver@6.3.0:
