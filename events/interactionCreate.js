@@ -27,7 +27,7 @@ export default async (client, interaction) => {
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
-  logger.log("log", `${invoker.username} (${invoker.id}) ran application command ${command}`);
+  logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
     if (database) {
       await database.addCount(command);
@@ -75,7 +75,7 @@ export default async (client, interaction) => {
     } else if (error.toString().includes("Job ended prematurely")) {
       await interaction[replyMethod]({ content: "Something happened to the image servers before I could receive the image. Try running your command again.", flags: 64 });
     } else {
-      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.optionsArray)}: ${error.stack || error}`);
+      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name == "Promise") err = await error;
