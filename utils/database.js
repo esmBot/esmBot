@@ -1,6 +1,5 @@
 // wrapper for the database drivers in ./database/
-import { config } from "dotenv";
-config();
+import "dotenv/config";
 
 let db = null;
 

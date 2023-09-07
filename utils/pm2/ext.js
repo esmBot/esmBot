@@ -2,12 +2,8 @@ import pm2 from "pm2";
 import winston from "winston";
 
 // load config from .env file
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-import { readFileSync } from "fs";
 import { createServer } from "http";
-import { config } from "dotenv";
-config({ path: resolve(dirname(fileURLToPath(import.meta.url)), "../../.env") });
+import "dotenv/config";
 
 // oceanic client used for getting shard counts
 import { Client } from "oceanic.js";

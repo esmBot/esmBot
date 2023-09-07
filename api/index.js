@@ -1,5 +1,4 @@
-import { config } from "dotenv";
-config();
+import "dotenv/config";
 import { cpus } from "os";
 import { Worker } from "worker_threads";
 import { join } from "path";

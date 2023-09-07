@@ -12,10 +12,7 @@ The bot will continue to run past this message in 5 seconds, but keep in mind th
 }
 
 // load config from .env file
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-import { config } from "dotenv";
-config({ path: resolve(dirname(fileURLToPath(import.meta.url)), ".env") });
+import "dotenv/config";
 
 import { reloadImageConnections } from "./utils/image.js";
 
@@ -27,6 +24,8 @@ import { promises, readFileSync } from "fs";
 import { logger } from "./utils/logger.js";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 const exec = promisify(baseExec);
 // initialize command loader
 import { load } from "./utils/handler.js";

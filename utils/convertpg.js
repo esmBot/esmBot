@@ -1,5 +1,4 @@
-import { config } from "dotenv";
-config();
+import "dotenv/config";
 import { Pool } from "pg";
 const pool = new Pool({
   connectionString: process.env.DB
