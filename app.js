@@ -18,7 +18,6 @@ import { reloadImageConnections } from "./utils/image.js";
 
 // main services
 import { Client } from "oceanic.js";
-import pm2 from "pm2";
 // some utils
 import { promises, readFileSync } from "fs";
 import { logger } from "./utils/logger.js";
@@ -171,6 +170,7 @@ esmBot ${esmBotVersion} (${process.env.GIT_REV})
 
   // PM2-specific handling
   if (process.env.PM2_USAGE) {
+    const { default: pm2 } = await import("pm2");
     // callback hell :)
     pm2.launchBus((err, pm2Bus) => {
       if (err) {

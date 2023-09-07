@@ -3,7 +3,7 @@ const { version } = JSON.parse(readFileSync(new URL("../../package.json", import
 import os from "os";
 import Command from "../../classes/command.js";
 import { VERSION } from "oceanic.js";
-import pm2 from "pm2";
+const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { getServers } from "../../utils/misc.js";
 
 class StatsCommand extends Command {

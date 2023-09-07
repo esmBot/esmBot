@@ -1,6 +1,6 @@
 import util from "util";
 import fs from "fs";
-import pm2 from "pm2";
+const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { config } from "dotenv";
 import db from "./database.js";
 
