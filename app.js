@@ -1,7 +1,7 @@
 if (process.versions.node.split(".")[0] < 16) {
   console.error(`You are currently running Node.js version ${process.version}.
 esmBot requires Node.js version 16 or above.
-Please refer to step 3 of the setup guide.`);
+Please refer to step 3 of the setup guide: https://docs.esmbot.net/setup/#3-install-nodejs`);
   process.exit(1);
 }
 if (process.platform === "win32") {
