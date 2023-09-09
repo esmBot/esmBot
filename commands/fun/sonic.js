@@ -1,4 +1,3 @@
-//import wrap from "../../utils/wrap.js";
 import ImageCommand from "../../classes/imageCommand.js";
 import { cleanMessage } from "../../utils/misc.js";
 
