@@ -21,7 +21,7 @@ class QueueCommand extends MusicCommand {
     }
     const pageSize = 5;
     const embeds = [];
-    const groups = trackList.map((item, index) => {
+    const groups = trackList.map((_item, index) => {
       return index % pageSize === 0 ? trackList.slice(index, index + pageSize) : null;
     }).filter(Boolean);
     if (groups.length === 0) groups.push("del");

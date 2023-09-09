@@ -1,5 +1,5 @@
 import { warn } from "../utils/logger.js";
 
-export default async (client, message) => {
+export default async (_client, message) => {
   warn(message);
 };

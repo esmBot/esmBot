@@ -152,9 +152,10 @@ function calcShards(shards, procs) {
   let i = 0;
   let size;
   let remainder;
+  let processes = procs;
 
-  if (length % procs === 0) {
-    size = Math.floor(length / procs);
+  if (length % processes === 0) {
+    size = Math.floor(length / processes);
     remainder = size % 16;
     if (size > 16 && remainder) {
       size -= remainder;
@@ -165,12 +166,15 @@ function calcShards(shards, procs) {
         added = 1;
         remainder--;
       }
-      r.push(shards.slice(i, (i += size + (size * added))));
+      const end = i + size + (size * added);
+      r.push(shards.slice(i, end));
+      i = end;
     }
   } else {
     while (i < length) {
-      size = Math.ceil((length - i) / procs--);
-      r.push(shards.slice(i, (i += size)));
+      size = Math.ceil((length - i) / processes--);
+      r.push(shards.slice(i, i + size));
+      i += size;
     }
   }
 

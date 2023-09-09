@@ -46,7 +46,7 @@ export async function reload(client) {
   return manager.nodes.size;
 }
 
-export async function play(client, sound, options, music = false) {
+export async function play(client, soundUrl, options, music = false) {
   if (!connected) return { content: "I'm not connected to any audio servers!", flags: 64 };
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
   if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
@@ -57,6 +57,7 @@ export async function play(client, sound, options, music = false) {
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   if (!music && manager.players.has(options.guild.id)) return { content: "I can't play a sound effect while other audio is playing!", flags: 64 };
   const node = manager.getNode();
+  let sound = soundUrl;
   if (!music && !nodes.filter(obj => obj.name === node.name)[0].local) {
     sound = sound.replace(/\.\//, "https://raw.githubusercontent.com/esmBot/esmBot/master/");
   }

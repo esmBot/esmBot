@@ -42,7 +42,8 @@ export async function upload(client, result, context, interaction = false) {
   }
 }
 
-async function removeOldImages(size) {
+async function removeOldImages(s) {
+  let size = s;
   if (size > process.env.THRESHOLD) {
     const files = (await readdir(process.env.TEMPDIR)).map((file) => {
       return lstat(`${process.env.TEMPDIR}/${file}`).then((stats) => {

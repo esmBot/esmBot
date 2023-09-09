@@ -4,11 +4,11 @@ import { setTimeout } from "timers/promises";
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
-const Rqueue = 0x03;
+//const Rqueue = 0x03;
 const Tcancel = 0x04;
-const Rcancel = 0x05;
+//const Rcancel = 0x05;
 const Twait = 0x06;
-const Rwait = 0x07;
+//const Rwait = 0x07;
 const Rinit = 0x08;
 
 class ImageConnection {

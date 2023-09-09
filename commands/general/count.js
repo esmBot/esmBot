@@ -21,7 +21,7 @@ class CountCommand extends Command {
       countArray2.push(`**${key}**: ${value}`);
     }
     const embeds = [];
-    const groups = countArray2.map((item, index) => {
+    const groups = countArray2.map((_item, index) => {
       return index % 15 === 0 ? countArray2.slice(index, index + 15) : null;
     }).filter((item) => {
       return item;

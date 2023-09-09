@@ -21,7 +21,8 @@ const optionalReplace = (token) => {
 };
 
 // clean(text) to clean message of any private info or mentions
-export function clean(text) {
+export function clean(input) {
+  let text = input;
   if (typeof text !== "string")
     text = util.inspect(text, { depth: 1 });
 
@@ -92,7 +93,7 @@ export function endBroadcast(bot) {
 export function getServers(bot) {
   return new Promise((resolve, reject) => {
     if (process.env.PM2_USAGE) {
-      pm2.launchBus((err, pm2Bus) => {
+      pm2.launchBus((_err, pm2Bus) => {
         const listener = (packet) => {
           if (packet.data?.type === "countResponse") {
             resolve(packet.data.serverCount);
