@@ -7,11 +7,9 @@ using namespace vips;
 
 ArgumentMap Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
             [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(BufferData, BufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              type == "gif" ? VImage::option()->set("n", -1) : 0)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
