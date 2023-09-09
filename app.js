@@ -64,9 +64,8 @@ async function* getFiles(dir) {
   }
 }
 
-async function init() {
-  await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o);
-  console.log(`
+await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o);
+console.log(`
      ,*\`$                    z\`"v       
     F zBw\`%                 A ,W "W     
   ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T    
@@ -90,140 +89,144 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
 esmBot ${esmBotVersion} (${process.env.GIT_REV})
 `);
 
-  if (!types.classic && !types.application) {
-    logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
-    return process.exit(1);
+if (!types.classic && !types.application) {
+  logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
+  process.exit(1);
+}
+
+if (database) {
+  // database handling
+  const dbResult = await database.upgrade(logger);
+  if (dbResult === 1) process.exit(1);
+}
+
+// process the threshold into bytes early
+if (process.env.TEMPDIR && process.env.THRESHOLD) {
+  await parseThreshold();
+}
+
+// register commands and their info
+logger.log("info", "Attempting to load commands...");
+for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
+  logger.log("main", `Loading command from ${commandFile}...`);
+  try {
+    await load(null, commandFile);
+  } catch (e) {
+    logger.error(`Failed to register command from ${commandFile}: ${e}`);
   }
+}
+logger.log("info", "Finished loading commands.");
 
-  if (database) {
-    // database handling
-    const dbResult = await database.upgrade(logger);
-    if (dbResult === 1) return process.exit(1);
-  }
+if (database) {
+  await database.setup();
+}
+if (process.env.API_TYPE === "ws") await reloadImageConnections();
 
-  // process the threshold into bytes early
-  if (process.env.TEMPDIR && process.env.THRESHOLD) {
-    await parseThreshold();
-  }
+const shardArray = process.env.SHARDS ? JSON.parse(process.env.SHARDS)[process.env.pm_id - 1] : null;
 
-  // register commands and their info
-  logger.log("info", "Attempting to load commands...");
-  for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
-    logger.log("main", `Loading command from ${commandFile}...`);
-    try {
-      await load(null, commandFile);
-    } catch (e) {
-      logger.error(`Failed to register command from ${commandFile}: ${e}`);
-    }
-  }
-  logger.log("info", "Finished loading commands.");
-
-  if (database) {
-    await database.setup();
-  }
-  if (process.env.API_TYPE === "ws") await reloadImageConnections();
-
-  const shardArray = process.env.SHARDS ? JSON.parse(process.env.SHARDS)[process.env.pm_id - 1] : null;
-
-  // create the oceanic client
-  const client = new Client({
-    auth: `Bot ${process.env.TOKEN}`,
-    allowedMentions: {
-      everyone: false,
-      roles: false,
-      users: true,
-      repliedUser: true
+// create the oceanic client
+const client = new Client({
+  auth: `Bot ${process.env.TOKEN}`,
+  allowedMentions: {
+    everyone: false,
+    roles: false,
+    users: true,
+    repliedUser: true
+  },
+  gateway: {
+    concurrency: "auto",
+    maxShards: "auto",
+    shardIDs: shardArray,
+    presence: {
+      status: "idle",
+      activities: [{
+        type: 0,
+        name: "Starting esmBot..."
+      }]
     },
-    gateway: {
-      concurrency: "auto",
-      maxShards: "auto",
-      shardIDs: shardArray,
-      presence: {
-        status: "idle",
-        activities: [{
-          type: 0,
-          name: "Starting esmBot..."
-        }]
-      },
-      intents
-    },
-    collectionLimits: {
-      messages: 50,
-      channels: !types.classic ? 0 : Infinity
-    }
-  });
-
-  // register events
-  logger.log("info", "Attempting to load events...");
-  for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
-    logger.log("main", `Loading event from ${file}...`);
-    const eventArray = file.split("/");
-    const eventName = eventArray[eventArray.length - 1].split(".")[0];
-    if (eventName === "interactionCreate" && !types.application) {
-      logger.log("warn", `Skipped loading event from ${file} because application commands are disabled`);
-      continue;
-    }
-    const { default: event } = await import(file);
-    client.on(eventName, event.bind(null, client));
+    intents
+  },
+  collectionLimits: {
+    messages: 50,
+    channels: !types.classic ? 0 : Infinity
   }
-  logger.log("info", "Finished loading events.");
+});
 
-  // PM2-specific handling
-  if (process.env.PM2_USAGE) {
-    const { default: pm2 } = await import("pm2");
-    // callback hell :)
-    pm2.launchBus((err, pm2Bus) => {
+// register events
+logger.log("info", "Attempting to load events...");
+for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
+  logger.log("main", `Loading event from ${file}...`);
+  const eventArray = file.split("/");
+  const eventName = eventArray[eventArray.length - 1].split(".")[0];
+  if (eventName === "interactionCreate" && !types.application) {
+    logger.log("warn", `Skipped loading event from ${file} because application commands are disabled`);
+    continue;
+  }
+  const { default: event } = await import(file);
+  client.on(eventName, event.bind(null, client));
+}
+logger.log("info", "Finished loading events.");
+
+// PM2-specific handling
+if (process.env.PM2_USAGE) {
+  const { default: pm2 } = await import("pm2");
+  // callback hell :)
+  pm2.launchBus((err, pm2Bus) => {
+    if (err) {
+      logger.error(err);
+      return;
+    }
+    pm2.list((err, list) => {
       if (err) {
         logger.error(err);
         return;
       }
-      pm2.list((err, list) => {
-        if (err) {
-          logger.error(err);
-          return;
+      const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+      pm2Bus.on("process:msg", async (packet) => {
+        switch (packet.data?.type) {
+          case "reload":
+            await load(client, paths.get(packet.data.message), true);
+            break;
+          case "soundreload":
+            await reload(client);
+            break;
+          case "imagereload":
+            await reloadImageConnections();
+            break;
+          case "broadcastStart":
+            startBroadcast(client, packet.data.message);
+            break;
+          case "broadcastEnd":
+            endBroadcast(client);
+            break;
+          case "serverCounts":
+            pm2.sendDataToProcessId(managerProc.pm_id, {
+              id: managerProc.pm_id,
+              type: "process:msg",
+              data: {
+                type: "serverCounts",
+                guilds: client.guilds.size,
+                shards: client.shards.size
+              },
+              topic: true
+            }, (err) => {
+              if (err) logger.error(err);
+            });
+            break;
         }
-        const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
-        pm2Bus.on("process:msg", async (packet) => {
-          switch (packet.data?.type) {
-            case "reload":
-              await load(client, paths.get(packet.data.message), true);
-              break;
-            case "soundreload":
-              await reload(client);
-              break;
-            case "imagereload":
-              await reloadImageConnections();
-              break;
-            case "broadcastStart":
-              startBroadcast(client, packet.data.message);
-              break;
-            case "broadcastEnd":
-              endBroadcast(client);
-              break;
-            case "serverCounts":
-              pm2.sendDataToProcessId(managerProc.pm_id, {
-                id: managerProc.pm_id,
-                type: "process:msg",
-                data: {
-                  type: "serverCounts",
-                  guilds: client.guilds.size,
-                  shards: client.shards.size
-                },
-                topic: true
-              }, (err) => {
-                if (err) logger.error(err);
-              });
-              break;
-          }
-        });
       });
     });
-  }
-
-  // connect to lavalink
-  if (!connected) connect(client);
-
-  client.connect();
+  });
 }
 
-init();
+// connect to lavalink
+if (!connected) connect(client);
+
+try {
+  await client.connect();
+} catch (e) {
+  logger.error("esmBot failed to connect to Discord!");
+  logger.error(e);
+  logger.error("The bot is unable to start, stopping now...");
+  process.exit(1);
+}
