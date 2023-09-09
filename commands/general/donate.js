@@ -17,7 +17,7 @@ class DonateCommand extends Command {
       }
       prefix += "\n";
     } catch (e) {
-      // no-op
+      logger.error(`Unable to get patron data: ${e}`);
     }
     return `${prefix}Like esmBot? Consider supporting the developer on Patreon to help keep it running! https://patreon.com/TheEssem`;
   }
