@@ -64,7 +64,7 @@ async function* getFiles(dir) {
   }
 }
 
-await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit").then(o => process.env.GIT_REV = o);
+process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit");
 console.log(`
      ,*\`$                    z\`"v       
     F zBw\`%                 A ,W "W     

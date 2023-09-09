@@ -12,7 +12,7 @@ class EvalCommand extends Command {
     const code = this.options.code ?? this.args.join(" ");
     try {
       let evaled = eval(code);
-      if (evaled?.constructor?.name == "Promise") evaled = await evaled;
+      if (evaled?.constructor?.name === "Promise") evaled = await evaled;
       const cleaned = clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
@@ -28,7 +28,7 @@ class EvalCommand extends Command {
       }
     } catch (err) {
       let error = err;
-      if (err?.constructor?.name == "Promise") error = await err;
+      if (err?.constructor?.name === "Promise") error = await err;
       return `\`ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``;
     }
   }

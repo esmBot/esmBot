@@ -6,13 +6,13 @@ class ImageStatsCommand extends Command {
     await this.acknowledge();
     const embed = {
       embeds: [{
-        "author": {
-          "name": "esmBot Image Statistics",
-          "iconURL": this.client.user.avatarURL()
+        author: {
+          name: "esmBot Image Statistics",
+          iconURL: this.client.user.avatarURL()
         },
-        "color": 16711680,
-        "description": `The bot is currently connected to ${connections.size} image server(s).`,
-        "fields": []
+        color: 16711680,
+        description: `The bot is currently connected to ${connections.size} image server(s).`,
+        fields: []
       }]
     };
     let i = 0;

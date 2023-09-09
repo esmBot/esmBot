@@ -65,7 +65,7 @@ export async function upgrade(logger) {
   try {
     let version = connection.pragma("user_version", { simple: true });
     const latestVersion = updates.length - 1;
-    if (version == 0) {
+    if (version === 0) {
       logger.info("Initializing SQLite database...");
       connection.exec(schema);
     } else if (version < latestVersion) {

@@ -14,10 +14,7 @@ const Rinit = 0x08;
 class ImageConnection {
   constructor(host, auth, tls = false) {
     this.requests = new Map();
-    if (!host.includes(":")) {
-      host += ":3762";
-    }
-    this.host = host;
+    this.host = host.includes(":") ? host : `${host}:3762`;
     this.auth = auth;
     this.tag = 0;
     this.disconnected = false;
@@ -29,7 +26,7 @@ class ImageConnection {
     } else {
       this.wsproto = "ws";
     }
-    this.sockurl = `${this.wsproto}://${host}/sock`;
+    this.sockurl = `${this.wsproto}://${this.host}/sock`;
     const headers = {};
     if (auth) {
       headers.Authentication = auth;
@@ -41,7 +38,7 @@ class ImageConnection {
     } else {
       httpproto = "http";
     }
-    this.httpurl = `${httpproto}://${host}`;
+    this.httpurl = `${httpproto}://${this.host}`;
     this.conn.on("message", (msg) => this.onMessage(msg));
     this.conn.once("error", (err) => this.onError(err));
     this.conn.once("close", () => this.onClose());
@@ -82,7 +79,7 @@ class ImageConnection {
       await setTimeout(5000);
       this.conn = new WebSocket(this.sockurl, {
         headers: {
-          "Authentication": this.auth
+          Authentication: this.auth
         }
       });
       this.conn.on("message", (msg) => this.onMessage(msg));

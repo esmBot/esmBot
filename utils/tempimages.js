@@ -81,7 +81,7 @@ export async function parseThreshold() {
     G: 1073741824,
     T: 1099511627776
   };
-  if (matched && matched[1] && matched[2]) {
+  if (matched?.[1] && matched[2]) {
     process.env.THRESHOLD = matched[1] * sizes[matched[2]];
   } else {
     logger.error("Invalid THRESHOLD config.");

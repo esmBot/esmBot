@@ -86,15 +86,15 @@ export default async (client, info, pages, timeout = 120000) => {
             currentPage = await currentPage.edit(Object.assign(pages[page], options));
             interactionCollector.extend();
             break;
-          case "jump":
+          case "jump": {
             await interaction.deferUpdate();
-            var newComponents = JSON.parse(JSON.stringify(components));
+            const newComponents = JSON.parse(JSON.stringify(components));
             for (const index of newComponents.components[0].components.keys()) {
               newComponents.components[0].components[index].disabled = true;
             }
             currentPage = await currentPage.edit(newComponents);
             interactionCollector.extend();
-            var jumpComponents = {
+            const jumpComponents = {
               components: [{
                 type: 1,
                 components: [{
@@ -112,7 +112,7 @@ export default async (client, info, pages, timeout = 120000) => {
               };
               jumpComponents.components[0].components[0].options[i] = payload;
             }
-            var promise;
+            let promise;
             if (info.type === "classic") {
               promise = client.rest.channels.createMessage(info.message.channelID, Object.assign({ content: "What page do you want to jump to?" }, {
                 messageReference: {
@@ -156,6 +156,7 @@ export default async (client, info, pages, timeout = 120000) => {
               throw error;
             });
             break;
+          }
           case "delete":
             await interaction.deferUpdate();
             interactionCollector.emit("end", true);

@@ -11,16 +11,16 @@ const relPath = `../build/${process.env.DEBUG && process.env.DEBUG === "true" ? 
 const img = nodeRequire(relPath);
 
 const enumMap = {
-  "forget": 0,
-  "northwest": 1,
-  "north": 2,
-  "northeast": 3,
-  "west": 4,
-  "center": 5,
-  "east": 6,
-  "southwest": 7,
-  "south": 8,
-  "southeast": 9
+  forget: 0,
+  northwest: 1,
+  north: 2,
+  northeast: 3,
+  west: 4,
+  center: 5,
+  east: 6,
+  southwest: 7,
+  south: 8,
+  southeast: 9
 };
 
 export default function run(object) {

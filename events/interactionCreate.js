@@ -20,7 +20,7 @@ export default async (client, interaction) => {
     if (!cmd) return;
   }
   if (cmd.dbRequired && !database) {
-    await interaction["createMessage"]({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
+    await interaction.createMessage({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
     return;
   }
 
@@ -78,7 +78,7 @@ export default async (client, interaction) => {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
       try {
         let err = error;
-        if (error?.constructor?.name == "Promise") err = await error;
+        if (error?.constructor?.name === "Promise") err = await error;
         if (!interaction.acknowledged) await interaction.defer(); // Files can't be uploaded without deferring first
         await interaction[replyMethod]({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",

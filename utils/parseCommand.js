@@ -50,7 +50,7 @@ export default (input) => {
     }
   }
 
-  if (curr && args[curr] == "") {
+  if (curr && args[curr] === "") {
     args[curr] = true;
   }
 

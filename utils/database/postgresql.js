@@ -61,7 +61,7 @@ export async function upgrade(logger) {
       await sql.unsafe(settingsSchema);
       let version;
       const settingsrow = (await sql`SELECT version FROM settings WHERE id = 1`);
-      if (settingsrow.length == 0) {
+      if (settingsrow.length === 0) {
         version = 0;
       } else {
         version = settingsrow[0].version;
@@ -95,7 +95,7 @@ export async function getGuild(query) {
   let guild;
   await sql.begin(async (sql) => {
     guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
-    if (guild == undefined) {
+    if (guild === undefined) {
       guild = { guild_id: query, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] };
       await sql`INSERT INTO guilds ${sql(guild)}`;
     }

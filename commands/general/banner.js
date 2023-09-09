@@ -11,7 +11,7 @@ class BannerCommand extends Command {
       return this.client.util.formatImage(Routes.BANNER(this.message.mentions.users[0].id, this.message.mentions.users[0].banner), null, 512);
     } else if (member && member > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);
-      if (user && user.banner) {
+      if (user?.banner) {
         return this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, 512);
       } else if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)[1];

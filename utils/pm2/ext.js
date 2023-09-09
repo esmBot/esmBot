@@ -239,7 +239,7 @@ function awaitStart(i, shardArrays) {
       exec_mode: "cluster",
       instances: 1,
       env: {
-        "SHARDS": JSON.stringify(shardArrays)
+        SHARDS: JSON.stringify(shardArrays)
       }
     }, (err) => {
       if (err) {

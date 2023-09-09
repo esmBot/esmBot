@@ -53,8 +53,8 @@ class HelpCommand extends Command {
         }
         if (flagInfo.length !== 0) {
           embed.embeds[0].fields.push({
-            "name": "Flags",
-            "value": flagInfo.join("\n")
+            name: "Flags",
+            value: flagInfo.join("\n")
           });
         }
       }
