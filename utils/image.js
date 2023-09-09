@@ -1,4 +1,3 @@
-import { request } from "undici";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -32,31 +31,31 @@ export async function getType(image, extraReturnTypes) {
     controller.abort();
   }, 3000);
   try {
-    const imageRequest = await request(image, {
+    const imageRequest = await fetch(image, {
       signal: controller.signal,
       method: "HEAD"
     });
     clearTimeout(timeout);
-    const size = imageRequest.headers["content-range"] ? imageRequest.headers["content-range"].split("/")[1] : imageRequest.headers["content-length"];
+    const size = imageRequest.headers.has("content-range") ? imageRequest.headers.get("content-range").split("/")[1] : imageRequest.headers.get("content-length");
     if (parseInt(size) > 41943040 && extraReturnTypes) { // 40 MB
       type = "large";
       return type;
     }
-    const typeHeader = imageRequest.headers["content-type"];
+    const typeHeader = imageRequest.headers.get("content-type");
     if (typeHeader) {
       type = typeHeader;
     } else {
       const timeout = setTimeout(() => {
         controller.abort();
       }, 3000);
-      const bufRequest = await request(image, {
+      const bufRequest = await fetch(image, {
         signal: controller.signal,
         headers: {
           range: "bytes=0-1023"
         }
       });
       clearTimeout(timeout);
-      const imageBuffer = await bufRequest.body.arrayBuffer();
+      const imageBuffer = await bufRequest.arrayBuffer();
       const imageType = await fileTypeFromBuffer(imageBuffer);
       if (imageType && formats.includes(imageType.mime)) {
         type = imageType.mime;

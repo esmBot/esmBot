@@ -1,4 +1,3 @@
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class DogCommand extends Command {
@@ -9,9 +8,9 @@ class DogCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const imageData = await request("https://dog.ceo/api/breeds/image/random", { signal: controller.signal });
+      const imageData = await fetch("https://dog.ceo/api/breeds/image/random", { signal: controller.signal });
       clearTimeout(timeout);
-      const json = await imageData.body.json();
+      const json = await imageData.json();
       return json.message;
     } catch (e) {
       if (e.name === "AbortError") {

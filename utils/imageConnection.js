@@ -1,4 +1,3 @@
-import { request } from "undici";
 import WebSocket from "ws";
 import * as logger from "./logger.js";
 import { setTimeout } from "timers/promises";
@@ -118,12 +117,12 @@ class ImageConnection {
   }
 
   async getOutput(jobid) {
-    const req = await request(`${this.httpurl}/image?id=${jobid}`, {
+    const req = await fetch(`${this.httpurl}/image?id=${jobid}`, {
       headers: {
         authentication: this.auth || undefined
       }
     });
-    const contentType = req.headers["content-type"];
+    const contentType = req.headers.get("content-type");
     let type;
     switch (contentType) {
       case "image/gif":
@@ -142,17 +141,17 @@ class ImageConnection {
         type = contentType;
         break;
     }
-    return { buffer: Buffer.from(await req.body.arrayBuffer()), type };
+    return { buffer: Buffer.from(await req.arrayBuffer()), type };
   }
 
   async getCount() {
-    const req = await request(`${this.httpurl}/count`, {
+    const req = await fetch(`${this.httpurl}/count`, {
       headers: {
         authentication: this.auth || undefined
       }
     });
     if (req.statusCode !== 200) return;
-    const res = parseInt(await req.body.text());
+    const res = parseInt(await req.text());
     return res;
   }
 

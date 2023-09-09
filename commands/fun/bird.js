@@ -1,4 +1,3 @@
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class BirdCommand extends Command {
@@ -9,9 +8,9 @@ class BirdCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const imageData = await request("http://shibe.online/api/birds", { signal: controller.signal });
+      const imageData = await fetch("http://shibe.online/api/birds", { signal: controller.signal });
       clearTimeout(timeout);
-      const json = await imageData.body.json();
+      const json = await imageData.json();
       return json[0];
     } catch (e) {
       if (e.name === "AbortError") {

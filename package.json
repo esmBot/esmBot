@@ -40,7 +40,6 @@
     "qrcode": "^1.5.3",
     "sharp": "^0.32.5",
     "shoukaku": "^3.4.0",
-    "undici": "^5.23.0",
     "winston": "^3.10.0",
     "winston-daily-rotate-file": "^4.7.1"
   },

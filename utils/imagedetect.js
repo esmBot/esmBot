@@ -1,4 +1,3 @@
-import { request } from "undici";
 import { getType } from "./image.js";
 
 const tenorURLs = [
@@ -49,11 +48,11 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
         if (image2.includes("tenor.com/view/")) {
           id = image2.split("-").pop();
         } else if (image2.endsWith(".gif")) {
-          const redirect = (await request(image2, { method: "HEAD" })).headers.location;
+          const redirect = (await fetch(image2, { method: "HEAD", redirect: "manual" })).headers.get("location");
           id = redirect.split("-").pop();
         }
-        const data = await request(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
-        if (data.statusCode === 429) {
+        const data = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
+        if (data.status === 429) {
           if (extraReturnTypes) {
             payload.type = "tenorlimit";
             return payload;
@@ -61,7 +60,7 @@ const getImage = async (image, image2, video, extraReturnTypes, gifv = false, ty
             return;
           }
         }
-        const json = await data.body.json();
+        const json = await data.json();
         if (json.error) throw Error(json.error.message);
         payload.path = json.results[0].media_formats.gif.url;
       }

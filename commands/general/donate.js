@@ -1,4 +1,3 @@
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class DonateCommand extends Command {
@@ -10,7 +9,7 @@ class DonateCommand extends Command {
       controller.abort();
     }, 5000);
     try {
-      const patrons = await request("https://projectlounge.pw/patrons", { signal: controller.signal }).then(data => data.body.json());
+      const patrons = await fetch("https://projectlounge.pw/patrons", { signal: controller.signal }).then(data => data.json());
       clearTimeout(timeout);
       prefix = "Thanks to the following patrons for their support:\n";
       for (const patron of patrons) {

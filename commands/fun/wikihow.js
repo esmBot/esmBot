@@ -1,4 +1,3 @@
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class WikihowCommand extends Command {
@@ -9,9 +8,9 @@ class WikihowCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const req = await request("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6", { signal: controller.signal });
+      const req = await fetch("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6", { signal: controller.signal });
       clearTimeout(timeout);
-      const json = await req.body.json();
+      const json = await req.json();
       const id = Object.keys(json.query.pages)[0];
       const data = json.query.pages[id];
       if (data.imageinfo) {

@@ -1,5 +1,4 @@
 import urlCheck from "../../utils/urlcheck.js";
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class LengthenCommand extends Command {
@@ -9,9 +8,9 @@ class LengthenCommand extends Command {
     this.success = false;
     if (!input || !input.trim() || !urlCheck(input)) return "You need to provide a short URL to lengthen!";
     if (urlCheck(input)) {
-      const url = await request(encodeURI(input), { method: "HEAD" });
+      const url = await fetch(encodeURI(input), { method: "HEAD", redirect: "manual" });
       this.success = true;
-      return url.headers.location || input;
+      return url.headers.get("location") || input;
     } else {
       return "That isn't a URL!";
     }

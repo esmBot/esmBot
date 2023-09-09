@@ -1,5 +1,4 @@
 import jsqr from "jsqr";
-import { request } from "undici";
 import sharp from "sharp";
 import { clean } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
@@ -11,7 +10,7 @@ class QrReadCommand extends Command {
     this.success = false;
     if (image === undefined) return "You need to provide an image/GIF with a QR code to read!";
     await this.acknowledge();
-    const data = Buffer.from(await (await request(image.path)).body.arrayBuffer());
+    const data = Buffer.from(await (await fetch(image.path)).arrayBuffer());
     const rawData = await sharp(data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
     if (!qrBuffer) return "I couldn't find a QR code!";

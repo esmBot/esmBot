@@ -38,9 +38,6 @@ dependencies:
   shoukaku:
     specifier: ^3.4.0
     version: 3.4.0
-  undici:
-    specifier: ^5.23.0
-    version: 5.23.0
   winston:
     specifier: ^3.10.0
     version: 3.10.0

@@ -1,4 +1,3 @@
-import { request } from "undici";
 import Command from "../../classes/command.js";
 
 class AncientCommand extends Command {
@@ -9,9 +8,9 @@ class AncientCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await request("https://files.projectlounge.pw/meme/", { method: "HEAD", signal: controller.signal });
+      const data = await fetch("https://files.projectlounge.pw/meme/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
       clearTimeout(timeout);
-      return `https://files.projectlounge.pw${data.headers.location}`;
+      return `https://files.projectlounge.pw${data.headers.get("location")}`;
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;
