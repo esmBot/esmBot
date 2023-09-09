@@ -6,7 +6,7 @@
   "bin": "./app.js",
   "type": "module",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "build": "cmake-js compile --CDWITH_MAGICK=ON",
