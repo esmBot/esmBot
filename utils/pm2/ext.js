@@ -109,16 +109,6 @@ async function updateStats() {
 }
 
 if (process.env.METRICS && process.env.METRICS !== "") {
-  const servers = [];
-  if (process.env.API_TYPE === "ws") {
-    const imageHosts = JSON.parse(readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image;
-    for (let { server } of imageHosts) {
-      if (!server.includes(":")) {
-        server += ":3762";
-      }
-      servers.push(server);
-    }
-  }
   const httpServer = createServer(async (req, res) => {
     if (req.method !== "GET") {
       res.statusCode = 405;
