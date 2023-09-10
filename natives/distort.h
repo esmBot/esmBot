@@ -4,5 +4,5 @@
 
 using std::string;
 
-ArgumentMap Explode(string type, string* outType, char* BufferData, size_t BufferLength,
+ArgumentMap Distort(string type, string* outType, char* BufferData, size_t BufferLength,
               ArgumentMap Arguments, size_t* DataSize);

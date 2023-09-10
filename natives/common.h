@@ -24,7 +24,7 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "colors.h"
 #include "crop.h"
 #include "deepfry.h"
-#include "explode.h"
+#include "distort.h"
 #include "flag.h"
 #include "flip.h"
 #include "freeze.h"
@@ -125,7 +125,7 @@ const std::map<std::string,
                    {"colors", &Colors},
                    {"crop", &Crop},
                    {"deepfry", &Deepfry},
-                   {"explode", &Explode},
+                   {"distort", &Distort},
                    {"flag", &Flag},
                    {"flip", &Flip},
                    {"freeze", &Freeze},
