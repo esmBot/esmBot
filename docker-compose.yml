@@ -31,7 +31,7 @@ services:
 
   lavalink:
     container_name: lavalink
-    image: fredboat/lavalink:dev
+    image: ghcr.io/lavalink-devs/lavalink:3
     restart: unless-stopped
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
