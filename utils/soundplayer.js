@@ -92,7 +92,8 @@ export async function play(client, soundUrl, options, music = false) {
         break;
     }
   } else {
-    tracks.push(response.data);
+    info = response.data.info;
+    tracks.push(response.data.encoded);
   }
   queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   if (process.env.YT_DISABLED === "true" && info.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
@@ -123,7 +124,6 @@ export async function play(client, soundUrl, options, music = false) {
 
 export async function nextSong(client, options, connection, track, info, music, voiceChannel, host, loop = false, shuffle = false, lastTrack = null) {
   skipVotes.delete(voiceChannel.guildID);
-  const parts = Math.floor((0 / info.length) * 10);
   let playingMessage;
   if (music && lastTrack === track && players.has(voiceChannel.guildID)) {
     playingMessage = players.get(voiceChannel.guildID).playMessage;
@@ -153,7 +153,7 @@ export async function nextSong(client, options, connection, track, info, music, 
             value: connection.node?.name ?? "Unknown"
           },
           {
-            name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+            name: `🔘${"▬".repeat(10)}`,
             value: `0:00/${info.isStream ? "∞" : format(info.length)}`
           }]
         }]
