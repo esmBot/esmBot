@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
 import { createRequire } from "module";
 import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
-import * as logger from "./logger.js";
+import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
 
 // init image libraries

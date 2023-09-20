@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createRequire } from "module";
 import EventEmitter from "events";
+import logger from "../utils/logger.js";
 
 const nodeRequire = createRequire(import.meta.url);
 const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
@@ -24,10 +25,10 @@ const Rinit = 0x08;
 
 const start = process.hrtime();
 const log = (msg, jobNum) => {
-  console.log(`[${process.hrtime(start)[1] / 1000000}${jobNum ? `:${jobNum}` : ""}]\t ${msg}`);
+  logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
 };
 const error = (msg, jobNum) => {
-  console.error(`[${process.hrtime(start)[1] / 1000000}${jobNum ? `:${jobNum}` : ""}]\t ${msg}`);
+  logger.error(`${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
 };
 
 class JobCache extends Map {
@@ -86,7 +87,7 @@ const waitForVerify = (event) => {
 const wss = new WebSocketServer({ clientTracking: true, noServer: true });
 
 wss.on("connection", (ws, request) => {
-  log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
+  logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
   const num = Buffer.alloc(2);
   num.writeUInt16LE(MAX_JOBS);
   const cur = Buffer.alloc(2);
@@ -148,17 +149,17 @@ wss.on("connection", (ws, request) => {
       //const waitResponse = Buffer.concat([Buffer.from([Rwait]), tag]);
       //ws.send(waitResponse);
     } else {
-      log("Could not parse WS message");
+      logger.warn("Could not parse WS message");
     }
   });
 
   ws.on("close", () => {
-    log(`WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has disconnected`);
+    logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has disconnected`);
   });
 });
 
 wss.on("error", (err) => {
-  error("A WS error occurred: ", err);
+  logger.error("A WS error occurred: ", err);
 });
 
 const httpServer = createServer();
@@ -242,7 +243,7 @@ httpServer.on("error", (e) => {
 });
 const port = parseInt(process.env.PORT) || 3762;
 httpServer.listen(port, () => {
-  log("HTTP and WS listening on port 3762");
+  logger.info(`HTTP and WS listening on port ${port}`);
 });
 
 const runJob = (job, ws) => {

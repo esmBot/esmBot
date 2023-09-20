@@ -1,4 +1,4 @@
-import * as logger from "./logger.js";
+import logger from "./logger.js";
 import fs from "fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";

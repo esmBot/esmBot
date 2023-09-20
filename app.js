@@ -20,7 +20,7 @@ import { reloadImageConnections } from "./utils/image.js";
 import { Client } from "oceanic.js";
 // some utils
 import { promises, readFileSync } from "fs";
-import { logger } from "./utils/logger.js";
+import logger from "./utils/logger.js";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
 import { resolve, dirname } from "path";

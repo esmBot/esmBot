@@ -1,5 +1,5 @@
 import database from "../utils/database.js";
-import * as logger from "../utils/logger.js";
+import logger from "../utils/logger.js";
 import { commands, messageCommands } from "../utils/collections.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";

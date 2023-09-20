@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import * as logger from "./logger.js";
+import logger from "./logger.js";
 import { setTimeout } from "timers/promises";
 
 const Rerror = 0x01;

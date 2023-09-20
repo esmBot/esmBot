@@ -1,7 +1,7 @@
 import winston from "winston";
 import "winston-daily-rotate-file";
 
-export const logger = winston.createLogger({
+const logger = winston.createLogger({
   levels: {
     error: 0,
     warn: 1,
@@ -37,8 +37,18 @@ winston.addColors({
 
 export function log(type, content) { return content ? logger.log(type === "log" ? "main" : type, content) : logger.info(type); }
 
+export function info(...args) { return log("info", ...args); }
+
 export function error(...args) { return log("error", ...args); }
 
 export function warn(...args) { return log("warn", ...args); }
 
 export function debug(...args) { return log("debug", ...args); }
+
+export default {
+  log,
+  info,
+  error,
+  warn,
+  debug
+};

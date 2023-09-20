@@ -1,7 +1,7 @@
 import { players, queues, skipVotes } from "../utils/soundplayer.js";
 import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
-import { logger } from "../utils/logger.js";
+import logger from "../utils/logger.js";
 
 const isWaiting = new Map();
 
