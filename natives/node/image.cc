@@ -97,13 +97,18 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
   return result;
 }
 
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
+void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
   if (vips_init("")) vips_error_exit(NULL);
+  return;
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set(Napi::String::New(env, "image"),
-              Napi::Function::New(env, ProcessImage));  // new function handler
+              Napi::Function::New(env, ProcessImage));
+  exports.Set(Napi::String::New(env, "imageInit"), Napi::Function::New(env, ImgInit));
 
   Napi::Array arr = Napi::Array::New(env);
   size_t i = 0;

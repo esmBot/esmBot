@@ -89,4 +89,6 @@ if (!isMainThread) {
       // turn promise rejection into normal error
       throw err;
     });
+} else {
+  img.imageInit();
 }

@@ -7,10 +7,11 @@ import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
 import * as logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
 
-// only requiring this to work around an issue regarding worker threads
+// init image libraries
 const nodeRequire = createRequire(import.meta.url);
 if (!process.env.API_TYPE || process.env.API_TYPE === "none") {
-  nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+  const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+  img.imageInit();
 }
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
