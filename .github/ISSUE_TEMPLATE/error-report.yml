@@ -42,7 +42,7 @@ body:
     id: error
     attributes:
       label: Error file
-      description: Post the contents of the error file in between the backticks.
+      description: Post the contents of the **entire** error file in between the backticks, not just the preview that Discord gives.
       value: |
         ```
 
