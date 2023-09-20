@@ -129,39 +129,39 @@ const std::map<std::string,
                    {"flag", &Flag},
                    {"flip", &Flip},
                    {"freeze", &Freeze},
-                   {"gamexplain", Gamexplain},
-                   {"globe", Globe},
-                   {"invert", Invert},
-                   {"jpeg", Jpeg},
+                   {"gamexplain", &Gamexplain},
+                   {"globe", &Globe},
+                   {"invert", &Invert},
+                   {"jpeg", &Jpeg},
 #ifdef MAGICK_ENABLED
-                   {"magik", Magik},
+                   {"magik", &Magik},
 #endif
-                   {"meme", Meme},
-                   {"mirror", Mirror},
-                   {"motivate", Motivate},
-                   {"reddit", Reddit},
-                   {"resize", Resize},
-                   {"reverse", Reverse},
-                   {"scott", Scott},
-                   {"snapchat", Snapchat},
+                   {"meme", &Meme},
+                   {"mirror", &Mirror},
+                   {"motivate", &Motivate},
+                   {"reddit", &Reddit},
+                   {"resize", &Resize},
+                   {"reverse", &Reverse},
+                   {"scott", &Scott},
+                   {"snapchat", &Snapchat},
                    {"speed", &Speed},
 #ifdef MAGICK_ENABLED
-                   {"spin", Spin},
+                   {"spin", &Spin},
 #endif
                    {"spotify", &Spotify},
-                   {"squish", Squish},
-                   {"swirl", Swirl},
-                   {"tile", Tile},
-                   {"togif", ToGif},
-                   {"uncanny", Uncanny},
+                   {"squish", &Squish},
+                   {"swirl", &Swirl},
+                   {"tile", &Tile},
+                   {"togif", &ToGif},
+                   {"uncanny", &Uncanny},
                    {"uncaption", &Uncaption},
 #if MAGICK_ENABLED
-                   {"wall", Wall},
+                   {"wall", &Wall},
 #endif
                    {"watermark", &Watermark},
-                   {"whisper", Whisper}};
+                   {"whisper", &Whisper}};
 
 const std::map<std::string,
                ArgumentMap (*)(string type, string* outType,
                                ArgumentMap Arguments, size_t* DataSize)>
-    NoInputFunctionMap = {{"homebrew", Homebrew}, {"sonic", Sonic}};
+    NoInputFunctionMap = {{"homebrew", &Homebrew}, {"sonic", &Sonic}};
