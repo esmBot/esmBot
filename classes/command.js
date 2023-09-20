@@ -31,7 +31,7 @@ class Command {
     } else if (options.type === "application") {
       this.interaction = options.interaction;
       this.args = [];
-      this.channel = options.interaction.channel ?? { id: options.interaction.channelID };
+      this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
       this.guild = options.interaction.guild;
       this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       this.permissions = options.interaction.appPermissions;
