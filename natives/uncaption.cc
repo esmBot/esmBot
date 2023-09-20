@@ -10,13 +10,11 @@ ArgumentMap Uncaption(string type, string *outType, char *BufferData,
                 size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
   float tolerance = GetArgumentWithFallback<float>(Arguments, "tolerance", 0.5);
 
-  VOption *options = VImage::option();
-
   VImage in =
       VImage::new_from_buffer(
           BufferData, BufferLength, "",
-          type == "gif" ? options->set("n", -1)->set("access", "sequential")
-                        : options)
+          type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
+                        : 0)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 

@@ -7,14 +7,14 @@ using namespace vips;
 
 VImage genText(string text, string font, const char *fontfile, int width,
                VImage mask, int radius) {
-  VImage in =
-      VImage::text(("<span foreground=\"white\">" + text + "</span>").c_str(),
-                   VImage::option()
-                       ->set("rgba", true)
-                       ->set("align", VIPS_ALIGN_CENTRE)
-                       ->set("font", font.c_str())
-                       ->set("fontfile", fontfile)
-                       ->set("width", width));
+  VOption *options = VImage::option()
+                         ->set("rgba", true)
+                         ->set("align", VIPS_ALIGN_CENTRE)
+                         ->set("font", font.c_str())
+                         ->set("width", width);
+  VImage in = VImage::text(
+      ("<span foreground=\"white\">" + text + "</span>").c_str(),
+      *fontfile == '\0' ? options->set("fontfile", fontfile) : options);
 
   in = in.embed(radius, radius * 2, in.width() + 2 * radius,
                 (in.height() + 2 * radius) + (radius * 2));

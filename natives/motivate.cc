@@ -6,7 +6,8 @@ using namespace std;
 using namespace vips;
 
 ArgumentMap Motivate(string type, string *outType, char *BufferData,
-               size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
+                     size_t BufferLength, ArgumentMap Arguments,
+                     size_t *DataSize) {
   string top_text = GetArgument<string>(Arguments, "top");
   string bottom_text = GetArgument<string>(Arguments, "bottom");
   string font = GetArgument<string>(Arguments, "font");
@@ -26,9 +27,7 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
   int nPages = vips_image_get_n_pages(in.get_image());
   int textWidth = width - ((width / 25) * 2);
 
-  string font_string =
-      font == "roboto" ? "Roboto Condensed" : font;
-
+  string font_string = font == "roboto" ? "Roboto Condensed" : font;
   auto findResult = fontPaths.find(font);
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
@@ -39,14 +38,17 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
     string topText = "<span foreground=\"white\" background=\"black\">" +
                      top_text + "</span>";
 
-    topImage = VImage::text(
-        topText.c_str(),
+    VOption *topTextOptions =
         VImage::option()
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
-            ->set("font", (font_string + " " + to_string(size)).c_str())
-            ->set("fontfile", fontResult.c_str())
-            ->set("width", textWidth));
+            ->set("width", textWidth)
+            ->set("font", (font_string + " " + to_string(size)).c_str());
+    if (fontResult != "") {
+      topTextOptions = topTextOptions->set(
+          "fontfile", (basePath + findResult->second).c_str());
+    }
+    topImage = VImage::text(topText.c_str(), topTextOptions);
   }
 
   VImage bottomImage;
@@ -54,14 +56,17 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
     string bottomText = "<span foreground=\"white\" background=\"black\">" +
                         bottom_text + "</span>";
 
-    bottomImage = VImage::text(
-        bottomText.c_str(),
+    VOption *bottomTextOptions =
         VImage::option()
             ->set("rgba", true)
             ->set("align", VIPS_ALIGN_CENTRE)
-            ->set("font", (font_string + " " + to_string(size * 0.4)).c_str())
-            ->set("fontfile", fontResult.c_str())
-            ->set("width", textWidth));
+            ->set("width", textWidth)
+            ->set("font", (font_string + " " + to_string(size * 0.4)).c_str());
+    if (fontResult != "") {
+      bottomTextOptions = bottomTextOptions->set(
+          "fontfile", (basePath + findResult->second).c_str());
+    }
+    bottomImage = VImage::text(bottomText.c_str(), bottomTextOptions);
   }
 
   vector<VImage> img;

@@ -11,13 +11,11 @@ ArgumentMap Distort(string type, string *outType, char *BufferData,
   string mapName = GetArgument<string>(Arguments, "mapName");
   string basePath = GetArgument<string>(Arguments, "basePath");
 
-  VOption *options = VImage::option();
-
   VImage in =
       VImage::new_from_buffer(
           BufferData, BufferLength, "",
-          type == "gif" ? options->set("n", -1)->set("access", "sequential")
-                        : options)
+          type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
+                        : 0)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
