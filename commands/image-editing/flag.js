@@ -1,6 +1,5 @@
 import fs from "fs";
 import emojiRegex from "emoji-regex";
-import emoji from "node-emoji";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class FlagCommand extends ImageCommand {
@@ -10,7 +9,7 @@ class FlagCommand extends ImageCommand {
     const text = this.options.text ?? this.args[0];
     const matched = text.match(emojiRegex());
     if (!matched) return false;
-    const flag = emoji.unemojify(matched[0]).replaceAll(":", "").replace("flag-", "");
+    const flag = this.ccFromFlag(matched[0]);
     let path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
     if (flag === "pirate_flag") path = "assets/images/pirateflag.png";
     if (flag === "rainbow-flag") path = "assets/images/rainbowflag.png";
@@ -26,6 +25,11 @@ class FlagCommand extends ImageCommand {
     } catch {
       return false;
     }
+  }
+
+  ccFromFlag(flag) {
+    const codepoints = [...flag].map(c => c.codePointAt() - 127397);
+    return String.fromCodePoint(...codepoints);
   }
 
   params() {
