@@ -11,7 +11,7 @@ class EmoteCommand extends Command {
       for (const codePoint of emoji) {
         codePoints.push(codePoint.codePointAt(0).toString(16));
       }
-      return `https://twemoji.maxcdn.com/v/latest/72x72/${codePoints.join("-").replace("-fe0f", "")}.png`;
+      return `https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/${codePoints.join("-")}.png`;
     } else {
       this.success = false;
       return "You need to provide a valid emoji to get an image!";
