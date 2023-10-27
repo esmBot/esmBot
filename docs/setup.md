@@ -4,11 +4,11 @@ Here are some instructions to get esmBot up and running from source.
 ??? check "Recommended system requirements"
     - 64-bit CPU/operating system
     - Quad-core CPU or better
-    - 1GB or more of RAM
-    - Linux-based operating system or virtual machine ([Ubuntu 22.04 LTS](https://ubuntu.com/download/server) or [Fedora 36](https://getfedora.org/) are recommended)
+    - 512MB or more of RAM
+    - Linux-based operating system or virtual machine ([Ubuntu](https://ubuntu.com/download/server) or [Fedora](https://getfedora.org/) are recommended)
 
 !!! warning
-    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
+    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
 
 If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://esmbot.net/support).
 
@@ -37,7 +37,7 @@ Choose the distro you're using below for insallation instructions.
     sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
     ```
 === "Alpine"
-    These instructions apply to the current Edge versions.
+    These instructions should apply to the current Edge versions.
     ```sh
     doas apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev gobject-introspection-dev cgif-dev libimagequant-dev meson
     ```
