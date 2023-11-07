@@ -1,4 +1,4 @@
-import { paths, commands, messageCommands, info, sounds, categories, aliases as _aliases } from "./collections.js";
+import { paths, commands, messageCommands, info, categories, aliases as _aliases } from "./collections.js";
 import { log } from "./logger.js";
 
 import { readFileSync } from "fs";
@@ -53,8 +53,6 @@ export async function load(client, command, slashReload = false) {
   if (slashReload && props.slashAllowed) {
     await send(client);
   }
-
-  if (Object.getPrototypeOf(props).name === "SoundboardCommand") sounds.set(commandName, props.file);
 
   info.set(commandName, commandInfo);
 

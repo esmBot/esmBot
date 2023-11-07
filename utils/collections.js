@@ -3,7 +3,6 @@ export const messageCommands = new Map();
 export const paths = new Map();
 export const aliases = new Map();
 export const info = new Map();
-export const sounds = new Map();
 export const categories = new Map();
 
 class TimedMap extends Map {

@@ -138,7 +138,7 @@ pnpm build
 
 ### 6. (Optional) Set up Lavalink.
 
-Lavalink is the audio server used by esmBot for soundboard commands and music playback. If you do not plan on using these features, you can safely skip this step.
+Lavalink is the audio server used by esmBot for music playback. If you do not plan on using this feature, you can safely skip this step.
 
 !!! warning
     There are websites out there providing lists of public Lavalink instances that can be used with the bot. However, these are not recommended due to performance/security concerns and missing features, and it is highly recommended to set one up yourself instead using the steps below.
