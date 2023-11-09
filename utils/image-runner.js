@@ -1,5 +1,7 @@
 import { createRequire } from "module";
 import { isMainThread, parentPort, workerData } from "worker_threads";
+import * as http from "http";
+import * as https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -35,12 +37,20 @@ export default function run(object) {
         buffer: Buffer.alloc(0),
         fileExtension: "nogif"
       });
-      promise = fetch(object.path).then(res => {
-        if (res.status === 429) return resolve({
-          buffer: Buffer.alloc(0),
-          fileExtension: "ratelimit"
+      promise = new Promise((res, rej) => {
+        const req = (object.path.startsWith("https") ? https.request : http.request)(object.path);
+        req.once("response", (resp) => {
+          const buffers = [];
+          resp.on("data", (chunk) => {
+            buffers.push(chunk);
+          });
+          resp.once("end", () => {
+            res(Buffer.concat(buffers));
+          });
+          resp.once("error", rej);
         });
-        return res.arrayBuffer();
+        req.once("error", rej);
+        req.end();
       });
     }
     // Convert from a MIME type (e.g. "image/png") to something the image processor understands (e.g. "png").
