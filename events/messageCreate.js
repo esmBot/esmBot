@@ -13,6 +13,9 @@ export default async (client, message) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
+  // block user 927240253272645662
+  if (message.author.id == "927240253272645662") return;
+
   // ignore other bots
   if (message.author.bot) return;
 

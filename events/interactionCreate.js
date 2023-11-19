@@ -26,6 +26,9 @@ export default async (client, interaction) => {
 
   const invoker = interaction.member ?? interaction.user;
 
+  // block user 927240253272645662
+  if (invoker.id == "927240253272645662") return;
+
   // actually run the command
   logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
