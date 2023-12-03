@@ -21,8 +21,8 @@ lavalink:
   plugins:
     - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.1"
       repository: "https://jitpack.io"
-    - dependency: "com.github.TopiSenpai.LavaSrc:lavasrc-plugin:3.2.0"
-      repository: "https://jitpack.io"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.0"
+      repository: "https://maven.lavalink.dev/releases"
 
 plugins:
   lavasrc:
