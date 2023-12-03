@@ -31,32 +31,34 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "emoji-regex": "^10.3.0",
-    "file-type": "^18.5.0",
+    "file-type": "^18.7.0",
     "format-duration": "^3.0.2",
     "jsqr": "^1.4.0",
     "node-addon-api": "^7.0.0",
     "oceanic.js": "1.8.1",
     "qrcode": "^1.5.3",
     "sharp": "^0.32.6",
-    "shoukaku": "github:Deivu/Shoukaku",
+    "shoukaku": "github:shipgirlproject/Shoukaku",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/eslint-parser": "^7.22.15",
-    "@babel/eslint-plugin": "^7.22.10",
-    "@babel/plugin-transform-class-properties": "^7.22.5",
+    "@babel/core": "^7.23.5",
+    "@babel/eslint-parser": "^7.23.3",
+    "@babel/eslint-plugin": "^7.23.5",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@biomejs/biome": "1.4.0",
+    "@biomejs/cli-linux-x64": "1.4.0",
     "cmake-js": "^7.2.1",
-    "eslint": "^8.52.0",
-    "eslint-plugin-unicorn": "^48.0.1"
+    "eslint": "^8.55.0",
+    "eslint-plugin-unicorn": "^49.0.0"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^9.0.0",
+    "better-sqlite3": "^9.2.0",
     "pm2": "^5.3.0",
-    "postgres": "^3.4.1",
+    "postgres": "^3.4.3",
     "ws": "^8.14.2",
-    "zlib-sync": "^0.1.8"
+    "zlib-sync": "^0.1.9"
   },
   "binary": {
     "napi_versions": [
