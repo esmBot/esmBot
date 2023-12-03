@@ -38,7 +38,7 @@
     "oceanic.js": "1.8.1",
     "qrcode": "^1.5.3",
     "sharp": "^0.32.6",
-    "shoukaku": "^3.4.0",
+    "shoukaku": "github:Deivu/Shoukaku",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1"
   },

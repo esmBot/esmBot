@@ -13,7 +13,7 @@ class QueueCommand extends MusicCommand {
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
     const node = nodes.filter((val) => val.name === player.player.node.name)[0];
-    const tracks = await fetch(`http://${node.url}/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.json());
+    const tracks = await fetch(`http://${node.url}/v4/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.json());
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {
