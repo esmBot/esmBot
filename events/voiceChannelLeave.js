@@ -111,9 +111,13 @@ export default async (client, member, oldChannel) => {
       players.delete(connection.originalChannel.guildID);
       queues.delete(connection.originalChannel.guildID);
       skipVotes.delete(connection.originalChannel.guildID);
-      await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
-      });
+      try {
+        await client.rest.channels.createMessage(connection.originalChannel.id, {
+          content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
+        });
+      } catch {
+        logger.warn(`Failed to post leave message in channel ${connection.originalChannel.id}`);
+      }
     }
   }
 };

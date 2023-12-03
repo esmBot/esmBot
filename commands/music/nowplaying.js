@@ -11,7 +11,7 @@ class NowPlayingCommand extends MusicCommand {
     const player = this.connection.player;
     if (!player) return "I'm not playing anything!";
     const track = await player.node.rest.decode(player.track);
-    const parts = Math.floor((player.position / track.length) * 10);
+    const parts = Math.floor((player.position / track.info.length) * 10);
     this.success = true;
     return {
       embeds: [{
@@ -22,11 +22,11 @@ class NowPlayingCommand extends MusicCommand {
         },
         fields: [{
           name: "ℹ️ Title",
-          value: track.title ? track.title : "Unknown"
+          value: track.info.title ?? "Unknown"
         },
         {
           name: "🎤 Artist",
-          value: track.author ? track.author : "Unknown"
+          value: track.info.author ?? "Unknown"
         },
         {
           name: "💬 Channel",
@@ -38,7 +38,7 @@ class NowPlayingCommand extends MusicCommand {
         },
         {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          value: `${format(player.position)}/${track.isStream ? "∞" : format(track.length)}`
+          value: `${format(player.position)}/${track.info.isStream ? "∞" : format(track.info.length)}`
         }]
       }]
     };

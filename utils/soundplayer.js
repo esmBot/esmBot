@@ -57,7 +57,7 @@ export async function play(client, soundUrl, options) {
   });
   if (!voiceChannel) return { content: "I can't join this voice channel! Make sure I have the right permissions.", flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
-  const node = manager.getIdealNode();
+  const node = manager.options.nodeResolver(manager.nodes);
   let response;
   try {
     response = await node.rest.resolve(soundUrl);
@@ -88,11 +88,11 @@ export async function play(client, soundUrl, options) {
       break;
   }
   queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
-  if (process.env.YT_DISABLED === "true" && info.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
+  if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
   const playerMeta = players.get(options.guild.id);
   let player;
-  if (node.players.has(voiceChannel.guildID)) {
-    player = node.players.get(voiceChannel.guildID);
+  if (manager.players.has(voiceChannel.guildID)) {
+    player = manager.players.get(voiceChannel.guildID);
   } else if (playerMeta?.player) {
     const storedState = playerMeta?.player?.connection.state;
     if (storedState && storedState === 1) {
@@ -107,7 +107,7 @@ export async function play(client, soundUrl, options) {
   });
 
   if (oldQueue?.length) {
-    return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info.title !== "" ? info.title.trim() : "(blank)")}\` has been added to the queue!`;
+    return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : "(blank)")}\` has been added to the queue!`;
   }
 
   nextSong(client, options, connection, tracks[0], info, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
@@ -245,7 +245,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
 
 export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options, closed) {
   try {
-    if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+    if (playingMessage?.channel.messages.has(playingMessage.id)) await playingMessage.delete();
     const playMessage = players.get(voiceChannel.guildID).playMessage;
     if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
   } catch {
