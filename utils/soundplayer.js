@@ -173,11 +173,11 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   players.set(voiceChannel.guildID, { player: connection, type: "music", host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
-    await connection.move();
-    await connection.resume();
+    await connection.movePlayer();
+    await connection.resumePlayer();
   });
   connection.on("end", async (data) => {
-    if (data.reason === "REPLACED") return;
+    if (data.reason === "replaced") return;
     let queue = queues.get(voiceChannel.guildID);
     const player = players.get(voiceChannel.guildID);
     if (player && process.env.STAYVC === "true") {
