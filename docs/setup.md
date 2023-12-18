@@ -217,7 +217,12 @@ pm2 start ecosystem.config.cjs
 ```
 
 !!! tip
-    If you wish to update the bot to the latest version/commit at any time, just run `git pull` and `pnpm install`.
+    If you wish to update the bot to the latest version/commit at any time, run the following commands:
+    ```sh
+    git pull
+    pnpm install
+    pnpm build
+    ```
 
 ***
 
