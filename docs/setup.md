@@ -75,39 +75,22 @@ sudo meson install
 
 Node.js is the runtime that esmBot is built on top of. The bot requires version 18 or above to run.
 
-First things first, we'll need to install pnpm, the package manager used by the bot. Run the following to install it:
+We suggest using nvm to manage your Node.js install. Run the following command to install it:
 ```sh
-curl -fsSL https://get.pnpm.io/install.sh | sh -
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 ```
 
-Once you've done that, continue with the instructions for your operating system below.
+Then run the following to install Node.js:
+```sh
+nvm install 18
+nvm use 18
+```
 
-=== "Debian/Ubuntu"
-    You'll need a more recent version than what's provided in most Debian/Ubuntu-based distros. You can add a repository that contains a supported version by running this command:
-    ```sh
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
-    ```
-    After that, you can install Node.js with this command:
-    ```sh
-    sudo apt-get install nodejs
-    ```
-=== "Fedora/RHEL"
-    On Fedora 37 and above, the package in the default repos should be good enough:
-    ```sh
-    sudo dnf install nodejs
-    ```
-    However, on RHEL, you'll need to add a separate repository before you run that command:
-    ```sh
-    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-    ```
-=== "Alpine"
-    ```sh
-    doas apk add nodejs
-    ```
-=== "Arch/Manjaro"
-    ```sh
-    sudo pacman -S nodejs
-    ```
+esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to install it:
+```sh
+corepack enable
+corepack prepare pnpm@latest --activate
+```
 
 ***
 
