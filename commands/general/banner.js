@@ -43,7 +43,7 @@ class BannerCommand extends Command {
 
   static description = "Gets a user's banner";
   static aliases = ["userbanner"];
-  static arguments = ["{mention/id}"];
+  static args = ["{mention/id}"];
   static flags = [{
     name: "member",
     type: 6,

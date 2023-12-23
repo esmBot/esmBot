@@ -42,7 +42,7 @@ class EvalCommand extends Command {
 
   static description = "Executes JavaScript code";
   static aliases = ["run"];
-  static arguments = ["[code]"];
+  static args = ["[code]"];
   static adminOnly = true;
 }
 

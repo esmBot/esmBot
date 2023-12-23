@@ -10,7 +10,7 @@ class SonicCommand extends ImageCommand {
   }
 
   static description = "Creates a Sonic speech bubble image";
-  static arguments = ["[text]"];
+  static args = ["[text]"];
 
   static requiresImage = false;
   static requiresText = true;

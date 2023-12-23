@@ -19,7 +19,7 @@ class DiceCommand extends Command {
 
   static description = "Rolls the dice";
   static aliases = ["roll", "die", "rng", "random"];
-  static arguments = ["{number}"];
+  static args = ["{number}"];
 }
 
 export default DiceCommand;

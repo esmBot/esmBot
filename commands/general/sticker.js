@@ -30,7 +30,7 @@ class StickerCommand extends Command {
 
   static description = "Gets a raw sticker image";
   static aliases = ["stick"];
-  static arguments = ["[sticker]"];
+  static args = ["[sticker]"];
 }
 
 export default StickerCommand;

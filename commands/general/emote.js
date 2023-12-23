@@ -27,7 +27,7 @@ class EmoteCommand extends Command {
 
   static description = "Gets a raw emote image";
   static aliases = ["e", "em", "hugemoji", "hugeemoji", "emoji"];
-  static arguments = ["[emote]"];
+  static args = ["[emote]"];
 }
 
 export default EmoteCommand;

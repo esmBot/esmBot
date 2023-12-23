@@ -22,7 +22,7 @@ class JPEGCommand extends ImageCommand {
 
   static description = "Adds JPEG compression to an image";
   static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg", "quality"];
-  static arguments = ["{quality}"];
+  static args = ["{quality}"];
 
   static noImage = "You need to provide an image/GIF to add more JPEG!";
   static command = "jpeg";

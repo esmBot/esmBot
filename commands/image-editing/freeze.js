@@ -22,7 +22,7 @@ class FreezeCommand extends ImageCommand {
 
   static description = "Makes an image sequence only play once";
   static aliases = ["noloop", "once"];
-  static arguments = ["{end frame number}"];
+  static args = ["{end frame number}"];
 
   static requiresGIF = true;
   static noImage = "You need to provide an image/GIF to freeze!";

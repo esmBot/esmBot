@@ -42,7 +42,7 @@ class QrCreateCommand extends Command {
   }];
 
   static description = "Generates a QR code";
-  static arguments = ["[text]"];
+  static args = ["[text]"];
 }
 
 export default QrCreateCommand;

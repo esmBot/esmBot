@@ -32,7 +32,7 @@ class SeekCommand extends MusicCommand {
   }];
   static description = "Seeks to a different position in the music";
   static aliases = ["pos"];
-  static arguments = ["[seconds]"];
+  static args = ["[seconds]"];
 }
 
 export default SeekCommand;

@@ -43,7 +43,7 @@ class ExecCommand extends Command {
 
   static description = "Executes a shell command";
   static aliases = ["runcmd"];
-  static arguments = ["[command]"];
+  static args = ["[command]"];
   static adminOnly = true;
 }
 

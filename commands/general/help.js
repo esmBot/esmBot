@@ -113,7 +113,7 @@ class HelpCommand extends Command {
 
   static description = "Gets a list of commands";
   static aliases = ["commands"];
-  static arguments = ["{command}"];
+  static args = ["{command}"];
   static slashAllowed = false;
 }
 
