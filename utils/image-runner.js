@@ -40,6 +40,13 @@ export default function run(object) {
       promise = new Promise((res, rej) => {
         const req = (object.path.startsWith("https") ? https.request : http.request)(object.path);
         req.once("response", (resp) => {
+          if (resp.statusCode === 429) {
+            req.end();
+            return resolve({
+              buffer: Buffer.alloc(0),
+              fileExtension: "ratelimit"
+            });
+          }
           const buffers = [];
           resp.on("data", (chunk) => {
             buffers.push(chunk);
