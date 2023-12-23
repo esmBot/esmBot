@@ -1,5 +1,4 @@
-import { readFileSync } from "fs";
-const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
+import packageJson from "../../package.json" with { type: "json" };
 import Command from "../../classes/command.js";
 import { getServers } from "../../utils/misc.js";
 
@@ -19,7 +18,7 @@ class InfoCommand extends Command {
         description: `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
         fields: [{
           name: "ℹ️ Version:",
-          value: `v${version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
+          value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
           name: "📝 Credits:",

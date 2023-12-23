@@ -1,5 +1,4 @@
-import { readFileSync } from "fs";
-const { version } = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url)));
+import packageJson from "../../package.json" with { type: "json" };
 import os from "os";
 import Command from "../../classes/command.js";
 import { VERSION } from "oceanic.js";
@@ -24,7 +23,7 @@ class StatsCommand extends Command {
         color: 16711680,
         fields: [{
           name: "Version",
-          value: `v${version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
+          value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
           name: "Process Memory Usage",

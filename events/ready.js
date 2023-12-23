@@ -2,16 +2,15 @@ import { activityChanger, checkBroadcast } from "../utils/misc.js";
 import { send } from "../utils/handler.js";
 import { generateList, createPage } from "../utils/help.js";
 import logger from "../utils/logger.js";
-import { readFileSync } from "fs";
 
-const { types } = JSON.parse(readFileSync(new URL("../config/commands.json", import.meta.url)));
+import commandsConfig from "../config/commands.json" with { type: "json" };
 let ready = false;
 
 export default async (client) => {
   if (ready) return;
 
   // send slash command data
-  if (types.application) {
+  if (commandsConfig.types.application) {
     try {
       await send(client);
     } catch (e) {

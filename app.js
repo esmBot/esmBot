@@ -19,7 +19,7 @@ import { reloadImageConnections } from "./utils/image.js";
 // main services
 import { Client } from "oceanic.js";
 // some utils
-import { promises, readFileSync } from "fs";
+import { promises } from "fs";
 import logger from "./utils/logger.js";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
@@ -38,16 +38,16 @@ import { reload, connect, connected } from "./utils/soundplayer.js";
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
 
-const { types } = JSON.parse(readFileSync(new URL("./config/commands.json", import.meta.url)));
-const esmBotVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url))).version;
-process.env.ESMBOT_VER = esmBotVersion;
+import commandConfig from "./config/commands.json" with { type: "json" };
+import packageJson from "./package.json" with { type: "json" };
+process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [
   "GUILD_VOICE_STATES",
   "DIRECT_MESSAGES",
   "GUILDS"
 ];
-if (types.classic) {
+if (commandConfig.types.classic) {
   intents.push("GUILD_MESSAGES");
   intents.push("MESSAGE_CONTENT");
 }
@@ -86,10 +86,10 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${esmBotVersion} (${process.env.GIT_REV})
+esmBot ${packageJson.version} (${process.env.GIT_REV})
 `);
 
-if (!types.classic && !types.application) {
+if (!commandConfig.types.classic && !commandConfig.types.application) {
   logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
   process.exit(1);
 }
@@ -148,7 +148,7 @@ const client = new Client({
   },
   collectionLimits: {
     messages: 50,
-    channels: !types.classic ? 0 : Infinity
+    channels: !commandConfig.types.classic ? 0 : Infinity
   }
 });
 
@@ -158,7 +158,7 @@ for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
-  if (eventName === "interactionCreate" && !types.application) {
+  if (eventName === "interactionCreate" && !commandConfig.types.application) {
     logger.log("warn", `Skipped loading event from ${file} because application commands are disabled`);
     continue;
   }

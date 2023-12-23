@@ -1,6 +1,5 @@
 import paginator from "../../utils/pagination/pagination.js";
-import { readFileSync } from "fs";
-const { searx } = JSON.parse(readFileSync(new URL("../../config/servers.json", import.meta.url)));
+import serversConfig from "../../config/servers.json" with { type: "json" };
 import { random } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
 
@@ -12,7 +11,7 @@ class ImageSearchCommand extends Command {
     if (!query || !query.trim()) return "You need to provide something to search for!";
     await this.acknowledge();
     const embeds = [];
-    const rawImages = await fetch(`${random(searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`).then(res => res.json());
+    const rawImages = await fetch(`${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`).then(res => res.json());
     if (rawImages.results.length === 0) return "I couldn't find any results!";
     const images = rawImages.results.filter((val) => !val.img_src.startsWith("data:"));
     for (const [i, value] of images.entries()) {

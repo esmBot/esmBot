@@ -2,10 +2,9 @@ import Command from "./command.js";
 import imageDetect from "../utils/imagedetect.js";
 import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
-import { readFileSync } from "fs";
-const { emotes } = JSON.parse(readFileSync(new URL("../config/messages.json", import.meta.url)));
 import { random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
+import messages from "../config/messages.json" with { type: "json" };
 
 class ImageCommand extends Command {
   async criteria() {
@@ -114,7 +113,7 @@ class ImageCommand extends Command {
 
   processMessage(channel) {
     return channel.createMessage({
-      content: `${random(emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`
+      content: `${random(messages.emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`
     });
   }
 

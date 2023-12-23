@@ -16,7 +16,7 @@ if (!process.env.API_TYPE || process.env.API_TYPE === "none") {
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 export const connections = new Map();
-export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : null;
+export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
 export async function getType(image, extraReturnTypes) {
   if (!image.startsWith("http")) {
