@@ -124,3 +124,7 @@ data/
 # Other lockfiles
 package-lock.json
 yarn.lock
+
+# Container outputs
+bot-temp/
+bot-help/
