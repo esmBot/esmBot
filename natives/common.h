@@ -83,9 +83,8 @@ inline void loadFonts(string basePath) {
            "global fonts (which may be inaccurate!)"
         << std::endl;
   }
-  FcConfig* cfg = FcConfigGetCurrent();
   if (!FcConfigParseAndLoad(
-          cfg,
+          FcConfigGetCurrent(),
           (const FcChar8*)(basePath + "assets/fonts/fontconfig.xml").c_str(),
           true)) {
     std::cerr
