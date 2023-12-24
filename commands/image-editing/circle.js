@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class CircleCommand extends ImageCommand {
   static description = "Applies a radial blur effect on an image";

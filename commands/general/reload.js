@@ -1,6 +1,6 @@
-import Command from "../../classes/command.js";
-import { load } from "../../utils/handler.js";
-import { paths } from "../../utils/collections.js";
+import Command from "#cmd-classes/command.js";
+import { load } from "#utils/handler.js";
+import { paths } from "#utils/collections.js";
 
 class ReloadCommand extends Command {
   async run() {

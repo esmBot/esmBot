@@ -1,5 +1,5 @@
-import ImageCommand from "../../classes/imageCommand.js";
-import { random, cleanMessage } from "../../utils/misc.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
+import { random, cleanMessage } from "#utils/misc.js";
 import { readdirSync } from "node:fs";
 import { Constants } from "oceanic.js";
 import { resolve, dirname } from "node:path";

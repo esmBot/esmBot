@@ -1,0 +1,9 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build",
+    "rootDir": ".",
+    "allowJs": true
+  },
+  "include": ["./src/**/*"]
+}

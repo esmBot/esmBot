@@ -1,7 +1,7 @@
-import serversConfig from "../../config/servers.json" with { type: "json" };
-import { random } from "../../utils/misc.js";
-import paginator from "../../utils/pagination/pagination.js";
-import Command from "../../classes/command.js";
+import serversConfig from "#config/servers.json" with { type: "json" };
+import { random } from "#utils/misc.js";
+import paginator from "#pagination";
+import Command from "#cmd-classes/command.js";
 
 class YouTubeCommand extends Command {
   async run() {

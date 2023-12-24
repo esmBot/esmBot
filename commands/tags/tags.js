@@ -1,7 +1,7 @@
-import database from "../../utils/database.js";
-import paginator from "../../utils/pagination/pagination.js";
-import { random } from "../../utils/misc.js";
-import Command from "../../classes/command.js";
+import database from "#database";
+import paginator from "#pagination";
+import { random } from "#utils/misc.js";
+import Command from "#cmd-classes/command.js";
 const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
 
 class TagsCommand extends Command {

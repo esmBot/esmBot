@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import imageDetect from "../../utils/imagedetect.js";
+import Command from "#cmd-classes/command.js";
+import imageDetect from "#utils/imagedetect.js";
 
 class RawCommand extends Command {
   async run() {

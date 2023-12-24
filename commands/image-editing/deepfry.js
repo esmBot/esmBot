@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class DeepfryCommand extends ImageCommand {
   static description = "Deep-fries an image";

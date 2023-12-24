@@ -1,7 +1,7 @@
-import paginator from "../../utils/pagination/pagination.js";
-import serversConfig from "../../config/servers.json" with { type: "json" };
-import { random } from "../../utils/misc.js";
-import Command from "../../classes/command.js";
+import paginator from "#pagination";
+import serversConfig from "#config/servers.json" with { type: "json" };
+import { random } from "#utils/misc.js";
+import Command from "#cmd-classes/command.js";
 
 class ImageSearchCommand extends Command {
   async run() {

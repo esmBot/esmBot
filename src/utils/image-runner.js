@@ -60,7 +60,7 @@ export default function run(object) {
       if (objectWithFixedType.gravity && Number.isNaN(Number.parseInt(objectWithFixedType.gravity))) {
         objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
       }
-      objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
+      objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
       try {
         const result = img.image(object.cmd, objectWithFixedType);
         const returnObject = {

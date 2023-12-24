@@ -1,6 +1,6 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "../../classes/imageCommand.js";
-import { cleanMessage } from "../../utils/misc.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
+import { cleanMessage } from "#utils/misc.js";
 
 class MemeCommand extends ImageCommand {
   async criteria(text, url) {

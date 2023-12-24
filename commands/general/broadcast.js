@@ -1,6 +1,6 @@
-import Command from "../../classes/command.js";
-import database from "../../utils/database.js";
-import { endBroadcast, startBroadcast } from "../../utils/misc.js";
+import Command from "#cmd-classes/command.js";
+import database from "#database";
+import { endBroadcast, startBroadcast } from "#utils/misc.js";
 
 class BroadcastCommand extends Command {
   async run() {

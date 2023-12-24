@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class MagikCommand extends ImageCommand {
   static description = "Adds a content aware scale effect to an image";

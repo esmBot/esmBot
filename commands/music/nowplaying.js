@@ -1,5 +1,5 @@
 import format from "format-duration";
-import MusicCommand from "../../classes/musicCommand.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class NowPlayingCommand extends MusicCommand {
   async run() {

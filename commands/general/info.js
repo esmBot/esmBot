@@ -1,6 +1,6 @@
 import packageJson from "../../package.json" with { type: "json" };
-import Command from "../../classes/command.js";
-import { getServers } from "../../utils/misc.js";
+import Command from "#cmd-classes/command.js";
+import { getServers } from "#utils/misc.js";
 
 class InfoCommand extends Command {
   async run() {

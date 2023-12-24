@@ -1,11 +1,11 @@
-import database from "../utils/database.js";
-import { log, error as _error } from "../utils/logger.js";
-import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "../utils/collections.js";
-import parseCommand from "../utils/parseCommand.js";
-import { clean } from "../utils/misc.js";
-import { upload } from "../utils/tempimages.js";
+import database from "#database";
+import { log, error as _error } from "#utils/logger.js";
+import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "#utils/collections.js";
+import parseCommand from "#utils/parseCommand.js";
+import { clean } from "#utils/misc.js";
+import { upload } from "#utils/tempimages.js";
 import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
-import { getString } from "../utils/i18n.js";
+import { getString } from "#utils/i18n.js";
 
 let Sentry;
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {

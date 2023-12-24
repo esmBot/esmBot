@@ -1,5 +1,5 @@
 import emojiRegex from "emoji-regex-xs";
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 
 class EmoteCommand extends Command {
   async run() {

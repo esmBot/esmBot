@@ -1,5 +1,5 @@
-import ImageCommand from "../../classes/imageCommand.js";
-import { cleanMessage } from "../../utils/misc.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
+import { cleanMessage } from "#utils/misc.js";
 
 class SonicCommand extends ImageCommand {
   params() {

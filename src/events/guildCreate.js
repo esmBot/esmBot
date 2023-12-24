@@ -1,4 +1,4 @@
-import { log } from "../utils/logger.js";
+import { log } from "#utils/logger.js";
 
 // run when the bot is added to a guild
 export default async (_client, guild) => {

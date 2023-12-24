@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import { clean } from "../../utils/misc.js";
+import Command from "#cmd-classes/command.js";
+import { clean } from "#utils/misc.js";
 
 class Base64Command extends Command {
   async run() {

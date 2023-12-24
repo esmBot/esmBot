@@ -1,7 +1,7 @@
 import { paths, commands, messageCommands, userCommands, info, categories, aliases as _aliases } from "./collections.js";
 import { log } from "./logger.js";
 
-import commandConfig from "../config/commands.json" with { type: "json" };
+import commandConfig from "#config/commands.json" with { type: "json" };
 import { Constants } from "oceanic.js";
 import { getAllLocalizations } from "./i18n.js";
 

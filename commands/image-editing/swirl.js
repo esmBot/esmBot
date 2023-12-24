@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SwirlCommand extends ImageCommand {
   static description = "Swirls an image";

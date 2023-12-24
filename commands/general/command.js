@@ -1,6 +1,6 @@
-import db from "../../utils/database.js";
-import Command from "../../classes/command.js";
-import * as collections from "../../utils/collections.js";
+import db from "#database";
+import Command from "#cmd-classes/command.js";
+import * as collections from "#utils/collections.js";
 
 class CommandCommand extends Command {
   async run() {

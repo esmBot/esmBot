@@ -46,15 +46,15 @@ import { load } from "./utils/handler.js";
 // command collections
 import { locales, paths } from "./utils/collections.js";
 // database stuff
-import database from "./utils/database.js";
+import database from "#database";
 // lavalink stuff
 import { reload, connect, connected } from "./utils/soundplayer.js";
 // events
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
 
-import commandConfig from "./config/commands.json" with { type: "json" };
-import packageJson from "./package.json" with { type: "json" };
+import commandConfig from "#config/commands.json" with { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [
@@ -142,7 +142,7 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./commands/"))) {
+for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../commands/"))) {
   logger.log("main", `Loading command from ${commandFile}...`);
   try {
     await load(null, commandFile);

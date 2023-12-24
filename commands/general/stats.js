@@ -1,9 +1,9 @@
 import packageJson from "../../package.json" with { type: "json" };
 import os from "node:os";
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 import { VERSION } from "oceanic.js";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
-import { getServers } from "../../utils/misc.js";
+import { getServers } from "#utils/misc.js";
 
 class StatsCommand extends Command {
   async run() {

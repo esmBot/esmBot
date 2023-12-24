@@ -1,4 +1,4 @@
-import logger from "../utils/logger.js";
+import logger from "#utils/logger.js";
 import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
 import { getString } from "./i18n.js";
 

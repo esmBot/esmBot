@@ -1,4 +1,4 @@
-import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "../collections.js";
+import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "#utils/collections.js";
 
 import Postgres from "postgres";
 const sql = Postgres(process.env.DB, {

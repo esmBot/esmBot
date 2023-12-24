@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class ReverseCommand extends ImageCommand {
   static description = "Reverses an image sequence";

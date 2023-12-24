@@ -1,5 +1,5 @@
 import Command from "./command.js";
-import { players, queues } from "../utils/soundplayer.js";
+import { players, queues } from "#utils/soundplayer.js";
 
 class MusicCommand extends Command {
   constructor(client, options) {

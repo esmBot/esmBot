@@ -1,4 +1,4 @@
-import MusicCommand from "../../classes/musicCommand.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class SeekCommand extends MusicCommand {
   async run() {

@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class GameXplainCommand extends ImageCommand {
   static description = "Makes a GameXplain thumbnail from an image";

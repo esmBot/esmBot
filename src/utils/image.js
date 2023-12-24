@@ -15,7 +15,7 @@ import ImageConnection from "./imageConnection.js";
 
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 export const connections = new Map();
-export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
+export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
 export function initImageLib() {
   const nodeRequire = createRequire(import.meta.url);
@@ -112,7 +112,7 @@ function disconnect() {
 }
 
 async function repopulate() {
-  const data = await fs.promises.readFile(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" });
+  const data = await fs.promises.readFile(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" });
   servers = JSON.parse(data).image;
 }
 

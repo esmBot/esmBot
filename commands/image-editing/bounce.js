@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class BounceCommand extends ImageCommand {
   static description = "Makes an image bounce up and down";

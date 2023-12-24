@@ -1,4 +1,4 @@
-import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "../collections.js";
+import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 
 let connection;
 if (process.versions.bun) {

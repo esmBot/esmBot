@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import { connections } from "../../utils/image.js";
+import Command from "#cmd-classes/command.js";
+import { connections } from "#utils/image.js";
 
 class ImageStatsCommand extends Command {
   async run() {

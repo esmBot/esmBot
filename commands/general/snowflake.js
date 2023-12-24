@@ -1,4 +1,4 @@
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 
 class SnowflakeCommand extends Command {
   async run() {

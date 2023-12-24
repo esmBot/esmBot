@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "../../classes/imageCommand.js";
-import { cleanMessage } from "../../utils/misc.js";
-import { getAllLocalizations } from "../../utils/i18n.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
+import { cleanMessage } from "#utils/misc.js";
+import { getAllLocalizations } from "#utils/i18n.js";
 
 class CaptionCommand extends ImageCommand {
   params(url) {

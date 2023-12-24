@@ -1,4 +1,4 @@
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 
 class DiceCommand extends Command {
   async run() {

@@ -6,8 +6,8 @@ import { WebSocketServer } from "ws";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 import EventEmitter from "node:events";
-import logger from "../utils/logger.js";
-import { img } from "../utils/imageLib.js";
+import logger from "#utils/logger.js";
+import { img } from "#utils/imageLib.js";
 import { Client } from "oceanic.js";
 
 img.imageInit();
@@ -315,7 +315,7 @@ const runJob = (job, ws) => {
       reject(new TypeError("Unknown image type"));
     }
 
-    const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../utils/image-runner.js"), {
+    const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../src/utils/image-runner.js"), {
       workerData: object
     });
     const timeout = setTimeout(() => {

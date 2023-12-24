@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class WallCommand extends ImageCommand {
   static description = "Creates a wall from an image";
