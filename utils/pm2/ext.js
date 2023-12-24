@@ -9,7 +9,7 @@ import "dotenv/config";
 import { Client } from "oceanic.js";
 
 import database from "../database.js";
-import { cpus } from "os";
+import { availableParallelism } from "os";
 
 const logger = winston.createLogger({
   levels: {
@@ -174,8 +174,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
   });
 }
 
-setInterval(updateStats, 60000);
-
+setInterval(updateStats, 60000); // 1 minute
 setTimeout(updateStats, 10000);
 
 logger.info("Started esmBot management process.");
@@ -218,7 +217,7 @@ function calcShards(shards, procs) {
   return r;
 }
 
-(async function init() {
+async function getGatewayData() {
   logger.main("Getting gateway connection data...");
   const client = new Client({
     auth: `Bot ${process.env.TOKEN}`,
@@ -237,8 +236,17 @@ function calcShards(shards, procs) {
   });
 
   const connectionData = await client.rest.getBotGateway();
-  const cpuAmount = cpus().length;
+  const cpuAmount = availableParallelism();
   const procAmount = Math.min(connectionData.shards, cpuAmount);
+  client.disconnect();
+  return {
+    procAmount,
+    connectionData
+  };
+}
+
+(async function init() {
+  const { procAmount, connectionData } = await getGatewayData();
   logger.main(`Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
 
   const runningProc = await getProcesses();
