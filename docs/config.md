@@ -59,8 +59,7 @@ The JSON-based configuration files are located in `config/`.
     {
       "name": "test", // A human-friendly name for the server
       "url": "localhost:2333", // IP address/domain name and port for the server
-      "auth": "youshallnotpass", // Password/authorization code for the server
-      "local": false // Whether or not the esmBot "assets" folder is located next to the Lavalink jar file
+      "auth": "youshallnotpass" // Password/authorization code for the server
     }
   ],
   "image": [ // Objects containing info for connecting to WS image server(s)

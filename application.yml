@@ -11,7 +11,6 @@ lavalink:
       twitch: true
       vimeo: true
       http: true
-      local: true
     bufferDurationMs: 400
     youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
     playerUpdateInterval: 1
