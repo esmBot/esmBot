@@ -35,15 +35,26 @@ winston.addColors({
   error: "red"
 });
 
-export function log(type, content) { return content ? logger.log(type === "log" ? "main" : type, content) : logger.info(type); }
+type LogFunction = (type: string, ...content: string[]) => void;
+type TypedLogFunction = (...args: (string | Error | object | unknown)[]) => void;
 
-export function info(...args) { return log("info", ...args); }
+export interface Logger {
+  log: LogFunction;
+  info: TypedLogFunction;
+  error: TypedLogFunction;
+  warn: TypedLogFunction;
+  debug: TypedLogFunction;
+}
 
-export function error(...args) { return log("error", ...args); }
+export function log(type: string, content: (string | Error | object | unknown | null)) { return content ? logger.log(type === "log" ? "main" : type, content) : logger.info(type); }
 
-export function warn(...args) { return log("warn", ...args); }
+export function info(args: string | Error | object | unknown) { return log("info", args); }
 
-export function debug(...args) { return log("debug", ...args); }
+export function error(args: string | Error | object | unknown) { return log("error", args); }
+
+export function warn(args: string | Error | object | unknown) { return log("warn", args); }
+
+export function debug(args: string | Error | object | unknown) { return log("debug", args); }
 
 export default {
   log,
@@ -51,4 +62,4 @@ export default {
   error,
   warn,
   debug
-};
+} as Logger;

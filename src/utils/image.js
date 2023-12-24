@@ -19,7 +19,7 @@ export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(
 
 export function initImageLib() {
   const nodeRequire = createRequire(import.meta.url);
-  const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+  const img = nodeRequire(`../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
   img.imageInit();
 }
 

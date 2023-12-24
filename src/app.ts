@@ -32,7 +32,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
 import { reloadImageConnections, initImageLib } from "./utils/image.js";
 
 // main services
-import { Client, Constants } from "oceanic.js";
+import { Client, type ClientEvents, Constants } from "oceanic.js";
 // some utils
 import { promises } from "node:fs";
 import logger from "./utils/logger.js";
@@ -67,12 +67,7 @@ if (commandConfig.types.classic) {
   intents.push(Constants.Intents.MESSAGE_CONTENT);
 }
 
-/**
- * @param {string} dir
- * @param {string} ext
- * @returns {AsyncGenerator<string>}
- */
-async function* getFiles(dir, ext = ".js") {
+async function* getFiles(dir: string, ext = ".js"): AsyncGenerator<string> {
   const dirents = await promises.readdir(dir, { withFileTypes: true });
   for (const dirent of dirents) {
     const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
@@ -204,7 +199,7 @@ for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)
     continue;
   }
   const { default: event } = await import(file);
-  client.on(eventName, event.bind(null, client));
+  client.on(eventName as keyof ClientEvents, event.bind(null, client));
 }
 logger.log("info", "Finished loading events.");
 
@@ -223,7 +218,7 @@ if (process.env.PM2_USAGE) {
         return;
       }
       const managerProc = list.find((v) => v.name === "esmBot-manager");
-      pm2Bus.on("process:msg", async (packet) => {
+      pm2Bus.on("process:msg", async (packet: { data: { type: string; message: string; }; }) => {
         switch (packet.data?.type) {
           case "reload":
             await load(client, paths.get(packet.data.message), true);
@@ -241,7 +236,7 @@ if (process.env.PM2_USAGE) {
             endBroadcast(client);
             break;
           case "serverCounts":
-            pm2.sendDataToProcessId(managerProc.pm_id, {
+            pm2.sendDataToProcessId(managerProc.pm_id as number, {
               id: managerProc.pm_id,
               type: "process:msg",
               data: {

@@ -1,7 +1,10 @@
 import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "#utils/collections.js";
+import { Logger } from "#utils/logger.js";
+import { Guild, GuildChannel } from "oceanic.js";
+import { DBGuild } from "#utils/types.js";
 
 import Postgres from "postgres";
-const sql = Postgres(process.env.DB, {
+const sql = Postgres(process.env.DB as string, {
   onnotice: () => {}
 });
 
@@ -55,7 +58,7 @@ export async function setup() {
   }
 }
 
-export async function upgrade(logger) {
+export async function upgrade(logger: Logger) {
   try {
     await sql.begin(async (sql) => {
       await sql.unsafe(settingsSchema);
@@ -91,50 +94,48 @@ export async function upgrade(logger) {
   }
 }
 
-export async function getGuild(query) {
-  let guild;
-  await sql.begin(async (sql) => {
-    guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0];
-    if (guild === undefined) {
-      guild = { guild_id: query, prefix: process.env.PREFIX, disabled: [], disabled_commands: [] };
-      await sql`INSERT INTO guilds ${sql(guild)}`;
-    }
+export function getGuild(query: string): Promise<DBGuild> {
+  return new Promise((resolve) => {
+    sql.begin(async (sql) => {
+      let guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0] as DBGuild;
+      if (guild === undefined) {
+        guild = { guild_id: query, prefix: process.env.PREFIX ?? "&", disabled: [], disabled_commands: [] };
+        await sql`INSERT INTO guilds ${sql(guild)}`;
+      }
+      resolve(guild);
+    });
   });
-  return guild;
 }
 
-export async function setPrefix(prefix, guild) {
+export async function setPrefix(prefix: string, guild: Guild) {
   await sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild.id}`;
   prefixCache.set(guild.id, prefix);
 }
 
-export async function getTag(guild, tag) {
+export async function getTag(guild: string, tag: string) {
   const tagResult = await sql`SELECT * FROM tags WHERE guild_id = ${guild} AND name = ${tag}`;
   return tagResult[0] ? { content: tagResult[0].content, author: tagResult[0].author } : undefined;
 }
 
-export async function getTags(guild) {
+export async function getTags(guild: string) {
   const tagArray = await sql`SELECT * FROM tags WHERE guild_id = ${guild}`;
-  const tags = {};
-  for (const tag of tagArray) {
-    tags[tag.name] = { content: tag.content, author: tag.author };
-  }
+  const tags = new Map(tagArray.map(tag => [tag.name, { content: tag.content, author: tag.author }]));
   return tags;
 }
 
-export async function setTag(name, content, guild) {
+export async function setTag(name: string, content: { content: string, author: string }, guild: Guild) {
   await sql`INSERT INTO tags ${sql({ guild_id: guild.id, name, content: content.content, author: content.author }, "guild_id", "name", "content", "author")}`;
 }
 
-export async function editTag(name, content, guild) {
+export async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
   await sql`UPDATE tags SET content = ${content.content}, author = ${content.author} WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
-export async function removeTag(name, guild) {
+export async function removeTag(name: string, guild: Guild) {
   await sql`DELETE FROM tags WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
-export async function setBroadcast(msg) {
+export async function setBroadcast(msg: string) {
   await sql`UPDATE settings SET broadcast = ${msg} WHERE id = 1`;
 }
 
@@ -143,27 +144,27 @@ export async function getBroadcast() {
   return result[0].broadcast;
 }
 
-export async function disableCommand(guild, command) {
-  const guildDB = await this.getGuild(guild);
+export async function disableCommand(guild: string, command: string) {
+  const guildDB = await getGuild(guild);
   await sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
 }
 
-export async function enableCommand(guild, command) {
-  const guildDB = await this.getGuild(guild);
+export async function enableCommand(guild: string, command: string) {
+  const guildDB = await getGuild(guild);
   const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, newDisabled);
 }
 
-export async function disableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guildID);
+export async function disableChannel(channel: GuildChannel) {
+  const guildDB = await getGuild(channel.guildID);
   await sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guildID}`;
   disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
 }
 
-export async function enableChannel(channel) {
-  const guildDB = await this.getGuild(channel.guildID);
+export async function enableChannel(channel: GuildChannel) {
+  const guildDB = await getGuild(channel.guildID);
   const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guildID}`;
   disabledCache.set(channel.guildID, newDisabled);
@@ -171,14 +172,11 @@ export async function enableChannel(channel) {
 
 export async function getCounts() {
   const counts = await sql`SELECT * FROM counts`;
-  const countObject = {};
-  for (const { command, count } of counts) {
-    countObject[command] = count;
-  }
-  return countObject;
+  const countMap = new Map(counts.map(val => [val.command, val.count]));
+  return countMap;
 }
 
-export async function addCount(command) {
+export async function addCount(command: string) {
   await sql`INSERT INTO counts ${sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
 }
 

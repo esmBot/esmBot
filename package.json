@@ -2,17 +2,19 @@
   "name": "esmbot",
   "version": "2024.9.0",
   "description": "A Discord bot with miscellaneous features",
-  "exports": "./src/app.js",
-  "bin": "./src/app.js",
+  "exports": "./dist/app.js",
+  "bin": "./dist/app.js",
   "type": "module",
   "engines": {
     "node": ">=20.12.0"
   },
   "scripts": {
-    "build": "cmake-js compile --CDWITH_MAGICK=ON",
-    "build:debug": "cmake-js compile -BDebug --CDWITH_MAGICK=ON",
-    "build:no-magick": "cmake-js compile --CDWITH_MAGICK=OFF",
-    "build:debug-no-magick": "cmake-js compile -BDebug --CDWITH_MAGICK=OFF",
+    "build": "tsc && pnpm build:natives",
+    "build:debug": "tsc && pnpm build:natives:debug",
+    "build:natives": "cmake-js compile --CDWITH_MAGICK=ON",
+    "build:natives:debug": "cmake-js compile -BDebug --CDWITH_MAGICK=ON",
+    "build:natives:no-magick": "cmake-js compile --CDWITH_MAGICK=OFF",
+    "build:natives:debug-no-magick": "cmake-js compile -BDebug --CDWITH_MAGICK=OFF",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host --entrypoint='[\"node\", \"api/index.js\"]' esmbot",
@@ -46,9 +48,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
-    "@types/bun": "^1.1.11",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/better-sqlite3": "^7.6.8",
+    "@types/bun": "^1.1.14",
+    "@types/node": "^20.12.0",
     "@types/ws": "^8.5.12",
-    "cmake-js": "^7.3.0"
+    "cmake-js": "^7.3.0",
+    "typescript": "^5.3.3"
   },
   "optionalDependencies": {
     "@sentry/node": "^8.34.0",
@@ -61,10 +67,10 @@
     ]
   },
   "imports": {
-    "#cmd-classes/*": "./src/classes/*",
-    "#utils/*": "./src/utils/*",
-    "#database": "./src/database.js",
-    "#pagination": "./src/pagination/pagination.js",
+    "#cmd-classes/*": "./dist/classes/*",
+    "#utils/*": "./dist/utils/*",
+    "#database": "./dist/database.js",
+    "#pagination": "./dist/pagination/pagination.js",
     "#config/*": "./config/*"
   },
   "packageManager": "pnpm@9.4.0"

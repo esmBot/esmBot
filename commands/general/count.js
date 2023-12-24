@@ -18,7 +18,7 @@ class CountCommand extends Command {
     }
     const counts = await database.getCounts();
     const countArray = [];
-    for (const entry of Object.entries(counts)) {
+    for (const entry of counts.entries()) {
       countArray.push(entry);
     }
     const sortedValues = countArray.sort((a, b) => {

@@ -122,7 +122,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 `);
       if (database) {
         const counts = await database.getCounts();
-        for (const [i, w] of Object.entries(counts)) {
+        for (const [i, w] of counts.entries()) {
           res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
         }
       }
