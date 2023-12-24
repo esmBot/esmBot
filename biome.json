@@ -1,0 +1,25 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUndeclaredVariables": "error",
+				"noUnusedVariables": "warn"
+			}
+		}
+	},
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "javascript": {
+    "formatter": {
+      "trailingComma": "none"
+    }
+  }
+}
