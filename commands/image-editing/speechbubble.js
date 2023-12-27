@@ -4,11 +4,12 @@ class SpeechBubbleCommand extends ImageCommand {
   params() {
     return {
       water: this.options.alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
-      gravity: "north",
+      gravity: this.options.bottom ? "south" : "north",
       resize: true,
       yscale: 0.2,
       alpha: this.options.alpha ? true : false,
-      flip: this.options.flip ? true : false
+      flipX: this.options.flip ? true : false,
+      flipY: this.options.bottom ? true : false
     };
   }
 
@@ -21,6 +22,10 @@ class SpeechBubbleCommand extends ImageCommand {
     }, {
       name: "flip",
       description: "Flips the speech bubble",
+      type: 5
+    }, {
+      name: "bottom",
+      description: "Puts the speech bubble on the bottom of the image",
       type: 5
     });
     return this;

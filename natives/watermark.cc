@@ -18,7 +18,8 @@ ArgumentMap Watermark(string type, string *outType, char *BufferData,
   bool append = GetArgumentWithFallback<bool>(Arguments, "append", false);
 
   bool alpha = GetArgumentWithFallback<bool>(Arguments, "alpha", false);
-  bool flip = GetArgumentWithFallback<bool>(Arguments, "flip", false);
+  bool flipX = GetArgumentWithFallback<bool>(Arguments, "flipX", false);
+  bool flipY = GetArgumentWithFallback<bool>(Arguments, "flipY", false);
 
   bool mc = MAP_HAS(Arguments, "mc");
 
@@ -39,8 +40,12 @@ ArgumentMap Watermark(string type, string *outType, char *BufferData,
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
-  if (flip) {
+  if (flipX) {
     watermark = watermark.flip(VIPS_DIRECTION_HORIZONTAL);
+  }
+
+  if (flipY) {
+    watermark = watermark.flip(VIPS_DIRECTION_VERTICAL);
   }
 
   if (resize && append) {
