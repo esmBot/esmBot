@@ -35,7 +35,7 @@
     "format-duration": "^3.0.2",
     "jsqr": "^1.4.0",
     "node-addon-api": "^7.0.0",
-    "oceanic.js": "1.8.1",
+    "oceanic.js": "github:TheEssem/Oceanic#node18-update",
     "qrcode": "^1.5.3",
     "sharp": "^0.32.6",
     "shoukaku": "github:shipgirlproject/Shoukaku",
