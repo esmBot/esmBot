@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0042 NEW)
+cmake_policy(SET CMP0135 NEW)
 project(image)
 
 include(FindPkgConfig)
+include(FetchContent)
 
 file(GLOB SOURCE_FILES "natives/*.cc" "natives/*.h")
 
@@ -13,7 +15,7 @@ if (CMAKE_JS_VERSION)
   set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
   target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})
 else()
-  add_executable(${PROJECT_NAME} ${SOURCE_FILES} natives/cli/image.cc)
+  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} natives/generic/image.cc)
 endif()
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
@@ -51,6 +53,12 @@ pkg_check_modules(VIPS REQUIRED vips-cpp)
 include_directories(${VIPS_INCLUDE_DIRS})
 link_directories(${VIPS_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${VIPS_LDFLAGS})
+
+if (NOT CMAKE_JS_VERSION)
+  FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+  FetchContent_MakeAvailable(json)
+  target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
+endif()
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET AND CMAKE_JS_VERSION)
   # Generate node.lib
