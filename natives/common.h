@@ -95,13 +95,6 @@ inline void loadFonts(string basePath) {
   }
 }
 
-#define MAP_HAS(ARRAY, KEY) (ARRAY.count(KEY) > 0)
-#define MAP_GET(ARRAY, KEY, TYPE)                 \
-  (MAP_HAS(ARRAY, KEY) ? get<TYPE>(ARRAY.at(KEY)) \
-                       : NULL)  // C++ has forced my hand
-#define MAP_GET_FALLBACK(ARRAY, KEY, TYPE, FALLBACK) \
-  (MAP_HAS(ARRAY, KEY) ? get<TYPE>(ARRAY.at(KEY)) : FALLBACK)
-
 #define ARG_TYPES std::variant<string, bool, int, float>
 
 const std::vector<double> zeroVec = {0, 0, 0, 0};

@@ -21,7 +21,7 @@ ArgumentMap Watermark(string type, string *outType, char *BufferData,
   bool flipX = GetArgumentWithFallback<bool>(Arguments, "flipX", false);
   bool flipY = GetArgumentWithFallback<bool>(Arguments, "flipY", false);
 
-  bool mc = MAP_HAS(Arguments, "mc");
+  bool mc = MapContainsKey(Arguments, "mc");
 
   string basePath = GetArgument<string>(Arguments, "basePath");
 
