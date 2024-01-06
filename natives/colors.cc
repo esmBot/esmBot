@@ -29,11 +29,11 @@ ArgumentMap Colors(const string& type, string& outType, const char* bufferdata, 
     out = in.extract_band(0, VImage::option()->set("n", 3)).recomb(sepia);
   }
 
-  void *buf;
-  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

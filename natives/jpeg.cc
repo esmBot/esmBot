@@ -9,7 +9,7 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
 {
   int quality = GetArgumentWithFallback<int>(arguments, "quality", 0);
 
-  void *buf;
+  char *buf;
 
   if (type == "gif") {
     VImage in = VImage::new_from_buffer(
@@ -53,7 +53,7 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
     }
 
     final.write_to_buffer(
-        ("." + outType).c_str(), &buf, &dataSize,
+        ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
     VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "");
@@ -61,18 +61,18 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
     in.write_to_buffer(".jpg", &jpgBuf, &dataSize,
                        VImage::option()->set("Q", quality)->set("strip", true));
     if (outType == "gif") {
-      VImage gifIn = VImage::new_from_buffer((char *)jpgBuf, dataSize, "");
+      VImage gifIn = VImage::new_from_buffer(reinterpret_cast<char*>(jpgBuf), dataSize, "");
       gifIn.write_to_buffer(
-          ".gif", &buf, &dataSize,
+          ".gif", reinterpret_cast<void**>(&buf), &dataSize,
           VImage::option()->set("Q", quality)->set("strip", true));
     } else {
       outType = "jpg";
-      buf = jpgBuf;
+      buf = reinterpret_cast<char*>(jpgBuf);
     }
   }
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

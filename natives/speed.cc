@@ -34,10 +34,10 @@ char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed) {
   VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
-  void *buf;
-  out.write_to_buffer(".gif", &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
-  return (char *)buf;
+  return buf;
 }
 
 ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
@@ -45,10 +45,10 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
   bool slow = GetArgumentWithFallback<bool>(arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(arguments, "speed", 2);
 
-  char *fileData = (char *)malloc(bufferLength);
+  char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
   memcpy(fileData, bufferdata, bufferLength);
 
-  char *match = (char *)"\x00\x21\xF9\x04";
+  char *match = static_cast<char*>("\x00\x21\xF9\x04");
 
   vector<uint16_t> old_delays;
   bool removeFrames = false;

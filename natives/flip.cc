@@ -37,15 +37,15 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
     out = in.flip(VIPS_DIRECTION_VERTICAL);
   }
 
-  void *buf;
+  char *buf;
   out.write_to_buffer(
-      ("." + outType).c_str(), &buf, &dataSize,
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

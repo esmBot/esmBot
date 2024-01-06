@@ -49,14 +49,14 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
   final.set("delay", delays);
 
-  void *buf;
-  final.write_to_buffer(".gif", &buf, &dataSize,
+  char *buf;
+  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize,
                         VImage::option()->set("dither", 0));
 
   outType = "gif";
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

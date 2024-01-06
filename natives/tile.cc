@@ -32,13 +32,13 @@ ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, si
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + outType).c_str(), &buf, &dataSize,
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

@@ -20,11 +20,11 @@ ArgumentMap Invert(const string& type, string& outType, const char* bufferdata, 
   VImage inverted = noAlpha.invert();
   VImage out = inverted.bandjoin(in.extract_band(3));
 
-  void *buf;
-  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

@@ -28,11 +28,11 @@ ArgumentMap Homebrew([[maybe_unused]] const string& type, string& outType, Argum
                                  ->set("x", 400 - (text.width() / 2))
                                  ->set("y", 300 - (text.height() / 2) - 8));
 
-  void *buf;
-  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

@@ -64,13 +64,13 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
     final.set("delay", delay);
   }
 
-  void *buf;
-  final.write_to_buffer(".gif", &buf, &dataSize);
+  char *buf;
+  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
   outType = "gif";
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

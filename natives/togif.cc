@@ -24,12 +24,12 @@ ArgumentMap ToGif(const string& type, string& outType, const char* bufferdata, s
         bufferdata, bufferLength, "",
         type == "webp" ? options->set("n", -1) : options);
 
-    void *buf;
-    in.write_to_buffer(".gif", &buf, &dataSize);
+    char *buf;
+    in.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
     outType = "gif";
 
     ArgumentMap output;
-    output["buf"] = (char *)buf;
+    output["buf"] = buf;
 
     return output;
   }

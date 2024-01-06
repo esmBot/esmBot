@@ -55,15 +55,15 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
                           .replicate(1, nPages);
   VImage final = in.composite(replicated, VIPS_BLEND_MODE_OVER);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + outType).c_str(), &buf, &dataSize,
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

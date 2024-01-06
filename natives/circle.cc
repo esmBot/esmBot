@@ -48,7 +48,7 @@ ArgumentMap Circle([[maybe_unused]] const string& type, string& outType, const c
   dataSize = blob.length();
 
   // workaround because the data is tied to the blob
-  char *data = (char *)malloc(dataSize);
+  char *data = reinterpret_cast<char*>(malloc(dataSize));
   memcpy(data, blob.data(), dataSize);
   
   ArgumentMap output;

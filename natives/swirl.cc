@@ -67,11 +67,11 @@ ArgumentMap Swirl(const string& type, string& outType, const char* bufferdata, s
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
-  void *buf;
-  final.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

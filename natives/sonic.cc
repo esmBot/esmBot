@@ -28,11 +28,11 @@ ArgumentMap Sonic([[maybe_unused]] const string& type, string& outType, Argument
   VImage out = bg.composite2(textImage, VIPS_BLEND_MODE_OVER,
                              VImage::option()->set("x", 391)->set("y", 84));
 
-  void *buf;
-  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

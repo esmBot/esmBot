@@ -63,11 +63,11 @@ ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, 
     }
   }
 
-  void *buf;
-  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

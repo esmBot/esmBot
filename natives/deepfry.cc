@@ -51,13 +51,13 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
     if (type == "gif") final.set("delay", fried.get_array_int("delay"));
   }
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + outType).c_str(), &buf, &dataSize,
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }
