@@ -5,7 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize) {
+ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? VImage::option()->set("n", -1) : 0)
@@ -17,7 +18,7 @@ ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, si
   int nPages = vips_image_get_n_pages(in.get_image());
 
   vector<VImage> img;
-  int finalHeight;
+  int finalHeight = 0;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;

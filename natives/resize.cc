@@ -23,7 +23,7 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
-  int finalHeight;
+  int finalHeight = 0;
   if (stretch) {
     out =
         in.resize(512.0 / (double)width,

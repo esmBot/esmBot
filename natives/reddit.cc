@@ -27,7 +27,7 @@ ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, 
 
   string captionText = "<span foreground=\"white\">" + text + "</span>";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage textImage = VImage::text(
       captionText.c_str(),
       VImage::option()

@@ -34,7 +34,7 @@ ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferda
 
   string captionText = "<span background=\"white\">" + caption + "</span>";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   auto findResult = fontPaths.find(font);
   VImage text = VImage::text(
       captionText.c_str(),

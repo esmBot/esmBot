@@ -57,7 +57,7 @@ ArgumentMap Meme(const string& type, string& outType, const char* bufferdata, si
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage combinedText =
       VImage::black(width, pageHeight, VImage::option()->set("bands", 3))
           .bandjoin(0)

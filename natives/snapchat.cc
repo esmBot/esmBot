@@ -29,7 +29,7 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
 
   string font_string = "Helvetica Neue " + to_string(size);
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage textIn = VImage::text(
       ("<span foreground=\"white\" background=\"#000000B2\">" + caption +
        "</span>")

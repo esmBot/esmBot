@@ -30,7 +30,7 @@ ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata,
       VImage::gaussmat(rad / 2, 0.1, VImage::option()->set("separable", true)) *
       8;
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage textIn = VImage::text(
       ("<span foreground=\"white\">" + caption + "</span>").c_str(),
       VImage::option()

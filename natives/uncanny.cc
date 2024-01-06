@@ -35,7 +35,7 @@ ArgumentMap Uncanny(const string& type, string& outType, const char* bufferdata,
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage text = VImage::text(captionText.c_str(),
                              VImage::option()
                                  ->set("rgba", true)

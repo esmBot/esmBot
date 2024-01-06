@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
 {
   VImage in =
       VImage::new_from_buffer(

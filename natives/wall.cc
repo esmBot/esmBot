@@ -10,7 +10,7 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Wall(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
 {
   Blob blob;
 

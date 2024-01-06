@@ -18,11 +18,8 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 
 #include "commands.h"
 
-inline bool MapContainsKey(const ArgumentMap& map, const string& key)
-{
-  ArgumentMap::const_iterator it = map.find(key);
-  return it != map.end();
-}
+void LoadFonts(string basePath);
+bool MapContainsKey(const ArgumentMap& map, const string& key);
 
 template <typename T>
 T GetArgument(ArgumentMap map, string key) {
@@ -38,24 +35,6 @@ T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
   return std::get<T>(map.at(key));
 }
 
-inline void loadFonts(string basePath) {
-  // manually loading fonts to workaround some font issues with libvips
-  if (!FcConfigAppFontAddDir(
-          NULL, (const FcChar8*)(basePath + "assets/fonts/").c_str())) {
-    std::cerr
-        << "Unable to load local font files from directory, falling back to "
-           "global fonts (which may be inaccurate!)"
-        << std::endl;
-  }
-  if (!FcConfigParseAndLoad(
-          FcConfigGetCurrent(),
-          (const FcChar8*)(basePath + "assets/fonts/fontconfig.xml").c_str(),
-          true)) {
-    std::cerr
-        << "Unable to load local fontconfig, some fonts may be inaccurate!"
-        << std::endl;
-  }
-}
 
 const std::vector<double> zeroVec = {0, 0, 0, 0};
 const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};

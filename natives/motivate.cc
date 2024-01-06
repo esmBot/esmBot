@@ -31,7 +31,7 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage topImage;
   if (top_text != "") {
     string topText = "<span foreground=\"white\" background=\"black\">" +
@@ -69,7 +69,7 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
   }
 
   vector<VImage> img;
-  int height;
+  int height = 0;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;

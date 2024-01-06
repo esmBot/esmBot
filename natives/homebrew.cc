@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Homebrew(const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Homebrew([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
 {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -13,7 +13,7 @@ ArgumentMap Homebrew(const string& type, string& outType, ArgumentMap arguments,
   string assetPath = basePath + "assets/images/hbc.png";
   VImage bg = VImage::new_from_file(assetPath.c_str());
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage text = VImage::text(
       ("<span letter_spacing=\"-5120\" color=\"white\">" + caption + "</span>")
           .c_str(),

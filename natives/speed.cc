@@ -40,7 +40,7 @@ char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed) {
   return (char *)buf;
 }
 
-ArgumentMap Speed([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
   bool slow = GetArgumentWithFallback<bool>(arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(arguments, "speed", 2);

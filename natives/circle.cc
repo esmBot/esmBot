@@ -12,7 +12,7 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Circle(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Circle([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]]  ArgumentMap arguments, size_t& dataSize)
 {
   Blob blob;
 

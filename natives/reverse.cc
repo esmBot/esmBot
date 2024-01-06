@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reverse(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
