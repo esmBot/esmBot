@@ -12,9 +12,9 @@ declare_input_func(Blur);
 declare_input_func(Bounce);
 declare_input_func(Caption);
 declare_input_func(CaptionTwo);
-
+#if MAGICK_ENABLED
 declare_input_func(Circle);
-
+#endif
 declare_input_func(Colors);
 declare_input_func(Crop);
 declare_input_func(Deepfry);
@@ -26,9 +26,9 @@ declare_input_func(Gamexplain);
 declare_input_func(Globe);
 declare_input_func(Invert);
 declare_input_func(Jpeg);
-
+#if MAGICK_ENABLED
 declare_input_func(Magik);
-
+#endif
 declare_input_func(Meme);
 declare_input_func(Mirror);
 declare_input_func(Motivate);
@@ -38,9 +38,9 @@ declare_input_func(Reverse);
 declare_input_func(Scott);
 declare_input_func(Snapchat);
 declare_input_func(Speed);
-
+#if MAGICK_ENABLED
 declare_input_func(Spin);
-
+#endif
 declare_input_func(Spotify);
 declare_input_func(Squish);
 declare_input_func(Swirl);
@@ -48,9 +48,9 @@ declare_input_func(Tile);
 declare_input_func(ToGif);
 declare_input_func(Uncanny);
 declare_input_func(Uncaption);
-
+#if MAGICK_ENABLED
 declare_input_func(Wall);
-
+#endif
 declare_input_func(Watermark);
 declare_input_func(Whisper);
 
