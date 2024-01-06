@@ -35,7 +35,6 @@ T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
   return std::get<T>(map.at(key));
 }
 
-
 const std::vector<double> zeroVec = {0, 0, 0, 0};
 const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
 
