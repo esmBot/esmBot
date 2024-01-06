@@ -5,10 +5,10 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Homebrew(string type, string *outType, ArgumentMap Arguments,
-                     size_t *DataSize) {
-  string caption = GetArgument<string>(Arguments, "caption");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Homebrew(const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+{
+  string caption = GetArgument<string>(arguments, "caption");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   string assetPath = basePath + "assets/images/hbc.png";
   VImage bg = VImage::new_from_file(assetPath.c_str());
@@ -29,7 +29,7 @@ ArgumentMap Homebrew(string type, string *outType, ArgumentMap Arguments,
                                  ->set("y", 300 - (text.height() / 2) - 8));
 
   void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
 
   ArgumentMap output;
   output["buf"] = (char *)buf;

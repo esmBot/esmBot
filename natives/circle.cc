@@ -12,16 +12,15 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Circle(string type, string *outType, char *BufferData,
-             size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
-             size_t *DataSize) {
+ArgumentMap Circle(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
   Blob blob;
 
   list<Image> frames;
   list<Image> coalesced;
   list<Image> blurred;
   try {
-    readImages(&frames, Blob(BufferData, BufferLength));
+    readImages(&frames, Blob(bufferdata, bufferLength));
   } catch (Magick::WarningCoder &warning) {
     cerr << "Coder Warning: " << warning.what() << endl;
   } catch (Magick::Warning &warning) {
@@ -31,13 +30,13 @@ ArgumentMap Circle(string type, string *outType, char *BufferData,
 
   for (Image &image : coalesced) {
     image.rotationalBlur(10);
-    image.magick(*outType);
+    image.magick(outType);
     blurred.push_back(image);
   }
 
   optimizeTransparency(blurred.begin(), blurred.end());
 
-  if (*outType == "gif") {
+  if (outType == "gif") {
     for (Image &image : blurred) {
       image.quantizeDitherMethod(FloydSteinbergDitherMethod);
       image.quantize();
@@ -46,11 +45,11 @@ ArgumentMap Circle(string type, string *outType, char *BufferData,
 
   writeImages(blurred.begin(), blurred.end(), &blob);
 
-  *DataSize = blob.length();
+  dataSize = blob.length();
 
   // workaround because the data is tied to the blob
-  char *data = (char *)malloc(*DataSize);
-  memcpy(data, blob.data(), *DataSize);
+  char *data = (char *)malloc(dataSize);
+  memcpy(data, blob.data(), dataSize);
   
   ArgumentMap output;
   output["buf"] = data;

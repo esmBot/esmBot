@@ -5,16 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reddit(string type, string *outType, char *BufferData,
-                   size_t BufferLength, ArgumentMap Arguments,
-                   size_t *DataSize) {
-  string text = GetArgument<string>(Arguments, "caption");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string text = GetArgument<string>(arguments, "caption");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -57,8 +56,8 @@ ArgumentMap Reddit(string type, string *outType, char *BufferData,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), &buf, &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 

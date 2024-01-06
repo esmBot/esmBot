@@ -5,15 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Jpeg(string type, string *outType, char *BufferData, size_t BufferLength,
-           ArgumentMap Arguments, size_t *DataSize) {
-  int quality = GetArgumentWithFallback<int>(Arguments, "quality", 0);
+ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  int quality = GetArgumentWithFallback<int>(arguments, "quality", 0);
 
   void *buf;
 
   if (type == "gif") {
     VImage in = VImage::new_from_buffer(
-                    BufferData, BufferLength, "",
+                    bufferdata, bufferLength, "",
                     VImage::option()->set("access", "sequential")->set("n", -1))
                     .colourspace(VIPS_INTERPRETATION_sRGB);
     if (!in.has_alpha()) in = in.bandjoin(255);
@@ -53,20 +53,20 @@ ArgumentMap Jpeg(string type, string *outType, char *BufferData, size_t BufferLe
     }
 
     final.write_to_buffer(
-        ("." + *outType).c_str(), &buf, DataSize,
-        *outType == "gif" ? VImage::option()->set("dither", 0) : 0);
+        ("." + outType).c_str(), &buf, &dataSize,
+        outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
-    VImage in = VImage::new_from_buffer(BufferData, BufferLength, "");
+    VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "");
     void *jpgBuf;
-    in.write_to_buffer(".jpg", &jpgBuf, DataSize,
+    in.write_to_buffer(".jpg", &jpgBuf, &dataSize,
                        VImage::option()->set("Q", quality)->set("strip", true));
-    if (*outType == "gif") {
-      VImage gifIn = VImage::new_from_buffer((char *)jpgBuf, *DataSize, "");
+    if (outType == "gif") {
+      VImage gifIn = VImage::new_from_buffer((char *)jpgBuf, dataSize, "");
       gifIn.write_to_buffer(
-          ".gif", &buf, DataSize,
+          ".gif", &buf, &dataSize,
           VImage::option()->set("Q", quality)->set("strip", true));
     } else {
-      *outType = "jpg";
+      outType = "jpg";
       buf = jpgBuf;
     }
   }

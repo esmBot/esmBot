@@ -24,17 +24,17 @@ VImage genText(string text, string font, const char *fontfile, int width,
   return outline.composite2(in, VIPS_BLEND_MODE_OVER);
 }
 
-ArgumentMap Meme(string type, string *outType, char *BufferData,
-                 size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  string top = GetArgument<string>(Arguments, "top");
-  string bottom = GetArgument<string>(Arguments, "bottom");
-  string font = GetArgument<string>(Arguments, "font");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Meme(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string top = GetArgument<string>(arguments, "top");
+  string bottom = GetArgument<string>(arguments, "bottom");
+  string font = GetArgument<string>(arguments, "font");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -91,8 +91,8 @@ ArgumentMap Meme(string type, string *outType, char *BufferData,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), &buf, &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 

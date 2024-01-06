@@ -16,45 +16,7 @@ using std::variant;
 typedef variant<char*, string, float, bool, int> ArgumentVariant;
 typedef map<string, ArgumentVariant> ArgumentMap;
 
-#include "blur.h"
-#include "bounce.h"
-#include "caption.h"
-#include "caption2.h"
-#include "circle.h"
-#include "colors.h"
-#include "crop.h"
-#include "deepfry.h"
-#include "distort.h"
-#include "flag.h"
-#include "flip.h"
-#include "freeze.h"
-#include "gamexplain.h"
-#include "globe.h"
-#include "homebrew.h"
-#include "invert.h"
-#include "jpeg.h"
-#include "magik.h"
-#include "meme.h"
-#include "mirror.h"
-#include "motivate.h"
-#include "reddit.h"
-#include "resize.h"
-#include "reverse.h"
-#include "scott.h"
-#include "snapchat.h"
-#include "sonic.h"
-#include "speed.h"
-#include "spin.h"
-#include "spotify.h"
-#include "squish.h"
-#include "swirl.h"
-#include "tile.h"
-#include "togif.h"
-#include "uncanny.h"
-#include "uncaption.h"
-#include "wall.h"
-#include "watermark.h"
-#include "whisper.h"
+#include "commands.h"
 
 inline bool MapContainsKey(const ArgumentMap& map, const string& key)
 {
@@ -104,9 +66,9 @@ const std::unordered_map<std::string, std::string> fontPaths{
     {"roboto", "assets/fonts/reddit.ttf"}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType, char* BufferData,
+               ArgumentMap (*)(const string& type, string& outType, const char* BufferData,
                                size_t BufferLength, ArgumentMap Arguments,
-                               size_t* DataSize)>
+                               size_t& DataSize)>
     FunctionMap = {{"blur", &Blur},
                    {"bounce", &Bounce},
                    {"caption", &Caption},
@@ -154,6 +116,6 @@ const std::map<std::string,
                    {"whisper", &Whisper}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType,
-                               ArgumentMap Arguments, size_t* DataSize)>
+               ArgumentMap (*)(const string& type, string& outType,
+                               ArgumentMap Arguments, size_t& DataSize)>
     NoInputFunctionMap = {{"homebrew", &Homebrew}, {"sonic", &Sonic}};

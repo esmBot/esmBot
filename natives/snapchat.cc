@@ -7,17 +7,16 @@ using namespace vips;
 
 const vector<double> zeroVec178 = {0, 0, 0, 178};
 
-ArgumentMap Snapchat(string type, string *outType, char *BufferData,
-                     size_t BufferLength, ArgumentMap Arguments,
-                     size_t *DataSize) {
-  string caption = GetArgument<string>(Arguments, "caption");
-  float pos = GetArgumentWithFallback<float>(Arguments, "pos", 0.5);
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string caption = GetArgument<string>(arguments, "caption");
+  float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.5);
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -58,8 +57,8 @@ ArgumentMap Snapchat(string type, string *outType, char *BufferData,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), &buf, &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 

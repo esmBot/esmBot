@@ -10,14 +10,14 @@ using namespace vips;
 VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
                                    0.1140, 0.2392, 0.4696, 0.0912);
 
-ArgumentMap Colors(string type, string *outType, char *BufferData,
-             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  string color = GetArgument<string>(Arguments, "color");
+ArgumentMap Colors(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string color = GetArgument<string>(arguments, "color");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -30,7 +30,7 @@ ArgumentMap Colors(string type, string *outType, char *BufferData,
   }
 
   void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
 
   ArgumentMap output;
   output["buf"] = (char *)buf;

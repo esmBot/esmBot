@@ -70,10 +70,10 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
     ArgumentMap outMap;
     if (obj.Has("data")) {
       Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-      outMap = FunctionMap.at(command)(type, &outType, data.Data(), data.Length(),
-                                    Arguments, &length);
+      outMap = FunctionMap.at(command)(type, outType, data.Data(), data.Length(),
+                                    Arguments, length);
     } else {
-      outMap = NoInputFunctionMap.at(command)(type, &outType, Arguments, &length);
+      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, length);
     }
 
     vips_error_clear();

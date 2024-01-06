@@ -6,29 +6,29 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Watermark(string type, string *outType, char *BufferData,
-                size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  string water = GetArgument<string>(Arguments, "water");
-  int gravity = GetArgument<int>(Arguments, "gravity");
+ArgumentMap Watermark(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string water = GetArgument<string>(arguments, "water");
+  int gravity = GetArgument<int>(arguments, "gravity");
 
-  bool resize = GetArgumentWithFallback<bool>(Arguments, "resize", false);
+  bool resize = GetArgumentWithFallback<bool>(arguments, "resize", false);
 
-  float yscale = GetArgumentWithFallback<float>(Arguments, "yscale", false);
+  float yscale = GetArgumentWithFallback<float>(arguments, "yscale", false);
 
-  bool append = GetArgumentWithFallback<bool>(Arguments, "append", false);
+  bool append = GetArgumentWithFallback<bool>(arguments, "append", false);
 
-  bool alpha = GetArgumentWithFallback<bool>(Arguments, "alpha", false);
-  bool flipX = GetArgumentWithFallback<bool>(Arguments, "flipX", false);
-  bool flipY = GetArgumentWithFallback<bool>(Arguments, "flipY", false);
+  bool alpha = GetArgumentWithFallback<bool>(arguments, "alpha", false);
+  bool flipX = GetArgumentWithFallback<bool>(arguments, "flipX", false);
+  bool flipY = GetArgumentWithFallback<bool>(arguments, "flipY", false);
 
-  bool mc = MapContainsKey(Arguments, "mc");
+  bool mc = MapContainsKey(arguments, "mc");
 
-  string basePath = GetArgument<string>(Arguments, "basePath");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -126,8 +126,8 @@ ArgumentMap Watermark(string type, string *outType, char *BufferData,
           bg = frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
               "interpretation", VIPS_INTERPRETATION_sRGB));
           frame = bg.bandjoin(frameAlpha);
-          if (*outType == "jpg" || *outType == "jpeg") {
-            *outType = "png";
+          if (outType == "jpg" || outType == "jpeg") {
+            outType = "png";
           }
         }
         VImage content =
@@ -150,8 +150,8 @@ ArgumentMap Watermark(string type, string *outType, char *BufferData,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), &buf, &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 

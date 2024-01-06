@@ -5,18 +5,17 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Motivate(string type, string *outType, char *BufferData,
-                     size_t BufferLength, ArgumentMap Arguments,
-                     size_t *DataSize) {
-  string top_text = GetArgument<string>(Arguments, "top");
-  string bottom_text = GetArgument<string>(Arguments, "bottom");
-  string font = GetArgument<string>(Arguments, "font");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string top_text = GetArgument<string>(arguments, "top");
+  string bottom_text = GetArgument<string>(arguments, "bottom");
+  string font = GetArgument<string>(arguments, "font");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -120,8 +119,8 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
 
   void *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
+      ("." + outType).c_str(), &buf, &dataSize,
+      outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = (char *)buf;

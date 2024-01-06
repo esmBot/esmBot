@@ -5,10 +5,10 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
-            size_t *DataSize) {
-  string text = GetArgument<string>(Arguments, "text");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Sonic(const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+{
+  string text = GetArgument<string>(arguments, "text");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   string assetPath = basePath + "assets/images/sonic.jpg";
   VImage bg = VImage::new_from_file(assetPath.c_str());
@@ -29,7 +29,7 @@ ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
                              VImage::option()->set("x", 391)->set("y", 84));
 
   void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  out.write_to_buffer(("." + outType).c_str(), &buf, &dataSize);
 
   ArgumentMap output;
   output["buf"] = (char *)buf;

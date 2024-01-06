@@ -6,14 +6,14 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reverse(string type, string *outType, char *BufferData,
-              size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  bool soos = GetArgumentWithFallback<bool>(Arguments, "soos", false);
+ArgumentMap Reverse(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
   VOption *options =
       VImage::option()->set("access", "sequential")->set("n", -1);
 
-  VImage in = VImage::new_from_buffer(BufferData, BufferLength, "", options)
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", options)
                   .colourspace(VIPS_INTERPRETATION_sRGB);
 
   int width = in.width();
@@ -50,10 +50,10 @@ ArgumentMap Reverse(string type, string *outType, char *BufferData,
   final.set("delay", delays);
 
   void *buf;
-  final.write_to_buffer(".gif", &buf, DataSize,
+  final.write_to_buffer(".gif", &buf, &dataSize,
                         VImage::option()->set("dither", 0));
 
-  *outType = "gif";
+  outType = "gif";
 
   ArgumentMap output;
   output["buf"] = (char *)buf;
