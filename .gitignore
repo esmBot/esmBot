@@ -128,3 +128,6 @@ yarn.lock
 # Container outputs
 bot-temp/
 bot-help/
+
+#Kate stuff
+*.kate*

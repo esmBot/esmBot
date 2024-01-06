@@ -95,8 +95,6 @@ inline void loadFonts(string basePath) {
   }
 }
 
-#define ARG_TYPES std::variant<string, bool, int, float>
-
 const std::vector<double> zeroVec = {0, 0, 0, 0};
 const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
 
