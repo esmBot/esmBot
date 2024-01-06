@@ -9,7 +9,7 @@ ArgumentMap ToGif(const string& type, string& outType, const char* bufferdata, s
 {
   if (type == "gif") {
     dataSize = bufferLength;
-    char *data = (char *)malloc(bufferLength);
+    char *data = reinterpret_cast<char*>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
 
     ArgumentMap output;

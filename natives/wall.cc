@@ -53,7 +53,7 @@ ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const cha
 
   dataSize = blob.length();
 
-  char *data = (char *)malloc(dataSize);
+  char *data = reinterpret_cast<char*>(malloc(dataSize));
   memcpy(data, blob.data(), dataSize);
 
   ArgumentMap output;

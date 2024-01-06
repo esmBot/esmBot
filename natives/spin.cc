@@ -67,7 +67,7 @@ ArgumentMap Spin(const string& type, string& outType, const char* bufferdata, si
   outType = "gif";
   dataSize = blob.length();
 
-  char *data = (char *)malloc(dataSize);
+  char *data = reinterpret_cast<char*>(malloc(dataSize));
   memcpy(data, blob.data(), dataSize);
   
   ArgumentMap output;

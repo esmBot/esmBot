@@ -48,7 +48,7 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
   char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
   memcpy(fileData, bufferdata, bufferLength);
 
-  char *match = static_cast<char*>("\x00\x21\xF9\x04");
+  char *match = const_cast<char*>("\x00\x21\xF9\x04");
 
   vector<uint16_t> old_delays;
   bool removeFrames = false;
@@ -56,27 +56,27 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
 
   // int amount = 0;
 
-  lastPos = (char *)memchr(fileData, '\x00', bufferLength);
+  lastPos = reinterpret_cast<char*>(memchr(fileData, '\x00', bufferLength));
   while (lastPos != NULL) {
     if (memcmp(lastPos, match, 4) != 0) {
-      lastPos = (char *)memchr(lastPos + 1, '\x00',
-                               (bufferLength - (lastPos - fileData)) - 1);
+      lastPos = reinterpret_cast<char*>(memchr(lastPos + 1, '\x00',
+                               (bufferLength - (lastPos - fileData)) - 1));
       continue;
     }
     //++amount;
     uint16_t old_delay;
     memcpy(&old_delay, lastPos + 5, 2);
     old_delays.push_back(old_delay);
-    lastPos = (char *)memchr(lastPos + 1, '\x00',
-                             (bufferLength - (lastPos - fileData)) - 1);
+    lastPos = reinterpret_cast<char*>(memchr(lastPos + 1, '\x00',
+                             (bufferLength - (lastPos - fileData)) - 1));
   }
 
   int currentFrame = 0;
-  lastPos = (char *)memchr(fileData, '\x00', bufferLength);
+  lastPos = reinterpret_cast<char*>(memchr(fileData, '\x00', bufferLength));
   while (lastPos != NULL) {
     if (memcmp(lastPos, match, 4) != 0) {
-      lastPos = (char *)memchr(lastPos + 1, '\x00',
-                               (bufferLength - (lastPos - fileData)) - 1);
+      lastPos = reinterpret_cast<char*>(memchr(lastPos + 1, '\x00',
+                               (bufferLength - (lastPos - fileData)) - 1));
       continue;
     }
     uint16_t new_delay = slow ? old_delays[currentFrame] * speed
@@ -88,8 +88,8 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
 
     memset16(lastPos + 5, new_delay, 1);
 
-    lastPos = (char *)memchr(lastPos + 1, '\x00',
-                             (bufferLength - (lastPos - fileData)) - 1);
+    lastPos = reinterpret_cast<char*>(memchr(lastPos + 1, '\x00',
+                             (bufferLength - (lastPos - fileData)) - 1));
     ++currentFrame;
   }
 
