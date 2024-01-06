@@ -56,22 +56,24 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "watermark.h"
 #include "whisper.h"
 
+inline bool MapContainsKey(const ArgumentMap& map, const string& key)
+{
+  ArgumentMap::const_iterator it = map.find(key);
+  return it != map.end();
+}
+
 template <typename T>
 T GetArgument(ArgumentMap map, string key) {
-  try {
-    return std::get<T>(map.at(key));
-  } catch (std::bad_variant_access&) {
+  if (!MapContainsKey(map, key))
     throw "Invalid requested type from variant.";
-  }
+  return std::get<T>(map.at(key));
 }
 
 template <typename T>
 T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
-  try {
-    return std::get<T>(map.at(key));
-  } catch (...) {  // this is, not great...
+  if (!MapContainsKey(map, key))
     return fallback;
-  }
+  return std::get<T>(map.at(key));
 }
 
 inline void loadFonts(string basePath) {
