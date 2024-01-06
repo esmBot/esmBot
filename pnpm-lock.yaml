@@ -24,8 +24,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   oceanic.js:
-    specifier: github:TheEssem/Oceanic#node18-update
-    version: github.com/TheEssem/Oceanic/c4c52c694d5ec32f875952c78182cc022a65eed7
+    specifier: 1.8.2-dev.ed8fd59
+    version: 1.8.2-dev.ed8fd59
   qrcode:
     specifier: ^1.5.3
     version: 1.5.3
@@ -78,6 +78,12 @@ devDependencies:
   '@biomejs/cli-linux-x64':
     specifier: 1.4.0
     version: 1.4.0
+  '@types/bun':
+    specifier: ^1.0.0
+    version: 1.0.0
+  '@types/ws':
+    specifier: ^8.5.10
+    version: 8.5.10
   cmake-js:
     specifier: ^7.2.1
     version: 7.2.1
@@ -531,6 +537,11 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
+  /@fastify/busboy@2.1.0:
+    resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
+    engines: {node: '>=14'}
+    dev: false
+
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
     engines: {node: '>=10.10.0'}
@@ -725,13 +736,17 @@ packages:
     dev: false
     optional: true
 
+  /@types/bun@1.0.0:
+    resolution: {integrity: sha512-TPI/aImv/fSo0SWlt29wq0tWRqQOWsC4FOXYeUK0Ni6tAS+FqJZ2p7QCGY4hmHaHQeE2KhKJ6Qn9k3kvFfXD3Q==}
+    dependencies:
+      bun-types: 1.0.18
+    dev: true
+
   /@types/node@20.10.3:
     resolution: {integrity: sha512-XJavIpZqiXID5Yxnxv3RUDKTN5b81ddNC3ecsA0SoFXz/QU8OGBwZGMomiq0zw+uuqbL/krztv/DINAQ/EV4gg==}
     requiresBuild: true
     dependencies:
       undici-types: 5.26.5
-    dev: false
-    optional: true
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -746,8 +761,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@types/node': 20.10.3
-    dev: false
-    optional: true
 
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
@@ -1020,6 +1033,10 @@ packages:
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
+    dev: true
+
+  /bun-types@1.0.18:
+    resolution: {integrity: sha512-1XZ7AxOF8oO8FZtw1xj006JAKxEjulK3dUhsktZVN95vXBlsf4NIjQxfistVdpt24v3H2I9BwHp+UU+gXSSpAw==}
     dev: true
 
   /callsites@3.1.0:
@@ -2440,6 +2457,24 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
+  /oceanic.js@1.8.2-dev.ed8fd59:
+    resolution: {integrity: sha512-dwwsn/+pDQokRp+VGCe9AxU00Lb8ohqLNezG+A0O6XJA3sXVtZTCbX4D0kEbY5gD9/CkVZDxHDHaihaE6S4Tdg==}
+    engines: {node: '>=16.16.0'}
+    dependencies:
+      tslib: 2.6.2
+      undici: 5.28.2
+      ws: 8.14.2
+    optionalDependencies:
+      '@discordjs/voice': 0.16.1
+    transitivePeerDependencies:
+      - '@discordjs/opus'
+      - bufferutil
+      - ffmpeg-static
+      - node-opus
+      - opusscript
+      - utf-8-validate
+    dev: false
+
   /once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
@@ -3343,8 +3378,13 @@ packages:
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
     requiresBuild: true
+
+  /undici@5.28.2:
+    resolution: {integrity: sha512-wh1pHJHnUeQV5Xa8/kyQhO7WFa8M34l026L5P/+2TYiakvGy5Rdc8jWZVyG7ieht/0WgJLEd3kcU5gKx+6GC8w==}
+    engines: {node: '>=14.0'}
+    dependencies:
+      '@fastify/busboy': 2.1.0
     dev: false
-    optional: true
 
   /universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -3611,27 +3651,6 @@ packages:
       nan: 2.18.0
     dev: false
     optional: true
-
-  github.com/TheEssem/Oceanic/c4c52c694d5ec32f875952c78182cc022a65eed7:
-    resolution: {tarball: https://codeload.github.com/TheEssem/Oceanic/tar.gz/c4c52c694d5ec32f875952c78182cc022a65eed7}
-    name: oceanic.js
-    version: 1.8.1
-    engines: {node: '>=18.13.0'}
-    prepare: true
-    requiresBuild: true
-    dependencies:
-      tslib: 2.6.2
-      ws: 8.14.2
-    optionalDependencies:
-      '@discordjs/voice': 0.16.1
-    transitivePeerDependencies:
-      - '@discordjs/opus'
-      - bufferutil
-      - ffmpeg-static
-      - node-opus
-      - opusscript
-      - utf-8-validate
-    dev: false
 
   github.com/shipgirlproject/Shoukaku/b2481e5c5ab3f7160681f95c14eb1ca36f47517a:
     resolution: {tarball: https://codeload.github.com/shipgirlproject/Shoukaku/tar.gz/b2481e5c5ab3f7160681f95c14eb1ca36f47517a}
