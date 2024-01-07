@@ -5,14 +5,14 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Scott(string type, string *outType, char *BufferData, size_t BufferLength,
-            ArgumentMap Arguments, size_t *DataSize) {
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Scott(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -47,13 +47,13 @@ ArgumentMap Scott(string type, string *outType, char *BufferData, size_t BufferL
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, 481);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

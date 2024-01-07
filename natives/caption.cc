@@ -6,17 +6,16 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Caption(string type, string *outType, char *BufferData,
-                    size_t BufferLength, ArgumentMap Arguments,
-                    size_t *DataSize) {
-  string caption = GetArgument<string>(Arguments, "caption");
-  string font = GetArgument<string>(Arguments, "font");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Caption(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string caption = GetArgument<string>(arguments, "caption");
+  string font = GetArgument<string>(arguments, "font");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -34,7 +33,7 @@ ArgumentMap Caption(string type, string *outType, char *BufferData,
 
   string captionText = "<span background=\"white\">" + caption + "</span>";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   auto findResult = fontPaths.find(font);
   VImage text = VImage::text(
       captionText.c_str(),
@@ -64,15 +63,15 @@ ArgumentMap Caption(string type, string *outType, char *BufferData,
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

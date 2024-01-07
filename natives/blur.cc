@@ -7,13 +7,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Blur(string type, string *outType, char *BufferData, size_t BufferLength,
-           ArgumentMap Arguments, size_t *DataSize) {
-  bool sharp = GetArgument<bool>(Arguments, "sharp");
+ArgumentMap Blur(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  bool sharp = GetArgument<bool>(arguments, "sharp");
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -24,11 +24,10 @@ ArgumentMap Blur(string type, string *outType, char *BufferData, size_t BufferLe
   VImage out =
       sharp ? in.sharpen(VImage::option()->set("sigma", 3)) : in.gaussblur(15);
 
-  void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
 
+  char* buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
   ArgumentMap output;
-  output["buf"] = (char *)buf;
-
+  output["buf"] = buf;
   return output;
 }

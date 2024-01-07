@@ -5,18 +5,17 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Motivate(string type, string *outType, char *BufferData,
-                     size_t BufferLength, ArgumentMap Arguments,
-                     size_t *DataSize) {
-  string top_text = GetArgument<string>(Arguments, "top");
-  string bottom_text = GetArgument<string>(Arguments, "bottom");
-  string font = GetArgument<string>(Arguments, "font");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string top_text = GetArgument<string>(arguments, "top");
+  string bottom_text = GetArgument<string>(arguments, "bottom");
+  string font = GetArgument<string>(arguments, "font");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -32,7 +31,7 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage topImage;
   if (top_text != "") {
     string topText = "<span foreground=\"white\" background=\"black\">" +
@@ -70,7 +69,7 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
   }
 
   vector<VImage> img;
-  int height;
+  int height = 0;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
@@ -118,13 +117,13 @@ ArgumentMap Motivate(string type, string *outType, char *BufferData,
                      .extract_band(0, VImage::option()->set("n", 3));
   final.set(VIPS_META_PAGE_HEIGHT, height);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif" ? VImage::option()->set("dither", 1) : 0);
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

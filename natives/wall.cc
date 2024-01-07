@@ -10,15 +10,15 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Wall(string type, string *outType, char *BufferData, size_t BufferLength,
-           [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
+ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
   Blob blob;
 
   list<Image> frames;
   list<Image> coalesced;
   list<Image> mid;
   try {
-    readImages(&frames, Blob(BufferData, BufferLength));
+    readImages(&frames, Blob(bufferdata, bufferLength));
   } catch (Magick::WarningCoder &warning) {
     cerr << "Coder Warning: " << warning.what() << endl;
   } catch (Magick::Warning &warning) {
@@ -36,13 +36,13 @@ ArgumentMap Wall(string type, string *outType, char *BufferData, size_t BufferLe
                             128, 0, 140, 60, 128, 128, 140, 140};
     image.distort(Magick::PerspectiveDistortion, 16, arguments);
     image.scale(Geometry("800x800>"));
-    image.magick(*outType);
+    image.magick(outType);
     mid.push_back(image);
   }
 
   optimizeTransparency(mid.begin(), mid.end());
 
-  if (*outType == "gif") {
+  if (outType == "gif") {
     for (Image &image : mid) {
       image.quantizeDitherMethod(FloydSteinbergDitherMethod);
       image.quantize();
@@ -51,10 +51,10 @@ ArgumentMap Wall(string type, string *outType, char *BufferData, size_t BufferLe
 
   writeImages(mid.begin(), mid.end(), &blob);
 
-  *DataSize = blob.length();
+  dataSize = blob.length();
 
-  char *data = (char *)malloc(*DataSize);
-  memcpy(data, blob.data(), *DataSize);
+  char *data = reinterpret_cast<char*>(malloc(dataSize));
+  memcpy(data, blob.data(), dataSize);
 
   ArgumentMap output;
   output["buf"] = data;

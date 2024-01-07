@@ -6,11 +6,11 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flip(string type, string *outType, char *BufferData, size_t BufferLength,
-           ArgumentMap Arguments, size_t *DataSize) {
-  bool flop = GetArgumentWithFallback<bool>(Arguments, "flop", false);
+ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
-  VImage in = VImage::new_from_buffer(BufferData, BufferLength, "",
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
                                       type == "gif"
                                           ? VImage::option()->set("n", -1)->set(
                                                 "access", "sequential")
@@ -37,15 +37,15 @@ ArgumentMap Flip(string type, string *outType, char *BufferData, size_t BufferLe
     out = in.flip(VIPS_DIRECTION_VERTICAL);
   }
 
-  void *buf;
+  char *buf;
   out.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

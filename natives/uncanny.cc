@@ -5,19 +5,18 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Uncanny(string type, string *outType, char *BufferData,
-                    size_t BufferLength, ArgumentMap Arguments,
-                    size_t *DataSize) {
-  string caption = GetArgument<string>(Arguments, "caption");
-  string caption2 = GetArgument<string>(Arguments, "caption2");
-  string font = GetArgument<string>(Arguments, "font");
-  string path = GetArgument<string>(Arguments, "path");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Uncanny(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string caption = GetArgument<string>(arguments, "caption");
+  string caption2 = GetArgument<string>(arguments, "caption2");
+  string font = GetArgument<string>(arguments, "font");
+  string path = GetArgument<string>(arguments, "path");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB)
           .extract_band(0, VImage::option()->set("n", 3));
@@ -36,7 +35,7 @@ ArgumentMap Uncanny(string type, string *outType, char *BufferData,
   string fontResult =
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage text = VImage::text(captionText.c_str(),
                              VImage::option()
                                  ->set("rgba", true)
@@ -89,13 +88,13 @@ ArgumentMap Uncanny(string type, string *outType, char *BufferData,
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, 720);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

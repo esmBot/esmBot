@@ -5,16 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Whisper(string type, string *outType, char *BufferData,
-                    size_t BufferLength, ArgumentMap Arguments,
-                    size_t *DataSize) {
-  string caption = GetArgument<string>(Arguments, "caption");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string caption = GetArgument<string>(arguments, "caption");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -31,7 +30,7 @@ ArgumentMap Whisper(string type, string *outType, char *BufferData,
       VImage::gaussmat(rad / 2, 0.1, VImage::option()->set("separable", true)) *
       8;
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage textIn = VImage::text(
       ("<span foreground=\"white\">" + caption + "</span>").c_str(),
       VImage::option()
@@ -57,15 +56,15 @@ ArgumentMap Whisper(string type, string *outType, char *BufferData,
                           .replicate(1, nPages);
   VImage final = in.composite(replicated, VIPS_BLEND_MODE_OVER);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

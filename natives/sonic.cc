@@ -5,15 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
-            size_t *DataSize) {
-  string text = GetArgument<string>(Arguments, "text");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Sonic([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+{
+  string text = GetArgument<string>(arguments, "text");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   string assetPath = basePath + "assets/images/sonic.jpg";
   VImage bg = VImage::new_from_file(assetPath.c_str());
 
-  loadFonts(basePath);
+  LoadFonts(basePath);
   VImage textImage =
       VImage::text(
           ("<span foreground=\"white\">" + text + "</span>").c_str(),
@@ -28,11 +28,11 @@ ArgumentMap Sonic(string type, string *outType, ArgumentMap Arguments,
   VImage out = bg.composite2(textImage, VIPS_BLEND_MODE_OVER,
                              VImage::option()->set("x", 391)->set("y", 84));
 
-  void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

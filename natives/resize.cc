@@ -5,15 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Resize(string type, string *outType, char *BufferData,
-             size_t BufferLength, ArgumentMap Arguments, size_t *DataSize) {
-  bool stretch = GetArgumentWithFallback<bool>(Arguments, "stretch", false);
-  bool wide = GetArgumentWithFallback<bool>(Arguments, "wide", false);
+ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  bool stretch = GetArgumentWithFallback<bool>(arguments, "stretch", false);
+  bool wide = GetArgumentWithFallback<bool>(arguments, "wide", false);
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -23,7 +23,7 @@ ArgumentMap Resize(string type, string *outType, char *BufferData,
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
-  int finalHeight;
+  int finalHeight = 0;
   if (stretch) {
     out =
         in.resize(512.0 / (double)width,
@@ -47,11 +47,11 @@ ArgumentMap Resize(string type, string *outType, char *BufferData,
   }
   out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
-  void *buf;
-  out.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

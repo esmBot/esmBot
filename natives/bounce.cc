@@ -7,12 +7,11 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Bounce(string type, string *outType, char *BufferData,
-             size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
-             size_t *DataSize) {
+ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
   VImage in =
       VImage::new_from_buffer(
-          BufferData, BufferLength, "",
+          bufferdata, bufferLength, "",
           type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
                         : 0)
           .colourspace(VIPS_INTERPRETATION_sRGB);
@@ -40,13 +39,13 @@ ArgumentMap Bounce(string type, string *outType, char *BufferData,
     final.set("delay", delay);
   }
 
-  void *buf;
-  final.write_to_buffer(".gif", &buf, DataSize);
+  char *buf;
+  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
-  *outType = "gif";
+  outType = "gif";
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

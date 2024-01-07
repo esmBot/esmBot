@@ -16,51 +16,10 @@ using std::variant;
 typedef variant<char*, string, float, bool, int> ArgumentVariant;
 typedef map<string, ArgumentVariant> ArgumentMap;
 
-#include "blur.h"
-#include "bounce.h"
-#include "caption.h"
-#include "caption2.h"
-#include "circle.h"
-#include "colors.h"
-#include "crop.h"
-#include "deepfry.h"
-#include "distort.h"
-#include "flag.h"
-#include "flip.h"
-#include "freeze.h"
-#include "gamexplain.h"
-#include "globe.h"
-#include "homebrew.h"
-#include "invert.h"
-#include "jpeg.h"
-#include "magik.h"
-#include "meme.h"
-#include "mirror.h"
-#include "motivate.h"
-#include "reddit.h"
-#include "resize.h"
-#include "reverse.h"
-#include "scott.h"
-#include "snapchat.h"
-#include "sonic.h"
-#include "speed.h"
-#include "spin.h"
-#include "spotify.h"
-#include "squish.h"
-#include "swirl.h"
-#include "tile.h"
-#include "togif.h"
-#include "uncanny.h"
-#include "uncaption.h"
-#include "wall.h"
-#include "watermark.h"
-#include "whisper.h"
+#include "commands.h"
 
-inline bool MapContainsKey(const ArgumentMap& map, const string& key)
-{
-  ArgumentMap::const_iterator it = map.find(key);
-  return it != map.end();
-}
+void LoadFonts(string basePath);
+bool MapContainsKey(const ArgumentMap& map, const string& key);
 
 template <typename T>
 T GetArgument(ArgumentMap map, string key) {
@@ -76,27 +35,6 @@ T GetArgumentWithFallback(ArgumentMap map, string key, T fallback) {
   return std::get<T>(map.at(key));
 }
 
-inline void loadFonts(string basePath) {
-  // manually loading fonts to workaround some font issues with libvips
-  if (!FcConfigAppFontAddDir(
-          NULL, (const FcChar8*)(basePath + "assets/fonts/").c_str())) {
-    std::cerr
-        << "Unable to load local font files from directory, falling back to "
-           "global fonts (which may be inaccurate!)"
-        << std::endl;
-  }
-  if (!FcConfigParseAndLoad(
-          FcConfigGetCurrent(),
-          (const FcChar8*)(basePath + "assets/fonts/fontconfig.xml").c_str(),
-          true)) {
-    std::cerr
-        << "Unable to load local fontconfig, some fonts may be inaccurate!"
-        << std::endl;
-  }
-}
-
-#define ARG_TYPES std::variant<string, bool, int, float>
-
 const std::vector<double> zeroVec = {0, 0, 0, 0};
 const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
 
@@ -106,9 +44,9 @@ const std::unordered_map<std::string, std::string> fontPaths{
     {"roboto", "assets/fonts/reddit.ttf"}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType, char* BufferData,
-                               size_t BufferLength, ArgumentMap Arguments,
-                               size_t* DataSize)>
+               ArgumentMap (*)(const string& type, string& outType, const char* bufferData,
+                               size_t bufferLength, ArgumentMap arguments,
+                               size_t& dataSize)>
     FunctionMap = {{"blur", &Blur},
                    {"bounce", &Bounce},
                    {"caption", &Caption},
@@ -156,6 +94,6 @@ const std::map<std::string,
                    {"whisper", &Whisper}};
 
 const std::map<std::string,
-               ArgumentMap (*)(string type, string* outType,
-                               ArgumentMap Arguments, size_t* DataSize)>
+               ArgumentMap (*)(const string& type, string& outType,
+                               ArgumentMap arguments, size_t& dataSize)>
     NoInputFunctionMap = {{"homebrew", &Homebrew}, {"sonic", &Sonic}};

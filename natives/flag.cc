@@ -5,15 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flag(string type, string *outType, char *BufferData, size_t BufferLength,
-           ArgumentMap Arguments, size_t *DataSize) {
-  string overlay = GetArgument<string>(Arguments, "overlay");
-  string basePath = GetArgument<string>(Arguments, "basePath");
+ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+{
+  string overlay = GetArgument<string>(arguments, "overlay");
+  string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -38,15 +38,15 @@ ArgumentMap Flag(string type, string *outType, char *BufferData, size_t BufferLe
   VImage replicated = overlayImage.replicate(1, nPages);
   VImage final = in.composite2(replicated, VIPS_BLEND_MODE_OVER);
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif"
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif"
           ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
           : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

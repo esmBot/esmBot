@@ -5,10 +5,10 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Swirl(string type, string *outType, char *BufferData, size_t BufferLength,
-            [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
+ArgumentMap Swirl(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? VImage::option()->set("n", -1) : 0)
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -67,11 +67,11 @@ ArgumentMap Swirl(string type, string *outType, char *BufferData, size_t BufferL
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
-  void *buf;
-  final.write_to_buffer(("." + *outType).c_str(), &buf, DataSize);
+  char *buf;
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

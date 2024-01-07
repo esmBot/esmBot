@@ -6,13 +6,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Deepfry(string type, string *outType, char *BufferData,
-              size_t BufferLength, [[maybe_unused]] ArgumentMap Arguments,
-              size_t *DataSize) {
+ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in =
-      VImage::new_from_buffer(BufferData, BufferLength, "",
+      VImage::new_from_buffer(bufferdata, bufferLength, "",
                               type == "gif" ? options->set("n", -1) : options)
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
@@ -52,13 +51,13 @@ ArgumentMap Deepfry(string type, string *outType, char *BufferData,
     if (type == "gif") final.set("delay", fried.get_array_int("delay"));
   }
 
-  void *buf;
+  char *buf;
   final.write_to_buffer(
-      ("." + *outType).c_str(), &buf, DataSize,
-      *outType == "gif" ? VImage::option()->set("dither", 0) : 0);
+      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
+      outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   ArgumentMap output;
-  output["buf"] = (char *)buf;
+  output["buf"] = buf;
 
   return output;
 }

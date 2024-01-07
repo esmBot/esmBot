@@ -10,9 +10,9 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Spin(string type, string *outType, char *BufferData, size_t BufferLength,
-           [[maybe_unused]] ArgumentMap Arguments, size_t *DataSize) {
-  int delay = GetArgumentWithFallback<int>(Arguments, "delay", 0);
+ArgumentMap Spin(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
+{
+  int delay = GetArgumentWithFallback<int>(arguments, "delay", 0);
 
   Blob blob;
 
@@ -20,7 +20,7 @@ ArgumentMap Spin(string type, string *outType, char *BufferData, size_t BufferLe
   list<Image> coalesced;
   list<Image> mid;
   try {
-    readImages(&frames, Blob(BufferData, BufferLength));
+    readImages(&frames, Blob(bufferdata, bufferLength));
   } catch (Magick::WarningCoder &warning) {
     cerr << "Coder Warning: " << warning.what() << endl;
   } catch (Magick::Warning &warning) {
@@ -64,11 +64,11 @@ ArgumentMap Spin(string type, string *outType, char *BufferData, size_t BufferLe
 
   writeImages(mid.begin(), mid.end(), &blob);
 
-  *outType = "gif";
-  *DataSize = blob.length();
+  outType = "gif";
+  dataSize = blob.length();
 
-  char *data = (char *)malloc(*DataSize);
-  memcpy(data, blob.data(), *DataSize);
+  char *data = reinterpret_cast<char*>(malloc(dataSize));
+  memcpy(data, blob.data(), dataSize);
   
   ArgumentMap output;
   output["buf"] = data;
