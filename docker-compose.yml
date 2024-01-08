@@ -7,15 +7,15 @@ services:
     image: esmbot
     restart: unless-stopped
     volumes:
-      - ./logs:/home/esmBot/.internal/logs
-      - ./bot-help:/home/esmBot/help
-      - ./bot-temp:/home/esmBot/temp
-      - ./config:/home/esmBot/.internal/config
+      - ./logs:/app/logs
+      - ./bot-help:/app/help
+      - ./bot-temp:/app/temp
+      - ./config:/app/config
     env_file:
       - .env
     environment:
-      OUTPUT: /home/esmBot/help/help.md
-      TEMPDIR: /home/esmBot/temp
+      OUTPUT: /app/help/help.md
+      TEMPDIR: /app/temp
     user: root
     links:
       - lavalink

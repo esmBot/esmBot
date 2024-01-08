@@ -1,35 +1,38 @@
 # Docker/Kubernetes file for running the bot
-#FROM node:alpine
-FROM alpine:edge
-
+FROM node:lts-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+COPY . /app
+WORKDIR /app
 RUN apk --no-cache upgrade
-RUN apk add --no-cache git cmake msttcorefonts-installer python3 alpine-sdk ffmpeg wget rpm2cpio \
-    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
-    libtool libwebp-dev libxml2-dev freetype fontconfig \
-		vips vips-dev grep libc6-compat nodejs-current nodejs-current-dev npm
+RUN apk add --no-cache msttcorefonts-installer freetype fontconfig \
+		vips vips-cpp grep libltdl icu-libs
+RUN update-ms-fonts && fc-cache -fv
 
-# install pnpm
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
-  npm install -g pnpm@8.6.2
+FROM base AS native-build
+RUN apk add --no-cache git cmake python3 alpine-sdk \
+    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
+    libtool libwebp-dev libxml2-dev \
+		vips-dev libc6-compat
 
 # liblqr needs to be built manually for magick to work
 # and because alpine doesn't have it in their repos
-RUN git clone https://github.com/carlobaldassi/liblqr \
-		&& cd liblqr \
-		&& ./configure \
+RUN git clone https://github.com/carlobaldassi/liblqr ~/liblqr \
+		&& cd ~/liblqr \
+		&& ./configure --prefix=/built \
 		&& make \
 		&& make install
 
+RUN cp -a /built/* /usr
+
 # install imagemagick from source rather than using the package
 # since the alpine package does not include liblqr support.
-RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
-    && cd ImageMagick \
+RUN git clone https://github.com/ImageMagick/ImageMagick.git ~/ImageMagick \
+    && cd ~/ImageMagick \
     && ./configure \
-		--prefix=/usr \
-		--sysconfdir=/etc \
-		--mandir=/usr/share/man \
-		--infodir=/usr/share/info \
-		--enable-static \
+		--prefix=/built \
+		--disable-static \
 		--disable-openmp \
 		--with-threads \
 		--with-png \
@@ -41,30 +44,23 @@ RUN git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick \
     && make \
     && make install
 
-RUN update-ms-fonts && fc-cache -f
+RUN cp -a /built/* /usr
 
-RUN adduser esmBot -s /bin/sh -D
-USER esmBot
-
-WORKDIR /home/esmBot/.internal
-
-COPY --chown=esmBot:esmBot ./package.json package.json
-COPY --chown=esmBot:esmBot ./pnpm-lock.yaml pnpm-lock.yaml
-RUN pnpm install
-COPY . .
-RUN rm .env
+FROM native-build AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-optional --frozen-lockfile
 RUN pnpm run build
 
-RUN mkdir /home/esmBot/help \
-		&& chown esmBot:esmBot /home/esmBot/help \
-		&& chmod 777 /home/esmBot/help
+FROM native-build AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-optional --frozen-lockfile
 
-RUN mkdir /home/esmBot/temp \
-		&& chown esmBot:esmBot /home/esmBot/temp \
-		&& chmod 777 /home/esmBot/temp
+FROM base
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/build/Release /app/build/Release
+COPY --from=build /built /usr
+RUN rm .env
 
-RUN mkdir /home/esmBot/.internal/logs \
-		&& chown esmBot:esmBot /home/esmBot/.internal/logs \
-		&& chmod 777 /home/esmBot/.internal/logs
+RUN mkdir /app/help && chmod 777 /app/help
+RUN mkdir /app/temp && chmod 777 /app/temp
+RUN mkdir /app/logs && chmod 777 /app/logs
 
 ENTRYPOINT ["node", "app.js"]
