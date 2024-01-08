@@ -30,7 +30,7 @@ plugins:
       - "ytsearch:%QUERY%"
     sources:
       spotify: false
-      applemusic: true
+      applemusic: false
       deezer: false
     spotify:
         clientId: "your client id"
