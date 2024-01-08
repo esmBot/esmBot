@@ -36,6 +36,7 @@
     "format-duration": "^3.0.2",
     "jsqr": "^1.4.0",
     "node-addon-api": "^7.0.0",
+    "node-gyp": "^10.0.1",
     "oceanic.js": "1.8.2-dev.ed8fd59",
     "postgres": "^3.4.3",
     "qrcode": "^1.5.3",
