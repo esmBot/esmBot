@@ -53,19 +53,20 @@ image_result *image(const char *command, const char *args, const char *data, siz
 
   size_t outLength = 0;
   ArgumentMap outMap;
-  if (length == 0)
-  {
-    if (MapContainsKey(FunctionMap, command))
-      outMap = FunctionMap.at(command)(type, outType, data, length, Arguments, &outLength);
-    else // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
-      throw "Error: \"FunctionMap\" does not contain \""" + command + "\", which was requested because \"length\" parameter was 0."
-  }
-  else
-  {
-    if (MapContainsKey(NoInputFunctionMap, command))
-      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, &outLength);
-    else
-      throw "Error: \"NoInputFunctionMap\" does not contain \""" + command + "\", which was requested because \"length\" parameter was not 0."
+  if (length != 0) {
+    if (MapContainsKey(FunctionMap, command)) {
+      outMap = FunctionMap.at(command)(type, outType, data, length, Arguments, outLength);
+    } else { // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
+      string cmd(command);
+      throw "Error: \"FunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was not 0.";
+    }
+  } else {
+    if (MapContainsKey(NoInputFunctionMap, command)) {
+      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, outLength);
+    } else {
+      string cmd(command);
+      throw "Error: \"NoInputFunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was 0.";
+    }
   }
 
   vips_error_clear();

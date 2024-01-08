@@ -19,7 +19,7 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "commands.h"
 
 void LoadFonts(string basePath);
-bool MapContainsKey(const ArgumentMap& map, const string& key);
+#define MapContainsKey(MAP, KEY) (MAP.find(KEY) != MAP.end())
 
 template <typename T>
 T GetArgument(ArgumentMap map, string key) {

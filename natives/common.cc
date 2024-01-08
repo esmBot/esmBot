@@ -19,9 +19,3 @@ void LoadFonts(string basePath)
         << std::endl;
   }
 }
-
-bool MapContainsKey(const ArgumentMap& map, const string& key)
-{
-  ArgumentMap::const_iterator it = map.find(key);
-  return it != map.end();
-}
