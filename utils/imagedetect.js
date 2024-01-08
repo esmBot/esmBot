@@ -146,7 +146,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   if (!singleMessage) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
     const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
-    if (!channel.permissionsOf(client.user.id.toString()).has("VIEW_CHANNEL")) return;
+    const perms = channel.permissionsOf?.(client.user.id);
+    if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {

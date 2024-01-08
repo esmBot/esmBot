@@ -14,7 +14,7 @@ class Command {
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
-      this.permissions = this.channel ? this.channel.permissionsOf(client.user.id.toString()) : Constants.AllTextPermissions;
+      this.permissions = this.channel?.permissionsOf?.(client.user.id) ?? Constants.AllTextPermissions;
       this.content = options.content;
       this.options = options.specialArgs;
       this.reference = {

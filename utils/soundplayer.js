@@ -51,12 +51,12 @@ export async function play(client, soundUrl, options) {
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
   if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
   if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
-  if (!options.guild.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
+  if (!options.guild.permissionsOf(client.user.id).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
   const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID).catch(e => {
     logger.warn(`Failed to get a voice channel: ${e}`);
   });
   if (!voiceChannel) return { content: "I can't join this voice channel! Make sure I have the right permissions.", flags: 64 };
-  if (!voiceChannel.permissionsOf(client.user.id.toString()).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
+  if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   const node = manager.options.nodeResolver(manager.nodes);
   let response;
   try {
