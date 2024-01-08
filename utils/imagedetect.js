@@ -1,3 +1,4 @@
+import { PrivateChannel, TextableChannel, ThreadChannel } from "oceanic.js";
 import { getType } from "./image.js";
 
 const tenorURLs = [
@@ -146,7 +147,8 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   if (!singleMessage) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
     const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
-    const perms = channel.permissionsOf?.(client.user.id);
+    if (!(channel instanceof TextableChannel) && !(channel instanceof ThreadChannel) && !(channel instanceof PrivateChannel)) return;
+    const perms = (channel instanceof TextableChannel || channel instanceof ThreadChannel) ? channel.permissionsOf?.(client.user.id) : null;
     if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
