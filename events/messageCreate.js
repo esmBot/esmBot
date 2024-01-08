@@ -25,7 +25,7 @@ export default async (client, message) => {
       return;
     }
   }
-  if (message.guildID && !permChannel.permissionsOf(client.user.id.toString()).has("SEND_MESSAGES")) return;
+  if (message.guildID && !permChannel.permissionsOf(client.user.id).has("SEND_MESSAGES")) return;
 
   if (!mentionRegex) mentionRegex = new RegExp(`^<@!?${client.user.id}> `);
 
