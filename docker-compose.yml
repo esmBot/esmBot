@@ -60,17 +60,6 @@ services:
       esmbot:
         ipv4_address: 172.20.0.4
 
-  adminer:
-    image: adminer
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    ports:
-      - 8888:8080
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.5
-
 volumes:
   bot-help:
   bot-temp:
