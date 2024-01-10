@@ -2,6 +2,10 @@
 #include <ZXing/BitMatrix.h>
 #include <ZXing/MultiFormatWriter.h>
 #include <ZXing/ReadBarcode.h>
+#include <ZXing/ZXVersion.h>
+#if ZXING_VERSION_MAJOR < 2
+#include <ZXing/TextUtfEncoding.h>
+#endif
 #include <vips/vips8>
 
 #include "common.h"
@@ -35,7 +39,16 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
 
   vips_image_wio_input(in.get_image());
 
-  ZXing::ReaderOptions opts;
+#if ZXING_VERSION_MAJOR >= 2
+  #if ZXING_VERSION_MINOR >= 2
+    ZXing::ReaderOptions opts;
+  #else
+    ZXing::DecodeHints opts;
+  #endif
+#else
+  ZXing::DecodeHints opts;
+#endif
+
   opts.setTryHarder(true);
   opts.setTryRotate(true);
   opts.setTryInvert(true);
@@ -54,7 +67,11 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
     return output;
   }
 
+#if ZXING_VERSION_MAJOR >= 2
   string resultText = result.text();
+#elif
+  string resultText = ZXing::TextUtfEncoding::ToUtf8(result.text());
+#endif
   dataSize = resultText.length();
 
   char *data = reinterpret_cast<char*>(malloc(dataSize));
