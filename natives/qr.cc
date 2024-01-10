@@ -1,7 +1,5 @@
 #ifdef ZXING_ENABLED
 #include <ZXing/BitMatrix.h>
-#include <ZXing/CharacterSet.h>
-#include <ZXing/ImageView.h>
 #include <ZXing/MultiFormatWriter.h>
 #include <ZXing/ReadBarcode.h>
 #include <vips/vips8>
@@ -46,17 +44,16 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
   opts.setMaxNumberOfSymbols(0xff);
 
   ZXing::ImageView img(VIPS_IMAGE_ADDR(in.get_image(), 0, 0), in.width(), in.height(), ZXing::ImageFormat::Lum);
-  auto results = ZXing::ReadBarcodes(img, opts);
+  ZXing::Result result = ZXing::ReadBarcode(img, opts);
 
   ArgumentMap output;
 
-  if (results.empty()) {
+  if (!result.isValid()) {
     output["buf"] = "";
     outType = "empty";
     return output;
   }
 
-  ZXing::Result result = results.front();
   string resultText = result.text();
   dataSize = resultText.length();
 
