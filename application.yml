@@ -38,6 +38,7 @@ plugins:
         countryCode: "US"
     applemusic:
         countryCode: "US"
+        mediaAPIToken: "your api token"
     deezer:
         masterDecryptionKey: "go looking for this somewhere"
 
