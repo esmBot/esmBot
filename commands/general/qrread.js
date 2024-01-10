@@ -1,33 +1,12 @@
-import jsqr from "jsqr";
-import sharp from "sharp";
-import { clean } from "../../utils/misc.js";
-import Command from "../../classes/command.js";
-import imageDetect from "../../utils/imagedetect.js";
+import ImageCommand from "../../classes/imageCommand.js";
 
-class QrReadCommand extends Command {
-  async run() {
-    const image = await imageDetect(this.client, this.message, this.interaction, this.options);
-    this.success = false;
-    if (image === undefined) return "You need to provide an image/GIF with a QR code to read!";
-    await this.acknowledge();
-    const data = Buffer.from(await (await fetch(image.path)).arrayBuffer());
-    const rawData = await sharp(data).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    const qrBuffer = jsqr(rawData.data, rawData.info.width, rawData.info.height);
-    if (!qrBuffer) return "I couldn't find a QR code!";
-    this.success = true;
-    return `\`\`\`\n${await clean(qrBuffer.data)}\n\`\`\``;
-  }
-
+class QrReadCommand extends ImageCommand {
   static description = "Reads a QR code";
-  static flags = [{
-    name: "image",
-    type: 11,
-    description: "An image/GIF attachment"
-  }, {
-    name: "link",
-    type: 3,
-    description: "An image/GIF URL"
-  }];
+
+  static requiresImage = true;
+  static noImage = "You need to provide an image/GIF with a QR code to read!";
+  static empty = "I couldn't find a QR code!";
+  static command = "qrread";
 }
 
 export default QrReadCommand;

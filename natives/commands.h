@@ -30,6 +30,9 @@ declare_input_func(Magik);
 declare_input_func(Meme);
 declare_input_func(Mirror);
 declare_input_func(Motivate);
+#if ZXING_ENABLED
+declare_input_func(QrRead);
+#endif
 declare_input_func(Reddit);
 declare_input_func(Resize);
 declare_input_func(Reverse);
@@ -55,4 +58,7 @@ declare_input_func(Whisper);
 // Declare our No-Input Functions
 
 declare_noinput_func(Homebrew);
+#if ZXING_ENABLED
+declare_noinput_func(QrCreate);
+#endif
 declare_noinput_func(Sonic);

@@ -7,14 +7,14 @@ COPY . /app
 WORKDIR /app
 RUN apk --no-cache upgrade
 RUN apk add --no-cache msttcorefonts-installer freetype fontconfig \
-		vips vips-cpp grep libltdl icu-libs
+		vips vips-cpp grep libltdl icu-libs zxing-cpp
 RUN update-ms-fonts && fc-cache -fv
 
 FROM base AS native-build
 RUN apk add --no-cache git cmake python3 alpine-sdk \
     zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
     libtool libwebp-dev libxml2-dev \
-		vips-dev libc6-compat
+		vips-dev libc6-compat zxing-cpp-dev
 
 # liblqr needs to be built manually for magick to work
 # and because alpine doesn't have it in their repos

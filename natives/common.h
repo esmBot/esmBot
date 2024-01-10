@@ -71,6 +71,9 @@ const std::map<std::string,
                    {"meme", &Meme},
                    {"mirror", &Mirror},
                    {"motivate", &Motivate},
+#ifdef ZXING_ENABLED
+                   {"qrread", &QrRead},
+#endif
                    {"reddit", &Reddit},
                    {"resize", &Resize},
                    {"reverse", &Reverse},
@@ -96,4 +99,8 @@ const std::map<std::string,
 const std::map<std::string,
                ArgumentMap (*)(const string& type, string& outType,
                                ArgumentMap arguments, size_t& dataSize)>
-    NoInputFunctionMap = {{"homebrew", &Homebrew}, {"sonic", &Sonic}};
+    NoInputFunctionMap = {{"homebrew", &Homebrew},
+#if ZXING_ENABLED
+    {"qrcreate", &QrCreate},
+#endif
+    {"sonic", &Sonic}};

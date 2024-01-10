@@ -79,12 +79,16 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
     vips_error_clear();
     vips_thread_shutdown();
 
-    char* buf = GetArgument<char*>(outMap, "buf");
+    if (length > 0) {
+      char* buf = GetArgument<char*>(outMap, "buf");
 
-    result.Set("data",
-               Napi::Buffer<char>::Copy(env, buf, length));
+      result.Set("data", Napi::Buffer<char>::Copy(env, buf, length));
+      g_free(buf);
+    } else {
+      result.Set("data", Napi::Buffer<char>::New(env, 0));
+    }
+    
     result.Set("type", outType);
-    g_free(buf);
   } catch (std::exception const& err) {
     Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
   } catch (...) {

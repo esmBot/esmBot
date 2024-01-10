@@ -2,7 +2,7 @@ import Command from "./command.js";
 import imageDetect from "../utils/imagedetect.js";
 import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
-import { random } from "../utils/misc.js";
+import { clean, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
 import messages from "../config/messages.json" assert { type: "json" };
 
@@ -16,7 +16,7 @@ class ImageCommand extends Command {
     const timestamp = this.type === "classic" ? this.message.createdAt : Math.floor((this.interaction.id / 4194304) + 1420070400000);
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
-    if (runningCommands.has(this.author.id) && (new Date(runningCommands.get(this.author.id)) - new Date(timestamp)) < 5000) {
+    if (runningCommands.has(this.author.id) && (new Date(runningCommands.get(this.author.id)).getTime() - new Date(timestamp).getTime()) < 5000) {
       return "Please slow down a bit.";
     }
     // before awaiting the command result, add this command to the set of running commands
@@ -36,11 +36,8 @@ class ImageCommand extends Command {
       try {
         const selection = selectedImages.get(this.author.id);
         const image = selection ?? await imageDetect(this.client, this.message, this.interaction, this.options, true).catch(e => {
-          if (e.name === "AbortError") {
-            return { type: "timeout" };
-          } else {
-            throw e;
-          }
+          if (e.name === "AbortError") return { type: "timeout" };
+          throw e;
         });
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
@@ -91,7 +88,9 @@ class ImageCommand extends Command {
       if (type === "ratelimit") return "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.";
       if (type === "nocmd") return "That command isn't supported on this instance of esmBot.";
       if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
+      if (type === "empty") return this.constructor.empty;
       this.success = true;
+      if (type === "text") return `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``;
       return {
         contents: buffer,
         name: `${this.constructor.command}.${type}`
@@ -155,6 +154,7 @@ class ImageCommand extends Command {
   static requiresGIF = false;
   static noImage = "You need to provide an image/GIF!";
   static noText = "You need to provide some text!";
+  static empty = "The resulting output was empty!";
   static command = "";
 }
 

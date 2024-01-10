@@ -35,6 +35,7 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(WITH_MAGICK "Build the functions that still depend on ImageMagick" OFF)
+option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
 
 if (WITH_MAGICK)
   find_package(ImageMagick COMPONENTS Magick++ MagickCore)
@@ -43,6 +44,14 @@ if (WITH_MAGICK)
   add_definitions(-DMAGICKCORE_HDRI_ENABLE=0)
   include_directories(${ImageMagick_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} ${ImageMagick_LIBRARIES})
+endif()
+
+if (WITH_ZXING)
+  pkg_check_modules(ZXing zxing)
+  add_definitions(-DZXING_ENABLED)
+  include_directories(${ZXing_INCLUDE_DIRS})
+  link_directories(${ZXing_LIBRARY_DIRS})
+  target_link_libraries(${PROJECT_NAME} ${ZXing_LDFLAGS})
 endif()
 
 find_package(Fontconfig REQUIRED)

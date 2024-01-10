@@ -20,7 +20,7 @@ Choose the distro you're using below for insallation instructions.
 === "Debian/Ubuntu"
     These instructions apply to Debian version 12 (bookworm) or Ubuntu version 22.04 (jammy) or later.
     ```sh
-    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libcgif-dev libgirepository1.0-dev libimagequant-dev meson
+    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libcgif-dev libgirepository1.0-dev libimagequant-dev meson libzxingcore-dev
     ```
     On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 === "Fedora/RHEL"
@@ -28,7 +28,7 @@ Choose the distro you're using below for insallation instructions.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them [here](https://rpmfusion.org/Configuration).
     ```sh
-    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel meson cabextract 
+    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel meson cabextract zxing-cpp-devel
     ```
     On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add [Remi's RPM Repository](https://rpms.remirepo.net) for the vips package.
     
@@ -39,11 +39,11 @@ Choose the distro you're using below for insallation instructions.
 === "Alpine"
     These instructions should apply to the current Edge versions.
     ```sh
-    doas apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev gobject-introspection-dev cgif-dev libimagequant-dev meson
+    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev gobject-introspection-dev cgif-dev libimagequant-dev meson zxing-cpp-dev
     ```
 === "Arch/Manjaro"
     ```sh
-    sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl gobject-introspection libcgif libimagequant meson
+    sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl gobject-introspection libcgif libimagequant meson zxing-cpp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 
