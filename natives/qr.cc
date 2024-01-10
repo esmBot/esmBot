@@ -15,7 +15,11 @@ ArgumentMap QrCreate([[maybe_unused]] const string& type, string& outType, Argum
 
   auto writer = ZXing::MultiFormatWriter(ZXing::BarcodeFormat::QRCode).setMargin(1).setEncoding(ZXing::CharacterSet::UTF8);
 
+#if ZXING_VERSION_MAJOR >= 2
   ZXing::BitMatrix matrix = writer.encode(text, 0, 0);
+#else
+  ZXing::BitMatrix matrix = writer.encode(ZXing::TextUtfEncoding::FromUtf8(text), 0, 0);
+#endif
   ZXing::Matrix<unsigned char> bitmap = ZXing::ToMatrix<uint8_t>(matrix);
 
   vips::VImage img = vips::VImage::new_from_memory(const_cast<unsigned char*>(bitmap.data()), bitmap.size(), bitmap.width(), bitmap.height(), 1, VIPS_FORMAT_UCHAR)
@@ -49,12 +53,7 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
   ZXing::DecodeHints opts;
 #endif
 
-  opts.setTryHarder(true);
-  opts.setTryRotate(true);
-  opts.setTryInvert(true);
-  opts.setTryDownscale(true);
   opts.setFormats(ZXing::BarcodeFormat::QRCode);
-  opts.setMaxNumberOfSymbols(0xff);
 
   ZXing::ImageView img(VIPS_IMAGE_ADDR(in.get_image(), 0, 0), in.width(), in.height(), ZXing::ImageFormat::Lum);
   ZXing::Result result = ZXing::ReadBarcode(img, opts);
@@ -69,7 +68,7 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
 
 #if ZXING_VERSION_MAJOR >= 2
   string resultText = result.text();
-#elif
+#else
   string resultText = ZXing::TextUtfEncoding::ToUtf8(result.text());
 #endif
   dataSize = resultText.length();
