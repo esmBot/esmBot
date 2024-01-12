@@ -54,8 +54,8 @@ class StatsCommand extends Command {
           inline: true
         },
         {
-          name: "Node.js Version",
-          value: process.version,
+          name: process.versions.bun ? "Bun Version" : "Node.js Version",
+          value: process.versions.bun ?? process.versions.node,
           inline: true
         },
         {
