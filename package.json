@@ -35,7 +35,7 @@
     "file-type": "^19.0.0",
     "format-duration": "^3.0.2",
     "node-addon-api": "^7.0.0",
-    "oceanic.js": "1.8.2-dev.ed8fd59",
+    "oceanic.js": "1.8.2-dev.56048cd",
     "postgres": "^3.4.3",
     "shoukaku": "^4.0.1",
     "winston": "^3.11.0",

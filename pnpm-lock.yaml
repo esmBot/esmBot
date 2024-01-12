@@ -24,8 +24,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   oceanic.js:
-    specifier: 1.8.2-dev.ed8fd59
-    version: 1.8.2-dev.ed8fd59
+    specifier: 1.8.2-dev.56048cd
+    version: 1.8.2-dev.56048cd
   postgres:
     specifier: ^3.4.3
     version: 3.4.3
@@ -523,11 +523,6 @@ packages:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
-
-  /@fastify/busboy@2.1.0:
-    resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
-    engines: {node: '>=14'}
-    dev: false
 
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
@@ -2397,12 +2392,11 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js@1.8.2-dev.ed8fd59:
-    resolution: {integrity: sha512-dwwsn/+pDQokRp+VGCe9AxU00Lb8ohqLNezG+A0O6XJA3sXVtZTCbX4D0kEbY5gD9/CkVZDxHDHaihaE6S4Tdg==}
-    engines: {node: '>=16.16.0'}
+  /oceanic.js@1.8.2-dev.56048cd:
+    resolution: {integrity: sha512-ogvVfRnw7Jozszh4xRVzkQGvwvkq5BcaIOKLOIWN3tZwd28mAXwaPO2MZ0pffB2HNgwDlT4Spgu/FPe6m1nx6Q==}
+    engines: {node: '>=18.13.0'}
     dependencies:
       tslib: 2.6.2
-      undici: 5.28.2
       ws: 8.16.0
     optionalDependencies:
       '@discordjs/voice': 0.16.1
@@ -3274,13 +3268,6 @@ packages:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
     requiresBuild: true
 
-  /undici@5.28.2:
-    resolution: {integrity: sha512-wh1pHJHnUeQV5Xa8/kyQhO7WFa8M34l026L5P/+2TYiakvGy5Rdc8jWZVyG7ieht/0WgJLEd3kcU5gKx+6GC8w==}
-    engines: {node: '>=14.0'}
-    dependencies:
-      '@fastify/busboy': 2.1.0
-    dev: false
-
   /universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
@@ -3408,6 +3395,7 @@ packages:
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+    requiresBuild: true
 
   /ws@7.4.6:
     resolution: {integrity: sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==}
