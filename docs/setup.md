@@ -73,7 +73,7 @@ sudo meson install
 
 ### 3. Install Node.js.
 
-Node.js is the runtime that esmBot is built on top of. The bot requires version 18 or above to run.
+Node.js is the runtime that esmBot is built on top of. The bot requires version 18 or above to run, but version 20 is recommended.
 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
 ```sh
@@ -82,8 +82,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 Then run the following to install Node.js:
 ```sh
-nvm install 18
-nvm use 18
+nvm install 20
+nvm use 20
 ```
 
 esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to install it:
