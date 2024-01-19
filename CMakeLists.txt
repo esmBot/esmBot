@@ -6,8 +6,60 @@ project(image)
 
 include(FindPkgConfig)
 include(FetchContent)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-file(GLOB SOURCE_FILES "natives/*.cc" "natives/*.h")
+set(SOURCE_FILES natives/blur.cc
+  natives/bounce.cc
+  natives/caption.cc
+  natives/caption2.cc
+  natives/colors.cc
+  natives/commands.h
+  natives/common.cc
+  natives/common.h
+  natives/crop.cc
+  natives/deepfry.cc
+  natives/distort.cc
+  natives/flag.cc
+  natives/flip.cc
+  natives/freeze.cc
+  natives/gamexplain.cc
+  natives/globe.cc
+  natives/homebrew.cc
+  natives/invert.cc
+  natives/jpeg.cc
+  natives/meme.cc
+  natives/mirror.cc
+  natives/motivate.cc
+  natives/reddit.cc
+  natives/resize.cc
+  natives/reverse.cc
+  natives/scott.cc
+  natives/snapchat.cc
+  natives/sonic.cc
+  natives/speed.cc
+  natives/spotify.cc
+  natives/squish.cc
+  natives/swirl.cc
+  natives/tile.cc
+  natives/togif.cc
+  natives/uncanny.cc
+  natives/uncaption.cc
+  natives/watermark.cc
+  natives/whisper.cc)
+
+option(WITH_MAGICK "Build the functions that still depend on ImageMagick" OFF)
+option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
+
+if (WITH_MAGICK)
+  list(APPEND SOURCE_FILES natives/circle.cc
+    natives/magik.cc
+    natives/spin.cc
+    natives/wall.cc)
+endif()
+
+if (WITH_ZXING)
+  list(APPEND SOURCE_FILES natives/qr.cc)
+endif()
 
 if (CMAKE_JS_VERSION)
   include_directories(${CMAKE_JS_INC})
@@ -31,11 +83,6 @@ else()
   set(CMAKE_CXX_FLAGS_DEBUG "-g")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif()
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-option(WITH_MAGICK "Build the functions that still depend on ImageMagick" OFF)
-option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
 
 if (WITH_MAGICK)
   find_package(ImageMagick COMPONENTS Magick++ MagickCore)
