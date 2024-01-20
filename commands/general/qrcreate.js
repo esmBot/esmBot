@@ -3,7 +3,7 @@ import { cleanMessage } from "../../utils/misc.js";
 
 class QrCreateCommand extends ImageCommand {
   params() {
-    const cleanedMessage = cleanMessage(this.message ?? this.interaction, this.options.text ?? this.content);
+    const cleanedMessage = cleanMessage(this.message ?? this.interaction, this.options.text ?? this.args.join(" "));
     return {
       text: cleanedMessage
     };
