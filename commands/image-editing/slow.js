@@ -6,7 +6,7 @@ class SlowCommand extends ImageCommand {
     const speed = parseInt(this.options.multiplier ?? this.args[0]);
     return {
       slow: true,
-      speed: isNaN(speed) ? 2 : speed
+      speed: Number.isNaN(speed) ? 2 : speed
     };
   }
 

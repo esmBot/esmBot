@@ -18,7 +18,7 @@ class SeekCommand extends MusicCommand {
     } else {
       seconds = parseFloat(pos);
     }
-    if (isNaN(seconds) || (seconds * 1000) > track.length || (seconds * 1000) < 0) return "That's not a valid position!";
+    if (Number.isNaN(seconds) || (seconds * 1000) > track.length || (seconds * 1000) < 0) return "That's not a valid position!";
     player.seekTo(seconds * 1000);
     this.success = true;
     return `🔊 Seeked track to ${seconds} second(s).`;

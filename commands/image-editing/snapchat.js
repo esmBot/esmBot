@@ -8,7 +8,7 @@ class SnapchatCommand extends ImageCommand {
     const position = parseFloat(this.options.position);
     return {
       caption: cleanMessage(this.message ?? this.interaction, newArgs),
-      pos: isNaN(position) ? 0.5 : position
+      pos: Number.isNaN(position) ? 0.5 : position
     };
   }
 

@@ -5,7 +5,7 @@ class UncaptionCommand extends ImageCommand {
   params() {
     const tolerance = parseFloat(this.options.tolerance);
     return {
-      tolerance: isNaN(tolerance) ? 0.95 : tolerance
+      tolerance: Number.isNaN(tolerance) ? 0.95 : tolerance
     };
   }
 

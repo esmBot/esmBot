@@ -5,7 +5,7 @@ class SpeedCommand extends ImageCommand {
   params() {
     const speed = parseInt(this.options.multiplier ?? this.args[0]);
     return {
-      speed: isNaN(speed) || speed < 1 ? 2 : speed
+      speed: Number.isNaN(speed) || speed < 1 ? 2 : speed
     };
   }
 

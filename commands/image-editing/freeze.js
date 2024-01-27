@@ -6,7 +6,7 @@ class FreezeCommand extends ImageCommand {
     const frameCount = parseInt(this.options.endframe ?? this.args[0]);
     return {
       loop: false,
-      frame: isNaN(frameCount) ? -1 : frameCount
+      frame: Number.isNaN(frameCount) ? -1 : frameCount
     };
   }
 

@@ -5,7 +5,7 @@ class JPEGCommand extends ImageCommand {
   params() {
     const quality = parseInt(this.options.quality ?? this.args[0]);
     return {
-      quality: isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100))
+      quality: Number.isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100))
     };
   }
 
