@@ -18,6 +18,10 @@ const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp
 export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
+/**
+ * @param {string} image
+ * @param {boolean} extraReturnTypes
+ */
 export async function getType(image, extraReturnTypes) {
   if (!image.startsWith("http")) {
     const imageType = await fileTypeFromFile(image);
@@ -37,8 +41,15 @@ export async function getType(image, extraReturnTypes) {
       method: "HEAD"
     });
     clearTimeout(timeout);
-    const size = imageRequest.headers.has("content-range") ? imageRequest.headers.get("content-range").split("/")[1] : imageRequest.headers.get("content-length");
-    if (parseInt(size) > 41943040 && extraReturnTypes) { // 40 MB
+    let size = 0;
+    if (imageRequest.headers.has("content-range")) {
+      const contentRange = imageRequest.headers.get("content-range");
+      if (contentRange) size = parseInt(contentRange.split("/")[1]);
+    } else if (imageRequest.headers.has("content-length")) {
+      const contentLength = imageRequest.headers.get("content-length");
+      if (contentLength) size = parseInt(contentLength);
+    }
+    if (size > 41943040 && extraReturnTypes) { // 40 MB
       type = "large";
       return type;
     }
