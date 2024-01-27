@@ -29,13 +29,13 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
-    "better-sqlite3": "^9.2.2",
-    "dotenv": "^16.3.1",
+    "better-sqlite3": "^9.3.0",
+    "dotenv": "^16.4.1",
     "emoji-regex": "^10.3.0",
     "file-type": "^19.0.0",
     "format-duration": "^3.0.2",
-    "node-addon-api": "^7.0.0",
-    "oceanic.js": "1.8.2-dev.56048cd",
+    "node-addon-api": "^7.1.0",
+    "oceanic.js": "1.9.0",
     "postgres": "^3.4.3",
     "shoukaku": "^4.0.1",
     "winston": "^3.11.0",
@@ -44,18 +44,18 @@
     "zlib-sync": "^0.1.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/eslint-parser": "^7.23.3",
+    "@babel/core": "^7.23.9",
+    "@babel/eslint-parser": "^7.23.9",
     "@babel/eslint-plugin": "^7.23.5",
     "@babel/plugin-transform-class-properties": "^7.23.3",
-    "@biomejs/biome": "1.4.1",
+    "@biomejs/biome": "1.5.3",
     "@types/ws": "^8.5.10",
-    "cmake-js": "^7.2.1",
+    "cmake-js": "^7.3.0",
     "eslint": "^8.56.0",
     "eslint-plugin-unicorn": "^50.0.1"
   },
   "optionalDependencies": {
-    "pm2": "^5.3.0"
+    "pm2": "^5.3.1"
   },
   "binary": {
     "napi_versions": [
