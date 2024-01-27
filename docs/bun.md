@@ -1,11 +1,11 @@
 # Bun Support
 With newer versions of esmBot, it is now possible to run it using [Bun](https://bun.sh), a newer JavaScript runtime that aims to be performant while retaining compatibility with Node.js applications and modules. This page exists to document known issues and extra steps that are needed at this time to run the bot on Bun.
 
-!!! danger
+!!! warning
     Bun support is still very experimental and prone to bugs. If you find any issues while running the bot on Bun, please test if the same issue occurs on Node; if it doesn't, then specify that it's a Bun-specific issue and provide the version you used (you can find this by running `bun --version`).
 
 ## Known Issues
-- Discord and image server connections do not handle disconnects properly (see https://github.com/oven-sh/bun/issues/7896)
+- Discord and image server connections do not handle disconnects properly (see [oven-sh/bun#7896](https://github.com/oven-sh/bun/issues/7896))
 
 ## Building the Image Natives
 !!! danger
