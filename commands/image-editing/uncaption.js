@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class UncaptionCommand extends ImageCommand {
@@ -12,7 +13,7 @@ class UncaptionCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "tolerance",
-      type: 10,
+      type: Constants.ApplicationCommandOptionTypes.NUMBER,
       description: "Set the shade tolerance for the caption detection (0.0 is highest, 1.0 is lowest, default is 0.95)",
       min_value: 0,
       max_value: 1

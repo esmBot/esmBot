@@ -2,6 +2,7 @@ import { paths, commands, messageCommands, info, categories, aliases as _aliases
 import { log } from "./logger.js";
 
 import commandConfig from "../config/commands.json" assert { type: "json" };
+import { Constants } from "oceanic.js";
 
 let queryValue = 0;
 
@@ -43,12 +44,12 @@ export async function load(client, command, slashReload = false) {
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
     adminOnly: props.adminOnly,
-    type: 1
+    type: Constants.ApplicationCommandTypes.CHAT_INPUT
   };
 
   if (category === "message") {
     messageCommands.set(commandName, props);
-    commandInfo.type = 3;
+    commandInfo.type = Constants.ApplicationCommandTypes.MESSAGE;
   } else {
     commands.set(commandName, props);
   }
@@ -92,7 +93,7 @@ export function update() {
       };
       info.set(name, cmdInfo);
     }
-    if (cmdInfo?.type === 3) {
+    if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         type: cmdInfo.type,

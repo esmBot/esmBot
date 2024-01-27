@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class FreezeCommand extends ImageCommand {
@@ -13,7 +14,7 @@ class FreezeCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "endframe",
-      type: 4,
+      type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the end frame (default: last frame)",
       min_value: 0
     });

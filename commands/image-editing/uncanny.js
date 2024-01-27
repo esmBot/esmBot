@@ -1,6 +1,7 @@
 import ImageCommand from "../../classes/imageCommand.js";
 import { random, cleanMessage } from "../../utils/misc.js";
 import { readdirSync } from "fs";
+import { Constants } from "oceanic.js";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 const prompts = ["you found:", "your dad is:", "you ate:", "your mom is:", "your sister is:", "you saw:", "you get lost in:", "you find:", "you grab:", "you pull out of your pocket:", "you fight:", "it's in your room:"];
@@ -28,7 +29,7 @@ class UncannyCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "font",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       choices: (() => {
         const array = [];
         for (const font of this.allowedFonts) {
@@ -39,7 +40,7 @@ class UncannyCommand extends ImageCommand {
       description: "Specify the font you want to use (default: helvetica)"
     }, {
       name: "phase",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       choices: (() => {
         const array = [];
         for (const name of names) {

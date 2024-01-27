@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeechBubbleCommand extends ImageCommand {
@@ -18,15 +19,15 @@ class SpeechBubbleCommand extends ImageCommand {
     this.flags.push({
       name: "alpha",
       description: "Make the top of the speech bubble transparent",
-      type: 5
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     }, {
       name: "flip",
       description: "Flips the speech bubble",
-      type: 5
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     }, {
       name: "bottom",
       description: "Puts the speech bubble on the bottom of the image",
-      type: 5
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     });
     return this;
   }

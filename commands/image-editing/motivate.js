@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
 import { cleanMessage } from "../../utils/misc.js";
 
@@ -25,7 +26,7 @@ class MotivateCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "font",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       choices: (() => {
         const array = [];
         for (const font of this.allowedFonts) {

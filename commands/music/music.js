@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import Command from "../../classes/command.js";
 import { commands, aliases, info, categories } from "../../utils/collections.js";
 
@@ -32,7 +33,7 @@ class MusicAIOCommand extends Command {
       const cmdInfo = info.get(cmd);
       this.flags.push({
         name: cmd,
-        type: 1,
+        type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
         description: cmdInfo.description,
         options: cmdInfo.flags
       });

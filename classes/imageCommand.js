@@ -5,6 +5,7 @@ import { runningCommands } from "../utils/collections.js";
 import { clean, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
 import messages from "../config/messages.json" assert { type: "json" };
+import { Constants } from "oceanic.js";
 
 class ImageCommand extends Command {
   async criteria() {
@@ -122,7 +123,7 @@ class ImageCommand extends Command {
     if (this.requiresText || this.textOptional) {
       this.flags.push({
         name: "text",
-        type: 3,
+        type: Constants.ApplicationCommandOptionTypes.STRING,
         description: "The text to put on the image",
         required: !this.textOptional
       });
@@ -130,17 +131,17 @@ class ImageCommand extends Command {
     if (this.requiresImage) {
       this.flags.push({
         name: "image",
-        type: 11,
+        type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
         description: "An image/GIF attachment"
       }, {
         name: "link",
-        type: 3,
+        type: Constants.ApplicationCommandOptionTypes.STRING,
         description: "An image/GIF URL"
       });
     }
     this.flags.push({
       name: "togif",
-      type: 5,
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
       description: "Force GIF output"
     });
     return this;

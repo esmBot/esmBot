@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
@@ -12,7 +13,7 @@ class SpeedCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "multiplier",
-      type: 4,
+      type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the speed multiplier (default: 2)",
       min_value: 1
     });
