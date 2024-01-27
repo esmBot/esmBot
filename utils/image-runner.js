@@ -68,7 +68,7 @@ export default function run(object) {
       if (buf) object.params.data = buf;
       const objectWithFixedType = Object.assign({}, object.params, { type: fileExtension });
       if (objectWithFixedType.gravity) {
-        if (Number.isNaN(objectWithFixedType.gravity)) {
+        if (Number.isNaN(parseInt(objectWithFixedType.gravity))) {
           objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
         }
       }
