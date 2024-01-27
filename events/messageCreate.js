@@ -4,11 +4,15 @@ import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from 
 import parseCommand from "../utils/parseCommand.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
-import { ThreadChannel } from "oceanic.js";
+import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
 
 let mentionRegex;
 
-// run when someone sends a message
+/**
+ * Runs when someone sends a message.
+ * @param {import("oceanic.js").Client} client
+ * @param {import("oceanic.js").Message} message
+ */
 export default async (client, message) => {
   // block if client is not ready yet
   if (!client.ready) return;
@@ -17,20 +21,23 @@ export default async (client, message) => {
   if (message.author.bot) return;
 
   // don't run command if bot can't send messages
-  let permChannel = message.channel;
-  if (permChannel instanceof ThreadChannel && !permChannel.parent) {
+  let permChannel;
+  if (message.channel instanceof ThreadChannel && !message.channel.parent) {
     try {
       permChannel = await client.rest.channels.get(message.channel.parentID);
     } catch {
       return;
     }
+  } else {
+    permChannel = message.channel;
   }
-  if (message.guildID && !permChannel.permissionsOf(client.user.id).has("SEND_MESSAGES")) return;
+  if (message.guildID && (!(permChannel instanceof PrivateChannel) && !(permChannel instanceof GroupChannel)) && !permChannel?.permissionsOf(client.user.id).has("SEND_MESSAGES")) return;
 
   if (!mentionRegex) mentionRegex = new RegExp(`^<@!?${client.user.id}> `);
 
   let guildDB;
   let text;
+  const defaultPrefix = process.env.PREFIX ?? "&";
   const mentionResult = message.content.match(mentionRegex);
   if (mentionResult) {
     text = message.content.substring(mentionResult[0].length).trim();
@@ -47,8 +54,8 @@ export default async (client, message) => {
         return;
       }
     }
-  } else if (message.content.startsWith(process.env.PREFIX)) {
-    text = message.content.substring(process.env.PREFIX.length).trim();
+  } else if (message.content.startsWith(defaultPrefix)) {
+    text = message.content.substring(defaultPrefix.length).trim();
   } else if (!message.guildID) {
     text = message.content;
   } else {
@@ -57,7 +64,9 @@ export default async (client, message) => {
 
   // separate commands and args
   const preArgs = text.split(/\s+/g);
-  const command = preArgs.shift().toLowerCase();
+  const shifted = preArgs.shift();
+  if (!shifted) return;
+  const command = shifted.toLowerCase();
   const aliased = aliases.get(command);
 
   // check if command exists and if it's enabled
@@ -117,7 +126,7 @@ export default async (client, message) => {
     const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
-    if ((endTime - startTime) >= 180000) reference.allowedMentions.repliedUser = true;
+    if ((endTime.getTime() - startTime.getTime()) >= 180000) reference.allowedMentions.repliedUser = true;
     if (typeof result === "string") {
       reference.allowedMentions.repliedUser = true;
       await client.rest.channels.createMessage(message.channelID, Object.assign({
@@ -126,7 +135,7 @@ export default async (client, message) => {
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
         let fileSize = 26214400;
-        if (message.guildID) {
+        if (message.guild) {
           switch (message.guild.premiumTier) {
             case 2:
               fileSize = 52428308;
@@ -175,7 +184,7 @@ export default async (client, message) => {
         await client.rest.channels.createMessage(message.channelID, Object.assign({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
           files: [{
-            contents: `Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`,
+            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"
           }]
         }, reference));
