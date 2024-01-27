@@ -30,6 +30,9 @@ export function generateList() {
   generated = true;
 }
 
+/**
+ * @param {string} output
+ */
 export async function createPage(output) {
   let template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/docs/assets/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 

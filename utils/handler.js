@@ -5,7 +5,12 @@ import commandConfig from "../config/commands.json" assert { type: "json" };
 
 let queryValue = 0;
 
-// load command into memory
+/**
+ * Load a command into memory.
+ * @param {import("oceanic.js").Client | null} client
+ * @param {string} command
+ * @param {boolean} slashReload
+ */
 export async function load(client, command, slashReload = false) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
@@ -109,6 +114,9 @@ export function update() {
   };
 }
 
+/**
+ * @param {import("oceanic.js").Client} bot
+ */
 export async function send(bot) {
   const commandArray = update();
   log("info", "Sending application command data to Discord...");

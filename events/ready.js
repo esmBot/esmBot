@@ -6,6 +6,9 @@ import logger from "../utils/logger.js";
 import commandsConfig from "../config/commands.json" assert { type: "json" };
 let ready = false;
 
+/**
+ * @param {import("oceanic.js").Client} client
+ */
 export default async (client) => {
   if (ready) return;
 

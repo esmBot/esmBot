@@ -1,4 +1,4 @@
-if (process.versions.node.split(".")[0] < 18) {
+if (parseInt(process.versions.node.split(".")[0]) < 18) {
   console.error(`You are currently running Node.js version ${process.version}.
 esmBot requires Node.js version 18 or above.
 Please refer to step 3 of the setup guide: https://docs.esmbot.net/setup/#3-install-nodejs`);
@@ -6,8 +6,8 @@ Please refer to step 3 of the setup guide: https://docs.esmbot.net/setup/#3-inst
 }
 if (process.platform === "win32") {
   console.error("\x1b[1m\x1b[31m\x1b[40m" + `WINDOWS IS NOT OFFICIALLY SUPPORTED!
-Although there's a (very) slim chance of it working, multiple aspects of the bot are built with UNIX-like systems in mind and could break on Win32-based systems. If you want to run the bot on Windows, using Windows Subsystem for Linux is highly recommended.
-The bot will continue to run past this message in 5 seconds, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` + "\x1b[0m");
+Although there's a (very) slim chance of it working, multiple aspects of esmBot are built with UNIX-like systems in mind and could break on Win32-based systems. If you want to run esmBot on Windows, using Windows Subsystem for Linux is highly recommended.
+esmBot will continue to run past this message in 5 seconds, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` + "\x1b[0m");
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
 }
 
@@ -17,7 +17,7 @@ import "dotenv/config";
 import { reloadImageConnections } from "./utils/image.js";
 
 // main services
-import { Client } from "oceanic.js";
+import { Client, Constants } from "oceanic.js";
 // some utils
 import { promises } from "fs";
 import logger from "./utils/logger.js";
@@ -43,15 +43,19 @@ import packageJson from "./package.json" assert { type: "json" };
 process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [
-  "GUILD_VOICE_STATES",
-  "DIRECT_MESSAGES",
-  "GUILDS"
+  Constants.Intents.GUILD_VOICE_STATES,
+  Constants.Intents.DIRECT_MESSAGES,
+  Constants.Intents.GUILDS
 ];
 if (commandConfig.types.classic) {
-  intents.push("GUILD_MESSAGES");
-  intents.push("MESSAGE_CONTENT");
+  intents.push(Constants.Intents.GUILD_MESSAGES);
+  intents.push(Constants.Intents.MESSAGE_CONTENT);
 }
 
+/**
+ * @param {string} dir
+ * @returns {AsyncGenerator<string>}
+ */
 async function* getFiles(dir) {
   const dirents = await promises.readdir(dir, { withFileTypes: true });
   for (const dirent of dirents) {
@@ -122,7 +126,7 @@ if (database) {
 }
 if (process.env.API_TYPE === "ws") await reloadImageConnections();
 
-const shardArray = process.env.SHARDS ? JSON.parse(process.env.SHARDS)[process.env.pm_id - 1] : null;
+const shardArray = process.env.SHARDS && process.env.pm_id ? JSON.parse(process.env.SHARDS)[parseInt(process.env.pm_id) - 1] : null;
 
 // create the oceanic client
 const client = new Client({
@@ -207,7 +211,8 @@ if (process.env.PM2_USAGE) {
                 type: "serverCounts",
                 guilds: client.guilds.size,
                 shards: client.shards.map((v) => {
-                  return { id: v.id, procId: process.env.pm_id - 1, latency: v.latency, status: v.status };
+                  if (!process.env.pm_id) return;
+                  return { id: v.id, procId: parseInt(process.env.pm_id) - 1, latency: v.latency, status: v.status };
                 })
               },
               topic: true

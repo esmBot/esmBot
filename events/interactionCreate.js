@@ -4,7 +4,11 @@ import { commands, messageCommands } from "../utils/collections.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 
-// run when a slash command is executed
+/**
+ * Runs when a slash/ command is executed.
+ * @param {import("oceanic.js").Client} client
+ * @param {import("oceanic.js").AnyInteractionGateway} interaction
+ */
 export default async (client, interaction) => {
   // block if client is not ready yet
   if (!client.ready) return;
@@ -83,7 +87,7 @@ export default async (client, interaction) => {
         await interaction[replyMethod]({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
           files: [{
-            contents: `Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`,
+            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"
           }]
         });

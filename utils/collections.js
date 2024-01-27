@@ -15,6 +15,7 @@ class TimedMap extends Map {
     setTimeout(() => {
       if (super.has(key)) super.delete(key);
     }, this.time);
+    return this;
   }
 }
 
@@ -30,6 +31,7 @@ class Cache extends Map {
   set(key, value) {
     super.set(key, value);
     if (this.size > this.maxValues) this.delete(this.keys().next().value);
+    return this;
   }
 }
 

@@ -3,15 +3,23 @@ import fs from "fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
 import { setTimeout } from "timers/promises";
+import { VoiceChannel } from "oceanic.js";
 
 export const players = new Map();
 export const queues = new Map();
 export const skipVotes = new Map();
 
+/**
+ * @typedef {{ channel: import("oceanic.js").AnyTextableChannel | import("oceanic.js").AnyInteractionChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: string; interaction: import("oceanic.js").CommandInteraction }} Options
+ * @type {Shoukaku}
+ */
 export let manager;
 export let nodes = JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).lava;
 export let connected = false;
 
+/**
+ * @param {import("oceanic.js").Client} client
+ */
 export function connect(client) {
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
   manager.on("error", (node, error) => {
@@ -26,6 +34,9 @@ export function connect(client) {
   });
 }
 
+/**
+ * @param {import("oceanic.js").Client} client
+ */
 export async function reload(client) {
   if (!manager) connect(client);
   const activeNodes = manager.nodes;
@@ -46,21 +57,27 @@ export async function reload(client) {
   return manager.nodes.size;
 }
 
+/**
+ * @param {import("oceanic.js").Client} client
+ * @param {string} soundUrl
+ * @param {Options} options
+ */
 export async function play(client, soundUrl, options) {
   if (!connected) return { content: "I'm not connected to any audio servers!", flags: 64 };
   if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
   if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
-  if (!options.member.voiceState) return { content: "You need to be in a voice channel first!", flags: 64 };
+  if (!options.member.voiceState?.channelID) return { content: "You need to be in a voice channel first!", flags: 64 };
   if (!options.guild.permissionsOf(client.user.id).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
-  const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID).catch(e => {
+  const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID).catch((e) => {
     logger.warn(`Failed to get a voice channel: ${e}`);
   });
   if (!voiceChannel) return { content: "I can't join this voice channel! Make sure I have the right permissions.", flags: 64 };
+  if (!(voiceChannel instanceof VoiceChannel)) return { content: "The channel I was given isn't a voice channel!", flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
   const node = manager.options.nodeResolver(manager.nodes);
   let response;
   try {
-    response = await node.rest.resolve(soundUrl);
+    response = await node?.rest.resolve(soundUrl);
     if (!response) return { content: "🔊 I couldn't get a response from the audio server.", flags: 64 };
     if (response.loadType === "empty" || response.loadType === "error") return { content: "I couldn't find that song!", flags: 64 };
   } catch (e) {
@@ -113,6 +130,18 @@ export async function play(client, soundUrl, options) {
   nextSong(client, options, connection, tracks[0], info, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
 }
 
+/**
+ * @param {import("oceanic.js").Client} client
+ * @param {Options} options
+ * @param {import("shoukaku").Player} connection
+ * @param {string} track
+ * @param {import("shoukaku").Track["info"] | undefined} info
+ * @param {import("oceanic.js").VoiceChannel} voiceChannel
+ * @param {string} host
+ * @param {boolean | undefined} loop
+ * @param {boolean | undefined} shuffle
+ * @param {string | null} lastTrack
+ */
 export async function nextSong(client, options, connection, track, info, voiceChannel, host, loop = false, shuffle = false, lastTrack = null) {
   skipVotes.delete(voiceChannel.guildID);
   let playingMessage;
@@ -129,11 +158,11 @@ export async function nextSong(client, options, connection, track, info, voiceCh
           },
           fields: [{
             name: "ℹ️ Title",
-            value: info.title?.trim() !== "" ? info.title : "(blank)"
+            value: info && info.title.trim() !== "" ? info.title : "(blank)"
           },
           {
             name: "🎤 Artist",
-            value: info.author?.trim() !== "" ? info.author : "(blank)"
+            value: info && info.author.trim() !== "" ? info.author : "(blank)"
           },
           {
             name: "💬 Channel",
@@ -145,14 +174,14 @@ export async function nextSong(client, options, connection, track, info, voiceCh
           },
           {
             name: `🔘${"▬".repeat(10)}`,
-            value: `0:00/${info.isStream ? "∞" : format(info.length)}`
+            value: `0:00/${info?.isStream ? "∞" : format(info?.length ?? 0)}`
           }]
         }]
       };
       if (options.type === "classic") {
         playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
       } else {
-        if ((Date.now() - options.interaction.createdAt) >= 900000) { // discord interactions are only valid for 15 minutes
+        if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) { // discord interactions are only valid for 15 minutes
           playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
         } else if (lastTrack && lastTrack !== track) {
           playingMessage = await options.interaction.createFollowup(content);
@@ -173,8 +202,8 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   players.set(voiceChannel.guildID, { player: connection, type: "music", host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
-    await connection.movePlayer();
-    await connection.resumePlayer();
+    await connection.move();
+    await connection.resume();
   });
   connection.on("end", async (data) => {
     if (data.reason === "replaced") return;
@@ -202,7 +231,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     queues.set(voiceChannel.guildID, newQueue);
     if (newQueue.length !== 0) {
       const newTrack = await connection.node.rest.decode(newQueue[0]);
-      nextSong(client, options, connection, newQueue[0], newTrack.info, voiceChannel, host, player.loop, player.shuffle, track);
+      nextSong(client, options, connection, newQueue[0], newTrack?.info, voiceChannel, host, player.loop, player.shuffle, track);
       try {
         if (options.type === "classic") {
           if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
@@ -222,7 +251,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
         if (options.type === "classic") {
           await client.rest.channels.createMessage(options.channel.id, { content });
         } else {
-          if ((Date.now() - options.interaction.createdAt) >= 900000) {
+          if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) {
             await client.rest.channels.createMessage(options.channel.id, { content });
           } else {
             await options.interaction.createFollowup({ content });
@@ -243,9 +272,18 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   });
 }
 
+/**
+ * @param {import("shoukaku").TrackExceptionEvent} exception
+ * @param {import("oceanic.js").Client} client
+ * @param {import("shoukaku").Player} connection
+ * @param {import("oceanic.js").Message} playingMessage
+ * @param {import("oceanic.js").VoiceChannel} voiceChannel
+ * @param {Options} options
+ * @param {boolean} [closed]
+ */
 export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options, closed) {
   try {
-    if (playingMessage?.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+    if (playingMessage.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
     const playMessage = players.get(voiceChannel.guildID).playMessage;
     if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
   } catch {
@@ -255,20 +293,16 @@ export async function errHandle(exception, client, connection, playingMessage, v
   queues.delete(voiceChannel.guildID);
   skipVotes.delete(voiceChannel.guildID);
   logger.error(exception);
-  try {
-    connection.node.leaveChannel(voiceChannel.guildID);
-  } catch {
-    // no-op
-  }
+  await manager.leaveVoiceChannel(voiceChannel.guildID).catch((e) => logger.warn(`Failed to leave voice channel: ${e}`));
   connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
   try {
-    const content = closed ? `🔊 I got disconnected by Discord and tried to reconnect; however, I got this error instead:\n\`\`\`${exception}\`\`\`` : `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.error}\`\`\``;
+    const content = closed ? `🔊 I got disconnected by Discord and tried to reconnect; however, I got this error instead:\n\`\`\`${exception}\`\`\`` : `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.exception}\`\`\``;
     if (options.type === "classic") {
-      await client.rest.channels.createMessage(playingMessage.channel.id, { content });
+      if (playingMessage.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
     } else {
-      if ((Date.now() - options.interaction.createdAt) >= 900000) {
+      if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) {
         await client.rest.channels.createMessage(options.channel.id, { content });
       } else {
         await options.interaction.createFollowup({ content });
