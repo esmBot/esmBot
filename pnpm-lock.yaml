@@ -66,9 +66,6 @@ devDependencies:
   '@biomejs/biome':
     specifier: 1.4.1
     version: 1.4.1
-  '@biomejs/cli-linux-x64':
-    specifier: 1.4.1
-    version: 1.4.1
   '@types/ws':
     specifier: ^8.5.10
     version: 8.5.10
@@ -434,7 +431,9 @@ packages:
     engines: {node: '>=14.*'}
     cpu: [x64]
     os: [linux]
+    requiresBuild: true
     dev: true
+    optional: true
 
   /@biomejs/cli-win32-arm64@1.4.1:
     resolution: {integrity: sha512-nWQbvkNKxYn/kCQ0yVF8kCaS3VzaGvtFSmItXiMknU4521LDjJ7tNWH12Gol+pIslrCbd4E1LhJa0a3ThRsBVg==}
