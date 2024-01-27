@@ -184,9 +184,13 @@ export async function nextSong(client, options, connection, track, info, voiceCh
         if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) { // discord interactions are only valid for 15 minutes
           playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
         } else if (lastTrack && lastTrack !== track) {
-          playingMessage = await options.interaction.createFollowup(content);
+          playingMessage = await (await options.interaction.createFollowup(content)).getMessage();
         } else {
-          playingMessage = await options.interaction[options.interaction.acknowledged ? "editOriginal" : "createMessage"](content);
+          if (options.interaction.acknowledged) {
+            playingMessage = await options.interaction.editOriginal(content);
+          } else {
+            playingMessage = await (await options.interaction.createMessage(content)).getMessage();
+          }
           if (!playingMessage) playingMessage = await options.interaction.getOriginal();
         }
       }

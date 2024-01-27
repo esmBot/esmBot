@@ -1,6 +1,9 @@
 import InteractionCollector from "./awaitinteractions.js";
-import { ComponentInteraction } from "oceanic.js";
 
+/**
+ * @param {import("oceanic.js").Client} client
+ * @param {{ type: string; message: import("oceanic.js").Message; interaction: import("oceanic.js").CommandInteraction; author: import("oceanic.js").User | import("oceanic.js").Member; }} info
+ */
 export default async (client, info, pages, timeout = 120000) => {
   const options = info.type === "classic" ? {
     messageReference: {
@@ -65,12 +68,13 @@ export default async (client, info, pages, timeout = 120000) => {
   if (info.type === "classic") {
     currentPage = await client.rest.channels.createMessage(info.message.channelID, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
   } else {
-    currentPage = await info.interaction[info.interaction.acknowledged ? "createFollowup" : "createMessage"](Object.assign(pages[page], pages.length > 1 ? components : {}));
+    const response = await info.interaction[info.interaction.acknowledged ? "createFollowup" : "createMessage"](Object.assign(pages[page], pages.length > 1 ? components : {}));
+    currentPage = await response.getMessage();
     if (!currentPage) currentPage = await info.interaction.getOriginal();
   }
   
   if (pages.length > 1) {
-    const interactionCollector = new InteractionCollector(client, currentPage, ComponentInteraction, timeout);
+    const interactionCollector = new InteractionCollector(client, currentPage, timeout);
     interactionCollector.on("interaction", async (interaction) => {
       if ((interaction.member ?? interaction.user).id === info.author.id) {
         switch (interaction.data.customID) {
@@ -126,10 +130,10 @@ export default async (client, info, pages, timeout = 120000) => {
                 }
               }, jumpComponents));
             } else {
-              promise = info.interaction.createFollowup(Object.assign({ content: "What page do you want to jump to?" }, jumpComponents));
+              promise = (await info.interaction.createFollowup(Object.assign({ content: "What page do you want to jump to?" }, jumpComponents))).getMessage();
             }
             promise.then(askMessage => {
-              const dropdownCollector = new InteractionCollector(client, askMessage, ComponentInteraction, timeout);
+              const dropdownCollector = new InteractionCollector(client, askMessage, timeout);
               let ended = false;
               dropdownCollector.on("interaction", async (response) => {
                 if (response.data.customID !== "seekDropdown") return;
