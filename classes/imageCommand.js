@@ -33,6 +33,7 @@ class ImageCommand extends Command {
 
     if (this.type === "application") await this.acknowledge();
 
+    let needsSpoiler = false;
     if (this.constructor.requiresImage) {
       try {
         const selection = selectedImages.get(this.author.id);
@@ -40,6 +41,7 @@ class ImageCommand extends Command {
           if (e.name === "AbortError") return { type: "timeout" };
           throw e;
         });
+        needsSpoiler = image.spoiler;
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
@@ -64,6 +66,8 @@ class ImageCommand extends Command {
         throw e;
       }
     }
+
+    if ("spoiler" in this.options) needsSpoiler = this.options.spoiler;
 
     if (this.constructor.requiresText) {
       const text = this.options.text ?? this.args.join(" ").trim();
@@ -94,7 +98,7 @@ class ImageCommand extends Command {
       if (type === "text") return `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``;
       return {
         contents: buffer,
-        name: `${this.constructor.command}.${type}`
+        name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`
       };
     } catch (e) {
       if (e === "Request ended prematurely due to a closed connection") return "This image job couldn't be completed because the server it was running on went down. Try running your command again.";
@@ -143,6 +147,10 @@ class ImageCommand extends Command {
       name: "togif",
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
       description: "Force GIF output"
+    }, {
+      name: "spoiler",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Attempt to send output as a spoiler"
     });
     return this;
   }

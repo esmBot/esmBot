@@ -1,4 +1,4 @@
-import { PrivateChannel, TextableChannel, ThreadChannel } from "oceanic.js";
+import { AttachmentFlags, PrivateChannel, TextableChannel, ThreadChannel } from "oceanic.js";
 import { getType } from "./image.js";
 
 const tenorURLs = [
@@ -31,23 +31,25 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 /**
  * Gets proper image paths.
- * @param {string} image 
- * @param {string} image2 
- * @param {boolean} video 
- * @param {boolean} extraReturnTypes 
- * @param {boolean} gifv 
- * @param {string | null} type 
- * @param {boolean} link 
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | undefined>}
+ * @param {string} image
+ * @param {string} image2
+ * @param {boolean} video
+ * @param {boolean} [spoiler]
+ * @param {boolean} [extraReturnTypes]
+ * @param {boolean} [gifv]
+ * @param {string | null} [type]
+ * @param {boolean} [link]
+ * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
-const getImage = async (image, image2, video, extraReturnTypes = false, gifv = false, type = null, link = false) => {
+const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, gifv = false, type = null, link = false) => {
   const fileNameSplit = new URL(image).pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
   const payload = {
     url: image2,
     path: image,
-    name: fileNameNoExtension
+    name: fileNameNoExtension,
+    spoiler
   };
   const host = new URL(image2).host;
   if (gifv || (link && combined.includes(host))) {
@@ -108,24 +110,29 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
   } else {
     // first check the embeds
     if (message.embeds.length !== 0) {
+      let hasSpoiler = false;
+      if (message.embeds[0].url && message.content) {
+        const spoilerRegex = new RegExp(`(?:\s|^)\|\|(\s+${message.embeds[0].url}\s+)\|\|`);
+        hasSpoiler = spoilerRegex.test(message.content);
+      }
       // embeds can vary in types, we check for tenor gifs first
       if (message.embeds[0].type === "gifv" && message.embeds[0].video?.url && message.embeds[0].url) {
-        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, extraReturnTypes, true);
+        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes, true);
         // then we check for other image types
       } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
-        type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
+        type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
         // finally we check both possible image fields for "generic" embeds
       } else if (message.embeds[0].type === "rich" || message.embeds[0].type === "article") {
         if (message.embeds[0].thumbnail) {
-          type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, extraReturnTypes);
+          type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
         } else if (message.embeds[0].image) {
-          type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, extraReturnTypes);
+          type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
         }
       }
       // then check the attachments
     } else if (message.attachments.size !== 0) {
       const firstAttachment = message.attachments.first();
-      if (firstAttachment?.width) type = await getImage(firstAttachment.proxyURL, firstAttachment.url, video);
+      if (firstAttachment?.width) type = await getImage(firstAttachment.proxyURL, firstAttachment.url, video, !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER));
     }
   }
   // if the return value exists then return it
@@ -147,11 +154,11 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     if (options.image) {
       const attachment = interaction.data.resolved.attachments.get(options.image);
       if (attachment) {
-        const result = await getImage(attachment.proxyURL, attachment.url, video, !!attachment.contentType);
+        const result = await getImage(attachment.proxyURL, attachment.url, video, !!(attachment.flags & AttachmentFlags.IS_SPOILER), !!attachment.contentType);
         if (result) return result;
       }
     } else if (options.link) {
-      const result = await getImage(options.link, options.link, video, extraReturnTypes, false, null, true);
+      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, false, null, true);
       if (result) return result;
     }
   }
