@@ -112,7 +112,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
     if (message.embeds.length !== 0) {
       let hasSpoiler = false;
       if (message.embeds[0].url && message.content) {
-        const spoilerRegex = new RegExp(`(?:\s|^)\|\|(\s+${message.embeds[0].url}\s+)\|\|`);
+        const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
         hasSpoiler = spoilerRegex.test(message.content);
       }
       // embeds can vary in types, we check for tenor gifs first
