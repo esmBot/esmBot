@@ -33,9 +33,6 @@ export default async (client, interaction) => {
   // actually run the command
   logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
-    if (database) {
-      await database.addCount(command);
-    }
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, { type: "application", interaction });
     const result = await commandClass.run();
@@ -94,6 +91,10 @@ export default async (client, interaction) => {
       } catch (e) {
         logger.error(`While attempting to send the previous error message, another error occurred: ${e.stack || e}`);
       }
+    }
+  } finally {
+    if (database) {
+      await database.addCount(command);
     }
   }
 };

@@ -118,9 +118,6 @@ export default async (client, message) => {
   try {
     // parse args
     const parsed = parseCommand(preArgs);
-    if (database) {
-      await database.addCount(aliases.get(command) ?? command);
-    }
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
@@ -191,6 +188,10 @@ export default async (client, message) => {
       } catch (e) {
         _error(`While attempting to send the previous error message, another error occurred: ${e.stack || e}`);
       }
+    }
+  } finally {
+    if (database) {
+      await database.addCount(aliases.get(command) ?? command);
     }
   }
 };
