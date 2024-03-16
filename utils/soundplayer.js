@@ -205,7 +205,6 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
-  await connection.setGlobalVolume(70);
   await connection.playTrack({ track });
   players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
@@ -219,21 +218,21 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     const player = players.get(voiceChannel.guildID);
     let newQueue = [];
     if (data.reason !== "stopped") {
-    if (player?.shuffle) {
-      if (player.loop) {
+      if (player?.shuffle) {
+        if (player.loop) {
+          queue.push(queue.shift());
+        } else {
+          queue = queue.slice(1);
+        }
+        queue.unshift(queue.splice(Math.floor(Math.random() * queue.length), 1)[0]);
+        newQueue = queue;
+      } else if (player?.loop) {
         queue.push(queue.shift());
+        newQueue = queue;
       } else {
-        queue = queue.slice(1);
+        newQueue = queue ? queue.slice(1) : [];
       }
-      queue.unshift(queue.splice(Math.floor(Math.random() * queue.length), 1)[0]);
-      newQueue = queue;
-    } else if (player?.loop) {
-      queue.push(queue.shift());
-      newQueue = queue;
-    } else {
-      newQueue = queue ? queue.slice(1) : [];
-    }
-    queues.set(voiceChannel.guildID, newQueue);
+      queues.set(voiceChannel.guildID, newQueue);
     }
     if (newQueue.length !== 0) {
       const newTrack = await connection.node.rest.decode(newQueue[0]);
