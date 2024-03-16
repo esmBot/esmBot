@@ -7,8 +7,8 @@ using namespace vips;
 
 ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
-  string top_text = GetArgument<string>(arguments, "top");
-  string bottom_text = GetArgument<string>(arguments, "bottom");
+  string top_text = GetArgument<string>(arguments, "topText");
+  string bottom_text = GetArgument<string>(arguments, "bottomText");
   string font = GetArgument<string>(arguments, "font");
   string basePath = GetArgument<string>(arguments, "basePath");
 

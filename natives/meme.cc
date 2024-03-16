@@ -14,7 +14,7 @@ VImage genText(string text, string font, const char *fontfile, int width,
                          ->set("width", width);
   VImage in = VImage::text(
       ("<span foreground=\"white\">" + text + "</span>").c_str(),
-      *fontfile == '\0' ? options->set("fontfile", fontfile) : options);
+      strncmp(fontfile, "\0", 1) != 0 ? options->set("fontfile", fontfile) : options);
 
   in = in.embed(radius, radius * 2, in.width() + 2 * radius,
                 (in.height() + 2 * radius) + (radius * 2));
@@ -26,8 +26,8 @@ VImage genText(string text, string font, const char *fontfile, int width,
 
 ArgumentMap Meme(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
-  string top = GetArgument<string>(arguments, "top");
-  string bottom = GetArgument<string>(arguments, "bottom");
+  string top = GetArgument<string>(arguments, "topText");
+  string bottom = GetArgument<string>(arguments, "bottomText");
   string font = GetArgument<string>(arguments, "font");
   string basePath = GetArgument<string>(arguments, "basePath");
 

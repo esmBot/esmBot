@@ -5,19 +5,16 @@ import { cleanMessage } from "../../utils/misc.js";
 class MemeCommand extends ImageCommand {
   async criteria(text, url) {
     const [topText, bottomText] = text.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
-    if (topText === "" && bottomText === "") {
-      return false;
-    } else {
-      return true;
-    }
+    if (topText === "" && bottomText === "") return false;
+    return true;
   }
 
   params(url) {
     const newArgs = this.options.text ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
     return {
-      top: cleanMessage(this.message ?? this.interaction, this.options.case ? topText : topText.toUpperCase()),
-      bottom: bottomText ? cleanMessage(this.message ?? this.interaction, this.options.case ? bottomText : bottomText.toUpperCase()) : "",
+      topText: cleanMessage(this.message ?? this.interaction, this.options.case ? topText : topText.toUpperCase()),
+      bottomText: bottomText ? cleanMessage(this.message ?? this.interaction, this.options.case ? bottomText : bottomText.toUpperCase()) : "",
       font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "impact"
     };
   }

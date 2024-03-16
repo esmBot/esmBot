@@ -36,27 +36,35 @@ ArgumentMap Uncanny(const string& type, string& outType, const char* bufferdata,
       findResult != fontPaths.end() ? basePath + findResult->second : "";
 
   LoadFonts(basePath);
-  VImage text = VImage::text(captionText.c_str(),
-                             VImage::option()
+  VOption *textOptions = VImage::option()
                                  ->set("rgba", true)
                                  ->set("align", VIPS_ALIGN_CENTRE)
                                  ->set("font", font_string.c_str())
-                                 ->set("fontfile", fontResult.c_str())
                                  ->set("width", 588)
-                                 ->set("height", 90));
+                                 ->set("height", 90);
+  if (fontResult != "") {
+    textOptions = textOptions->set(
+        "fontfile", fontResult.c_str());
+  }
+  VImage text = VImage::text(captionText.c_str(),
+                             textOptions);
   VImage captionImage =
       text.extract_band(0, VImage::option()->set("n", 3))
           .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40,
                    VImage::option()->set("extend", "black"));
 
+  VOption *textOptions2 = VImage::option()
+                                 ->set("rgba", true)
+                                 ->set("align", VIPS_ALIGN_CENTRE)
+                                 ->set("font", font_string.c_str())
+                                 ->set("width", 588)
+                                 ->set("height", 90);
+  if (fontResult != "") {
+    textOptions2 = textOptions2->set(
+        "fontfile", fontResult.c_str());
+  }
   VImage text2 = VImage::text(caption2Text.c_str(),
-                              VImage::option()
-                                  ->set("rgba", true)
-                                  ->set("align", VIPS_ALIGN_CENTRE)
-                                  ->set("font", font_string.c_str())
-                                  ->set("fontfile", fontResult.c_str())
-                                  ->set("width", 588)
-                                  ->set("height", 90));
+                              textOptions2);
   VImage caption2Image =
       text2.extract_band(0, VImage::option()->set("n", 3))
           .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40,
