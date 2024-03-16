@@ -5,7 +5,7 @@ import { commands, aliases, info, categories } from "../../utils/collections.js"
 // all-in-one music command
 class MusicAIOCommand extends Command {
   async run() {
-    let cmd = this.type === "classic" ? this.args[0] : this.optionsArray[0].name;
+    let cmd = this.type === "classic" ? this.args[0] : this.interaction?.data.options.getSubCommand()?.[0];
     if (cmd === "music" || this.constructor.aliases.includes(cmd)) return "https://esmbot.net/robotdance.gif";
     await this.acknowledge();
     if (this.type === "classic") {

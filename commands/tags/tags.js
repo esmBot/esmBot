@@ -9,16 +9,16 @@ class TagsCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
-    const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.optionsArray[0].name;
+    const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
-    const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.optionsArray[0].options[0]?.value;
+    const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.interaction?.data.options.getString("name");
 
     if (cmd === "create" || cmd === "add") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";
       if (blacklist.includes(tagName)) return "You can't make a tag with that name!";
       const getResult = await database.getTag(this.guild.id, tagName);
       if (getResult) return "This tag already exists!";
-      const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.guild);
+      const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.interaction?.data.options.getString("content", true), author: this.member?.id }, this.guild);
       this.success = true;
       if (result) return result;
       return `The tag \`${tagName}\` has been added!`;
@@ -37,7 +37,7 @@ class TagsCommand extends Command {
       if (!getResult) return "This tag doesn't exist!";
       const owners = process.env.OWNER.split(",");
       if (getResult.author !== this.author.id && !this.member.permissions.has("MANAGE_MESSAGES") && !owners.includes(this.author.id)) return "You don't own this tag!";
-      await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.optionsArray[0].options[1].value, author: this.member.id }, this.guild);
+      await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.interaction?.data.options.getString("content", true), author: this.member?.id }, this.guild);
       this.success = true;
       return `The tag \`${tagName}\` has been edited!`;
     } else if (cmd === "own" || cmd === "owner") {
