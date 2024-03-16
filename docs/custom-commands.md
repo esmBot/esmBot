@@ -64,7 +64,6 @@ Some options are only available depending on the context/original message type, 
 The options only available with application (slash and context menu) commands are listed below:
 
 - `this.interaction`: An Oceanic [`CommandInteraction`](https://docs.oceanic.ws/latest/classes/CommandInteraction.CommandInteraction.html) object of the incoming slash command data.
-- `this.optionsArray`: A raw array of command options. Should rarely be used.
 - `this.success`: A boolean value that causes the bot to respond with a normal message when set to `true`, or an "ephemeral" message (a message that's only visible to the person who ran the command) when set to `false`.
 - `this.edit`: A boolean value that causes the bot to respond by editing the original message when set to `true`, or by creating a followup message when set to `false`.
 

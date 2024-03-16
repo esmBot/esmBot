@@ -1,6 +1,10 @@
 import { Constants } from "oceanic.js";
 
 class Command {
+  /**
+   * @param {import("oceanic.js").Client} client
+   * @param {{ type: string; args: []; message: import("oceanic.js").Message; content: string; specialArgs: {}; interaction: import("oceanic.js").CommandInteraction }} options
+   */
   constructor(client, options) {
     this.client = client;
     this.origOptions = options;
@@ -28,34 +32,36 @@ class Command {
           repliedUser: false
         }
       };
-    } else if (options.type === "application") {
+    } else {
       this.interaction = options.interaction;
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
       this.guild = options.interaction.guild;
       this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
       this.permissions = options.interaction.appPermissions;
-      if (options.interaction.data.options) {
-        this.options = options.interaction.data.options.raw.reduce((obj, item) => {
-          obj[item.name] = item.value;
-          return obj;
-        }, {});
-        this.optionsArray = options.interaction.data.options.raw;
-      } else {
-        this.options = {};
-      }
+      this.options = options.interaction.data.options.raw.reduce((obj, item) => {
+        obj[item.name] = item.value;
+        return obj;
+      }, {});
     }
   }
 
+  /**
+   * The main command function.
+   * @returns {Promise<string | import("oceanic.js").InteractionContent | import("oceanic.js").CreateMessageOptions | undefined>}
+   */
   async run() {
     return "It works!";
   }
 
+  /**
+   * @param {number | undefined} [flags]
+   */
   async acknowledge(flags) {
     if (this.type === "classic") {
       const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
       await channel.sendTyping();
-    } else if (!this.interaction.acknowledged) {
+    } else if (this.interaction && !this.interaction.acknowledged) {
       await this.interaction.defer(flags);
     }
   }
