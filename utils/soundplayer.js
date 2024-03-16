@@ -5,6 +5,10 @@ import { Shoukaku, Connectors } from "shoukaku";
 import { setTimeout } from "timers/promises";
 import { VoiceChannel } from "oceanic.js";
 
+/**
+ * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").AnyTextableChannel | import("oceanic.js").AnyInteractionChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
+ * @type {Map<string, MapPlayer>}
+ */
 export const players = new Map();
 export const queues = new Map();
 export const skipVotes = new Map();
@@ -111,7 +115,7 @@ export async function play(client, soundUrl, options) {
   if (manager.players.has(voiceChannel.guildID)) {
     player = manager.players.get(voiceChannel.guildID);
   } else if (playerMeta?.player) {
-    const storedState = playerMeta?.player?.connection.state;
+    const storedState = manager.connections.get(options.guild.id)?.state;
     if (storedState && storedState === 1) {
       player = playerMeta?.player;
     }
@@ -146,7 +150,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   skipVotes.delete(voiceChannel.guildID);
   let playingMessage;
   if (lastTrack === track && players.has(voiceChannel.guildID)) {
-    playingMessage = players.get(voiceChannel.guildID).playMessage;
+    playingMessage = players.get(voiceChannel.guildID)?.playMessage;
   } else {
     try {
       const content = {
@@ -203,7 +207,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   connection.removeAllListeners("end");
   await connection.setGlobalVolume(70);
   await connection.playTrack({ track });
-  players.set(voiceChannel.guildID, { player: connection, type: "music", host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
+  players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
     await connection.move();
@@ -213,11 +217,8 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     if (data.reason === "replaced") return;
     let queue = queues.get(voiceChannel.guildID);
     const player = players.get(voiceChannel.guildID);
-    if (player && process.env.STAYVC === "true") {
-      player.type = "idle";
-      players.set(voiceChannel.guildID, player);
-    }
-    let newQueue;
+    let newQueue = [];
+    if (data.reason !== "stopped") {
     if (player?.shuffle) {
       if (player.loop) {
         queue.push(queue.shift());
@@ -233,18 +234,11 @@ export async function nextSong(client, options, connection, track, info, voiceCh
       newQueue = queue ? queue.slice(1) : [];
     }
     queues.set(voiceChannel.guildID, newQueue);
+    }
     if (newQueue.length !== 0) {
       const newTrack = await connection.node.rest.decode(newQueue[0]);
-      nextSong(client, options, connection, newQueue[0], newTrack?.info, voiceChannel, host, player.loop, player.shuffle, track);
-      try {
-        if (options.type === "classic") {
-          if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-          if (newQueue[0] !== track && player.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
-        }
-      } catch {
-        // no-op
-      }
-    } else if (process.env.STAYVC !== "true") {
+      nextSong(client, options, connection, newQueue[0], newTrack?.info, voiceChannel, host, player?.loop, player?.shuffle, track);
+    } else if (process.env.STAYVC !== "true" && data.reason !== "stopped") {
       await setTimeout(400);
       await manager.leaveVoiceChannel(voiceChannel.guildID);
       players.delete(voiceChannel.guildID);
@@ -267,8 +261,8 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     }
     if (options.type === "classic") {
       try {
-        if (playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
-        if (player?.playMessage.channel.messages.has(player.playMessage.id)) await player.playMessage.delete();
+        if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+        if (newQueue[0] !== track && player?.playMessage?.channel?.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
       }
@@ -288,8 +282,8 @@ export async function nextSong(client, options, connection, track, info, voiceCh
 export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options, closed) {
   try {
     if (playingMessage.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
-    const playMessage = players.get(voiceChannel.guildID).playMessage;
-    if (playMessage.channel.messages.has(playMessage.id)) await playMessage.delete();
+    const playMessage = players.get(voiceChannel.guildID)?.playMessage;
+    if (playMessage?.channel?.messages.has(playMessage.id)) await playMessage.delete();
   } catch {
     // no-op
   }
