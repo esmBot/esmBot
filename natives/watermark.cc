@@ -12,7 +12,6 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
   int gravity = GetArgument<int>(arguments, "gravity");
 
   bool resize = GetArgumentWithFallback<bool>(arguments, "resize", false);
-
   float yscale = GetArgumentWithFallback<float>(arguments, "yscale", false);
 
   bool append = GetArgumentWithFallback<bool>(arguments, "append", false);
@@ -48,16 +47,18 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
     watermark = watermark.flip(VIPS_DIRECTION_VERTICAL);
   }
 
-  if (resize && append) {
-    watermark = watermark.resize((double)width / (double)watermark.width());
-  } else if (resize && yscale) {
-    watermark = watermark.resize(
-        (double)width / (double)watermark.width(),
-        VImage::option()->set("vscale", (double)(pageHeight * yscale) /
-                                            (double)watermark.height()));
-  } else if (resize) {
-    watermark =
-        watermark.resize((double)pageHeight / (double)watermark.height());
+  if (resize) {
+    if (append) {
+      watermark = watermark.resize((double)width / (double)watermark.width());
+    } else if (yscale) {
+      watermark = watermark.resize(
+          (double)width / (double)watermark.width(),
+          VImage::option()->set("vscale", (double)(pageHeight * yscale) /
+                                              (double)watermark.height()));
+    } else {
+      watermark =
+          watermark.resize((double)pageHeight / (double)watermark.height());
+    }
   }
 
   int x = 0, y = 0;
