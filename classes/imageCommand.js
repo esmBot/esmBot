@@ -8,13 +8,17 @@ import messages from "../config/messages.json" assert { type: "json" };
 import { Constants } from "oceanic.js";
 
 class ImageCommand extends Command {
-  async criteria() {
+  /**
+   * @param {string} _text
+   * @param {string} _url
+   */
+  async criteria(_text, _url) {
     return true;
   }
 
   async run() {
     this.success = false;
-    const timestamp = this.type === "classic" ? this.message.createdAt : Math.floor((this.interaction.id / 4194304) + 1420070400000);
+    const timestamp = this.type === "classic" ? this.message?.createdAt : Math.floor((this.interaction.id / 4194304) + 1420070400000);
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
     if (runningCommands.has(this.author.id) && (new Date(runningCommands.get(this.author.id)).getTime() - new Date(timestamp).getTime()) < 5000) {
@@ -46,13 +50,16 @@ class ImageCommand extends Command {
         if (image === undefined) {
           runningCommands.delete(this.author.id);
           return `${this.constructor.noImage} (Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)`;
-        } else if (image.type === "large") {
+        }
+        if (image.type === "large") {
           runningCommands.delete(this.author.id);
           return "That image is too large (>= 40MB)! Try using a smaller image.";
-        } else if (image.type === "tenorlimit") {
+        }
+        if (image.type === "tenorlimit") {
           runningCommands.delete(this.author.id);
           return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
-        } else if (image.type === "timeout") {
+        }
+        if (image.type === "timeout") {
           runningCommands.delete(this.author.id);
           return "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.";
         }
@@ -72,7 +79,7 @@ class ImageCommand extends Command {
     if (this.constructor.requiresText) {
       const text = this.options.text ?? this.args.join(" ").trim();
       if (text.length === 0 || !await this.criteria(text, imageParams.url)) {
-        runningCommands.delete(this.author.id);
+        runningCommands.delete(this.author?.id);
         return this.constructor.noText;
       }
     }
@@ -111,7 +118,7 @@ class ImageCommand extends Command {
       } catch {
         // no-op
       }
-      runningCommands.delete(this.author.id);
+      runningCommands.delete(this.author?.id);
     }
 
   }
