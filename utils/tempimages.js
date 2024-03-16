@@ -3,6 +3,11 @@ import { readdir, lstat, rm, writeFile, stat } from "fs/promises";
 
 let dirSizeCache;
 
+/**
+ * @param {import("oceanic.js").Client} client
+ * @param {{ name: string; contents: Buffer; }} result
+ * @param {import("oceanic.js").CommandInteraction | import("oceanic.js").Message} context
+ */
 export async function upload(client, result, context, interaction = false) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
@@ -45,6 +50,8 @@ export async function upload(client, result, context, interaction = false) {
 }
 
 async function removeOldImages(s) {
+  if (!process.env.THRESHOLD || process.env.THRESHOLD === "") return;
+  if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
   let size = s;
   if (size > process.env.THRESHOLD) {
     const files = (await readdir(process.env.TEMPDIR)).map((file) => {
@@ -59,7 +66,7 @@ async function removeOldImages(s) {
     });
     
     const resolvedFiles = await Promise.all(files);
-    const oldestFiles = resolvedFiles.filter(Boolean).sort((a, b) => a.ctime - b.ctime);
+    const oldestFiles = resolvedFiles.filter(Boolean).sort((a, b) => a.ctime.getTime() - b.ctime.getTime());
 
     do {
       if (!oldestFiles[0]) break;
@@ -77,6 +84,8 @@ async function removeOldImages(s) {
 }
 
 export async function parseThreshold() {
+  if (!process.env.THRESHOLD || process.env.THRESHOLD === "") return;
+  if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
   const matched = process.env.THRESHOLD.match(/(\d+)([KMGT])/);
   const sizes = {
     K: 1024,
