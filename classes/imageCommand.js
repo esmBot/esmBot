@@ -45,12 +45,12 @@ class ImageCommand extends Command {
           if (e.name === "AbortError") return { type: "timeout" };
           throw e;
         });
-        needsSpoiler = image.spoiler;
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
           return `${this.constructor.noImage} (Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)`;
         }
+        needsSpoiler = image.spoiler;
         if (image.type === "large") {
           runningCommands.delete(this.author.id);
           return "That image is too large (>= 40MB)! Try using a smaller image.";
