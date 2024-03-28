@@ -2,7 +2,7 @@ import Command from "./command.js";
 import imageDetect from "../utils/imagedetect.js";
 import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
-import { clean, random } from "../utils/misc.js";
+import { clean, isEmpty, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
 import messages from "../config/messages.json" assert { type: "json" };
 import { Constants } from "oceanic.js";
@@ -78,7 +78,7 @@ class ImageCommand extends Command {
 
     if (this.constructor.requiresText) {
       const text = this.options.text ?? this.args.join(" ").trim();
-      if (text.length === 0 || !await this.criteria(text, imageParams.url)) {
+      if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
         return this.constructor.noText;
       }

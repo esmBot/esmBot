@@ -161,3 +161,7 @@ export function cleanMessage(message, content) {
 
   return textEncode(cleanContent);
 }
+
+export function isEmpty(string) {
+  return string.length === 0 || string.replace(/[\s\u200B-\u200D\uFEFF]/g, "").length === 0;
+}
