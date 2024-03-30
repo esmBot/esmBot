@@ -9,15 +9,18 @@ class FlagCommand extends ImageCommand {
     const text = this.options.text ?? this.args[0];
     const matched = text.match(emojiRegex());
     if (!matched) return false;
-    const flag = this.ccFromFlag(matched[0]);
-    let path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
-    if (flag === "pirate_flag") path = "assets/images/pirateflag.png";
-    if (flag === "rainbow-flag") path = "assets/images/rainbowflag.png";
-    if (flag === "checkered_flag") path = "assets/images/checkeredflag.png";
-    if (flag === "transgender_flag") path = "assets/images/transflag.png";
-    if (text === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "assets/images/region-flags/png/GB-SCT.png";
-    if (text === "🏴󠁧󠁢󠁷󠁬󠁳󠁿") path = "assets/images/region-flags/png/GB-WLS.png";
-    if (text === "🏴󠁧󠁢󠁥󠁮󠁧󠁿") path = "assets/images/region-flags/png/GB-ENG.png";
+    let path;
+    if (matched[0] === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "assets/images/region-flags/png/GB-SCT.png";
+    if (matched[0] === "🏴󠁧󠁢󠁷󠁬󠁳󠁿") path = "assets/images/region-flags/png/GB-WLS.png";
+    if (matched[0] === "🏴󠁧󠁢󠁥󠁮󠁧󠁿") path = "assets/images/region-flags/png/GB-ENG.png";
+    if (matched[0] === "🏴‍☠️") path = "assets/images/pirateflag.png";
+    if (matched[0] === "🏳️‍🌈") path = "assets/images/rainbowflag.png";
+    if (matched[0] === "🏁") path = "assets/images/checkeredflag.png";
+    if (matched[0] === "🏳️‍⚧️") path = "assets/images/transflag.png";
+    if (!path) {
+      const flag = this.ccFromFlag(matched[0]);
+      path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
+    }
     try {
       await fs.promises.access(path);
       this.flagPath = path;
@@ -27,6 +30,9 @@ class FlagCommand extends ImageCommand {
     }
   }
 
+  /**
+   * @param {string} flag
+   */
   ccFromFlag(flag) {
     const codepoints = [...flag].map(c => c.codePointAt() - 127397);
     return String.fromCodePoint(...codepoints);
