@@ -5,7 +5,7 @@ With newer versions of esmBot, it is now possible to run it using [Bun](https://
     Bun support is still very experimental and prone to bugs. If you find any issues while running the bot on Bun, please test if the same issue occurs on Node; if it doesn't, then specify that it's a Bun-specific issue and provide the version you used (you can find this by running `bun --version`).
 
 ## Known Issues
-- Discord and image server connections do not handle disconnects properly (see [oven-sh/bun#7896](https://github.com/oven-sh/bun/issues/7896))
+- ~~Discord and image server connections do not handle disconnects properly (see [oven-sh/bun#7896](https://github.com/oven-sh/bun/issues/7896))~~ **Fixed in Bun 1.1!**
 
 ## Building the Image Natives
 !!! danger
