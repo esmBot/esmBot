@@ -10,7 +10,7 @@ class SeekCommand extends MusicCommand {
     if (this.connection.host !== this.author.id) return "Only the current voice session host can seek the music!";
     const player = this.connection.player;
     const track = await player.node.rest.decode(player.track);
-    if (!track.isSeekable) return "This track isn't seekable!";
+    if (!track?.info.isSeekable) return "This track isn't seekable!";
     const pos = this.options.position ?? this.args[0];
     let seconds;
     if (typeof pos === "string" && pos.includes(":")) {
@@ -18,7 +18,7 @@ class SeekCommand extends MusicCommand {
     } else {
       seconds = parseFloat(pos);
     }
-    if (Number.isNaN(seconds) || (seconds * 1000) > track.length || (seconds * 1000) < 0) return "That's not a valid position!";
+    if (Number.isNaN(seconds) || (seconds * 1000) > track.info.length || (seconds * 1000) < 0) return "That's not a valid position!";
     player.seekTo(seconds * 1000);
     this.success = true;
     return `🔊 Seeked track to ${seconds} second(s).`;
