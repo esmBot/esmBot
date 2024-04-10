@@ -37,7 +37,8 @@ class Command {
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
       this.guild = options.interaction.guild;
-      this.author = this.member = options.interaction.guildID ? options.interaction.member : options.interaction.user;
+      this.author = options.interaction.user;
+      this.member = options.interaction.member;
       this.permissions = options.interaction.appPermissions;
       this.options = options.interaction.data.options.raw.reduce((obj, item) => {
         obj[item.name] = item.value;
@@ -58,7 +59,7 @@ class Command {
    * @param {number | undefined} [flags]
    */
   async acknowledge(flags) {
-    if (this.type === "classic") {
+    if (this.type === "classic" && this.message) {
       const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
       await channel.sendTyping();
     } else if (this.interaction && !this.interaction.acknowledged) {
