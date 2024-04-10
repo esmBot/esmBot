@@ -217,7 +217,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     let queue = queues.get(voiceChannel.guildID);
     const player = players.get(voiceChannel.guildID);
     let newQueue = [];
-    if (data.reason !== "stopped") {
+    if (manager.connections.has(voiceChannel.guildID)) {
       if (player?.shuffle) {
         if (player.loop) {
           queue.push(queue.shift());
