@@ -15,7 +15,7 @@ The image natives used with Node are currently incompatible with Bun. Because of
 
 To build the image natives for Bun, run the following commands:
 ```sh
-mkdir -p build
+mkdir build
 cd build
 cmake .. -DWITH_MAGICK=ON
 make
