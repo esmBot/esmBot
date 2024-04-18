@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import emojiRegex from "emoji-regex";
 import ImageCommand from "../../classes/imageCommand.js";
 

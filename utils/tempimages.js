@@ -1,5 +1,5 @@
 import logger from "../utils/logger.js";
-import { readdir, lstat, rm, writeFile, stat } from "fs/promises";
+import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
 
 let dirSizeCache;
 

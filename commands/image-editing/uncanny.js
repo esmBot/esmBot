@@ -1,9 +1,9 @@
 import ImageCommand from "../../classes/imageCommand.js";
 import { random, cleanMessage } from "../../utils/misc.js";
-import { readdirSync } from "fs";
+import { readdirSync } from "node:fs";
 import { Constants } from "oceanic.js";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 const prompts = ["you found:", "your dad is:", "you ate:", "your mom is:", "your sister is:", "you saw:", "you get lost in:", "you find:", "you grab:", "you pull out of your pocket:", "you fight:", "it's in your room:"];
 const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../../assets/images/uncanny/")).filter((val) => {
   if (!val.startsWith(".") && val.endsWith(".png")) return true;

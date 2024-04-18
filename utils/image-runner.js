@@ -1,8 +1,8 @@
-import { isMainThread, parentPort, workerData } from "worker_threads";
-import * as http from "http";
-import * as https from "https";
-import path from "path";
-import { fileURLToPath } from "url";
+import { isMainThread, parentPort, workerData } from "node:worker_threads";
+import * as http from "node:http";
+import * as https from "node:https";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { img } from "./imageLib.js";
 
 const enumMap = {

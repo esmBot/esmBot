@@ -19,12 +19,12 @@ import { reloadImageConnections } from "./utils/image.js";
 // main services
 import { Client, Constants } from "oceanic.js";
 // some utils
-import { promises } from "fs";
+import { promises } from "node:fs";
 import logger from "./utils/logger.js";
-import { exec as baseExec } from "child_process";
-import { promisify } from "util";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { exec as baseExec } from "node:child_process";
+import { promisify } from "node:util";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 const exec = promisify(baseExec);
 // initialize command loader
 import { load } from "./utils/handler.js";

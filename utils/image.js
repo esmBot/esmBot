@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { Worker } from "worker_threads";
-import { createRequire } from "module";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { Worker } from "node:worker_threads";
+import { createRequire } from "node:module";
 import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";

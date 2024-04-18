@@ -1,5 +1,5 @@
 import packageJson from "../../package.json" assert { type: "json" };
-import os from "os";
+import os from "node:os";
 import Command from "../../classes/command.js";
 import { VERSION } from "oceanic.js";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;

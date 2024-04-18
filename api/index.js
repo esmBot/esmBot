@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { cpus } from "os";
-import { Worker } from "worker_threads";
-import { join } from "path";
-import { createServer } from "http";
+import { cpus } from "node:os";
+import { Worker } from "node:worker_threads";
+import { join } from "node:path";
+import { createServer } from "node:http";
 import { WebSocketServer } from "ws";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import EventEmitter from "events";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import EventEmitter from "node:events";
 import logger from "../utils/logger.js";
 import { img } from "../utils/imageLib.js";
 

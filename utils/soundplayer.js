@@ -1,8 +1,8 @@
 import logger from "./logger.js";
-import fs from "fs";
+import fs from "node:fs";
 import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
-import { setTimeout } from "timers/promises";
+import { setTimeout } from "node:timers/promises";
 import { VoiceChannel } from "oceanic.js";
 
 /**

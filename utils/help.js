@@ -1,5 +1,5 @@
 import { commands, info } from "./collections.js";
-import { promises } from "fs";
+import { promises } from "node:fs";
 
 export const categoryTemplate = {
   general: [],
