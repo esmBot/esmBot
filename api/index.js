@@ -21,7 +21,6 @@ const Twait = 0x06;
 const Rwait = 0x07;
 const Rinit = 0x08;
 
-const start = process.hrtime();
 const log = (msg, jobNum) => {
   logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
 };
@@ -35,6 +34,7 @@ class JobCache extends Map {
     setTimeout(() => {
       if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
     }, 300000); // delete jobs if not requested after 5 minutes
+    return this;
   }
 }
 
@@ -43,10 +43,16 @@ const jobs = new JobCache();
 const queue = [];
 // Array of IDs
 
-const MAX_JOBS = process.env.JOBS ? parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
+const MAX_JOBS = process.env.JOBS ? Number.parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
 const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
 
+/**
+ * Accept an image job.
+ * @param {string} id 
+ * @param {import("ws").WebSocket} sock 
+ * @returns {Promise<void>}
+ */
 const acceptJob = (id, sock) => {
   jobAmount++;
   queue.shift();
@@ -144,8 +150,6 @@ wss.on("connection", (ws, request) => {
       job.verifyEvent.emit("end", tag);
       job.tag = tag;
       jobs.set(id, job);
-      //const waitResponse = Buffer.concat([Buffer.from([Rwait]), tag]);
-      //ws.send(waitResponse);
     } else {
       logger.warn("Could not parse WS message");
     }
@@ -207,15 +211,15 @@ httpServer.on("request", async (req, res) => {
     return res.end(data, (err) => {
       if (err) error(err);
     });
-  } else if (reqUrl.pathname === "/count" && req.method === "GET") {
+  }
+  if (reqUrl.pathname === "/count" && req.method === "GET") {
     log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     return res.end(jobAmount.toString(), (err) => {
       if (err) error(err);
     });
-  } else {
+  }
     res.statusCode = 404;
     return res.end("404 Not Found");
-  }
 });
 
 httpServer.on("upgrade", (req, sock, head) => {
@@ -239,11 +243,17 @@ httpServer.on("upgrade", (req, sock, head) => {
 httpServer.on("error", (e) => {
   error("An HTTP error occurred: ", e);
 });
-const port = parseInt(process.env.PORT) || 3762;
+const port = process.env.PORT && process.env.PORT !== "" ? Number.parseInt(process.env.PORT) : 3762;
 httpServer.listen(port, () => {
   logger.info(`HTTP and WS listening on port ${port}`);
 });
 
+/**
+ * Run an image job.
+ * @param {{ id: string; msg: object; num: number; }} job 
+ * @param {import("ws").WebSocket} ws 
+ * @returns {Promise<void>}
+ */
 const runJob = (job, ws) => {
   return new Promise((resolve, reject) => {
     log(`Job ${job.id} starting...`, job.num);
