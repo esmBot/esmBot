@@ -7,16 +7,5 @@ With newer versions of esmBot, it is now possible to run it using [Bun](https://
 ## Known Issues
 - <s>Discord and image server connections do not handle disconnects properly (see [oven-sh/bun#7896](https://github.com/oven-sh/bun/issues/7896))</s> **Fixed in Bun 1.1!**
 
-## Building the Image Natives
-!!! danger
-    The following is heavily WIP and does *not* currently work. The instructions below are simply here for developer reference; if you want to use image commands with Bun right now, please run the external image server with the Node natives.
-
-The image natives used with Node are currently incompatible with Bun. Because of this, the bot uses a different set of generic natives that use the `bun:ffi` module instead of Node-API, and as such they must be built differently.
-
-To build the image natives for Bun, run the following commands:
-```sh
-mkdir build
-cd build
-cmake .. -DWITH_MAGICK=ON
-make
-```
+## Image Natives
+Previously, the image natives used with Node did not work when using Bun; however, with the current Bun version as of this writing (1.1.4), they appear to work with no issue. It should be possible to build and use them with Bun as if you were working with Node.
