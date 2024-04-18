@@ -6,12 +6,10 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import { createRequire } from "module";
 import EventEmitter from "events";
 import logger from "../utils/logger.js";
+import { img } from "../utils/imageLib.js";
 
-const nodeRequire = createRequire(import.meta.url);
-const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 img.imageInit();
 
 const Rerror = 0x01;

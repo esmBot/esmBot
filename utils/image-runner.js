@@ -1,14 +1,9 @@
-import { createRequire } from "module";
 import { isMainThread, parentPort, workerData } from "worker_threads";
 import * as http from "http";
 import * as https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
-
-const nodeRequire = createRequire(import.meta.url);
-
-const relPath = `../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`;
-const img = nodeRequire(relPath);
+import { img } from "./imageLib.js";
 
 const enumMap = {
   forget: 0,
@@ -67,10 +62,8 @@ export default function run(object) {
     promise.then(buf => {
       if (buf) object.params.data = buf;
       const objectWithFixedType = Object.assign({}, object.params, { type: fileExtension });
-      if (objectWithFixedType.gravity) {
-        if (Number.isNaN(parseInt(objectWithFixedType.gravity))) {
+      if (objectWithFixedType.gravity && Number.isNaN(Number.parseInt(objectWithFixedType.gravity))) {
           objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
-        }
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
       try {
