@@ -20,10 +20,9 @@ class MusicAIOCommand extends Command {
       const result =  await inst.run();
       this.success = inst.success;
       return result;
-    } else {
-      this.success = false;
-      return "That isn't a valid music command!";
     }
+    this.success = false;
+    return "That isn't a valid music command!";
   }
 
   static postInit() {

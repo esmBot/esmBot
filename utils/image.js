@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Worker } from "node:worker_threads";
 import { createRequire } from "node:module";
-import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
+import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
 
@@ -23,13 +23,6 @@ export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(
  * @param {boolean} extraReturnTypes
  */
 export async function getType(image, extraReturnTypes) {
-  if (!image.startsWith("http")) {
-    const imageType = await fileTypeFromFile(image);
-    if (imageType && formats.includes(imageType.mime)) {
-      return imageType.mime;
-    }
-    return undefined;
-  }
   let type;
   const controller = new AbortController();
   const timeout = setTimeout(() => {
@@ -44,10 +37,10 @@ export async function getType(image, extraReturnTypes) {
     let size = 0;
     if (imageRequest.headers.has("content-range")) {
       const contentRange = imageRequest.headers.get("content-range");
-      if (contentRange) size = parseInt(contentRange.split("/")[1]);
+      if (contentRange) size = Number.parseInt(contentRange.split("/")[1]);
     } else if (imageRequest.headers.has("content-length")) {
       const contentLength = imageRequest.headers.get("content-length");
-      if (contentLength) size = parseInt(contentLength);
+      if (contentLength) size = Number.parseInt(contentLength);
     }
     if (size > 41943040 && extraReturnTypes) { // 40 MB
       type = "large";

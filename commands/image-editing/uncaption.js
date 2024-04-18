@@ -3,7 +3,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class UncaptionCommand extends ImageCommand {
   params() {
-    const tolerance = parseFloat(this.options.tolerance);
+    const tolerance = Number.parseFloat(this.options.tolerance);
     return {
       tolerance: Number.isNaN(tolerance) ? 0.95 : tolerance
     };

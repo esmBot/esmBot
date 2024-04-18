@@ -5,7 +5,7 @@ import { runningCommands } from "../utils/collections.js";
 import { clean, isEmpty, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
 import messages from "../config/messages.json" assert { type: "json" };
-import { Constants } from "oceanic.js";
+import { Constants, CommandInteraction } from "oceanic.js";
 
 class ImageCommand extends Command {
   /**
@@ -18,10 +18,10 @@ class ImageCommand extends Command {
 
   async run() {
     this.success = false;
-    const timestamp = this.type === "classic" ? this.message?.createdAt : Math.floor((this.interaction.id / 4194304) + 1420070400000);
+    const timestamp = this.type === "application" && this.interaction ? CommandInteraction.getCreatedAt(this.interaction.id) : this.message?.createdAt ?? new Date();
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
-    if (runningCommands.has(this.author.id) && (new Date(runningCommands.get(this.author.id)).getTime() - new Date(timestamp).getTime()) < 5000) {
+    if (runningCommands.has(this.author?.id) && (runningCommands.get(this.author?.id).getTime() - timestamp.getTime()) < 5000) {
       return "Please slow down a bit.";
     }
     // before awaiting the command result, add this command to the set of running commands

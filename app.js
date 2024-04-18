@@ -1,4 +1,4 @@
-if (parseInt(process.versions.node.split(".")[0]) < 18) {
+if (Number.parseInt(process.versions.node.split(".")[0]) < 18) {
   console.error(`You are currently running Node.js version ${process.version}.
 esmBot requires Node.js version 18 or above.
 Please refer to step 3 of the setup guide: https://docs.esmbot.net/setup/#3-install-nodejs`);
@@ -126,7 +126,7 @@ if (database) {
 }
 if (process.env.API_TYPE === "ws") await reloadImageConnections();
 
-const shardArray = process.env.SHARDS && process.env.pm_id ? JSON.parse(process.env.SHARDS)[parseInt(process.env.pm_id) - 1] : null;
+const shardArray = process.env.SHARDS && process.env.pm_id ? JSON.parse(process.env.SHARDS)[Number.parseInt(process.env.pm_id) - 1] : null;
 
 // create the oceanic client
 const client = new Client({
@@ -152,7 +152,7 @@ const client = new Client({
   },
   collectionLimits: {
     messages: 50,
-    channels: !commandConfig.types.classic ? 0 : Infinity
+    channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY
   }
 });
 
@@ -212,7 +212,7 @@ if (process.env.PM2_USAGE) {
                 guilds: client.guilds.size,
                 shards: client.shards.map((v) => {
                   if (!process.env.pm_id) return;
-                  return { id: v.id, procId: parseInt(process.env.pm_id) - 1, latency: v.latency, status: v.status };
+                  return { id: v.id, procId: Number.parseInt(process.env.pm_id) - 1, latency: v.latency, status: v.status };
                 })
               },
               topic: true

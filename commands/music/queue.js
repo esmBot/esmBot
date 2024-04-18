@@ -7,7 +7,7 @@ class QueueCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
-    if (!this.member.voiceState) return "You need to be in a voice channel first!";
+    if (!this.member?.voiceState) return "You need to be in a voice channel first!";
     if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
     if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;

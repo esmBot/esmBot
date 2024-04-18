@@ -23,9 +23,8 @@ class EvalCommand extends Command {
             name: "result.txt"
           }]
         };
-      } else {
-        return sendString;
       }
+      return sendString;
     } catch (err) {
       let error = err;
       if (err?.constructor?.name === "Promise") error = await err;

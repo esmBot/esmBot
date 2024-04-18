@@ -148,7 +148,7 @@ class ImageConnection {
       }
     });
     if (req.statusCode !== 200) return;
-    const res = parseInt(await req.text());
+    const res = Number.parseInt(await req.text());
     return res;
   }
 

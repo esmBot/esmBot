@@ -5,7 +5,7 @@ class SkipCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
-    if (!this.member.voiceState) return "You need to be in a voice channel first!";
+    if (!this.member?.voiceState) return "You need to be in a voice channel first!";
     if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
@@ -18,7 +18,7 @@ class SkipCommand extends MusicCommand {
         max: votes.max
       };
       if (votes.count + 1 === votes.max) {
-        await player.player.stopTrack(this.guild.id);
+        await player.player.stopTrack();
         skipVotes.set(this.guild.id, { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) });
         this.success = true;
         if (this.type === "application") return "🔊 The current song has been skipped.";
