@@ -117,7 +117,7 @@ export function update() {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         type: cmdInfo.type,
-        dm_permission: cmdInfo.directAllowed
+        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
       });
     } else if (cmdInfo?.slashAllowed) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
@@ -125,7 +125,7 @@ export function update() {
         type: cmdInfo.type,
         description: cmdInfo.description,
         options: cmdInfo.flags,
-        dm_permission: cmdInfo.directAllowed
+        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
       });
     }
   }
