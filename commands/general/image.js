@@ -46,7 +46,7 @@ class ImageSearchCommand extends Command {
 
   static description = "Searches for images across the web";
   static aliases = ["im", "photo", "img"];
-  static args = ["[query]"];
+  static cmdArgs = ["[query]"];
 }
 
 export default ImageSearchCommand;

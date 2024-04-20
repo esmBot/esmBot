@@ -10,7 +10,7 @@ class SpotifyCommand extends ImageCommand {
   }
 
   static description = "Adds a Spotify \"This is\" header to an image";
-  static args = ["[name]"];
+  static cmdArgs = ["[name]"];
 
   static requiresText = true;
   static noText = "You need to provide some text to add a Spotify \"This is\" header!";

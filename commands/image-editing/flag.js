@@ -45,7 +45,7 @@ class FlagCommand extends ImageCommand {
   }
 
   static description = "Overlays a flag onto an image";
-  static args = ["[flag]"];
+  static cmdArgs = ["[flag]"];
 
   static requiresText = true;
   static noText = "You need to provide an emoji of a flag to overlay!";

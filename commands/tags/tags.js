@@ -111,7 +111,7 @@ class TagsCommand extends Command {
 
   static description = "Manage tags";
   static aliases = ["t", "tag", "ta"];
-  static args = {
+  static cmdArgs = {
     default: ["[name]"],
     add: ["[name]", "[content]"],
     delete: ["[name]"],

@@ -41,7 +41,7 @@ class MemeCommand extends ImageCommand {
   }
 
   static description = "Generates a meme from an image (separate top/bottom text with a comma)";
-  static args = ["[top text]", "{bottom text}"];
+  static cmdArgs = ["[top text]", "{bottom text}"];
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a meme!";

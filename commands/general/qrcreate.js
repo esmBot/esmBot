@@ -10,7 +10,7 @@ class QrCreateCommand extends ImageCommand {
   }
 
   static description = "Generates a QR code";
-  static args = ["[text]"];
+  static cmdArgs = ["[text]"];
 
   static requiresImage = false;
   static requiresText = true;

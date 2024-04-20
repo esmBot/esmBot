@@ -11,7 +11,7 @@ class HomebrewCommand extends ImageCommand {
 
   static description = "Creates a Homebrew Channel edit";
   static aliases = ["hbc", "brew", "wiibrew"];
-  static args = ["[text]"];
+  static cmdArgs = ["[text]"];
 
   static requiresImage = false;
   static requiresText = true;

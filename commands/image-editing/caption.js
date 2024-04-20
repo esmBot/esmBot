@@ -38,7 +38,7 @@ class CaptionCommand extends ImageCommand {
 
   static description = "Adds a caption to an image";
   static aliases = ["gifc", "gcaption", "ifcaption", "ifunnycaption"];
-  static args = ["[text]"];
+  static cmdArgs = ["[text]"];
 
   static requiresText = true;
   static noText = "You need to provide some text to add a caption!";

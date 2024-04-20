@@ -25,7 +25,7 @@ class LengthenCommand extends Command {
 
   static description = "Lengthens a short URL";
   static aliases = ["longurl", "lengthenurl", "longuri", "lengthenuri", "unshorten"];
-  static args = ["[url]"];
+  static cmdArgs = ["[url]"];
 }
 
 export default LengthenCommand;

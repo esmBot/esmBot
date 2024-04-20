@@ -22,7 +22,7 @@ class SpeedCommand extends ImageCommand {
 
   static description = "Makes an image sequence faster";
   static aliases = ["speedup", "fast", "gifspeed", "faster"];
-  static args = ["{multiplier}"];
+  static cmdArgs = ["{multiplier}"];
 
   static requiresGIF = true;
   static noImage = "You need to provide an image/GIF to speed up!";

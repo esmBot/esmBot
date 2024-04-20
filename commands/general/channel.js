@@ -46,7 +46,7 @@ class ChannelCommand extends Command {
   }
 
   static description = "Enables/disables classic commands in a channel (use server settings for slash commands)";
-  static args = ["[enable/disable]", "{id}"];
+  static cmdArgs = ["[enable/disable]", "{id}"];
   static slashAllowed = false;
   static directAllowed = false;
   static dbRequired = true;

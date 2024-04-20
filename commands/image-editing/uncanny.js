@@ -57,7 +57,7 @@ class UncannyCommand extends ImageCommand {
 
   static description = "Makes a Mr. Incredible Becomes Uncanny image (separate left/right text with a comma)";
   static aliases = ["canny", "incredible", "pain"];
-  static args = ["{left text}", "{right text}"];
+  static cmdArgs = ["{left text}", "{right text}"];
 
   static noImage = "You need to provide an image/GIF to create an uncanny image!";
   static command = "uncanny";

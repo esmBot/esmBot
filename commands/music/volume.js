@@ -25,7 +25,7 @@ class VolumeCommand extends MusicCommand {
   }];
   static description = "Pauses/resumes the current song";
   static aliases = ["pause", "resume"];
-  static args = ["[level]"];
+  static cmdArgs = ["[level]"];
 }
 
 export default VolumeCommand;
