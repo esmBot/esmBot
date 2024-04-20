@@ -24,7 +24,8 @@ class RemoveCommand extends MusicCommand {
     type: 4,
     description: "The queue position you want to remove",
     min_value: 1,
-    required: true
+    required: true,
+    classic: true
   }];
   static description = "Removes a song from the queue";
   static aliases = ["rm"];

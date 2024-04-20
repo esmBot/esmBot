@@ -41,11 +41,11 @@ class AvatarCommand extends Command {
 
   static description = "Gets a user's avatar";
   static aliases = ["pfp", "ava"];
-  static cmdArgs = ["{mention/id}"];
   static flags = [{
     name: "member",
     type: 6,
     description: "The member to get the avatar from",
+    classic: true,
     required: false
   }];
 }

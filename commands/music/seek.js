@@ -28,11 +28,11 @@ class SeekCommand extends MusicCommand {
     name: "position",
     type: 3,
     description: "Seek to this position",
-    required: true
+    required: true,
+    classic: true
   }];
   static description = "Seeks to a different position in the music";
   static aliases = ["pos"];
-  static cmdArgs = ["[seconds]"];
 }
 
 export default SeekCommand;

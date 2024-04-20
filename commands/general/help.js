@@ -18,6 +18,7 @@ class HelpCommand extends Command {
     if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
+      const params = info.params.filter((v) => typeof v === "string");
       const embed = {
         embeds: [{
           author: {
@@ -26,14 +27,14 @@ class HelpCommand extends Command {
           },
           title: `${this.guild ? prefix : ""}${command}`,
           url: "https://esmbot.net/help.html",
-          description: command === "tags" ? "The main tags command. Check the help page for more info: https://esmbot.net/help.html" : info.description,
+          description: info.description,
           color: 16711680,
           fields: [{
             name: "Aliases",
             value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
           }, {
             name: "Parameters",
-            value: command === "tags" ? "[name]" : (info.params ? (info.params.length !== 0 ? info.params.join(" ") : "None") : "None"),
+            value: command === "tags" ? "[name]" : (params ? (params.length !== 0 ? params.join(" ") : "None") : "None"),
             inline: true
           }]
         }]
@@ -113,7 +114,12 @@ class HelpCommand extends Command {
 
   static description = "Gets a list of commands";
   static aliases = ["commands"];
-  static cmdArgs = ["{command}"];
+  static flags = [{
+    name: "command",
+    type: 3,
+    description: "A command to view info about",
+    classic: true
+  }];
   static slashAllowed = false;
 }
 

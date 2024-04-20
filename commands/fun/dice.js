@@ -13,12 +13,12 @@ class DiceCommand extends Command {
     name: "max",
     type: 4,
     description: "The maximum dice value",
-    min_value: 1
+    min_value: 1,
+    classic: true
   }];
 
   static description = "Rolls the dice";
   static aliases = ["roll", "die", "rng", "random"];
-  static cmdArgs = ["{number}"];
 }
 
 export default DiceCommand;

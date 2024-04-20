@@ -73,10 +73,6 @@ class Command {
 
   static description = "No description found";
   static aliases = [];
-  /**
-   * @type {string[] | object}
-   */
-  static cmdArgs = [];
   static flags = [];
   static slashAllowed = true;
   static directAllowed = true;

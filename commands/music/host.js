@@ -50,7 +50,8 @@ class HostCommand extends MusicCommand {
   static flags = [{
     name: "user",
     type: 6,
-    description: "The user you want the new host to be"
+    description: "The user you want the new host to be",
+    classic: true
   }];
   static description = "Gets or changes the host of the current voice session";
   static aliases = ["sethost"];

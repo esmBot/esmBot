@@ -38,7 +38,6 @@ class MotivateCommand extends ImageCommand {
 
   static description = "Generates a motivational poster";
   static aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation", "demotivate"];
-  static cmdArgs = ["[top text]", "{bottom text}"];
 
   static requiresText = true;
   static noText = "You need to provide some text to generate a motivational poster!";

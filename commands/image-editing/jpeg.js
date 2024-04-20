@@ -16,14 +16,14 @@ class JPEGCommand extends ImageCommand {
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the JPEG quality (default: 1)",
       min_value: 1,
-      max_value: 100
+      max_value: 100,
+      classic: true
     });
     return this;
   }
 
   static description = "Adds JPEG compression to an image";
   static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg", "quality"];
-  static cmdArgs = ["{quality}"];
 
   static noImage = "You need to provide an image/GIF to add more JPEG!";
   static command = "jpeg";

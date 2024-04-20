@@ -23,12 +23,12 @@ class YouTubeCommand extends Command {
     name: "query",
     type: 3,
     description: "The query you want to search for",
+    classic: true,
     required: true
   }];
 
   static description = "Searches YouTube";
   static aliases = ["yt", "video", "ytsearch"];
-  static cmdArgs = ["[query]"];
 }
 
 export default YouTubeCommand;

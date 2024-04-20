@@ -109,48 +109,47 @@ class TagsCommand extends Command {
     return getResult.content;
   }
 
-  static description = "Manage tags";
+  static description = "The main tags command. Check the help page for more info: https://esmbot.net/help.html";
   static aliases = ["t", "tag", "ta"];
-  static cmdArgs = {
-    default: ["[name]"],
-    add: ["[name]", "[content]"],
-    delete: ["[name]"],
-    edit: ["[name]", "[content]"],
-    owner: ["[name]"]
-  };
 
-  static subArgs = [{
-    name: "name",
-    type: 3,
-    description: "The name of the tag",
-    required: true
-  }, {
-    name: "content",
-    type: 3,
-    description: "The content of the tag",
-    required: true
-  }];
+  static subArgs(needsContent = false) {
+    const args = [{
+      name: "name",
+      type: 3,
+      description: "The name of the tag",
+      required: true,
+      classic: true
+    }];
+    if (needsContent) args.push({
+      name: "content",
+      type: 3,
+      description: "The content of the tag",
+      required: true,
+      classic: true
+    });
+    return args;
+  }
 
   static flags = [{
     name: "add",
     type: 1,
     description: "Adds a new tag",
-    options: this.subArgs
+    options: this.subArgs(true)
   }, {
     name: "delete",
     type: 1,
     description: "Deletes a tag",
-    options: [this.subArgs[0]]
+    options: this.subArgs()
   }, {
     name: "edit",
     type: 1,
     description: "Edits an existing tag",
-    options: this.subArgs
+    options: this.subArgs(true)
   }, {
     name: "get",
     type: 1,
     description: "Gets a tag",
-    options: [this.subArgs[0]]
+    options: this.subArgs()
   }, {
     name: "list",
     type: 1,
@@ -159,7 +158,7 @@ class TagsCommand extends Command {
     name: "owner",
     type: 1,
     description: "Gets the owner of a tag",
-    options: [this.subArgs[0]]
+    options: this.subArgs()
   }, {
     name: "random",
     type: 1,

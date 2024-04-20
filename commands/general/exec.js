@@ -38,12 +38,12 @@ class ExecCommand extends Command {
     name: "cmd",
     type: 3,
     description: "The command to execute",
+    classic: true,
     required: true
   }];
 
   static description = "Executes a shell command";
   static aliases = ["runcmd"];
-  static cmdArgs = ["[command]"];
   static adminOnly = true;
 }
 

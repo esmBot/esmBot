@@ -26,7 +26,6 @@ class SnapchatCommand extends ImageCommand {
 
   static description = "Adds a Snapchat style caption to an image";
   static aliases = ["snap", "caption3"];
-  static cmdArgs = ["[text]"];
 
   static requiresText = true;
   static noText = "You need to provide some text to add a caption!";

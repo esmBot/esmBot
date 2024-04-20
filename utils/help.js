@@ -10,22 +10,29 @@ export let categories = categoryTemplate;
 
 export let generated = false;
 
+function generateEntries(baseName, params, desc, categories, category) {
+  let entry = `**${baseName}**`;
+  const sorted = [];
+  let generated = false;
+  for (const param of params) {
+    if (typeof param !== "string") {
+      generateEntries(`${baseName} ${param.name}`, param.params ?? [], param.desc, categories, category);
+      generated = true;
+    } else {
+      sorted.push(param);
+    }
+  }
+  if (generated) return;
+  entry += `${sorted.length > 0 ? ` ${sorted.join(" ")}` : ""} - ${desc}`;
+  categories[category].push(entry);
+}
+
 export function generateList() {
   categories = categoryTemplate;
   for (const [command] of commands) {
-    const category = info.get(command).category;
-    const description = info.get(command).description;
-    const params = info.get(command).params;
-    if (category === "tags") {
-      const subCommands = info.get(command).flags;
-      categories.tags.push(`**tags** ${params.default} - ${description}`);
-      for (const subCommand of subCommands) {
-        categories.tags.push(`**tags ${subCommand.name}**${params[subCommand.name] ? ` ${params[subCommand.name].join(" ")}` : ""} - ${subCommand.description}`);
-      }
-    } else {
-      if (!categories[category]) categories[category] = [];
-      categories[category].push(`**${command}**${params ? ` ${params.join(" ")}` : ""} - ${description}`);
-    }
+    const cmd = info.get(command);
+    if (!categories[cmd.category]) categories[cmd.category] = [];
+    if (command !== "music") generateEntries(command, cmd.params, cmd.description, categories, cmd.category);
   }
   generated = true;
 }

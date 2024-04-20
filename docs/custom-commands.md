@@ -71,7 +71,6 @@ Some static fields are also available and can be set depending on your command. 
 
 - `description`: Your command's description, which is shown in the help command.
 - `aliases`: An array of command aliases. People will be able to run the command using these as well as the normal command name.
-- `arguments`: An array of command argument types, which are shown in the help command.
 - `flags`: An array of objects specifying command flags, or special arguments, that will be shown when running `help <command>` or a slash command. Example:
 ```js
 static flags = [{

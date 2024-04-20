@@ -23,7 +23,12 @@ class PrefixCommand extends Command {
 
   static description = "Checks/changes the server prefix";
   static aliases = ["setprefix", "changeprefix", "checkprefix"];
-  static cmdArgs = ["{prefix}"];
+  static flags = [{
+    name: "prefix",
+    type: 3,
+    description: "The server prefix you want to use",
+    classic: true
+  }];
   static slashAllowed = false;
 }
 

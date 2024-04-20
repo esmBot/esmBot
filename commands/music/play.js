@@ -35,11 +35,11 @@ class PlayCommand extends MusicCommand {
     name: "query",
     type: 3,
     description: "An audio search query or URL",
+    classic: true,
     required: true
   }];
   static description = "Plays a song or adds it to the queue";
   static aliases = ["p"];
-  static cmdArgs = ["[url]"];
 }
 
 export default PlayCommand;

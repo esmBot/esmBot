@@ -29,11 +29,11 @@ class ReloadCommand extends Command {
     name: "cmd",
     type: 3,
     description: "The command to reload",
+    classic: true,
     required: true
   }];
 
   static description = "Reloads a command";
-  static cmdArgs = ["[command]"];
   static adminOnly = true;
 }
 

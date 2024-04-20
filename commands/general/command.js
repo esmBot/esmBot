@@ -35,7 +35,29 @@ class CommandCommand extends Command {
 
   static description = "Enables/disables a classic command for a server (use server settings for slash commands)";
   static aliases = ["cmd"];
-  static cmdArgs = ["[enable/disable]", "[command]"];
+  static flags = [{
+    name: "enable",
+    type: 1,
+    description: "Enables a classic command",
+    options: [{
+      name: "text",
+      type: 3,
+      description: "The text to decode",
+      classic: true,
+      required: true
+    }]
+  }, {
+    name: "disable",
+    type: 1,
+    description: "Disables a classic command",
+    options: [{
+      name: "text",
+      type: 3,
+      description: "The text to encode",
+      classic: true,
+      required: true
+    }]
+  }];
   static slashAllowed = false;
   static directAllowed = false;
   static dbRequired = true;

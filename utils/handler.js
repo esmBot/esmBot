@@ -39,7 +39,7 @@ export async function load(client, command, slashReload = false) {
     category: category,
     description: props.description,
     aliases: props.aliases,
-    params: props.cmdArgs,
+    params: parseFlags(props.flags),
     flags: props.flags,
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
@@ -72,6 +72,26 @@ export async function load(client, command, slashReload = false) {
   return commandName;
 }
 
+/**
+ * Convert command flags to params
+ * @param {object} flags
+ * @returns {string[] | object[]}
+ */
+function parseFlags(flags) {
+  const params = [];
+  for (const flag of flags) {
+    if (flag.type === 1) {
+      const sub = { name: flag.name, desc: flag.description };
+      if (flag.options) sub.params = parseFlags(flag.options);
+      params.push(sub);
+    } else {
+      if (!flag.classic) continue;
+      params.push(`${flag.required ? "[" : "{"}${flag.name}${flag.required ? "]" : "}"}`);
+    }
+  }
+  return params;
+}
+
 export function update() {
   const commandArray = [];
   const privateCommandArray = [];
@@ -84,7 +104,7 @@ export function update() {
         category: cmdInfo.category,
         description: cmd.description,
         aliases: cmd.aliases,
-        params: cmd.cmdArgs,
+        params: parseFlags(cmd.flags),
         flags: cmd.flags,
         slashAllowed: cmd.slashAllowed,
         directAllowed: cmd.directAllowed,

@@ -136,7 +136,8 @@ class ImageCommand extends Command {
         name: "text",
         type: Constants.ApplicationCommandOptionTypes.STRING,
         description: "The text to put on the image",
-        required: !this.textOptional
+        required: !this.textOptional,
+        classic: true
       });
     }
     if (this.requiresImage) {

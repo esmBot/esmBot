@@ -27,6 +27,7 @@ class Base64Command extends Command {
       name: "text",
       type: 3,
       description: "The text to decode",
+      classic: true,
       required: true
     }]
   }, {
@@ -37,12 +38,12 @@ class Base64Command extends Command {
       name: "text",
       type: 3,
       description: "The text to encode",
+      classic: true,
       required: true
     }]
   }];
 
   static description = "Encodes/decodes a Base64 string";
-  static cmdArgs = ["[encode/decode]", "[text]"];
 }
 
 export default Base64Command;
