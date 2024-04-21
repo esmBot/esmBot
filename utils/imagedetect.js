@@ -142,8 +142,8 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
 /**
  * Checks for the latest message containing an image and returns the URL of the image.
  * @param {import("oceanic.js").Client} client
- * @param {import("oceanic.js").Message} cmdMessage
- * @param {import("oceanic.js").CommandInteraction} interaction
+ * @param {import("oceanic.js").Message | undefined} cmdMessage
+ * @param {import("oceanic.js").CommandInteraction | undefined} interaction
  * @param {{ image: string; link: any; }} options
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | boolean | undefined>}
  */
@@ -175,7 +175,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     const result = await checkImages(cmdMessage, extraReturnTypes, video, sticker);
     if (result !== false) return result;
   }
-  if (!singleMessage) {
+  if (!singleMessage && (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined)) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
     const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
     if (!(channel instanceof TextableChannel) && !(channel instanceof ThreadChannel) && !(channel instanceof PrivateChannel)) return;

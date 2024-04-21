@@ -15,7 +15,7 @@ class PingCommand extends Command {
       });
       const pingMessage = await this.interaction.getOriginal();
       this.edit = true;
-      return `🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - Math.floor((this.interaction.id / 4194304) + 1420070400000)}ms${this.interaction.guildID ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]).latency)}ms` : ""}\n\`\`\``;
+      return `🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - Math.floor((this.interaction.id / 4194304) + 1420070400000)}ms${this.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]).latency)}ms` : ""}\n\`\`\``;
     }
   }
 

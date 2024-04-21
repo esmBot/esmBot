@@ -36,7 +36,11 @@ class Command {
       this.interaction = options.interaction;
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
-      this.guild = options.interaction.guild;
+      if (!options.interaction.authorizingIntegrationOwners || options.interaction.authorizingIntegrationOwners[0] !== undefined) {
+        this.guild = options.interaction.guild;
+      } else {
+        this.guild = null;
+      }
       this.author = options.interaction.user;
       this.member = options.interaction.member;
       this.permissions = options.interaction.appPermissions;
@@ -76,6 +80,7 @@ class Command {
   static flags = [];
   static slashAllowed = true;
   static directAllowed = true;
+  static userAllowed = true;
   static adminOnly = false;
 }
 

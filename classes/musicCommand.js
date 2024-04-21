@@ -12,6 +12,7 @@ class MusicCommand extends Command {
 
   static slashAllowed = false;
   static directAllowed = false;
+  static userAllowed = false;
 }
 
 export default MusicCommand;

@@ -10,9 +10,8 @@ let queryValue = 0;
  * Load a command into memory.
  * @param {import("oceanic.js").Client | null} client
  * @param {string} command
- * @param {boolean} slashReload
  */
-export async function load(client, command, slashReload = false) {
+export async function load(client, command) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   const commandArray = command.split("/");
@@ -43,6 +42,7 @@ export async function load(client, command, slashReload = false) {
     flags: props.flags,
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
+    userAllowed: props.userAllowed,
     adminOnly: props.adminOnly,
     type: Constants.ApplicationCommandTypes.CHAT_INPUT
   };
@@ -54,7 +54,7 @@ export async function load(client, command, slashReload = false) {
     commands.set(commandName, props);
   }
 
-  if (slashReload && props.slashAllowed) {
+  if (client && props.slashAllowed) {
     await send(client);
   }
 
@@ -108,6 +108,7 @@ export function update() {
         flags: cmd.flags,
         slashAllowed: cmd.slashAllowed,
         directAllowed: cmd.directAllowed,
+        userAllowed: cmd.userAllowed,
         adminOnly: cmd.adminOnly,
         type: cmdInfo.type
       };
@@ -117,6 +118,7 @@ export function update() {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         type: cmdInfo.type,
+        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
       });
     } else if (cmdInfo?.slashAllowed) {
@@ -125,6 +127,7 @@ export function update() {
         type: cmdInfo.type,
         description: cmdInfo.description,
         options: cmdInfo.flags,
+        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
       });
     }

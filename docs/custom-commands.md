@@ -82,6 +82,7 @@ static flags = [{
 ```
 - `slashAllowed`: Specifies whether or not the command is available via slash commands.
 - `directAllowed`: Specifies whether or not a command is available in direct messages.
+- `userAllowed`: Specifies whether or not a command is available when run in a user installation context.
 - `adminOnly`: Specifies whether or not a command should be limited to the bot owner(s).
 
 ## The `run` Function

@@ -81,13 +81,21 @@ export default async (client, info, pages, timeout = 120000) => {
           case "back":
             await interaction.deferUpdate();
             page = page > 0 ? --page : pages.length - 1;
-            currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            if (info.type === "application") {
+              currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
+            } else {
+              currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            }
             interactionCollector.extend();
             break;
           case "forward":
             await interaction.deferUpdate();
             page = page + 1 < pages.length ? ++page : 0;
-            currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            if (info.type === "application") {
+              currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
+            } else {
+              currentPage = await currentPage.edit(Object.assign(pages[page], options));
+            }
             interactionCollector.extend();
             break;
           case "jump": {
@@ -96,7 +104,11 @@ export default async (client, info, pages, timeout = 120000) => {
             for (const index of newComponents.components[0].components.keys()) {
               newComponents.components[0].components[index].disabled = true;
             }
-            currentPage = await currentPage.edit(newComponents);
+            if (info.type === "application") {
+              currentPage = await info.interaction.editOriginal(newComponents);
+            } else {
+              currentPage = await currentPage.edit(newComponents);
+            }
             interactionCollector.extend();
             const jumpComponents = {
               components: [{
@@ -138,23 +150,39 @@ export default async (client, info, pages, timeout = 120000) => {
               dropdownCollector.on("interaction", async (response) => {
                 if (response.data.customID !== "seekDropdown") return;
                 try {
-                  await askMessage.delete();
+                  if (info.type === "application") {
+                    await info.interaction.deleteFollowup(askMessage.id);
+                  } else {
+                    await askMessage.delete();
+                  }
                 } catch {
                   // no-op
                 }
                 page = Number(response.data.values.raw[0]);
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+                if (info.type === "application") {
+                  currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
+                } else {
+                  currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+                }
                 ended = true;
                 dropdownCollector.stop();
               });
               dropdownCollector.once("end", async () => {
                 if (ended) return;
                 try {
-                  await askMessage.delete();
+                  if (info.type === "application") {
+                    await info.interaction.deleteFollowup(askMessage.id);
+                  } else {
+                    await askMessage.delete();
+                  }
                 } catch {
                   // no-op
                 }
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+                if (info.type === "application") {
+                  currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
+                } else {
+                  currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+                }
               });
             }).catch(error => {
               throw error;
@@ -165,7 +193,11 @@ export default async (client, info, pages, timeout = 120000) => {
             await interaction.deferUpdate();
             interactionCollector.emit("end", true);
             try {
-              await currentPage.delete();
+              if (info.type === "application") {
+                await info.interaction.deleteOriginal();
+              } else {
+                await currentPage.delete();
+              }
             } catch {
               // no-op
             }
@@ -182,7 +214,11 @@ export default async (client, info, pages, timeout = 120000) => {
           components.components[0].components[index].disabled = true;
         }
         try {
-          await currentPage.edit(components);
+          if (info.type === "application") {
+            await info.interaction.editOriginal(components);
+          } else {
+            await currentPage.edit(components);
+          }
         } catch {
           // no-op
         }

@@ -165,6 +165,7 @@ class TagsCommand extends Command {
     description: "Gets a random tag"
   }];
   static directAllowed = false;
+  static userAllowed = false;
   static dbRequired = true;
 }
 
