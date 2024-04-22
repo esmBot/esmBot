@@ -31,7 +31,7 @@ class SpeechBubbleCommand extends ImageCommand {
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     }, {
       name: "scale",
-      description: "A multiplier to resize the speech bubble vertically (0.01 is smallest, 1.0 is largest, default is 0.2)",
+      description: "A multiplier to resize the speech bubble (0.01 is smallest, 1.0 is largest, default is 0.2)",
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
       min_value: 0.01,
       max_value: 1.0
