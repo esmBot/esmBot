@@ -61,33 +61,30 @@ export async function stop() {
 }
 
 export async function upgrade(logger) {
-  connection.exec("BEGIN TRANSACTION");
   try {
-    let version = connection.pragma("user_version", { simple: true });
-    const latestVersion = updates.length - 1;
-    if (version === 0) {
-      logger.info("Initializing SQLite database...");
-      connection.exec(schema);
-    } else if (version < latestVersion) {
-      logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
-      while (version < latestVersion) {
-        version++;
-        logger.info(`Running version ${version} update script...`);
-        connection.exec(updates[version]);
+    connection.transaction(() => {
+      let version = connection.pragma("user_version", { simple: true });
+      const latestVersion = updates.length - 1;
+      if (version === 0) {
+        logger.info("Initializing SQLite database...");
+        connection.exec(schema);
+      } else if (version < latestVersion) {
+        logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+        while (version < latestVersion) {
+          version++;
+          logger.info(`Running version ${version} update script...`);
+          connection.exec(updates[version]);
+        }
+      } else if (version > latestVersion) {
+        throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
       }
-    } else if (version > latestVersion) {
-      throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
-    } else {
-      return;
-    }
-    connection.pragma(`user_version = ${latestVersion}`); // prepared statements don't seem to work here
+      connection.pragma(`user_version = ${latestVersion}`); // prepared statements don't seem to work here
+    })();
   } catch (e) {
     logger.error(`SQLite migration failed: ${e}`);
-    connection.exec("ROLLBACK");
     logger.error("Unable to start the bot, quitting now.");
     return 1;
   }
-  connection.exec("COMMIT");
 }
 
 export async function addCount(command) {
@@ -183,7 +180,7 @@ export async function getGuild(query) {
     if (!guild) {
       guild = {
         id: query,
-        prefix: process.env.PREFIX,
+        prefix: process.env.PREFIX ?? "&",
         disabled: "[]",
         disabledCommands: "[]"
       };
