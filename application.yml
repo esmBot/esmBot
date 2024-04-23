@@ -5,7 +5,7 @@ lavalink:
   server:
     password: "youshallnotpass"
     sources:
-      youtube: true
+      youtube: false # Disabled to be compatible with the youtube-source plugin
       bandcamp: true
       soundcloud: true
       twitch: true
@@ -20,10 +20,15 @@ lavalink:
   plugins:
     - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.2"
       repository: "https://jitpack.io"
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.0"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.1"
       repository: "https://maven.lavalink.dev/releases"
+    - dependency: "com.github.lavalink-devs.lavaplayer-youtube-source:plugin:1.0.3"
+      repository: "https://jitpack.io"
 
 plugins:
+  youtube:
+    enabled: true
+    clients: ["MUSIC", "ANDROID", "WEB"]
   lavasrc:
     providers:
       - "ytsearch:\"%ISRC%\""
