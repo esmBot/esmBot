@@ -91,7 +91,7 @@ export function endBroadcast(bot) {
 
 export function getServers(bot) {
   return new Promise((resolve, reject) => {
-    if (process.env.PM2_USAGE) {
+    if (pm2) {
       pm2.launchBus((_err, pm2Bus) => {
         const listener = (packet) => {
           if (packet.data?.type === "countResponse") {
@@ -100,22 +100,27 @@ export function getServers(bot) {
           }
         };
         pm2Bus.on("process:msg", listener);
-      });
-      pm2.list((err, list) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
-        pm2.sendDataToProcessId(managerProc.pm_id, {
-          id: managerProc.pm_id,
-          type: "process:msg",
-          data: {
-            type: "getCount"
-          },
-          topic: true
-        }, (err) => {
-          if (err) reject(err);
+
+        pm2.list((err, list) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+          if (!managerProc) {
+            pm2Bus.off("process:msg");
+            return resolve(bot.guilds.size);
+          }
+          pm2.sendDataToProcessId(managerProc.pm_id, {
+            id: managerProc.pm_id,
+            type: "process:msg",
+            data: {
+              type: "getCount"
+            },
+            topic: true
+          }, (err) => {
+            if (err) reject(err);
+          });
         });
       });
     } else {

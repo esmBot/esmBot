@@ -52,7 +52,7 @@ let timeout;
 
 process.on("message", (packet) => {
   if (packet.data?.type === "getCount") {
-    process.send({
+    process.send?.({
       type: "process:msg",
       data: {
         type: "countResponse",
@@ -100,7 +100,7 @@ async function updateStats() {
     logger.error("Timed out while waiting for stats");
   }, 5000);
   process.on("message", listener);
-  process.send({
+  process.send?.({
     type: "process:msg",
     data: {
       type: "serverCounts"
