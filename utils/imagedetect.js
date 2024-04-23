@@ -81,8 +81,8 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     } else if (giphyMediaURLs.includes(host)) {
       payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
     } else if (imgurURLs.includes(host)) {
-      // Seems that Imgur has a possibility of making GIFs static
-      payload.path = image.replace(".mp4", ".gif");
+      // Imgur does not have a way to get a proper GIF file from a gifv (and most content from there is just long videos anyways), so just ignore it.
+      return;
     }
     payload.type = "image/gif";
   } else if (video) {
