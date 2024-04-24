@@ -18,13 +18,13 @@ const giphyMediaURLs = [ // there could be more of these
   "media3.giphy.com",
   "media4.giphy.com"
 ];
-const imgurURLs = [
-  "imgur.com",
-  "www.imgur.com",
-  "i.imgur.com"
-];
 
-const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...imgurURLs];
+const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs];
+
+const providerUrls = [
+  "https://tenor.co",
+  "https://giphy.com"
+];
 
 const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
@@ -36,12 +36,10 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
  * @param {boolean} video
  * @param {boolean} [spoiler]
  * @param {boolean} [extraReturnTypes]
- * @param {boolean} [gifv]
  * @param {string | null} [type]
- * @param {boolean} [link]
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
-const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, gifv = false, type = null, link = false) => {
+const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null) => {
   const fileNameSplit = new URL(image).pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
@@ -52,7 +50,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     spoiler
   };
   const host = new URL(image2).host;
-  if (gifv || (link && combined.includes(host))) {
+  if (combined.includes(host)) {
     if (tenorURLs.includes(host)) {
       // Tenor doesn't let us access a raw GIF without going through their API,
       // so we use that if there's a key in the config
@@ -74,15 +72,14 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
         const json = await data.json();
         if (json.error) throw Error(json.error.message);
         payload.path = json.results[0].media_formats.gif.url;
+      } else {
+        return;
       }
     } else if (giphyURLs.includes(host)) {
       // Can result in an HTML page instead of a GIF
       payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.gif`;
     } else if (giphyMediaURLs.includes(host)) {
       payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
-    } else if (imgurURLs.includes(host)) {
-      // Imgur does not have a way to get a proper GIF file from a gifv (and most content from there is just long videos anyways), so just ignore it.
-      return;
     }
     payload.type = "image/gif";
   } else if (video) {
@@ -115,19 +112,15 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
         const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
         hasSpoiler = spoilerRegex.test(message.content);
       }
-      // embeds can vary in types, we check for tenor gifs first
-      if (message.embeds[0].type === "gifv" && message.embeds[0].video?.url && message.embeds[0].url) {
-        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes, true);
-        // then we check for other image types
-      } else if ((message.embeds[0].type === "video" || message.embeds[0].type === "image") && message.embeds[0].thumbnail) {
+      // embeds can vary in types, we check for gifvs first
+      if (message.embeds[0].provider?.url && providerUrls.includes(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
+        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
+      // then thumbnails
+      } else if (message.embeds[0].thumbnail) {
         type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
-        // finally we check both possible image fields for "generic" embeds
-      } else if (message.embeds[0].type === "rich" || message.embeds[0].type === "article") {
-        if (message.embeds[0].thumbnail) {
-          type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
-        } else if (message.embeds[0].image) {
-          type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
-        }
+      // and finally direct images
+      } else if (message.embeds[0].image) {
+        type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
       }
       // then check the attachments
     } else if (message.attachments.size !== 0) {
@@ -158,7 +151,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
         if (result) return result;
       }
     } else if (options.link) {
-      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, false, null, true);
+      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, null);
       if (result) return result;
     }
   }
