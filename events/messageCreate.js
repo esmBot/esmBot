@@ -152,7 +152,6 @@ export default async (client, message) => {
           }
         } else {
           await client.rest.channels.createMessage(message.channelID, Object.assign({
-            content: result.text ? result.text : undefined,
             files: [result]
           }, reference));
         }

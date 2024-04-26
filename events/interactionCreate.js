@@ -47,7 +47,7 @@ export default async (client, interaction) => {
         const fileSize = 26214400;
         if (result.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
-            await upload(client, result, interaction, true);
+            await upload(client, result, interaction, commandClass.success, true);
           } else {
             await interaction[replyMethod]({
               content: "The resulting image was more than 25MB in size, so I can't upload it.",
@@ -55,7 +55,10 @@ export default async (client, interaction) => {
             });
           }
         } else {
-          await interaction[replyMethod](result.text ? result.text : { files: [result] });
+          await interaction[replyMethod]({
+            flags: result.flags ?? (commandClass.success ? 0 : 64),
+            files: [result]
+          });
         }
       } else {
         await interaction[replyMethod](Object.assign({
