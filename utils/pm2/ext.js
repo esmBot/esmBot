@@ -116,7 +116,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
     }
 
     const reqUrl = new URL(req.url, `http://${req.headers.host}`);
-    if (reqUrl.pathname === "/") {
+    if (reqUrl.pathname === "/" || reqUrl.pathname === "/metrics") {
       res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
 # HELP esmbot_server_count Number of servers/guilds the bot is in
