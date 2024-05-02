@@ -137,7 +137,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
       res.write(`esmbot_shard_count ${shardData.length}\n`);
 
       for (const shard of shardData) {
-        res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}`);
+        if (shard.latency) res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}\n`);
       }
 
       res.end();
