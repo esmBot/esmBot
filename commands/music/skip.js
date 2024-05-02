@@ -9,7 +9,7 @@ class SkipCommand extends MusicCommand {
     if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
-    if (player.host !== this.author.id && !this.member.permissions.has("MANAGE_CHANNELS")) {
+    if (player.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) {
       const votes = skipVotes.get(this.guild.id) ?? { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) };
       if (votes.ids.includes(this.author.id)) return "You've already voted to skip!";
       const newObject = {

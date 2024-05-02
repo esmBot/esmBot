@@ -7,7 +7,7 @@ class CommandCommand extends Command {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
     const owners = process.env.OWNER.split(",");
-    if (!this.member.permissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
+    if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
     if (this.args.length === 0) return "You need to provide whether you want to enable/disable a command!";
     if (this.args[0] !== "disable" && this.args[0] !== "enable") return "That's not a valid option!";
     if (!this.args[1]) return "You need to provide what command to enable/disable!";
