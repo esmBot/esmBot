@@ -153,7 +153,8 @@ const client = new Client({
   collectionLimits: {
     messages: 50,
     channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
-    guildThreads: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY
+    guildThreads: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
+    emojis: 0
   }
 });
 
