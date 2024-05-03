@@ -18,7 +18,7 @@ class Command {
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
-      this.permissions = this.channel?.permissionsOf.(client.user.id) ?? new Permission(Constants.AllPermissions);
+      this.permissions = this.channel?.permissionsOf?.(client.user.id) ?? new Permission(Constants.AllPermissions);
       this.memberPermissions = this.member?.permissions ?? new Permission(Constants.AllPermissions);
       this.content = options.content;
       this.options = options.specialArgs;
