@@ -24,8 +24,8 @@ dependencies:
     specifier: ^8.0.0
     version: 8.0.0
   oceanic.js:
-    specifier: 1.10.2
-    version: 1.10.2
+    specifier: 1.10.4
+    version: 1.10.4
   postgres:
     specifier: ^3.4.4
     version: 3.4.4
@@ -496,7 +496,7 @@ packages:
       discord-api-types: 0.37.61
       prism-media: 1.3.5
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.17.0
     transitivePeerDependencies:
       - '@discordjs/opus'
       - bufferutil
@@ -2424,12 +2424,12 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /oceanic.js@1.10.2:
-    resolution: {integrity: sha512-preIEfqbLJae3S1pS0r6x79jagO3Cd3+puaHwIFrtHFXUY+F5AsV/hlpgmbjeGKp/WSxpiLTfVhlz35z5oI6cQ==}
+  /oceanic.js@1.10.4:
+    resolution: {integrity: sha512-pgTc4xYUBgXvyxHit7NuwON7yYpKaO2F/4xego08TNGPCwzU1hE+NQGTKw6A8+AYOoF6R3V6oJSuGAq2pXdsKA==}
     engines: {node: '>=18.13.0'}
     dependencies:
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.17.0
     optionalDependencies:
       '@discordjs/voice': 0.16.1
     transitivePeerDependencies:
@@ -3465,6 +3465,19 @@ packages:
 
   /ws@8.16.0:
     resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
+  /ws@8.17.0:
+    resolution: {integrity: sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
