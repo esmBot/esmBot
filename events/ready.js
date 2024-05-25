@@ -3,7 +3,7 @@ import { send } from "../utils/handler.js";
 import { generateList, createPage } from "../utils/help.js";
 import logger from "../utils/logger.js";
 
-import commandsConfig from "../config/commands.json" assert { type: "json" };
+import commandsConfig from "../config/commands.json" with { type: "json" };
 let ready = false;
 
 /**

@@ -4,7 +4,7 @@ import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
 import { clean, isEmpty, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
-import messages from "../config/messages.json" assert { type: "json" };
+import messages from "../config/messages.json" with { type: "json" };
 import { Constants, CommandInteraction } from "oceanic.js";
 
 class ImageCommand extends Command {

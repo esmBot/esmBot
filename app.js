@@ -38,8 +38,8 @@ import { reload, connect, connected } from "./utils/soundplayer.js";
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
 
-import commandConfig from "./config/commands.json" assert { type: "json" };
-import packageJson from "./package.json" assert { type: "json" };
+import commandConfig from "./config/commands.json" with { type: "json" };
+import packageJson from "./package.json" with { type: "json" };
 process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [
