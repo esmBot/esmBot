@@ -31,7 +31,7 @@ class HostCommand extends MusicCommand {
           user = member;
         }
       } else {
-        user = input;
+        user = this.client.users.get(input);
       }
       if (!user) return "I can't find that user!";
       if (user.bot) return "This is illegal, you know.";
