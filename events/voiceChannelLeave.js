@@ -106,10 +106,10 @@ async function handleExit(client, connection) {
     } catch {
       logger.warn(`Failed to leave voice channel ${connection.originalChannel.guildID}`);
     }
-    players.delete(connection.originalChannel.guildID);
-    queues.delete(connection.originalChannel.guildID);
-    skipVotes.delete(connection.originalChannel.guildID);
   }
+  players.delete(connection.originalChannel.guildID);
+  queues.delete(connection.originalChannel.guildID);
+  skipVotes.delete(connection.originalChannel.guildID);
   try {
     await client.rest.channels.createMessage(connection.originalChannel.id, {
       content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
