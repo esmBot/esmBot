@@ -14,7 +14,7 @@ class ReloadCommand extends Command {
     const result = await load(this.client, path);
     if (result !== commandName) return "I couldn't reload that command!";
     if (process.env.PM2_USAGE) {
-      process.send({
+      process.send?.({
         type: "process:msg",
         data: {
           type: "reload",

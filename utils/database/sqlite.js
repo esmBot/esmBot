@@ -1,7 +1,13 @@
 import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "../collections.js";
 
-import sqlite3 from "better-sqlite3";
-const connection = sqlite3(process.env.DB.replace("sqlite://", ""));
+let connection;
+if (process.versions.bun) {
+  const { Database } = await import("bun:sqlite");
+  connection = new Database(process.env.DB.replace("sqlite://", ""), { create: true, readwrite: true });
+} else {
+  const { default: sqlite3 } = await import("better-sqlite3");
+  connection = sqlite3(process.env.DB.replace("sqlite://", ""));
+}
 
 const schema = `
 CREATE TABLE guilds (
@@ -61,33 +67,46 @@ export async function stop() {
 }
 
 export async function upgrade(logger) {
-  connection.exec("BEGIN TRANSACTION");
+  if (process.versions.bun) {
+    connection.exec("PRAGMA journal_mode = WAL;");
+  } else {
+    connection.pragma("journal_mode = WAL");
+  }
   try {
-    let version = connection.pragma("user_version", { simple: true });
-    const latestVersion = updates.length - 1;
-    if (version === 0) {
-      logger.info("Initializing SQLite database...");
-      connection.exec(schema);
-    } else if (version < latestVersion) {
-      logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
-      while (version < latestVersion) {
-        version++;
-        logger.info(`Running version ${version} update script...`);
-        connection.exec(updates[version]);
+    connection.transaction(() => {
+      let version;
+      if (process.versions.bun) {
+        const { user_version } = connection.prepare("PRAGMA user_version").get();
+        version = user_version;
+      } else {
+        version = connection.pragma("user_version", { simple: true });
       }
-    } else if (version > latestVersion) {
-      throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
-    } else {
-      return;
-    }
-    connection.pragma(`user_version = ${latestVersion}`); // prepared statements don't seem to work here
+      const latestVersion = updates.length - 1;
+      if (version === 0) {
+        logger.info("Initializing SQLite database...");
+        connection.exec(schema);
+      } else if (version < latestVersion) {
+        logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+        while (version < latestVersion) {
+          version++;
+          logger.info(`Running version ${version} update script...`);
+          connection.exec(updates[version]);
+        }
+      } else if (version > latestVersion) {
+        throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
+      }
+      // prepared statements don't seem to work here
+      if (process.versions.bun) {
+        connection.exec(`PRAGMA user_version = ${latestVersion}`);
+      } else {
+        connection.pragma(`user_version = ${latestVersion}`);
+      }
+    })();
   } catch (e) {
     logger.error(`SQLite migration failed: ${e}`);
-    connection.exec("ROLLBACK");
     logger.error("Unable to start the bot, quitting now.");
     return 1;
   }
-  connection.exec("COMMIT");
 }
 
 export async function addCount(command) {
@@ -151,7 +170,16 @@ export async function setTag(name, content, guild) {
     content: content.content,
     author: content.author
   };
-  connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@id, @name, @content, @author)").run(tag);
+  if (process.versions.bun) {
+    connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES ($id, $name, $content, $author)").run({
+      $id: tag.id,
+      $name: tag.name,
+      $content: tag.content,
+      $author: tag.author
+    });
+  } else {
+    connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@id, @name, @content, @author)").run(tag);
+  }
 }
 
 export async function removeTag(name, guild) {
@@ -183,11 +211,20 @@ export async function getGuild(query) {
     if (!guild) {
       guild = {
         id: query,
-        prefix: process.env.PREFIX,
+        prefix: process.env.PREFIX ?? "&",
         disabled: "[]",
         disabledCommands: "[]"
       };
-      connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guild);
+      if (process.versions.bun) {
+        connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($id, $prefix, $disabled, $disabledCommands)").run({
+          $id: guild.id,
+          $prefix: guild.prefix,
+          $disabled: guild.disabled,
+          $disabledCommands: guild.disabledCommands
+        });
+      } else {
+        connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guild);
+      }
     }
   })();
   return guild;

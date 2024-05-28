@@ -1,3 +1,6 @@
+/**
+ * @param {string[] | string} cmd
+ */
 export default (cmd) => {
   let input = cmd;
   if (typeof input === "string") input = input.split(/\s+/g);

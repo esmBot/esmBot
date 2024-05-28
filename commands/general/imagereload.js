@@ -12,7 +12,7 @@ class ImageReloadCommand extends Command {
     const length = await reloadImageConnections();
     if (!length) {
       if (process.env.PM2_USAGE) {
-        process.send({
+        process.send?.({
           type: "process:msg",
           data: {
             type: "imagereload"

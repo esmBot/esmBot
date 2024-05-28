@@ -1,6 +1,7 @@
-if (Number.parseInt(process.versions.node.split(".")[0]) < 18) {
+const [ major, minor ] = process.versions.node.split(".").map(Number);
+if (major < 18 || (major === 18 && minor < 20)) {
   console.error(`You are currently running Node.js version ${process.version}.
-esmBot requires Node.js version 18 or above.
+esmBot requires Node.js version 18.20.0 or above.
 Please refer to step 3 of the setup guide: https://docs.esmbot.net/setup/#3-install-nodejs`);
   process.exit(1);
 }
@@ -38,8 +39,8 @@ import { reload, connect, connected } from "./utils/soundplayer.js";
 import { endBroadcast, startBroadcast } from "./utils/misc.js";
 import { parseThreshold } from "./utils/tempimages.js";
 
-import commandConfig from "./config/commands.json" assert { type: "json" };
-import packageJson from "./package.json" assert { type: "json" };
+import commandConfig from "./config/commands.json" with { type: "json" };
+import packageJson from "./package.json" with { type: "json" };
 process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [
@@ -152,7 +153,9 @@ const client = new Client({
   },
   collectionLimits: {
     messages: 50,
-    channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY
+    channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
+    guildThreads: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
+    emojis: 0
   }
 });
 

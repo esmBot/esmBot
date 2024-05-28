@@ -44,10 +44,7 @@ jobs:
         node-version: 18
         cache: pnpm
     - name: Install dependencies
-      run: brew install imagemagick vips
-    # https://github.com/nodejs/node-gyp/issues/2869
-    - name: Fix node-gyp and Python
-      run: python3 -m pip install packaging setuptools
+      run: brew install imagemagick vips python-setuptools # https://github.com/nodejs/node-gyp/issues/2869
     - name: Build
       run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF
 

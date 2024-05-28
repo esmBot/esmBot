@@ -53,7 +53,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
         Arguments[property] = val.ToString().As<Napi::String>().Utf8Value();
       } else if (val.IsNumber()) {
         auto num = val.ToNumber();
-        if (isNapiValueInt(env, num) && property != "yscale") { // dumb hack
+        if (isNapiValueInt(env, num) && property != "yscale" && property != "tolerance" && property != "pos") { // dumb hack
           Arguments[property] = num.Int32Value();
         } else {
           Arguments[property] = num.FloatValue();

@@ -14,7 +14,7 @@ class BroadcastCommand extends Command {
       await database.setBroadcast(message);
       startBroadcast(this.client, message);
       if (process.env.PM2_USAGE) {
-        process.send({
+        process.send?.({
           type: "process:msg",
           data: {
             type: "broadcastStart",
@@ -27,7 +27,7 @@ class BroadcastCommand extends Command {
       await database.setBroadcast(null);
       endBroadcast(this.client);
       if (process.env.PM2_USAGE) {
-        process.send({
+        process.send?.({
           type: "process:msg",
           data: {
             type: "broadcastEnd"

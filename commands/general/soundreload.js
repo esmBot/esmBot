@@ -9,9 +9,9 @@ class SoundReloadCommand extends Command {
       return "Only the bot owner can reload Lavalink!";
     }
     await this.acknowledge();
-    const length = await reload();
+    const length = await reload(this.client);
     if (process.env.PM2_USAGE) {
-      process.send({
+      process.send?.({
         type: "process:msg",
         data: {
           type: "soundreload"

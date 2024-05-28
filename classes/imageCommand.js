@@ -4,7 +4,7 @@ import { runImageJob } from "../utils/image.js";
 import { runningCommands } from "../utils/collections.js";
 import { clean, isEmpty, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
-import messages from "../config/messages.json" assert { type: "json" };
+import messages from "../config/messages.json" with { type: "json" };
 import { Constants, CommandInteraction } from "oceanic.js";
 
 class ImageCommand extends Command {
@@ -35,7 +35,7 @@ class ImageCommand extends Command {
       id: (this.interaction ?? this.message).id
     };
 
-    if (this.type === "application") await this.acknowledge();
+    if (this.type === "application") await this.acknowledge(this.options.ephemeral ? 64 : undefined);
 
     let needsSpoiler = false;
     if (this.constructor.requiresImage) {
@@ -102,10 +102,14 @@ class ImageCommand extends Command {
       if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
       if (type === "empty") return this.constructor.empty;
       this.success = true;
-      if (type === "text") return `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``;
+      if (type === "text") return {
+        content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
+        flags: this.options.ephemeral ? 64 : undefined
+      };
       return {
         contents: buffer,
-        name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`
+        name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`,
+        flags: this.options.ephemeral ? 64 : undefined
       };
     } catch (e) {
       if (e === "Request ended prematurely due to a closed connection") return "This image job couldn't be completed because the server it was running on went down. Try running your command again.";
@@ -159,6 +163,10 @@ class ImageCommand extends Command {
       name: "spoiler",
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
       description: "Attempt to send output as a spoiler"
+    }, {
+      name: "ephemeral",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Attempt to send output as an ephemeral/temporary response"
     });
     return this;
   }

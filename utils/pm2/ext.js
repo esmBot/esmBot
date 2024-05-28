@@ -52,7 +52,7 @@ let timeout;
 
 process.on("message", (packet) => {
   if (packet.data?.type === "getCount") {
-    process.send({
+    process.send?.({
       type: "process:msg",
       data: {
         type: "countResponse",
@@ -100,7 +100,7 @@ async function updateStats() {
     logger.error("Timed out while waiting for stats");
   }, 5000);
   process.on("message", listener);
-  process.send({
+  process.send?.({
     type: "process:msg",
     data: {
       type: "serverCounts"
@@ -116,7 +116,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
     }
 
     const reqUrl = new URL(req.url, `http://${req.headers.host}`);
-    if (reqUrl.pathname === "/") {
+    if (reqUrl.pathname === "/" || reqUrl.pathname === "/metrics") {
       res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
 # HELP esmbot_server_count Number of servers/guilds the bot is in
@@ -137,7 +137,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
       res.write(`esmbot_shard_count ${shardData.length}\n`);
 
       for (const shard of shardData) {
-        res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}`);
+        if (shard.latency) res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}\n`);
       }
 
       res.end();

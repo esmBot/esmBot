@@ -1,4 +1,4 @@
-import packageJson from "../../package.json" assert { type: "json" };
+import packageJson from "../../package.json" with { type: "json" };
 import Command from "../../classes/command.js";
 import { getServers } from "../../utils/misc.js";
 
