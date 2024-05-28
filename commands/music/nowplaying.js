@@ -6,7 +6,7 @@ class NowPlayingCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
     if (!this.member?.voiceState) return "You need to be in a voice channel first!";
-    if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
+    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
     if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
     const player = this.connection.player;
     if (!player) return "I'm not playing anything!";

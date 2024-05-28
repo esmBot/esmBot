@@ -6,7 +6,7 @@ class StopCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
     if (!this.member?.voiceState) return "You need to be in a voice channel first!";
-    if (!this.guild.voiceStates.has(this.client.user.id)) return "I'm not in a voice channel!";
+    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
     if (this.connection?.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can stop the music!";
     players.delete(this.guild.id);
     queues.delete(this.guild.id);
