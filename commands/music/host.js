@@ -1,4 +1,5 @@
 import { players } from "../../utils/soundplayer.js";
+import logger from "../../utils/logger.js";
 import MusicCommand from "../../classes/musicCommand.js";
 
 class HostCommand extends MusicCommand {
@@ -34,7 +35,9 @@ class HostCommand extends MusicCommand {
       }
       if (!user) return "I can't find that user!";
       if (user.bot) return "This is illegal, you know.";
-      const member = this.guild.members.get(user.id);
+      const member = this.guild.members.get(user.id) ?? await this.client.rest.guilds.getMember(this.guild.id, user.id).catch(e => {
+        logger.warn(`Failed to get a member: ${e}`);
+      });
       if (!member) return "That user isn't in this server!";
       const object = this.connection;
       object.host = member.id;
