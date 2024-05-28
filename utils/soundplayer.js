@@ -239,10 +239,10 @@ export async function nextSong(client, options, connection, track, info, voiceCh
       nextSong(client, options, connection, newQueue[0], newTrack?.info, voiceChannel, host, player?.loop, player?.shuffle, track);
     } else if (process.env.STAYVC !== "true" && data.reason !== "stopped") {
       await setTimeout(400);
-      await manager.leaveVoiceChannel(voiceChannel.guildID);
       players.delete(voiceChannel.guildID);
       queues.delete(voiceChannel.guildID);
       skipVotes.delete(voiceChannel.guildID);
+      await manager.leaveVoiceChannel(voiceChannel.guildID);
       try {
         const content = `🔊 The voice channel session in \`${voiceChannel.name}\` has ended.`;
         if (options.type === "classic") {
