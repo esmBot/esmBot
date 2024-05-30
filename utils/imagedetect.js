@@ -19,15 +19,15 @@ const giphyMediaURLs = [ // there could be more of these
   "media4.giphy.com"
 ];
 
-const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs];
+const combined = new Set([...tenorURLs, ...giphyURLs, ...giphyMediaURLs]);
 
-const providerUrls = [
+const providerUrls = new Set([
   "https://tenor.co",
   "https://giphy.com"
-];
+]);
 
-const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
-const videoFormats = ["video/mp4", "video/webm", "video/mov"];
+const imageFormats = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "large"]);
+const videoFormats = new Set(["video/mp4", "video/webm", "video/mov"]);
 
 /**
  * Gets proper image paths.
@@ -41,7 +41,7 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
  */
 const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null) => {
   const fileNameSplit = new URL(image).pathname.split("/");
-  const fileName = fileNameSplit[fileNameSplit.length - 1];
+  const fileName = fileNameSplit.at(-1);
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
   const payload = {
     url: image2,
@@ -50,7 +50,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     spoiler
   };
   const host = new URL(image2).host;
-  if (combined.includes(host)) {
+  if (combined.has(host)) {
     if (tenorURLs.includes(host)) {
       // Tenor doesn't let us access a raw GIF without going through their API,
       // so we use that if there's a key in the config
@@ -65,14 +65,12 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
           return;
         }
         const data = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
-        if (data.status === 429) {
-          if (extraReturnTypes) {
-            payload.type = "tenorlimit";
-            return payload;
-          }
+        if (data.status === 429 && extraReturnTypes) {
+          payload.type = "tenorlimit";
+          return payload;
         }
         const json = await data.json();
-        if (json.error) throw Error(json.error.message);
+        if (json.error) throw new Error(json.error.message);
         payload.path = json.results[0].media_formats.gif.url;
       } else {
         return;
@@ -86,10 +84,10 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     payload.type = "image/gif";
   } else if (video) {
     payload.type = type ?? await getType(payload.path, extraReturnTypes);
-    if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
+    if (!payload.type || (!videoFormats.has(payload.type) && !imageFormats.has(payload.type))) return;
   } else {
     payload.type = type ?? await getType(payload.path, extraReturnTypes);
-    if (!payload.type || !imageFormats.includes(payload.type)) return;
+    if (!payload.type || !imageFormats.has(payload.type)) return;
   }
   return payload;
 };
@@ -108,14 +106,14 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
     type = message.stickerItems[0];
   } else {
     // first check the embeds
-    if (message.embeds.length !== 0) {
+    if (message.embeds.length > 0) {
       let hasSpoiler = false;
       if (message.embeds[0].url && message.content) {
         const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
         hasSpoiler = spoilerRegex.test(message.content);
       }
       // embeds can vary in types, we check for gifvs first
-      if (message.embeds[0].provider?.url && providerUrls.includes(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
+      if (message.embeds[0].provider?.url && providerUrls.has(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
         type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
       // then thumbnails
       } else if (message.embeds[0].thumbnail) {
@@ -125,7 +123,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
         type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
       }
       // then check the attachments
-    } else if (message.attachments.size !== 0) {
+    } else if (message.attachments.size > 0) {
       const firstAttachment = message.attachments.first();
       if (firstAttachment?.width) type = await getImage(firstAttachment.proxyURL, firstAttachment.url, video, !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER));
     }

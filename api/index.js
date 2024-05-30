@@ -111,47 +111,58 @@ wss.on("connection", (ws, request) => {
     const opcode = msg.readUint8(0);
     const tag = msg.slice(1, 3);
     const req = msg.toString().slice(3);
-    if (opcode === Tqueue) {
-      const id = msg.readBigInt64LE(3);
-      const obj = msg.slice(11);
-      const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
-      jobs.set(id, job);
-      queue.push(id);
+    switch (opcode) {
+      case Tqueue: {
+        const id = msg.readBigInt64LE(3);
+        const obj = msg.slice(11);
+        const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
+        jobs.set(id, job);
+        queue.push(id);
 
-      const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
-      ws.send(newBuffer);
+        const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
+        ws.send(newBuffer);
   
-      if (jobAmount < MAX_JOBS) {
-        log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
-        acceptJob(id, ws);
-      } else {
-        log(`Got WS request for job ${job.msg} with id ${id}, queued in position ${queue.indexOf(id)}`, job.num);
+        if (jobAmount < MAX_JOBS) {
+          log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
+          acceptJob(id, ws);
+        } else {
+          log(`Got WS request for job ${job.msg} with id ${id}, queued in position ${queue.indexOf(id)}`, job.num);
+        }
+    
+        break;
       }
-    } else if (opcode === Tcancel) {
-      delete queue[queue.indexOf(req) - 1];
-      jobs.delete(req);
-      const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
-      ws.send(cancelResponse);
-    } else if (opcode === Twait) {
-      const id = msg.readBigUInt64LE(3);
-      const job = jobs.get(id);
-      if (!job) {
-        const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from("Invalid job ID")]);
-        ws.send(errorResponse);
-        return;
+      case Tcancel: {
+        delete queue[queue.indexOf(req) - 1];
+        jobs.delete(req);
+        const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
+        ws.send(cancelResponse);
+    
+        break;
       }
-      if (job.error) {
-        job.verifyEvent.emit("error", job.error);
-        jobs.delete(id);
-        const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from(job.error)]);
-        ws.send(errorResponse);
-        return;
+      case Twait: {
+        const id = msg.readBigUInt64LE(3);
+        const job = jobs.get(id);
+        if (!job) {
+          const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from("Invalid job ID")]);
+          ws.send(errorResponse);
+          return;
+        }
+        if (job.error) {
+          job.verifyEvent.emit("error", job.error);
+          jobs.delete(id);
+          const errorResponse = Buffer.concat([Buffer.from([Rerror]), tag, Buffer.from(job.error)]);
+          ws.send(errorResponse);
+          return;
+        }
+        job.verifyEvent.emit("end", tag);
+        job.tag = tag;
+        jobs.set(id, job);
+    
+        break;
       }
-      job.verifyEvent.emit("end", tag);
-      job.tag = tag;
-      jobs.set(id, job);
-    } else {
-      logger.warn("Could not parse WS message");
+      default: {
+        logger.warn("Could not parse WS message");
+      }
     }
   });
 
@@ -190,19 +201,23 @@ httpServer.on("request", async (req, res) => {
     const ext = jobs.get(id).ext;
     let contentType;
     switch (ext) {
-      case "gif":
+      case "gif": {
         contentType = "image/gif";
         break;
-      case "png":
+      }
+      case "png": {
         contentType = "image/png";
         break;
+      }
       case "jpeg":
-      case "jpg":
+      case "jpg": {
         contentType = "image/jpeg";
         break;
-      case "webp":
+      }
+      case "webp": {
         contentType = "image/webp";
         break;
+      }
     }
     if (contentType) res.setHeader("Content-Type", contentType);
     else res.setHeader("Content-Type", ext);
@@ -218,8 +233,8 @@ httpServer.on("request", async (req, res) => {
       if (err) error(err);
     });
   }
-    res.statusCode = 404;
-    return res.end("404 Not Found");
+  res.statusCode = 404;
+  return res.end("404 Not Found");
 });
 
 httpServer.on("upgrade", (req, sock, head) => {

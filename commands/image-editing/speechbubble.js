@@ -9,9 +9,9 @@ class SpeechBubbleCommand extends ImageCommand {
       gravity: this.options.bottom ? "south" : "north",
       resize: true,
       yscale: !Number.isNaN(parsedScale) ? parsedScale : 0.2,
-      alpha: this.options.alpha ? true : false,
-      flipX: this.options.flip ? true : false,
-      flipY: this.options.bottom ? true : false
+      alpha: !!this.options.alpha,
+      flipX: !!this.options.flip,
+      flipY: !!this.options.bottom
     };
   }
 
@@ -34,7 +34,7 @@ class SpeechBubbleCommand extends ImageCommand {
       description: "A multiplier to resize the speech bubble (0.01 is smallest, 1.0 is largest, default is 0.2)",
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
       min_value: 0.01,
-      max_value: 1.0
+      max_value: 1
     });
     return this;
   }

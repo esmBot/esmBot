@@ -33,7 +33,7 @@ export default async (client, interaction) => {
   // actually run the command
   logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
-    // eslint-disable-next-line no-unused-vars
+     
     const commandClass = new cmd(client, { type: "application", interaction });
     const result = await commandClass.run();
     const replyMethod = interaction.acknowledged ? (commandClass.edit ? "editOriginal" : "createFollowup") : "createMessage";

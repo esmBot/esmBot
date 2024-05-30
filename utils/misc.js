@@ -12,7 +12,7 @@ let broadcast = false;
 
 // random(array) to select a random entry in array
 export function random(array) {
-  if (!array || array.length < 1) return null;
+  if (!array || array.length === 0) return null;
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -106,7 +106,7 @@ export function getServers(bot) {
             reject(err);
             return;
           }
-          const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+          const managerProc = list.find((v) => v.name === "esmBot-manager");
           if (!managerProc) {
             pm2Bus.off("process:msg");
             return resolve(bot.guilds.size);
@@ -131,28 +131,28 @@ export function getServers(bot) {
 
 // copied from eris
 export function cleanMessage(message, content) {
-  let cleanContent = content?.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
+  let cleanContent = content?.replace(/<a?(:\w+:)\d+>/g, "$1") || "";
 
   const author = message.author ?? message.member ?? message.user;
   let authorName = author.username;
   if (message.member?.nick) {
     authorName = message.member.nick;
   }
-  cleanContent = cleanContent.replace(new RegExp(`<@!?${author.id}>`, "g"), `@${authorName}`);
+  cleanContent = cleanContent.replaceAll(new RegExp(`<@!?${author.id}>`, "g"), `@${authorName}`);
 
   if (message.mentions) {
     for (const mention of message.mentions.members) {
       if (mention.nick) {
-        cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.nick}`);
+        cleanContent = cleanContent.replaceAll(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.nick}`);
       }
-      cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.username}`);
+      cleanContent = cleanContent.replaceAll(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.username}`);
     }
 
     if (message.guildID && message.mentions.roles) {
       for (const roleID of message.mentions.roles) {
         const role = message.guild.roles.get(roleID);
         const roleName = role ? role.name : "deleted-role";
-        cleanContent = cleanContent.replace(new RegExp(`<@&${roleID}>`, "g"), `@${roleName}`);
+        cleanContent = cleanContent.replaceAll(new RegExp(`<@&${roleID}>`, "g"), `@${roleName}`);
       }
     }
 
@@ -168,5 +168,5 @@ export function cleanMessage(message, content) {
 }
 
 export function isEmpty(string) {
-  return string.length === 0 || string.replace(/[\s\u200B-\u200D\uFEFF]/g, "").length === 0;
+  return string.length === 0 || string.replaceAll(/[\s\u200B-\u200D]/g, "").length === 0;
 }

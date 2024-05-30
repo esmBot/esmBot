@@ -14,10 +14,10 @@ class HostCommand extends MusicCommand {
     if (input?.trim()) {
       let user;
       if (this.type === "classic" && this.message) {
-        const getUser = this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
+        const getUser = this.message.mentions.users.length > 0 ? this.message.mentions.users[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
-        } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && input >= 21154535154122752n) {
+        } else if (/^<?[#@]?[!&]?\d+>?$/.test(input) && input >= 21154535154122752n) {
           try {
             user = await this.client.rest.users.get(input);
           } catch {

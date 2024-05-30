@@ -78,7 +78,7 @@ export default async (client, info, pages, timeout = 120000) => {
     interactionCollector.on("interaction", async (interaction) => {
       if ((interaction.member ?? interaction.user).id === info.author.id) {
         switch (interaction.data.customID) {
-          case "back":
+          case "back": {
             await interaction.deferUpdate();
             page = page > 0 ? --page : pages.length - 1;
             if (info.type === "application") {
@@ -88,7 +88,8 @@ export default async (client, info, pages, timeout = 120000) => {
             }
             interactionCollector.extend();
             break;
-          case "forward":
+          }
+          case "forward": {
             await interaction.deferUpdate();
             page = page + 1 < pages.length ? ++page : 0;
             if (info.type === "application") {
@@ -98,6 +99,7 @@ export default async (client, info, pages, timeout = 120000) => {
             }
             interactionCollector.extend();
             break;
+          }
           case "jump": {
             await interaction.deferUpdate();
             const newComponents = JSON.parse(JSON.stringify(components));
@@ -189,7 +191,7 @@ export default async (client, info, pages, timeout = 120000) => {
             });
             break;
           }
-          case "delete":
+          case "delete": {
             await interaction.deferUpdate();
             interactionCollector.emit("end", true);
             try {
@@ -201,9 +203,11 @@ export default async (client, info, pages, timeout = 120000) => {
             } catch {
               // no-op
             }
-            return;
-          default:
+          }
+            
+          default: {
             break;
+          }
         }
       }
     });

@@ -8,7 +8,7 @@ class EmoteCommand extends Command {
       const replyMessage = await this.client.rest.channels.getMessage(this.message.messageReference.channelID, this.message.messageReference.messageID).catch(() => undefined);
       if (replyMessage) emoji = replyMessage.content;
     }
-    const matches = emoji.matchAll(/<(a?):[\w\d_]+:(\d+)>/g);
+    const matches = emoji.matchAll(/<(a?):\w+:(\d+)>/g);
     const urls = [];
     for (const match of matches) {
       urls.push(`https://cdn.discordapp.com/emojis/${match[2]}.${match[1] === "a" ? "gif" : "png"}`);

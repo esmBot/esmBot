@@ -14,7 +14,7 @@ if (!process.env.API_TYPE || process.env.API_TYPE === "none") {
   img.imageInit();
 }
 
-const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
+const formats = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"]);
 export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
@@ -62,7 +62,7 @@ export async function getType(image, extraReturnTypes) {
       clearTimeout(timeout);
       const imageBuffer = await bufRequest.arrayBuffer();
       const imageType = await fileTypeFromBuffer(imageBuffer);
-      if (imageType && formats.includes(imageType.mime)) {
+      if (imageType && formats.has(imageType.mime)) {
         type = imageType.mime;
       }
     }

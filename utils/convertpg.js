@@ -14,7 +14,7 @@ const pool = new Pool({
   }
   for (const guild of guilds) {
     for (const [name, value] of Object.entries(guild.tags)) {
-      if ((await pool.query("SELECT * FROM tags WHERE guild_id = $1 AND name = $2", [guild.guild_id, name])).rows.length !== 0) {
+      if ((await pool.query("SELECT * FROM tags WHERE guild_id = $1 AND name = $2", [guild.guild_id, name])).rows.length > 0) {
         await pool.query("UPDATE tags SET content = $1, author = $2 WHERE guild_id = $3 AND name = $4", [value.content, value.author, guild.guild_id, name]);
       } else {
         await pool.query("INSERT INTO tags (guild_id, name, content, author) VALUES ($1, $2, $3, $4)", [guild.guild_id, name, value.content, value.author]);

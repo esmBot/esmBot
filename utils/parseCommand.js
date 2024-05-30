@@ -7,8 +7,7 @@ export default (cmd) => {
   const args = { _: [] };
   let curr = null;
   let concated = "";
-  for (let i = 0; i < input.length; i++) {
-    const a = input[i];
+  for (const a of input) {
     if ((a.startsWith("--") || a.startsWith("—")) && !curr) {
       if (a.includes("=")) {
         const [arg, value] = (a.startsWith("--") ? a.slice(2).split("=") : a.slice(1).split("="));

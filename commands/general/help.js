@@ -15,7 +15,7 @@ class HelpCommand extends Command {
     } else {
       prefix = process.env.PREFIX;
     }
-    if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
+    if (this.args.length > 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
       const params = info.params.filter((v) => typeof v === "string");
@@ -31,10 +31,10 @@ class HelpCommand extends Command {
           color: 16711680,
           fields: [{
             name: "Aliases",
-            value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
+            value: info.aliases.length > 0 ? info.aliases.join(", ") : "None"
           }, {
             name: "Parameters",
-            value: command === "tags" ? "[name]" : (params ? (params.length !== 0 ? params.join(" ") : "None") : "None"),
+            value: command === "tags" ? "[name]" : (params ? (params.length > 0 ? params.join(" ") : "None") : "None"),
             inline: true
           }]
         }]
@@ -46,13 +46,13 @@ class HelpCommand extends Command {
           inline: true
         });
       }
-      if (info.flags.length !== 0) {
+      if (info.flags.length > 0) {
         const flagInfo = [];
         for (const flag of info.flags) {
           if (flag.type === 1) continue;
           flagInfo.push(`\`--${flag.name}${flag.type ? `=[${Constants.ApplicationCommandOptionTypes[flag.type]}]` : ""}\` - ${flag.description}`);
         }
-        if (flagInfo.length !== 0) {
+        if (flagInfo.length > 0) {
           embed.embeds[0].fields.push({
             name: "Flags",
             value: flagInfo.join("\n")
@@ -70,9 +70,7 @@ class HelpCommand extends Command {
       for (const category of Object.keys(help.categories)) {
         const splitPages = help.categories[category].map((_item, index) => {
           return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
-        }).filter((item) => {
-          return item;
-        });
+        }).filter(Boolean);
         const categoryStringArray = category.split("-");
         for (const index of categoryStringArray.keys()) {
           categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);

@@ -63,7 +63,7 @@ export default function run(object) {
       if (buf) object.params.data = buf;
       const objectWithFixedType = Object.assign({}, object.params, { type: fileExtension });
       if (objectWithFixedType.gravity && Number.isNaN(Number.parseInt(objectWithFixedType.gravity))) {
-          objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
+        objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
       try {

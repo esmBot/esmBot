@@ -49,8 +49,7 @@ const intents = [
   Constants.Intents.GUILDS
 ];
 if (commandConfig.types.classic) {
-  intents.push(Constants.Intents.GUILD_MESSAGES);
-  intents.push(Constants.Intents.MESSAGE_CONTENT);
+  intents.push(Constants.Intents.GUILD_MESSAGES, Constants.Intents.MESSAGE_CONTENT);
 }
 
 /**
@@ -69,7 +68,7 @@ async function* getFiles(dir) {
   }
 }
 
-process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit");
+process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.slice(0, 7), () => "unknown commit");
 console.log(`
      ,*\`$                    z\`"v       
     F zBw\`%                 A ,W "W     
@@ -164,7 +163,7 @@ logger.log("info", "Attempting to load events...");
 for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
-  const eventName = eventArray[eventArray.length - 1].split(".")[0];
+  const eventName = eventArray.at(-1).split(".")[0];
   if (eventName === "interactionCreate" && !commandConfig.types.application) {
     logger.log("warn", `Skipped loading event from ${file} because application commands are disabled`);
     continue;
@@ -188,25 +187,30 @@ if (process.env.PM2_USAGE) {
         logger.error(err);
         return;
       }
-      const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+      const managerProc = list.find((v) => v.name === "esmBot-manager");
       pm2Bus.on("process:msg", async (packet) => {
         switch (packet.data?.type) {
-          case "reload":
+          case "reload": {
             await load(client, paths.get(packet.data.message));
             break;
-          case "soundreload":
+          }
+          case "soundreload": {
             await reload(client);
             break;
-          case "imagereload":
+          }
+          case "imagereload": {
             await reloadImageConnections();
             break;
-          case "broadcastStart":
+          }
+          case "broadcastStart": {
             startBroadcast(client, packet.data.message);
             break;
-          case "broadcastEnd":
+          }
+          case "broadcastEnd": {
             endBroadcast(client);
             break;
-          case "serverCounts":
+          }
+          case "serverCounts": {
             pm2.sendDataToProcessId(managerProc.pm_id, {
               id: managerProc.pm_id,
               type: "process:msg",
@@ -223,6 +227,7 @@ if (process.env.PM2_USAGE) {
               if (err) logger.error(err);
             });
             break;
+          }
         }
       });
     });

@@ -40,22 +40,22 @@ export default async (client, message) => {
   const defaultPrefix = process.env.PREFIX ?? "&";
   const mentionResult = message.content.match(mentionRegex);
   if (mentionResult) {
-    text = message.content.substring(mentionResult[0].length).trim();
+    text = message.content.slice(mentionResult[0].length).trim();
   } else if (message.guildID && database) {
     const cachedPrefix = prefixCache.get(message.guildID);
     if (cachedPrefix && message.content.startsWith(cachedPrefix)) {
-      text = message.content.substring(cachedPrefix.length).trim();
+      text = message.content.slice(cachedPrefix.length).trim();
     } else {
       guildDB = await database.getGuild(message.guildID);
       if (message.content.startsWith(guildDB.prefix)) {
-        text = message.content.substring(guildDB.prefix.length).trim();
+        text = message.content.slice(guildDB.prefix.length).trim();
         prefixCache.set(message.guildID, guildDB.prefix);
       } else {
         return;
       }
     }
   } else if (message.content.startsWith(defaultPrefix)) {
-    text = message.content.substring(defaultPrefix.length).trim();
+    text = message.content.slice(defaultPrefix.length).trim();
   } else if (!message.guildID) {
     text = message.content;
   } else {
@@ -134,12 +134,14 @@ export default async (client, message) => {
         let fileSize = 26214400;
         if (message.guild) {
           switch (message.guild.premiumTier) {
-            case 2:
+            case 2: {
               fileSize = 52428308;
               break;
-            case 3:
+            }
+            case 3: {
               fileSize = 104856616;
               break;
+            }
           }
         }
         if (result.contents.length > fileSize) {

@@ -23,9 +23,7 @@ class CountCommand extends Command {
     const embeds = [];
     const groups = countArray2.map((_item, index) => {
       return index % 15 === 0 ? countArray2.slice(index, index + 15) : null;
-    }).filter((item) => {
-      return item;
-    });
+    }).filter(Boolean);
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [{
