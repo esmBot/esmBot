@@ -8,10 +8,9 @@ class BirdCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const imageData = await fetch("http://shibe.online/api/birds", { signal: controller.signal });
+      const data = await fetch("https://files.projectlounge.pw/bird/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
       clearTimeout(timeout);
-      const json = await imageData.json();
-      return json[0];
+      return `https://files.projectlounge.pw${data.headers.get("location")}`;
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;
