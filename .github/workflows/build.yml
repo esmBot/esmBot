@@ -10,7 +10,25 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2.4.0
+      with:
+        version: 8
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.0.1
+      with:
+        node-version: 18
+        cache: pnpm
+    - name: Lint
+      run: pnpm install --frozen-lockfile --no-optional && pnpm run lint
+
   linux:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -30,6 +48,7 @@ jobs:
       run: pnpm install --frozen-lockfile --no-optional && pnpm run build
 
   darwin:
+    needs: lint
     runs-on: macos-latest
     steps:
     - name: Checkout

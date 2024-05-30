@@ -20,7 +20,8 @@
     "start": "node app.js",
     "start:debug": "DEBUG=true node app.js",
     "start-api": "node api/index.js",
-    "start-api:debug": "DEBUG=true node app.js"
+    "start-api:debug": "DEBUG=true node app.js",
+    "lint": "eslint"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
+    "@babel/plugin-syntax-import-attributes": "^7.24.6",
     "better-sqlite3": "^9.5.0",
     "dotenv": "^16.4.5",
     "emoji-regex": "^10.3.0",
@@ -44,15 +46,16 @@
     "zlib-sync": "^0.1.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/eslint-parser": "^7.24.1",
-    "@babel/eslint-plugin": "^7.23.5",
-    "@babel/plugin-transform-class-properties": "^7.24.1",
+    "@babel/core": "^7.24.6",
+    "@babel/eslint-parser": "^7.24.6",
+    "@babel/eslint-plugin": "^7.24.6",
+    "@babel/plugin-transform-class-properties": "^7.24.6",
     "@biomejs/biome": "1.6.4",
     "@types/ws": "^8.5.10",
     "cmake-js": "^7.3.0",
     "eslint": "^9.1.0",
-    "eslint-plugin-unicorn": "^52.0.0"
+    "eslint-plugin-unicorn": "^52.0.0",
+    "globals": "^15.3.0"
   },
   "optionalDependencies": {
     "pm2": "^5.3.1"
