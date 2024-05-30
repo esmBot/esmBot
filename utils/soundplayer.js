@@ -276,9 +276,8 @@ export async function nextSong(client, options, connection, track, info, voiceCh
  * @param {import("oceanic.js").Message} playingMessage
  * @param {import("oceanic.js").VoiceChannel} voiceChannel
  * @param {Options} options
- * @param {boolean} [closed]
  */
-export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options, closed) {
+export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options) {
   try {
     if (playingMessage.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
     const playMessage = players.get(voiceChannel.guildID)?.playMessage;
@@ -295,7 +294,7 @@ export async function errHandle(exception, client, connection, playingMessage, v
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
   try {
-    const content = closed ? `🔊 I got disconnected by Discord and tried to reconnect; however, I got this error instead:\n\`\`\`${exception}\`\`\`` : `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.type}: ${exception.exception}\`\`\``;
+    const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.exception.cause}: ${exception.exception.message}\`\`\``;
     if (options.type === "classic") {
       if (playingMessage.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
     } else {
