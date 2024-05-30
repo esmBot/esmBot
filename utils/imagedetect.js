@@ -115,10 +115,10 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
       // embeds can vary in types, we check for gifvs first
       if (message.embeds[0].provider?.url && providerUrls.has(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
         type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
-      // then thumbnails
+        // then thumbnails
       } else if (message.embeds[0].thumbnail) {
         type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
-      // and finally direct images
+        // and finally direct images
       } else if (message.embeds[0].image) {
         type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
       }
@@ -140,7 +140,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
  * @param {{ image: string; link: any; }} options
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | boolean | undefined>}
  */
-export default async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false, singleMessage = false) => {
+const imagedetect = async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false, singleMessage = false) => {
   // we start by determining whether or not we're dealing with an interaction or a message
   if (interaction && options) {
     // we can get a raw attachment or a URL in the interaction itself
@@ -170,7 +170,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
   }
   if (!singleMessage && (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined)) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
-    const channel = (interaction ? interaction : cmdMessage).channel ?? await client.rest.channels.get((interaction ? interaction : cmdMessage).channelID);
+    const channel = (interaction ?? cmdMessage).channel ?? await client.rest.channels.get((interaction ?? cmdMessage).channelID);
     if (!(channel instanceof TextableChannel) && !(channel instanceof ThreadChannel) && !(channel instanceof PrivateChannel)) return;
     const perms = (channel instanceof TextableChannel || channel instanceof ThreadChannel) ? channel.permissionsOf?.(client.user.id) : null;
     if (perms && !perms.has("VIEW_CHANNEL")) return;
@@ -182,3 +182,4 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     }
   }
 };
+export default imagedetect;

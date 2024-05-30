@@ -26,7 +26,7 @@ class InfoCommand extends Command {
         },
         {
           name: "💬 Total Servers:",
-          value: servers ? servers : `${this.client.guilds.size} (for this process only)`
+          value: servers ?? `${this.client.guilds.size} (for this process only)`
         },
         {
           name: "✅ Official Server:",

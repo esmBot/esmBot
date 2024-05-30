@@ -59,7 +59,7 @@ if (commandConfig.types.classic) {
 async function* getFiles(dir) {
   const dirents = await promises.readdir(dir, { withFileTypes: true });
   for (const dirent of dirents) {
-    const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
+    const name = dir + (dir.at(- 1) !== "/" ? "/" : "") + dirent.name;
     if (dirent.isDirectory()) {
       yield* getFiles(name);
     } else if (dirent.name.endsWith(".js")) {

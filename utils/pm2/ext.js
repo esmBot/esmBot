@@ -86,7 +86,6 @@ async function updateStats() {
       responseCount += 1;
       if (responseCount >= clusterCount) {
         process.removeListener("message", listener);
-        
       } else {
         timeout = setTimeout(() => {
           process.removeListener("message", listener);
@@ -117,7 +116,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 
     const reqUrl = new URL(req.url, `http://${req.headers.host}`);
     switch (reqUrl.pathname) {
-      case "/": 
+      case "/":
       case "/metrics": {
         res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
@@ -143,7 +142,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
         }
 
         res.end();
-    
+
         break;
       }
       case "/shard": {
@@ -253,6 +252,7 @@ async function getGatewayData() {
   };
 }
 
+ 
 (async function init() {
   const { procAmount, connectionData } = await getGatewayData();
   logger.main(`Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
@@ -279,7 +279,7 @@ async function getGatewayData() {
   for (i; i < shardArrays.length; i++) {
     await awaitStart(i, shardArrays);
   }
-  
+
   await updateStats();
 })();
 

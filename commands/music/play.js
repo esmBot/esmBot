@@ -17,10 +17,10 @@ class PlayCommand extends MusicCommand {
     let query = input ? input.trim() : "";
     const attachment = this.type === "classic" ? this.message?.attachments.first() : undefined;
     if (query.startsWith("||") && query.endsWith("||")) {
-      query = query.substring(2, query.length - 2);
+      query = query.slice(2, -2);
     }
     if (query.startsWith("<") && query.endsWith(">")) {
-      query = query.substring(1, query.length - 1);
+      query = query.slice(1, -1);
     }
     try {
       const url = new URL(query);

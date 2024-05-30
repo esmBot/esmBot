@@ -27,8 +27,8 @@ export function clean(input) {
     text = util.inspect(text, { depth: 1 });
 
   text = text
-    .replaceAll("`", `\`${String.fromCharCode(8203)}`)
-    .replaceAll("@", `@${String.fromCharCode(8203)}`);
+    .replaceAll("`", `\`${String.fromCodePoint(8203)}`)
+    .replaceAll("@", `@${String.fromCodePoint(8203)}`);
 
   let { parsed } = config();
   if (!parsed) parsed = process.env;

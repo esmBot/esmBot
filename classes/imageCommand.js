@@ -12,6 +12,7 @@ class ImageCommand extends Command {
    * @param {string} _text
    * @param {string} _url
    */
+  // eslint-disable-next-line no-unused-vars
   async criteria(_text, _url) {
     return true;
   }

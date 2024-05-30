@@ -65,7 +65,7 @@ class StatsCommand extends Command {
         },
         {
           name: "Servers",
-          value: servers ? servers : `${this.client.guilds.size} (for this process only)`,
+          value: servers ?? `${this.client.guilds.size} (for this process only)`,
           inline: true
         }
         ]
