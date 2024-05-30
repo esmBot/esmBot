@@ -108,8 +108,8 @@ export async function play(client, soundUrl, options) {
       tracks = response.data.tracks.map((v) => v.encoded);
       break;
   }
-  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
+  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   const playerMeta = players.get(options.guild.id);
   let player;
   if (manager.players.has(voiceChannel.guildID)) {
