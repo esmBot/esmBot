@@ -1,6 +1,5 @@
 #include <napi.h>
 
-#include <iostream>
 #include <map>
 #include <string>
 
@@ -103,6 +102,7 @@ void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
   Magick::InitializeMagick("");
 #endif
   if (vips_init("")) vips_error_exit(NULL);
+  vips_block_untrusted_set(true);
   return;
 }
 

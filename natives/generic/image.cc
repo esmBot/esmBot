@@ -15,6 +15,7 @@ void imageInit() {
   Magick::InitializeMagick("");
 #endif
   if (vips_init("")) vips_error_exit(NULL);
+  vips_block_untrusted_set(true);
   return;
 }
 
