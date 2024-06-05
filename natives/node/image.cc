@@ -102,7 +102,9 @@ void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
   Magick::InitializeMagick("");
 #endif
   if (vips_init("")) vips_error_exit(NULL);
+#if VIPS_MAJOR_VERSION >= 8 && VIPS_MINOR_VERSION >= 13
   vips_block_untrusted_set(true);
+#endif
   return;
 }
 
