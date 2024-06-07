@@ -9,7 +9,7 @@ class ToggleCommand extends MusicCommand {
     if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
     if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can pause/resume the music!";
     const player = this.connection.player;
-    player.setPaused(!player.paused ? true : false);
+    player.setPaused(!player.paused);
     this.success = true;
     return `🔊 The player has been ${player.paused ? "paused" : "resumed"}.`;
   }

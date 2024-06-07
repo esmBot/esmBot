@@ -12,7 +12,7 @@ class QueueCommand extends MusicCommand {
     if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
-    const node = nodes.filter((val) => val.name === player.player.node.name)[0];
+    const node = nodes.find((val) => val.name === player.player.node.name);
     const tracks = await fetch(`http://${node.url}/v4/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.json());
     const trackList = [];
     const firstTrack = tracks.shift();

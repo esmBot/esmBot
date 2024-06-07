@@ -1,5 +1,5 @@
 import Command from "../../classes/command.js";
-const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
+const mentionRegex = /^<?[#@]?[!&]?(\d+)>?$/;
 
 class AvatarCommand extends Command {
   async run() {

@@ -16,7 +16,10 @@ class RemoveCommand extends MusicCommand {
     const track = await this.connection.player.node.rest.decode(removed[0]);
     queues.set(this.guild.id, this.queue);
     this.success = true;
-    return `🔊 The song \`${track?.info.title ? track.info.title : "(blank)"}\` has been removed from the queue.`;
+    if (track?.info.title) {
+      return `🔊 The song \`${track.info.title}\` has been removed from the queue.`;
+    }
+    return "🔊 The song has been removed from the queue.";
   }
 
   static flags = [{

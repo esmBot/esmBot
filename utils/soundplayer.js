@@ -46,9 +46,9 @@ export async function reload(client) {
   const activeNodes = manager.nodes;
   const json = await fs.promises.readFile(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" });
   nodes = JSON.parse(json).lava;
-  const names = nodes.map((a) => a.name);
+  const names = new Set(nodes.map((a) => a.name));
   for (const name in activeNodes) {
-    if (!names.includes(name)) {
+    if (!names.has(name)) {
       manager.removeNode(name);
     }
   }
@@ -57,7 +57,7 @@ export async function reload(client) {
       manager.addNode(node);
     }
   }
-  if (!manager.nodes.size) connected = false;
+  if (manager.nodes.size === 0) connected = false;
   return manager.nodes.size;
 }
 
@@ -94,19 +94,22 @@ export async function play(client, soundUrl, options) {
   let info;
   let playlistInfo;
   switch (response.loadType) {
-    case "track":
+    case "track": {
       info = response.data.info;
       tracks.push(response.data.encoded);
       break;
-    case "search":
+    }
+    case "search": {
       info = response.data[0].info;
       tracks.push(response.data[0].encoded);
       break;
-    case "playlist":
+    }
+    case "playlist": {
       info = response.data.tracks[0].info;
       playlistInfo = response.data.info;
       tracks = response.data.tracks.map((v) => v.encoded);
       break;
+    }
   }
   if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
   queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
@@ -234,7 +237,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
       }
       queues.set(voiceChannel.guildID, newQueue);
     }
-    if (newQueue.length !== 0) {
+    if (newQueue.length > 0) {
       const newTrack = await connection.node.rest.decode(newQueue[0]);
       nextSong(client, options, connection, newQueue[0], newTrack?.info, voiceChannel, host, player?.loop, player?.shuffle, track);
     } else if (process.env.STAYVC !== "true" && data.reason !== "stopped") {

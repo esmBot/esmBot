@@ -2,7 +2,7 @@ import database from "../../utils/database.js";
 import paginator from "../../utils/pagination/pagination.js";
 import { random } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
-const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
+const blacklist = new Set(["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"]);
 
 class TagsCommand extends Command {
   // todo: attempt to not make this file the worst thing that human eyes have ever seen
@@ -15,7 +15,7 @@ class TagsCommand extends Command {
 
     if (cmd === "create" || cmd === "add") {
       if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";
-      if (blacklist.includes(tagName)) return "You can't make a tag with that name!";
+      if (blacklist.has(tagName)) return "You can't make a tag with that name!";
       const getResult = await database.getTag(this.guild.id, tagName);
       if (getResult) return "This tag already exists!";
       const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.interaction?.data.options.getString("content", true), author: this.member?.id }, this.guild);
@@ -66,9 +66,7 @@ class TagsCommand extends Command {
       const embeds = [];
       const groups = Object.keys(tagList).map((_item, index) => {
         return index % 15 === 0 ? Object.keys(tagList).slice(index, index + 15) : null;
-      }).filter((item) => {
-        return item;
-      });
+      }).filter(Boolean);
       for (const [i, value] of groups.entries()) {
         embeds.push({
           embeds: [{

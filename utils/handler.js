@@ -15,8 +15,8 @@ export async function load(client, command) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   const commandArray = command.split("/");
-  let commandName = commandArray[commandArray.length - 1].split(".")[0];
-  const category = commandArray[commandArray.length - 2];
+  let commandName = commandArray.at(-1).split(".")[0];
+  const category = commandArray.at(-2);
 
   if (commandConfig.blacklist.includes(commandName)) {
     log("warn", `Skipped loading blacklisted command ${command}...`);

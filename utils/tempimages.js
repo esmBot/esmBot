@@ -9,7 +9,7 @@ let dirSizeCache;
  * @param {import("oceanic.js").CommandInteraction | import("oceanic.js").Message} context
  */
 export async function upload(client, result, context, success = true, interaction = false) {
-  const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
+  const filename = `${Math.random().toString(36).slice(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload = result.name.startsWith("SPOILER_") ? {
@@ -88,7 +88,7 @@ async function removeOldImages(s) {
 export async function parseThreshold() {
   if (!process.env.THRESHOLD || process.env.THRESHOLD === "") return;
   if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
-  const matched = process.env.THRESHOLD.match(/(\d+)([KMGT])/);
+  const matched = process.env.THRESHOLD.match(/(\d+)([GKMT])/);
   const sizes = {
     K: 1024,
     M: 1048576,

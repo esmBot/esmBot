@@ -1,6 +1,6 @@
 import Command from "../../classes/command.js";
 import { Routes } from "oceanic.js";
-const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
+const mentionRegex = /^<?[#@]?[!&]?(\d+)>?$/;
 
 class BannerCommand extends Command {
   // this command sucks

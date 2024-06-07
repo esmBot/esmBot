@@ -14,7 +14,7 @@ class ChannelCommand extends Command {
 
     if (this.args[0].toLowerCase() === "disable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[#@]?[!&]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
         const id = this.args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
         if (guildDB.disabled.includes(id)) return "I'm already disabled in this channel!";
         channel = this.guild.channels.get(id) ?? await this.client.rest.channels.get(id);
@@ -29,7 +29,7 @@ class ChannelCommand extends Command {
       return `I have been disabled in this channel. To re-enable me, just run \`${guildDB.prefix}channel enable\`.`;
     } else if (this.args[0].toLowerCase() === "enable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[#@]?[!&]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
         const id = this.args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
         if (!guildDB.disabled.includes(id)) return "I'm not disabled in that channel!";
         channel = this.guild.channels.get(id) ?? await this.client.rest.channels.get(id);

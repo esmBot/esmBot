@@ -3,7 +3,7 @@ import ImageCommand from "../../classes/imageCommand.js";
 class VignetteCommand extends ImageCommand {
   params = {
     water: "assets/images/vignette.png",
-    yscale: 1.0,
+    yscale: 1,
     gravity: 1,
     resize: true
   };

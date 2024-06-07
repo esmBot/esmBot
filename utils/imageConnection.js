@@ -122,21 +122,26 @@ class ImageConnection {
     const contentType = req.headers.get("content-type");
     let type;
     switch (contentType) {
-      case "image/gif":
+      case "image/gif": {
         type = "gif";
         break;
-      case "image/png":
+      }
+      case "image/png": {
         type = "png";
         break;
-      case "image/jpeg":
+      }
+      case "image/jpeg": {
         type = "jpg";
         break;
-      case "image/webp":
+      }
+      case "image/webp": {
         type = "webp";
         break;
-      default:
+      }
+      default: {
         type = contentType;
         break;
+      }
     }
     return { buffer: Buffer.from(await req.arrayBuffer()), type };
   }
