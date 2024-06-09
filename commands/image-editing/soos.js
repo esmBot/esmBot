@@ -9,6 +9,7 @@ class SooSCommand extends ImageCommand {
   static aliases = ["boomerang"];
 
   static requiresGIF = true;
+  static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to loop!";
   static command = "reverse";
 }

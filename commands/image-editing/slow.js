@@ -26,6 +26,7 @@ class SlowCommand extends ImageCommand {
   static aliases = ["slowdown", "slower", "gifspeed2"];
 
   static requiresGIF = true;
+  static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to slow down!";
   static command = "speed";
 }
