@@ -155,11 +155,15 @@ class ImageCommand extends Command {
         description: "An image/GIF URL"
       });
     }
+    if (!this.alwaysGIF) {
+      this.flags.push({
+        name: "togif",
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        description: "Force GIF output"
+      })
+    }
+
     this.flags.push({
-      name: "togif",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-      description: "Force GIF output"
-    }, {
       name: "spoiler",
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
       description: "Attempt to send output as a spoiler"
@@ -177,6 +181,7 @@ class ImageCommand extends Command {
   static requiresText = false;
   static textOptional = false;
   static requiresGIF = false;
+  static alwaysGIF = false;
   static noImage = "You need to provide an image/GIF!";
   static noText = "You need to provide some text!";
   static empty = "The resulting output was empty!";

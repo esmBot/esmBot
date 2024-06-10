@@ -8,6 +8,7 @@ class UnfreezeCommand extends ImageCommand {
   static description = "Unfreezes an image sequence";
 
   static requiresGIF = true;
+  static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to unfreeze!";
   static command = "freeze";
 }

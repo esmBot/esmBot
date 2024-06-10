@@ -25,6 +25,7 @@ class SpeedCommand extends ImageCommand {
   static aliases = ["speedup", "fast", "gifspeed", "faster"];
 
   static requiresGIF = true;
+  static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to speed up!";
   static command = "speed";
 }
