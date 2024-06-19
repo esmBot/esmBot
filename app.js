@@ -15,6 +15,12 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
 // load config from .env file
 import "dotenv/config";
 
+if (process.env.TOKEN.length != 72) {
+  logger.error("Incorrect bot token length!");
+  logger.error("You may have accidentally copied the OAuth2 client secret, try generating a new token from the \"bot\" tab.");
+  process.exit(1);
+}
+
 import { reloadImageConnections } from "./utils/image.js";
 
 // main services
