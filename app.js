@@ -21,7 +21,7 @@ esmBot requires a valid Discord bot token to function. Generate a new token from
   process.exit(1);
 }
 
-if (process.env.TOKEN.length !== 72) {
+if (process.env.TOKEN.length <= 59) {
   console.error(`Incorrect bot token length!
 You may have accidentally copied the OAuth2 client secret. Try generating a new token from the "Bot" tab in your Discord application settings.`);
   process.exit(1);
