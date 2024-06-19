@@ -15,9 +15,15 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
 // load config from .env file
 import "dotenv/config";
 
-if (process.env.TOKEN.length != 72) {
-  logger.error("Incorrect bot token length!");
-  logger.error("You may have accidentally copied the OAuth2 client secret, try generating a new token from the \"bot\" tab.");
+if (!process.env.TOKEN) {
+  console.error(`No token was provided!
+esmBot requires a valid Discord bot token to function. Generate a new token from the "Bot" tab in your Discord application settings and paste it into your .env file.`);
+  process.exit(1);
+}
+
+if (process.env.TOKEN.length !== 72) {
+  console.error(`Incorrect bot token length!
+You may have accidentally copied the OAuth2 client secret. Try generating a new token from the "Bot" tab in your Discord application settings.`);
   process.exit(1);
 }
 
