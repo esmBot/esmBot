@@ -18,8 +18,8 @@ lavalink:
     soundcloudSearchEnabled: true
     gc-warnings: true
   plugins:
-    - dependency: "com.github.esmBot:lava-xm-plugin:v0.2.3"
-      repository: "https://jitpack.io"
+    - dependency: "net.esmbot:lava-xm-plugin:0.2.4"
+      repository: "https://repo.projectlounge.pw/maven/releases"
     - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.1.1"
       repository: "https://maven.lavalink.dev/releases"
     - dependency: "dev.lavalink.youtube:youtube-plugin:1.3.0"
