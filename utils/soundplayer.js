@@ -25,7 +25,7 @@ export let connected = false;
  * @param {import("oceanic.js").Client} client
  */
 export function connect(client) {
-  manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true, reconnectInterval: 500, reconnectTries: 1 });
+  manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true });
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
   });
