@@ -6,7 +6,7 @@ import { setTimeout } from "node:timers/promises";
 import { VoiceChannel } from "oceanic.js";
 
 /**
- * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").AnyTextableChannel | import("oceanic.js").AnyInteractionChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
+ * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
  * @type {Map<string, MapPlayer>}
  */
 export const players = new Map();
@@ -14,7 +14,7 @@ export const queues = new Map();
 export const skipVotes = new Map();
 
 /**
- * @typedef {{ channel: import("oceanic.js").AnyTextableChannel | import("oceanic.js").AnyInteractionChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: string; interaction: import("oceanic.js").CommandInteraction }} Options
+ * @typedef {{ channel: import("oceanic.js").GuildChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: string; interaction: import("oceanic.js").CommandInteraction }} Options
  * @type {Shoukaku}
  */
 export let manager;
