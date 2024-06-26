@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Worker } from "node:worker_threads";
 import { createRequire } from "node:module";
+import { lookup } from "node:dns/promises";
+import ipaddr from "ipaddr.js";
 import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
@@ -19,11 +21,20 @@ export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
 /**
- * @param {string} image
+ * @param {URL} image
  * @param {boolean} extraReturnTypes
  */
 export async function getType(image, extraReturnTypes) {
+  try {
+    const remoteIP = await lookup(image.host);
+    const parsedIP = ipaddr.parse(remoteIP.address);
+    if (parsedIP.range() !== "unicast") return;
+  } catch (e) {
+    if (e.code === "ENOTFOUND") return;
+    throw e;
+  }
   let type;
+  let url;
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
@@ -34,6 +45,13 @@ export async function getType(image, extraReturnTypes) {
       method: "HEAD"
     });
     clearTimeout(timeout);
+    if (imageRequest.redirected) {
+      const redirectHost = new URL(imageRequest.url).host;
+      const remoteIP = await lookup(redirectHost);
+      const parsedIP = ipaddr.parse(remoteIP.address);
+      if (parsedIP.range() !== "unicast") return;
+    }
+    url = imageRequest.url;
     let size = 0;
     if (imageRequest.headers.has("content-range")) {
       const contentRange = imageRequest.headers.get("content-range");
@@ -44,7 +62,7 @@ export async function getType(image, extraReturnTypes) {
     }
     if (size > 41943040 && extraReturnTypes) { // 40 MB
       type = "large";
-      return type;
+      return { type };
     }
     const typeHeader = imageRequest.headers.get("content-type");
     if (typeHeader) {
@@ -69,7 +87,7 @@ export async function getType(image, extraReturnTypes) {
   } finally {
     clearTimeout(timeout);
   }
-  return type;
+  return { type, url };
 }
 
 function connect(server, auth) {

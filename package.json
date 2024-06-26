@@ -34,6 +34,7 @@
     "emoji-regex": "^10.3.0",
     "file-type": "^19.0.0",
     "format-duration": "^3.0.2",
+    "ipaddr.js": "^2.2.0",
     "node-addon-api": "^8.0.0",
     "oceanic.js": "1.10.4",
     "postgres": "^3.4.4",

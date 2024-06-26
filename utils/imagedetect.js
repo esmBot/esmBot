@@ -41,7 +41,8 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
 const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null) => {
-  const fileNameSplit = new URL(image).pathname.split("/");
+  const imageURL = new URL(image);
+  const fileNameSplit = imageURL.pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
   const payload = {
@@ -85,12 +86,12 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
       payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
     }
     payload.type = "image/gif";
-  } else if (video) {
-    payload.type = type ?? await getType(payload.path, extraReturnTypes);
-    if (!payload.type || (!videoFormats.includes(payload.type) && !imageFormats.includes(payload.type))) return;
   } else {
-    payload.type = type ?? await getType(payload.path, extraReturnTypes);
-    if (!payload.type || !imageFormats.includes(payload.type)) return;
+    const result = await getType(imageURL, extraReturnTypes);
+    if (!result) return;
+    if (result.url) payload.path = result.url;
+    payload.type = type ?? result.type;
+    if (!payload.type || ((video ? !videoFormats.includes(payload.type) : true) && !imageFormats.includes(payload.type))) return;
   }
   return payload;
 };

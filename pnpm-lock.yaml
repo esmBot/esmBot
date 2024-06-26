@@ -23,6 +23,9 @@ importers:
       format-duration:
         specifier: ^3.0.2
         version: 3.0.2
+      ipaddr.js:
+        specifier: ^2.2.0
+        version: 2.2.0
       node-addon-api:
         specifier: ^8.0.0
         version: 8.0.0
@@ -1064,6 +1067,10 @@ packages:
   ip-address@9.0.5:
     resolution: {integrity: sha512-zHtQzGojZXTwZTHQqra+ETKd4Sn3vgi7uBmlPoXVWZqYvuKmtI0l/VZTjqGmJY9x88GGOaZ9+G9ES8hC4T4X8g==}
     engines: {node: '>= 12'}
+
+  ipaddr.js@2.2.0:
+    resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
+    engines: {node: '>= 10'}
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
@@ -3052,6 +3059,8 @@ snapshots:
       jsbn: 1.1.0
       sprintf-js: 1.1.3
     optional: true
+
+  ipaddr.js@2.2.0: {}
 
   is-arrayish@0.2.1: {}
 
