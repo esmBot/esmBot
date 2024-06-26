@@ -71,7 +71,7 @@ export async function getType(image, extraReturnTypes) {
       const timeout = setTimeout(() => {
         controller.abort();
       }, 3000);
-      const bufRequest = await fetch(image, {
+      const bufRequest = await fetch(url, {
         signal: controller.signal,
         headers: {
           range: "bytes=0-1023"
