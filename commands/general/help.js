@@ -61,7 +61,7 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
-      if (this.guild && !this.permissions.has("EMBED_LINKS")) {
+      if (!this.permissions.has("EMBED_LINKS")) {
         this.success = false;
         return "I don't have the `Embed Links` permission!";
       }

@@ -4,7 +4,7 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    if (this.guild && !this.permissions.has("EMBED_LINKS")) {
+    if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
       return "I don't have the `Embed Links` permission!";
     }
