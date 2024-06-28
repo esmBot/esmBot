@@ -106,7 +106,7 @@ Lavalink is the audio server used by esmBot for music playback. If you do not pl
 
 esmBot requires Lavalink version v4 or later, which requires a Java (17 or later) installation. You can use [SDKMAN](https://sdkman.io) to install Eclipse Temurin, a popular Java distribution:
 ```sh
-sdk install java 17.0.9-tem
+sdk install java 17.0.11-tem
 ```
 
 Initial setup is like this:
