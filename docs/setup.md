@@ -20,7 +20,7 @@ Choose the distro you're using below for insallation instructions.
 === "Debian/Ubuntu"
     These instructions apply to Debian version 12 (bookworm) or Ubuntu version 22.04 (jammy) or later.
     ```sh
-    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libcgif-dev libgirepository1.0-dev libimagequant-dev meson libzxingcore-dev
+    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxingcore-dev
     ```
     On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 === "Fedora/RHEL"
@@ -28,7 +28,7 @@ Choose the distro you're using below for insallation instructions.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them [here](https://rpmfusion.org/Configuration).
     ```sh
-    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ libcgif-devel ImageMagick-c++-devel vips-devel libimagequant-devel gobject-introspection-devel meson cabextract zxing-cpp-devel
+    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ ImageMagick-c++-devel vips-devel cabextract zxing-cpp-devel
     ```
     On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add [Remi's RPM Repository](https://rpms.remirepo.net) for the vips package.
     
@@ -39,39 +39,17 @@ Choose the distro you're using below for insallation instructions.
 === "Alpine"
     These instructions should apply to the current Edge versions.
     ```sh
-    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev gobject-introspection-dev cgif-dev libimagequant-dev meson zxing-cpp-dev
+    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
     ```
 === "Arch/Manjaro"
     ```sh
-    sudo pacman -S git curl cmake pango ffmpeg npm imagemagick libvips sqlite3 libltdl gobject-introspection libcgif libimagequant meson zxing-cpp
+    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 
 ***
 
-### 2. Install libvips.
-
-[libvips](https://github.com/libvips/libvips) is the core of esmBot's image processing commands. Version 8.13.0 or higher is required and should be packaged for most distros; however, you may want to build from source to take advantage of the `nsgif` GIF decoder and its improved performance over the default ImageMagick decoder.
-
-First, download the source and move into it:
-```sh
-git clone https://github.com/libvips/libvips
-cd libvips
-```
-From here, you can set up the build:
-```sh
-meson setup --prefix=/usr --buildtype=release -Dnsgif=true build
-```
-If that command finishes with no errors, you can compile and install it:
-```sh
-cd build
-meson compile
-sudo meson install
-```
-
-***
-
-### 3. Install Node.js.
+### 2. Install Node.js.
 
 Node.js is the runtime that esmBot is built on top of. The bot requires version 18.20.0 or above to run, but version 20 is recommended.
 
@@ -94,7 +72,7 @@ corepack prepare pnpm@latest --activate
 
 ***
 
-### 4. Set up the database.
+### 3. Set up the database.
 
 esmBot officially supports two database systems: SQLite and PostgreSQL. While SQLite is smaller and requires no initial setup, PostgreSQL has better performance (especially in large environments).
 
@@ -107,7 +85,7 @@ If you would like to use the PostgreSQL database, view the setup instructions [h
 
 ***
 
-### 5. Clone the repo and install the required Node modules.
+### 4. Clone the repo and install the required Node modules.
 ```sh
 cd ~
 git clone --recursive https://github.com/esmBot/esmBot
@@ -119,7 +97,7 @@ pnpm build
 
 ***
 
-### 6. (Optional) Set up Lavalink.
+### 5. (Optional) Set up Lavalink.
 
 Lavalink is the audio server used by esmBot for music playback. If you do not plan on using this feature, you can safely skip this step.
 
@@ -149,7 +127,7 @@ java -jar Lavalink.jar
 
 ***
 
-### 7. Configure the bot.
+### 6. Configure the bot.
 
 Configuration is done via environment variables which can be specified through a `.env` file. Copy `.env.example` to get a starter config file:
 ```sh
@@ -171,7 +149,7 @@ An overview of each of the variables in the `.env` file can be found [here](http
 
 ***
 
-### 8. Run the bot.
+### 7. Run the bot.
 
 Once everything else is set up, you can start the bot like so:
 ```sh

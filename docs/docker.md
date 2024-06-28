@@ -9,7 +9,7 @@ cd ~
 git clone --recurse-submodules https://github.com/esmBot/esmBot
 cd esmBot
 ```
-Modify the `.env` file as described in step 7 of the manual setup. Make sure to change the `DB` option to this, however:
+Modify the `.env` file as described in step 6 of the manual setup. Make sure to change the `DB` option to this, however:
 ```
 DB=postgresql://esmbot:verycoolpass100@postgres:5432/esmbot
 ```
