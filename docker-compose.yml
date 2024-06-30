@@ -23,7 +23,7 @@ services:
       lavalink:
         condition: service_healthy
       postgres:
-        condition: service_started
+        condition: service_healthy
 
     networks:
       esmbot:
