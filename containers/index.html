@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../bun/">
+      
+      
+        <link rel="next" href="../postgresql/">
       
       
       <link rel="icon" href="../assets/esmbot.png">
@@ -316,18 +320,28 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../docker.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    None
+    Containers
   </span>
   
 
       </a>
+      
     </li>
   
 
@@ -371,7 +385,7 @@
 
 
 <h1 id="containers">Containers</h1>
-<p>You can run the bot as well as its dependencies as a series of containers using Docker or Podman. This allows for a slightly easier setup if you're able to run one of those two container runtimes; however, the manual setup is still recommended if you want more control over the bot.</p>
+<p>You can run the bot as well as its dependencies as a series of containers using Docker or Podman. This can allow for a slightly easier setup if you're able to run one of those two container runtimes; however, the manual setup is still recommended if you want more control over the bot.</p>
 <p>To start, install <a href="https://docs.docker.com/engine/install/#server">Docker</a> or <a href="https://podman.io/docs/installation">Podman</a> on your system via the linked instructions. If using Podman, you'll also need to install <a href="https://github.com/containers/podman-compose/blob/main/README.md#installation">podman-compose</a>.</p>
 <p>Once you've installed one of those, you should clone the esmBot repo:
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
