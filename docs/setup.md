@@ -13,7 +13,7 @@ Here are some instructions to get esmBot up and running from source.
 If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://esmbot.net/support).
 
 !!! tip
-    You can run the bot using Docker for a somewhat simpler setup experience. [Click here to go to the Docker setup guide.](https://docs.esmbot.net/docker)
+    You can run the bot using Docker or Podman for a somewhat simpler setup experience. [Click here to go to the container setup guide.](https://docs.esmbot.net/containers)
 
 ### 1. Install the required native dependencies.
 Choose the distro you're using below for insallation instructions.
