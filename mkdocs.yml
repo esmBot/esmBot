@@ -9,7 +9,7 @@ nav:
     - config.md
     - custom-commands.md
     - bun.md
-    - docker.md
+    - containers.md
     - postgresql.md
 markdown_extensions:
   - def_list
