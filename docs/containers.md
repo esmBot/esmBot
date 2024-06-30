@@ -1,5 +1,5 @@
 # Containers
-You can run the bot as well as its dependencies as a series of containers using Docker or Podman. This allows for a slightly easier setup if you're able to run one of those two container runtimes; however, the manual setup is still recommended if you want more control over the bot.
+You can run the bot as well as its dependencies as a series of containers using Docker or Podman. This can allow for a slightly easier setup if you're able to run one of those two container runtimes; however, the manual setup is still recommended if you want more control over the bot.
 
 To start, install [Docker](https://docs.docker.com/engine/install/#server) or [Podman](https://podman.io/docs/installation) on your system via the linked instructions. If using Podman, you'll also need to install [podman-compose](https://github.com/containers/podman-compose/blob/main/README.md#installation).
 
