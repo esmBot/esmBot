@@ -1,0 +1,786 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../config/">
+      
+      
+      <link rel="icon" href="../assets/esmbot.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>Setup - esmBot</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="esmBot" class="md-header__button md-logo" aria-label="esmBot" data-md-component="logo">
+      
+  <img src="../assets/esmbot.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            esmBot
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/esmBot/esmBot" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    esmBot/esmBot
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="esmBot" class="md-nav__button md-logo" aria-label="esmBot" data-md-component="logo">
+      
+  <img src="../assets/esmbot.png" alt="logo">
+
+    </a>
+    esmBot
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/esmBot/esmBot" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    esmBot/esmBot
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-install-the-required-native-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Install the required native dependencies.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-install-nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install Node.js.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-set-up-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Set up the database.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-clone-the-repo-and-install-the-required-node-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Clone the repo and install the required Node modules.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-optional-set-up-lavalink" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. (Optional) Set up Lavalink.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configure-the-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Configure the bot.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-run-the-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Run the bot.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bun/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bun Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="setup">Setup</h1>
+<p>Here are some instructions to get esmBot up and running from source.</p>
+<details class="check">
+<summary>Recommended system requirements</summary>
+<ul>
+<li>64-bit CPU/operating system</li>
+<li>Quad-core CPU or better</li>
+<li>512MB or more of RAM</li>
+<li>Linux-based operating system or virtual machine (<a href="https://ubuntu.com/download/server">Ubuntu</a> or <a href="https://getfedora.org/">Fedora</a> are recommended)</li>
+</ul>
+</details>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you want to run the bot on Windows, <a href="https://learn.microsoft.com/en-us/windows/wsl/install">Windows Subsystem for Linux</a> is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.</p>
+</div>
+<p>If you have any further questions regarding setup, feel free to ask in the #support channel on the <a href="https://esmbot.net/support">esmBot Support server</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can run the bot using Docker or Podman for a somewhat simpler setup experience. <a href="https://docs.esmbot.net/containers">Click here to go to the container setup guide.</a></p>
+</div>
+<h3 id="1-install-the-required-native-dependencies">1. Install the required native dependencies.</h3>
+<p>Choose the distro you're using below for insallation instructions.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Debian/Ubuntu</label><label for="__tabbed_1_2">Fedora/RHEL</label><label for="__tabbed_1_3">Alpine</label><label for="__tabbed_1_4">Arch/Manjaro</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>These instructions apply to Debian version 12 (bookworm) or Ubuntu version 22.04 (jammy) or later.
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxingcore-dev
+</code></pre></div>
+On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.</p>
+</div>
+<div class="tabbed-block">
+<p>These instructions apply to Fedora 36/RHEL 9 or later.</p>
+<p>Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them <a href="https://rpmfusion.org/Configuration">here</a>.
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite<span class="w"> </span>gcc-c++<span class="w"> </span>ImageMagick-c++-devel<span class="w"> </span>vips-devel<span class="w"> </span>cabextract<span class="w"> </span>zxing-cpp-devel
+</code></pre></div>
+On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add <a href="https://rpms.remirepo.net">Remi's RPM Repository</a> for the vips package.</p>
+<p>Some fonts used in the bot (e.g. Impact) require installing the MS Core Fonts package, which is unavailable through most RHEL repositories. You can install it using the following command (you're on your own regarding dependencies, each RHEL derivative handles them differently):
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>rpm<span class="w"> </span>-i<span class="w"> </span>https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p>These instructions should apply to the current Edge versions.
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>msttcorefonts-installer<span class="w"> </span>python3<span class="w"> </span>sqlite3<span class="w"> </span>alpine-sdk<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick-dev<span class="w"> </span>vips-dev<span class="w"> </span>zxing-cpp-dev
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>npm<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>sqlite3<span class="w"> </span>zxing-cpp
+</code></pre></div>
+You'll also need to install <a href="https://aur.archlinux.org/packages/ttf-ms-win10-auto/"><code>ttf-ms-win10-auto</code></a> from the AUR.</p>
+</div>
+</div>
+</div>
+<hr />
+<h3 id="2-install-nodejs">2. Install Node.js.</h3>
+<p>Node.js is the runtime that esmBot is built on top of. The bot requires version 18.20.0 or above to run, but version 20 is recommended.</p>
+<p>We suggest using nvm to manage your Node.js install. Run the following command to install it:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-o-<span class="w"> </span>https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</code></pre></div></p>
+<p>Then run the following to install Node.js:
+<div class="highlight"><pre><span></span><code>nvm<span class="w"> </span>install<span class="w"> </span><span class="m">20</span>
+nvm<span class="w"> </span>use<span class="w"> </span><span class="m">20</span>
+</code></pre></div></p>
+<p>esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to install it:
+<div class="highlight"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+corepack<span class="w"> </span>prepare<span class="w"> </span>pnpm@latest<span class="w"> </span>--activate
+</code></pre></div></p>
+<hr />
+<h3 id="3-set-up-the-database">3. Set up the database.</h3>
+<p>esmBot officially supports two database systems: SQLite and PostgreSQL. While SQLite is smaller and requires no initial setup, PostgreSQL has better performance (especially in large environments).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you're new to databases and self-hosting, choose SQLite.</p>
+</div>
+<p>If you would like to use the SQLite database, no configuration is needed and you can move on to the next step.</p>
+<p>If you would like to use the PostgreSQL database, view the setup instructions <a href="https://docs.esmbot.net/postgresql">here</a> and come back here when you're finished.</p>
+<hr />
+<h3 id="4-clone-the-repo-and-install-the-required-node-modules">4. Clone the repo and install the required Node modules.</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
+git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/esmBot/esmBot
+<span class="nb">cd</span><span class="w"> </span>esmBot
+pnpm<span class="w"> </span>i<span class="w"> </span>-g<span class="w"> </span>node-gyp
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>build
+</code></pre></div>
+<hr />
+<h3 id="5-optional-set-up-lavalink">5. (Optional) Set up Lavalink.</h3>
+<p>Lavalink is the audio server used by esmBot for music playback. If you do not plan on using this feature, you can safely skip this step.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>There are websites out there providing lists of public Lavalink instances that can be used with the bot. However, these are not recommended due to performance/security concerns and missing features, and it is highly recommended to set one up yourself instead using the steps below.</p>
+</div>
+<p>esmBot requires Lavalink version v4 or later, which requires a Java (17 or later) installation. You can use <a href="https://sdkman.io">SDKMAN</a> to install Eclipse Temurin, a popular Java distribution:
+<div class="highlight"><pre><span></span><code>sdk<span class="w"> </span>install<span class="w"> </span>java<span class="w"> </span><span class="m">17</span>.0.11-tem
+</code></pre></div></p>
+<p>Initial setup is like this:
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
+mkdir<span class="w"> </span>Lavalink
+<span class="nb">cd</span><span class="w"> </span>Lavalink
+curl<span class="w"> </span>-OL<span class="w"> </span>https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar
+cp<span class="w"> </span>~/esmBot/application.yml<span class="w"> </span>.
+</code></pre></div>
+To run Lavalink, you can use this command:
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>Lavalink.jar
+</code></pre></div></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You'll need to run Lavalink alongside the bot in order to use it. There are a few methods to do this, such as the <code>screen</code> command, creating a new systemd service, or simply just opening a new terminal session alongside your current one.</p>
+</div>
+<hr />
+<h3 id="6-configure-the-bot">6. Configure the bot.</h3>
+<p>Configuration is done via environment variables which can be specified through a <code>.env</code> file. Copy <code>.env.example</code> to get a starter config file:
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</code></pre></div></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you can't see either of these files, don't worry - Linux treats files whose names start with a . as hidden files.</p>
+</div>
+<p>To edit this file in the terminal, run this command:
+<div class="highlight"><pre><span></span><code>nano<span class="w"> </span>.env
+</code></pre></div>
+This will launch a text editor with the file ready to go. Create a Discord application <a href="https://discord.com/developers/applications">here</a> and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the <code>TOKEN</code> variable.</p>
+<p>When you're finished editing the file, press Ctrl + X, then Y and Enter.</p>
+<p>An overview of each of the variables in the <code>.env</code> file can be found <a href="https://docs.esmbot.net/config">here</a>.</p>
+<hr />
+<h3 id="7-run-the-bot">7. Run the bot.</h3>
+<p>Once everything else is set up, you can start the bot like so:
+<div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>start
+</code></pre></div>
+If the bot starts successfully, you're done! You can invite the bot to your server by generating an invite link under OAuth -&gt; URL Generator in the Discord application dashboard.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You will need to select the <code>bot</code> and <code>applications.commands</code> scopes.
+The following permissions are needed in most cases for the bot to work properly:</p>
+<p><figure markdown>
+<a class="glightbox" href="../assets/permissions.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Required permissions" loading="lazy," src="../assets/permissions.png" width="500" /></a>
+<figcaption>click to enlarge</figcaption>
+</figure></p>
+</div>
+<p>If you want the bot to run 24/7, you can use the <a href="https://pm2.keymetrics.io">PM2</a> process manager. Install it using the following command:
+<div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>add<span class="w"> </span>-g<span class="w"> </span>pm2
+</code></pre></div></p>
+<p>Once you've done that, you can start the bot using the following command:
+<div class="highlight"><pre><span></span><code>pm2<span class="w"> </span>start<span class="w"> </span>ecosystem.config.cjs
+</code></pre></div></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you wish to update the bot to the latest version/commit at any time, run the following commands:
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>build
+</code></pre></div></p>
+</div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<details class="faq">
+<summary>Error: Cannot find module './build/Release/image.node'</summary>
+<p>The native image functions haven't been built. Run <code>pnpm run build</code> to build them.</p>
+</details>
+<details class="faq">
+<summary><code>pnpm install</code> or <code>pnpm build</code> fails with error 'ELIFECYCLE  Command failed.'</summary>
+<p>You seem to be missing node-gyp. This can be fixed by running:
+<div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>i<span class="w"> </span>-g<span class="w"> </span>node-gyp
+rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
+pnpm<span class="w"> </span>install
+</code></pre></div></p>
+</details>
+<details class="faq">
+<summary>Error: connect ECONNREFUSED 127.0.0.1:5432</summary>
+<p>PostgreSQL isn't running, you should be able to start it with <code>sudo systemctl start postgresql</code>. If you don't intend to use PostgreSQL, you should take another look at your <code>DB</code> variable in the .env file.</p>
+</details>
+<details class="faq">
+<summary>Gifs from Tenor result in a "no decode delegate for this image format" or "improper image header" error</summary>
+<p>Tenor GIFs are actually stored as MP4s, which libvips can't decode most of the time. You'll need to get a Tenor API key from <a href="https://developers.google.com/tenor/guides/quickstart">here</a> and put it in the <code>TENOR</code> variable in .env.</p>
+</details>
+<hr />
+<p>If you have any further questions regarding self-hosting, feel free to ask in the #support channel on the <a href="https://esmbot.net/support">esmBot Support server</a>.</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2024</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2018 - 2024 <a href="https://essem.space">Essem</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://wetdry.world/@esmBot" target="_blank" rel="noopener me" title="wetdry.world" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/esmBot" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://patreon.com/TheEssem" target="_blank" rel="noopener" title="patreon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M489.7 153.8c-.1-65.4-51-119-110.7-138.3C304.8-8.5 207-5 136.1 28.4 50.3 68.9 23.3 157.7 22.3 246.2 21.5 319 28.7 510.6 136.9 512c80.3 1 92.3-102.5 129.5-152.3 26.4-35.5 60.5-45.5 102.4-55.9 72-17.8 121.1-74.7 121-150z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "content.tabs.link"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
