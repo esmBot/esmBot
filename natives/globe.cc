@@ -19,6 +19,14 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
+
+  double maxSize = max(width, pageHeight);
+  if (maxSize > 800) {
+    in = in.resize(800 / maxSize);
+    width = in.width();
+    pageHeight = vips_image_get_page_height(in.get_image());
+  }
+
   int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
   double size = min(width, pageHeight);
@@ -46,9 +54,6 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage resized = img_frame.resize(
-        size / (double)width,
-        VImage::option()->set("vscale", size / (double)pageHeight));
     VImage rolled = img_frame.wrap(
         VImage::option()->set("x", width * i / nPages)->set("y", 0));
     VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));

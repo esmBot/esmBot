@@ -19,6 +19,14 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
+
+  double maxSize = max(width, pageHeight);
+  if (maxSize > 800) {
+    in = in.resize(800 / maxSize);
+    width = in.width();
+    pageHeight = vips_image_get_page_height(in.get_image());
+  }
+
   int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 15;
   double mult = M_PI / nPages;
   int halfHeight = pageHeight / 2;
