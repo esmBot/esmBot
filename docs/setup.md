@@ -51,7 +51,7 @@ Choose the distro you're using below for insallation instructions.
 
 ### 2. Install Node.js.
 
-Node.js is the runtime that esmBot is built on top of. The bot requires version 18.20.0 or above to run, but version 20 is recommended.
+Node.js is the runtime that esmBot is built on top of. The bot requires version 20.12.0 or above to run.
 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
 ```sh
