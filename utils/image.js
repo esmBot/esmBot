@@ -9,16 +9,15 @@ import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
 
-// init image libraries
-const nodeRequire = createRequire(import.meta.url);
-if (!process.env.API_TYPE || process.env.API_TYPE === "none") {
-  const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
-  img.imageInit();
-}
-
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
+
+export function initImageLib() {
+  const nodeRequire = createRequire(import.meta.url);
+  const img = nodeRequire(`../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+  img.imageInit();
+}
 
 /**
  * @param {URL} image

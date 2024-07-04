@@ -27,7 +27,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
   process.exit(1);
 }
 
-import { reloadImageConnections } from "./utils/image.js";
+import { reloadImageConnections, initImageLib } from "./utils/image.js";
 
 // main services
 import { Client, Constants } from "oceanic.js";
@@ -138,6 +138,7 @@ if (database) {
   await database.setup();
 }
 if (process.env.API_TYPE === "ws") await reloadImageConnections();
+else initImageLib();
 
 const shardArray = process.env.SHARDS && process.env.pm_id ? JSON.parse(process.env.SHARDS)[Number.parseInt(process.env.pm_id) - 1] : null;
 
