@@ -566,7 +566,6 @@ corepack<span class="w"> </span>prepare<span class="w"> </span>pnpm@latest<span 
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
 git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/esmBot/esmBot
 <span class="nb">cd</span><span class="w"> </span>esmBot
-pnpm<span class="w"> </span>i<span class="w"> </span>-g<span class="w"> </span>node-gyp
 pnpm<span class="w"> </span>install
 pnpm<span class="w"> </span>build
 </code></pre></div>
@@ -646,7 +645,7 @@ pnpm<span class="w"> </span>build
 </details>
 <details class="faq">
 <summary><code>pnpm install</code> or <code>pnpm build</code> fails with error 'ELIFECYCLE  Command failed.'</summary>
-<p>You seem to be missing node-gyp. This can be fixed by running:
+<p>You might need to install node-gyp. You can do this by running the following:
 <div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>i<span class="w"> </span>-g<span class="w"> </span>node-gyp
 rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
 pnpm<span class="w"> </span>install
