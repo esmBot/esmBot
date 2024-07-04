@@ -20,6 +20,18 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
+  // this command is useless with single-page images
+  if (nPages < 2) {
+    dataSize = bufferLength;
+    char *data = reinterpret_cast<char*>(malloc(bufferLength));
+    memcpy(data, bufferdata, bufferLength);
+
+    ArgumentMap output;
+    output["buf"] = data;
+
+    return output;
+  }
+
   vector<VImage> split;
   // todo: find a better way of getting individual frames (or at least getting
   // the frames in reverse order)
