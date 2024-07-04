@@ -19,15 +19,16 @@ ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, 
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
   double maxSize = max(width, pageHeight);
   if (maxSize > 800) {
     in = in.resize(800 / maxSize);
     width = in.width();
-    pageHeight = vips_image_get_page_height(in.get_image());
+    int newHeight = vips_image_get_page_height(in.get_image());
+    pageHeight = type == "gif" ? newHeight / nPages : newHeight;
   }
 
-  int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
   double mult = (2 * M_PI) / nPages;
 
   vector<VImage> img;
