@@ -90,7 +90,6 @@ If you would like to use the PostgreSQL database, view the setup instructions [h
 cd ~
 git clone --recursive https://github.com/esmBot/esmBot
 cd esmBot
-pnpm i -g node-gyp
 pnpm install
 pnpm build
 ```
@@ -191,7 +190,7 @@ pm2 start ecosystem.config.cjs
     The native image functions haven't been built. Run `pnpm run build` to build them.
 
 ??? faq "`pnpm install` or `pnpm build` fails with error 'ELIFECYCLE  Command failed.'"
-    You seem to be missing node-gyp. This can be fixed by running:
+    You might need to install node-gyp. You can do this by running the following:
     ```sh
     pnpm i -g node-gyp
     rm -rf node_modules
