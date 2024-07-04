@@ -68,8 +68,8 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
     size_t length = 0;
     ArgumentMap outMap;
     if (obj.Has("data")) {
-      Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
-      outMap = FunctionMap.at(command)(type, outType, data.Data(), data.Length(),
+      Napi::ArrayBuffer data = obj.Get("data").As<Napi::ArrayBuffer>();
+      outMap = FunctionMap.at(command)(type, outType, (char *)data.Data(), data.ByteLength(),
                                     Arguments, length);
     } else {
       outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, length);
