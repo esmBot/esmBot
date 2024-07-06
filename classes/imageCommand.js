@@ -95,8 +95,15 @@ class ImageCommand extends Command {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
+    if (this.interaction) {
+      imageParams.ephemeral = this.options.ephemeral;
+      imageParams.spoiler = needsSpoiler;
+      imageParams.token = this.interaction.token;
+    }
+
     try {
       const { buffer, type } = await runImageJob(imageParams);
+      if (type === "sent") return;
       if (type === "ratelimit") return "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.";
       if (type === "nocmd") return "That command isn't supported on this instance of esmBot.";
       if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";

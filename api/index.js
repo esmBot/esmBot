@@ -9,6 +9,7 @@ import { dirname } from "node:path";
 import EventEmitter from "node:events";
 import logger from "../utils/logger.js";
 import { img } from "../utils/imageLib.js";
+import { Client } from "oceanic.js";
 
 img.imageInit();
 
@@ -20,6 +21,7 @@ const Rcancel = 0x05;
 const Twait = 0x06;
 const Rwait = 0x07;
 const Rinit = 0x08;
+const Rsent = 0x09;
 
 const log = (msg, jobNum) => {
   logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
@@ -46,6 +48,10 @@ const queue = [];
 const MAX_JOBS = process.env.JOBS ? Number.parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
 const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
+
+// Used for direct image uploads
+const discord = new Client();
+const clientID = process.env.CLIENT_ID;
 
 /**
  * Accept an image job.
@@ -218,8 +224,8 @@ httpServer.on("request", async (req, res) => {
       if (err) error(err);
     });
   }
-    res.statusCode = 404;
-    return res.end("404 Not Found");
+  res.statusCode = 404;
+  return res.end("404 Not Found");
 });
 
 httpServer.on("upgrade", (req, sock, head) => {
@@ -248,6 +254,9 @@ httpServer.listen(port, () => {
   logger.info(`HTTP and WS listening on port ${port}`);
 });
 
+const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp"];
+const fileSize = 26214400;
+
 /**
  * Run an image job.
  * @param {{ id: string; msg: object; num: number; }} job 
@@ -274,7 +283,7 @@ const runJob = (job, ws) => {
     log(`Job ${job.id} started`, job.num);
     worker.once("message", (data) => {
       clearTimeout(timeout);
-      log(`Sending result of job ${job.id} back to the bot`, job.num);
+      log(`Sending result of job ${job.id}`, job.num);
       const jobObject = jobs.get(job.id);
       jobObject.data = data.buffer;
       jobObject.ext = data.fileExtension;
@@ -284,8 +293,27 @@ const runJob = (job, ws) => {
       } else {
         verifyPromise = Promise.resolve(jobObject.tag);
       }
-      verifyPromise.then(tag => {
+      let tag;
+      verifyPromise.then(t => {
+        tag = t;
         jobs.set(job.id, jobObject);
+        if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
+          return discord.rest.interactions.createFollowupMessage(clientID, object.token, {
+            flags: object.ephemeral ? 64 : undefined,
+            files: [{
+              name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+              contents: jobObject.data
+            }]
+          });
+        }
+        return;
+      }).then((r) => {
+        if (r) jobs.delete(job.id);
+        const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
+        ws.send(waitResponse);
+        resolve();
+      }, (e) => {
+        error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
         const waitResponse = Buffer.concat([Buffer.from([Rwait]), tag]);
         ws.send(waitResponse);
         resolve();

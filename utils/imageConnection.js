@@ -10,6 +10,7 @@ const Tcancel = 0x04;
 const Twait = 0x06;
 //const Rwait = 0x07;
 const Rinit = 0x08;
+const Rsent = 0x09;
 
 class ImageConnection {
   constructor(host, auth, tls = false) {
@@ -62,7 +63,11 @@ class ImageConnection {
       promise.reject(new Error(msg.slice(3, msg.length).toString()));
       return;
     }
-    promise.resolve();
+    if (op === Rsent) {
+      promise.resolve(true);
+    } else {
+      promise.resolve();
+    }
   }
 
   onError(e) {
