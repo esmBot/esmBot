@@ -8,7 +8,7 @@ class SnapchatCommand extends ImageCommand {
     const position = Number.parseFloat(this.options.position);
     return {
       caption: cleanMessage(this.message ?? this.interaction, newArgs),
-      pos: Number.isNaN(position) ? 0.5 : position
+      pos: Number.isNaN(position) ? 0.565 : position
     };
   }
 
@@ -17,7 +17,7 @@ class SnapchatCommand extends ImageCommand {
     this.flags.push({
       name: "position",
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
-      description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.5)",
+      description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.565)",
       min_value: 0,
       max_value: 1
     });

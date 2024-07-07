@@ -10,7 +10,7 @@ const vector<double> zeroVec178 = {0, 0, 0, 178};
 ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
   string caption = GetArgument<string>(arguments, "caption");
-  float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.5);
+  float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.565);
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VOption *options = VImage::option()->set("access", "sequential");
@@ -49,7 +49,8 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
                           ->set("extend", "background")
                           ->set("background", zeroVec178));
 
-  VImage replicated = textIn.embed(0, pageHeight * pos, width, pageHeight)
+  int yPos = (pageHeight - textIn.height()) * pos;
+  VImage replicated = textIn.embed(0, yPos, width, pageHeight)
                           .copy(VImage::option()->set("interpretation",
                                                       VIPS_INTERPRETATION_sRGB))
                           .replicate(1, nPages);
