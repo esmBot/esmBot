@@ -168,5 +168,5 @@ export function cleanMessage(message, content) {
 }
 
 export function isEmpty(string) {
-  return string.length === 0 || string.replace(/[\s\u200B-\u200D\uFEFF]/g, "").length === 0;
+  return string.length === 0 || string.replace(/[\s\p{C}]/gu, "").length === 0;
 }
