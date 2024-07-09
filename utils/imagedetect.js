@@ -90,7 +90,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
   } else {
     let result;
     if (client
-      && (imageURL.host == "cdn.discordapp.com" || imageURL.host == "media.discordapp.net")
+      && (imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net")
       && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))
       && (isAttachmentExpired(imageURL))) {
       const refreshed = await client.rest.misc.refreshAttachmentURLs([image]);
@@ -157,7 +157,7 @@ function isAttachmentExpired(url) {
     const expiry = url.searchParams.get("ex");
     return !expiry 
       || expiry.length > 8 
-      || Date.now() >= Number('0x'+expiry)*1000;
+      || Date.now() >= Number(`0x${expiry}`) * 1000;
   } catch {
     // ignore invalid expiration dates
   }
