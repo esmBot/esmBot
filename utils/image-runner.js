@@ -78,7 +78,7 @@ export default function run(object) {
 if (!isMainThread) {
   run(workerData)
     .then(returnObject => {
-      parentPort.postMessage(returnObject);
+      parentPort.postMessage(returnObject, [returnObject.buffer.buffer]);
     })
     .catch(err => {
       // turn promise rejection into normal error
