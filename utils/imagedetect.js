@@ -38,9 +38,10 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
  * @param {boolean} [spoiler]
  * @param {boolean} [extraReturnTypes]
  * @param {string | null} [type]
+ * @param {import("oceanic.js").Client | undefined } client
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
-const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null) => {
+const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null, client = undefined) => {
   const imageURL = new URL(image);
   const fileNameSplit = imageURL.pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
@@ -87,7 +88,17 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     }
     payload.type = "image/gif";
   } else {
-    const result = await getType(imageURL, extraReturnTypes);
+    let result;
+    if (client
+      && (imageURL.host == "cdn.discordapp.com" || imageURL.host == "media.discordapp.net")
+      && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))
+      && (isAttachmentExpired(imageURL))) {
+      const refreshed = await client.rest.misc.refreshAttachmentURLs([image]);
+      const refreshedURL = new URL(refreshed.refreshedURLs[0].refreshed);
+      result = await getType(refreshedURL, extraReturnTypes);
+    } else {
+      result = await getType(imageURL, extraReturnTypes);
+    }
     if (!result) return;
     if (result.url) payload.path = result.url;
     payload.type = type ?? result.type;
@@ -137,6 +148,23 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
 };
 
 /**
+ * Checks whether an attachment URL has already expired
+ * @param {URL} url
+ * @returns {boolean}
+ */
+function isAttachmentExpired(url) {
+  try {
+    const expiry = url.searchParams.get("ex");
+    return !expiry 
+      || expiry.length > 8 
+      || Date.now() >= Number('0x'+expiry)*1000;
+  } catch {
+    // ignore invalid expiration dates
+  }
+  return true;
+}
+
+/**
  * Checks for the latest message containing an image and returns the URL of the image.
  * @param {import("oceanic.js").Client} client
  * @param {import("oceanic.js").Message | undefined} cmdMessage
@@ -155,7 +183,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
         if (result) return result;
       }
     } else if (options.link) {
-      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, null);
+      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, null, interaction.client);
       if (result) return result;
     }
   }
