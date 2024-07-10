@@ -54,12 +54,11 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage rolled = img_frame.wrap(
-        VImage::option()->set("x", width * i / nPages)->set("y", 0));
-    VImage extracted = rolled.extract_band(0, VImage::option()->set("n", 3));
-    VImage mapped = extracted.mapim(distort);
-    VImage composited = mapped * diffuse + specular;
-    VImage frame = composited.bandjoin(diffuse > 0.0);
+    VImage mapped = img_frame
+        .wrap(VImage::option()->set("x", width * i / nPages)->set("y", 0))
+        .extract_band(0, VImage::option()->set("n", 3))
+        .mapim(distort);
+    VImage frame = (mapped * diffuse + specular).bandjoin(diffuse > 0.0);
     img.push_back(frame);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
