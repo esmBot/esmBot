@@ -32,10 +32,10 @@
     "better-sqlite3": "^11.1.2",
     "dotenv": "^16.4.5",
     "emoji-regex": "^10.3.0",
-    "file-type": "^19.0.0",
+    "file-type": "^19.1.0",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.2.0",
-    "node-addon-api": "^8.0.0",
+    "node-addon-api": "^8.1.0",
     "oceanic.js": "1.11.0",
     "postgres": "^3.4.4",
     "shoukaku": "^4.0.1",
@@ -57,7 +57,7 @@
     "eslint-plugin-unicorn": "^54.0.0"
   },
   "optionalDependencies": {
-    "pm2": "^5.4.1"
+    "pm2": "^5.4.2"
   },
   "binary": {
     "napi_versions": [
