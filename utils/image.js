@@ -9,6 +9,10 @@ import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
 
+/**
+ * @typedef {{ cmd: string; params: object; id: string; }} JobObject
+ */
+
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
 export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
@@ -162,6 +166,9 @@ function waitForWorker(worker) {
   });
 }
 
+/**
+ * @param {JobObject} params
+ */
 export async function runImageJob(params) {
   if (process.env.API_TYPE === "ws") {
     for (let i = 0; i < 3; i++) {
@@ -171,7 +178,10 @@ export async function runImageJob(params) {
       };
       try {
         await currentServer.queue(BigInt(params.id), params);
-        await currentServer.wait(BigInt(params.id));
+        const result = await currentServer.wait(BigInt(params.id));
+        if (result) return {
+          type: "sent"
+        };
         const output = await currentServer.getOutput(params.id);
         return output;
       } catch (e) {
