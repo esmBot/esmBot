@@ -21,12 +21,13 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 - Rwait 0x07
 - Rinit 0x08
 - Rsent 0x09
+- Rclose 0xFF
 
 ### Messages
 [n] means n bytes.
 [s] means a string that goes until the end of the message.
 [j] means JSON data that goes until the end of the message.
-`tag` is used to identify a request/response pair, like `lock` in the original API. `jid` is used to identify a job. `job` is a job object.
+`tag` is used to identify a request/response pair. `jid` is used to identify a job. `job` is a job object.
 - Rerror tag[2] error[s]
 - Tqueue tag[2] jid[8] job[j]
 - Rqueue tag[2]
@@ -36,6 +37,7 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 - Rwait tag[2]
 - Rinit tag[2] max_jobs[2] running_jobs[2] formats[j]
 - Rsent tag[2]
+- Rclose
 
 ### Job Object
 The job object is formatted like this:

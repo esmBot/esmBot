@@ -11,6 +11,7 @@ const Twait = 0x06;
 //const Rwait = 0x07;
 const Rinit = 0x08;
 const Rsent = 0x09;
+const Rclose = 0xFF;
 
 class ImageConnection {
   constructor(host, auth, tls = false) {
@@ -52,6 +53,11 @@ class ImageConnection {
       this.funcs = Object.keys(this.formats);
       return;
     }
+    if (op === Rclose) {
+      this.reconnect = true;
+      this.close();
+      return;
+    }
     const tag = msg.readUint16LE(1);
     const promise = this.requests.get(tag);
     if (!promise) {
@@ -79,8 +85,8 @@ class ImageConnection {
       obj.reject("Request ended prematurely due to a closed connection");
       this.requests.delete(tag);
     }
-    if (!this.disconnected) {
-      logger.warn(`Lost connection to ${this.host}, attempting to reconnect in 5 seconds...`);
+    if (!this.disconnected || this.reconnect) {
+      logger.warn(`${this.reconnect ? `${this.host} requested a reconnect` : `Lost connection to ${this.host}`}, attempting to reconnect in 5 seconds...`);
       await setTimeout(5000);
       this.conn = new WebSocket(this.sockurl, {
         headers: {
@@ -91,6 +97,7 @@ class ImageConnection {
       this.conn.once("error", (err) => this.onError(err));
       this.conn.once("close", () => this.onClose());
     }
+    this.reconnect = false;
     this.disconnected = false;
   }
 
@@ -152,7 +159,7 @@ class ImageConnection {
         authentication: this.auth || undefined
       }
     });
-    if (req.statusCode !== 200) return;
+    if (req.status !== 200) return;
     const res = Number.parseInt(await req.text());
     return res;
   }

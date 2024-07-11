@@ -22,6 +22,7 @@ const Twait = 0x06;
 const Rwait = 0x07;
 const Rinit = 0x08;
 const Rsent = 0x09;
+const Rclose = 0xFF;
 
 const log = (msg, jobNum) => {
   logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
@@ -37,6 +38,18 @@ class JobCache extends Map {
       if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
     }, 300000); // delete jobs if not requested after 5 minutes
     return this;
+  }
+
+  _delListener(_size) {}
+
+  delete(key) {
+    const out = super.delete(key);
+    this._delListener(this.size);
+    return out;
+  }
+
+  delListen(func) {
+    this._delListener = func;
   }
 }
 
@@ -252,6 +265,43 @@ httpServer.on("error", (e) => {
 const port = process.env.PORT && process.env.PORT !== "" ? Number.parseInt(process.env.PORT) : 3762;
 httpServer.listen(port, () => {
   logger.info(`HTTP and WS listening on port ${port}`);
+});
+
+function stopHTTPServer() {
+  httpServer.close((e) => {
+    if (e) {
+      error(e);
+      process.exit(1);
+    }
+    logger.info("Stopped HTTP server");
+    process.exit();
+  });
+}
+
+process.on("SIGINT", () => {
+  logger.info("SIGINT detected, finishing jobs and shutting down...");
+  discord.disconnect();
+  httpServer.removeAllListeners("upgrade");
+  const closeResponse = Buffer.concat([Buffer.from([Rclose])]);
+  for (const client of wss.clients) {
+    client.send(closeResponse);
+  }
+  wss.close((e) => {
+    if (e) {
+      error(e);
+      process.exit(1);
+    }
+    logger.info("Stopped WS server");
+    if (jobs.size > 0) {
+      jobs.delListen((size) => {
+        if (size > 0) return;
+        logger.info("All jobs finished");
+        stopHTTPServer();
+      });
+    } else {
+      stopHTTPServer();
+    }
+  });
 });
 
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp"];
