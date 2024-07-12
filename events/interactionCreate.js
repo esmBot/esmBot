@@ -66,7 +66,7 @@ export default async (client, interaction) => {
         }, result));
       }
     } else {
-      logger.warn(`Unknown return type for command ${command}: ${result} (${typeof result})`);
+      logger.debug(`Unknown return type for command ${command}: ${result} (${typeof result})`);
       if (!result) return;
       await interaction[replyMethod](Object.assign({
         flags: commandClass.success ? 0 : 64
