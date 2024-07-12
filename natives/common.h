@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vips/vips8>
 #include <fontconfig/fontconfig.h>
 
 #include <iostream>
@@ -19,6 +20,7 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 #include "commands.h"
 
 void LoadFonts(string basePath);
+vips::VImage NormalizeVips(vips::VImage in, string type, int *width, int *pageHeight, int nPages);
 #define MapContainsKey(MAP, KEY) (MAP.find(KEY) != MAP.end())
 
 template <typename T>

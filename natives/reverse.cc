@@ -20,6 +20,17 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
+  try {
+    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+  } catch (int e) {
+    if (e == -1) {
+      ArgumentMap output;
+      output["buf"] = "";
+      outType = "frames";
+      return output;
+    }
+  }
+
   // this command is useless with single-page images
   if (nPages < 2) {
     dataSize = bufferLength;

@@ -21,12 +21,15 @@ ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, 
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
-  double maxSize = max(width, pageHeight);
-  if (maxSize > 800) {
-    in = in.resize(800 / maxSize);
-    width = in.width();
-    int newHeight = vips_image_get_page_height(in.get_image());
-    pageHeight = type == "gif" ? newHeight / nPages : newHeight;
+  try {
+    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+  } catch (int e) {
+    if (e == -1) {
+      ArgumentMap output;
+      output["buf"] = "";
+      outType = "frames";
+      return output;
+    }
   }
 
   double mult = (2 * M_PI) / nPages;

@@ -21,6 +21,17 @@ ArgumentMap Scott(const string& type, string& outType, const char* bufferdata, s
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
+  try {
+    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+  } catch (int e) {
+    if (e == -1) {
+      ArgumentMap output;
+      output["buf"] = "";
+      outType = "frames";
+      return output;
+    }
+  }
+
   string assetPath = basePath + "assets/images/scott.png";
   VImage bg = VImage::new_from_file(assetPath.c_str());
 
