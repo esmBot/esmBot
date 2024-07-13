@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <vips/vips8>
 
 #include "common.h"
@@ -10,8 +9,7 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
 {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
-  VOption *options =
-      VImage::option()->set("access", "sequential")->set("n", -1);
+  VOption *options = VImage::option()->set("n", -1);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", options)
                   .colourspace(VIPS_INTERPRETATION_sRGB);
@@ -43,34 +41,33 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
     return output;
   }
 
-  vector<VImage> split;
-  // todo: find a better way of getting individual frames (or at least getting
-  // the frames in reverse order)
-  for (int i = 0; i < nPages; i++) {
-    VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
-    split.push_back(img_frame);
-  }
-
-  vector<int> delays = in.get_array_int("delay");
+  vector<VImage> out;
+  vector<int> delaysOut;
+  int *delays;
+  in.get_array_int("delay", &delays, NULL);
   if (soos) {
-    vector<VImage> copy = split;
-    vector<int> copy2 = delays;
-    reverse(copy.begin(), copy.end());
-    reverse(copy2.begin(), copy2.end());
-    copy.pop_back();
-    copy2.pop_back();
-    copy.erase(copy.begin());
-    copy2.erase(copy2.begin());
-    split.insert(split.end(), copy.begin(), copy.end());
-    delays.insert(delays.end(), copy2.begin(), copy2.end());
+    for (int i = 0; i < nPages; i++) {
+      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+      out.push_back(img_frame);
+      delaysOut.push_back(delays[i]);
+    }
+
+    for (int i = nPages - 2; i > 0; i--) {
+      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+      out.push_back(img_frame);
+      delaysOut.push_back(delays[i]);
+    }
   } else {
-    reverse(split.begin(), split.end());
-    reverse(delays.begin(), delays.end());
+    for (int i = nPages - 1; i > -1; i--) {
+      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+      out.push_back(img_frame);
+      delaysOut.push_back(delays[i]);
+    }
   }
 
-  VImage final = VImage::arrayjoin(split, VImage::option()->set("across", 1));
+  VImage final = VImage::arrayjoin(out, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-  final.set("delay", delays);
+  final.set("delay", delaysOut);
 
   char *buf;
   final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize,
