@@ -327,6 +327,8 @@ const runJob = (job, ws) => {
       workerData: object
     });
     const timeout = setTimeout(() => {
+      worker.removeAllListeners("message");
+      worker.removeAllListeners("error");
       worker.terminate();
       reject(new Error("Job timed out"));
     }, 900000);
