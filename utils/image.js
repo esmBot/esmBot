@@ -174,12 +174,14 @@ export async function runImageJob(params) {
     for (let i = 0; i < 3; i++) {
       const currentServer = await getIdeal(params);
       if (!currentServer) return {
+        buffer: Buffer.alloc(0),
         type: "nocmd"
       };
       try {
         await currentServer.queue(BigInt(params.id), params);
         const result = await currentServer.wait(BigInt(params.id));
         if (result) return {
+          buffer: Buffer.alloc(0),
           type: "sent"
         };
         const output = await currentServer.getOutput(params.id);
