@@ -63,6 +63,10 @@ class ImageCommand extends Command {
           runningCommands.delete(this.author.id);
           return "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.";
         }
+        if (image.type === "badurl") {
+          runningCommands.delete(this.author.id);
+          return "That URL is invalid!";
+        }
         imageParams.path = image.path;
         imageParams.params.type = image.type;
         imageParams.url = image.url; // technically not required but can be useful for text filtering

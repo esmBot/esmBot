@@ -42,7 +42,18 @@ const videoFormats = ["video/mp4", "video/webm", "video/mov"];
  * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
 const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null, client = undefined) => {
-  const imageURL = new URL(image);
+  let imageURL;
+  try {
+    imageURL = new URL(image);
+  } catch {
+    return {
+      url: image2,
+      path: image,
+      name: "null",
+      type: "badurl",
+      spoiler
+    };
+  }
   const fileNameSplit = imageURL.pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
@@ -113,7 +124,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
  * @param {boolean} extraReturnTypes 
  * @param {boolean} video 
  * @param {boolean} sticker 
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | boolean | undefined>}
+ * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | undefined>}
  */
 const checkImages = async (message, extraReturnTypes, video, sticker) => {
   let type;
@@ -144,7 +155,7 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
     }
   }
   // if the return value exists then return it
-  return type ?? false;
+  return type;
 };
 
 /**
@@ -170,7 +181,7 @@ function isAttachmentExpired(url) {
  * @param {import("oceanic.js").Message | undefined} cmdMessage
  * @param {import("oceanic.js").CommandInteraction | undefined} interaction
  * @param {{ image: string; link: any; }} options
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | boolean | undefined>}
+ * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | undefined>}
  */
 export default async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false, singleMessage = false) => {
   // we start by determining whether or not we're dealing with an interaction or a message
@@ -179,12 +190,10 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     if (options.image) {
       const attachment = interaction.data.resolved.attachments.get(options.image);
       if (attachment) {
-        const result = await getImage(attachment.proxyURL, attachment.url, video, !!(attachment.flags & AttachmentFlags.IS_SPOILER), !!attachment.contentType);
-        if (result) return result;
+        return getImage(attachment.proxyURL, attachment.url, video, !!(attachment.flags & AttachmentFlags.IS_SPOILER), !!attachment.contentType);
       }
     } else if (options.link) {
-      const result = await getImage(options.link, options.link, video, false, extraReturnTypes, null, interaction.client);
-      if (result) return result;
+      return getImage(options.link, options.link, video, false, extraReturnTypes, null, interaction.client);
     }
   }
   if (cmdMessage) {
@@ -193,12 +202,12 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
       const replyMessage = await client.rest.channels.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
       if (replyMessage) {
         const replyResult = await checkImages(replyMessage, extraReturnTypes, video, sticker);
-        if (replyResult !== false) return replyResult;
+        if (replyResult) return replyResult;
       }
     }
     // then we check the current message
     const result = await checkImages(cmdMessage, extraReturnTypes, video, sticker);
-    if (result !== false) return result;
+    if (result) return result;
   }
   if (!singleMessage && (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined)) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
@@ -212,7 +221,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     // iterate over each message
     for (const message of messages) {
       const result = await checkImages(message, extraReturnTypes, video, sticker);
-      if (result !== false) return result;
+      if (result) return result;
     }
   }
 };
