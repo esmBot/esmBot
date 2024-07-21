@@ -93,6 +93,10 @@ export async function getType(image, extraReturnTypes) {
   return { type, url };
 }
 
+/**
+ * @param {string} server
+ * @param {string} auth
+ */
 function connect(server, auth) {
   const connection = new ImageConnection(server, auth);
   connections.set(server, connection);
@@ -133,6 +137,10 @@ function chooseServer(ideal) {
   return sorted[0];
 }
 
+/**
+ * @param {JobObject} object
+ * @returns {Promise<ImageConnection>}
+ */
 async function getIdeal(object) {
   const idealServers = [];
   for (const [address, connection] of connections) {
@@ -154,6 +162,10 @@ async function getIdeal(object) {
   return connections.get(server.addr);
 }
 
+/**
+ * @param {Worker} worker 
+ * @returns {Promise<{ buffer: Buffer; type: string; }>}
+ */
 function waitForWorker(worker) {
   return new Promise((resolve, reject) => {
     worker.once("message", (data) => {
@@ -168,6 +180,7 @@ function waitForWorker(worker) {
 
 /**
  * @param {JobObject} params
+ * @returns {Promise<{ buffer: Buffer; type: string; }>}
  */
 export async function runImageJob(params) {
   if (process.env.API_TYPE === "ws") {
@@ -188,16 +201,19 @@ export async function runImageJob(params) {
         return output;
       } catch (e) {
         if (i >= 2 && e !== "Request ended prematurely due to a closed connection") {
-          if (e === "No available servers" && i >= 2) throw "Request ended prematurely due to a closed connection";
+          if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
           throw e;
         }
       }
     }
-  } else {
+    return {
+      buffer: Buffer.alloc(0),
+      type: "noresult"
+    };
+  }
     // Called from command (not using image API)
     const worker = new Worker(path.join(path.dirname(fileURLToPath(import.meta.url)), "./image-runner.js"), {
       workerData: params
     });
     return await waitForWorker(worker);
-  }
 }

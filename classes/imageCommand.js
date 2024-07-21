@@ -106,9 +106,13 @@ class ImageCommand extends Command {
     }
 
     try {
-      const { buffer, type } = await runImageJob(imageParams);
+      const result = await runImageJob(imageParams);
+      const buffer = result.buffer;
+      const type = result.type;
       if (type === "sent") return;
       if (type === "frames") return "That GIF has way too many frames (over 1000)!";
+      if (type === "unknown") return "The image output wasn't in a recognizable format. Please try again.";
+      if (type === "noresult") return "I couldn't get a response from the image server. Please try again.";
       if (type === "ratelimit") return "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.";
       if (type === "nocmd") return "That command isn't supported on this instance of esmBot.";
       if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";

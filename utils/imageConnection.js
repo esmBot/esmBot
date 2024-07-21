@@ -147,7 +147,7 @@ class ImageConnection {
         type = "webp";
         break;
       default:
-        type = contentType;
+        type = contentType ?? "unknown";
         break;
     }
     return { buffer: Buffer.from(await req.arrayBuffer()), type };
