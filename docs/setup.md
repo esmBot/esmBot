@@ -114,7 +114,7 @@ cd ~
 mkdir Lavalink
 cd Lavalink
 curl -OL https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar
-cp ~/esmBot/application.yml .
+ln -s ~/esmBot/application.yml .
 ```
 To run Lavalink, you can use this command:
 ```sh
