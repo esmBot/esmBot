@@ -1,10 +1,11 @@
 import InteractionCollector from "./awaitinteractions.js";
+import { collectors } from "../collections.js";
 
 /**
  * @param {import("oceanic.js").Client} client
  * @param {{ type: string; message: import("oceanic.js").Message; interaction: import("oceanic.js").CommandInteraction; author: import("oceanic.js").User | import("oceanic.js").Member; }} info
  */
-export default async (client, info, pages, timeout = 120000) => {
+export default async (client, info, pages) => {
   const options = info.type === "classic" ? {
     messageReference: {
       channelID: info.message.channelID,
@@ -74,7 +75,7 @@ export default async (client, info, pages, timeout = 120000) => {
   }
   
   if (pages.length > 1) {
-    const interactionCollector = new InteractionCollector(client, currentPage, timeout);
+    const interactionCollector = new InteractionCollector(client, currentPage);
     interactionCollector.on("interaction", async (interaction) => {
       if ((interaction.member ?? interaction.user).id === info.author.id) {
         switch (interaction.data.customID) {
@@ -145,7 +146,7 @@ export default async (client, info, pages, timeout = 120000) => {
               promise = (await info.interaction.createFollowup(Object.assign({ content: "What page do you want to jump to?" }, jumpComponents))).getMessage();
             }
             promise.then(askMessage => {
-              const dropdownCollector = new InteractionCollector(client, askMessage, timeout);
+              const dropdownCollector = new InteractionCollector(client, askMessage);
               let ended = false;
               dropdownCollector.on("interaction", async (response) => {
                 if (response.data.customID !== "seekDropdown") return;
@@ -168,6 +169,7 @@ export default async (client, info, pages, timeout = 120000) => {
                 dropdownCollector.stop();
               });
               dropdownCollector.once("end", async () => {
+                collectors.delete(askMessage.id);
                 if (ended) return;
                 try {
                   if (info.type === "application") {
@@ -184,6 +186,7 @@ export default async (client, info, pages, timeout = 120000) => {
                   currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
                 }
               });
+              collectors.set(askMessage.id, dropdownCollector);
             }).catch(error => {
               throw error;
             });
@@ -208,6 +211,7 @@ export default async (client, info, pages, timeout = 120000) => {
       }
     });
     interactionCollector.once("end", async (deleted = false) => {
+      collectors.delete(currentPage.id);
       interactionCollector.removeAllListeners("interaction");
       if (!deleted) {
         for (const index of components.components[0].components.keys()) {
@@ -224,5 +228,6 @@ export default async (client, info, pages, timeout = 120000) => {
         }
       }
     });
+    collectors.set(currentPage.id, interactionCollector);
   }
 };

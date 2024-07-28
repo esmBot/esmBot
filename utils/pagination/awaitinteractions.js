@@ -6,26 +6,14 @@ class InteractionCollector extends EventEmitter {
   /**
    * @param {import("oceanic.js").Client} client
    * @param {import("oceanic.js").Message} message
-   * @param {number} [timeout]
    */
-  constructor(client, message, timeout = 120000) {
+  constructor(client, message) {
     super();
     this.message = message;
     this.ended = false;
     this.bot = client;
-    this.timeout = timeout;
-    this.listener = async (interaction) => {
-      await this.verify(interaction);
-    };
-    this.bot.on("interactionCreate", this.listener);
-    this.end = setTimeout(() => this.stop(), timeout);
-  }
-
-  async verify(interaction) {
-    if (!(interaction instanceof ComponentInteraction)) return false;
-    if (this.message.id !== interaction.message.id) return false;
-    this.emit("interaction", interaction);
-    return true;
+    this.timeout = 120000;
+    this.end = setTimeout(() => this.stop(), this.timeout);
   }
 
   extend() {
@@ -36,7 +24,6 @@ class InteractionCollector extends EventEmitter {
   stop() {
     if (this.ended) return;
     this.ended = true;
-    this.bot.removeListener("interactionCreate", this.listener);
     this.emit("end");
   }
 }

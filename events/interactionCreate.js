@@ -1,11 +1,12 @@
 import database from "../utils/database.js";
 import logger from "../utils/logger.js";
-import { commands, messageCommands } from "../utils/collections.js";
+import { collectors, commands, messageCommands } from "../utils/collections.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
+import { InteractionTypes } from "oceanic.js";
 
 /**
- * Runs when a slash/ command is executed.
+ * Runs when a slash command/interaction is executed.
  * @param {import("oceanic.js").Client} client
  * @param {import("oceanic.js").AnyInteractionGateway} interaction
  */
@@ -13,8 +14,16 @@ export default async (client, interaction) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
-  // block non-command events
-  if (interaction?.type !== 2) return;
+  // handle incoming non-command interactions
+  if (interaction.type === InteractionTypes.MESSAGE_COMPONENT) {
+    //await interaction.deferUpdate();
+    const collector = collectors.get(interaction.message.id);
+    if (collector) collector.emit("interaction", interaction);
+    return;
+  }
+
+  // block other non-command events
+  if (interaction.type !== InteractionTypes.APPLICATION_COMMAND) return;
 
   // check if command exists and if it's enabled
   const command = interaction.data.name;

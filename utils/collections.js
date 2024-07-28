@@ -4,6 +4,7 @@ export const paths = new Map();
 export const aliases = new Map();
 export const info = new Map();
 export const categories = new Map();
+export const collectors = new Map();
 
 class TimedMap extends Map {
   constructor(time, values) {
