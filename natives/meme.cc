@@ -42,8 +42,8 @@ ArgumentMap Meme(const string& type, string& outType, const char* bufferdata, si
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
-  int size = width / 9;
-  double radius = (double)size / 18;
+  double size = (double)width / 9;
+  double radius = size / 18;
 
   string font_string = (font == "roboto" ? "Roboto Condensed" : font) + " " +
                        (font != "impact" ? "bold" : "normal") + " " +
