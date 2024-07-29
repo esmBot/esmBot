@@ -278,7 +278,13 @@ function stopHTTPServer() {
   });
 }
 
+let stopping = false;
 process.on("SIGINT", () => {
+  if (stopping) {
+    logger.info("Another SIGINT detected, forcing shutdown...");
+    process.exit();
+  }
+  stopping = true;
   logger.info("SIGINT detected, finishing jobs and shutting down...");
   discord.disconnect();
   httpServer.removeAllListeners("upgrade");
