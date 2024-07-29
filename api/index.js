@@ -66,6 +66,8 @@ let jobAmount = 0;
 const discord = new Client();
 const clientID = process.env.CLIENT_ID;
 
+discord.on("error", error);
+
 /**
  * Accept an image job.
  * @param {string} id 
@@ -362,17 +364,15 @@ const runJob = (job, ws) => {
               name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
               contents: jobObject.data
             }]
+            }).catch((e) => {
+              error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
+              return;
           });
         }
         return;
       }).then((r) => {
         if (r) jobs.delete(job.id);
         const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
-        ws.send(waitResponse);
-        resolve();
-      }, (e) => {
-        error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
-        const waitResponse = Buffer.concat([Buffer.from([Rwait]), tag]);
         ws.send(waitResponse);
         resolve();
       });
