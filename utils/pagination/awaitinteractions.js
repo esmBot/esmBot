@@ -1,6 +1,5 @@
 // oceanic doesn't come with a method to wait for interactions by default, so we make our own
 import { EventEmitter } from "node:events";
-import { ComponentInteraction } from "oceanic.js";
 
 class InteractionCollector extends EventEmitter {
   /**
