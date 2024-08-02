@@ -156,6 +156,7 @@ class ImageCommand extends Command {
         name: "text",
         type: Constants.ApplicationCommandOptionTypes.STRING,
         description: "The text to put on the image",
+        maxLength: 4096,
         required: !this.textOptional,
         classic: true
       });
