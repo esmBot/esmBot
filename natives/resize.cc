@@ -23,6 +23,17 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
 
+  try {
+    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+  } catch (int e) {
+    if (e == -1) {
+      ArgumentMap output;
+      output["buf"] = "";
+      outType = "frames";
+      return output;
+    }
+  }
+
   int finalHeight = 0;
   if (stretch) {
     out =
