@@ -15,8 +15,8 @@ class JPEGCommand extends ImageCommand {
       name: "quality",
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the JPEG quality (default: 1)",
-      min_value: 1,
-      max_value: 100,
+      minValue: 1,
+      maxValue: 100,
       classic: true
     });
     return this;

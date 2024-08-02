@@ -16,7 +16,7 @@ class SlowCommand extends ImageCommand {
       name: "multiplier",
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the speed multiplier (default: 2)",
-      min_value: 1,
+      minValue: 1,
       classic: true
     });
     return this;

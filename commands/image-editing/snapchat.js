@@ -18,8 +18,8 @@ class SnapchatCommand extends ImageCommand {
       name: "position",
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
       description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.565)",
-      min_value: 0,
-      max_value: 1
+      minValue: 0,
+      maxValue: 1
     });
     return this;
   }

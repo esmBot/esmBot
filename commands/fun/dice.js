@@ -13,7 +13,7 @@ class DiceCommand extends Command {
     name: "max",
     type: 4,
     description: "The maximum dice value",
-    min_value: 1,
+    minValue: 1,
     classic: true
   }];
 

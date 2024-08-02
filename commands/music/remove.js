@@ -23,7 +23,7 @@ class RemoveCommand extends MusicCommand {
     name: "position",
     type: 4,
     description: "The queue position you want to remove",
-    min_value: 1,
+    minValue: 1,
     required: true,
     classic: true
   }];

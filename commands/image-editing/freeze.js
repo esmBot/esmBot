@@ -16,7 +16,7 @@ class FreezeCommand extends ImageCommand {
       name: "endframe",
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the end frame (default: last frame)",
-      min_value: 0,
+      minValue: 0,
       classic: true
     });
     return this;
