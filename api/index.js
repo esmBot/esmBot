@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { cpus } from "node:os";
 import { Worker } from "node:worker_threads";
 import { join } from "node:path";
 import { createServer } from "node:http";
@@ -55,10 +54,7 @@ class JobCache extends Map {
 
 const jobs = new JobCache();
 // Should look like ID : { msg: "request", num: <job number> }
-const queue = [];
-// Array of IDs
 
-const MAX_JOBS = process.env.JOBS ? Number.parseInt(process.env.JOBS) : cpus().length * 4; // Completely arbitrary, should usually be some multiple of your amount of cores
 const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
 
@@ -76,7 +72,6 @@ discord.on("error", error);
  */
 const acceptJob = (id, sock) => {
   jobAmount++;
-  queue.shift();
   const job = jobs.get(id);
   return runJob({
     id: id,
@@ -96,9 +91,6 @@ const acceptJob = (id, sock) => {
     sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
   }).finally(() => {
     jobAmount--;
-    if (queue.length > 0) {
-      acceptJob(queue[0], sock);
-    }
   });
 };
 
@@ -113,15 +105,13 @@ const wss = new WebSocketServer({ clientTracking: true, noServer: true });
 
 wss.on("connection", (ws, request) => {
   logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
-  const num = Buffer.alloc(2);
-  num.writeUInt16LE(MAX_JOBS);
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobAmount);
   const formats = {};
   for (const cmd of img.funcs) {
     formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp"];
   }
-  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00]), num, cur, Buffer.from(JSON.stringify(formats))]);
+  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00, 0x00, 0x00]), cur, Buffer.from(JSON.stringify(formats))]);
   ws.send(init);
 
   ws.on("error", (err) => {
@@ -137,19 +127,13 @@ wss.on("connection", (ws, request) => {
       const obj = msg.slice(11);
       const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
       jobs.set(id, job);
-      queue.push(id);
 
       const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
       ws.send(newBuffer);
   
-      if (jobAmount < MAX_JOBS) {
         log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
         acceptJob(id, ws);
-      } else {
-        log(`Got WS request for job ${job.msg} with id ${id}, queued in position ${queue.indexOf(id)}`, job.num);
-      }
     } else if (opcode === Tcancel) {
-      delete queue[queue.indexOf(req) - 1];
       jobs.delete(req);
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
       ws.send(cancelResponse);
