@@ -119,12 +119,6 @@ if (process.env.METRICS && process.env.METRICS !== "") {
     if (reqUrl.pathname === "/" || reqUrl.pathname === "/metrics") {
       res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
-# HELP esmbot_server_count Number of servers/guilds the bot is in
-# TYPE esmbot_server_count gauge
-# HELP esmbot_shard_count Number of shards the bot has
-# TYPE esmbot_shard_count gauge
-# HELP esmbot_shard_ping Latency of each of the bot's shards
-# TYPE esmbot_shard_ping gauge
 `);
       if (database) {
         const counts = await database.getCounts();
@@ -133,8 +127,15 @@ if (process.env.METRICS && process.env.METRICS !== "") {
         }
       }
 
-      res.write(`esmbot_server_count ${serverCount}\n`);
-      res.write(`esmbot_shard_count ${shardData.length}\n`);
+      res.write(`# HELP esmbot_servers Number of servers/guilds the bot is in
+# TYPE esmbot_servers gauge
+esmbot_servers ${serverCount}
+# HELP esmbot_shards Number of shards the bot has
+# TYPE esmbot_shards gauge
+esmbot_shards ${shardData.length}
+# HELP esmbot_shard_ping Latency of each of the bot's shards
+# TYPE esmbot_shard_ping gauge
+`);
 
       for (const shard of shardData) {
         if (shard.latency) res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}\n`);
