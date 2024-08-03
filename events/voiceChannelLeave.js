@@ -9,7 +9,7 @@ const isWaiting = new Map();
 /**
  * @param {import("oceanic.js").Client} client
  * @param {import("oceanic.js").Member} member
- * @param {import("oceanic.js").VoiceChannel | import("oceanic.js").StageChannel | null} oldChannel
+ * @param {import("oceanic.js").VoiceChannel | import("oceanic.js").StageChannel | import("oceanic.js").Uncached | null} oldChannel
  */
 export default async (client, member, oldChannel) => {
   // block if client is not ready yet
@@ -18,7 +18,7 @@ export default async (client, member, oldChannel) => {
   if (!oldChannel) return;
   const connection = players.get(member.guildID);
   if (connection && oldChannel.id === connection.voiceChannel.id) {
-    const fullChannel = oldChannel.voiceMembers ? oldChannel : await client.rest.channels.get(oldChannel.id);
+    const fullChannel = oldChannel.voiceMembers ? oldChannel : connection.voiceChannel;
     if (!(fullChannel instanceof VoiceChannel) && !(fullChannel instanceof StageChannel)) return;
     if (fullChannel.voiceMembers.filter((i) => i.id !== client.user.id && !i.bot).length === 0) {
       if (isWaiting.has(oldChannel.id)) return;
