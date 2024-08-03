@@ -87,6 +87,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
         }
         const json = await data.json();
         if (json.error) throw Error(json.error.message);
+        if (json.results.length === 0) return;
         payload.path = json.results[0].media_formats.gif.url;
       } else {
         return;
