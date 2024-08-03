@@ -64,7 +64,7 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
       VImage gifIn = VImage::new_from_buffer(reinterpret_cast<char*>(jpgBuf), dataSize, "");
       gifIn.write_to_buffer(
           ".gif", reinterpret_cast<void**>(&buf), &dataSize,
-          VImage::option()->set("Q", quality)->set("strip", true));
+          VImage::option()->set("strip", true));
     } else {
       outType = "jpg";
       buf = reinterpret_cast<char*>(jpgBuf);
