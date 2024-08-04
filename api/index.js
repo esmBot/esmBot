@@ -323,7 +323,7 @@ const runJob = (job, ws) => {
       worker.removeAllListeners("error");
       worker.terminate();
       reject(new Error("Job timed out"));
-    }, 900000);
+    }, 600000);
     log(`Job ${job.id} started`, job.num);
     worker.once("message", (data) => {
       clearTimeout(timeout);

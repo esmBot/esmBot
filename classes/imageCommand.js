@@ -129,7 +129,7 @@ class ImageCommand extends Command {
       };
     } catch (e) {
       if (e === "Request ended prematurely due to a closed connection") return "This image job couldn't be completed because the server it was running on went down. Try running your command again.";
-      if (e === "Job timed out" || e === "Timeout") return "The image is taking too long to process (>=15 minutes), so the job was cancelled. Try using a smaller image.";
+      if (e === "Job timed out" || e === "Timeout") return "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.";
       if (e === "No available servers") return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
       throw e;
     } finally {
