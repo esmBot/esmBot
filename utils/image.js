@@ -168,13 +168,23 @@ async function getIdeal(object) {
  */
 function waitForWorker(worker) {
   return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      worker.removeAllListeners("message");
+      worker.removeAllListeners("error");
+      worker.terminate();
+      reject(new Error("Job timed out"));
+    }, 600000);
     worker.once("message", (data) => {
+      clearTimeout(timeout);
       resolve({
         buffer: Buffer.from([...data.buffer]),
         type: data.fileExtension
       });
     });
-    worker.once("error", reject);
+    worker.once("error", (e) => {
+      clearTimeout(timeout);
+      reject(e);
+    });
   });
 }
 
