@@ -55,7 +55,7 @@ export default async (client, interaction) => {
       if (result.contents && result.name) {
         const fileSize = 26214400;
         if (result.contents.length > fileSize) {
-          if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
+          if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
             await upload(client, result, interaction, commandClass.success, true);
           } else {
             await interaction[replyMethod]({

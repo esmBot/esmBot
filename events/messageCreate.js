@@ -143,7 +143,7 @@ export default async (client, message) => {
           }
         }
         if (result.contents.length > fileSize) {
-          if (process.env.TEMPDIR && process.env.TEMPDIR !== "") {
+          if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && commandClass.permissions.has("EMBED_LINKS")) {
             await upload(client, result, message);
           } else {
             await client.rest.channels.createMessage(message.channelID, {
