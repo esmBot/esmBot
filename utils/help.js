@@ -1,4 +1,5 @@
 import { commands, info } from "./collections.js";
+import commandConfig from "../config/commands.json" with { type: "json" };
 import { promises } from "node:fs";
 
 export const categoryTemplate = {
@@ -31,6 +32,7 @@ export function generateList() {
   categories = categoryTemplate;
   for (const [command] of commands) {
     const cmd = info.get(command);
+    if (!cmd.slashAllowed && !commandConfig.types.classic) continue;
     if (!categories[cmd.category]) categories[cmd.category] = [];
     if (command !== "music") generateEntries(command, cmd.params, cmd.description, categories, cmd.category);
   }
@@ -41,13 +43,13 @@ export function generateList() {
  * @param {string} output
  */
 export async function createPage(output) {
-  let template = `# <img src="https://raw.githubusercontent.com/esmBot/esmBot/master/docs/assets/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
+  let template = `# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 
 This page was last generated on \`${new Date().toString()}\`.
 
 \`[]\` means an argument is required, \`{}\` means an argument is optional.
 
-**Want to help support esmBot's development? Consider donating on Patreon!** https://patreon.com/TheEssem
+**Want to help support esmBot's development? Consider leaving a tip on Ko-fi!** https://ko-fi.com/TheEssem
 `;
 
   template += "\n## Table of Contents\n";
