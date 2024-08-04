@@ -1,9 +1,16 @@
 import paginator from "../../utils/pagination/pagination.js";
+import * as collections from "../../utils/collections.js";
 import database from "../../utils/database.js";
 import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
+    const cmd = (this.interaction?.data.options.getString("command") ?? this.args.join(" ")).trim().toLowerCase();
+    if (cmd && (collections.commands.has(cmd) || collections.aliases.has(cmd))) {
+      const command = collections.aliases.get(cmd) ?? cmd;
+      const counts = await database.getCounts();
+      return `The command \`${command}\` has been run a total of ${counts[command]} times.`;
+    }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
       return "I don't have the `Embed Links` permission!";
@@ -47,6 +54,12 @@ class CountCommand extends Command {
 
   static description = "Gets how many times every command was used";
   static aliases = ["counts"];
+  static flags = [{
+    name: "command",
+    type: 3,
+    description: "A specific command to view counts for",
+    classic: true
+  }];
   static dbRequired = true;
 }
 
