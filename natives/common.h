@@ -88,13 +88,9 @@ const std::map<std::string,
                    {"spotify", &Spotify},
                    {"squish", &Squish},
                    {"swirl", &Swirl},
-                   {"tile", &Tile},
                    {"togif", &ToGif},
                    {"uncanny", &Uncanny},
                    {"uncaption", &Uncaption},
-#if MAGICK_ENABLED
-                   {"wall", &Wall},
-#endif
                    {"watermark", &Watermark},
                    {"whisper", &Whisper}};
 
