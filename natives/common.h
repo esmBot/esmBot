@@ -43,7 +43,8 @@ const std::vector<double> zeroVecOneAlpha = {0, 0, 0, 1};
 const std::unordered_map<std::string, std::string> fontPaths{
     {"futura", "assets/fonts/caption.otf"},
     {"helvetica", "assets/fonts/caption2.ttf"},
-    {"roboto", "assets/fonts/reddit.ttf"}};
+    {"roboto", "assets/fonts/reddit.ttf"},
+    {"ubuntu", "assets/fonts/Ubuntu.ttf"}};
 
 const std::map<std::string,
                ArgumentMap (*)(const string& type, string& outType, const char* bufferData,

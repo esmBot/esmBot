@@ -192,7 +192,7 @@ class ImageCommand extends Command {
     return this;
   }
 
-  static allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times", "comic sans ms"];
+  static allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times", "comic sans ms", "ubuntu"];
 
   static requiresImage = true;
   static requiresText = false;
