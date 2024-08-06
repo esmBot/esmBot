@@ -18,6 +18,9 @@ class ImageCommand extends Command {
 
   async run() {
     this.success = false;
+
+    if (!this.permissions.has("ATTACH_FILES")) return "I don't have the `Attach Files` permission!";
+
     const timestamp = this.type === "application" && this.interaction ? CommandInteraction.getCreatedAt(this.interaction.id) : this.message?.createdAt ?? new Date();
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
