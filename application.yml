@@ -32,7 +32,7 @@ plugins:
     allowSearch: true
     allowDirectVideoIds: true
     allowDirectPlaylistIds: true
-    clients:
+    clients: # https://github.com/lavalink-devs/youtube-source#available-clients
       - MUSIC
       - WEB
   lavasrc:
