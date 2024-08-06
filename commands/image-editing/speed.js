@@ -16,6 +16,7 @@ class SpeedCommand extends ImageCommand {
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       description: "Set the speed multiplier (default: 2)",
       minValue: 1,
+      maxValue: 1000,
       classic: true
     });
     return this;
