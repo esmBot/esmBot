@@ -91,16 +91,8 @@ if (WITH_MAGICK)
 endif()
 
 if (WITH_ZXING)
-  add_definitions(-DZXING_ENABLED)
   find_package(ZXing)
-  if (NOT ZXing_FOUND)
-    FetchContent_Declare(ZXing
-      URL https://github.com/zxing-cpp/zxing-cpp/archive/refs/tags/v2.2.1.tar.gz
-      URL_HASH SHA256=02078ae15f19f9d423a441f205b1d1bee32349ddda7467e2c84e8f08876f8635
-    )
-    set(BUILD_EXAMPLES OFF CACHE BOOL "Build the example barcode reader/writer applications" FORCE)
-    FetchContent_MakeAvailable(ZXing)
-  endif()
+  add_definitions(-DZXING_ENABLED)
   target_link_libraries(${PROJECT_NAME} ZXing::ZXing)
 endif()
 
