@@ -46,5 +46,4 @@ jobs:
     - name: Install dependencies
       run: brew install imagemagick vips
     - name: Build
-      run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF
-
+      run: pnpm install --frozen-lockfile --no-optional && pnpm run build
