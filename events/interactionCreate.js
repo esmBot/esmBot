@@ -32,8 +32,16 @@ export default async (client, interaction) => {
     cmd = messageCommands.get(command);
     if (!cmd) return;
   }
+
+  try {
+    await interaction.defer((cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false)) ? 64 : undefined);
+  } catch (e) {
+    logger.error(`Could not defer interaction, cannot continue further: ${e}`);
+    return;
+  }
+
   if (cmd.dbRequired && !database) {
-    await interaction.createMessage({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
+    await interaction.createFollowup({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
     return;
   }
 
@@ -44,7 +52,7 @@ export default async (client, interaction) => {
   try {
     const commandClass = new cmd(client, { type: "application", interaction });
     const result = await commandClass.run();
-    const replyMethod = interaction.acknowledged ? (commandClass.edit ? "editOriginal" : "createFollowup") : "createMessage";
+    const replyMethod = commandClass.edit ? "editOriginal" : "createFollowup";
     if (typeof result === "string") {
       await interaction[replyMethod]({
         content: result,
@@ -81,18 +89,16 @@ export default async (client, interaction) => {
       }, result));
     }
   } catch (error) {
-    const replyMethod = interaction.acknowledged ? "createFollowup" : "createMessage";
     if (error.toString().includes("Request entity too large")) {
-      await interaction[replyMethod]({ content: "The resulting file was too large to upload. Try again with a smaller image if possible.", flags: 64 });
+      await interaction.createFollowup({ content: "The resulting file was too large to upload. Try again with a smaller image if possible.", flags: 64 });
     } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction[replyMethod]({ content: "Something happened to the image servers before I could receive the image. Try running your command again.", flags: 64 });
+      await interaction.createFollowup({ content: "Something happened to the image servers before I could receive the image. Try running your command again.", flags: 64 });
     } else {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
-        if (!interaction.acknowledged) await interaction.defer(); // Files can't be uploaded without deferring first
-        await interaction[replyMethod]({
+        await interaction.createFollowup({
           content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
           files: [{
             contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),

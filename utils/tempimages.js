@@ -30,7 +30,7 @@ export async function upload(client, result, context, success = true, interactio
     flags: result.flags ?? (success ? 0 : 64)
   };
   if (interaction) {
-    await context[context.acknowledged ? "createFollowup" : "createMessage"](payload);
+    await context.createFollowup(payload);
   } else {
     await client.rest.channels.createMessage(context.channelID, Object.assign(payload, {
       messageReference: {

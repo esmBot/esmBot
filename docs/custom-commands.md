@@ -81,6 +81,7 @@ static flags = [{
   ...
 }];
 ```
+- `ephemeral`: Specifies whether or not the command output should be ephemeral.
 - `slashAllowed`: Specifies whether or not the command is available via slash commands.
 - `directAllowed`: Specifies whether or not a command is available in direct messages.
 - `userAllowed`: Specifies whether or not a command is available when run in a user installation context.

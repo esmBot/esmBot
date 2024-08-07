@@ -190,11 +190,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
         } else if (lastTrack && lastTrack !== track) {
           playingMessage = await (await options.interaction.createFollowup(content)).getMessage();
         } else {
-          if (options.interaction.acknowledged) {
-            playingMessage = await options.interaction.editOriginal(content);
-          } else {
-            playingMessage = await (await options.interaction.createMessage(content)).getMessage();
-          }
+          playingMessage = await options.interaction.editOriginal(content);
           if (!playingMessage) playingMessage = await options.interaction.getOriginal();
         }
       }

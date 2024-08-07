@@ -38,8 +38,6 @@ class ImageCommand extends Command {
       id: (this.interaction ?? this.message).id
     };
 
-    if (this.type === "application") await this.acknowledge(this.options.ephemeral ? 64 : undefined);
-
     let needsSpoiler = false;
     if (this.constructor.requiresImage) {
       try {

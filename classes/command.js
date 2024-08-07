@@ -61,15 +61,10 @@ class Command {
     return "It works!";
   }
 
-  /**
-   * @param {number | undefined} [flags]
-   */
-  async acknowledge(flags) {
+  async acknowledge() {
     if (this.type === "classic" && this.message) {
       const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
       await channel.sendTyping();
-    } else if (this.interaction && !this.interaction.acknowledged) {
-      await this.interaction.defer(flags);
     }
   }
 
@@ -80,6 +75,7 @@ class Command {
   static description = "No description found";
   static aliases = [];
   static flags = [];
+  static ephemeral = false;
   static slashAllowed = true;
   static directAllowed = true;
   static userAllowed = true;

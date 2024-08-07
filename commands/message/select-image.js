@@ -4,7 +4,6 @@ import { selectedImages } from "../../utils/collections.js";
 
 class SelectImageCommand extends Command {
   async run() {
-    await this.acknowledge(64);
     const message = this.interaction?.data.target;
     const image = await imageDetect(this.client, message, this.interaction, this.options, true, false, false, true).catch(e => {
       if (e.name === "AbortError") return { type: "timeout" };
@@ -29,6 +28,8 @@ class SelectImageCommand extends Command {
     selectedImages.set(this.author.id, image);
     return "The image has been selected for your next command.";
   }
+
+  static ephemeral = true;
 }
 
 export default SelectImageCommand;

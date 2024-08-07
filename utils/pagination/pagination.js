@@ -69,7 +69,7 @@ export default async (client, info, pages) => {
   if (info.type === "classic") {
     currentPage = await client.rest.channels.createMessage(info.message.channelID, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
   } else {
-    const response = await info.interaction[info.interaction.acknowledged ? "createFollowup" : "createMessage"](Object.assign(pages[page], pages.length > 1 ? components : {}));
+    const response = await info.interaction.createFollowup(Object.assign(pages[page], pages.length > 1 ? components : {}));
     currentPage = await response.getMessage();
     if (!currentPage) currentPage = await info.interaction.getOriginal();
   }
