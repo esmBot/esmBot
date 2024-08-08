@@ -36,6 +36,7 @@ set(SOURCE_FILES natives/blur.cc
   natives/snapchat.cc
   natives/sonic.cc
   natives/speed.cc
+  natives/spin.cc
   natives/spotify.cc
   natives/squish.cc
   natives/swirl.cc
@@ -50,8 +51,7 @@ option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread command
 
 if (WITH_MAGICK)
   list(APPEND SOURCE_FILES natives/circle.cc
-    natives/magik.cc
-    natives/spin.cc)
+    natives/magik.cc)
 endif()
 
 if (WITH_ZXING)

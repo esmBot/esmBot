@@ -83,9 +83,7 @@ const std::map<std::string,
                    {"scott", &Scott},
                    {"snapchat", &Snapchat},
                    {"speed", &Speed},
-#ifdef MAGICK_ENABLED
                    {"spin", &Spin},
-#endif
                    {"spotify", &Spotify},
                    {"squish", &Squish},
                    {"swirl", &Swirl},

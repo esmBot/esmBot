@@ -39,9 +39,7 @@ declare_input_func(Reverse);
 declare_input_func(Scott);
 declare_input_func(Snapchat);
 declare_input_func(Speed);
-#if MAGICK_ENABLED
 declare_input_func(Spin);
-#endif
 declare_input_func(Spotify);
 declare_input_func(Squish);
 declare_input_func(Swirl);

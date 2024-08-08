@@ -1,78 +1,62 @@
-#ifdef MAGICK_ENABLED
-#include <Magick++.h>
-
-#include <cstring>
-#include <iostream>
-#include <list>
+#include <vips/vips8>
 
 #include "common.h"
 
 using namespace std;
-using namespace Magick;
+using namespace vips;
 
-ArgumentMap Spin(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize)
-{
-  int delay = GetArgumentWithFallback<int>(arguments, "delay", 0);
+ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
+                 size_t bufferLength, [[maybe_unused]] ArgumentMap arguments,
+                 size_t& dataSize) {
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
+                                      type == "gif"
+                                          ? VImage::option()->set("n", -1)->set(
+                                                "access", "sequential")
+                                          : 0)
+                  .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
-  Blob blob;
+  int width = in.width();
+  int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
-  list<Image> frames;
-  list<Image> coalesced;
-  list<Image> mid;
   try {
-    readImages(&frames, Blob(bufferdata, bufferLength));
-  } catch (Magick::WarningCoder &warning) {
-    cerr << "Coder Warning: " << warning.what() << endl;
-  } catch (Magick::Warning &warning) {
-    cerr << "Warning: " << warning.what() << endl;
-  }
-  coalesceImages(&coalesced, frames.begin(), frames.end());
-
-  if (type != "gif") {
-    list<Image>::iterator it = coalesced.begin();
-    for (int i = 0; i < 29; ++i) {
-      coalesced.push_back(*it);
+    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+  } catch (int e) {
+    if (e == -1) {
+      ArgumentMap output;
+      output["buf"] = "";
+      outType = "frames";
+      return output;
     }
   }
 
-  int i = 0;
-  for (Image &image : coalesced) {
-    image.virtualPixelMethod(Magick::TransparentVirtualPixelMethod);
-    image.scale(Geometry("256x256"));
-    image.alphaChannel(Magick::SetAlphaChannel);
-    double rotation[1] = {(double)360 * i / coalesced.size()};
-    image.distort(Magick::ScaleRotateTranslateDistortion, 1, rotation);
-    image.magick("GIF");
-    mid.push_back(image);
-    i++;
+  vector<VImage> img;
+  for (int i = 0; i < nPages; i++) {
+    VImage img_frame =
+        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    double rotation = (double)360 * i / nPages;
+    VImage rotated = img_frame.similarity(
+        VImage::option()->set("angle", rotation));
+    VImage embedded = rotated.embed(
+        (width / 2) - (rotated.width() / 2),
+        (pageHeight / 2) - (rotated.height() / 2), width, pageHeight);
+    img.push_back(embedded);
+  }
+  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+  final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+  if (type != "gif") {
+    vector<int> delay(30, 50);
+    final.set("delay", delay);
   }
 
-  for_each(mid.begin(), mid.end(),
-           gifDisposeMethodImage(Magick::BackgroundDispose));
-
-  optimizeTransparency(mid.begin(), mid.end());
-  if (delay != 0) {
-    for_each(mid.begin(), mid.end(), animationDelayImage(delay));
-  } else if (type != "gif") {
-    for_each(mid.begin(), mid.end(), animationDelayImage(5));
-  }
-
-  for (Image &image : mid) {
-    image.quantizeDitherMethod(FloydSteinbergDitherMethod);
-    image.quantize();
-  }
-
-  writeImages(mid.begin(), mid.end(), &blob);
+  char* buf;
+  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
   outType = "gif";
-  dataSize = blob.length();
 
-  char *data = reinterpret_cast<char*>(malloc(dataSize));
-  memcpy(data, blob.data(), dataSize);
-  
   ArgumentMap output;
-  output["buf"] = data;
+  output["buf"] = buf;
 
   return output;
 }
-#endif
