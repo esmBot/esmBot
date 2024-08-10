@@ -1,4 +1,4 @@
-import { paths, commands, messageCommands, info, categories, aliases as _aliases } from "./collections.js";
+import { paths, commands, messageCommands, userCommands, info, categories, aliases as _aliases } from "./collections.js";
 import { log } from "./logger.js";
 
 import commandConfig from "../config/commands.json" with { type: "json" };
@@ -23,7 +23,7 @@ export async function load(client, command) {
     return;
   }
 
-  if (category === "message") {
+  if (category === "message" || category === "user") {
     const nameStringArray = commandName.split("-");
     for (const index of nameStringArray.keys()) {
       nameStringArray[index] = nameStringArray[index].charAt(0).toUpperCase() + nameStringArray[index].slice(1);
@@ -50,6 +50,9 @@ export async function load(client, command) {
   if (category === "message") {
     messageCommands.set(commandName, props);
     commandInfo.type = Constants.ApplicationCommandTypes.MESSAGE;
+  } else if (category === "user") {
+    userCommands.set(commandName, props);
+    commandInfo.type = Constants.ApplicationCommandTypes.USER;
   } else {
     commands.set(commandName, props);
   }
@@ -95,7 +98,7 @@ function parseFlags(flags) {
 export function update() {
   const commandArray = [];
   const privateCommandArray = [];
-  const merged = new Map([...commands, ...messageCommands]);
+  const merged = new Map([...commands, ...messageCommands, ...userCommands]);
   for (const [name, command] of merged.entries()) {
     let cmdInfo = info.get(name);
     if (command.postInit) {
@@ -114,7 +117,7 @@ export function update() {
       };
       info.set(name, cmdInfo);
     }
-    if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE) {
+    if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE || cmdInfo?.type === Constants.ApplicationCommandTypes.USER) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         type: cmdInfo.type,

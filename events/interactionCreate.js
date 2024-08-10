@@ -1,6 +1,6 @@
 import database from "../utils/database.js";
 import logger from "../utils/logger.js";
-import { collectors, commands, messageCommands } from "../utils/collections.js";
+import { collectors, commands, messageCommands, userCommands } from "../utils/collections.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { InteractionTypes } from "oceanic.js";
@@ -27,11 +27,8 @@ export default async (client, interaction) => {
 
   // check if command exists and if it's enabled
   const command = interaction.data.name;
-  let cmd = commands.get(command);
-  if (!cmd) {
-    cmd = messageCommands.get(command);
-    if (!cmd) return;
-  }
+  const cmd = commands.get(command) ?? messageCommands.get(command) ?? userCommands.get(command);
+  if (!cmd) return;
 
   try {
     await interaction.defer((cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false)) ? 64 : undefined);
