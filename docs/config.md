@@ -64,6 +64,7 @@ The JSON-based configuration files are located in `config/`.
   ],
   "image": [ // Objects containing info for connecting to WS image server(s)
     {
+      "name": "test", // A human-friendly name for the server
       "server": "localhost", // IP address or domain name for the server
       "auth": "verycoolpass100", // Password/authorization code for the server
       "tls": false // Whether or not this is a secure TLS/wss connection

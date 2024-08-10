@@ -18,9 +18,8 @@ class ImageStatsCommand extends Command {
     let i = 0;
     for (const connection of connections.values()) {
       const count = await connection.getCount();
-      if (!count) continue;
       embed.embeds[0].fields.push({
-        name: `Server ${i++}`,
+        name: `Server ${i++}${connection.name ? ` (${connection.name})` : ""}`,
         value: `Running Jobs: ${count}`
       });
     }

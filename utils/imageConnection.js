@@ -14,10 +14,11 @@ const Rsent = 0x09;
 const Rclose = 0xFF;
 
 class ImageConnection {
-  constructor(host, auth, tls = false) {
+  constructor(host, auth, name, tls = false) {
     this.requests = new Map();
     this.host = host.includes(":") ? host : `${host}:3762`;
     this.auth = auth;
+    this.name = name;
     this.tag = 0;
     this.disconnected = false;
     this.formats = {};

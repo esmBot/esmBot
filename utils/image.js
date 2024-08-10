@@ -96,9 +96,11 @@ export async function getType(image, extraReturnTypes) {
 /**
  * @param {string} server
  * @param {string} auth
+ * @param {string | undefined} name
+ * @param {boolean} tls
  */
-function connect(server, auth) {
-  const connection = new ImageConnection(server, auth);
+function connect(server, auth, name, tls) {
+  const connection = new ImageConnection(server, auth, name, tls);
   connections.set(server, connection);
 }
 
@@ -120,7 +122,7 @@ export async function reloadImageConnections() {
   let amount = 0;
   for (const server of servers) {
     try {
-      connect(server.server, server.auth);
+      connect(server.server, server.auth, server.name, server.tls);
       amount += 1;
     } catch (e) {
       logger.error(e);
