@@ -5,8 +5,9 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    const cmd = (this.interaction?.data.options.getString("command") ?? this.args.join(" ")).trim().toLowerCase();
-    if (cmd && (collections.commands.has(cmd) || collections.aliases.has(cmd))) {
+    const cmd = (this.interaction?.data.options.getString("command") ?? this.args.join(" ")).trim();
+    const merged = new Map([...collections.commands, ...collections.messageCommands, ...collections.userCommands]);
+    if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
       const counts = await database.getCounts();
       return `The command \`${command}\` has been run a total of ${counts[command]} times.`;
