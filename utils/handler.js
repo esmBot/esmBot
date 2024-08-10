@@ -10,8 +10,9 @@ let queryValue = 0;
  * Load a command into memory.
  * @param {import("oceanic.js").Client | null} client
  * @param {string} command
+ * @param {boolean} skipSend
  */
-export async function load(client, command) {
+export async function load(client, command, skipSend = false) {
   const { default: props } = await import(`${command}?v=${queryValue}`);
   queryValue++;
   const commandArray = command.split("/");
@@ -57,7 +58,7 @@ export async function load(client, command) {
     commands.set(commandName, props);
   }
 
-  if (client && props.slashAllowed) {
+  if (client && props.slashAllowed && !skipSend) {
     await send(client);
   }
 
