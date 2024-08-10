@@ -9,6 +9,7 @@ class TagsCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return "This command only works in servers!";
+    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
     const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.interaction?.data.options.getString("name");

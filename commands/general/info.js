@@ -4,6 +4,10 @@ import { getServers } from "../../utils/misc.js";
 
 class InfoCommand extends Command {
   async run() {
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
     if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
     const servers = await getServers(this.client);

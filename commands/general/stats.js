@@ -7,6 +7,10 @@ import { getServers } from "../../utils/misc.js";
 
 class StatsCommand extends Command {
   async run() {
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);

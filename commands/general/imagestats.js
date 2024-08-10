@@ -3,6 +3,10 @@ import { connections } from "../../utils/image.js";
 
 class ImageStatsCommand extends Command {
   async run() {
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     await this.acknowledge();
     const embed = {
       embeds: [{

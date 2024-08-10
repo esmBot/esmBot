@@ -5,10 +5,14 @@ import { random } from "../../utils/misc.js";
 import paginator from "../../utils/pagination/pagination.js";
 import * as help from "../../utils/help.js";
 import Command from "../../classes/command.js";
-const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://esmbot.net/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional.", "esmBot is hosted and paid for completely out-of-pocket by the main developer. If you want to support development, please consider donating! https://patreon.com/TheEssem"];
+const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://esmbot.net/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional.", "esmBot is hosted and paid for completely out-of-pocket by the main developer. If you want to support development, please consider leaving a tip! https://ko-fi.com/TheEssem"];
 
 class HelpCommand extends Command {
   async run() {
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     let prefix;
     if (this.guild && database) {
       prefix = (await database.getGuild(this.guild.id)).prefix;
@@ -61,10 +65,6 @@ class HelpCommand extends Command {
       }
       return embed;
     } else {
-      if (!this.permissions.has("EMBED_LINKS")) {
-        this.success = false;
-        return "I don't have the `Embed Links` permission!";
-      }
       const pages = [];
       if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
       for (const category of Object.keys(help.categories)) {

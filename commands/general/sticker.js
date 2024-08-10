@@ -3,6 +3,10 @@ import imagedetect from "../../utils/imagedetect.js";
 
 class StickerCommand extends Command {
   async run() {
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     const result = await imagedetect(this.client, this.message, this.interaction, this.options, false, false, true);
     this.success = false;
     if (!result) return "You need to provide a sticker!";

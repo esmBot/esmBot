@@ -9,6 +9,10 @@ class PlayCommand extends MusicCommand {
       this.success = false;
       return "This command only works in servers!";
     }
+    if (!this.permissions.has("EMBED_LINKS")) {
+      this.success = false;
+      return "I don't have the `Embed Links` permission!";
+    }
     const input = this.options.query ?? this.args.join(" ");
     if (!input && (!this.message || this.message?.attachments.size <= 0)) {
       this.success = false;
