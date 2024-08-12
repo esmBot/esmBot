@@ -46,7 +46,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
   try {
     imageURL = new URL(image);
     if (!imageURL.host) throw null;
-    if (imageURL.protocol !== "http" && imageURL.protocol !== "https") throw null;
+    if (imageURL.protocol !== "http:" && imageURL.protocol !== "https:") throw null;
   } catch {
     return {
       url: image2,
