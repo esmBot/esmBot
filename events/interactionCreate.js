@@ -33,7 +33,7 @@ export default async (client, interaction) => {
   try {
     await interaction.defer((cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false)) ? 64 : undefined);
   } catch (e) {
-    logger.error(`Could not defer interaction, cannot continue further: ${e}`);
+    logger.warn(`Could not defer interaction, cannot continue further: ${e}`);
     return;
   }
 
