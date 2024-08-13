@@ -28,10 +28,9 @@ export default async (client, member, oldChannel) => {
         content: "🔊 Waiting 10 seconds for someone to return..."
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, true, member.id);
-      awaitRejoin.once("end", async (rejoined, newMember, cancel) => {
+      awaitRejoin.once("end", async (rejoined, newMember) => {
         isWaiting.delete(oldChannel.id);
         if (rejoined) {
-          if (cancel) return;
           connection.player.setPaused(false);
           if (member.id !== newMember.id) {
             players.set(connection.voiceChannel.guildID, { player: connection.player, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
@@ -51,7 +50,6 @@ export default async (client, member, oldChannel) => {
           } catch {
             logger.warn(`Failed to delete wait message ${waitMessage.id}`);
           }
-          if (cancel) return;
           await handleExit(client, connection);
         }
       });

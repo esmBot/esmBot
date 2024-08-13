@@ -3,12 +3,16 @@ import { EventEmitter } from "node:events";
 import { random } from "./misc.js";
 
 class AwaitRejoin extends EventEmitter {
+  /**
+   * @param {import("oceanic.js").VoiceChannel | import("oceanic.js").StageChannel} channel
+   * @param {boolean} anyone
+   * @param {string} memberID
+   */
   constructor(channel, anyone, memberID) {
     super();
     this.member = memberID;
     this.anyone = anyone;
     this.channel = channel;
-    this.rejoined = false;
     this.ended = false;
     this.bot = channel.client;
     this.listener = (member, newChannel) => this.verify(member, newChannel);
@@ -18,17 +22,22 @@ class AwaitRejoin extends EventEmitter {
     this.checkInterval = setInterval(() => this.verify({ id: memberID }, channel, true), 1000);
   }
 
+  /**
+   * @param {import("oceanic.js").Member | { id: string; }} member
+   * @param {{ id: string; }} channel
+   * @param {boolean} [checked]
+   */
   verify(member, channel, checked) {
     if (this.channel.id === channel.id) {
       if ((this.member === member.id && this.channel.voiceMembers.has(member.id)) || (this.anyone && !checked)) {
         clearTimeout(this.stopTimeout);
-        this.rejoined = true;
-        this.stop(member);
+        this.stop(member, true);
         return true;
-      } else if (this.anyone && (!checked || this.channel.voiceMembers.size > 1)) {
+      }
+      const filteredMembers = this.channel.voiceMembers.filter((i) => i.id !== this.bot.user.id && !i.bot);
+      if (this.anyone && (!checked || filteredMembers.length > 0)) {
         clearTimeout(this.stopTimeout);
-        this.rejoined = true;
-        this.stop(random(this.channel.voiceMembers.filter((i) => i.id !== this.bot.user.id && !i.bot)));
+        this.stop(random(filteredMembers), true);
         return true;
       }
     } else {
@@ -36,13 +45,17 @@ class AwaitRejoin extends EventEmitter {
     }
   }
 
-  stop(member) {
+  /**
+   * @param {import("oceanic.js").Member | { id: string; }} [member]
+   * @param {boolean} [rejoined]
+   */
+  stop(member, rejoined = false) {
     if (this.ended) return;
     this.ended = true;
     clearInterval(this.checkInterval);
     this.bot.removeListener("voiceChannelJoin", this.listener);
     this.bot.removeListener("voiceChannelSwitch", this.listener);
-    this.emit("end", this.rejoined, member);
+    this.emit("end", rejoined, member);
   }
 }
 
