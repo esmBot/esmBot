@@ -146,7 +146,7 @@ class ImageCommand extends Command {
 
   processMessage(channel) {
     return channel.createMessage({
-      content: `${random(messages.emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`
+      content: `${random(messages.emotes) || "⚙️"} Processing... This might take a while`
     });
   }
 
