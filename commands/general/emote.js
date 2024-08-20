@@ -1,4 +1,4 @@
-import emojiRegex from "emoji-regex";
+import emojiRegex from "emoji-regex-xs";
 import Command from "../../classes/command.js";
 
 class EmoteCommand extends Command {

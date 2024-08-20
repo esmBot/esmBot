@@ -32,7 +32,7 @@
     "better-sqlite3": "^11.1.2",
     "bufferutil": "^4.0.8",
     "dotenv": "^16.4.5",
-    "emoji-regex": "^10.3.0",
+    "emoji-regex-xs": "^1.0.0",
     "file-type": "^19.4.1",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.2.0",

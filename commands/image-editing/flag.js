@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import emojiRegex from "emoji-regex";
+import emojiRegex from "emoji-regex-xs";
 import ImageCommand from "../../classes/imageCommand.js";
 
 class FlagCommand extends ImageCommand {

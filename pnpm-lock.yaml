@@ -17,9 +17,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      emoji-regex:
-        specifier: ^10.3.0
-        version: 10.3.0
+      emoji-regex-xs:
+        specifier: ^1.0.0
+        version: 1.0.0
       file-type:
         specifier: ^19.4.1
         version: 19.4.1
@@ -689,8 +689,8 @@ packages:
   electron-to-chromium@1.5.12:
     resolution: {integrity: sha512-tIhPkdlEoCL1Y+PToq3zRNehUaKp3wBX/sr7aclAWdIWjvqAe/Im/H0SiCM4c1Q8BLPHCdoJTol+ZblflydehA==}
 
-  emoji-regex@10.3.0:
-    resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
+  emoji-regex-xs@1.0.0:
+    resolution: {integrity: sha512-LRlerrMYoIDrT6jgpeZ2YYl/L8EulRTt5hQcYjy5AInh7HWXKimpqx68aknBFpGL2+/IcogTcaydJEgaTmOpDg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2547,7 +2547,7 @@ snapshots:
 
   electron-to-chromium@1.5.12: {}
 
-  emoji-regex@10.3.0: {}
+  emoji-regex-xs@1.0.0: {}
 
   emoji-regex@8.0.0: {}
 
