@@ -19,11 +19,8 @@ ArgumentMap Blur(const string& type, string& outType, const char* bufferdata, si
 
   if (!in.has_alpha()) in = in.bandjoin(255);
 
-  // TODO: find a better way to calculate the intensity for GIFs without
-  // splitting frames
   VImage out =
-      sharp ? in.sharpen(VImage::option()->set("sigma", 3)) : in.gaussblur(15);
-
+      sharp ? in.sharpen(VImage::option()->set("sigma", 3)) : in.gaussblur(5);
 
   char* buf;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
