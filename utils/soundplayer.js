@@ -109,7 +109,6 @@ export async function play(client, soundUrl, options) {
       break;
   }
   if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
-  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   const playerMeta = players.get(options.guild.id);
   let player;
   if (manager.players.has(voiceChannel.guildID)) {
@@ -127,6 +126,7 @@ export async function play(client, soundUrl, options) {
     deaf: true
   });
 
+  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   if (oldQueue?.length) {
     return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : "(blank)")}\` has been added to the queue!`;
   }
