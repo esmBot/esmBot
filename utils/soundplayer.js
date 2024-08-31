@@ -201,7 +201,11 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
-  await connection.playTrack({ track });
+  await connection.playTrack({
+    track: {
+      encoded: track
+    }
+  });
   players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
