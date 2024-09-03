@@ -1,4 +1,4 @@
-import { manager, players, queues, skipVotes } from "../../utils/soundplayer.js";
+import { leaveChannel, players, queues, skipVotes } from "../../utils/soundplayer.js";
 import MusicCommand from "../../classes/musicCommand.js";
 
 class StopCommand extends MusicCommand {
@@ -11,7 +11,7 @@ class StopCommand extends MusicCommand {
     players.delete(this.guild.id);
     queues.delete(this.guild.id);
     skipVotes.delete(this.guild.id);
-    await manager.leaveVoiceChannel(this.guild.id);
+    await leaveChannel(this.guild.id);
     this.success = true;
     return this.connection ? `🔊 The voice channel session in \`${this.connection.voiceChannel.name}\` has ended.` : "🔊 The current voice channel session has ended.";
   }

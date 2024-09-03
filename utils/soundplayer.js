@@ -62,6 +62,13 @@ export async function reload(client) {
 }
 
 /**
+ * @param {string} id
+ */
+export async function leaveChannel(id) {
+  await manager.leaveVoiceChannel(id);
+}
+
+/**
  * @param {import("oceanic.js").Client} client
  * @param {string} soundUrl
  * @param {Options} options

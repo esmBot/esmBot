@@ -1,4 +1,4 @@
-import { manager, players, queues, skipVotes } from "../utils/soundplayer.js";
+import { leaveChannel, players, queues, skipVotes } from "../utils/soundplayer.js";
 import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
 import logger from "../utils/logger.js";
@@ -102,7 +102,7 @@ async function handleExit(client, connection) {
   queues.delete(connection.originalChannel.guildID);
   skipVotes.delete(connection.originalChannel.guildID);
   try {
-    await manager.leaveVoiceChannel(connection.originalChannel.guildID);
+    await leaveChannel(connection.originalChannel.guildID);
   } catch {
     logger.warn(`Failed to leave voice channel ${connection.originalChannel.guildID}`);
   }
