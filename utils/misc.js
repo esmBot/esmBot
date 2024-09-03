@@ -106,7 +106,7 @@ export function getServers(bot) {
             reject(err);
             return;
           }
-          const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+          const managerProc = list.find((v) => v.name === "esmBot-manager");
           if (!managerProc) {
             pm2Bus.off("process:msg");
             return resolve(bot.guilds.size);

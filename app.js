@@ -201,7 +201,7 @@ if (process.env.PM2_USAGE) {
         logger.error(err);
         return;
       }
-      const managerProc = list.filter((v) => v.name === "esmBot-manager")[0];
+      const managerProc = list.find((v) => v.name === "esmBot-manager");
       pm2Bus.on("process:msg", async (packet) => {
         switch (packet.data?.type) {
           case "reload":
@@ -247,6 +247,7 @@ if (!connected) connect(client);
 
 try {
   await client.connect();
+
 } catch (e) {
   logger.error("esmBot failed to connect to Discord!");
   logger.error(e);
