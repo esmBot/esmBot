@@ -16,6 +16,7 @@ These variables that are not necessarily required for the bot to run, but can gr
 
 - `STAYVC`: Set this to true if you want the bot to stay in voice chat after playing music/a sound effect. You can make it leave by using the stop command.
 - `TENOR`: An API token from [Tenor](https://tenor.com/gifapi). This is required for using GIFs from Tenor.
+- `SENTRY_DSN`: A DSN endpoint URL from [Sentry](https://sentry.io). This is a fully optional integration for error monitoring and statistics.
 - `OUTPUT`: A directory to output the help documentation in Markdown format to. It's recommended to set this to a directory being served by a web server.
 - `TEMPDIR`: A directory that will store generated images larger than 25MB. It's recommended to set this to a directory being served by a web server.
 - `TMP_DOMAIN`: The root domain/directory that the images larger than 25MB are stored at. Example: `https://projectlounge.pw/tmp`

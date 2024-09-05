@@ -6,6 +6,11 @@ import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
 
+let Sentry;
+if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
+  Sentry = await import("@sentry/node");
+}
+
 let mentionRegex;
 
 /**
@@ -160,6 +165,13 @@ export default async (client, message) => {
       }
     }
   } catch (error) {
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
+      tags: {
+        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+        command,
+        args: JSON.stringify(preArgs)
+      }
+    });
     if (error.toString().includes("Request entity too large")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
         content: "The resulting file was too large to upload. Try again with a smaller image if possible."

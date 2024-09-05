@@ -57,6 +57,8 @@
     "eslint-plugin-unicorn": "^55.0.0"
   },
   "optionalDependencies": {
+    "@sentry/node": "^8.28.0",
+    "@sentry/profiling-node": "^8.28.0",
     "pm2": "^5.4.2"
   },
   "binary": {

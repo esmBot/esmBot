@@ -5,6 +5,11 @@ import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { InteractionTypes } from "oceanic.js";
 
+let Sentry;
+if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
+  Sentry = await import("@sentry/node");
+}
+
 /**
  * Runs when a slash command/interaction is executed.
  * @param {import("oceanic.js").Client} client
@@ -86,6 +91,13 @@ export default async (client, interaction) => {
       }, result));
     }
   } catch (error) {
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
+      tags: {
+        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+        command,
+        args: JSON.stringify(interaction.data.options.raw)
+      }
+    });
     if (error.toString().includes("Request entity too large")) {
       await interaction.createFollowup({ content: "The resulting file was too large to upload. Try again with a smaller image if possible.", flags: 64 });
     } else if (error.toString().includes("Job ended prematurely")) {
