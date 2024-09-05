@@ -13,7 +13,7 @@ class ImageSearchCommand extends Command {
     const embeds = [];
     const rawImages = await fetch(`${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`).then(res => res.json());
     if (rawImages.results.length === 0) return "I couldn't find any results!";
-    const images = rawImages.results.filter((val) => !val.img_src.startsWith("data:"));
+    const images = rawImages.results.filter((val) => val.img_src.startsWith("https://"));
     for (const [i, value] of images.entries()) {
       embeds.push({
         embeds: [{
