@@ -9,7 +9,7 @@ export function getString(key, locale = process.env.LOCALE ?? "en-US") {
   const splitKey = key.split(".");
   let string;
   try {
-    string = splitKey.reduce((prev, cur) => prev[cur], obj);
+    string = splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || key;
   } catch {
     try {
       string = splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US"));
