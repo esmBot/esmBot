@@ -7,7 +7,17 @@ import { locales } from "./collections.js";
 export function getString(key, locale = process.env.LOCALE ?? "en-US") {
   const obj = locales.get(locale);
   const splitKey = key.split(".");
-  return splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || key;
+  let string;
+  try {
+    string = splitKey.reduce((prev, cur) => prev[cur], obj);
+  } catch {
+    try {
+      string = splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US"));
+    } catch {
+      return key;
+    }
+  }
+  return string;
 }
 
 export function getAllLocalizations(key) {
