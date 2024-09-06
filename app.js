@@ -223,7 +223,7 @@ if (process.env.PM2_USAGE) {
       pm2Bus.on("process:msg", async (packet) => {
         switch (packet.data?.type) {
           case "reload":
-            await load(client, paths.get(packet.data.message.command), packet.data.message.skipsend);
+            await load(client, paths.get(packet.data.message), true);
             break;
           case "soundreload":
             await reload(client);
