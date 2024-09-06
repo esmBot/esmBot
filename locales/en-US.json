@@ -1,0 +1,78 @@
+{
+  "commands": {
+    "descriptions": {
+      "bounce": "Makes an image bounce up and down",
+      "caption": "Adds a caption to an image"
+    },
+    "flagNames": {
+      "caption": {
+        "font": "font",
+        "noegg": "noegg"
+      }
+    },
+    "flags": {
+      "caption": {
+        "font": "Specify the font you want to use (default: futura)",
+        "noegg": "Disable... something. Not saying what it is though."
+      }
+    },
+    "names": {
+      "bounce": "bounce",
+      "caption": "caption",
+      "Select Image": "Select Image"
+    },
+    "noImage": {
+      "bounce": "You need to provide an image/GIF to bounce!",
+      "caption": "You need to provide an image/GIF to add a caption!"
+    },
+    "noText": {
+      "caption": "You need to provide some text to add a caption!"
+    }
+  },
+  "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",
+  "image": {
+    "badurl": "That URL is invalid!",
+    "couldNotFind": "I couldn't find an image in that message!",
+    "empty": "The resulting output was empty!",
+    "flagNames": {
+      "ephemeral": "ephemeral",
+      "image": "image",
+      "link": "link",
+      "spoiler": "spoiler",
+      "text": "text",
+      "togif": "togif"
+    },
+    "flags": {
+      "ephemeral": "Attempt to send output as an ephemeral/temporary response",
+      "image": "An image/GIF attachment",
+      "link": "An image/GIF URL",
+      "spoiler": "Attempt to send output as a spoiler",
+      "text": "The text to put on the image",
+      "togif": "Force GIF output"
+    },
+    "frames": "That GIF has way too many frames (over 1000)!",
+    "jobEnded": "Something happened to the image servers before I could receive the image. Try running your command again.",
+    "large": "That image is too large (>= 40MB)! Try using a smaller image.",
+    "noAttachFiles": "I don't have the `Attach Files` permission!",
+    "nocmd": "That command isn't supported on this instance of esmBot.",
+    "nogif": "That isn't a GIF!",
+    "noImage": "You need to provide an image/GIF!",
+    "noResult": "I couldn't get a response from the image server. Please try again.",
+    "noServers": "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.",
+    "noTempServer": "The resulting image was more than 25MB in size, so I can't upload it.",
+    "noText": "You need to provide some text!",
+    "processing": "Processing... This might take a while",
+    "ratelimit": "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.",
+    "selected": "The image has been selected for your next command.",
+    "slowDown": "Please slow down a bit.",
+    "tempImageSent": "Here's your image!",
+    "tempSite": "The result image was more than 25MB in size, so it was uploaded to an external site instead.",
+    "tenor": "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.",
+    "timeout": "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.",
+    "tip": "(Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)",
+    "tooLarge": "The resulting file was too large to upload. Try again with a smaller image if possible.",
+    "tooLong": "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.",
+    "tryAgain": "This image job couldn't be completed because the server it was running on went down. Try running your command again.",
+    "unknown": "The image output wasn't in a recognizable format. Please try again."
+  }
+}

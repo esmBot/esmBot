@@ -3,6 +3,7 @@ import { log } from "./logger.js";
 
 import commandConfig from "../config/commands.json" with { type: "json" };
 import { Constants } from "oceanic.js";
+import { getAllLocalizations } from "./i18n.js";
 
 let queryValue = 0;
 
@@ -121,6 +122,7 @@ export function update() {
     if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE || cmdInfo?.type === Constants.ApplicationCommandTypes.USER) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
+        nameLocalizations: getAllLocalizations(`commands.names.${name}`),
         type: cmdInfo.type,
         integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
@@ -128,8 +130,10 @@ export function update() {
     } else if (cmdInfo?.slashAllowed) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name,
+        nameLocalizations: getAllLocalizations(`commands.names.${name}`),
         type: cmdInfo.type,
         description: cmdInfo.description,
+        descriptionLocalizations: getAllLocalizations(`commands.descriptions.${name}`),
         options: cmdInfo.flags,
         integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)

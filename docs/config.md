@@ -10,6 +10,7 @@ To make managing environment variables easier, an example `.env` file is include
 - `DB`: The database connection string. By default the `sqlite` and `postgresql` protocols are available, but this can be expanded by putting proper DB driver scripts into `utils/database/`.
 - `OWNER`: Your Discord user ID. This is used for granting yourself access to certain management commands. Adding multiple users is supported by separating the IDs with a comma; however, this is not recommended for security purposes.
 - `PREFIX`: The bot's default command prefix for classic commands. Note that servers can set their own individual prefixes via the `prefix` command.
+- `LOCALE`: The default language/locale for messages sent by the bot. A corresponding locale JSON must be present in the `locales` directory, and if the command is an interaction, it will be overridden by the user's set client language.
 
 ### Optional
 These variables that are not necessarily required for the bot to run, but can greatly enhance its functionality:

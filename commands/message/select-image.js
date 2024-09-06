@@ -11,22 +11,22 @@ class SelectImageCommand extends Command {
     });
     this.success = false;
     if (image === undefined) {
-      return "I couldn't find an image in that message!";
+      return this.getString("image.couldNotFind");
     }
     if (image.type === "large") {
-      return "That image is too large (>= 40MB)! Try using a smaller image.";
+      return this.getString("image.large");
     }
     if (image.type === "tenorlimit") {
-      return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
+      return this.getString("image.tenor");
     }
     if (image.type === "timeout") {
-      return "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.";
+      return this.getString("image.timeout");
     }
     if (image.type === "badurl") {
-      return "That URL is invalid!";
+      return this.getString("image.badurl");
     }
     selectedImages.set(this.author.id, image);
-    return "The image has been selected for your next command.";
+    return this.getString("image.selected");
   }
 
   static ephemeral = true;

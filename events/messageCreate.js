@@ -5,6 +5,7 @@ import parseCommand from "../utils/parseCommand.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
+import { getString } from "../utils/i18n.js";
 
 let Sentry;
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
@@ -174,11 +175,11 @@ export default async (client, message) => {
     });
     if (error.toString().includes("Request entity too large")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "The resulting file was too large to upload. Try again with a smaller image if possible."
+        content: getString("image.tooLarge")
       }, reference));
     } else if (error.toString().includes("Job ended prematurely")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "Something happened to the image servers before I could receive the image. Try running your command again."
+        content: getString("image.jobEnded")
       }, reference));
     } else if (error.toString().includes("Timed out")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
@@ -190,7 +191,7 @@ export default async (client, message) => {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await client.rest.channels.createMessage(message.channelID, Object.assign({
-          content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
+          content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
             contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"

@@ -44,7 +44,7 @@ const exec = promisify(baseExec);
 // initialize command loader
 import { load } from "./utils/handler.js";
 // command collections
-import { paths } from "./utils/collections.js";
+import { locales, paths } from "./utils/collections.js";
 // database stuff
 import database from "./utils/database.js";
 // lavalink stuff
@@ -69,15 +69,16 @@ if (commandConfig.types.classic) {
 
 /**
  * @param {string} dir
+ * @param {string} ext
  * @returns {AsyncGenerator<string>}
  */
-async function* getFiles(dir) {
+async function* getFiles(dir, ext = ".js") {
   const dirents = await promises.readdir(dir, { withFileTypes: true });
   for (const dirent of dirents) {
     const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
     if (dirent.isDirectory()) {
-      yield* getFiles(name);
-    } else if (dirent.name.endsWith(".js")) {
+      yield* getFiles(name, ext);
+    } else if (dirent.name.endsWith(ext)) {
       yield name;
     }
   }
@@ -123,6 +124,21 @@ if (database) {
 if (process.env.TEMPDIR && process.env.THRESHOLD) {
   await parseThreshold();
 }
+
+// register locales
+logger.log("info", "Attempting to load locale data...");
+for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./locales/"), ".json")) {
+  logger.log("main", `Loading locales from ${localeFile}...`);
+  try {
+    const commandArray = localeFile.split("/");
+    const localeName = commandArray[commandArray.length - 1].split(".")[0];
+    const data = await promises.readFile(localeFile, { encoding: "utf8" });
+    locales.set(localeName, JSON.parse(data));
+  } catch (e) {
+    logger.error(`Failed to register locales from ${localeFile}: ${e}`);
+  }
+}
+logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");

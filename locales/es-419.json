@@ -1,0 +1,76 @@
+{
+  "commands": {
+    "descriptions": {
+      "bounce": "Hace rebotar una imágen",
+      "caption": "Añade un encabezado a una imágen"
+    },
+    "flagNames": {
+      "caption": {
+        "font": "fuente",
+        "noegg": "sinhuevo"
+      }
+    },
+    "flags": {
+      "caption": {
+        "font": "Elige qué fuente usar (por defecto: futura)",
+        "noegg": "Desactiva... algo. Pero no te diré qué."
+      }
+    },
+    "names": {
+      "bounce": "rebotar",
+      "caption": "encabezado",
+      "Select Image": "Seleccionar imágen"
+    },
+    "noImage": {
+      "bounce": "¡Necesitas subir una imágen o GIF para que rebote!",
+      "caption": "¡Necesitas subir una imágen o GIF para añadirle un encabezado!"
+    },
+    "noText": {
+      "caption": "¡Necesitas incluir un texto para añadirlo como encabezado!"
+    }
+  },
+  "error": "¡Ups! Encontré un error al correr ese comando. Por favor, envía el contenido del archivo adjunto en el siguiente link o en el servidor de soporte de esmBot:",
+  "image": {
+    "badurl": "¡Esa URL no es válida!",
+    "couldNotFind": "¡No encontré una imágen en ese mensaje!",
+    "empty": "¡El resultado está vacío!",
+    "flagNames": {
+      "ephemeral": "efímero",
+      "image": "imagen",
+      "text": "texto",
+      "togif": "agif"
+    },
+    "flags": {
+      "ephemeral": "Intenta enviar el resultado como una respuesta temporaria/efímera",
+      "image": "Una imágen o GIF adjunto",
+      "link": "Una URL de una imágen o GIF",
+      "spoiler": "Intenta enviar el resultado como un spoiler",
+      "text": "El texto que irá en la imágen",
+      "togif": "Forzar un GIF como resultado"
+    },
+    "frames": "¡Ese GIF tiene demasiados frames (más de 1000)!",
+    "jobEnded": "Sucedió algo en los servidores y no recibí la imágen. Intenta correr el comando de nuevo.",
+    "large": "¡Esa imágen es demasiado grande (>= 40MB)! Intenta subir una imágen más pequeña.",
+    "noAttachFiles": "¡No tengo el permiso `Adjuntar archivos` activado!",
+    "nocmd": "Ese comando no tiene soporte en esta instancia de esmBot.",
+    "nogif": "¡Eso no es un GIF!",
+    "noImage": "¡Necesitas subir una imágen o GIF!",
+    "noResult": "No recibí respuesta del servidor de imágenes. Por favor inténtalo de nuevo.",
+    "noServers": "No me pude conectar a los servidores de imágenes, puede que estén caídos o que se estén reiniciando. Por favor espera.",
+    "noTempServer": "La imágen que resultó del comando pesa más de 25MB, así que no la puedo subir.",
+    "noText": "¡Necesitas incluir un texto!",
+    "processing": "Procesando... Puede que esto tarde.",
+    "ratelimit": "El servidor en el que está subida tu imágen está bloqueándome temporariamente. Intenta subir tu imágen a otro lado.",
+    "selected": "Se he seleccionado la imágen para tu siguiente comando.",
+    "slowDown": "Por favor, ve más despacio.",
+    "tempImageSent": "¡Aquí está tu imágen!",
+    "tempSite": "La imágen que resultó del comando pesa más de 25MB, así que se subió a una página externa.",
+    "tenor": "Tenor tiene actualmente una tasa limitada. Intenta subir tu GIF a otro lado.",
+    "timeout": "Recuperar la imágen del servidor tardó demasiado. Por favor intenta de nuevo, sube tu imágen a otro lado, o usa otra imágen.",
+    "tip": "(Consejo: intenta hacer click derecho/mantener presionado un mensaje y presionar Apps -> Seleccionar imágen, e intentálo de nuevo.)",
+    "tooLarge": "El archivo que resultó es demasiado grande. Si es posible, intenta subir una imágen más pequeña.",
+    "tooLong": "La imágen tardó demasiado en ser procesada (>=10 minutes), así que se canceló el trabajo. Intenta subir una imágen más pequeña.",
+    "tryAgain": "Este trabajo de imágen no se pudo completar porque el servidor en el que corría se apagó. Intenta correr el comando de nuevo.",
+    "unknown": "La imágen que resultó no estaba en un formato reconocible. Por favor inténtalo de nuevo."
+  }
+}
