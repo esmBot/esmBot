@@ -1,6 +1,6 @@
 {
   "name": "esmbot",
-  "version": "2024.8.1",
+  "version": "2024.9.0",
   "description": "A Discord bot with miscellaneous features",
   "exports": "./app.js",
   "bin": "./app.js",
