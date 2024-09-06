@@ -8,7 +8,7 @@ Here are some instructions to get esmBot up and running from source.
     - Linux-based operating system or virtual machine ([Ubuntu](https://ubuntu.com/download/server) or [Fedora](https://getfedora.org/) are recommended)
 
 !!! warning
-    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
+    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/windows/wsl/install) is recommended. This guide is somewhat centered around Unix-like systems, so for now you're mostly on your own if you decide not to use WSL.
 
 If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://esmbot.net/support).
 

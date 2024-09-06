@@ -60,7 +60,7 @@ Some options are only available depending on the context/original message type, 
 - `this.message`: An Oceanic [`Message`](https://docs.oceanic.ws/latest/classes/Message.Message.html) object of the message that the command was run from, useful for interaction.
 - `this.args`: An array of text arguments passed to the command.
 - `this.content`: A string of the raw content of the command message, excluding the prefix and command name.
-- `this.reference`: An object that's useful if you ever decide to reply to a user inside the command. You can use [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) to combine your message content with this parameter.
+- `this.reference`: An object that's useful if you ever decide to reply to a user inside the command. You can use [`Object.assign`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) to combine your message content with this parameter.
 
 The options only available with application (slash and context menu) commands are listed below:
 
@@ -88,4 +88,4 @@ static flags = [{
 - `adminOnly`: Specifies whether or not a command should be limited to the bot owner(s).
 
 ## The `run` Function
-The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.
+The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.
