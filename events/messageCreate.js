@@ -75,8 +75,10 @@ export default async (client, message) => {
   const command = shifted.toLowerCase();
   const aliased = aliases.get(command);
 
+  const cmdName = aliased ?? command;
+
   // check if command exists and if it's enabled
-  const cmd = commands.get(aliased ?? command);
+  const cmd = commands.get(cmdName);
   if (!cmd) return;
 
   // block certain commands from running in DMs
@@ -105,7 +107,7 @@ export default async (client, message) => {
       disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
       disabledCmds = guildDB.disabled_commands ?? guildDB.disabledCommands;
     }
-    if (disabledCmds.includes(aliased ?? command)) return;
+    if (disabledCmds.includes(cmdName)) return;
   }
 
   // actually run the command
@@ -126,7 +128,7 @@ export default async (client, message) => {
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime.getTime() - startTime.getTime()) >= 180000) reference.allowedMentions.repliedUser = true;

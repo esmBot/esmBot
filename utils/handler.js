@@ -36,12 +36,14 @@ export async function load(client, command, skipSend = false) {
   props.init();
   paths.set(commandName, command);
 
+  const extendedFlags = extendFlags(props.flags, commandName);
+
   const commandInfo = {
     category: category,
     description: props.description,
     aliases: props.aliases,
     params: parseFlags(props.flags),
-    flags: props.flags,
+    flags: extendedFlags,
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
     userAllowed: props.userAllowed,
@@ -95,6 +97,20 @@ function parseFlags(flags) {
     }
   }
   return params;
+}
+
+function extendFlags(flags, name) {
+  const outFlags = [];
+  for (const flag of flags) {
+    if (!flag.nameLocalizations) flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
+    if (!flag.descriptionLocalizations) flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
+    if (flag.type === 1 && flag.options) {
+      const nameWithFlag = `${name} ${flag.name}`;
+      extendFlags(flag.options, nameWithFlag);
+    }
+    outFlags.push(flag);
+  }
+  return outFlags;
 }
 
 export function update() {

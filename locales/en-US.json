@@ -1,32 +1,640 @@
 {
   "commands": {
     "descriptions": {
+      "8ball": "Asks the magic 8-ball a question",
+      "ancient": "Gets a random ancient meme",
+      "bird": "Gets a random bird picture",
+      "cat": "Gets a random cat picture",
+      "dice": "Rolls the dice",
+      "dog": "Gets a random dog picture",
+      "homebrew": "Creates a Homebrew Channel edit",
+      "sonic": "Creates a Sonic speech bubble image",
+      "wikihow": "Gets a random WikiHow image",
+      "avatar": "Gets a user's avatar",
+      "banner": "Gets a user's banner",
+      "base64": "Encodes/decodes a Base64 string",
+      "broadcast": "Broadcasts a playing message until the command is run again or the bot restarts",
+      "channel": "Enables/disables classic commands in a channel (use server settings for slash commands)",
+      "command": "Enables/disables a classic command for a server (use server settings for slash commands)",
+      "count": "Gets how many times every command was used",
+      "donate": "Learn more about how you can support esmBot's development",
+      "emote": "Gets a raw emote image",
+      "eval": "Executes JavaScript code",
+      "exec": "Executes a shell command",
+      "help": "Gets a list of commands",
+      "image": "Searches for images across the web",
+      "imagereload": "Attempts to reconnect to all available image processing servers",
+      "imagestats": "Gets some statistics about the image servers",
+      "info": "Gets some info and credits about me",
+      "lengthen": "Lengthens a short URL",
+      "ping": "Pings Discord's servers",
+      "prefix": "Checks/changes the server prefix",
+      "qrcreate": "Generates a QR code",
+      "qrread": "Reads a QR code",
+      "raw": "Gets a direct image URL (useful for saving GIFs from sites like Tenor)",
+      "reload": "Reloads a command",
+      "restart": "Restarts me",
+      "snowflake": "Converts a Discord snowflake id into a timestamp",
+      "soundreload": "Attempts to reconnect to all available Lavalink nodes",
+      "stats": "Gets some statistics about me",
+      "sticker": "Gets a raw sticker image",
+      "youtube": "Searches YouTube",
+      "9gag": "Adds the 9GAG watermark to an image",
+      "avs4you": "Adds the avs4you watermark to an image",
+      "bandicam": "Adds the Bandicam watermark to an image",
+      "blur": "Blurs an image",
       "bounce": "Makes an image bounce up and down",
-      "caption": "Adds a caption to an image"
+      "caption": "Adds a caption to an image",
+      "caption2": "Adds a bottom caption/tag list to an image",
+      "circle": "Applies a radial blur effect on an image",
+      "crop": "Crops an image to 1:1",
+      "deepfry": "Deep-fries an image",
+      "deviantart": "Adds a DeviantArt watermark to an image",
+      "explode": "Explodes an image",
+      "flag": "Overlays a flag onto an image",
+      "flip": "Flips an image",
+      "flop": "Flips an image",
+      "freeze": "Makes an image sequence only play once",
+      "funky": "Adds the New Funky Mode banner to an image",
+      "gamexplain": "Makes a GameXplain thumbnail from an image",
+      "gif": "Converts an image into a GIF",
+      "globe": "Spins an image",
+      "grayscale": "Adds a grayscale filter",
+      "haah": "Mirrors the left side of an image onto the right",
+      "hooh": "Mirrors the bottom of an image onto the top",
+      "hypercam": "Adds the Hypercam watermark to an image",
+      "ifunny": "Adds the iFunny watermark to an image",
+      "implode": "Implodes an image",
+      "invert": "Inverts an image",
+      "jpeg": "Adds JPEG compression to an image",
+      "kinemaster": "Adds the KineMaster watermark to an image",
+      "magik": "Adds a content aware scale effect to an image",
+      "meme": "Generates a meme from an image (separate top/bottom text with a comma)",
+      "memecenter": "Adds the MemeCenter watermark to an image",
+      "motivate": "Generates a motivational poster",
+      "pixelate": "Pixelates an image",
+      "reddit": "Adds a Reddit watermark to an image",
+      "reverse": "Reverses an image sequence",
+      "scott": "Makes Scott the Woz show off an image",
+      "sepia": "Adds a sepia filter",
+      "sharpen": "Sharpens an image",
+      "shutterstock": "Adds the Shutterstock watermark to an image",
+      "slow": "Makes an image sequence slower",
+      "snapchat": "Adds a Snapchat style caption to an image",
+      "soos": "\"Loops\" an image sequence by reversing it when it's finished",
+      "speechbubble": "Adds a speech bubble to an image",
+      "speed": "Makes an image sequence faster",
+      "spin": "Spins an image",
+      "spotify": "Adds a Spotify \"This is\" header to an image",
+      "squish": "Squishes/stretches an image",
+      "stretch": "Stretches an image to a 1:1 aspect ratio",
+      "swirl": "Swirls an image",
+      "tile": "Creates a tile pattern from an image",
+      "uncanny": "Makes a Mr. Incredible Becomes Uncanny image (separate left/right text with a comma)",
+      "uncaption": "Removes the caption from an image",
+      "unfreeze": "Unfreezes an image sequence",
+      "vignette": "Adds a vignette to an image",
+      "waaw": "Mirrors the right side of an image onto the left",
+      "wall": "Creates a wall from an image",
+      "whisper": "Adds a Whisper style caption to an image",
+      "wide": "Stretches an image to 19x its width",
+      "woow": "Mirrors the top of an image onto the bottom",
+      "Select Image": "No description found",
+      "host": "Gets or changes the host of the current voice session",
+      "loop": "Loops the music",
+      "music": "Handles music playback",
+      "nowplaying": "Shows the currently playing song",
+      "play": "Plays a song or adds it to the queue",
+      "queue": "Shows the current queue",
+      "remove": "Removes a song from the queue",
+      "seek": "Seeks to a different position in the music",
+      "shuffle": "Shuffles the music",
+      "skip": "Skips the current song",
+      "stop": "Stops the music",
+      "toggle": "Pauses/resumes the current song",
+      "volume": "Sets the volume of the music",
+      "tags": "The main tags command. Check the help page for more info: https://esmbot.net/help.html"
     },
     "flagNames": {
+      "8ball": {
+        "question": "question"
+      },
+      "dice": {
+        "max": "max"
+      },
+      "avatar": {
+        "member": "member"
+      },
+      "banner": {
+        "member": "member"
+      },
+      "base64": {
+        "decode": "decode",
+        "encode": "encode"
+      },
+      "base64 decode": {
+        "text": "text"
+      },
+      "base64 encode": {
+        "text": "text"
+      },
+      "broadcast": {
+        "message": "message"
+      },
+      "channel": {
+        "enable": "enable",
+        "disable": "disable"
+      },
+      "channel enable": {
+        "text": "text"
+      },
+      "channel disable": {
+        "text": "text"
+      },
+      "command": {
+        "enable": "enable",
+        "disable": "disable"
+      },
+      "command enable": {
+        "text": "text"
+      },
+      "command disable": {
+        "text": "text"
+      },
+      "count": {
+        "command": "command"
+      },
+      "emote": {
+        "emoji": "emoji"
+      },
+      "eval": {
+        "code": "code"
+      },
+      "exec": {
+        "cmd": "cmd"
+      },
+      "help": {
+        "command": "command"
+      },
+      "image": {
+        "query": "query"
+      },
+      "lengthen": {
+        "url": "url"
+      },
+      "prefix": {
+        "prefix": "prefix"
+      },
+      "reload": {
+        "cmd": "cmd",
+        "skipsend": "skipsend"
+      },
+      "snowflake": {
+        "id": "id"
+      },
+      "youtube": {
+        "query": "query"
+      },
       "caption": {
+        "noegg": "noegg",
+        "font": "font"
+      },
+      "caption2": {
+        "top": "top",
+        "font": "font"
+      },
+      "freeze": {
+        "endframe": "endframe"
+      },
+      "jpeg": {
+        "quality": "quality"
+      },
+      "meme": {
+        "case": "case",
+        "font": "font"
+      },
+      "motivate": {
+        "font": "font"
+      },
+      "slow": {
+        "multiplier": "multiplier"
+      },
+      "snapchat": {
+        "position": "position"
+      },
+      "speechbubble": {
+        "alpha": "alpha",
+        "flip": "flip",
+        "bottom": "bottom",
+        "scale": "scale"
+      },
+      "speed": {
+        "multiplier": "multiplier"
+      },
+      "uncanny": {
         "font": "font",
-        "noegg": "noegg"
+        "phase": "phase"
+      },
+      "uncaption": {
+        "tolerance": "tolerance"
+      },
+      "host": {
+        "user": "user"
+      },
+      "play": {
+        "query": "query"
+      },
+      "remove": {
+        "position": "position"
+      },
+      "seek": {
+        "position": "position"
+      },
+      "volume": {
+        "level": "level"
+      },
+      "tags": {
+        "add": "add",
+        "delete": "delete",
+        "edit": "edit",
+        "get": "get",
+        "list": "list",
+        "owner": "owner",
+        "random": "random"
+      },
+      "tags add": {
+        "name": "name",
+        "content": "content"
+      },
+      "tags delete": {
+        "name": "name"
+      },
+      "tags edit": {
+        "name": "name",
+        "content": "content"
+      },
+      "tags get": {
+        "name": "name"
+      },
+      "tags owner": {
+        "name": "name"
       }
     },
     "flags": {
+      "8ball": {
+        "question": "A question you want to ask the ball"
+      },
+      "dice": {
+        "max": "The maximum dice value"
+      },
+      "avatar": {
+        "member": "The member to get the avatar from"
+      },
+      "banner": {
+        "member": "The member to get the banner from"
+      },
+      "base64": {
+        "decode": "Decodes a Base64 string",
+        "encode": "Encodes a Base64 string"
+      },
+      "base64 decode": {
+        "text": "The text to decode"
+      },
+      "base64 encode": {
+        "text": "The text to encode"
+      },
+      "broadcast": {
+        "message": "The message to broadcast"
+      },
+      "channel": {
+        "enable": "Enables classic commands in a channel",
+        "disable": "Disables classic commands in a channel"
+      },
+      "channel enable": {
+        "text": "The text to decode"
+      },
+      "channel disable": {
+        "text": "The text to encode"
+      },
+      "command": {
+        "enable": "Enables a classic command",
+        "disable": "Disables a classic command"
+      },
+      "command enable": {
+        "text": "The text to decode"
+      },
+      "command disable": {
+        "text": "The text to encode"
+      },
+      "count": {
+        "command": "A specific command to view counts for"
+      },
+      "emote": {
+        "emoji": "The emoji you want to get"
+      },
+      "eval": {
+        "code": "The code to execute"
+      },
+      "exec": {
+        "cmd": "The command to execute"
+      },
+      "help": {
+        "command": "A command to view info about"
+      },
+      "image": {
+        "query": "The query you want to search for"
+      },
+      "lengthen": {
+        "url": "The URL you want to lengthen"
+      },
+      "prefix": {
+        "prefix": "The server prefix you want to use"
+      },
+      "reload": {
+        "cmd": "The command to reload",
+        "skipsend": "Skips sending new application command data to Discord"
+      },
+      "snowflake": {
+        "id": "A snowflake ID"
+      },
+      "youtube": {
+        "query": "The query you want to search for"
+      },
       "caption": {
-        "font": "Specify the font you want to use (default: futura)",
-        "noegg": "Disable... something. Not saying what it is though."
+        "noegg": "Disable... something. Not saying what it is though.",
+        "font": "Specify the font you want to use (default: futura)"
+      },
+      "caption2": {
+        "top": "Put the caption on the top of an image instead of the bottom",
+        "font": "Specify the font you want to use (default: helvetica)"
+      },
+      "freeze": {
+        "endframe": "Set the end frame (default: last frame)"
+      },
+      "jpeg": {
+        "quality": "Set the JPEG quality (default: 1)"
+      },
+      "meme": {
+        "case": "Make the meme text case-sensitive (allows for lowercase text)",
+        "font": "Specify the font you want to use (default: impact)"
+      },
+      "motivate": {
+        "font": "Specify the font you want to use (default: times)"
+      },
+      "slow": {
+        "multiplier": "Set the speed multiplier (default: 2)"
+      },
+      "snapchat": {
+        "position": "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.565)"
+      },
+      "speechbubble": {
+        "alpha": "Make the top of the speech bubble transparent",
+        "flip": "Flips the speech bubble",
+        "bottom": "Puts the speech bubble on the bottom of the image",
+        "scale": "A multiplier to resize the speech bubble (0.01 is smallest, 1.0 is largest, default is 0.2)"
+      },
+      "speed": {
+        "multiplier": "Set the speed multiplier (default: 2)"
+      },
+      "uncanny": {
+        "font": "Specify the font you want to use (default: helvetica)",
+        "phase": "Specify the uncanny image you want to use"
+      },
+      "uncaption": {
+        "tolerance": "Set the shade tolerance for the caption detection (0.0 is highest, 1.0 is lowest, default is 0.95)"
+      },
+      "host": {
+        "user": "The user you want the new host to be"
+      },
+      "play": {
+        "query": "An audio search query or URL"
+      },
+      "remove": {
+        "position": "The queue position you want to remove"
+      },
+      "seek": {
+        "position": "Seek to this position"
+      },
+      "volume": {
+        "level": "The volume level"
+      },
+      "tags": {
+        "add": "Adds a new tag",
+        "delete": "Deletes a tag",
+        "edit": "Edits an existing tag",
+        "get": "Gets a tag",
+        "list": "Lists every tag in this server",
+        "owner": "Gets the owner of a tag",
+        "random": "Gets a random tag"
+      },
+      "tags add": {
+        "name": "The name of the tag",
+        "content": "The content of the tag"
+      },
+      "tags delete": {
+        "name": "The name of the tag"
+      },
+      "tags edit": {
+        "name": "The name of the tag",
+        "content": "The content of the tag"
+      },
+      "tags get": {
+        "name": "The name of the tag"
+      },
+      "tags owner": {
+        "name": "The name of the tag"
       }
     },
     "names": {
+      "8ball": "8ball",
+      "ancient": "ancient",
+      "bird": "bird",
+      "cat": "cat",
+      "dice": "dice",
+      "dog": "dog",
+      "homebrew": "homebrew",
+      "sonic": "sonic",
+      "wikihow": "wikihow",
+      "avatar": "avatar",
+      "banner": "banner",
+      "base64": "base64",
+      "broadcast": "broadcast",
+      "channel": "channel",
+      "command": "command",
+      "count": "count",
+      "donate": "donate",
+      "emote": "emote",
+      "eval": "eval",
+      "exec": "exec",
+      "help": "help",
+      "image": "image",
+      "imagereload": "imagereload",
+      "imagestats": "imagestats",
+      "info": "info",
+      "lengthen": "lengthen",
+      "ping": "ping",
+      "prefix": "prefix",
+      "qrcreate": "qrcreate",
+      "qrread": "qrread",
+      "raw": "raw",
+      "reload": "reload",
+      "restart": "restart",
+      "snowflake": "snowflake",
+      "soundreload": "soundreload",
+      "stats": "stats",
+      "sticker": "sticker",
+      "youtube": "youtube",
+      "9gag": "9gag",
+      "avs4you": "avs4you",
+      "bandicam": "bandicam",
+      "blur": "blur",
       "bounce": "bounce",
       "caption": "caption",
-      "Select Image": "Select Image"
+      "caption2": "caption2",
+      "circle": "circle",
+      "crop": "crop",
+      "deepfry": "deepfry",
+      "deviantart": "deviantart",
+      "explode": "explode",
+      "flag": "flag",
+      "flip": "flip",
+      "flop": "flop",
+      "freeze": "freeze",
+      "funky": "funky",
+      "gamexplain": "gamexplain",
+      "gif": "gif",
+      "globe": "globe",
+      "grayscale": "grayscale",
+      "haah": "haah",
+      "hooh": "hooh",
+      "hypercam": "hypercam",
+      "ifunny": "ifunny",
+      "implode": "implode",
+      "invert": "invert",
+      "jpeg": "jpeg",
+      "kinemaster": "kinemaster",
+      "magik": "magik",
+      "meme": "meme",
+      "memecenter": "memecenter",
+      "motivate": "motivate",
+      "pixelate": "pixelate",
+      "reddit": "reddit",
+      "reverse": "reverse",
+      "scott": "scott",
+      "sepia": "sepia",
+      "sharpen": "sharpen",
+      "shutterstock": "shutterstock",
+      "slow": "slow",
+      "snapchat": "snapchat",
+      "soos": "soos",
+      "speechbubble": "speechbubble",
+      "speed": "speed",
+      "spin": "spin",
+      "spotify": "spotify",
+      "squish": "squish",
+      "stretch": "stretch",
+      "swirl": "swirl",
+      "tile": "tile",
+      "uncanny": "uncanny",
+      "uncaption": "uncaption",
+      "unfreeze": "unfreeze",
+      "vignette": "vignette",
+      "waaw": "waaw",
+      "wall": "wall",
+      "whisper": "whisper",
+      "wide": "wide",
+      "woow": "woow",
+      "Select Image": "Select Image",
+      "host": "host",
+      "loop": "loop",
+      "music": "music",
+      "nowplaying": "nowplaying",
+      "play": "play",
+      "queue": "queue",
+      "remove": "remove",
+      "seek": "seek",
+      "shuffle": "shuffle",
+      "skip": "skip",
+      "stop": "stop",
+      "toggle": "toggle",
+      "volume": "volume",
+      "tags": "tags"
     },
     "noImage": {
+      "qrread": "You need to provide an image/GIF with a QR code to read!",
+      "9gag": "You need to provide an image/GIF to add a 9GAG watermark!",
+      "avs4you": "You need to provide an image/GIF to add an avs4you watermark!",
+      "bandicam": "You need to provide an image/GIF to add a Bandicam watermark!",
+      "blur": "You need to provide an image/GIF to blur!",
       "bounce": "You need to provide an image/GIF to bounce!",
-      "caption": "You need to provide an image/GIF to add a caption!"
+      "caption": "You need to provide an image/GIF to add a caption!",
+      "caption2": "You need to provide an image/GIF to add a caption!",
+      "circle": "You need to provide an image/GIF to add radial blur!",
+      "crop": "You need to provide an image/GIF to crop!",
+      "deepfry": "You need to provide an image/GIF to fry!",
+      "deviantart": "You need to provide an image/GIF to add a DeviantArt watermark!",
+      "explode": "You need to provide an image/GIF to explode!",
+      "flag": "You need to provide an image/GIF to overlay a flag onto!",
+      "flip": "You need to provide an image/GIF to flip!",
+      "flop": "You need to provide an image/GIF to flop!",
+      "freeze": "You need to provide an image/GIF to freeze!",
+      "funky": "You need to provide an image/GIF to add a New Funky Mode banner!",
+      "gamexplain": "You need to provide an image/GIF to make a GameXplain thumbnail from!",
+      "gif": "You need to provide an image to convert to GIF!",
+      "globe": "You need to provide an image/GIF to spin!",
+      "grayscale": "You need to provide an image/GIF to turn grayscale!",
+      "haah": "You need to provide an image/GIF to mirror!",
+      "hooh": "You need to provide an image/GIF to mirror!",
+      "hypercam": "You need to provide an image/GIF to add a Hypercam watermark!",
+      "ifunny": "You need to provide an image/GIF to add an iFunny watermark!",
+      "implode": "You need to provide an image/GIF to implode!",
+      "invert": "You need to provide an image/GIF to invert!",
+      "jpeg": "You need to provide an image/GIF to add more JPEG!",
+      "kinemaster": "You need to provide an image/GIF to add a KineMaster watermark!",
+      "magik": "You need to provide an image/GIF to add some magik!",
+      "meme": "You need to provide an image/GIF to generate a meme!",
+      "memecenter": "You need to provide an image/GIF to add a MemeCenter watermark!",
+      "motivate": "You need to provide an image/GIF to generate a motivational poster!",
+      "pixelate": "You need to provide an image/GIF to pixelate!",
+      "reverse": "You need to provide an image/GIF to reverse!",
+      "scott": "You need to provide an image/GIF for Scott to show off!",
+      "sepia": "You need to provide an image/GIF to add a sepia filter!",
+      "sharpen": "You need to provide an image/GIF to sharpen!",
+      "shutterstock": "You need to provide an image/GIF to add a Shutterstock watermark!",
+      "slow": "You need to provide an image/GIF to slow down!",
+      "snapchat": "You need to provide an image/GIF to add a caption!",
+      "soos": "You need to provide an image/GIF to loop!",
+      "speechbubble": "You need to provide an image/GIF to add a speech bubble!",
+      "speed": "You need to provide an image/GIF to speed up!",
+      "spin": "You need to provide an image/GIF to spin!",
+      "spotify": "You need to provide an image/GIF to add a Spotify \"This is\" header!",
+      "squish": "You need to provide an image/GIF to squish!",
+      "stretch": "You need to provide an image/GIF to stretch!",
+      "swirl": "You need to provide an image/GIF to swirl!",
+      "tile": "You need to provide an image/GIF to tile!",
+      "uncanny": "You need to provide an image/GIF to create an uncanny image!",
+      "uncaption": "You need to provide an image/GIF to uncaption!",
+      "unfreeze": "You need to provide an image/GIF to unfreeze!",
+      "vignette": "You need to provide an image/GIF to add a vignette!",
+      "waaw": "You need to provide an image/GIF to mirror!",
+      "wall": "You need to provide an image/GIF to make a wall!",
+      "whisper": "You need to provide an image/GIF to add a caption!",
+      "wide": "You need to provide an image/GIF to stretch!",
+      "woow": "You need to provide an image/GIF to mirror!"
     },
     "noText": {
-      "caption": "You need to provide some text to add a caption!"
+      "homebrew": "You need to provide some text to make a Homebrew Channel edit!",
+      "sonic": "You need to provide some text to make a Sonic meme!",
+      "qrcreate": "You need to provide some text to generate a QR code!",
+      "caption": "You need to provide some text to add a caption!",
+      "caption2": "You need to provide some text to add a caption!",
+      "flag": "You need to provide an emoji of a flag to overlay!",
+      "meme": "You need to provide some text to generate a meme!",
+      "motivate": "You need to provide some text to generate a motivational poster!",
+      "reddit": "You need to provide some text to add a Reddit watermark!",
+      "snapchat": "You need to provide some text to add a caption!",
+      "spotify": "You need to provide some text to add a Spotify \"This is\" header!",
+      "whisper": "You need to provide some text to add a caption!"
     }
   },
   "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",

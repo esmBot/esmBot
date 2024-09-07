@@ -50,7 +50,7 @@ class ImageCommand extends Command {
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return `${this.constructor.noImage} ${this.getString("image.tip")}`;
+          return `${this.getString(`commands.noImage.${this.cmdName}`, true) || this.getString("image.noImage", true) || this.constructor.noImage} ${this.getString("image.tip")}`;
         }
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
@@ -86,7 +86,7 @@ class ImageCommand extends Command {
       const text = this.options.text ?? this.args.join(" ").trim();
       if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
-        return this.constructor.noText;
+        return this.getString(`commands.noText.${this.cmdName}`, true) || this.getString("image.noText", true) || this.constructor.noText;
       }
     }
 

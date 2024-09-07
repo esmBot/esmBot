@@ -16,6 +16,7 @@ class Command {
     if (options.type === "classic") {
       this.message = options.message;
       this.locale = process.env.LOCALE ?? "en-US";
+      this.cmdName = options.cmdName;
       this.channel = options.message.channel;
       this.guild = options.message.guild;
       this.author = options.message.author;
@@ -38,6 +39,7 @@ class Command {
     } else {
       this.interaction = options.interaction;
       this.locale = options.interaction.locale;
+      this.cmdName = options.interaction.data.name;
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
       if (!options.interaction.authorizingIntegrationOwners || options.interaction.authorizingIntegrationOwners[0] !== undefined) {
@@ -74,8 +76,8 @@ class Command {
   /**
    * @param {string} key
    */
-  getString(key) {
-    return getString(key, this.locale);
+  getString(key, returnNull = false) {
+    return getString(key, this.locale, returnNull);
   }
 
   static init() {
