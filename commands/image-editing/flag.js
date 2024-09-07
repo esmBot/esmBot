@@ -19,7 +19,7 @@ class FlagCommand extends ImageCommand {
     if (matched[0] === "🏳️‍⚧️") path = "assets/images/transflag.png";
     if (!path) {
       const flag = this.ccFromFlag(matched[0]);
-      path = `assets/images/region-flags/png/${flag.toUpperCase()}.png`;
+      path = `assets/images/region-flags/png/${flag?.toUpperCase()}.png`;
     }
     try {
       await fs.promises.access(path);
@@ -35,6 +35,7 @@ class FlagCommand extends ImageCommand {
    */
   ccFromFlag(flag) {
     const codepoints = [...flag].map(c => c.codePointAt() - 127397);
+    if (codepoints.find((v) => v < 65 || v > 90)) return;
     return String.fromCodePoint(...codepoints);
   }
 
