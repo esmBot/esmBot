@@ -155,7 +155,7 @@ export default async (client, message) => {
             await upload(client, result, message);
           } else {
             await client.rest.channels.createMessage(message.channelID, {
-              content: "The resulting image was more than 25MB in size, so I can't upload it."
+              content: getString("image.noTempServer")
             });
           }
         } else {

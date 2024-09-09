@@ -69,7 +69,7 @@ export default async (client, interaction) => {
             await upload(client, result, interaction, commandClass.success, true);
           } else {
             await interaction[replyMethod]({
-              content: "The resulting image was more than 25MB in size, so I can't upload it.",
+              content: getString("image.noTempServer", interaction.locale),
               flags: 64
             });
           }
