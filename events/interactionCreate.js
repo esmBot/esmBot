@@ -44,7 +44,7 @@ export default async (client, interaction) => {
   }
 
   if (cmd.dbRequired && !database) {
-    await interaction.createFollowup({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
+    await interaction.createFollowup({ content: getString("noDatabase", interaction.locale), flags: 64 });
     return;
   }
 

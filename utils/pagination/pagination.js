@@ -1,10 +1,11 @@
 import InteractionCollector from "./awaitinteractions.js";
 import { collectors } from "../collections.js";
 import logger from "../logger.js";
+import { getString } from "../i18n.js";
 
 /**
  * @param {import("oceanic.js").Client} client
- * @param {{ type: string; message: import("oceanic.js").Message; interaction: import("oceanic.js").CommandInteraction; author: import("oceanic.js").User | import("oceanic.js").Member; }} info
+ * @param {{ type: "classic" | "application"; message: import("oceanic.js").Message; interaction: import("oceanic.js").CommandInteraction; author: import("oceanic.js").User | import("oceanic.js").Member; }} info
  * @param {{ embeds: import("oceanic.js").EmbedOptions[]; }[]} pages
  */
 export default async (client, info, pages) => {
@@ -26,7 +27,7 @@ export default async (client, info, pages) => {
       components: [
         {
           type: 2,
-          label: "Back",
+          label: getString("pagination.back", info.type === "application" ? info.interaction.locale : undefined),
           emoji: {
             id: null,
             name: "◀"
@@ -36,7 +37,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: "Forward",
+          label: getString("pagination.forward", info.type === "application" ? info.interaction.locale : undefined),
           emoji: {
             id: null,
             name: "▶"
@@ -46,7 +47,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: "Jump",
+          label: getString("pagination.jump", info.type === "application" ? info.interaction.locale : undefined),
           emoji: {
             id: null,
             name: "🔢"
@@ -56,7 +57,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: "Delete",
+          label: getString("pagination.delete", info.type === "application" ? info.interaction.locale : undefined),
           emoji: {
             id: null,
             name: "🗑"
@@ -122,7 +123,7 @@ export default async (client, info, pages) => {
                 components: [{
                   type: 3,
                   customID: "seekDropdown",
-                  placeholder: "Page Number",
+                  placeholder: getString("pagination.pageNumber", interaction.locale),
                   options: []
                 }]
               }]
@@ -134,7 +135,7 @@ export default async (client, info, pages) => {
               };
               jumpComponents.components[0].components[0].options[i] = payload;
             }
-            const followup = await interaction.createFollowup(Object.assign({ content: "What page do you want to jump to?", flags: 64 }, jumpComponents));
+            const followup = await interaction.createFollowup(Object.assign({ content: getString("pagination.jumpTo", interaction.locale), flags: 64 }, jumpComponents));
             const askMessage = await followup.getMessage();
             const dropdownCollector = new InteractionCollector(client, askMessage);
             let ended = false;
@@ -188,7 +189,7 @@ export default async (client, info, pages) => {
         }
       } else {
         await interaction.createFollowup({
-          content: "You can't change the page on a command you didn't run!",
+          content: getString("pagination.cantChangePage", interaction.locale),
           flags: 64
         });
       }

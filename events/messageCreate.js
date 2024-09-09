@@ -86,7 +86,7 @@ export default async (client, message) => {
 
   if (cmd.dbRequired && !database) {
     await client.rest.channels.createMessage(message.channelID, {
-      content: "This command is unavailable on stateless instances of esmBot."
+      content: getString("noDatabase")
     });
     return;
   }

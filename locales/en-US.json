@@ -682,5 +682,15 @@
     "tooLong": "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.",
     "tryAgain": "This image job couldn't be completed because the server it was running on went down. Try running your command again.",
     "unknown": "The image output wasn't in a recognizable format. Please try again."
+  },
+  "noDatabase": "This command is unavailable on stateless instances of esmBot.",
+  "pagination": {
+    "back": "Back",
+    "cantChangePage": "You can't change the page on a command you didn't run!",
+    "delete": "Delete",
+    "forward": "Forward",
+    "jump": "Jump",
+    "jumpTo": "What page do you want to jump to?",
+    "pageNumber": "Page Number"
   }
 }
