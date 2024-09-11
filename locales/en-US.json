@@ -638,6 +638,7 @@
     }
   },
   "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",
+  "guildOnly": "This command only works in servers!",
   "image": {
     "badurl": "That URL is invalid!",
     "couldNotFind": "I couldn't find an image in that message!",
@@ -692,5 +693,31 @@
     "jump": "Jump",
     "jumpTo": "What page do you want to jump to?",
     "pageNumber": "Page Number"
+  },
+  "sound": {
+    "artist": "Artist",
+    "blank": "(blank)",
+    "cantJoin": "I can't join this voice channel! Make sure I have the right permissions.",
+    "channel": "Channel",
+    "error": "Looks like there was an error during sound playback:",
+    "looping": "Looping?",
+    "no": "No",
+    "node": "Node",
+    "noManager": "The sound commands are still starting up!",
+    "noQueue": "There's nothing in the queue!",
+    "noResponse": "I couldn't get a response from the audio server.",
+    "noSong": "I couldn't find that song!",
+    "notConnected": "I'm not connected to any audio servers!",
+    "notVoiceChannel": "The channel I was given isn't a voice channel!",
+    "noVoiceState": "You need to be in a voice channel first!",
+    "nowPlaying": "Now Playing",
+    "noYouTube": "YouTube playback is disabled on this instance.",
+    "queue": "Queue",
+    "serversDown": "Hmmm, seems that all of the audio servers are down. Try again in a bit.",
+    "title": "Title",
+    "unknown": "Unknown",
+    "waitingForHost": "Waiting 10 seconds for the host to return...",
+    "waitingForSomeone": "Waiting 10 seconds for someone to return...",
+    "yes": "Yes"
   }
 }

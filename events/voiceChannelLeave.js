@@ -3,6 +3,7 @@ import AwaitRejoin from "../utils/awaitrejoin.js";
 import { random } from "../utils/misc.js";
 import logger from "../utils/logger.js";
 import { GuildChannel, VoiceChannel, StageChannel } from "oceanic.js";
+import { getString } from "../utils/i18n.js";
 
 const isWaiting = new Map();
 
@@ -25,7 +26,7 @@ export default async (client, member, oldChannel) => {
       isWaiting.set(oldChannel.id, true);
       connection.player.setPaused(true);
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: "🔊 Waiting 10 seconds for someone to return..."
+        content: `🔊 ${getString("sound.waitingForSomeone")}` // TODO: find a way to get locale
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, true, member.id);
       awaitRejoin.once("end", async (rejoined, newMember) => {
@@ -57,7 +58,7 @@ export default async (client, member, oldChannel) => {
       if (isWaiting.has(oldChannel.id)) return;
       isWaiting.set(oldChannel.id, true);
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: "🔊 Waiting 10 seconds for the host to return..."
+        content: `🔊 ${getString("sound.waitingForHost")}` // TODO: find a way to get locale
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, false, member.id);
       awaitRejoin.once("end", async (rejoined) => {
