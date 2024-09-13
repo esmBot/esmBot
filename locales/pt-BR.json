@@ -12,13 +12,13 @@
     },
     "flags": {
       "caption": {
-        "font": "Especifique a fonte que deseja usar (padrão: futura)",
-        "noegg": "Desative... algo. Não vou dizer o que é."
+        "font": "Especifica a fonte que deseja usar (padrão: futura)",
+        "noegg": "Desativa... algo. Não vou dizer o que é."
       }
     },
     "names": {
       "bounce": "saltar",
-      "caption": "legenda",
+      "caption": "legendar",
       "Select Image": "Selecionar Imagem"
     },
     "noImage": {
@@ -29,7 +29,7 @@
       "caption": "Você precisa enviar texto para colocar na legenda!"
     }
   },
-  "error": "Uh oh! Encontrei um erro ao executar este comando. Informe o conteúdo do arquivo anexado no link a seguir ou no servidor de suporte do esmBot:",
+  "error": "Opa! Encontrei um erro ao executar este comando. Informe o conteúdo do arquivo anexado no link a seguir ou no servidor de suporte do esmBot:",
   "image": {
     "badurl": "Esse link é inválido!",
     "couldNotFind": "Não pude encontrar uma imagem nessa mensagem!",
@@ -48,10 +48,10 @@
       "text": "O texto para colocar na imagem",
       "togif": "Força resultado como GIF"
     },
-    "frames": "Esse GIF tem muitos quadros (mais de 1000)!",
+    "frames": "Esse GIF tem muitas frames (mais de 1000)!",
     "jobEnded": "Algo aconteceu com os servidores de imagem antes que eu pudesse receber a imagem. Tente executar seu comando novamente.",
     "large": "Essa imagem é muito grande (>= 40MB)! Tente usar uma imagem menor.",
-    "noAttachFiles": "Não tenho a permissão de anexar imagem!",
+    "noAttachFiles": "Não tenho a permissão de anexar arquivos!",
     "nocmd": "Esse comando não é compatível com esta instância do esmBot.",
     "nogif": "Isso não é um GIF!",
     "noImage": "Você precisa enviar uma imagem/GIF!",
@@ -65,10 +65,10 @@
     "slowDown": "Por favor, diminua a velocidade um pouco.",
     "tempImageSent": "Aqui está sua imagem!",
     "tempSite": "A imagem resultante tinha mais de 25 MB de tamanho, portanto, foi enviada para um site externo.",
-    "tenor": "Fui parado pela Tenor. Tente enviar seu GIF em outro lugar.",
+    "tenor": "Fui limitado pelo Tenor. Tente enviar seu GIF em outro lugar.",
     "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
     "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente).",
-    "tooLarge": "O arquivo resultante era muito grande para ser enviada. Tente novamente com uma imagem menor, se possível.",
+    "tooLarge": "O arquivo resultante era muito grande para ser enviado. Tente novamente com uma imagem menor, se possível.",
     "tooLong": "A imagem está demorando muito para ser processada (>=10 minutos), por isso o processsamento foi cancelado. Tente usar uma imagem menor.",
     "tryAgain": "Não foi possível concluir o processamento dessa imagem porque o servidor em que ela estava sendo processada caiu. Tente executar seu comando novamente.",
     "unknown": "A imagem resultante não estava em um formato reconhecível. Tente novamente."
