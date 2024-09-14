@@ -26,6 +26,7 @@ theme:
   features:
     - toc.integrate
     - content.tabs.link
+    - content.code.copy
   logo: assets/esmbot.png
   favicon: assets/esmbot.png
   palette:
