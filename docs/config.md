@@ -19,8 +19,8 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `TENOR`: An API token from [Tenor](https://tenor.com/gifapi). This is required for using GIFs from Tenor.
 - `SENTRY_DSN`: A DSN endpoint URL from [Sentry](https://sentry.io). This is a fully optional integration for error monitoring and statistics.
 - `OUTPUT`: A directory to output the help documentation in Markdown format to. It's recommended to set this to a directory being served by a web server.
-- `TEMPDIR`: A directory that will store generated images larger than 25MB. It's recommended to set this to a directory being served by a web server.
-- `TMP_DOMAIN`: The root domain/directory that the images larger than 25MB are stored at. Example: `https://projectlounge.pw/tmp`
+- `TEMPDIR`: A directory that will store generated images larger than Discord's filesize limit. It's recommended to set this to a directory being served by a web server.
+- `TMP_DOMAIN`: The root domain/directory that the images larger than Discord's filesize limit are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
 - `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
 - `API_TYPE`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `config/servers.json`.
