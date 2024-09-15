@@ -34,7 +34,9 @@ plugins:
     allowDirectPlaylistIds: true
     clients: # https://github.com/lavalink-devs/youtube-source#available-clients
       - MUSIC
+      - ANDROID_MUSIC
       - WEB
+      - TVHTML5EMBEDDED
   lavasrc:
     providers:
       - "ytsearch:\"%ISRC%\""
