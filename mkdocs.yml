@@ -45,9 +45,11 @@ plugins:
   - git-revision-date-localized
 extra:
   social:
-    - icon: fontawesome/brands/mastodon 
+    - icon: simple/mastodon
       link: https://wetdry.world/@esmBot
-    - icon: fontawesome/brands/github
+    - icon: simple/bluesky
+      link: https://bsky.app/profile/esmbot.net
+    - icon: simple/github
       link: https://github.com/esmBot
-    - icon: fontawesome/brands/patreon
-      link: https://patreon.com/TheEssem
+    - icon: simple/kofi
+      link: https://ko-fi.com/TheEssem

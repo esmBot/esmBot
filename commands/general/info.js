@@ -46,7 +46,13 @@ class InfoCommand extends Command {
         },
         {
           name: "🐘 Mastodon:",
-          value: "[Click here!](https://wetdry.world/@esmBot)"
+          value: "[Click here!](https://wetdry.world/@esmBot)",
+          inline: true
+        },
+        {
+          name: "🦋 Bluesky:",
+          value: "[Click here!](https://bsky.app/profile/esmbot.net)",
+          inline: true
         }
         ]
       }]
