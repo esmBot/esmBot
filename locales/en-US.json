@@ -635,6 +635,30 @@
       "snapchat": "You need to provide some text to add a caption!",
       "spotify": "You need to provide some text to add a Spotify \"This is\" header!",
       "whisper": "You need to provide some text to add a caption!"
+    },
+    "responses": {
+      "8ball": {
+        "betterNot": "Better not tell you now",
+        "cannotPredict": "Cannot predict now",
+        "certain": "It is certain",
+        "concentrate": "Concentrate and ask again",
+        "decidedly": "It is decidedly so",
+        "definitely": "Yes, definitely",
+        "dontCount": "Don't count on it",
+        "doubtful": "Very doubtful",
+        "hazy": "Reply hazy, try again",
+        "later": "Ask again later",
+        "likely": "Most likely",
+        "outlookBad": "Outlook not so good",
+        "outlookGood": "Outlook good",
+        "rely": "You may rely on it",
+        "replyNo": "My reply is no",
+        "seeIt": "As I see it, yes",
+        "signs": "Signs point to yes",
+        "sourcesNo": "My sources say no",
+        "withoutDoubt": "Without a doubt",
+        "yes": "Yes"
+      }
     }
   },
   "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",
