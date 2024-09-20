@@ -658,6 +658,21 @@
         "sourcesNo": "My sources say no",
         "withoutDoubt": "Without a doubt",
         "yes": "Yes"
+      },
+      "ancient": {
+        "error": "I couldn't get a meme in time. Maybe try again?"
+      },
+      "bird": {
+        "error": "I couldn't get a bird image in time. Maybe try again?"
+      },
+      "cat": {
+        "error": "I couldn't get a cat image in time. Maybe try again?"
+      },
+      "dog": {
+        "error": "I couldn't get a dog image in time. Maybe try again?"
+      },
+      "wikihow": {
+        "error": "I couldn't get a WikiHow image in time. Maybe try again?"
       }
     }
   },

@@ -14,7 +14,7 @@ class CatCommand extends Command {
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;
-        return "I couldn't get a cat image in time. Maybe try again?";
+        return this.getString("commands.responses.cat.error");
       }
     }
   }
