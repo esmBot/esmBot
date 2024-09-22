@@ -7,7 +7,7 @@ class BroadcastCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) {
       this.success = false;
-      return "Only the bot owner can broadcast messages!";
+      return this.getString("commands.responses.broadcast.owner");
     }
     const message = this.options.message ?? this.args.join(" ");
     if (message?.trim()) {
@@ -22,7 +22,7 @@ class BroadcastCommand extends Command {
           }
         });
       }
-      return "Started broadcast.";
+      return this.getString("commands.responses.broadcast.started");
     } else {
       await database.setBroadcast(null);
       endBroadcast(this.client);
@@ -34,7 +34,7 @@ class BroadcastCommand extends Command {
           }
         });
       }
-      return "Ended broadcast.";
+      return this.getString("commands.responses.broadcast.ended");
     }
   }
 

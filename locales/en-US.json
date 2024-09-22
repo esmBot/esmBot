@@ -662,8 +662,16 @@
       "ancient": {
         "error": "I couldn't get a meme in time. Maybe try again?"
       },
+      "base64": {
+        "noCmd": "You need to provide whether you want to encode or decode the text!"
+      },
       "bird": {
         "error": "I couldn't get a bird image in time. Maybe try again?"
+      },
+      "broadcast": {
+        "ended": "Ended broadcast.",
+        "owner": "Only the bot owner can broadcast messages!",
+        "started": "Started broadcast."
       },
       "cat": {
         "error": "I couldn't get a cat image in time. Maybe try again?"
@@ -701,7 +709,6 @@
     "frames": "That GIF has way too many frames (over 1000)!",
     "jobEnded": "Something happened to the image servers before I could receive the image. Try running your command again.",
     "large": "That image is too large (>= 40MB)! Try using a smaller image.",
-    "noAttachFiles": "I don't have the `Attach Files` permission!",
     "nocmd": "That command isn't supported on this instance of esmBot.",
     "nogif": "That isn't a GIF!",
     "noImage": "You need to provide an image/GIF!",
@@ -732,6 +739,10 @@
     "jump": "Jump",
     "jumpTo": "What page do you want to jump to?",
     "pageNumber": "Page Number"
+  },
+  "permissions": {
+    "noAttachFiles": "I don't have the `Attach Files` permission!",
+    "noEmbedLinks": "I don't have the `Embed Links` permission!"
   },
   "sound": {
     "artist": "Artist",

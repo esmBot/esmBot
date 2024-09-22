@@ -9,7 +9,7 @@ class QueueCommand extends MusicCommand {
     if (!this.guild) return this.getString("guildOnly");
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
-    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection;
     if (!player) return "Something odd happened to the voice connection; try playing your song again.";
     const node = nodes.find((val) => val.name === player.player.node.name);

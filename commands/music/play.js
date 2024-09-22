@@ -11,7 +11,7 @@ class PlayCommand extends MusicCommand {
     }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     const input = this.options.query ?? this.args.join(" ");
     if (!input && (!this.message || this.message?.attachments.size <= 0)) {

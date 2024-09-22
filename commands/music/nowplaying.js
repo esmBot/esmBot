@@ -8,7 +8,7 @@ class NowPlayingCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
     if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
-    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection.player;
     if (!player || !player.track) return "I'm not playing anything!";
     const track = await player.node.rest.decode(player.track);

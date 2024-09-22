@@ -51,7 +51,6 @@
     "frames": "¡Ese GIF tiene demasiados fotogramas (más de 1000)!",
     "jobEnded": "Sucedió algo en los servidores y no recibí la imagen. Intenta correr el comando de nuevo.",
     "large": "¡Esa imagen es demasiado grande (>= 40MB)! Intenta subir una imagen más pequeña.",
-    "noAttachFiles": "¡No tengo el permiso `Adjuntar archivos` activado!",
     "nocmd": "Ese comando no tiene soporte en esta instancia de esmBot.",
     "nogif": "¡Eso no es un GIF!",
     "noImage": "¡Necesitas subir una imagen o GIF!",
@@ -72,5 +71,8 @@
     "tooLong": "La imagen tardó demasiado en ser procesada (>=10 minutes), así que se canceló el trabajo. Intenta subir una imagen más pequeña.",
     "tryAgain": "Este trabajo de imagen no se pudo completar porque el servidor en el que corría se apagó. Intenta correr el comando de nuevo.",
     "unknown": "La imagen que resultó no estaba en un formato reconocible. Por favor inténtalo de nuevo."
+  },
+  "permissions": {
+    "noAttachFiles": "¡No tengo el permiso `Adjuntar archivos` activado!"
   }
 }

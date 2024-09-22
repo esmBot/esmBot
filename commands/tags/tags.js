@@ -9,7 +9,7 @@ class TagsCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
-    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
     if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
     const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.interaction?.data.options.getString("name");
@@ -62,7 +62,7 @@ class TagsCommand extends Command {
       }
     }
     if (cmd === "list") {
-      if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+      if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
       const tagList = await database.getTags(this.guild.id);
       const embeds = [];
       const groups = Object.keys(tagList).map((_item, index) => {

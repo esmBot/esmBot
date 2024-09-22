@@ -6,7 +6,7 @@ import Command from "../../classes/command.js";
 class ImageSearchCommand extends Command {
   async run() {
     this.success = false;
-    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const query = this.options.query ?? this.args.join(" ");
     if (!query || !query.trim()) return "You need to provide something to search for!";
     await this.acknowledge();

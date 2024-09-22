@@ -51,7 +51,6 @@
     "frames": "Esse GIF tem muitas frames (mais de 1000)!",
     "jobEnded": "Algo aconteceu com os servidores de imagem antes que eu pudesse receber a imagem. Tente executar seu comando novamente.",
     "large": "Essa imagem é muito grande (>= 40MB)! Tente usar uma imagem menor.",
-    "noAttachFiles": "Não tenho a permissão de anexar arquivos!",
     "nocmd": "Esse comando não é compatível com esta instância do esmBot.",
     "nogif": "Isso não é um GIF!",
     "noImage": "Você precisa enviar uma imagem/GIF!",
@@ -72,5 +71,8 @@
     "tooLong": "A imagem está demorando muito para ser processada (>=10 minutos), por isso o processsamento foi cancelado. Tente usar uma imagem menor.",
     "tryAgain": "Não foi possível concluir o processamento dessa imagem porque o servidor em que ela estava sendo processada caiu. Tente executar seu comando novamente.",
     "unknown": "A imagem resultante não estava em um formato reconhecível. Tente novamente."
+  },
+  "permissions": {
+    "noAttachFiles": "Não tenho a permissão de anexar arquivos!"
   }
 }
