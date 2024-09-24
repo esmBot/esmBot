@@ -11,7 +11,7 @@ class HelpCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     let prefix;
     if (this.guild && database) {

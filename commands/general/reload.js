@@ -18,10 +18,7 @@ class ReloadCommand extends Command {
         type: "process:msg",
         data: {
           type: "reload",
-          message: {
-            command: commandName,
-            skipsend: this.options.skipsend
-          }
+          message: commandName
         }
       });
     }

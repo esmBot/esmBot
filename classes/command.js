@@ -1,4 +1,5 @@
 import { Constants, Permission } from "oceanic.js";
+import { getString } from "../utils/i18n.js";
 
 class Command {
   /**
@@ -14,6 +15,8 @@ class Command {
     this.edit = false;
     if (options.type === "classic") {
       this.message = options.message;
+      this.locale = process.env.LOCALE ?? "en-US";
+      this.cmdName = options.cmdName;
       this.channel = options.message.channel;
       this.guild = options.message.guild;
       this.author = options.message.author;
@@ -35,6 +38,8 @@ class Command {
       };
     } else {
       this.interaction = options.interaction;
+      this.locale = options.interaction.locale;
+      this.cmdName = options.interaction.data.name;
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
       if (!options.interaction.authorizingIntegrationOwners || options.interaction.authorizingIntegrationOwners[0] !== undefined) {
@@ -66,6 +71,13 @@ class Command {
       const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
       await channel.sendTyping();
     }
+  }
+
+  /**
+   * @param {string} key
+   */
+  getString(key, returnNull = false) {
+    return getString(key, this.locale, returnNull);
   }
 
   static init() {

@@ -3,6 +3,7 @@ import { log } from "./logger.js";
 
 import commandConfig from "../config/commands.json" with { type: "json" };
 import { Constants } from "oceanic.js";
+import { getAllLocalizations } from "./i18n.js";
 
 let queryValue = 0;
 
@@ -35,12 +36,14 @@ export async function load(client, command, skipSend = false) {
   props.init();
   paths.set(commandName, command);
 
+  const extendedFlags = extendFlags(props.flags, commandName);
+
   const commandInfo = {
     category: category,
     description: props.description,
     aliases: props.aliases,
     params: parseFlags(props.flags),
-    flags: props.flags,
+    flags: extendedFlags,
     slashAllowed: props.slashAllowed,
     directAllowed: props.directAllowed,
     userAllowed: props.userAllowed,
@@ -96,6 +99,20 @@ function parseFlags(flags) {
   return params;
 }
 
+function extendFlags(flags, name) {
+  const outFlags = [];
+  for (const flag of flags) {
+    if (!flag.nameLocalizations) flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
+    if (!flag.descriptionLocalizations) flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
+    if (flag.type === 1 && flag.options) {
+      const nameWithFlag = `${name} ${flag.name}`;
+      extendFlags(flag.options, nameWithFlag);
+    }
+    outFlags.push(flag);
+  }
+  return outFlags;
+}
+
 export function update() {
   const commandArray = [];
   const privateCommandArray = [];
@@ -121,6 +138,7 @@ export function update() {
     if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE || cmdInfo?.type === Constants.ApplicationCommandTypes.USER) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
+        nameLocalizations: getAllLocalizations(`commands.names.${name}`),
         type: cmdInfo.type,
         integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
@@ -128,8 +146,10 @@ export function update() {
     } else if (cmdInfo?.slashAllowed) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name,
+        nameLocalizations: getAllLocalizations(`commands.names.${name}`),
         type: cmdInfo.type,
         description: cmdInfo.description,
+        descriptionLocalizations: getAllLocalizations(`commands.descriptions.${name}`),
         options: cmdInfo.flags,
         integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
         contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)

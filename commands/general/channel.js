@@ -4,7 +4,7 @@ import Command from "../../classes/command.js";
 class ChannelCommand extends Command {
   async run() {
     this.success = false;
-    if (!this.guild) return "This command only works in servers!";
+    if (!this.guild) return this.getString("guildOnly");
     const owners = process.env.OWNER.split(",");
     if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
     if (this.args.length === 0) return "You need to provide whether I should be enabled or disabled in this channel!";

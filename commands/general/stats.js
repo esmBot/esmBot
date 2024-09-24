@@ -9,7 +9,7 @@ class StatsCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;

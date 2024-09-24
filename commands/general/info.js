@@ -6,7 +6,7 @@ class InfoCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
     if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
@@ -46,7 +46,13 @@ class InfoCommand extends Command {
         },
         {
           name: "🐘 Mastodon:",
-          value: "[Click here!](https://wetdry.world/@esmBot)"
+          value: "[Click here!](https://wetdry.world/@esmBot)",
+          inline: true
+        },
+        {
+          name: "🦋 Bluesky:",
+          value: "[Click here!](https://bsky.app/profile/esmbot.net)",
+          inline: true
         }
         ]
       }]

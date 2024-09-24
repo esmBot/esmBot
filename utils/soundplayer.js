@@ -4,6 +4,7 @@ import format from "format-duration";
 import { Shoukaku, Connectors } from "shoukaku";
 import { setTimeout } from "node:timers/promises";
 import { VoiceChannel } from "oceanic.js";
+import { getString } from "./i18n.js";
 
 /**
  * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
@@ -14,7 +15,7 @@ export const queues = new Map();
 export const skipVotes = new Map();
 
 /**
- * @typedef {{ channel: import("oceanic.js").GuildChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: string; interaction: import("oceanic.js").CommandInteraction }} Options
+ * @typedef {{ channel: import("oceanic.js").GuildChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: "classic" | "application"; interaction: import("oceanic.js").CommandInteraction; locale: string }} Options
  * @type {Shoukaku}
  */
 export let manager;
@@ -62,34 +63,41 @@ export async function reload(client) {
 }
 
 /**
+ * @param {string} id
+ */
+export async function leaveChannel(id) {
+  await manager.leaveVoiceChannel(id);
+}
+
+/**
  * @param {import("oceanic.js").Client} client
  * @param {string} soundUrl
  * @param {Options} options
  */
 export async function play(client, soundUrl, options) {
-  if (!connected) return { content: "I'm not connected to any audio servers!", flags: 64 };
-  if (!manager) return { content: "The sound commands are still starting up!", flags: 64 };
-  if (!options.guild) return { content: "This command only works in servers!", flags: 64 };
-  if (!options.member.voiceState?.channelID) return { content: "You need to be in a voice channel first!", flags: 64 };
-  if (!options.guild.permissionsOf(client.user.id).has("CONNECT")) return { content: "I can't join this voice channel!", flags: 64 };
+  if (!connected) return { content: getString("sound.notConnected", options.locale), flags: 64 };
+  if (!manager) return { content: getString("sound.noManager", options.locale), flags: 64 };
+  if (!options.guild) return { content: getString("guildOnly", options.locale), flags: 64 };
+  if (!options.member.voiceState?.channelID) return { content: getString("sound.noVoiceState", options.locale), flags: 64 };
+  if (!options.guild.permissionsOf(client.user.id).has("CONNECT")) return { content: getString("sound.cantJoin", options.locale), flags: 64 };
   const voiceChannel = options.guild.channels.get(options.member.voiceState.channelID) ?? await client.rest.channels.get(options.member.voiceState.channelID).catch((e) => {
     logger.warn(`Failed to get a voice channel: ${e}`);
   });
-  if (!voiceChannel) return { content: "I can't join this voice channel! Make sure I have the right permissions.", flags: 64 };
-  if (!(voiceChannel instanceof VoiceChannel)) return { content: "The channel I was given isn't a voice channel!", flags: 64 };
-  if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: "I don't have permission to join this voice channel!", flags: 64 };
+  if (!voiceChannel) return { content: getString("sound.cantJoin", options.locale), flags: 64 };
+  if (!(voiceChannel instanceof VoiceChannel)) return { content: getString("sound.notVoiceChannel", options.locale), flags: 64 };
+  if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: getString("sound.cantJoin", options.locale), flags: 64 };
   const node = manager.options.nodeResolver(manager.nodes);
   let response;
   try {
     response = await node?.rest.resolve(soundUrl);
-    if (!response) return { content: "🔊 I couldn't get a response from the audio server.", flags: 64 };
-    if (response.loadType === "empty" || response.loadType === "error") return { content: "I couldn't find that song!", flags: 64 };
+    if (!response) return { content: `🔊 ${getString("sound.noResponse", options.locale)}`, flags: 64 };
+    if (response.loadType === "empty" || response.loadType === "error") return { content: getString("sound.noSong", options.locale), flags: 64 };
   } catch (e) {
     logger.error(e);
-    return { content: "🔊 Hmmm, seems that all of the audio servers are down. Try again in a bit.", flags: 64 };
+    return { content: `🔊 ${getString("sound.serversDown", options.locale)}`, flags: 64 };
   }
   const oldQueue = queues.get(voiceChannel.guildID);
-  if (!response?.data) return { content: "I couldn't find that song!", flags: 64 };
+  if (!response?.data) return { content: getString("sound.noSong", options.locale), flags: 64 };
   let tracks = [];
   let info;
   let playlistInfo;
@@ -108,8 +116,7 @@ export async function play(client, soundUrl, options) {
       tracks = response.data.tracks.map((v) => v.encoded);
       break;
   }
-  if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: "YouTube playback is disabled on this instance.", flags: 64 };
-  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
+  if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: getString("sound.noYouTube", options.locale), flags: 64 };
   const playerMeta = players.get(options.guild.id);
   let player;
   if (manager.players.has(voiceChannel.guildID)) {
@@ -127,8 +134,9 @@ export async function play(client, soundUrl, options) {
     deaf: true
   });
 
+  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   if (oldQueue?.length) {
-    return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : "(blank)")}\` has been added to the queue!`;
+    return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : getString("sound.blank", options.locale))}\` has been added to the queue!`;
   }
 
   nextSong(client, options, connection, tracks[0], info, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
@@ -157,24 +165,24 @@ export async function nextSong(client, options, connection, track, info, voiceCh
         embeds: [{
           color: 16711680,
           author: {
-            name: "Now Playing",
+            name: getString("sound.nowPlaying", options.locale),
             iconURL: client.user.avatarURL()
           },
           fields: [{
-            name: "ℹ️ Title",
-            value: info && info.title.trim() !== "" ? info.title : "(blank)"
+            name: `ℹ️ ${getString("sound.title", options.locale)}`,
+            value: info && info.title.trim() !== "" ? info.title : getString("sound.blank", options.locale)
           },
           {
-            name: "🎤 Artist",
-            value: info && info.author.trim() !== "" ? info.author : "(blank)"
+            name: `🎤 ${getString("sound.artist", options.locale)}`,
+            value: info && info.author.trim() !== "" ? info.author : getString("sound.blank", options.locale)
           },
           {
-            name: "💬 Channel",
+            name: `💬 ${getString("sound.channel", options.locale)}`,
             value: voiceChannel.name
           },
           {
-            name: "🌐 Node",
-            value: connection.node?.name ?? "Unknown"
+            name: `🌐 ${getString("sound.node", options.locale)}`,
+            value: connection.node?.name ?? getString("sound.unknown", options.locale)
           },
           {
             name: `🔘${"▬".repeat(10)}`,
@@ -201,7 +209,11 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   connection.removeAllListeners("exception");
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
-  await connection.playTrack({ track });
+  await connection.playTrack({
+    track: {
+      encoded: track
+    }
+  });
   players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
@@ -290,7 +302,7 @@ export async function errHandle(exception, client, connection, playingMessage, v
   connection.removeAllListeners("stuck");
   connection.removeAllListeners("end");
   try {
-    const content = `🔊 Looks like there was an error regarding sound playback:\n\`\`\`${exception.exception.cause}: ${exception.exception.message}\`\`\``;
+    const content = `🔊 ${getString("sound.error", options.locale)}\n\`\`\`${exception.exception.cause}: ${exception.exception.message}\`\`\``;
     if (options.type === "classic") {
       if (playingMessage.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
     } else {

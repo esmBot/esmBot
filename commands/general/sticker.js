@@ -5,7 +5,7 @@ class StickerCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     const result = await imagedetect(this.client, this.message, this.interaction, this.options, false, false, true);
     this.success = false;

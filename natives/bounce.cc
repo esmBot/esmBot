@@ -39,7 +39,7 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    double height = halfHeight * ((abs(sin(i * mult)) * -1) + 1);
+    double height = halfHeight * (-sin(i * mult) + 1);
     VImage embedded =
         img_frame.embed(0, height, width, pageHeight + halfHeight);
     img.push_back(embedded);

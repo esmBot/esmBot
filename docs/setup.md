@@ -8,7 +8,7 @@ Here are some instructions to get esmBot up and running from source.
     - Linux-based operating system or virtual machine ([Ubuntu](https://ubuntu.com/download/server) or [Fedora](https://getfedora.org/) are recommended)
 
 !!! warning
-    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) is recommended. This guide is somewhat Linux-centric, so for now you're mostly on your own if you decide not to use WSL.
+    If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/windows/wsl/install) is recommended. This guide is somewhat centered around Unix-like systems, so for now you're mostly on your own if you decide not to use WSL.
 
 If you have any further questions regarding setup, feel free to ask in the #support channel on the [esmBot Support server](https://esmbot.net/support).
 
@@ -18,13 +18,13 @@ If you have any further questions regarding setup, feel free to ask in the #supp
 ### 1. Install the required native dependencies.
 Choose the distro you're using below for insallation instructions.
 === "Debian/Ubuntu"
-    These instructions apply to Debian version 12 (bookworm) or Ubuntu version 22.04 (jammy) or later.
+    These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
     ```sh
     sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxingcore-dev
     ```
     On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 === "Fedora/RHEL"
-    These instructions apply to Fedora 36/RHEL 9 or later.
+    These instructions apply to Fedora 38/RHEL 9 or later.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them [here](https://rpmfusion.org/Configuration).
     ```sh
@@ -37,7 +37,7 @@ Choose the distro you're using below for insallation instructions.
     sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
     ```
 === "Alpine"
-    These instructions should apply to the current Edge versions.
+    These instructions should apply to version 3.17 or later.
     ```sh
     sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
     ```

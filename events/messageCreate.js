@@ -5,6 +5,12 @@ import parseCommand from "../utils/parseCommand.js";
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
+import { getString } from "../utils/i18n.js";
+
+let Sentry;
+if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
+  Sentry = await import("@sentry/node");
+}
 
 let mentionRegex;
 
@@ -69,8 +75,10 @@ export default async (client, message) => {
   const command = shifted.toLowerCase();
   const aliased = aliases.get(command);
 
+  const cmdName = aliased ?? command;
+
   // check if command exists and if it's enabled
-  const cmd = commands.get(aliased ?? command);
+  const cmd = commands.get(cmdName);
   if (!cmd) return;
 
   // block certain commands from running in DMs
@@ -78,7 +86,7 @@ export default async (client, message) => {
 
   if (cmd.dbRequired && !database) {
     await client.rest.channels.createMessage(message.channelID, {
-      content: "This command is unavailable on stateless instances of esmBot."
+      content: getString("noDatabase")
     });
     return;
   }
@@ -99,7 +107,7 @@ export default async (client, message) => {
       disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
       disabledCmds = guildDB.disabled_commands ?? guildDB.disabledCommands;
     }
-    if (disabledCmds.includes(aliased ?? command)) return;
+    if (disabledCmds.includes(cmdName)) return;
   }
 
   // actually run the command
@@ -120,7 +128,7 @@ export default async (client, message) => {
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
     // eslint-disable-next-line no-unused-vars
-    const commandClass = new cmd(client, { type: "classic", message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime.getTime() - startTime.getTime()) >= 180000) reference.allowedMentions.repliedUser = true;
@@ -147,7 +155,7 @@ export default async (client, message) => {
             await upload(client, result, message);
           } else {
             await client.rest.channels.createMessage(message.channelID, {
-              content: "The resulting image was more than 25MB in size, so I can't upload it."
+              content: getString("image.noTempServer")
             });
           }
         } else {
@@ -160,13 +168,20 @@ export default async (client, message) => {
       }
     }
   } catch (error) {
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
+      tags: {
+        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+        command,
+        args: JSON.stringify(preArgs)
+      }
+    });
     if (error.toString().includes("Request entity too large")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "The resulting file was too large to upload. Try again with a smaller image if possible."
+        content: getString("image.tooLarge")
       }, reference));
     } else if (error.toString().includes("Job ended prematurely")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "Something happened to the image servers before I could receive the image. Try running your command again."
+        content: getString("image.jobEnded")
       }, reference));
     } else if (error.toString().includes("Timed out")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
@@ -178,7 +193,7 @@ export default async (client, message) => {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await client.rest.channels.createMessage(message.channelID, Object.assign({
-          content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
+          content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
             contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"

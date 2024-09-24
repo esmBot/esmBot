@@ -6,6 +6,7 @@ import { clean, isEmpty, random } from "../utils/misc.js";
 import { selectedImages } from "../utils/collections.js";
 import messages from "../config/messages.json" with { type: "json" };
 import { Constants, CommandInteraction } from "oceanic.js";
+import { getAllLocalizations } from "../utils/i18n.js";
 
 class ImageCommand extends Command {
   /**
@@ -19,13 +20,13 @@ class ImageCommand extends Command {
   async run() {
     this.success = false;
 
-    if (!this.permissions.has("ATTACH_FILES")) return "I don't have the `Attach Files` permission!";
+    if (!this.permissions.has("ATTACH_FILES")) return this.getString("permissions.noAttachFiles");
 
     const timestamp = this.type === "application" && this.interaction ? CommandInteraction.getCreatedAt(this.interaction.id) : this.message?.createdAt ?? new Date();
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
     if (runningCommands.has(this.author?.id) && (runningCommands.get(this.author?.id).getTime() - timestamp.getTime()) < 5000) {
-      return "Please slow down a bit.";
+      return this.getString("image.slowDown");
     }
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
@@ -49,24 +50,24 @@ class ImageCommand extends Command {
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return `${this.constructor.noImage} (Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)`;
+          return `${this.getString(`commands.noImage.${this.cmdName}`, true) || this.getString("image.noImage", true) || this.constructor.noImage} ${this.getString("image.tip")}`;
         }
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
           runningCommands.delete(this.author.id);
-          return "That image is too large (>= 40MB)! Try using a smaller image.";
+          return this.getString("image.large");
         }
         if (image.type === "tenorlimit") {
           runningCommands.delete(this.author.id);
-          return "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.";
+          return this.getString("image.tenor");
         }
         if (image.type === "timeout") {
           runningCommands.delete(this.author.id);
-          return "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.";
+          return this.getString("image.timeout");
         }
         if (image.type === "badurl") {
           runningCommands.delete(this.author.id);
-          return "That URL is invalid!";
+          return this.getString("image.badurl");
         }
         imageParams.path = image.path;
         imageParams.params.type = image.type;
@@ -85,7 +86,7 @@ class ImageCommand extends Command {
       const text = this.options.text ?? this.args.join(" ").trim();
       if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
-        return this.constructor.noText;
+        return this.getString(`commands.noText.${this.cmdName}`, true) || this.getString("image.noText", true) || this.constructor.noText;
       }
     }
 
@@ -111,12 +112,12 @@ class ImageCommand extends Command {
       const buffer = result.buffer;
       const type = result.type;
       if (type === "sent") return;
-      if (type === "frames") return "That GIF has way too many frames (over 1000)!";
-      if (type === "unknown") return "The image output wasn't in a recognizable format. Please try again.";
-      if (type === "noresult") return "I couldn't get a response from the image server. Please try again.";
-      if (type === "ratelimit") return "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.";
-      if (type === "nocmd") return "That command isn't supported on this instance of esmBot.";
-      if (type === "nogif" && this.constructor.requiresGIF) return "That isn't a GIF!";
+      if (type === "frames") return this.getString("image.frames");
+      if (type === "unknown") return this.getString("image.unknown");
+      if (type === "noresult") return this.getString("image.noresult");
+      if (type === "ratelimit") return this.getString("image.ratelimit");
+      if (type === "nocmd") return this.getString("image.nocmd");
+      if (type === "nogif" && this.constructor.requiresGIF) return this.getString("image.nogif");
       if (type === "empty") return this.constructor.empty;
       this.success = true;
       if (type === "text") return {
@@ -129,9 +130,9 @@ class ImageCommand extends Command {
         flags: this.options.ephemeral ? 64 : undefined
       };
     } catch (e) {
-      if (e === "Request ended prematurely due to a closed connection") return "This image job couldn't be completed because the server it was running on went down. Try running your command again.";
-      if (e === "Job timed out" || e === "Timeout") return "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.";
-      if (e === "No available servers") return "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.";
+      if (e === "Request ended prematurely due to a closed connection") return this.getString("image.tryAgain");
+      if (e === "Job timed out" || e === "Timeout") return this.getString("image.tooLong");
+      if (e === "No available servers") return this.getString("image.noServers");
       throw e;
     } finally {
       try {
@@ -146,7 +147,7 @@ class ImageCommand extends Command {
 
   processMessage(channel) {
     return channel.createMessage({
-      content: `${random(messages.emotes) || process.env.PROCESSING_EMOJI || "<a:processing:479351417102925854>"} Processing... This might take a while`
+      content: `${random(messages.emotes) || "⚙️"} ${this.getString("image.processing")}`
     });
   }
 
@@ -155,8 +156,10 @@ class ImageCommand extends Command {
     if (this.requiresText || this.textOptional) {
       this.flags.push({
         name: "text",
+        nameLocalizations: getAllLocalizations("image.flagNames.text"),
         type: Constants.ApplicationCommandOptionTypes.STRING,
         description: "The text to put on the image",
+        descriptionLocalizations: getAllLocalizations("image.flags.text"),
         maxLength: 4096,
         required: !this.textOptional,
         classic: true
@@ -165,30 +168,40 @@ class ImageCommand extends Command {
     if (this.requiresImage) {
       this.flags.push({
         name: "image",
+        nameLocalizations: getAllLocalizations("image.flagNames.image"),
         type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
-        description: "An image/GIF attachment"
+        description: "An image/GIF attachment",
+        descriptionLocalizations: getAllLocalizations("image.flags.image"),
       }, {
         name: "link",
+        nameLocalizations: getAllLocalizations("image.flagNames.link"),
         type: Constants.ApplicationCommandOptionTypes.STRING,
-        description: "An image/GIF URL"
+        description: "An image/GIF URL",
+        descriptionLocalizations: getAllLocalizations("image.flags.link"),
       });
     }
     if (!this.alwaysGIF) {
       this.flags.push({
         name: "togif",
+        nameLocalizations: getAllLocalizations("image.flagNames.togif"),
         type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-        description: "Force GIF output"
+        description: "Force GIF output",
+        descriptionLocalizations: getAllLocalizations("image.flags.togif")
       })
     }
 
     this.flags.push({
       name: "spoiler",
+      nameLocalizations: getAllLocalizations("image.flagNames.spoiler"),
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-      description: "Attempt to send output as a spoiler"
+      description: "Attempt to send output as a spoiler",
+      descriptionLocalizations: getAllLocalizations("image.flags.spoiler")
     }, {
       name: "ephemeral",
+      nameLocalizations: getAllLocalizations("image.flagNames.ephemeral"),
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-      description: "Attempt to send output as an ephemeral/temporary response"
+      description: "Attempt to send output as an ephemeral/temporary response",
+      descriptionLocalizations: getAllLocalizations("image.flags.ephemeral")
     });
     return this;
   }

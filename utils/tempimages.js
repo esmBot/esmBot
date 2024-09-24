@@ -1,5 +1,6 @@
 import logger from "../utils/logger.js";
 import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
+import { getString } from "./i18n.js";
 
 let dirSizeCache;
 
@@ -13,18 +14,18 @@ export async function upload(client, result, context, success = true, interactio
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload = result.name.startsWith("SPOILER_") ? {
-    content: `The result image was more than 25MB in size, so it was uploaded to an external site instead.\n|| ${imageURL} ||`,
+    content: `${getString("image.tempSite", interaction ? context.locale : undefined)}\n|| ${imageURL} ||`,
     flags: result.flags ?? (success ? 0 : 64)
   } : {
     embeds: [{
       color: 16711680,
-      title: "Here's your image!",
+      title: getString("image.tempImageSent", interaction ? context.locale : undefined),
       url: imageURL,
       image: {
         url: imageURL
       },
       footer: {
-        text: "The result image was more than 25MB in size, so it was uploaded to an external site instead."
+        text: getString("image.tempSite", interaction ? context.locale : undefined)
       },
     }],
     flags: result.flags ?? (success ? 0 : 64)

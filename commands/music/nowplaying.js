@@ -4,13 +4,13 @@ import MusicCommand from "../../classes/musicCommand.js";
 class NowPlayingCommand extends MusicCommand {
   async run() {
     this.success = false;
-    if (!this.guild) return "This command only works in servers!";
-    if (!this.member?.voiceState) return "You need to be in a voice channel first!";
+    if (!this.guild) return this.getString("guildOnly");
+    if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
     if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
-    if (!this.permissions.has("EMBED_LINKS")) return "I don't have the `Embed Links` permission!";
+    if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection.player;
-    if (!player) return "I'm not playing anything!";
+    if (!player || !player.track) return "I'm not playing anything!";
     const track = await player.node.rest.decode(player.track);
     const parts = Math.floor((player.position / track.info.length) * 10);
     this.success = true;
@@ -18,24 +18,24 @@ class NowPlayingCommand extends MusicCommand {
       embeds: [{
         color: 16711680,
         author: {
-          name: "Now Playing",
+          name: this.getString("sound.nowPlaying"),
           iconURL: this.client.user.avatarURL()
         },
         fields: [{
-          name: "ℹ️ Title",
-          value: track.info.title ?? "Unknown"
+          name: `ℹ️ ${this.getString("sound.title")}`,
+          value: track.info.title ?? this.getString("sound.unknown")
         },
         {
-          name: "🎤 Artist",
-          value: track.info.author ?? "Unknown"
+          name: `🎤 ${this.getString("sound.artist")}`,
+          value: track.info.author ?? this.getString("sound.unknown")
         },
         {
-          name: "💬 Channel",
+          name: `💬 ${this.getString("sound.channel")}`,
           value: (this.guild.channels.get(this.member.voiceState.channelID) ?? await this.client.rest.channels.get(this.member.voiceState.channelID)).name
         },
         {
-          name: "🌐 Node",
-          value: player.node ? player.node.name : "Unknown"
+          name: `🌐 ${this.getString("sound.node")}`,
+          value: player.node ? player.node.name : this.getString("sound.unknown")
         },
         {
           name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,

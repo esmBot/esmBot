@@ -4,6 +4,12 @@ import { collectors, commands, messageCommands, userCommands } from "../utils/co
 import { clean } from "../utils/misc.js";
 import { upload } from "../utils/tempimages.js";
 import { InteractionTypes } from "oceanic.js";
+import { getString } from "../utils/i18n.js";
+
+let Sentry;
+if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
+  Sentry = await import("@sentry/node");
+}
 
 /**
  * Runs when a slash command/interaction is executed.
@@ -38,7 +44,7 @@ export default async (client, interaction) => {
   }
 
   if (cmd.dbRequired && !database) {
-    await interaction.createFollowup({ content: "This command is unavailable on stateless instances of esmBot.", flags: 64 });
+    await interaction.createFollowup({ content: getString("noDatabase", interaction.locale), flags: 64 });
     return;
   }
 
@@ -63,7 +69,7 @@ export default async (client, interaction) => {
             await upload(client, result, interaction, commandClass.success, true);
           } else {
             await interaction[replyMethod]({
-              content: "The resulting image was more than 25MB in size, so I can't upload it.",
+              content: getString("image.noTempServer", interaction.locale),
               flags: 64
             });
           }
@@ -86,17 +92,24 @@ export default async (client, interaction) => {
       }, result));
     }
   } catch (error) {
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
+      tags: {
+        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+        command,
+        args: JSON.stringify(interaction.data.options.raw)
+      }
+    });
     if (error.toString().includes("Request entity too large")) {
-      await interaction.createFollowup({ content: "The resulting file was too large to upload. Try again with a smaller image if possible.", flags: 64 });
+      await interaction.createFollowup({ content: getString("image.tooLarge", interaction.locale), flags: 64 });
     } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction.createFollowup({ content: "Something happened to the image servers before I could receive the image. Try running your command again.", flags: 64 });
+      await interaction.createFollowup({ content: getString("image.jobEnded", interaction.locale), flags: 64 });
     } else {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await interaction.createFollowup({
-          content: "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server: <https://github.com/esmBot/esmBot/issues>",
+          content: `${getString("error", interaction.locale)} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
             contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"

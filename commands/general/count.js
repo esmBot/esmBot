@@ -14,7 +14,7 @@ class CountCommand extends Command {
     }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
-      return "I don't have the `Embed Links` permission!";
+      return this.getString("permissions.noEmbedLinks");
     }
     const counts = await database.getCounts();
     const countArray = [];

@@ -80,8 +80,8 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
         } else {
           return;
         }
-        if (Number.isNaN(id)) return;
-        const data = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${id}&media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}`);
+        if (Number.isNaN(Number(id))) return;
+        const data = await fetch(`https://tenor.googleapis.com/v2/posts?media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}&ids=${id}`);
         if (data.status === 429) {
           if (extraReturnTypes) {
             payload.type = "tenorlimit";
