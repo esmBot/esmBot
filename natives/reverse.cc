@@ -19,7 +19,7 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
   int nPages = vips_image_get_n_pages(in.get_image());
 
   try {
-    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+    in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
       ArgumentMap output;

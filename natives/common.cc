@@ -22,7 +22,7 @@ void LoadFonts(string basePath)
   }
 }
 
-vips::VImage NormalizeVips(vips::VImage in, string type, int *width, int *pageHeight, int nPages) {
+vips::VImage NormalizeVips(vips::VImage in, int *width, int *pageHeight, int nPages) {
   if (nPages > 1000) {
     throw -1;
   }
@@ -34,7 +34,7 @@ vips::VImage NormalizeVips(vips::VImage in, string type, int *width, int *pageHe
     out = out.resize(800 / maxSize);
     *width = out.width();
     int newHeight = vips_image_get_page_height(out.get_image());
-    *pageHeight = type == "gif" ? newHeight / nPages : newHeight;
+    *pageHeight = nPages > 1 ? newHeight / nPages : newHeight;
   }
 
   return out;
