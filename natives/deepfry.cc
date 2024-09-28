@@ -25,7 +25,7 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
   VImage fried = (in * 1.3 - (255.0 * 1.3 - 255.0)) * 1.5;
 
   VImage final;
-  if (totalHeight > 65500 && type == "gif") {
+  if (totalHeight > 65500 && nPages > 1) {
     vector<VImage> img;
     for (int i = 0; i < nPages; i++) {
       VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
@@ -48,7 +48,7 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
                           VImage::option()->set("Q", 1)->set("strip", true));
     final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-    if (type == "gif") final.set("delay", fried.get_array_int("delay"));
+    if (nPages > 1) final.set("delay", fried.get_array_int("delay"));
   }
 
   char *buf;
