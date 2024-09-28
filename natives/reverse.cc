@@ -9,9 +9,7 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
 {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
-  VOption *options = VImage::option()->set("n", -1);
-
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", options)
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false))
                   .colourspace(VIPS_INTERPRETATION_sRGB);
 
   int width = in.width();
@@ -69,11 +67,11 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
   final.set("delay", delaysOut);
 
-  char *buf;
-  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize,
-                        VImage::option()->set("dither", 0));
+  if (outType != "webp") outType = "gif";
 
-  outType = "gif";
+  char *buf;
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

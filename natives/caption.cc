@@ -12,11 +12,9 @@ ArgumentMap Caption(const string& type, string& outType, const char* bufferdata,
   string font = GetArgument<string>(arguments, "font");
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -54,7 +52,7 @@ ArgumentMap Caption(const string& type, string& outType, const char* bufferdata,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage frame = captionImage.join(
         img_frame, VIPS_DIRECTION_VERTICAL,
         VImage::option()->set("background", 0xffffff)->set("expand", true));

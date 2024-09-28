@@ -13,11 +13,9 @@ ArgumentMap Uncanny(const string& type, string& outType, const char* bufferdata,
   string path = GetArgument<string>(arguments, "path");
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB)
           .extract_band(0, VImage::option()->set("n", 3));
 
@@ -83,7 +81,7 @@ ArgumentMap Uncanny(const string& type, string& outType, const char* bufferdata,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage resized = img_frame.resize(690.0 / (double)width);
     if (resized.height() > 590) {
       double vscale = 590.0 / (double)resized.height();

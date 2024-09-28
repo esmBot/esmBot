@@ -11,17 +11,16 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
 
   char *buf;
 
-  if (type == "gif") {
-    VImage in = VImage::new_from_buffer(
+  VImage in = VImage::new_from_buffer(
                     bufferdata, bufferLength, "",
-                    VImage::option()->set("access", "sequential")->set("n", -1))
-                    .colourspace(VIPS_INTERPRETATION_sRGB);
-    if (!in.has_alpha()) in = in.bandjoin(255);
+                    GetInputOptions(type, true, false));
 
+  int nPages = vips_image_get_n_pages(in.get_image());
+
+  if (nPages > 1) {
     int width = in.width();
     int pageHeight = vips_image_get_page_height(in.get_image());
     int totalHeight = in.height();
-    int nPages = vips_image_get_n_pages(in.get_image());
 
     VImage final;
 
@@ -56,7 +55,6 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
         ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
-    VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "");
     void *jpgBuf;
     in.write_to_buffer(".jpg", &jpgBuf, &dataSize,
                        VImage::option()->set("Q", quality)->set("strip", true));

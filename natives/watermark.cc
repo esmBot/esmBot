@@ -24,11 +24,9 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -89,65 +87,71 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
       break;
   }
 
-  vector<VImage> img;
-  int addedHeight = 0;
-  VImage contentAlpha;
-  VImage frameAlpha;
-  VImage bg;
-  VImage frame;
-  for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    if (append) {
-      VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
-                                       VImage::option()->set("expand", true));
-      addedHeight = watermark.height();
-      img.push_back(appended);
-    } else if (mc) {
-      VImage padded =
-          img_frame.embed(0, 0, width, pageHeight + 15,
-                          VImage::option()->set("background", 0xffffff));
-      VImage composited =
-          padded.composite2(watermark, VIPS_BLEND_MODE_OVER,
-                            VImage::option()
-                                ->set("x", width - 190)
-                                ->set("y", padded.height() - 22));
-      addedHeight = 15;
-      img.push_back(composited);
-    } else {
-      VImage composited;
-      if (alpha) {
-        if (i == 0) {
-          contentAlpha = watermark.extract_band(0).embed(
-              x, y, width, pageHeight,
-              VImage::option()->set("extend", "white"));
-          frameAlpha = watermark.extract_band(1).embed(
-              x, y, width, pageHeight,
-              VImage::option()->set("extend", "black"));
-          bg = frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
-              "interpretation", VIPS_INTERPRETATION_sRGB));
-          frame = bg.bandjoin(frameAlpha);
-          if (outType == "jpg" || outType == "jpeg") {
-            outType = "png";
-          }
-        }
-        VImage content =
-            img_frame.extract_band(0, VImage::option()->set("n", 3))
-                .bandjoin(contentAlpha & img_frame.extract_band(3));
-
-        composited =
-            content.composite2(frame, VIPS_BLEND_MODE_OVER,
-                               VImage::option()->set("x", x)->set("y", y));
+  VImage final;
+  if (!append && !mc && !alpha) {
+    VImage replicated = watermark.embed(x, y, width, pageHeight).replicate(1, nPages);
+    final = in.composite2(replicated, VIPS_BLEND_MODE_OVER);
+  } else {
+    vector<VImage> img;
+    int addedHeight = 0;
+    VImage contentAlpha;
+    VImage frameAlpha;
+    VImage bg;
+    VImage frame;
+    for (int i = 0; i < nPages; i++) {
+      VImage img_frame =
+          nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+      if (append) {
+        VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
+                                        VImage::option()->set("expand", true));
+        addedHeight = watermark.height();
+        img.push_back(appended);
+      } else if (mc) {
+        VImage padded =
+            img_frame.embed(0, 0, width, pageHeight + 15,
+                            VImage::option()->set("background", 0xffffff));
+        VImage composited =
+            padded.composite2(watermark, VIPS_BLEND_MODE_OVER,
+                              VImage::option()
+                                  ->set("x", width - 190)
+                                  ->set("y", padded.height() - 22));
+        addedHeight = 15;
+        img.push_back(composited);
       } else {
-        composited =
-            img_frame.composite2(watermark, VIPS_BLEND_MODE_OVER,
-                                 VImage::option()->set("x", x)->set("y", y));
+        VImage composited;
+        if (alpha) {
+          if (i == 0) {
+            contentAlpha = watermark.extract_band(0).embed(
+                x, y, width, pageHeight,
+                VImage::option()->set("extend", "white"));
+            frameAlpha = watermark.extract_band(1).embed(
+                x, y, width, pageHeight,
+                VImage::option()->set("extend", "black"));
+            bg = frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
+                "interpretation", VIPS_INTERPRETATION_sRGB));
+            frame = bg.bandjoin(frameAlpha);
+            if (outType == "jpg" || outType == "jpeg") {
+              outType = "png";
+            }
+          }
+          VImage content =
+              img_frame.extract_band(0, VImage::option()->set("n", 3))
+                  .bandjoin(contentAlpha & img_frame.extract_band(3));
+
+          composited =
+              content.composite2(frame, VIPS_BLEND_MODE_OVER,
+                                VImage::option()->set("x", x)->set("y", y));
+        } else {
+          composited =
+              img_frame.composite2(watermark, VIPS_BLEND_MODE_OVER,
+                                  VImage::option()->set("x", x)->set("y", y));
+        }
+        img.push_back(composited);
       }
-      img.push_back(composited);
     }
+    final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
+    final.set(VIPS_META_PAGE_HEIGHT, pageHeight + addedHeight);
   }
-  VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-  final.set(VIPS_META_PAGE_HEIGHT, pageHeight + addedHeight);
 
   char *buf;
   final.write_to_buffer(

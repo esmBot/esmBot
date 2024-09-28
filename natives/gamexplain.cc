@@ -9,11 +9,9 @@ ArgumentMap Gamexplain(const string& type, string& outType, const char* bufferda
 {
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -27,7 +25,7 @@ ArgumentMap Gamexplain(const string& type, string& outType, const char* bufferda
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage resized =
         img_frame
             .resize(1181.0 / (double)width,

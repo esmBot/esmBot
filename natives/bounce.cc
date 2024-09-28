@@ -12,14 +12,18 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
   VImage in =
       VImage::new_from_buffer(
           bufferdata, bufferLength, "",
-          type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
-                        : 0)
+          GetInputOptions(type, true, true))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 15;
+  int nPages = vips_image_get_n_pages(in.get_image());
+  bool multiPage = true;
+  if (nPages == 1) {
+    multiPage = false;
+    nPages = 15;
+  }
 
   try {
     in = NormalizeVips(in, &width, &pageHeight, nPages);
@@ -38,7 +42,7 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double height = halfHeight * (-sin(i * mult) + 1);
     VImage embedded =
         img_frame.embed(0, height, width, pageHeight + halfHeight);
@@ -46,15 +50,15 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + halfHeight);
-  if (type != "gif") {
+  if (!multiPage) {
     vector<int> delay(30, 50);
     final.set("delay", delay);
   }
 
   char *buf;
-  final.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
-  outType = "gif";
+  if (outType != "webp") outType = "gif";
 
   ArgumentMap output;
   output["buf"] = buf;

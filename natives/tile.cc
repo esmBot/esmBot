@@ -9,7 +9,7 @@ ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, si
 {
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? VImage::option()->set("n", -1) : 0)
+                              GetInputOptions(type, false, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -32,7 +32,7 @@ ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, si
   int finalHeight = 0;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage replicated = img_frame.replicate(5, 5);
     double scale = 800.0 / replicated.height();
     if (scale > 1) scale = 800.0 / replicated.width();

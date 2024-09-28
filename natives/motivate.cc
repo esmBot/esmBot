@@ -12,11 +12,9 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
   string font = GetArgument<string>(arguments, "font");
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                             GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -72,7 +70,7 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
   int height = 0;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
 
     int borderSize = max(2, width / 66);
     int borderSize2 = borderSize * 0.5;

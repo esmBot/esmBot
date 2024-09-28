@@ -13,8 +13,7 @@ ArgumentMap Uncaption(const string& type, string& outType, const char* bufferdat
   VImage in =
       VImage::new_from_buffer(
           bufferdata, bufferLength, "",
-          type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
-                        : 0)
+          GetInputOptions(type, true, true))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 

@@ -12,7 +12,7 @@ ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, 
 
   VImage in = VImage::new_from_buffer(
                   bufferdata, bufferLength, "",
-                  type == "gif" ? VImage::option()->set("n", -1) : 0)
+                  GetInputOptions(type, false, false))
                   .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 

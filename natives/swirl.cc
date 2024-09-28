@@ -9,7 +9,7 @@ ArgumentMap Swirl(const string& type, string& outType, const char* bufferdata, s
 {
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? VImage::option()->set("n", -1) : 0)
+                              GetInputOptions(type, false, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -52,7 +52,7 @@ ArgumentMap Swirl(const string& type, string& outType, const char* bufferdata, s
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
 
     VImage distort =
         img_frame

@@ -10,11 +10,9 @@ ArgumentMap Spotify(const string& type, string& outType, const char* bufferdata,
   string text = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -47,7 +45,7 @@ ArgumentMap Spotify(const string& type, string& outType, const char* bufferdata,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage frame = watermark.join(img_frame, VIPS_DIRECTION_VERTICAL,
                                   VImage::option()->set("expand", true));
     img.push_back(frame);

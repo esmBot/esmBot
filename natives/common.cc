@@ -39,3 +39,21 @@ vips::VImage NormalizeVips(vips::VImage in, int *width, int *pageHeight, int nPa
 
   return out;
 }
+
+vips::VOption* GetInputOptions(string type, bool sequential, bool sequentialIfAnim) {
+  bool anim = type == "gif" || type == "webp";
+  vips::VOption* options = vips::VImage::option();
+
+  if (anim) {
+    options->set("n", -1);
+    if (sequential && sequentialIfAnim) {
+      options->set("access", "sequential");
+    }
+  }
+
+  if (sequential && !sequentialIfAnim) {
+    options->set("access", "sequential");
+  }
+
+  return options;
+}

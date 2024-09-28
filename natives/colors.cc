@@ -14,11 +14,9 @@ ArgumentMap Colors(const string& type, string& outType, const char* bufferdata, 
 {
   string color = GetArgument<string>(arguments, "color");
 
-  VOption *options = VImage::option()->set("access", "sequential");
-
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              type == "gif" ? options->set("n", -1) : options)
+                              GetInputOptions(type, true, false))
           .colourspace(VIPS_INTERPRETATION_sRGB);
 
   VImage out;

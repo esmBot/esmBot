@@ -13,8 +13,7 @@ ArgumentMap Distort(const string& type, string& outType, const char* bufferdata,
   VImage in =
       VImage::new_from_buffer(
           bufferdata, bufferLength, "",
-          type == "gif" ? VImage::option()->set("n", -1)->set("access", "sequential")
-                        : 0)
+          GetInputOptions(type, true, true))
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -35,7 +34,7 @@ ArgumentMap Distort(const string& type, string& outType, const char* bufferdata,
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
-        type == "gif" ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage mapped = img_frame.mapim(distortImage);
     img.push_back(mapped);
   }

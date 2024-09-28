@@ -21,6 +21,7 @@ typedef map<string, ArgumentVariant> ArgumentMap;
 
 void LoadFonts(string basePath);
 vips::VImage NormalizeVips(vips::VImage in, int *width, int *pageHeight, int nPages);
+vips::VOption* GetInputOptions(string type, bool sequential, bool sequentialIfAnim);
 #define MapContainsKey(MAP, KEY) (MAP.find(KEY) != MAP.end())
 
 template <typename T>
