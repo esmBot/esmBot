@@ -22,7 +22,7 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
   int nPages = type == "gif" ? vips_image_get_n_pages(in.get_image()) : 30;
 
   try {
-    in = NormalizeVips(in, type, &width, &pageHeight, nPages);
+    in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
       ArgumentMap output;
