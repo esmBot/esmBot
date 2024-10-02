@@ -36,7 +36,7 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
     }
   }
 
-  double mult = M_PI / nPages;
+  double mult = 3.14 / nPages;
   int halfHeight = pageHeight / 2;
 
   vector<VImage> img;

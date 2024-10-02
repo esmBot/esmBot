@@ -36,7 +36,7 @@ ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, 
     }
   }
 
-  double mult = (2 * M_PI) / nPages;
+  double mult = 6.28 / nPages;
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
