@@ -182,6 +182,9 @@ const client = new Client({
     },
     intents
   },
+  rest: {
+    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
+  },
   collectionLimits: {
     messages: 50,
     channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
