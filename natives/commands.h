@@ -10,9 +10,7 @@ declare_input_func(Blur);
 declare_input_func(Bounce);
 declare_input_func(Caption);
 declare_input_func(CaptionTwo);
-#if MAGICK_ENABLED
 declare_input_func(Circle);
-#endif
 declare_input_func(Colors);
 declare_input_func(Crop);
 declare_input_func(Deepfry);

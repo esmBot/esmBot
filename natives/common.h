@@ -55,9 +55,7 @@ const std::map<std::string,
                    {"bounce", &Bounce},
                    {"caption", &Caption},
                    {"captionTwo", &CaptionTwo},
-#ifdef MAGICK_ENABLED
                    {"circle", &Circle},
-#endif
                    {"colors", &Colors},
                    {"crop", &Crop},
                    {"deepfry", &Deepfry},
