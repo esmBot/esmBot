@@ -7,8 +7,8 @@ class HostCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
-    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
-    if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
+    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
+    if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return "Only the current voice session host can choose another host!";
     const input = this.options.user ?? this.args.join(" ");
     if (input?.trim()) {
@@ -34,7 +34,7 @@ class HostCommand extends MusicCommand {
         user = this.client.users.get(input);
       }
       if (!user) return "I can't find that user!";
-      if (user.bot) return "This is illegal, you know.";
+      if (user.bot) return "https://www.youtube.com/watch?v=rmQFcVR6vEs";
       const member = this.guild.members.get(user.id) ?? await this.client.rest.guilds.getMember(this.guild.id, user.id).catch(e => {
         logger.warn(`Failed to get a member: ${e}`);
       });

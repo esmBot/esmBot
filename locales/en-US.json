@@ -679,6 +679,9 @@
       "dog": {
         "error": "I couldn't get a dog image in time. Maybe try again?"
       },
+      "music": {
+        "invalid": "That isn't a valid music command!"
+      },
       "wikihow": {
         "error": "I couldn't get a WikiHow image in time. Maybe try again?"
       }
@@ -752,12 +755,14 @@
     "error": "Looks like there was an error during sound playback:",
     "looping": "Looping?",
     "no": "No",
+    "noConnection": "Something odd happened to the voice connection; try playing your song again.",
     "node": "Node",
     "noManager": "The sound commands are still starting up!",
     "noQueue": "There's nothing in the queue!",
     "noResponse": "I couldn't get a response from the audio server.",
     "noSong": "I couldn't find that song!",
     "notConnected": "I'm not connected to any audio servers!",
+    "notInVoice": "I'm not in a voice channel!",
     "notVoiceChannel": "The channel I was given isn't a voice channel!",
     "noVoiceState": "You need to be in a voice channel first!",
     "nowPlaying": "Now Playing",

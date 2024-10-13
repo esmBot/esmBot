@@ -6,8 +6,8 @@ class RemoveCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
-    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return "I'm not in a voice channel!";
-    if (!this.connection) return "Something odd happened to the voice connection; try playing your song again.";
+    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
+    if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return "Only the current voice session host can remove songs from the queue!";
     const pos = Number.parseInt(this.options.position ?? this.args[0]);
     if (Number.isNaN(pos) || pos > this.queue.length || pos < 1) return "That's not a valid position!";

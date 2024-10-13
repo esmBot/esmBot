@@ -22,7 +22,7 @@ class MusicAIOCommand extends Command {
       return result;
     }
     this.success = false;
-    return "That isn't a valid music command!";
+    return this.getString("commands.responses.music.invalid");
   }
 
   static postInit() {
