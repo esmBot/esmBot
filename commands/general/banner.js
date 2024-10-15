@@ -1,6 +1,7 @@
 import Command from "../../classes/command.js";
 import { Routes } from "oceanic.js";
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
+const imageSize = 4096
 
 class BannerCommand extends Command {
   // this command sucks
@@ -8,7 +9,7 @@ class BannerCommand extends Command {
     const member = this.options.member ?? this.args[0];
     const self = await this.client.rest.users.get(this.author.id); // banners are only available over REST
     if (this.type === "classic" && this.message.mentions.users[0] && this.message.mentions.users[0].banner) {
-      return this.client.util.formatImage(Routes.BANNER(this.message.mentions.users[0].id, this.message.mentions.users[0].banner), null, 512);
+      return this.client.util.formatImage(Routes.BANNER(this.message.mentions.users[0].id, this.message.mentions.users[0].banner), null, imageSize);
     } else if (member && member > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);
       if (user?.banner) {
@@ -21,9 +22,9 @@ class BannerCommand extends Command {
         }
         try {
           const user = await this.client.rest.users.get(id);
-          return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, 512) : "This user doesn't have a banner!";
+          return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, imageSize) : "This user doesn't have a banner!";
         } catch {
-          return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, 512) : "You don't have a banner!";
+          return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "You don't have a banner!";
         }
       } else {
         return "This user doesn't have a banner!";
@@ -33,11 +34,11 @@ class BannerCommand extends Command {
         query: this.args.join(" "),
         limit: 1
       });
-      if (searched.length === 0) return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, 512) : "This user doesn't have a banner!";
+      if (searched.length === 0) return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "This user doesn't have a banner!";
       const user = await this.client.rest.users.get(searched[0].user.id);
-      return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, 512) : (self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, 512) : "This user doesn't have a banner!");
+      return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, imageSize) : (self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "This user doesn't have a banner!");
     } else {
-      return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, 512) : "You don't have a banner!";
+      return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "You don't have a banner!";
     }
   }
 
