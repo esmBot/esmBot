@@ -7,6 +7,9 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"complexity": {
+				"noThisInStatic": "off"
+			},
 			"correctness": {
 				"noUndeclaredVariables": "error",
 				"noUnusedVariables": "warn"
