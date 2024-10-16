@@ -127,7 +127,6 @@ export default async (client, message) => {
     // parse args
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
-    // eslint-disable-next-line no-unused-vars
     const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
