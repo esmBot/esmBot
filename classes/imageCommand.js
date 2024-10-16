@@ -114,7 +114,7 @@ class ImageCommand extends Command {
       if (type === "sent") return;
       if (type === "frames") return this.getString("image.frames");
       if (type === "unknown") return this.getString("image.unknown");
-      if (type === "noresult") return this.getString("image.noresult");
+      if (type === "noresult") return this.getString("image.noResult");
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
       if (type === "nogif" && this.constructor.requiresGIF) return this.getString("image.nogif");
