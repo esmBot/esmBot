@@ -11,6 +11,7 @@ set(SOURCE_FILES natives/blur.cc
   natives/bounce.cc
   natives/caption.cc
   natives/caption2.cc
+  natives/circle.cc
   natives/colors.cc
   natives/commands.h
   natives/common.cc
@@ -51,8 +52,7 @@ option(WITH_MAGICK "Build with ImageMagick, enables the circle, magik, and spin 
 option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
 
 if (WITH_MAGICK)
-  list(APPEND SOURCE_FILES natives/circle.cc
-    natives/magik.cc
+  list(APPEND SOURCE_FILES natives/magik.cc
     natives/wall.cc)
 endif()
 
