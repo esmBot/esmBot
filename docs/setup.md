@@ -5,7 +5,7 @@ Here are some instructions to get esmBot up and running from source.
     - 64-bit CPU/operating system
     - Quad-core CPU or better
     - 512MB or more of RAM
-    - Linux-based operating system or virtual machine ([Ubuntu](https://ubuntu.com/download/server) or [Fedora](https://getfedora.org/) are recommended)
+    - Unix-like (e.g. Linux, macOS, FreeBSD) operating system or virtual machine ([Ubuntu](https://ubuntu.com/download/server) or [Fedora](https://getfedora.org/) are recommended)
 
 !!! warning
     If you want to run the bot on Windows, [Windows Subsystem for Linux](https://learn.microsoft.com/windows/wsl/install) is recommended. This guide is somewhat centered around Unix-like systems, so for now you're mostly on your own if you decide not to use WSL.
@@ -16,11 +16,11 @@ If you have any further questions regarding setup, feel free to ask in the #supp
     You can run the bot using Docker or Podman for a somewhat simpler setup experience. [Click here to go to the container setup guide.](https://docs.esmbot.net/containers)
 
 ### 1. Install the required native dependencies.
-Choose the distro you're using below for insallation instructions.
+Choose the OS you're using below for insallation instructions.
 === "Debian/Ubuntu"
     These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
     ```sh
-    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxingcore-dev
+    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev
     ```
     On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 === "Fedora/RHEL"
@@ -46,6 +46,11 @@ Choose the distro you're using below for insallation instructions.
     sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
+=== "macOS (Homebrew)"
+    ```sh
+    brew install cmake ffmpeg imagemagick libvips
+    ```
+    The `zxing-cpp` package is not available through Homebrew, so unfortunately the QR commands will be unavailable on macOS without further intervention.
 
 ***
 
@@ -55,7 +60,7 @@ Node.js is the runtime that esmBot is built on top of. The bot requires version 
 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
 ```sh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 ```
 
 Then run the following to install Node.js:
@@ -93,6 +98,12 @@ cd esmBot
 pnpm install
 pnpm build
 ```
+
+!!! note
+    On macOS, you'll need to replace the last command in the above list with the following:
+    ```sh
+    pnpm build --CDWITH_ZXING=OFF
+    ```
 
 ***
 
@@ -187,7 +198,7 @@ pm2 start ecosystem.config.cjs
 
 ## Troubleshooting
 ??? faq "Error: Cannot find module './build/Release/image.node'"
-    The native image functions haven't been built. Run `pnpm run build` to build them.
+    The native image functions haven't been built. Run `pnpm build` to build them.
 
 ??? faq "`pnpm install` or `pnpm build` fails with error 'ELIFECYCLE  Command failed.'"
     You might need to install node-gyp. You can do this by running the following:
@@ -198,7 +209,7 @@ pm2 start ecosystem.config.cjs
     ```
 
 ??? faq "Error: connect ECONNREFUSED 127.0.0.1:5432"
-    PostgreSQL isn't running, you should be able to start it with `sudo systemctl start postgresql`. If you don't intend to use PostgreSQL, you should take another look at your `DB` variable in the .env file.
+    PostgreSQL isn't running, you should be able to start it on most Linux systems with `sudo systemctl start postgresql`. If you don't intend to use PostgreSQL, you should take another look at your `DB` variable in the .env file.
 
 ??? faq "Gifs from Tenor result in a "no decode delegate for this image format" or "improper image header" error"
     Tenor GIFs are actually stored as MP4s, which libvips can't decode most of the time. You'll need to get a Tenor API key from [here](https://developers.google.com/tenor/guides/quickstart) and put it in the `TENOR` variable in .env.
