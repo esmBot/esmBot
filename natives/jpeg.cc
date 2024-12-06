@@ -7,7 +7,7 @@ using namespace vips;
 
 ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
-  int quality = GetArgumentWithFallback<int>(arguments, "quality", 0);
+  int quality = GetArgumentWithFallback<int>(arguments, "quality", 1);
 
   char *buf;
 
