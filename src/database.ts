@@ -1,8 +1,8 @@
 // wrapper for the database drivers in ./database/
 import "dotenv/config";
-import { Logger } from "#utils/logger.js";
-import { Guild, GuildChannel } from "oceanic.js";
-import { DBGuild, isError } from "#utils/types.js";
+import type { Logger } from "#utils/logger.js";
+import type { Guild, GuildChannel } from "oceanic.js";
+import { type DBGuild, isError } from "#utils/types.js";
 
 interface DatabasePlugin {
   setup: () => Promise<void>;

@@ -129,5 +129,8 @@ yarn.lock
 bot-temp/
 bot-help/
 
-#Kate stuff
+# Kate stuff
 *.kate*
+
+# Typescript outputs
+dist/

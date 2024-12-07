@@ -1,7 +1,7 @@
 import InteractionCollector from "./awaitinteractions.js";
-import { collectors } from "../collections.js";
-import logger from "../logger.js";
-import { getString } from "../i18n.js";
+import { collectors } from "../utils/collections.js";
+import logger from "../utils/logger.js";
+import { getString } from "../utils/i18n.js";
 
 /**
  * @param {import("oceanic.js").Client} client

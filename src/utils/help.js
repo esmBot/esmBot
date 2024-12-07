@@ -1,5 +1,5 @@
 import { commands, info } from "./collections.js";
-import commandConfig from "../config/commands.json" with { type: "json" };
+import commandConfig from "#config/commands.json" with { type: "json" };
 import { promises } from "node:fs";
 
 export const categoryTemplate = {

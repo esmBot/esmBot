@@ -49,12 +49,11 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
     "@tsconfig/node20": "^20.1.4",
-    "@types/better-sqlite3": "^7.6.8",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/bun": "^1.1.14",
-    "@types/node": "^20.12.0",
-    "@types/ws": "^8.5.12",
+    "@types/ws": "^8.5.13",
     "cmake-js": "^7.3.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.2"
   },
   "optionalDependencies": {
     "@sentry/node": "^8.34.0",

@@ -1,15 +1,23 @@
 import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
-import { Guild, GuildChannel } from "oceanic.js";
-import { Logger } from "#utils/logger.js";
-import { DBGuild, Tag } from "#utils/types.js";
+import type { Guild, GuildChannel } from "oceanic.js";
+import type { Logger } from "#utils/logger.js";
+import type { DBGuild, Tag } from "#utils/types.js";
+import type { Database as BSQLite3Database, Statement as BSQLite3Statement } from "better-sqlite3";
+import { Database as BunDatabase, type Statement as BunStatement } from "bun:sqlite";
 
-let connection;
+// bun:sqlite is mostly compatible with better-sqlite3, but has a few minor type differences that don't really matter in our case
+// here we attempt to bring the two closer together
+let connection: {
+  prepare: (query: string) => BSQLite3Statement | BunStatement;
+  transaction: (func: () => void) => CallableFunction;
+} & (BSQLite3Database | BunDatabase);
+
 if (process.versions.bun) {
   const { Database } = await import("bun:sqlite");
-  connection = new Database(process.env.DB.replace("sqlite://", ""), { create: true, readwrite: true });
+  connection = new Database((process.env.DB as string).replace("sqlite://", ""), { create: true, readwrite: true, strict: true });
 } else {
   const { default: sqlite3 } = await import("better-sqlite3");
-  connection = sqlite3(process.env.DB.replace("sqlite://", ""));
+  connection = sqlite3((process.env.DB as string).replace("sqlite://", ""));
 }
 
 const schema = `
@@ -70,7 +78,7 @@ export async function stop() {
 }
 
 export async function upgrade(logger: Logger) {
-  if (process.versions.bun) {
+  if (connection instanceof BunDatabase) {
     connection.exec("PRAGMA journal_mode = WAL;");
   } else {
     connection.pragma("journal_mode = WAL");
@@ -78,11 +86,11 @@ export async function upgrade(logger: Logger) {
   try {
     connection.transaction(() => {
       let version: number;
-      if (process.versions.bun) {
-        const { user_version } = connection.prepare("PRAGMA user_version").get();
+      if (connection instanceof BunDatabase) {
+        const { user_version } = connection.prepare<{ user_version: number }, []>("PRAGMA user_version").get();
         version = user_version;
       } else {
-        version = connection.pragma("user_version", { simple: true });
+        version = connection.pragma("user_version", { simple: true }) as number;
       }
       const latestVersion = updates.length - 1;
       if (version === 0) {
@@ -99,7 +107,7 @@ export async function upgrade(logger: Logger) {
         throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
       }
       // prepared statements don't seem to work here
-      if (process.versions.bun) {
+      if (connection instanceof BunDatabase) {
         connection.exec(`PRAGMA user_version = ${latestVersion}`);
       } else {
         connection.pragma(`user_version = ${latestVersion}`);
@@ -161,21 +169,12 @@ export async function getTags(guild: string) {
 
 export async function setTag(name: string, content: Tag, guild: Guild) {
   const tag = {
-    id: guild.id,
+    guild_id: guild.id,
     name: name,
     content: content.content,
     author: content.author
   };
-  if (process.versions.bun) {
-    connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES ($id, $name, $content, $author)").run({
-      $id: tag.id,
-      $name: tag.name,
-      $content: tag.content,
-      $author: tag.author
-    });
-  } else {
-    connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@id, @name, @content, @author)").run(tag);
-  }
+  connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@guild_id, @name, @content, @author)").run(tag);
 }
 
 export async function removeTag(name: string, guild: Guild) {
@@ -201,26 +200,24 @@ export async function setPrefix(prefix: string, guild: Guild) {
 }
 
 export async function getGuild(query: string): Promise<DBGuild> {
-  let guild;
+  let guild: DBGuild;
   connection.transaction(() => {   
-    guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query);
+    guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as DBGuild;
     if (!guild) {
-      guild = {
-        id: query,
-        prefix: process.env.PREFIX ?? "&",
+      const guild_id = query;
+      const prefix = process.env.PREFIX ?? "&";
+      connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@guild_id, @prefix, @disabled, @disabled_commands)").run({
+        guild_id,
+        prefix,
         disabled: "[]",
-        disabledCommands: "[]"
+        disabled_commands: "[]"
+      });
+      guild = {
+        guild_id,
+        prefix,
+        disabled: [],
+        disabled_commands: []
       };
-      if (process.versions.bun) {
-        connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES ($id, $prefix, $disabled, $disabledCommands)").run({
-          $id: guild.id,
-          $prefix: guild.prefix,
-          $disabled: guild.disabled,
-          $disabledCommands: guild.disabledCommands
-        });
-      } else {
-        connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@id, @prefix, @disabled, @disabledCommands)").run(guild);
-      }
     }
   })();
   return guild;

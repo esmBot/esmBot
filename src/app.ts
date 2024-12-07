@@ -122,7 +122,7 @@ if (process.env.TEMPDIR && process.env.THRESHOLD) {
 
 // register locales
 logger.log("info", "Attempting to load locale data...");
-for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./locales/"), ".json")) {
+for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../locales/"), ".json")) {
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
@@ -236,6 +236,7 @@ if (process.env.PM2_USAGE) {
             endBroadcast(client);
             break;
           case "serverCounts":
+            if (!managerProc) break;
             pm2.sendDataToProcessId(managerProc.pm_id as number, {
               id: managerProc.pm_id,
               type: "process:msg",
