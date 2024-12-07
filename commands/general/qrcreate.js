@@ -2,18 +2,18 @@ import ImageCommand from "../../classes/imageCommand.js";
 import { cleanMessage } from "../../utils/misc.js";
 
 class QrCreateCommand extends ImageCommand {
-  params() {
-    const cleanedMessage = cleanMessage(this.message ?? this.interaction, this.options.text ?? this.args.join(" "));
-    return {
-      text: cleanedMessage
-    };
-  }
-
   async criteria(text, _url) {
     if (QrCreateCommand.textEncoder.encode(text).length > QrCreateCommand.maxBytes) {
       return false;
     }
     return true;
+  }
+
+  params() {
+    const cleanedMessage = cleanMessage(this.message ?? this.interaction, this.options.text ?? this.args.join(" "));
+    return {
+      text: cleanedMessage
+    };
   }
 
   static init() {
