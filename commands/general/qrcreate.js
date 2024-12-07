@@ -26,7 +26,7 @@ class QrCreateCommand extends ImageCommand {
 
   static requiresImage = false;
   static requiresText = true;
-  static noText = "You need to provide some text to generate a QR code!";
+  static noText = "You need to provide some text that is less than 2953 bytes to generate a QR code!";
   static command = "qrcreate";
 
   static textEncoder = new TextEncoder();
