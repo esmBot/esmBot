@@ -8,6 +8,7 @@ using namespace vips;
 ArgumentMap Nerd(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
 {
   string basePath = GetArgument<string>(arguments, "basePath");
+  bool resize = GetArgumentWithFallback<bool>(arguments, "resize", false);
 
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
@@ -18,6 +19,7 @@ ArgumentMap Nerd(const string& type, string& outType, const char* bufferdata, si
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = vips_image_get_n_pages(in.get_image());
+  double aspectRatio = (double)width / pageHeight;
 
   try {
     in = NormalizeVips(in, &width, &pageHeight, nPages);
@@ -33,15 +35,43 @@ ArgumentMap Nerd(const string& type, string& outType, const char* bufferdata, si
   string assetPath = basePath + "assets/images/nerd.png";
   VImage bg = VImage::new_from_file(assetPath.c_str());
 
+  if (resize) {
+    aspectRatio = 0.8;
+  }
+
+  int inNewWidth;
+  int inNewHeight;
+
+  if (aspectRatio > 0.8) {
+    if (aspectRatio > 1.512) {
+      inNewWidth = 650;
+      inNewHeight = 650 / aspectRatio;
+    } else {
+      inNewWidth = 430 * aspectRatio;
+      inNewHeight = 430;
+    }
+  } else {
+    if (aspectRatio > 0.575) {
+      inNewWidth = 345;
+      inNewHeight = 345 / aspectRatio;
+    } else {
+      inNewWidth = 600 * aspectRatio;
+      inNewHeight = 600;
+    }
+  }
+  
+  int inTopLeftX = 675 - inNewWidth / 2;
+  int inTopLeftY = 300 - inNewHeight / 2;
+
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame =
         nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage resized = img_frame.resize(
-        345 / (double)width,
-        VImage::option()->set("vscale", 430 / (double)pageHeight));
+        inNewWidth / (double)width,
+        VImage::option()->set("vscale", inNewHeight / (double)pageHeight));
     
-    VImage offset = resized.embed(502, 85, 1000, 1000);
+    VImage offset = resized.embed(inTopLeftX, inTopLeftY, 1000, 1000);
     VImage composited = bg.composite2(offset, VIPS_BLEND_MODE_OVER);
     img.push_back(composited);
   }

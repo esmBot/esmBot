@@ -217,6 +217,9 @@
       "motivate": {
         "font": "font"
       },
+      "nerd": {
+        "resize": "resize"
+      },
       "slow": {
         "multiplier": "multiplier"
       },
@@ -381,6 +384,9 @@
       },
       "motivate": {
         "font": "Specify the font you want to use (default: times)"
+      },
+      "nerd": {
+        "resize": "Resize the image to fit completely inside the speech bubble (default: false)"
       },
       "slow": {
         "multiplier": "Set the speed multiplier (default: 2)"
