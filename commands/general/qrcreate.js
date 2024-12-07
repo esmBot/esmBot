@@ -9,12 +9,28 @@ class QrCreateCommand extends ImageCommand {
     };
   }
 
+  async criteria(text, _url) {
+    if (QrCreateCommand.textEncoder.encode(text).length > QrCreateCommand.maxBytes) {
+      return false;
+    }
+    return true;
+  }
+
+  static init() {
+    super.init();
+    this.flags.find((v) => v.name === "text").maxLength = QrCreateCommand.maxBytes;
+    return this;
+  }
+
   static description = "Generates a QR code";
 
   static requiresImage = false;
   static requiresText = true;
   static noText = "You need to provide some text to generate a QR code!";
   static command = "qrcreate";
+
+  static textEncoder = new TextEncoder();
+  static maxBytes = 2952;     // a QR code can only encode up to 2953 bytes
 }
 
 export default QrCreateCommand;
