@@ -1,31 +1,39 @@
 import logger from "./logger.js";
 import fs from "node:fs";
 import format from "format-duration";
-import { Shoukaku, Connectors } from "shoukaku";
+import { Shoukaku, Connectors, type Player, type NodeOption, type Track, type TrackExceptionEvent, type LavalinkResponse, type Playlist } from "shoukaku";
 import { setTimeout } from "node:timers/promises";
-import { VoiceChannel } from "oceanic.js";
+import { type Client, type CommandInteraction, type Guild, type GuildChannel, type Member, type Message, VoiceChannel } from "oceanic.js";
 import { getString } from "./i18n.js";
 
-/**
- * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
- * @type {Map<string, MapPlayer>}
- */
-export const players = new Map();
-export const queues = new Map();
+export type SoundPlayer = {
+  player: Player;
+  host: string;
+  voiceChannel: VoiceChannel;
+  originalChannel: GuildChannel;
+  loop: boolean;
+  shuffle: boolean;
+  playMessage?: Message;
+};
+
+export const players = new Map<string, SoundPlayer>();
+export const queues = new Map<string, string[]>();
 export const skipVotes = new Map();
 
-/**
- * @typedef {{ channel: import("oceanic.js").GuildChannel; guild: import("oceanic.js").Guild; member: import("oceanic.js").Member; type: "classic" | "application"; interaction: import("oceanic.js").CommandInteraction; locale: string }} Options
- * @type {Shoukaku}
- */
-export let manager;
-export let nodes = JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).lava;
+type Options = {
+  type: "classic" | "application";
+  channel: GuildChannel;
+  guild: Guild;
+  member: Member;
+  interaction?: CommandInteraction;
+  locale: string;
+};
+
+export let manager: Shoukaku;
+export let nodes = JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).lava as NodeOption[];
 export let connected = false;
 
-/**
- * @param {import("oceanic.js").Client} client
- */
-export function connect(client) {
+export function connect(client: Client) {
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true });
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
@@ -39,10 +47,7 @@ export function connect(client) {
   });
 }
 
-/**
- * @param {import("oceanic.js").Client} client
- */
-export async function reload(client) {
+export async function reload(client: Client) {
   if (!manager) connect(client);
   const activeNodes = manager.nodes;
   const json = await fs.promises.readFile(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" });
@@ -62,19 +67,11 @@ export async function reload(client) {
   return manager.nodes.size;
 }
 
-/**
- * @param {string} id
- */
-export async function leaveChannel(id) {
+export async function leaveChannel(id: string) {
   await manager.leaveVoiceChannel(id);
 }
 
-/**
- * @param {import("oceanic.js").Client} client
- * @param {string} soundUrl
- * @param {Options} options
- */
-export async function play(client, soundUrl, options) {
+export async function play(client: Client, soundUrl: string, options: Options) {
   if (!connected) return { content: getString("sound.notConnected", options.locale), flags: 64 };
   if (!manager) return { content: getString("sound.noManager", options.locale), flags: 64 };
   if (!options.guild) return { content: getString("guildOnly", options.locale), flags: 64 };
@@ -87,7 +84,7 @@ export async function play(client, soundUrl, options) {
   if (!(voiceChannel instanceof VoiceChannel)) return { content: getString("sound.notVoiceChannel", options.locale), flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: getString("sound.cantJoin", options.locale), flags: 64 };
   const node = manager.options.nodeResolver(manager.nodes);
-  let response;
+  let response: LavalinkResponse;
   try {
     response = await node?.rest.resolve(soundUrl);
     if (!response) return { content: `🔊 ${getString("sound.noResponse", options.locale)}`, flags: 64 };
@@ -98,9 +95,9 @@ export async function play(client, soundUrl, options) {
   }
   const oldQueue = queues.get(voiceChannel.guildID);
   if (!response?.data) return { content: getString("sound.noSong", options.locale), flags: 64 };
-  let tracks = [];
-  let info;
-  let playlistInfo;
+  let tracks: string[] = [];
+  let info: Track["info"];
+  let playlistInfo: Playlist["info"];
   switch (response.loadType) {
     case "track":
       info = response.data.info;
@@ -118,7 +115,7 @@ export async function play(client, soundUrl, options) {
   }
   if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: getString("sound.noYouTube", options.locale), flags: 64 };
   const playerMeta = players.get(options.guild.id);
-  let player;
+  let player: Player;
   if (manager.players.has(voiceChannel.guildID)) {
     player = manager.players.get(voiceChannel.guildID);
   } else if (playerMeta?.player) {
@@ -142,21 +139,9 @@ export async function play(client, soundUrl, options) {
   nextSong(client, options, connection, tracks[0], info, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
 }
 
-/**
- * @param {import("oceanic.js").Client} client
- * @param {Options} options
- * @param {import("shoukaku").Player} connection
- * @param {string} track
- * @param {import("shoukaku").Track["info"] | undefined} info
- * @param {import("oceanic.js").VoiceChannel} voiceChannel
- * @param {string} host
- * @param {boolean | undefined} loop
- * @param {boolean | undefined} shuffle
- * @param {string | null} lastTrack
- */
-export async function nextSong(client, options, connection, track, info, voiceChannel, host, loop = false, shuffle = false, lastTrack = null) {
+export async function nextSong(client: Client, options: Options, connection: Player, track: string, info: Track["info"] | undefined, voiceChannel: VoiceChannel, host: string, loop = false, shuffle = false, lastTrack: string | null = null) {
   skipVotes.delete(voiceChannel.guildID);
-  let playingMessage;
+  let playingMessage: Message;
   if (lastTrack === track && players.has(voiceChannel.guildID)) {
     playingMessage = players.get(voiceChannel.guildID)?.playMessage;
   } else {
@@ -224,7 +209,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     if (data.reason === "replaced") return;
     let queue = queues.get(voiceChannel.guildID);
     const player = players.get(voiceChannel.guildID);
-    let newQueue = [];
+    let newQueue: string[] = [];
     if (manager.connections.has(voiceChannel.guildID)) {
       if (player?.shuffle) {
         if (player.loop) {
@@ -277,15 +262,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
   });
 }
 
-/**
- * @param {import("shoukaku").TrackExceptionEvent} exception
- * @param {import("oceanic.js").Client} client
- * @param {import("shoukaku").Player} connection
- * @param {import("oceanic.js").Message} playingMessage
- * @param {import("oceanic.js").VoiceChannel} voiceChannel
- * @param {Options} options
- */
-export async function errHandle(exception, client, connection, playingMessage, voiceChannel, options) {
+export async function errHandle(exception: TrackExceptionEvent, client: Client, connection: Player, playingMessage: Message, voiceChannel: VoiceChannel, options: Options) {
   try {
     if (playingMessage.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
     const playMessage = players.get(voiceChannel.guildID)?.playMessage;

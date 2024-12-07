@@ -1,13 +1,9 @@
 import { locales } from "./collections.js";
 
-/**
- * @param {string} key
- * @param {string} locale
- */
-export function getString(key, locale = process.env.LOCALE ?? "en-US", returnNull = false) {
+export function getString(key: string, locale = process.env.LOCALE ?? "en-US", returnNull = false) {
   const obj = locales.get(locale);
   const splitKey = key.split(".");
-  let string;
+  let string: string;
   try {
     string = splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || (returnNull ? null : key);
   } catch {
@@ -20,11 +16,11 @@ export function getString(key, locale = process.env.LOCALE ?? "en-US", returnNul
   return string;
 }
 
-export function getAllLocalizations(key) {
+export function getAllLocalizations(key: string) {
   const obj = {};
   const splitKey = key.split(".");
   for (const [locale, data] of locales.entries()) {
-    let str;
+    let str: string;
     try {
       str = splitKey.reduce((prev, cur) => prev[cur], data);
     } catch {}

@@ -1,14 +1,18 @@
 // this is a method to wait for someone to rejoin a voice channel
 import { EventEmitter } from "node:events";
 import { random } from "./misc.js";
+import type { Client, Member, StageChannel, VoiceChannel } from "oceanic.js";
 
 class AwaitRejoin extends EventEmitter {
-  /**
-   * @param {import("oceanic.js").VoiceChannel | import("oceanic.js").StageChannel} channel
-   * @param {boolean} anyone
-   * @param {string} memberID
-   */
-  constructor(channel, anyone, memberID) {
+  member: string;
+  anyone: boolean;
+  channel: VoiceChannel | StageChannel;
+  ended: boolean;
+  bot: Client;
+  listener: (member: Member | { id: string; }, channel: VoiceChannel | StageChannel | { id: string; }) => boolean;
+  stopTimeout: ReturnType<typeof setTimeout>;
+  checkInterval: ReturnType<typeof setInterval>;
+  constructor(channel: VoiceChannel | StageChannel, anyone: boolean, memberID: string) {
     super();
     this.member = memberID;
     this.anyone = anyone;
@@ -22,12 +26,7 @@ class AwaitRejoin extends EventEmitter {
     this.checkInterval = setInterval(() => this.verify({ id: memberID }, channel, true), 1000);
   }
 
-  /**
-   * @param {import("oceanic.js").Member | { id: string; }} member
-   * @param {{ id: string; }} channel
-   * @param {boolean} [checked]
-   */
-  verify(member, channel, checked) {
+  verify(member: Member | { id: string; }, channel: VoiceChannel | StageChannel | { id: string; }, checked = false) {
     if (this.channel.id === channel.id) {
       if ((this.member === member.id && this.channel.voiceMembers.has(member.id)) || (this.anyone && !checked)) {
         clearTimeout(this.stopTimeout);
@@ -45,11 +44,7 @@ class AwaitRejoin extends EventEmitter {
     }
   }
 
-  /**
-   * @param {import("oceanic.js").Member | { id: string; }} [member]
-   * @param {boolean} [rejoined]
-   */
-  stop(member, rejoined = false) {
+  stop(member?: Member | { id: string; }, rejoined = false) {
     if (this.ended) return;
     this.ended = true;
     clearInterval(this.checkInterval);

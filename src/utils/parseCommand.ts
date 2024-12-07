@@ -1,7 +1,4 @@
-/**
- * @param {string[] | string} cmd
- */
-export default (cmd) => {
+export default (cmd: string[] | string) => {
   let input = cmd;
   if (typeof input === "string") input = input.split(/\s+/g);
   const args = { _: [] };

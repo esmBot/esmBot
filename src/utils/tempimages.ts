@@ -1,36 +1,33 @@
 import logger from "#utils/logger.js";
 import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
 import { getString } from "./i18n.js";
+import { type Client, CommandInteraction, type Message } from "oceanic.js";
 
-let dirSizeCache;
+let dirSizeCache: number;
+let threshold: number;
 
-/**
- * @param {import("oceanic.js").Client} client
- * @param {{ name: string; contents: Buffer; flags?: number; }} result
- * @param {import("oceanic.js").CommandInteraction | import("oceanic.js").Message} context
- */
-export async function upload(client, result, context, success = true, interaction = false) {
+export async function upload(client: Client, result: { name: string; contents: Buffer; flags?: number; }, context: CommandInteraction | Message, success = true) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload = result.name.startsWith("SPOILER_") ? {
-    content: `${getString("image.tempSite", interaction ? context.locale : undefined)}\n|| ${imageURL} ||`,
+    content: `${getString("image.tempSite", context instanceof CommandInteraction ? context.locale : undefined)}\n|| ${imageURL} ||`,
     flags: result.flags ?? (success ? 0 : 64)
   } : {
     embeds: [{
       color: 16711680,
-      title: getString("image.tempImageSent", interaction ? context.locale : undefined),
+      title: getString("image.tempImageSent", context instanceof CommandInteraction ? context.locale : undefined),
       url: imageURL,
       image: {
         url: imageURL
       },
       footer: {
-        text: getString("image.tempSite", interaction ? context.locale : undefined)
+        text: getString("image.tempSite", context instanceof CommandInteraction ? context.locale : undefined)
       },
     }],
     flags: result.flags ?? (success ? 0 : 64)
   };
-  if (interaction) {
+  if (context instanceof CommandInteraction) {
     await context.createFollowup(payload);
   } else {
     await client.rest.channels.createMessage(context.channelID, Object.assign(payload, {
@@ -45,27 +42,26 @@ export async function upload(client, result, context, success = true, interactio
       }
     }));
   }
-  if (process.env.THRESHOLD) {
+  if (threshold) {
     const size = dirSizeCache + result.contents.length;
     dirSizeCache = size;
     await removeOldImages(size);
   }
 }
 
-async function removeOldImages(s) {
-  if (!process.env.THRESHOLD || process.env.THRESHOLD === "") return;
+async function removeOldImages(s: number) {
+  if (!threshold) return;
   if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
   let size = s;
-  if (size > process.env.THRESHOLD) {
-    const files = (await readdir(process.env.TEMPDIR)).map((file) => {
-      return lstat(`${process.env.TEMPDIR}/${file}`).then((stats) => {
-        if (stats.isSymbolicLink()) return;
-        return {
-          name: file,
-          size: stats.size,
-          ctime: stats.ctime
-        };
-      });
+  if (size > threshold) {
+    const files = (await readdir(process.env.TEMPDIR)).map(async (file) => {
+      const stats = await lstat(`${process.env.TEMPDIR}/${file}`);
+      if (stats.isSymbolicLink()) return;
+      return {
+        name: file,
+        size: stats.size,
+        ctime: stats.ctime
+      };
     });
     
     const resolvedFiles = await Promise.all(files);
@@ -77,7 +73,7 @@ async function removeOldImages(s) {
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
       size -= oldestFiles[0].size;
       oldestFiles.shift();
-    } while (size > process.env.THRESHOLD);
+    } while (size > threshold);
 
     const newSize = oldestFiles.reduce((a, b) => {
       return a + b.size;
@@ -97,10 +93,10 @@ export async function parseThreshold() {
     T: 1099511627776
   };
   if (matched?.[1] && matched[2]) {
-    process.env.THRESHOLD = matched[1] * sizes[matched[2]];
+    threshold = Number(matched[1]) * sizes[matched[2]];
   } else {
     logger.error("Invalid THRESHOLD config.");
-    process.env.THRESHOLD = undefined;
+    threshold = undefined;
   }
   const dirstat = (await readdir(process.env.TEMPDIR)).map((file) => {
     return stat(`${process.env.TEMPDIR}/${file}`).then((stats) => stats.size);

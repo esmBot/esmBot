@@ -1,8 +1,11 @@
-import Command from "./command.js";
-import { players, queues } from "#utils/soundplayer.js";
+import Command, { type CommandOptions } from "./command.js";
+import { players, queues, type SoundPlayer } from "#utils/soundplayer.js";
+import type { Client } from "oceanic.js";
 
 class MusicCommand extends Command {
-  constructor(client, options) {
+  connection?: SoundPlayer;
+  queue?: string[];
+  constructor(client: Client, options: CommandOptions) {
     super(client, options);
     if (this.guild) {
       this.connection = players.get(this.guild.id);

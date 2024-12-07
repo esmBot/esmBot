@@ -1,6 +1,7 @@
 import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { config } from "dotenv";
+import type { Client } from "oceanic.js";
 import db from "#database";
 import { servers } from "./image.js";
 
@@ -16,7 +17,7 @@ export function random(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-const optionalReplace = (token) => {
+const optionalReplace = (token: string) => {
   return token === undefined || token === "" ? "" : (token === "true" || token === "false" ? token : "<redacted>");
 };
 
@@ -48,12 +49,12 @@ export function clean(input) {
 }
 
 // textEncode(string) to encode characters for image processing
-export function textEncode(string) {
+export function textEncode(string: string) {
   return string.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n").replaceAll("\\:", ":").replaceAll("\\,", ",");
 }
 
 // set activity (a.k.a. the gamer code)
-export async function activityChanger(bot) {
+export async function activityChanger(bot: Client) {
   if (!broadcast) {
     await bot.editStatus("dnd", [{
       type: 0,
@@ -63,7 +64,7 @@ export async function activityChanger(bot) {
   setTimeout(() => activityChanger(bot), 900000);
 }
 
-export async function checkBroadcast(bot) {
+export async function checkBroadcast(bot: Client) {
   if (!db) {
     return;
   }
@@ -73,7 +74,7 @@ export async function checkBroadcast(bot) {
   }
 }
 
-export function startBroadcast(bot, message) {
+export function startBroadcast(bot: Client, message: string) {
   bot.editStatus("dnd", [{
     type: 0,
     name: message + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : "")
@@ -81,7 +82,7 @@ export function startBroadcast(bot, message) {
   broadcast = true;
 }
 
-export function endBroadcast(bot) {
+export function endBroadcast(bot: Client) {
   bot.editStatus("dnd", [{
     type: 0,
     name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : "")
@@ -89,7 +90,7 @@ export function endBroadcast(bot) {
   broadcast = false;
 }
 
-export function getServers(bot) {
+export function getServers(bot: Client) {
   return new Promise((resolve, reject) => {
     if (pm2) {
       pm2.launchBus((_err, pm2Bus) => {
@@ -167,6 +168,6 @@ export function cleanMessage(message, content) {
   return textEncode(cleanContent);
 }
 
-export function isEmpty(string) {
+export function isEmpty(string: string) {
   return string.length === 0 || string.replace(/[\s\u2800\p{C}]/gu, "").length === 0;
 }

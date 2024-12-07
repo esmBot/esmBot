@@ -1,27 +1,77 @@
-import { Constants, Permission } from "oceanic.js";
+import {
+  Constants,
+  Permission,
+  type AllowedMentions,
+  type AnyInteractionChannel,
+  type Client,
+  type CommandInteraction,
+  type CreateMessageOptions,
+  type Guild,
+  type InteractionContent,
+  type Locale,
+  type Member,
+  type Message,
+  type MessageReference,
+  type Uncached,
+  type User
+} from "oceanic.js";
 import { getString } from "../utils/i18n.js";
 
+type CommandType = "classic" | "application";
+
+type ClassicCommandOptions = {
+  type: "classic";
+  cmdName: string;
+  args: string[];
+  message: Message;
+  content: string;
+  specialArgs: object;
+};
+
+type ApplicationCommandOptions = {
+  type: "application";
+  interaction: CommandInteraction;
+};
+
+export type CommandOptions = ClassicCommandOptions | ApplicationCommandOptions;
+
 class Command {
-  /**
-   * @param {import("oceanic.js").Client} client
-   * @param {{ type: string; args: []; message: import("oceanic.js").Message; content: string; specialArgs: {}; interaction: import("oceanic.js").CommandInteraction }} options
-   */
-  constructor(client, options) {
+  client: Client;
+  origOptions: CommandOptions;
+  type: CommandType;
+  success: boolean;
+  edit: boolean;
+  args: string[];
+  locale: Locale;
+  cmdName: string;
+  author: User;
+  permissions: Permission;
+  memberPermissions: Permission;
+  options: object;
+
+  message?: Message;
+  interaction?: CommandInteraction;
+  channel?: AnyInteractionChannel | Uncached;
+  guild?: Guild;
+  member?: Member;
+  content?: string;
+  reference?: { messageReference: MessageReference, allowedMentions: AllowedMentions };
+  constructor(client: Client, options: CommandOptions) {
     this.client = client;
     this.origOptions = options;
     this.type = options.type;
-    this.args = options.args;
     this.success = true;
     this.edit = false;
     if (options.type === "classic") {
       this.message = options.message;
-      this.locale = process.env.LOCALE ?? "en-US";
+      this.args = options.args;
+      this.locale = (process.env.LOCALE as Locale) ?? "en-US";
       this.cmdName = options.cmdName;
       this.channel = options.message.channel;
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
-      this.permissions = this.channel?.permissionsOf?.(client.user.id) ?? new Permission(Constants.AllPermissions);
+      this.permissions = this.channel.permissionsOf?.(client.user.id) ?? new Permission(Constants.AllPermissions);
       this.memberPermissions = this.member?.permissions ?? new Permission(Constants.AllPermissions);
       this.content = options.content;
       this.options = options.specialArgs;
@@ -38,7 +88,7 @@ class Command {
       };
     } else {
       this.interaction = options.interaction;
-      this.locale = options.interaction.locale;
+      this.locale = options.interaction.locale as Locale;
       this.cmdName = options.interaction.data.name;
       this.args = [];
       this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
@@ -60,23 +110,18 @@ class Command {
 
   /**
    * The main command function.
-   * @returns {Promise<string | import("oceanic.js").InteractionContent | import("oceanic.js").CreateMessageOptions | undefined>}
    */
-  async run() {
+  async run(): Promise<string | InteractionContent | CreateMessageOptions | undefined> {
     return "It works!";
   }
 
   async acknowledge() {
-    if (this.type === "classic" && this.message) {
-      const channel = this.channel ?? await this.client.rest.channels.get(this.message.channelID);
-      await channel.sendTyping();
+    if (this.type === "classic") {
+      await this.client.rest.channels.sendTyping(this.message.channelID);
     }
   }
 
-  /**
-   * @param {string} key
-   */
-  getString(key, returnNull = false) {
+  getString(key: string, returnNull = false) {
     return getString(key, this.locale, returnNull);
   }
 
@@ -85,7 +130,7 @@ class Command {
   }
 
   static description = "No description found";
-  static aliases = [];
+  static aliases: string[] = [];
   static flags = [];
   static ephemeral = false;
   static slashAllowed = true;
