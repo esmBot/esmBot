@@ -3,6 +3,10 @@ import { cleanMessage } from "../../utils/misc.js";
 
 class QrCreateCommand extends ImageCommand {
   async criteria(text, _url) {
+    // assuming a character uses at most 4 bytes
+    if (text.length < QrCreateCommand.maxBytes / 4) {
+      return true;
+    }
     if (QrCreateCommand.textEncoder.encode(text).length > QrCreateCommand.maxBytes) {
       return false;
     }
