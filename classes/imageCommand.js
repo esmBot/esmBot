@@ -73,7 +73,7 @@ class ImageCommand extends Command {
         imageParams.params.type = image.type;
         imageParams.url = image.url; // technically not required but can be useful for text filtering
         imageParams.name = image.name;
-        if (this.constructor.requiresGIF) imageParams.onlyGIF = true;
+        if (this.constructor.requiresAnim) imageParams.onlyAnim = true;
       } catch (e) {
         runningCommands.delete(this.author.id);
         throw e;
@@ -117,7 +117,7 @@ class ImageCommand extends Command {
       if (type === "noresult") return this.getString("image.noResult");
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
-      if (type === "nogif" && this.constructor.requiresGIF) return this.getString("image.nogif");
+      if (type === "noanim" && this.constructor.requiresAnim) return this.getString("image.noanim");
       if (type === "empty") return this.constructor.empty;
       this.success = true;
       if (type === "text") return {
@@ -211,7 +211,7 @@ class ImageCommand extends Command {
   static requiresImage = true;
   static requiresText = false;
   static textOptional = false;
-  static requiresGIF = false;
+  static requiresAnim = false;
   static alwaysGIF = false;
   static noImage = "You need to provide an image/GIF!";
   static noText = "You need to provide some text!";
