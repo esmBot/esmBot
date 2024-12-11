@@ -13,8 +13,28 @@ const Rinit = 0x08;
 const Rsent = 0x09;
 const Rclose = 0xFF;
 
+type RequestState = {
+  resolve: (value?: unknown) => void,
+  reject: (reason?: unknown) => void,
+  id: bigint,
+  op: number
+};
+
 class ImageConnection {
-  constructor(host, auth, name, tls = false) {
+  requests: Map<number, RequestState>;
+  host: string;
+  auth: string;
+  name?: string;
+  tag: number;
+  disconnected: boolean;
+  formats: { [key: string]: string[] };
+  funcs: string[];
+  wsproto: string;
+  sockurl: string;
+  conn: WebSocket;
+  httpurl: string;
+  reconnect?: boolean;
+  constructor(host: string, auth: string, name?: string, tls = false) {
     this.requests = new Map();
     this.host = host.includes(":") ? host : `${host}:3762`;
     this.auth = auth;
@@ -30,27 +50,25 @@ class ImageConnection {
       this.wsproto = "ws";
     }
     this.sockurl = `${this.wsproto}://${this.host}/sock`;
-    const headers = {};
+    const headers: { [key: string]: string } = {};
     if (auth) {
       headers.Authentication = auth;
     }
     this.conn = new WebSocket(this.sockurl, { headers });
-    let httpproto;
+    this.conn.binaryType = "nodebuffer";
+    let httpproto: string;
     if (tls) {
       httpproto = "https";
     } else {
       httpproto = "http";
     }
     this.httpurl = `${httpproto}://${this.host}`;
-    this.conn.on("message", (msg) => this.onMessage(msg));
+    this.conn.on("message", (msg: Buffer) => this.onMessage(msg));
     this.conn.once("error", (err) => this.onError(err));
     this.conn.once("close", () => this.onClose());
   }
 
-  /**
-   * @param {WebSocket.RawData} msg
-   */
-  async onMessage(msg) {
+  async onMessage(msg: Buffer) {
     const op = msg.readUint8(0);
     logger.debug(`Received message from image server ${this.host} with opcode ${op}`);
     if (op === Rinit) {
@@ -81,7 +99,7 @@ class ImageConnection {
     }
   }
 
-  onError(e) {
+  onError(e: Error) {
     logger.error(e.toString());
   }
 
@@ -98,7 +116,7 @@ class ImageConnection {
           Authentication: this.auth
         }
       });
-      this.conn.on("message", (msg) => this.onMessage(msg));
+      this.conn.on("message", (msg: Buffer) => this.onMessage(msg));
       this.conn.once("error", (err) => this.onError(err));
       this.conn.once("close", () => this.onClose());
     }
@@ -111,7 +129,7 @@ class ImageConnection {
     this.conn.close();
   }
 
-  queue(jobid, jobobj) {
+  queue(jobid: bigint, jobobj) {
     logger.debug(`Queuing ${jobid} on image server ${this.host}`);
     const str = JSON.stringify(jobobj);
     const buf = Buffer.alloc(8);
@@ -119,21 +137,21 @@ class ImageConnection {
     return this.do(Tqueue, jobid, Buffer.concat([buf, Buffer.from(str)]));
   }
 
-  wait(jobid) {
+  wait(jobid: bigint) {
     logger.debug(`Waiting for ${jobid} on image server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
     return this.do(Twait, jobid, buf);
   }
 
-  cancel(jobid) {
+  cancel(jobid: bigint) {
     logger.debug(`Cancelling ${jobid} on image server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
     return this.do(Tcancel, jobid, buf);
   }
 
-  async getOutput(jobid) {
+  async getOutput(jobid: bigint) {
     logger.debug(`Getting output of ${jobid} on image server ${this.host}`);
     const req = await fetch(`${this.httpurl}/image?id=${jobid}`, {
       headers: {
@@ -141,7 +159,7 @@ class ImageConnection {
       }
     });
     const contentType = req.headers.get("content-type");
-    let type;
+    let type: string;
     switch (contentType) {
       case "image/gif":
         type = "gif";
@@ -173,7 +191,7 @@ class ImageConnection {
     return res;
   }
 
-  async do(op, id, data) {
+  async do(op: number, id: bigint, data: Buffer) {
     const buf = Buffer.alloc(1 + 2);
     let tag = this.tag++;
     if (tag > 65535) tag = this.tag = 0;

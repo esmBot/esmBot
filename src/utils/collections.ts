@@ -1,9 +1,9 @@
 import type Command from "#cmd-classes/command.js";
 import type InteractionCollector from "../pagination/awaitinteractions.js";
 
-export const commands = new Map<string, Command>();
-export const messageCommands = new Map<string, Command>();
-export const userCommands = new Map<string, Command>();
+export const commands = new Map<string, typeof Command>();
+export const messageCommands = new Map<string, typeof Command>();
+export const userCommands = new Map<string, typeof Command>();
 
 export const paths = new Map<string, string>();
 export const aliases = new Map<string, string>();

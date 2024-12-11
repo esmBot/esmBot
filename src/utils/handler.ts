@@ -2,19 +2,34 @@ import { paths, commands, messageCommands, userCommands, info, categories, alias
 import { log } from "./logger.js";
 
 import commandConfig from "#config/commands.json" with { type: "json" };
-import { Constants } from "oceanic.js";
+import { Constants, type ApplicationCommandOptions, type Client } from "oceanic.js";
 import { getAllLocalizations } from "./i18n.js";
+import Command from "#cmd-classes/command.js";
 
 let queryValue = 0;
 
+type CommandInfo = {
+  category: string;
+  description: string;
+  aliases: string[];
+  params: (string | object)[];
+  flags: ExtendedCommandOptions[];
+  slashAllowed: boolean;
+  directAllowed: boolean;
+  userAllowed: boolean;
+  adminOnly: boolean;
+  type: Constants.ApplicationCommandTypes;
+};
+
+type ExtendedCommandOptions = {
+  classic?: boolean;
+} & ApplicationCommandOptions;
+
 /**
  * Load a command into memory.
- * @param {import("oceanic.js").Client | null} client
- * @param {string} command
- * @param {boolean} skipSend
  */
-export async function load(client, command, skipSend = false) {
-  const { default: props } = await import(`${command}?v=${queryValue}`);
+export async function load(client: Client | null, command: string, skipSend = false) {
+  const { default: props } = await import(`${command}?v=${queryValue}`) as { default: typeof Command };
   queryValue++;
   const commandArray = command.split("/");
   let commandName = commandArray[commandArray.length - 1].split(".")[0];
@@ -22,6 +37,11 @@ export async function load(client, command, skipSend = false) {
 
   if (commandConfig.blacklist.includes(commandName)) {
     log("warn", `Skipped loading blacklisted command ${command}...`);
+    return;
+  }
+
+  if (!(props.prototype instanceof Command)) {
+    log("warn", `Command ${command} is invalid, skipping...`);
     return;
   }
 
@@ -38,7 +58,7 @@ export async function load(client, command, skipSend = false) {
 
   const extendedFlags = extendFlags(props.flags, commandName);
 
-  const commandInfo = {
+  const commandInfo: CommandInfo = {
     category: category,
     description: props.description,
     aliases: props.aliases,
@@ -81,14 +101,12 @@ export async function load(client, command, skipSend = false) {
 
 /**
  * Convert command flags to params
- * @param {object} flags
- * @returns {string[] | object[]}
  */
-function parseFlags(flags) {
-  const params = [];
+function parseFlags(flags: ExtendedCommandOptions[]) {
+  const params: (string | object)[] = [];
   for (const flag of flags) {
     if (flag.type === 1) {
-      const sub = { name: flag.name, desc: flag.description };
+      const sub = { name: flag.name, desc: flag.description, params: undefined };
       if (flag.options) sub.params = parseFlags(flag.options);
       params.push(sub);
     } else {
@@ -99,8 +117,8 @@ function parseFlags(flags) {
   return params;
 }
 
-function extendFlags(flags, name) {
-  const outFlags = [];
+function extendFlags(flags: ExtendedCommandOptions[], name: string) {
+  const outFlags: ExtendedCommandOptions[] = [];
   for (const flag of flags) {
     if (!flag.nameLocalizations) flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
     if (!flag.descriptionLocalizations) flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
@@ -162,10 +180,7 @@ export function update() {
   };
 }
 
-/**
- * @param {import("oceanic.js").Client} bot
- */
-export async function send(bot) {
+export async function send(bot: Client) {
   const commandArray = update();
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;

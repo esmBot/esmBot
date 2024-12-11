@@ -11,7 +11,7 @@ export let categories = categoryTemplate;
 
 export let generated = false;
 
-function generateEntries(baseName, params, desc, categories, category) {
+function generateEntries(baseName: string, params, desc: string, categories, category: string) {
   let entry = `**${baseName}**`;
   const sorted = [];
   let generated = false;
@@ -39,10 +39,7 @@ export function generateList() {
   generated = true;
 }
 
-/**
- * @param {string} output
- */
-export async function createPage(output) {
+export async function createPage(output: string) {
   let template = `# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 
 This page was last generated on \`${new Date().toString()}\`.

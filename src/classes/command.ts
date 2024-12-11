@@ -3,6 +3,7 @@ import {
   Permission,
   type AllowedMentions,
   type AnyInteractionChannel,
+  type ApplicationCommandOptions,
   type Client,
   type CommandInteraction,
   type CreateMessageOptions,
@@ -19,7 +20,7 @@ import { getString } from "../utils/i18n.js";
 
 type CommandType = "classic" | "application";
 
-type ClassicCommandOptions = {
+type CommandOptionsClassic = {
   type: "classic";
   cmdName: string;
   args: string[];
@@ -28,12 +29,12 @@ type ClassicCommandOptions = {
   specialArgs: object;
 };
 
-type ApplicationCommandOptions = {
+type CommandOptionsApplication = {
   type: "application";
   interaction: CommandInteraction;
 };
 
-export type CommandOptions = ClassicCommandOptions | ApplicationCommandOptions;
+export type CommandOptions = CommandOptionsClassic | CommandOptionsApplication;
 
 class Command {
   client: Client;
@@ -129,9 +130,13 @@ class Command {
     return this;
   }
 
+  static postInit<T extends typeof Command>(this: T): T {
+    return this;
+  }
+
   static description = "No description found";
   static aliases: string[] = [];
-  static flags = [];
+  static flags: ({ classic: boolean } & ApplicationCommandOptions)[] = [];
   static ephemeral = false;
   static slashAllowed = true;
   static directAllowed = true;

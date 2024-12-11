@@ -9,11 +9,7 @@ import { Constants, CommandInteraction } from "oceanic.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 
 class ImageCommand extends Command {
-  /**
-   * @param {string} _text
-   * @param {string} _url
-   */
-  async criteria(_text, _url) {
+  async criteria(_text: string, _url: string) {
     return true;
   }
 

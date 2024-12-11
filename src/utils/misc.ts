@@ -1,7 +1,7 @@
 import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { config } from "dotenv";
-import type { Client } from "oceanic.js";
+import type { Client, Message } from "oceanic.js";
 import db from "#database";
 import { servers } from "./image.js";
 
@@ -12,7 +12,7 @@ import commandsConfig from "#config/commands.json" with { type: "json" };
 let broadcast = false;
 
 // random(array) to select a random entry in array
-export function random(array) {
+export function random(array: unknown[]) {
   if (!array || array.length < 1) return null;
   return array[Math.floor(Math.random() * array.length)];
 }
@@ -22,7 +22,7 @@ const optionalReplace = (token: string) => {
 };
 
 // clean(text) to clean message of any private info or mentions
-export function clean(input) {
+export function clean(input: string) {
   let text = input;
   if (typeof text !== "string")
     text = util.inspect(text, { depth: 1 });
@@ -131,7 +131,7 @@ export function getServers(bot: Client) {
 }
 
 // copied from eris
-export function cleanMessage(message, content) {
+export function cleanMessage(message: Message, content: string) {
   let cleanContent = content?.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
   const author = message.author ?? message.member ?? message.user;
