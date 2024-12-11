@@ -104,13 +104,16 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
     payload.type = "image/gif";
   } else {
     let result;
-    if (client
-      && (imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net")
-      && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))
-      && (isAttachmentExpired(imageURL))) {
-      const refreshed = await client.rest.misc.refreshAttachmentURLs([image]);
-      const refreshedURL = new URL(refreshed.refreshedURLs[0].refreshed);
-      result = await getType(refreshedURL, extraReturnTypes);
+    if ((imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net") && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))) {
+      let url;
+      if (client && isAttachmentExpired(imageURL)) {
+        const refreshed = await client.rest.misc.refreshAttachmentURLs([image]);
+        url = new URL(refreshed.refreshedURLs[0].refreshed);
+      } else {
+        url = new URL(image);
+      }
+      url.searchParams.set("animated", "true");
+      result = await getType(url, extraReturnTypes);
     } else {
       result = await getType(imageURL, extraReturnTypes);
     }
