@@ -138,14 +138,14 @@ export default async (client, message) => {
       }, reference));
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        let fileSize = 26214400;
+        let fileSize = 10485760;
         if (message.guild) {
           switch (message.guild.premiumTier) {
             case 2:
-              fileSize = 52428308;
+              fileSize = 52428800;
               break;
             case 3:
-              fileSize = 104856616;
+              fileSize = 104857600;
               break;
           }
         }

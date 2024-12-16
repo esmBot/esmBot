@@ -297,7 +297,7 @@ process.on("SIGINT", () => {
 });
 
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp"];
-const fileSize = 26214400;
+const fileSize = 10485760;
 
 /**
  * Run an image job.

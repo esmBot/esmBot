@@ -63,7 +63,17 @@ export default async (client, interaction) => {
       });
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        const fileSize = 26214400;
+        let fileSize = 10485760;
+        if (interaction.guild) {
+          switch (interaction.guild.premiumTier) {
+            case 2:
+              fileSize = 52428800;
+              break;
+            case 3:
+              fileSize = 104857600;
+              break;
+          }
+        }
         if (result.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
             await upload(client, result, interaction, commandClass.success, true);
