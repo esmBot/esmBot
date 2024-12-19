@@ -8,9 +8,9 @@ class CatCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://files.projectlounge.pw/cta/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
+      const data = await fetch("https://files.esmbot.net/cta/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
       clearTimeout(timeout);
-      return `https://files.projectlounge.pw${data.headers.get("location")}`;
+      return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;
