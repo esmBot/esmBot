@@ -52,7 +52,7 @@
     "jobEnded": "Sucedió algo en los servidores y no recibí la imagen. Intenta correr el comando de nuevo.",
     "large": "¡Esa imagen es demasiado grande (>= 40MB)! Intenta subir una imagen más pequeña.",
     "nocmd": "Ese comando no tiene soporte en esta instancia de esmBot.",
-    "nogif": "¡Eso no es un GIF!",
+    "noanim": "¡Eso no es un GIF!",
     "noImage": "¡Necesitas subir una imagen o GIF!",
     "noResult": "No recibí respuesta del servidor de imágenes. Por favor inténtalo de nuevo.",
     "noServers": "No me pude conectar a los servidores de imágenes, puede que estén caídos o que se estén reiniciando. Por favor espera.",

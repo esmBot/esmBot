@@ -713,7 +713,7 @@
     "jobEnded": "Something happened to the image servers before I could receive the image. Try running your command again.",
     "large": "That image is too large (>= 40MB)! Try using a smaller image.",
     "nocmd": "That command isn't supported on this instance of esmBot.",
-    "nogif": "That isn't a GIF!",
+    "noanim": "That image isn't in an animated format (GIF or WEBP)!",
     "noImage": "You need to provide an image/GIF!",
     "noResult": "I couldn't get a response from the image server. Please try again.",
     "noServers": "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.",
