@@ -139,6 +139,7 @@ packages:
   '@discordjs/voice@0.17.0':
     resolution: {integrity: sha512-hArn9FF5ZYi1IkxdJEVnJi+OxlwLV0NJYWpKXsmNOojtGtAZHxmsELA+MZlu2KW1F/K1/nt7lFOfcMXNYweq9w==}
     engines: {node: '>=16.11.0'}
+    deprecated: This version uses deprecated encryption modes. Please use a newer version.
 
   '@opentelemetry/api-logs@0.52.1':
     resolution: {integrity: sha512-qnSqB2DQ9TPP96dl8cDubDvrUyWc0/sK81xHTK8eSUspzDM3bsewX903qclQFvVhgStjRWdC5bLb3kQqMkfV5A==}
@@ -1328,8 +1329,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  systeminformation@5.23.5:
-    resolution: {integrity: sha512-PEpJwhRYxZgBCAlWZhWIgfMTjXLqfcaZ1pJsJn9snWNfBW/Z1YQg1mbIUSWrEV3ErAHF7l/OoVLQeaZDlPzkpA==}
+  systeminformation@5.23.14:
+    resolution: {integrity: sha512-mUHEuDQJJOpphvjcIrTY0iwLnoNo/qotr6SuN7v0ANOO0L3j89mfCrEuIVheS/9S9KGRt4Osqxh9GoF7BX49UA==}
     engines: {node: '>=8.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
@@ -2787,7 +2788,7 @@ snapshots:
       async: 3.2.6
       debug: 4.3.7
       pidusage: 2.0.21
-      systeminformation: 5.23.5
+      systeminformation: 5.23.14
       tx2: 1.0.5
     transitivePeerDependencies:
       - supports-color
@@ -3062,7 +3063,7 @@ snapshots:
   supports-preserve-symlinks-flag@1.0.0:
     optional: true
 
-  systeminformation@5.23.5:
+  systeminformation@5.23.14:
     optional: true
 
   tar-fs@2.1.1:
