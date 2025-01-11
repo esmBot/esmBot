@@ -25,7 +25,7 @@ jobs:
         node-version: 20
         cache: pnpm
     - name: Install dependencies
-      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev
+      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev libwebp-dev
     - name: Build
       run: pnpm install --frozen-lockfile --no-optional && pnpm run build
 
@@ -44,7 +44,7 @@ jobs:
         node-version: 20
         cache: pnpm
     - name: Install dependencies
-      run: brew install imagemagick vips
+      run: brew install imagemagick vips webp
     - name: Build
       run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF
 
