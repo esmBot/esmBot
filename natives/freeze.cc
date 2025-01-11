@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <map>
 #include <vips/vips8>
+#include <webp/mux.h>
 
 #include "common.h"
 
@@ -12,6 +13,9 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
   bool loop = GetArgumentWithFallback<bool>(arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(arguments, "frame", -1);
 
+  ArgumentMap output;
+
+  if (type == "gif") {
   char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
   memcpy(fileData, bufferdata, bufferLength);
 
@@ -42,10 +46,7 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     }
     if (none) dataSize = bufferLength;
 
-    ArgumentMap output;
     output["buf"] = newData;
-
-    return output;
   } else if (frame >= 0 && !loop) {
     VImage in =
         VImage::new_from_buffer(bufferdata, bufferLength, "",
@@ -63,11 +64,7 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     char *buf;
     out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
-    ArgumentMap output;
     output["buf"] = buf;
-
-    return output;
-    
   } else {
     lastPos = reinterpret_cast<char*>(memchr(fileData, '\x21', bufferLength));
     while (lastPos != NULL) {
@@ -83,9 +80,47 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     }
     if (none) dataSize = bufferLength;
 
-    ArgumentMap output;
     output["buf"] = fileData;
+    }
+  } else if (type == "webp") {
+    WebPData webp_data;
+    WebPDataInit(&webp_data);
+    webp_data.bytes = (const uint8_t *)bufferdata;
+    webp_data.size = bufferLength;
+    int copy_data = 0;
+    WebPMux *mux = WebPMuxCreate(&webp_data, copy_data);
 
-    return output;
+    WebPMuxAnimParams anim;
+    WebPMuxError err;
+    err = WebPMuxGetAnimationParams(mux, &anim);
+    if (err > 0) {
+      anim.loop_count = loop ? 0 : 1;
+      if (frame >= 0 && !loop) {
+        while (err > 0) {
+          err = WebPMuxDeleteFrame(mux, frame + 1);
   }
+      }
+      WebPMuxSetAnimationParams(mux, &anim);
+    }
+
+    WebPData out;
+    WebPMuxAssemble(mux, &out);
+
+    dataSize = out.size;
+    char *data = reinterpret_cast<char*>(malloc(dataSize));
+    memcpy(data, out.bytes, dataSize);
+
+    WebPDataClear(&out);
+
+    output["buf"] = data;
+    
+    WebPDataInit(&webp_data);
+    WebPMuxDelete(mux);
+  } else {
+    char *data = reinterpret_cast<char*>(malloc(dataSize));
+    memcpy(data, bufferdata, dataSize);
+    output["buf"] = data;
+  }
+
+  return output;
 }

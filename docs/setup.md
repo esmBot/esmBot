@@ -20,7 +20,7 @@ Choose the OS you're using below for insallation instructions.
 === "Debian/Ubuntu"
     These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
     ```sh
-    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev
+    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev libwebp-dev
     ```
     On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
 === "Fedora/RHEL"
@@ -28,7 +28,7 @@ Choose the OS you're using below for insallation instructions.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them [here](https://rpmfusion.org/Configuration).
     ```sh
-    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ ImageMagick-c++-devel vips-devel cabextract zxing-cpp-devel
+    sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ ImageMagick-c++-devel vips-devel cabextract zxing-cpp-devel libwebp-devel
     ```
     On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add [Remi's RPM Repository](https://rpms.remirepo.net) for the vips package.
     
@@ -39,16 +39,16 @@ Choose the OS you're using below for insallation instructions.
 === "Alpine"
     These instructions should apply to version 3.17 or later.
     ```sh
-    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
+    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev libwebp-dev
     ```
 === "Arch/Manjaro"
     ```sh
-    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp
+    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp libwebp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 === "macOS (Homebrew)"
     ```sh
-    brew install cmake ffmpeg imagemagick libvips
+    brew install cmake ffmpeg imagemagick libvips webp
     ```
     The `zxing-cpp` package is not available through Homebrew, so unfortunately the QR commands will be unavailable on macOS without further intervention.
 

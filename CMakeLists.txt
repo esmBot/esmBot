@@ -102,6 +102,10 @@ find_package(Fontconfig REQUIRED)
 include_directories(${Fontconfig_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${Fontconfig_LIBRARIES})
 
+find_package(WebP REQUIRED)
+include_directories(${WebP_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${WebP_LIBRARIES})
+
 pkg_check_modules(VIPS REQUIRED vips-cpp)
 include_directories(${VIPS_INCLUDE_DIRS})
 link_directories(${VIPS_LIBRARY_DIRS})
