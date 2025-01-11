@@ -29,7 +29,7 @@
             "qrcreate": "Generează un cod QR",
             "hypercam": "Adaugă filigranul Hypercam la o imagine",
             "memecenter": "Adaugă filigranul MemeCenter la o imagine",
-            "raw": "Obține o adresă URL directă pentru o imagine (util pentru salvarea GIF-urilor de pe site-uri ca Tenor)",
+            "raw": "",
             "shutterstock": "Adaugă filigranul Shutterstock la o imagine"
         },
         "flagNames": {
