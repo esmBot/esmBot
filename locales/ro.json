@@ -29,7 +29,91 @@
             "qrcreate": "Generează un cod QR",
             "hypercam": "Adaugă filigranul Hypercam la o imagine",
             "memecenter": "Adaugă filigranul MemeCenter la o imagine",
-            "shutterstock": "Adaugă filigranul Shutterstock la o imagine"
+            "shutterstock": "Adaugă filigranul Shutterstock la o imagine",
+            "8ball": "Pune o întrebare mingii magice 8-ball",
+            "ancient": "Obține o imagine aleatorie a unui meme antic",
+            "homebrew": "Creează o editare Homebrew Channel",
+            "wikihow": "Obține o imagine aleatorie WikiHow",
+            "sonic": "Creează o imagine cu o bulă de dialog Sonic",
+            "info": "Obține niște informații și atribuții despre mine",
+            "imagereload": "Încearcă reconectarea la toate serverele disponibile de procesare a imaginilor",
+            "emote": "Obține o imagine a unui emoticon",
+            "donate": "Află mai multe despre cum poți sprijini dezvoltarea esmBot",
+            "count": "Obține numărul de utilizări a fiecărei comenzi",
+            "command": "Activează/dezactivează o comandă clasică într-un server (comenzile slash le modifici în setări)",
+            "channel": "Activează/dezactivează o comandă clasică într-un canal (comenzile slash le modifici în setări)",
+            "broadcast": "Transmite un mesaj de stare până când comanda este rulată din nou sau botul este repornit",
+            "prefix": "Verifică/schimbă prefixul serverului",
+            "ping": "Verifică conexiunea la serverele Discord",
+            "lengthen": "Prelungește o adresă URL scurtă",
+            "snowflake": "Transformă un ID snowflake Discord într-o marcă temporală",
+            "soundreload": "Încearcă reconectarea la toate nodurile Lavalink disponibile",
+            "blur": "Blurează o imagine",
+            "bounce": "Face o imagine să sară în sus și în jos",
+            "caption": "Adaugă un titlu la o imagine",
+            "caption2": "Adaugă un subtitlu/listă de etichete la o imagine",
+            "circle": "Aplică un efect de blurare radial pe o imagine",
+            "crop": "Decupează o imagine la 1:1",
+            "deepfry": "Prăjește o imagine",
+            "flag": "Suprapune un drapel pe o imagine",
+            "flip": "Răstoarnă o imagine",
+            "flop": "Răstoarnă o imagine",
+            "freeze": "Face ca o secvență de imagini să fie redată o singură dată",
+            "globe": "Învârte o imagine",
+            "funky": "Adaugă un banner New Funky Mode la o imagine",
+            "gamexplain": "Creează o miniatură GameXplain dintr-o imagine",
+            "explode": "Adaugă un efect de explozie la o imagine",
+            "gif": "Transformă o imagine într-un GIF",
+            "invert": "Inversează o imagine",
+            "grayscale": "Adaugă un filtru în tonuri de gri",
+            "haah": "Oglindește partea stângă a unei imagini în dreapta",
+            "hooh": "Oglindește partea de jos a unei imagini în partea de sus",
+            "implode": "Adaugă un efect de implozie la o imagine",
+            "jpeg": "Adaugă compresie JPEG la o imagine",
+            "pixelate": "Pixelează o imagine",
+            "motivate": "Generează un poster motivațional",
+            "scott": "Îl face pe Scott the Woz să arate o imagine",
+            "sepia": "Adaugă un filtru sepia",
+            "sharpen": "Clarifică o imagine",
+            "slow": "Face o secvență de imagini mai lentă",
+            "speechbubble": "Adaugă o bulă de dialog la o imagine",
+            "speed": "Face o secvență de imagini mai rapidă",
+            "spin": "Învârte o imagine",
+            "soos": "\"Redă în buclă\" o secvență de imagini prin redarea ei în mod invers la sfârșit",
+            "magik": "Adaugă un efect de redimensionare în funcție de conținut la o imagine",
+            "meme": "Creează un meme dintr-o imagine (separă textul de sus/de jos cu o virgulă)",
+            "squish": "Strânge/întinde o imagine",
+            "stretch": "Întinde o imagine la un raport de aspect 1:1",
+            "uncaption": "Scoate titlul dintr-o imagine",
+            "unfreeze": "Dezgheață o secvență de imagini",
+            "vignette": "Adaugă o vinietă unei imagini",
+            "waaw": "Oglindește partea dreaptă a unei imagini în stânga",
+            "wall": "Creează un perete dintr-o imagine",
+            "spotify": "Adaugă un antet de tipul Spotify \"This is\" la o imagine",
+            "swirl": "Adaugă un vârtej la o imagine",
+            "whisper": "Adaugă un titlu în stil Șoaptă la o imagine",
+            "tile": "Creează un șablon de dale dintr-o imagine",
+            "uncanny": "Creează o imagine Mr. Incredible Devine Ciudat (separă textul stânga/dreapta cu o virgulă)",
+            "woow": "Oglindește partea de sus a unei imagini în partea de jos",
+            "Select Image": "Nu a fost găsită nicio descriere",
+            "loop": "Redă muzica în buclă",
+            "music": "Gestionează redarea muzicii",
+            "nowplaying": "Afișează melodia redată la moment",
+            "play": "Redă o melodie sau o adaugă la coadă",
+            "queue": "Afișează coada curentă",
+            "remove": "Elimină o melodie din coadă",
+            "seek": "Schimbă poziția de redare în melodie",
+            "shuffle": "Amestecă melodiile",
+            "skip": "Sare peste melodia curentă",
+            "stop": "Oprește melodia",
+            "toggle": "Întrerupe/reia melodia curentă",
+            "volume": "Setează volumul muzicii",
+            "tags": "Comanda principală pentru etichete. Vezi mai multe detalii aici: https://esmbot.net/help.html",
+            "raw": "Obține o adresă URL pentru o imagine (util pentru salvarea GIF-urilor de pe site-uri ca Tenor)",
+            "host": "Obține sau schimbă gazda sesiunii vocale curente",
+            "snapchat": "Adaugă un titlu în stil Snapchat la o imagine",
+            "wide": "Întinde o imagine la 19x lățimea ei",
+            "reverse": "Redă o secvență de imagini în ordine inversă"
         },
         "flagNames": {
             "dice": {
@@ -86,28 +170,34 @@
                 "prefix": "prefix"
             },
             "caption2": {
-                "font": "font"
+                "font": "font",
+                "top": "sus"
             },
             "caption": {
-                "font": "font"
+                "font": "font",
+                "noegg": "fărăou"
             },
             "meme": {
-                "font": "font"
+                "font": "font",
+                "case": "distingeliterele"
             },
             "motivate": {
                 "font": "font"
             },
             "uncanny": {
-                "font": "font"
+                "font": "font",
+                "phase": "tip"
             },
             "tags add": {
-                "name": "nume"
+                "name": "nume",
+                "content": "conținut"
             },
             "tags delete": {
                 "name": "nume"
             },
             "tags edit": {
-                "name": "nume"
+                "name": "nume",
+                "content": "conținut"
             },
             "tags get": {
                 "name": "nume"
@@ -118,7 +208,11 @@
             "tags": {
                 "add": "adaugă",
                 "delete": "șterge",
-                "edit": "editează"
+                "edit": "editează",
+                "get": "preia",
+                "list": "listează",
+                "owner": "proprietar",
+                "random": "aleatoriu"
             },
             "tags owner": {
                 "name": "nume"
@@ -128,6 +222,62 @@
             },
             "channel disable": {
                 "text": "text"
+            },
+            "base64": {
+                "decode": "decodează",
+                "encode": "codează"
+            },
+            "exec": {
+                "cmd": "comandă"
+            },
+            "reload": {
+                "cmd": "comandă",
+                "skipsend": "saritrimitere"
+            },
+            "snowflake": {
+                "id": "id"
+            },
+            "youtube": {
+                "query": "interogare"
+            },
+            "image": {
+                "query": "interogare"
+            },
+            "snapchat": {
+                "position": "poziție"
+            },
+            "speechbubble": {
+                "scale": "dimensiune",
+                "alpha": "transparent",
+                "flip": "răstoarnă",
+                "bottom": "jos"
+            },
+            "speed": {
+                "multiplier": "multiplicator"
+            },
+            "uncaption": {
+                "tolerance": "toleranță"
+            },
+            "host": {
+                "user": "utilizator"
+            },
+            "freeze": {
+                "endframe": "cadrufinal"
+            },
+            "jpeg": {
+                "quality": "calitate"
+            },
+            "slow": {
+                "multiplier": "multiplicator"
+            },
+            "play": {
+                "query": "interogare"
+            },
+            "remove": {
+                "position": "poziție"
+            },
+            "seek": {
+                "position": "poziție"
             }
         },
         "noText": {
@@ -138,7 +288,11 @@
             "homebrew": "Trebuie să furnizezi un text pentru a crea o editare Homebrew Channel!",
             "snapchat": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
             "whisper": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
-            "spotify": "Trebuie să furnizezi un text pentru a adăuga un antet Spotify \"This is\"!"
+            "spotify": "Trebuie să furnizezi un text pentru a adăuga un antet Spotify \"This is\"!",
+            "meme": "Trebuie să furnizezi un text pentru a genera un meme!",
+            "flag": "Trebuie să furnizezi emoji-ul unui drapel pe care să-l suprapui!",
+            "reddit": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul Reddit!",
+            "motivate": "Trebuie să furnizezi un text pentru a genera un poster motivațional!"
         },
         "responses": {
             "8ball": {
@@ -189,6 +343,348 @@
             "cat": {
                 "error": "Nu am putut obține o imagine cu o pisică la timp. Poate mai încearcă o dată?"
             }
+        },
+        "flags": {
+            "8ball": {
+                "question": "O întrebare pe care vrei să o pui mingii"
+            },
+            "dice": {
+                "max": "Valoarea maximă a zarului"
+            },
+            "avatar": {
+                "member": "Membrul de la care să ia poza de profil"
+            },
+            "banner": {
+                "member": "Membrul de la care să ia poza de fundal"
+            },
+            "base64": {
+                "decode": "Decodează un șir de caractere folosind codificarea Base64",
+                "encode": "Codifică un șir de caractere folosind codificarea Base64"
+            },
+            "base64 decode": {
+                "text": "Textul de decodat"
+            },
+            "base64 encode": {
+                "text": "Textul de codificat"
+            },
+            "channel": {
+                "enable": "Activează comenzile clasice într-un canal",
+                "disable": "Dezactivează comenzile clasice dintr-un canal"
+            },
+            "channel enable": {
+                "text": "Textul de decodat"
+            },
+            "channel disable": {
+                "text": "Textul de codificat"
+            },
+            "broadcast": {
+                "message": "Mesajul de difuzat"
+            },
+            "command enable": {
+                "text": "Textul de decodat"
+            },
+            "command disable": {
+                "text": "Textul de codificat"
+            },
+            "emote": {
+                "emoji": "Emoji-ul pe care vrei să-l primești"
+            },
+            "count": {
+                "command": "Comanda pentru care să vezi numărul de utilizări"
+            },
+            "command": {
+                "enable": "Activează o comandă clasică",
+                "disable": "Dezactivează o comandă clasică"
+            },
+            "exec": {
+                "cmd": "Comanda de executat"
+            },
+            "help": {
+                "command": "Comanda pentru care să vezi informații"
+            },
+            "lengthen": {
+                "url": "Adresa URL pe care vrei să o prelungești"
+            },
+            "prefix": {
+                "prefix": "Prefixul serverului pe care vrei să îl folosești"
+            },
+            "reload": {
+                "cmd": "Comanda de reîncărcat",
+                "skipsend": "Omite trimiterea datelor noi despre comenzile aplicației către Discord"
+            },
+            "snowflake": {
+                "id": "Un ID snowflake"
+            },
+            "caption": {
+                "noegg": "Dezactivează... ceva. N-o să spun însă ce e aia.",
+                "font": "Specifică fontul pe care vrei să-l utilizezi (implicit: futura)"
+            },
+            "caption2": {
+                "font": "Specifică fontul pe care vrei să-l folosești (implicit: helvetica)",
+                "top": "Pune titlul în partea de sus a unei imagini în loc de partea de jos"
+            },
+            "freeze": {
+                "endframe": "Setează cadrul final (implicit: ultimul cadru)"
+            },
+            "jpeg": {
+                "quality": "Setează calitatea JPEG (implicit: 1)"
+            },
+            "meme": {
+                "font": "Specifică fontul pe care vrei să îl folosești (implicit: impact)",
+                "case": "Fă ca textul meme-ului să distingă între majuscule și minuscule (permite text cu minuscule)"
+            },
+            "motivate": {
+                "font": "Specifică fontul pe care vrei să îl folosești (implicit: times)"
+            },
+            "slow": {
+                "multiplier": "Setează multiplicatorul de viteză (implicit: 2)"
+            },
+            "snapchat": {
+                "position": "Setează poziția titlului ca un număr zecimal (0.0 este sus, 1.0 este jos, implicit este 0.565)"
+            },
+            "speechbubble": {
+                "alpha": "Fă ca partea superioară a bulei de dialog să fie transparentă",
+                "flip": "Întoarce bula de dialog pe cealaltă parte",
+                "bottom": "Pune bula de dialog în partea de jos a imaginii",
+                "scale": "Un multiplicator pentru a redimensiona bula de dialog (0.01 este cel mai mic, 1.0 este cel mai mare, implicit este 0.2)"
+            },
+            "speed": {
+                "multiplier": "Setează multiplicatorul de viteză (implicit: 2)"
+            },
+            "uncanny": {
+                "font": "Specifică fontul pe care vrei să-l folosești (implicit: helvetica)",
+                "phase": "Specifică imaginea ciudată pe care vrei să o folosești"
+            },
+            "host": {
+                "user": "Utilizatorul pe care vrei să fie noua gază"
+            },
+            "play": {
+                "query": "O interogare de căutare audio sau o adresă URL"
+            },
+            "seek": {
+                "position": "Schimbă la această poziție"
+            },
+            "volume": {
+                "level": "Nivelul volumului"
+            },
+            "tags": {
+                "add": "Adaugă o nouă etichetă",
+                "delete": "Șterge o etichetă",
+                "edit": "Editează o etichetă existentă",
+                "get": "Obține o etichetă",
+                "list": "Listează fiecare etichetă de pe acest server",
+                "owner": "Obține proprietarul unei etichete",
+                "random": "Obține o etichetă aleatorie"
+            },
+            "tags add": {
+                "name": "Numele etichetei",
+                "content": "Conținutul etichetei"
+            },
+            "tags delete": {
+                "name": "Numele etichetei"
+            },
+            "tags edit": {
+                "name": "Numele etichetei",
+                "content": "Conținutul etichetei"
+            },
+            "tags get": {
+                "name": "Numele etichetei"
+            },
+            "tags owner": {
+                "name": "Numele etichetei"
+            },
+            "eval": {
+                "code": "Codul de executat"
+            },
+            "image": {
+                "query": "Interogarea pe care vrei să o cauți"
+            },
+            "uncaption": {
+                "tolerance": "Setează toleranța de nuanță pentru detecția titlului (0.0 este cea mai mare, 1.0 este cea mai mică, implicit este 0.95)"
+            },
+            "youtube": {
+                "query": "Interogarea pe care vrei să o cauți"
+            },
+            "remove": {
+                "position": "Poziția în coadă pe care vrei să o elimini"
+            }
+        },
+        "names": {
+            "8ball": "8ball",
+            "ancient": "antic",
+            "bird": "pasăre",
+            "dice": "zar",
+            "dog": "câine",
+            "homebrew": "homebrew",
+            "sonic": "sonic",
+            "wikihow": "wikihow",
+            "avatar": "avatar",
+            "banner": "fundal",
+            "base64": "base64",
+            "broadcast": "difuzează",
+            "channel": "canal",
+            "command": "comandă",
+            "count": "numără",
+            "donate": "donează",
+            "emote": "emoticon",
+            "eval": "evaluează",
+            "exec": "execută",
+            "help": "ajutor",
+            "image": "imagine",
+            "imagereload": "reîncarcăimagini",
+            "info": "informații",
+            "lengthen": "lungește",
+            "ping": "verifică",
+            "qrread": "citeșteqr",
+            "reload": "reîncarcă",
+            "restart": "repornește",
+            "snowflake": "snowflake",
+            "soundreload": "reîncarcăsunete",
+            "stats": "statistici",
+            "sticker": "sticker",
+            "youtube": "youtube",
+            "9gag": "9gag",
+            "avs4you": "avs4you",
+            "blur": "blurare",
+            "bounce": "salt",
+            "caption": "titlu",
+            "caption2": "titlu2",
+            "circle": "cerc",
+            "crop": "decupează",
+            "deepfry": "prăjește",
+            "deviantart": "deviantart",
+            "flag": "etichetă",
+            "flip": "răstoarnă",
+            "flop": "întoarce",
+            "freeze": "îngheață",
+            "funky": "funky",
+            "gamexplain": "gamexplain",
+            "gif": "gif",
+            "globe": "glob",
+            "explode": "explozie",
+            "hypercam": "hypercam",
+            "ifunny": "ifunny",
+            "jpeg": "jpeg",
+            "kinemaster": "kinemaster",
+            "magik": "magik",
+            "grayscale": "grayscale",
+            "implode": "implozie",
+            "invert": "inversează",
+            "hooh": "hooh",
+            "memecenter": "memecenter",
+            "pixelate": "pixelează",
+            "reddit": "reddit",
+            "scott": "scott",
+            "sharpen": "clarifică",
+            "shutterstock": "shutterstock",
+            "slow": "încetinește",
+            "snapchat": "snapchat",
+            "speechbubble": "bulădedialog",
+            "motivate": "motivează",
+            "reverse": "înapoi",
+            "soos": "soos",
+            "speed": "viteză",
+            "spin": "învârte",
+            "spotify": "spotify",
+            "squish": "strânge",
+            "stretch": "întinde",
+            "swirl": "vârtej",
+            "tile": "dale",
+            "uncanny": "ciudat",
+            "uncaption": "fărătitlu",
+            "unfreeze": "dezgheață",
+            "vignette": "vinietă",
+            "wall": "perete",
+            "whisper": "șoptește",
+            "wide": "lat",
+            "Select Image": "Selectează o imagine",
+            "host": "gazdă",
+            "loop": "buclă",
+            "music": "muzică",
+            "play": "joacă",
+            "nowplaying": "acumjoacă",
+            "waaw": "waaw",
+            "woow": "woow",
+            "queue": "coadă",
+            "remove": "elimină",
+            "seek": "schimbă",
+            "shuffle": "amestecă",
+            "skip": "sari",
+            "stop": "oprește",
+            "toggle": "comută",
+            "volume": "volum",
+            "tags": "etichete",
+            "qrcreate": "creeazăqr",
+            "cat": "pisică",
+            "imagestats": "statisticiimagini",
+            "raw": "direct",
+            "bandicam": "bandicam",
+            "meme": "meme",
+            "sepia": "sepia",
+            "prefix": "prefix",
+            "haah": "haah"
+        },
+        "noImage": {
+            "qrread": "Trebuie să furnizezi o imagine sau un GIF cu un cod QR pentru citire!",
+            "9gag": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul 9GAG!",
+            "bandicam": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul Bandicam!",
+            "blur": "Trebuie să furnizezi o imagine sau un GIF pentru blurare!",
+            "bounce": "Trebuie să furnizezi o imagine sau un GIF pentru a face o imagine să sară!",
+            "caption2": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un titlu!",
+            "circle": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un efect de blurare radial!",
+            "crop": "Trebuie să furnizezi o imagine sau un GIF pentru a decupa!",
+            "haah": "Trebuie să furnizezi o imagine sau un GIF pentru oglindire!",
+            "hooh": "Trebuie să furnizezi o imagine sau un GIF pentru oglindire!",
+            "flag": "Trebuie să furnizezi o imagine sau un GIF pentru a suprapune un drapel!",
+            "flip": "Trebuie să furnizezi o imagine sau un GIF pentru a răsturna imaginea!",
+            "flop": "Trebuie să furnizezi o imagine sau un GIF pentru a întoarce imaginea!",
+            "freeze": "Trebuie să furnizezi o imagine sau un GIF pentru a îngheța!",
+            "funky": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un banner New Funky Mode!",
+            "gif": "Trebuie să furnizezi o imagine pentru a o converti într-un GIF!",
+            "globe": "Trebuie să furnizezi o imagine sau un GIF pentru a roti!",
+            "grayscale": "Trebuie să furnizezi o imagine sau un GIF pentru a o transforma în tonuri de gri!",
+            "hypercam": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul Hypercam!",
+            "ifunny": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul iFunny!",
+            "kinemaster": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul KineMaster!",
+            "deepfry": "Trebuie să furnizezi o imagine sau un GIF pentru a prăji!",
+            "jpeg": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga mai mult JPEG!",
+            "magik": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga magik!",
+            "motivate": "Trebuie să furnizezi o imagine sau un GIF pentru a genera un poster motivațional!",
+            "pixelate": "Trebuie să furnizezi o imagine sau un GIF pentru a pixela!",
+            "sepia": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un filtru sepia!",
+            "sharpen": "Trebuie să furnizezi o imagine sau un GIF pentru a clarifica!",
+            "reverse": "Trebuie să furnizezi o imagine sau un GIF pentru a reda în ordine inversă!",
+            "explode": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un efect de explozie!",
+            "implode": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un efect de implozie!",
+            "stretch": "Trebuie să furnizezi o imagine sau un GIF pentru întindere!",
+            "snapchat": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un titlu!",
+            "spin": "Trebuie să furnizezi o imagine sau un GIF pentru a roti!",
+            "shutterstock": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul Shutterstock!",
+            "slow": "Trebuie să furnizezi o imagine sau un GIF pentru a încetini!",
+            "soos": "Trebuie să furnizezi o imagine sau un GIF pentru a reda în buclă!",
+            "speechbubble": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga o bulă de dialog!",
+            "speed": "Trebuie să furnizezi o imagine sau un GIF pentru a mări viteza!",
+            "spotify": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un antet de tipul Spotify \"This is\"!",
+            "waaw": "Trebuie să furnizezi o imagine sau un GIF pentru oglindire!",
+            "swirl": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un vârtej!",
+            "tile": "Trebuie să furnizezi o imagine sau un GIF pentru a crea un șablon de dale!",
+            "uncanny": "Trebuie să furnizezi o imagine sau un GIF pentru a crea o imagine ciudată!",
+            "uncaption": "Trebuie să furnizezi o imagine sau un GIF pentru a scoate titlul!",
+            "unfreeze": "Trebuie să furnizezi o imagine sau un GIF pentru a dezgheța!",
+            "vignette": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga o vinietă!",
+            "woow": "Trebuie să furnizezi o imagine sau un GIF pentru oglindire!",
+            "wide": "Trebuie să furnizezi o imagine sau un GIF pentru întindere!",
+            "whisper": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un titlu!",
+            "wall": "Trebuie să furnizezi o imagine sau un GIF pentru a crea un perete!",
+            "meme": "Trebuie să furnizezi o imagine sau un GIF pentru a genera un meme!",
+            "caption": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga un titlu!",
+            "gamexplain": "Trebuie să furnizezi o imagine sau un GIF din care să creezi o miniatură GameXplain!",
+            "memecenter": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul MemeCenter!",
+            "scott": "Trebuie să furnizezi o imagine sau un GIF ca Scott să o arate!",
+            "avs4you": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul avs4you!",
+            "deviantart": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul DeviantArt!",
+            "squish": "Trebuie să furnizezi o imagine sau un GIF pentru a strânge!",
+            "invert": "Trebuie să furnizezi o imagine sau un GIF pentru a inversa!"
         }
     },
     "image": {
@@ -197,7 +693,8 @@
             "link": "O adresă URL a unei imagini sau a unui GIF",
             "text": "Textul de pus pe imagine",
             "togif": "Forțează rezultatul ca GIF",
-            "spoiler": "Încearcă să trimiți rezultatul ca un spoiler"
+            "spoiler": "Încearcă să trimiți rezultatul ca un spoiler",
+            "ephemeral": "Încearcă să trimiți rezultatul ca un răspuns efemer/temporar"
         },
         "frames": "Acest GIF are prea multe cadre (peste 1000)!",
         "jobEnded": "Ceva s-a întâmplat cu serverele de imagini înainte să pot obține imaginea. Încearcă să rulezi comanda din nou.",
@@ -217,7 +714,22 @@
         "tip": "(Sfat: încearcă să dai clic dreapta sau să ții apăsat pe un mesaj și să apeși Aplicații -> Selectează o imagine, apoi încearcă din nou.)",
         "tooLong": "Procesarea imaginii durează prea mult (>= 10 minute), așa că cererea de procesare a fost anulată. Încearcă să folosești o imagine mai mică.",
         "unknown": "Imaginea rezultat nu a fost într-un format cunoscut. Te rog să încerci din nou.",
-        "timeout": "Solicitarea de a obține acea imagine a expirat. Încearcă din nou, încarcă imaginea în altă parte sau utilizează o altă imagine."
+        "timeout": "Solicitarea de a obține acea imagine a expirat. Încearcă din nou, încarcă imaginea în altă parte sau utilizează o altă imagine.",
+        "flagNames": {
+            "image": "imagine",
+            "ephemeral": "efemer",
+            "link": "adresă",
+            "spoiler": "spoiler",
+            "text": "text",
+            "togif": "îngif"
+        },
+        "noTempServer": "Imaginea obținută a fost mai mare decât limita de încărcare a Discord, așa că nu o pot încărca.",
+        "processing": "Procesez... Poate dura ceva timp",
+        "ratelimit": "Am atins limita de cereri către serverul care găzduiește acea imagine. Încearcă să încarci imaginea ta în altă parte.",
+        "selected": "Imaginea a fost selectată pentru următoarea comandă.",
+        "slowDown": "Te rog să încetinești puțin.",
+        "tempImageSent": "Iată imaginea ta!",
+        "tempSite": "Imaginea obținută a fost mai mare decât limita de încărcare a Discord, așa că a fost încărcată pe un site extern."
     },
     "pagination": {
         "delete": "Șterge",
@@ -253,7 +765,8 @@
         "error": "Se pare că a apărut o eroare în timpul redării sunetului:",
         "cantJoin": "Nu mă pot alătura acestui canal vocal! Asigură-te că am permisiunile necesare.",
         "waitingForHost": "Voi aștepta 10 secunde să se întoarcă gazda...",
-        "waitingForSomeone": "Voi aștepta 10 secunde să se întoarcă cineva..."
+        "waitingForSomeone": "Voi aștepta 10 secunde să se întoarcă cineva...",
+        "nowPlaying": "Acum Joacă"
     },
     "noDatabase": "Această comandă nu este disponibilă pe instanțe esmBot fără o bază de date.",
     "guildOnly": "Comanda funcționează doar în servere!",
