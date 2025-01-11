@@ -24,6 +24,9 @@ A command list can be found [here](https://esmbot.net/help.html).
 
 If you want to self-host the bot, a guide can be found [here](https://docs.esmbot.net/setup).
 
+## Contributing
+esmBot is licensed under the MIT License. Issues and pull requests are accepted to introduce features and fix bugs, and translations into different languages are accepted via [Weblate](https://translate.codeberg.org/projects/esmbot/esmbot/).
+
 ## Credits
 Icon by [Steel](https://twitter.com/MintBurrow).
 All images and fonts are copyright of their respective owners.
