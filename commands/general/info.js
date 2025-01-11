@@ -41,6 +41,10 @@ class InfoCommand extends Command {
           value: "[Click here!](https://github.com/esmBot/esmBot)"
         },
         {
+          name: "🌐 Translate:",
+          value: "[Click here!](https://translate.codeberg.org/projects/esmbot/esmbot/)"
+        },
+        {
           name: "🛡️ Privacy Policy:",
           value: "[Click here!](https://esmbot.net/privacy.html)"
         },
