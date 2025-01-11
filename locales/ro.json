@@ -1,0 +1,175 @@
+{
+    "commands": {
+        "descriptions": {
+            "cat": "Obține o imagine aleatorie a unei pisici",
+            "dice": "Dă cu zarul",
+            "dog": "Obține o imagine aleatorie a unui câine",
+            "avatar": "Obține poza de profil a unui utilizator",
+            "banner": "Obține poza de fundal a unui utilizator",
+            "base64": "Codifică/decodifică un șir de caractere folosind codificarea Base64",
+            "eval": "Rulează cod JavaScript",
+            "exec": "Rulează o comandă shell",
+            "help": "Obține toate comenzile disponibile",
+            "image": "Caută imagini pe web",
+            "imagestats": "Obține niște statistici despre serverele de imagini",
+            "qrread": "Citește un cod QR",
+            "reload": "Reîncarcă o comandă",
+            "restart": "Repornește esmBot",
+            "stats": "Obține niște statistici despre esmBot",
+            "sticker": "Obține imaginea unui sticker",
+            "youtube": "Caută pe YouTube",
+            "9gag": "Adaugă filigranul 9GAG la o imagine",
+            "avs4you": "Adaugă filigranul avs4you la o imagine",
+            "bandicam": "Adaugă filigranul Bandicam la o imagine",
+            "deviantart": "Adaugă filigranul DeviantArt la o imagine",
+            "ifunny": "Adaugă filigranul iFunny la o imagine",
+            "kinemaster": "Adaugă filigranul KineMaster la o imagine",
+            "reddit": "Adaugă filigranul Reddit la o imagine",
+            "bird": "Obține o imagine aleatorie a unei păsări",
+            "qrcreate": "Generează un cod QR",
+            "hypercam": "Adaugă filigranul Hypercam la o imagine",
+            "memecenter": "Adaugă filigranul MemeCenter la o imagine",
+            "raw": "Obține o adresă URL directă pentru o imagine (util pentru salvarea GIF-urilor de pe site-uri ca Tenor)",
+            "shutterstock": "Adaugă filigranul Shutterstock la o imagine"
+        },
+        "flagNames": {
+            "dice": {
+                "max": "maxim"
+            },
+            "avatar": {
+                "member": "membru"
+            },
+            "banner": {
+                "member": "membru"
+            },
+            "base64 decode": {
+                "text": "text"
+            },
+            "base64 encode": {
+                "text": "text"
+            },
+            "broadcast": {
+                "message": "mesaj"
+            },
+            "channel": {
+                "enable": "activează",
+                "disable": "dezactivează"
+            },
+            "channel enable": {
+                "text": "text"
+            },
+            "command": {
+                "enable": "activează",
+                "disable": "dezactivează"
+            },
+            "command enable": {
+                "text": "text"
+            },
+            "command disable": {
+                "text": "text"
+            },
+            "count": {
+                "command": "comandă"
+            },
+            "emote": {
+                "emoji": "emoji"
+            },
+            "eval": {
+                "code": "cod"
+            },
+            "help": {
+                "command": "comandă"
+            },
+            "lengthen": {
+                "url": "url"
+            },
+            "prefix": {
+                "prefix": "prefix"
+            },
+            "caption2": {
+                "font": "font"
+            },
+            "caption": {
+                "font": "font"
+            },
+            "meme": {
+                "font": "font"
+            },
+            "motivate": {
+                "font": "font"
+            },
+            "uncanny": {
+                "font": "font"
+            },
+            "tags add": {
+                "name": "nume"
+            },
+            "tags delete": {
+                "name": "nume"
+            },
+            "tags edit": {
+                "name": "nume"
+            },
+            "tags get": {
+                "name": "nume"
+            },
+            "volume": {
+                "level": "nivel"
+            },
+            "tags": {
+                "add": "adaugă",
+                "delete": "șterge",
+                "edit": "editează"
+            },
+            "tags owner": {
+                "name": "nume"
+            },
+            "8ball": {
+                "question": "întrebare"
+            },
+            "channel disable": {
+                "text": "text"
+            }
+        }
+    },
+    "image": {
+        "flags": {
+            "image": "O imagine sau un GIF atașat",
+            "link": "O adresă URL a unei imagini sau a unui GIF",
+            "text": "Textul de pus pe imagine",
+            "togif": "Forțează rezultatul ca GIF",
+            "spoiler": "Încearcă să trimiți rezultatul ca un spoiler"
+        },
+        "frames": "Acest GIF are prea multe cadre (peste 1000)!",
+        "jobEnded": "Ceva s-a întâmplat cu serverele de imagini înainte să pot obține imaginea. Încearcă să rulezi comanda din nou.",
+        "large": "Imaginea este prea mare (>= 40MB)! Încearcă să utilizezi o imagine mai mică.",
+        "nocmd": "Comanda nu funcționează pe această instanță esmBot.",
+        "noanim": "Imaginea nu este într-un format animat (GIF sau WEBP)!",
+        "noImage": "Trebuie să introduci o imagine sau un GIF!",
+        "noResult": "Nu am reușit să obțin un răspuns de la serverul de imagini. Te rog să încerci din nou.",
+        "noServers": "Nu pot contacta serverele de imagini, s-ar putea ca ele să nu fie în stare funcțională sau să fie în curs de pornire. Te rog să aștepți puțin.",
+        "noText": "Trebuie să furnizezi un text!"
+    },
+    "pagination": {
+        "delete": "Șterge",
+        "back": "Înapoi",
+        "forward": "Înainte"
+    },
+    "sound": {
+        "queue": "Coadă",
+        "no": "Nu",
+        "channel": "Canal",
+        "artist": "Artist",
+        "noSong": "Nu am găsit acea melodie!",
+        "noResponse": "Nu am putut obține un răspuns de la serverul audio.",
+        "notConnected": "Nu sunt conectat la niciun server audio!",
+        "notInVoice": "Nu sunt într-un canal vocal!",
+        "noVoiceState": "Mai întâi trebuie să fii într-un canal vocal!",
+        "yes": "Da",
+        "unknown": "Necunoscut",
+        "title": "Titlu",
+        "blank": "(gol)",
+        "serversDown": "Hmm, se pare că toate serverele audio sunt offline. Încearcă din nou mai târziu."
+    },
+    "noDatabase": "Această comandă nu este disponibilă pe instanțe esmBot fără o bază de date."
+}
