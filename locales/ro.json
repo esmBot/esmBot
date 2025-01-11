@@ -130,6 +130,66 @@
             "channel disable": {
                 "text": "text"
             }
+        },
+        "noText": {
+            "caption": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
+            "caption2": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
+            "qrcreate": "Trebuie să furnizezi un text pentru a genera un cod QR!",
+            "sonic": "Trebuie să furnizezi un text pentru a crea un meme Sonic!",
+            "homebrew": "Trebuie să furnizezi un text pentru a crea o editare Homebrew Channel!",
+            "snapchat": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
+            "whisper": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
+            "spotify": "Trebuie să furnizezi un text pentru a adăuga un antet Spotify \"This is\"!"
+        },
+        "responses": {
+            "8ball": {
+                "certain": "Este sigur",
+                "cannotPredict": "Nu pot prezice acum",
+                "betterNot": "E mai bine dacă nu-ți spun acum",
+                "hazy": "Răspunsul e neclar, încearcă din nou",
+                "doubtful": "Foarte îndoielnic",
+                "dontCount": "Nu te baza pe asta",
+                "definitely": "Da, cu siguranță",
+                "signs": "Semnele indică da",
+                "seeIt": "După cum văd eu, da",
+                "replyNo": "Răspunsul meu este nu",
+                "rely": "Te poți baza pe ea",
+                "outlookGood": "Perspectiva pare bună",
+                "outlookBad": "Perspectiva nu pare bună",
+                "likely": "Cel mai probabil",
+                "yes": "Da",
+                "withoutDoubt": "Fără îndoială",
+                "sourcesNo": "Sursele mele spun că nu",
+                "later": "Întreabă din nou mai târziu",
+                "decidedly": "Așa este hotărât",
+                "concentrate": "Concentrează-te și întreabă din nou"
+            },
+            "broadcast": {
+                "ended": "Am terminat difuzarea.",
+                "started": "Am început difuzarea.",
+                "owner": "Numai proprietarul botului poate transmite mesaje!"
+            },
+            "bird": {
+                "error": "Nu am putut obține o imagine cu o pasăre la timp. Poate mai încearcă o dată?"
+            },
+            "base64": {
+                "noCmd": "Trebuie să precizezi dacă vrei să codezi sau să decodezi textul!"
+            },
+            "ancient": {
+                "error": "Nu am putut obține un meme la timp. Poate mai încearcă o dată?"
+            },
+            "wikihow": {
+                "error": "Nu am putut obține o imagine WikiHow la timp. Poate mai încearcă o dată?"
+            },
+            "music": {
+                "invalid": "Comanda muzicală nu este una validă!"
+            },
+            "dog": {
+                "error": "Nu am putut obține o imagine cu un câine la timp. Poate mai încearcă o dată?"
+            },
+            "cat": {
+                "error": "Nu am putut obține o imagine cu o pisică la timp. Poate mai încearcă o dată?"
+            }
         }
     },
     "image": {
@@ -148,12 +208,26 @@
         "noImage": "Trebuie să introduci o imagine sau un GIF!",
         "noResult": "Nu am reușit să obțin un răspuns de la serverul de imagini. Te rog să încerci din nou.",
         "noServers": "Nu pot contacta serverele de imagini, s-ar putea ca ele să nu fie în stare funcțională sau să fie în curs de pornire. Te rog să aștepți puțin.",
-        "noText": "Trebuie să furnizezi un text!"
+        "noText": "Trebuie să furnizezi un text!",
+        "badurl": "Adresa URL nu este validă!",
+        "couldNotFind": "Nu am găsit o imagine în acel mesaj!",
+        "empty": "Rezultatul a fost gol!",
+        "tenor": "Am atins limita de cereri către Tenor. Încearcă să încarci GIF-ul tău în altă parte.",
+        "tryAgain": "Cererea de procesare a imaginii nu a putut fi finalizată deoarece serverul pe care rula s-a defectat. Încearcă să rulezi comanda din nou.",
+        "tooLarge": "Fișierul rezultat a fost prea mare pentru a fi încărcat. Încearcă din nou cu o imagine mai mică, dacă e posibil.",
+        "tip": "(Sfat: încearcă să dai clic dreapta sau să ții apăsat pe un mesaj și să apeși Aplicații -> Selectează o imagine, apoi încearcă din nou.)",
+        "tooLong": "Procesarea imaginii durează prea mult (>= 10 minute), așa că cererea de procesare a fost anulată. Încearcă să folosești o imagine mai mică.",
+        "unknown": "Imaginea rezultat nu a fost într-un format cunoscut. Te rog să încerci din nou.",
+        "timeout": "Solicitarea de a obține acea imagine a expirat. Încearcă din nou, încarcă imaginea în altă parte sau utilizează o altă imagine."
     },
     "pagination": {
         "delete": "Șterge",
         "back": "Înapoi",
-        "forward": "Înainte"
+        "forward": "Înainte",
+        "jumpTo": "La ce pagină vrei să sari?",
+        "jump": "Sari",
+        "cantChangePage": "Nu poți schimba pagina la o comandă pe care nu ai executat-o!",
+        "pageNumber": "Număr de pagină"
     },
     "sound": {
         "queue": "Coadă",
@@ -169,7 +243,24 @@
         "unknown": "Necunoscut",
         "title": "Titlu",
         "blank": "(gol)",
-        "serversDown": "Hmm, se pare că toate serverele audio sunt offline. Încearcă din nou mai târziu."
+        "serversDown": "Hmm, se pare că toate serverele audio sunt offline. Încearcă din nou mai târziu.",
+        "noYouTube": "Redarea YouTube este dezactivată în această instanță.",
+        "notVoiceChannel": "Canalul care mi l-ai dat nu este un canal vocal!",
+        "noQueue": "Nu e nimic la coadă!",
+        "noManager": "Comenzile sonore încă sunt în curs de pornire!",
+        "node": "Nod",
+        "noConnection": "Ceva ciudat s-a întâmplat cu conexiunea vocală; încearcă să redai melodia din nou.",
+        "looping": "Redare în buclă?",
+        "error": "Se pare că a apărut o eroare în timpul redării sunetului:",
+        "cantJoin": "Nu mă pot alătura acestui canal vocal! Asigură-te că am permisiunile necesare.",
+        "waitingForHost": "Voi aștepta 10 secunde să se întoarcă gazda...",
+        "waitingForSomeone": "Voi aștepta 10 secunde să se întoarcă cineva..."
     },
-    "noDatabase": "Această comandă nu este disponibilă pe instanțe esmBot fără o bază de date."
+    "noDatabase": "Această comandă nu este disponibilă pe instanțe esmBot fără o bază de date.",
+    "guildOnly": "Comanda funcționează doar în servere!",
+    "error": "O nu! Am întâlnit o eroare la rularea comenzii. Te rog să raportezi conținutul fișierului atașat la următorul link sau pe serverul de asistență esmBot:",
+    "permissions": {
+        "noEmbedLinks": "Nu am permisiunea `Încorporează link-uri`!",
+        "noAttachFiles": "Nu am permisiunea `Atașează fișiere`!"
+    }
 }
