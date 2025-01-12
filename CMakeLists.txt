@@ -7,6 +7,8 @@ include(FindPkgConfig)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 set(SOURCE_FILES natives/blur.cc
   natives/bounce.cc
   natives/caption.cc
@@ -106,7 +108,7 @@ find_package(Fontconfig REQUIRED)
 include_directories(${Fontconfig_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${Fontconfig_LIBRARIES})
 
-find_package(WebP REQUIRED)
+find_package(WebP MODULE REQUIRED COMPONENTS mux)
 include_directories(${WebP_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${WebP_LIBRARIES})
 
