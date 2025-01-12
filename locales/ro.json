@@ -445,8 +445,7 @@
             "speechbubble": {
                 "alpha": "Fă ca partea superioară a bulei de dialog să fie transparentă",
                 "flip": "Întoarce bula de dialog pe cealaltă parte",
-                "bottom": "Pune bula de dialog în partea de jos a imaginii",
-                "scale": ""
+                "bottom": "Pune bula de dialog în partea de jos a imaginii"
             },
             "speed": {
                 "multiplier": "Setează multiplicatorul de viteză (implicit: 2)"
@@ -498,9 +497,6 @@
             },
             "image": {
                 "query": "Interogarea pe care vrei să o cauți"
-            },
-            "uncaption": {
-                "tolerance": ""
             },
             "youtube": {
                 "query": "Interogarea pe care vrei să o cauți"
