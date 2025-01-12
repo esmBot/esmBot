@@ -2,7 +2,27 @@
     "commands": {
         "descriptions": {
             "bounce": "Faz uma imagem saltar para cima e para baixo",
-            "caption": "Adiciona uma legenda na imagem"
+            "caption": "Adiciona uma legenda na imagem",
+            "bird": "Mostra uma imagem de pássaro aleatória",
+            "dice": "Gira o dado",
+            "dog": "Mostra uma imagem de cachorro aleatória",
+            "homebrew": "Cria uma edit do Homebrew Channel",
+            "sonic": "Cria uma imagem de balão de fala do Sonic",
+            "wikihow": "Mostra uma imagem aleatória do WikiHow",
+            "banner": "Mostra o banner de um usuário",
+            "base64": "Codifica/Decodifica uma chave de Base64",
+            "command": "Liga/desliga um comando clássico para um servidor (use as config. do serv. para comandos de barra)",
+            "count": "Mostra quantas vezes cada comando foi usado",
+            "donate": "Aprenda mais sobre como você pode ajudar no desenvolvimento do esmBot",
+            "emote": "Pega a imagem original de um emote",
+            "eval": "Roda código JavaScript",
+            "exec": "Roda um comando de terminal/shell",
+            "help": "Mostra uma lista de comandos",
+            "8ball": "Faz uma pergunta para a bola 8 mágica",
+            "cat": "Pega uma imagem de gato aleatória",
+            "ancient": "Mostra um meme muito antigo",
+            "avatar": "Mostra o avatar de um usuário",
+            "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)"
         },
         "flagNames": {
             "caption": {
