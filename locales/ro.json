@@ -445,7 +445,8 @@
             "speechbubble": {
                 "alpha": "Fă ca partea superioară a bulei de dialog să fie transparentă",
                 "flip": "Întoarce bula de dialog pe cealaltă parte",
-                "bottom": "Pune bula de dialog în partea de jos a imaginii"
+                "bottom": "Pune bula de dialog în partea de jos a imaginii",
+                "scale": "Multiplicator pentru dimensiune (0.01 este cel mai mic, 1.0 este cel mai mare, implicit este 0.2)"
             },
             "speed": {
                 "multiplier": "Setează multiplicatorul de viteză (implicit: 2)"
@@ -503,6 +504,9 @@
             },
             "remove": {
                 "position": "Poziția în coadă pe care vrei să o elimini"
+            },
+            "uncaption": {
+                "tolerance": "Toleranța pentru detecție (0.0 este cea mai mare, 1.0 este cea mai mică, implicit este 0.95)"
             }
         },
         "names": {
