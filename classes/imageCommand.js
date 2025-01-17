@@ -112,6 +112,7 @@ class ImageCommand extends Command {
       const buffer = result.buffer;
       const type = result.type;
       if (type === "sent") return;
+      if (type === "speed_temp") return "The speed and slow commands currently do not support animated WEBP files. Sorry for the inconvenience; this is still a work in progress!"; // Not translating, meant to be temporary
       if (type === "frames") return this.getString("image.frames");
       if (type === "unknown") return this.getString("image.unknown");
       if (type === "noresult") return this.getString("image.noResult");
