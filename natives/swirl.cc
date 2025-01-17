@@ -14,7 +14,7 @@ ArgumentMap Swirl(const string& type, string& outType, const char* bufferdata, s
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   int width = in.width();
   double newWidth = width * 3;
   double newHeight = pageHeight * 3;

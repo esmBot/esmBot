@@ -110,6 +110,7 @@ void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
   vips_operation_block_set("VipsForeignLoadPng", false);
   vips_operation_block_set("VipsForeignLoadNsgif", false);
   vips_operation_block_set("VipsForeignLoadWebp", false);
+  vips_operation_block_set("VipsForeignLoadHeif", false);
 #endif
   return;
 }

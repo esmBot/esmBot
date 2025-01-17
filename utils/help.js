@@ -5,7 +5,7 @@ import { promises } from "node:fs";
 export const categoryTemplate = {
   general: [],
   tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
-  "image-editing": ["> **These commands support the PNG, JPEG, WEBP (static), and GIF (animated or static) formats.**\n"]
+  "image-editing": ["> **These commands support the PNG, JPEG, WEBP, AVIF (static only), and GIF formats.**\n"]
 };
 export let categories = categoryTemplate;
 

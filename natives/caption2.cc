@@ -24,7 +24,7 @@ ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferda
   int width = in.width();
   int size = width / 13;
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   int textWidth = width - ((width / 25) * 2);
 
   string font_string =

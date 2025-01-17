@@ -155,6 +155,9 @@ class ImageConnection {
       case "image/webp":
         type = "webp";
         break;
+      case "image/avif":
+        type = "avif";
+        break;
       default:
         type = contentType ?? "unknown";
         break;

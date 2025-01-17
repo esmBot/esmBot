@@ -55,7 +55,7 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
       if (!in.has_alpha()) in = in.bandjoin(255);
 
       int pageHeight = vips_image_get_page_height(in.get_image());
-      int nPages = vips_image_get_n_pages(in.get_image());
+      int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
       int framePos = clamp(frame, 1, (int)nPages);
       VImage out = in.crop(0, 0, in.width(), pageHeight * framePos);
       out.set(VIPS_META_PAGE_HEIGHT, pageHeight);

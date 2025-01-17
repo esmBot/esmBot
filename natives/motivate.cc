@@ -21,7 +21,7 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
   int width = in.width();
   int size = width / 5;
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   int textWidth = width - ((width / 25) * 2);
 
   string font_string = font == "roboto" ? "Roboto Condensed" : font;

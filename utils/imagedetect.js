@@ -27,7 +27,7 @@ const providerUrls = [
   "https://giphy.com"
 ];
 
-const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "large"];
+const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
 /**

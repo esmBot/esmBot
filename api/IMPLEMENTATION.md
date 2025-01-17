@@ -62,5 +62,5 @@ The image API will attempt to respond to a command by itself if all of the follo
 - The original request was done through an interaction/slash command
 - The bot's application/user ID is specified on the API server through the `CLIENT_ID` environment variable
 - The incoming job object has an interaction token set in the job object with the key `token`
-- The output data is a PNG, JPEG, GIF, or WEBP
+- The output data is a PNG, JPEG, GIF, WEBP, or AVIF
 - The output data is less than 10 MB

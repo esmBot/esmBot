@@ -35,7 +35,7 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   if (flipX) {
     watermark = watermark.flip(VIPS_DIRECTION_HORIZONTAL);

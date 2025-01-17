@@ -15,7 +15,7 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
                     bufferdata, bufferLength, "",
                     GetInputOptions(type, true, false));
 
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   if (nPages > 1) {
     int width = in.width();

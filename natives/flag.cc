@@ -19,7 +19,7 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   string assetPath = basePath + overlay;
   VImage overlayInput = VImage::new_from_file(assetPath.c_str());

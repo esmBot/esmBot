@@ -18,7 +18,7 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
   int totalHeight = in.height();
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   VImage fried = (in * 1.3 - (255.0 * 1.3 - 255.0)) * 1.5;
 

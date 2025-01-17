@@ -21,7 +21,7 @@ ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, 
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   string captionText = "<span foreground=\"white\">" + text + "</span>";
 
