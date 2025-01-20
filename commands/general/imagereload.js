@@ -6,7 +6,7 @@ class ImageReloadCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) {
       this.success = false;
-      return "Only the bot owner can reload the image servers!";
+      return this.getString("commands.responses.imagereload.owner");
     }
     await this.acknowledge();
     const length = await reloadImageConnections();
@@ -20,9 +20,8 @@ class ImageReloadCommand extends Command {
         });
       }
       return `Successfully connected to ${length} image server(s).`;
-    } else {
-      return "I couldn't connect to any image servers!";
     }
+    return this.getString("commands.responses.imagereload.couldNotConnect");
   }
 
   static description = "Attempts to reconnect to all available image processing servers";

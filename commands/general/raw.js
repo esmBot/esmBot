@@ -7,7 +7,7 @@ class RawCommand extends Command {
     const image = await imageDetect(this.client, this.message, this.interaction, this.options);
     if (image === undefined) {
       this.success = false;
-      return "You need to provide an image/GIF to get a raw URL!";
+      return this.getString("commands.responses.raw.noInput");
     }
     return image.path;
   }

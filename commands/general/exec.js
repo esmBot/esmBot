@@ -9,28 +9,27 @@ class ExecCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) {
       this.success = false;
-      return "Only the bot owner can use exec!";
+      return this.getString("commands.responses.exec.botOwnerOnly");
     }
     await this.acknowledge();
     const code = this.options.cmd ?? this.args.join(" ");
     try {
       const execed = await exec(code);
-      if (execed.stderr) return `\`ERROR\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;
+      if (execed.stderr) return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;
       const cleaned = await clean(execed.stdout);
       const sendString = `\`\`\`bash\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
         return {
-          content: "The result was too large, so here it is as a file:",
+          content: this.getString("tooLarge"),
           files: [{
             contents: cleaned,
             name: "result.txt"
           }]
         };
-      } else {
-        return sendString;
       }
+      return sendString;
     } catch (err) {
-      return `\`ERROR\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
+      return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
     }
   }
 

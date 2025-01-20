@@ -5,13 +5,13 @@ class LengthenCommand extends Command {
     await this.acknowledge();
     const input = this.options.url ?? this.args.join(" ");
     this.success = false;
-    if (!input || !input.trim() || !this.urlCheck(input)) return "You need to provide a short URL to lengthen!";
+    if (!input || !input.trim() || !this.urlCheck(input)) return this.getString("commands.responses.lengthen.noInput");
     if (this.urlCheck(input)) {
       const url = await fetch(encodeURI(input), { method: "HEAD", redirect: "manual" });
       this.success = true;
       return url.headers.get("location") || input;
     }
-    return "That isn't a URL!";
+    return this.getString("commands.responses.lengthen.notURL");
   }
 
   /**

@@ -8,37 +8,37 @@ class BannerCommand extends Command {
   async run() {
     const member = this.options.member ?? this.args[0];
     const self = await this.client.rest.users.get(this.author.id); // banners are only available over REST
-    if (this.type === "classic" && this.message.mentions.users[0] && this.message.mentions.users[0].banner) {
-      return this.client.util.formatImage(Routes.BANNER(this.message.mentions.users[0].id, this.message.mentions.users[0].banner), null, imageSize);
-    } else if (member && member > 21154535154122752n) {
+    if (this.type === "classic" && this.message?.mentions.users[0]) {
+      return this.message.mentions.users[0].bannerURL(undefined, imageSize) ?? self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
+    }
+    if (member && member > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);
-      if (user?.banner) {
-        return this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, 512);
-      } else if (mentionRegex.test(member)) {
+      if (user?.banner) return user.bannerURL(undefined, imageSize) ?? self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
+      if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)[1];
         if (id < 21154535154122752n) {
           this.success = false;
-          return "That's not a valid mention!";
+          return this.getString("commands.responses.banner.invalidMention");
         }
         try {
           const user = await this.client.rest.users.get(id);
-          return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, imageSize) : "This user doesn't have a banner!";
+          return user.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
         } catch {
-          return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "You don't have a banner!";
+          return self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noSelfBanner");
         }
       } else {
-        return "This user doesn't have a banner!";
+        return this.getString("commands.responses.banner.noUserBanner");
       }
     } else if (this.args.join(" ") !== "" && this.guild) {
       const searched = await this.guild.searchMembers({
         query: this.args.join(" "),
         limit: 1
       });
-      if (searched.length === 0) return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "This user doesn't have a banner!";
+      if (searched.length === 0) return self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
       const user = await this.client.rest.users.get(searched[0].user.id);
-      return user.banner ? this.client.util.formatImage(Routes.BANNER(user.id, user.banner), null, imageSize) : (self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "This user doesn't have a banner!");
+      return user.bannerURL(undefined, imageSize) ?? self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
     } else {
-      return self.banner ? this.client.util.formatImage(Routes.BANNER(self.id, self.banner), null, imageSize) : "You don't have a banner!";
+      return self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noSelfBanner");
     }
   }
 

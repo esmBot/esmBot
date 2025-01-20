@@ -662,6 +662,14 @@
       "ancient": {
         "error": "I couldn't get a meme in time. Maybe try again?"
       },
+      "avatar": {
+        "invalidMention": "That's not a valid mention!"
+      },
+      "banner": {
+        "invalidMention": "That's not a valid mention!",
+        "noSelfBanner": "You don't have a banner!",
+        "noUserBanner": "This user doesn't have a banner!"
+      },
       "base64": {
         "noCmd": "You need to provide whether you want to encode or decode the text!"
       },
@@ -679,8 +687,68 @@
       "dog": {
         "error": "I couldn't get a dog image in time. Maybe try again?"
       },
+      "emote": {
+        "invalidEmoji": "You need to provide a valid emoji to get an image!"
+      },
+      "eval": {
+        "botOwnerOnly": "Only the bot owner can use eval!"
+      },
+      "exec": {
+        "botOwnerOnly": "Only the bot owner can use exec!"
+      },
+      "image": {
+        "noInput": "You need to provide something to search for!",
+        "noResults": "I couldn't find any results!",
+        "results": "Search Results"
+      },
+      "imagereload": {
+        "couldNotConnect": "I couldn't connect to any image servers!",
+        "owner": "Only the bot owner can reload the image servers!"
+      },
+      "lengthen": {
+        "noInput": "You need to provide a short URL to lengthen!",
+        "notURL": "That isn't a URL!"
+      },
+      "loop": {
+        "notHost": "Only the current voice session host can loop the music!",
+        "notLooping": "The player is no longer looping.",
+        "nowLooping": "The player is now looping."
+      },
       "music": {
         "invalid": "That isn't a valid music command!"
+      },
+      "nowplaying": {
+        "notPlaying": "I'm not playing anything!"
+      },
+      "play": {
+        "noInput": "You need to provide what you want to play!"
+      },
+      "raw": {
+        "noInput": "You need to provide an image/GIF to get a raw URL!"
+      },
+      "restart": {
+        "owner": "Only the bot owner can restart me!",
+        "restarting": "esmBot is restarting."
+      },
+      "shuffle": {
+        "notHost": "Only the current voice session host can shuffle the music!",
+        "notShuffling": "The player is no longer shuffling.",
+        "nowShuffling": "The player is now shuffling."
+      },
+      "snowflake": {
+        "invalid": "That's not a valid snowflake!",
+        "noInput": "You need to provide a snowflake ID!"
+      },
+      "sticker": {
+        "apng": "This sticker is an APNG; however, since Discord doesn't allow displaying APNGs outside of stickers, you'll have to save it or open it in your browser to view it.",
+        "lottie": "I can't display this sticker because it uses the Lottie animation format; however, I can give you the raw JSON link to it:",
+        "noInput": "You need to provide a sticker!",
+        "unknown": "I don't recognize that sticker format!"
+      },
+      "toggle": {
+        "notHost": "Only the current voice session host can pause/resume the music!",
+        "paused": "The player has been paused.",
+        "resumed": "The player has been resumed."
       },
       "wikihow": {
         "error": "I couldn't get a WikiHow image in time. Maybe try again?"
@@ -688,6 +756,7 @@
     }
   },
   "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",
+  "errorCaps": "ERROR",
   "guildOnly": "This command only works in servers!",
   "image": {
     "badurl": "That URL is invalid!",
@@ -727,6 +796,7 @@
     "tempSite": "The result image was larger than Discord's upload limit, so it was uploaded to an external site instead.",
     "tenor": "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.",
     "timeout": "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.",
+    "timeoutDownload": "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.",
     "tip": "(Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)",
     "tooLarge": "The resulting file was too large to upload. Try again with a smaller image if possible.",
     "tooLong": "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.",
@@ -774,5 +844,6 @@
     "waitingForHost": "Waiting 10 seconds for the host to return...",
     "waitingForSomeone": "Waiting 10 seconds for someone to return...",
     "yes": "Yes"
-  }
+  },
+  "tooLarge": "The result was too large, so here it is as a file:"
 }

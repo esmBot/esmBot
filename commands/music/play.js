@@ -16,7 +16,7 @@ class PlayCommand extends MusicCommand {
     const input = this.options.query ?? this.args.join(" ");
     if (!input && (!this.message || this.message?.attachments.size <= 0)) {
       this.success = false;
-      return "You need to provide what you want to play!";
+      return this.getString("commands.responses.play.noInput");
     }
     let query = input ? input.trim() : "";
     const attachment = this.type === "classic" ? this.message?.attachments.first() : undefined;

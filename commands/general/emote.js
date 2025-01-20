@@ -22,7 +22,7 @@ class EmoteCommand extends Command {
     }
     if (urls.length > 0) return urls.join(" ");
     this.success = false;
-    return "You need to provide a valid emoji to get an image!";
+    return this.getString("commands.responses.emote.invalidEmoji");
   }
 
   static flags = [{

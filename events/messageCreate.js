@@ -184,7 +184,7 @@ export default async (client, message) => {
       }, reference));
     } else if (error.toString().includes("Timed out")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size."
+        content: getString("image.timeoutDownload")
       }, reference));
     } else {
       _error(`Error occurred with command message ${message.content}: ${error.stack || error}`);
