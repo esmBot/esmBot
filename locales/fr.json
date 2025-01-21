@@ -176,8 +176,7 @@
                 "url": "lien"
             },
             "reload": {
-                "cmd": "cmd",
-                "skipsend": ""
+                "cmd": "cmd"
             },
             "snowflake": {
                 "id": "identifiant"
@@ -270,9 +269,6 @@
             },
             "help": {
                 "command": "commande"
-            },
-            "freeze": {
-                "endframe": ""
             }
         },
         "flags": {
