@@ -6,8 +6,6 @@
             "sonic": "Crée une image ou Sonic parle dans une bulle de dialogue",
             "avatar": "Récupère l'avatar d'un utilisateur",
             "base64": "Encode/Décode un texte en Base64",
-            "channel": "",
-            "command": "",
             "count": "Combien de fois chaque commande a été utilisée",
             "ancient": "Meme \"ancient\" aléatoire",
             "bird": "Image d'oiseau aléatoire",
@@ -109,11 +107,9 @@
             "soos": "Boucle une image animé en l'inversant à la fin",
             "spin": "Fait tourner une image",
             "spotify": "Ajoute un Spotify \"This is\" au dessus",
-            "uncanny": "",
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
-            "skip": "Saute la musique en cours",
-            "tags": ""
+            "skip": "Saute la musique en cours"
         },
         "flagNames": {
             "8ball": {
@@ -373,8 +369,7 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": ""
+                "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
@@ -436,12 +431,6 @@
             "reload": {
                 "cmd": "La commande à recharger",
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
-            },
-            "snapchat": {
-                "position": ""
-            },
-            "uncaption": {
-                "tolerance": ""
             }
         },
         "names": {
@@ -464,17 +453,13 @@
             "exec": "exécuter",
             "help": "aide",
             "image": "image",
-            "imagestats": "",
             "info": "informations",
             "lengthen": "allonger",
             "ping": "ping",
             "prefix": "préfix",
-            "qrcreate": "",
-            "qrread": "",
             "raw": "brute",
             "reload": "recharger",
             "snowflake": "snowflake",
-            "soundreload": "",
             "stats": "statistique",
             "sticker": "sticker",
             "youtube": "youtube",
@@ -513,7 +498,6 @@
             "reddit": "reddit",
             "scott": "scott",
             "sepia": "sepia",
-            "sharpen": "",
             "shutterstock": "shutterstock",
             "slow": "lent",
             "snapchat": "snapchat",
@@ -535,7 +519,6 @@
             "host": "hôte",
             "loop": "boucle",
             "music": "musique",
-            "nowplaying": "",
             "play": "jouer",
             "queue": "queue",
             "remove": "retirer",
@@ -546,14 +529,10 @@
             "toggle": "activer",
             "volume": "volume",
             "tags": "tags",
-            "8ball": "",
             "wikihow": "wikihow",
             "broadcast": "diffuser",
-            "imagereload": "",
             "restart": "redémarrer",
             "crop": "rogner",
-            "grayscale": "",
-            "speechbubble": "",
             "tile": "mosaïque",
             "vignette": "vignette",
             "reverse": "inverse",
