@@ -59,7 +59,11 @@ const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
 
 // Used for direct image uploads
-const discord = new Client();
+const discord = new Client({
+  rest: {
+    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
+  }
+});
 const clientID = process.env.CLIENT_ID;
 
 discord.on("error", error);
