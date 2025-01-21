@@ -177,7 +177,7 @@
             },
             "reload": {
                 "cmd": "cmd",
-                "skipsend": "ignorer l'envoi"
+                "skipsend": ""
             },
             "snowflake": {
                 "id": "identifiant"
@@ -272,7 +272,7 @@
                 "command": "commande"
             },
             "freeze": {
-                "endframe": "image de fin"
+                "endframe": ""
             }
         },
         "flags": {
