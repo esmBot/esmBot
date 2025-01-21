@@ -669,7 +669,7 @@
             "image": "image",
             "link": "lien",
             "spoiler": "spoiler",
-            "togif": "vers gif",
+            "togif": "",
             "text": "texte"
         },
         "flags": {
