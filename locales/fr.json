@@ -6,8 +6,8 @@
             "sonic": "Crée une image ou Sonic parle dans une bulle de dialogue",
             "avatar": "Récupère l'avatar d'un utilisateur",
             "base64": "Encode/Décode un texte en Base64",
-            "channel": "Active/désactive les commandes classiques dans un canal (utilise les paramètres du serveur pour les commandes slash)",
-            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)",
+            "channel": "",
+            "command": "",
             "count": "Combien de fois chaque commande a été utilisée",
             "ancient": "Meme \"ancient\" aléatoire",
             "bird": "Image d'oiseau aléatoire",
@@ -109,11 +109,11 @@
             "soos": "Boucle une image animé en l'inversant à la fin",
             "spin": "Fait tourner une image",
             "spotify": "Ajoute un Spotify \"This is\" au dessus",
-            "uncanny": "Crée une image de Mr. Indestructible qui devient étrange (sépare le texte gauche/droite par une virgule)",
+            "uncanny": "",
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
-            "tags": "La commande des tags principaux. Consultez la page d'aide pour plus d'informations: https://esmbot.net/help.html"
+            "tags": ""
         },
         "flagNames": {
             "8ball": {
@@ -374,7 +374,7 @@
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
                 "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": "Multiplicateur pour redimensionner la bulle de dialogue (0,01 est le plus petit, 1,0 est le plus grand, la valeur par défaut est 0,2)"
+                "scale": ""
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
@@ -438,10 +438,10 @@
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
             },
             "snapchat": {
-                "position": "Défini la position de la légende sous forme décimale (0,0 est en haut, 1,0 est en bas, la valeur par défaut est 0,565)"
+                "position": ""
             },
             "uncaption": {
-                "tolerance": "Défini la tolérance d'ombre pour la détection de légende (0,0 est la plus élevée, 1,0 est la plus basse, la valeur par défaut est 0,95)"
+                "tolerance": ""
             }
         },
         "names": {
@@ -464,17 +464,17 @@
             "exec": "exécuter",
             "help": "aide",
             "image": "image",
-            "imagestats": "image statistique",
+            "imagestats": "",
             "info": "informations",
             "lengthen": "allonger",
             "ping": "ping",
             "prefix": "préfix",
-            "qrcreate": "qr création",
-            "qrread": "qr lire",
+            "qrcreate": "",
+            "qrread": "",
             "raw": "brute",
             "reload": "recharger",
             "snowflake": "snowflake",
-            "soundreload": "recharger le son",
+            "soundreload": "",
             "stats": "statistique",
             "sticker": "sticker",
             "youtube": "youtube",
@@ -513,7 +513,7 @@
             "reddit": "reddit",
             "scott": "scott",
             "sepia": "sepia",
-            "sharpen": "rendre plus net",
+            "sharpen": "",
             "shutterstock": "shutterstock",
             "slow": "lent",
             "snapchat": "snapchat",
@@ -535,7 +535,7 @@
             "host": "hôte",
             "loop": "boucle",
             "music": "musique",
-            "nowplaying": "en cours de lecture",
+            "nowplaying": "",
             "play": "jouer",
             "queue": "queue",
             "remove": "retirer",
@@ -546,14 +546,14 @@
             "toggle": "activer",
             "volume": "volume",
             "tags": "tags",
-            "8ball": "Boule magique",
+            "8ball": "",
             "wikihow": "wikihow",
             "broadcast": "diffuser",
-            "imagereload": "recharger l'image",
+            "imagereload": "",
             "restart": "redémarrer",
             "crop": "rogner",
-            "grayscale": "nuance de gris",
-            "speechbubble": "bulle de dialogue",
+            "grayscale": "",
+            "speechbubble": "",
             "tile": "mosaïque",
             "vignette": "vignette",
             "reverse": "inverse",
