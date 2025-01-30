@@ -7,33 +7,37 @@
 using namespace std;
 using namespace vips;
 
-VImage toPolar(VImage image, int width, int height) {
-  VImage xy = VImage::xyz(width, height);
-  xy -= {width / 2.0, height / 2.0};
-  int scale = max(width, height) / width;
-  xy *= 1.5 / scale;
-  VImage xy_complex = xy.copy(VImage::option()->set("format", VIPS_FORMAT_COMPLEX)->set("bands", 1));
+VImage toPolar(VImage image, int width, int height, VImage& polarIndex) {
+  if (polarIndex.is_null()) {
+    VImage xy = VImage::xyz(width, height);
+    xy -= {width / 2.0, height / 2.0};
+    int scale = max(width, height) / width;
+    xy *= 1.5 / scale;
+    VImage indexComplex = xy.copy(VImage::option()->set("format", VIPS_FORMAT_COMPLEX)->set("bands", 1)).polar();
 
-  VImage indexComplex = xy_complex.polar();
-  VImage index = indexComplex.copy(VImage::option()->set("format", VIPS_FORMAT_FLOAT)->set("bands", 2));
-  index *= {1, height / 360.0};
+    VImage index = indexComplex.copy(VImage::option()->set("format", VIPS_FORMAT_FLOAT)->set("bands", 2));
+    index *= {1, height / 360.0};
+    polarIndex = index;
+  }
 
-  return image.mapim(index,
+  return image.mapim(polarIndex,
                      VImage::option()->set("extend", VIPS_EXTEND_MIRROR));
 }
 
-VImage toRectangular(VImage image, int width, int height) {
-  VImage xy = VImage::xyz(width, height);
-  xy *= vector<double>{1, 360.0 / height};
-  VImage xy_complex = xy.copy(VImage::option()->set("format", VIPS_FORMAT_COMPLEX)->set("bands", 1));
+VImage toRectangular(VImage image, int width, int height, VImage& rectIndex) {
+  if (rectIndex.is_null()) {
+    VImage xy = VImage::xyz(width, height);
+    xy *= vector<double>{1, 360.0 / height};
+    VImage indexComplex = xy.copy(VImage::option()->set("format", VIPS_FORMAT_COMPLEX)->set("bands", 1)).rect();
 
-  VImage indexComplex = xy_complex.rect();
-  VImage index = indexComplex.copy(VImage::option()->set("format", VIPS_FORMAT_FLOAT)->set("bands", 2));
-  int scale = max(width, height) / width;
-  index *= (double)scale / 1.5;
-  index += {width / 2.0, height / 2.0};
+    VImage index = indexComplex.copy(VImage::option()->set("format", VIPS_FORMAT_FLOAT)->set("bands", 2));
+    double scale = static_cast<double>(max(width, height)) / width / 1.5;
+    index *= scale;
+    index += {width / 2.0, height / 2.0};
+    rectIndex = index;
+  }
 
-  return image.mapim(index);
+  return image.mapim(rectIndex);
 }
 
 ArgumentMap Circle(const string& type, string& outType,
@@ -61,6 +65,8 @@ ArgumentMap Circle(const string& type, string& outType,
     }
   }
 
+  VImage rectIndex;
+  VImage polarIndex;
   VImage gaussmat =
       VImage::gaussmat(5, 0.2, VImage::option()->set("separable", true)).rot90();
 
@@ -69,12 +75,12 @@ ArgumentMap Circle(const string& type, string& outType,
     VImage img_frame =
         nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage rectangular =
-        toRectangular(img_frame, width, pageHeight);
+        toRectangular(img_frame, width, pageHeight, rectIndex);
     rectangular = rectangular.replicate(1, 3)
             .conv(gaussmat,
                   VImage::option()->set("precision", VIPS_PRECISION_INTEGER))
             .crop(0, pageHeight, width, pageHeight);
-    VImage polar = toPolar(rectangular, width, pageHeight);
+    VImage polar = toPolar(rectangular, width, pageHeight, polarIndex);
     img.push_back(polar);
   }
 
