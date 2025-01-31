@@ -1,7 +1,6 @@
 #include <map>
 #include <cstdint>
 #include <vips/vips8>
-//#include <webp/mux.h>
 
 #include "common.h"
 
@@ -15,7 +14,14 @@ void *memset16(void *m, uint16_t val, size_t count) {
   return m;
 }
 
-char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed) {
+uint32_t readUint32LE(unsigned char *buffer) {
+  return static_cast<uint32_t>(buffer[0]) |
+          (static_cast<uint32_t>(buffer[1]) << 8) |
+          (static_cast<uint32_t>(buffer[2]) << 16) |
+          (static_cast<uint32_t>(buffer[3]) << 24);
+}
+
+char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed, string suffix) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in = VImage::new_from_buffer(data, length, "", options->set("n", -1));
@@ -33,7 +39,7 @@ char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed) {
   out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
 
   char *buf;
-  out.write_to_buffer(".gif", reinterpret_cast<void**>(&buf), &dataSize);
+  out.write_to_buffer(suffix.c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   return buf;
 }
@@ -45,10 +51,10 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
 
   ArgumentMap output;
 
-  if (type == "gif") {
-    char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
-    memcpy(fileData, bufferdata, bufferLength);
+  char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
+  memcpy(fileData, bufferdata, bufferLength);
 
+  if (type == "gif") {
     char *match = const_cast<char*>("\x00\x21\xF9\x04");
 
     vector<uint16_t> old_delays;
@@ -92,44 +98,45 @@ ArgumentMap Speed([[maybe_unused]] const string& type, [[maybe_unused]] string& 
     }
 
     if (removeFrames) {
-      fileData = vipsRemove(bufferdata, bufferLength, dataSize, speed);
+      fileData = vipsRemove(bufferdata, bufferLength, dataSize, speed, ".gif");
     } else {
       dataSize = bufferLength;
     }
-
-    output["buf"] = fileData;
   } else if (type == "webp") {
-    /*WebPData webp_data;
-    WebPDataInit(&webp_data);
-    webp_data.bytes = (const uint8_t *)bufferdata;
-    webp_data.size = bufferLength;
-    WebPMux *mux = WebPMuxCreate(&webp_data, 0);
+    size_t position = 12;
+    bool removeFrames = false;
 
-    WebPMuxFrameInfo frame;
-    WebPMuxError err;
-    int i = 1;
-    err = WebPMuxGetFrame(mux, i, &frame);
+    while (position + 8 <= bufferLength) {
+      const char* fourCC = &fileData[position];
+      uint32_t chunkSize = readUint32LE(reinterpret_cast<unsigned char*>(fileData) + position + 4);
 
-    WebPData out;
-    WebPMuxAssemble(mux, &out);
+      if (memcmp(fourCC, "ANMF", 4) == 0) {
+        size_t dataStart = position + 8;
+        uint32_t duration = readUint32LE(reinterpret_cast<unsigned char*>(fileData) + dataStart + 12) & 0x00FFFFFF;
+        uint32_t newDuration = slow ? duration * speed : duration / speed;
+        if (!slow && newDuration <= 10) {
+          removeFrames = true;
+          break;
+        }
 
-    dataSize = out.size;
-    char *data = reinterpret_cast<char*>(malloc(dataSize));
-    memcpy(data, out.bytes, dataSize);
+        fileData[dataStart + 12] = static_cast<uint8_t>(newDuration & 0xFF);
+        fileData[dataStart + 13] = static_cast<uint8_t>((newDuration >> 8) & 0xFF);
+        fileData[dataStart + 14] = static_cast<uint8_t>((newDuration >> 16) & 0xFF);
+      }
 
-    WebPDataClear(&out);
+      position += 8 + chunkSize + (chunkSize % 2);
+    }
 
-    output["buf"] = data;
-    
-    WebPDataInit(&webp_data);
-    WebPMuxDelete(mux);*/
-    output["buf"] = "";
-    outType = "speed_temp";
+    if (removeFrames) {
+      fileData = vipsRemove(bufferdata, bufferLength, dataSize, speed, ".webp");
+    } else {
+      dataSize = bufferLength;
+    }
   } else {
-    char *data = reinterpret_cast<char*>(malloc(dataSize));
-    memcpy(data, bufferdata, dataSize);
-    output["buf"] = data;
+    dataSize = bufferLength;
   }
+
+  output["buf"] = fileData;
 
   return output;
 }
