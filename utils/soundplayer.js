@@ -97,7 +97,7 @@ export async function play(client, soundUrl, options) {
     return { content: `🔊 ${getString("sound.serversDown", options.locale)}`, flags: 64 };
   }
   const oldQueue = queues.get(voiceChannel.guildID);
-  if (!response?.data) return { content: getString("sound.noSong", options.locale), flags: 64 };
+  if (!response?.data || (Array.isArray(response.data) && response.data.length === 0)) return { content: getString("sound.noSong", options.locale), flags: 64 };
   let tracks = [];
   let info;
   let playlistInfo;
