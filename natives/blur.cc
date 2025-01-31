@@ -13,10 +13,7 @@ ArgumentMap Blur(const string& type, string& outType, const char* bufferdata, si
 
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
-
-  if (!in.has_alpha()) in = in.bandjoin(255);
+                              GetInputOptions(type, true, false));
 
   VImage out =
       sharp ? in.sharpen(VImage::option()->set("sigma", 3)) : in.gaussblur(5);

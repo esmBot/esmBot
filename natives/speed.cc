@@ -18,9 +18,7 @@ void *memset16(void *m, uint16_t val, size_t count) {
 char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed) {
   VOption *options = VImage::option()->set("access", "sequential");
 
-  VImage in = VImage::new_from_buffer(data, length, "", options->set("n", -1))
-                  .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+  VImage in = VImage::new_from_buffer(data, length, "", options->set("n", -1));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());

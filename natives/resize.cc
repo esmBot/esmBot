@@ -12,8 +12,7 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
 
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+                              GetInputOptions(type, true, false));
 
   VImage out;
 

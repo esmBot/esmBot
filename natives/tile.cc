@@ -9,9 +9,7 @@ ArgumentMap Tile(const string& type, string& outType, const char* bufferdata, si
 {
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, false, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+                              GetInputOptions(type, false, false));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());

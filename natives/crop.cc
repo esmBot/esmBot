@@ -11,8 +11,7 @@ ArgumentMap Crop(const string& type, string& outType, const char* bufferdata, si
 {
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+                              GetInputOptions(type, true, false));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());

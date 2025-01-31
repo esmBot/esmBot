@@ -9,14 +9,14 @@ ArgumentMap Invert(const string& type, string& outType, const char* bufferdata, 
 {
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+                              GetInputOptions(type, true, false));
+
+  bool hasAlpha = in.has_alpha();
 
   VImage noAlpha =
-      in.extract_band(0, VImage::option()->set("n", in.bands() - 1));
+      hasAlpha ? in.extract_band(0, VImage::option()->set("n", in.bands() - 1)) : in;
   VImage inverted = noAlpha.invert();
-  VImage out = inverted.bandjoin(in.extract_band(3));
+  VImage out = hasAlpha ? inverted.bandjoin(in.extract_band(in.bands() - 1)) : inverted;
 
   char *buf;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);

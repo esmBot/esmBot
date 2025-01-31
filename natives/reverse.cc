@@ -9,8 +9,7 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
 {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false))
-                  .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());

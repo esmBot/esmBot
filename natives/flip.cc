@@ -11,9 +11,7 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
   bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                      GetInputOptions(type, true, true))
-                  .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+                                      GetInputOptions(type, true, true));
 
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
