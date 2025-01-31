@@ -51,7 +51,7 @@
     "cmake-js": "^7.3.0"
   },
   "optionalDependencies": {
-    "@sentry/node": "^8.48.0",
+    "@sentry/node": "^8.49.0",
     "@sentry/profiling-node": "^8.48.0",
     "pm2": "^5.4.3"
   },
