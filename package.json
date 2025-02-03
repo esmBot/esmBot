@@ -29,7 +29,7 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.2",
+    "better-sqlite3": "^11.8.1",
     "bufferutil": "^4.0.9",
     "dotenv": "^16.4.7",
     "emoji-regex-xs": "^1.0.0",
@@ -45,14 +45,14 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.3",
-    "@types/bun": "^1.1.16",
-    "@types/ws": "^8.5.13",
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "^1.2.2",
+    "@types/ws": "^8.5.14",
     "cmake-js": "^7.3.0"
   },
   "optionalDependencies": {
-    "@sentry/node": "^8.48.0",
-    "@sentry/profiling-node": "^8.48.0",
+    "@sentry/node": "^8.54.0",
+    "@sentry/profiling-node": "^8.54.0",
     "pm2": "^5.4.3"
   },
   "binary": {
@@ -60,5 +60,5 @@
       7
     ]
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051"
 }
