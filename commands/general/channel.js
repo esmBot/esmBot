@@ -27,7 +27,8 @@ class ChannelCommand extends Command {
       await db.disableChannel(channel);
       this.success = true;
       return `I have been disabled in this channel. To re-enable me, just run \`${guildDB.prefix}channel enable\`.`;
-    } else if (this.args[0].toLowerCase() === "enable") {
+    }
+    if (this.args[0].toLowerCase() === "enable") {
       let channel;
       if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
         const id = this.args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");

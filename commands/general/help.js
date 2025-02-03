@@ -64,52 +64,51 @@ class HelpCommand extends Command {
         }
       }
       return embed;
-    } else {
-      const pages = [];
-      if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
-      for (const category of Object.keys(help.categories)) {
-        const splitPages = help.categories[category].map((_item, index) => {
-          return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
-        }).filter((item) => {
-          return item;
-        });
-        const categoryStringArray = category.split("-");
-        for (const index of categoryStringArray.keys()) {
-          categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
-        }
-        for (const page of splitPages) {
-          pages.push({
-            title: categoryStringArray.join(" "),
-            page: page
-          });
-        }
-      }
-      const embeds = [];
-      for (const [i, value] of pages.entries()) {
-        embeds.push({
-          embeds: [{
-            author: {
-              name: "esmBot Help",
-              iconURL: this.client.user.avatarURL()
-            },
-            title: value.title,
-            description: value.page.join("\n"),
-            color: 16711680,
-            footer: {
-              text: `Page ${i + 1} of ${pages.length}`
-            },
-            fields: [{
-              name: "Prefix",
-              value: prefix
-            }, {
-              name: "Tip",
-              value: random(tips)
-            }]
-          }]
-        });
-      }
-      return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
     }
+    const pages = [];
+    if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
+    for (const category of Object.keys(help.categories)) {
+      const splitPages = help.categories[category].map((_item, index) => {
+        return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
+      }).filter((item) => {
+        return item;
+      });
+      const categoryStringArray = category.split("-");
+      for (const index of categoryStringArray.keys()) {
+        categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
+      }
+      for (const page of splitPages) {
+        pages.push({
+          title: categoryStringArray.join(" "),
+          page: page
+        });
+      }
+    }
+    const embeds = [];
+    for (const [i, value] of pages.entries()) {
+      embeds.push({
+        embeds: [{
+          author: {
+            name: "esmBot Help",
+            iconURL: this.client.user.avatarURL()
+          },
+          title: value.title,
+          description: value.page.join("\n"),
+          color: 16711680,
+          footer: {
+            text: `Page ${i + 1} of ${pages.length}`
+          },
+          fields: [{
+            name: "Prefix",
+            value: prefix
+          }, {
+            name: "Tip",
+            value: random(tips)
+          }]
+        }]
+      });
+    }
+    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "Gets a list of commands";

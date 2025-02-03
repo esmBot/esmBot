@@ -13,7 +13,8 @@ class Base64Command extends Command {
     if (command === "decode") {
       const b64Decoded = Buffer.from(string, "base64").toString("utf8");
       return `\`\`\`\n${b64Decoded.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`)}\`\`\``;
-    } else if (command === "encode") {
+    }
+    if (command === "encode") {
       const b64Encoded = Buffer.from(string, "utf8").toString("base64");
       return `\`\`\`\n${b64Encoded}\`\`\``;
     }

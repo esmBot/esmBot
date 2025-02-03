@@ -24,7 +24,8 @@ class CommandCommand extends Command {
       await db.disableCommand(this.guild.id, command);
       this.success = true;
       return `The command has been disabled. To re-enable it, just run \`${guildDB.prefix}command enable ${command}\`.`;
-    } else if (this.args[0].toLowerCase() === "enable") {
+    }
+    if (this.args[0].toLowerCase() === "enable") {
       if (!disabled?.includes(command)) return "That command isn't disabled!";
 
       await db.enableCommand(this.guild.id, command);
