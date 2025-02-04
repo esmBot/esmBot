@@ -61,15 +61,30 @@ export default function run(object) {
         objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
-      try {
-        const result = img.image(object.cmd, objectWithFixedType);
-        const returnObject = {
-          buffer: result.data,
-          fileExtension: result.type
-        };
-        resolve(returnObject);
-      } catch (e) {
-        reject(e);
+      if (process.env.NODE_ASYNC === "true") {
+        img.image(object.cmd, objectWithFixedType, (err, data, type) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+  
+          const returnObject = {
+            buffer: data,
+            fileExtension: type
+          };
+          resolve(returnObject);
+        });
+      } else {
+        try {
+          const result = img.image(object.cmd, objectWithFixedType);
+          const returnObject = {
+            buffer: result.data,
+            fileExtension: result.type
+          };
+          resolve(returnObject);
+        } catch (e) {
+          reject(e);
+        }
       }
     });
   });

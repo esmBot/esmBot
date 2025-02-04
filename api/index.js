@@ -9,6 +9,7 @@ import EventEmitter from "node:events";
 import logger from "../utils/logger.js";
 import { img } from "../utils/imageLib.js";
 import { Client } from "oceanic.js";
+const run = process.env.NODE_ASYNC === "true" ? (await import("../utils/image-runner.js")).default : null;
 
 img.imageInit();
 
@@ -307,33 +308,13 @@ const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
 /**
- * Run an image job.
+ * @param {{ buffer: ArrayBuffer; fileExtension: string; }} data
  * @param {{ id: string; msg: object; num: number; }} job 
+ * @param {{ token: string; ephemeral: boolean; spoiler: boolean; cmd: string; }} object
  * @param {import("ws").WebSocket} ws 
- * @returns {Promise<void>}
+ * @param {(value: void | PromiseLike<void>) => void} resolve
  */
-const runJob = (job, ws) => {
-  return new Promise((resolve, reject) => {
-    log(`Job ${job.id} starting...`, job.num);
-
-    const object = JSON.parse(job.msg);
-    // If the image has a path, it must also have a type
-    if (object.path && !object.params.type) {
-      reject(new TypeError("Unknown image type"));
-    }
-
-    const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../utils/image-runner.js"), {
-      workerData: object
-    });
-    const timeout = setTimeout(() => {
-      worker.removeAllListeners("message");
-      worker.removeAllListeners("error");
-      worker.terminate();
-      reject(new Error("Job timed out"));
-    }, 600000);
-    log(`Job ${job.id} started`, job.num);
-    worker.once("message", (data) => {
-      clearTimeout(timeout);
+function finishJob(data, job, object, ws, resolve) {
       log(`Sending result of job ${job.id}`, job.num);
       const jobObject = jobs.get(job.id);
       jobObject.data = data.buffer;
@@ -367,10 +348,46 @@ const runJob = (job, ws) => {
         ws.send(waitResponse);
         resolve();
       });
+}
+
+/**
+ * Run an image job.
+ * @param {{ id: string; msg: object; num: number; }} job 
+ * @param {import("ws").WebSocket} ws 
+ * @returns {Promise<void>}
+ */
+const runJob = (job, ws) => {
+  return new Promise((resolve, reject) => {
+    log(`Job ${job.id} starting...`, job.num);
+
+    const object = JSON.parse(job.msg);
+    // If the image has a path, it must also have a type
+    if (object.path && !object.params.type) {
+      reject(new TypeError("Unknown image type"));
+    }
+
+    if (run) {
+      run(object).then(data => finishJob(data, job, object, ws, resolve), (e) => reject(e));
+      log(`Job ${job.id} started`, job.num);
+    } else {
+      const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../utils/image-runner.js"), {
+        workerData: object
+      });
+      const timeout = setTimeout(() => {
+        worker.removeAllListeners("message");
+        worker.removeAllListeners("error");
+        worker.terminate().then((val) => console.log(`Killed worker with exit code ${val}`));
+        reject(new Error("Job timed out"));
+      }, 600000);
+      log(`Job ${job.id} started`, job.num);
+      worker.once("message", (data) => {
+        clearTimeout(timeout);
+        finishJob(data, job, object, ws, resolve);
     });
     worker.once("error", (e) => {
       clearTimeout(timeout);
       reject(e);
     });
+    }
   });
 };
