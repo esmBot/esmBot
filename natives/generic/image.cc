@@ -14,9 +14,16 @@ void imageInit() {
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
-  if (vips_init("")) vips_error_exit(NULL);
+  if (VIPS_INIT("")) vips_error_exit(NULL);
+  vips_cache_set_max(0);
 #if VIPS_MAJOR_VERSION >= 8 && VIPS_MINOR_VERSION >= 13
   vips_block_untrusted_set(true);
+  vips_operation_block_set("VipsForeignLoad", true);
+  vips_operation_block_set("VipsForeignLoadJpeg", false);
+  vips_operation_block_set("VipsForeignLoadPng", false);
+  vips_operation_block_set("VipsForeignLoadNsgif", false);
+  vips_operation_block_set("VipsForeignLoadWebp", false);
+  vips_operation_block_set("VipsForeignLoadHeif", false);
 #endif
   return;
 }
