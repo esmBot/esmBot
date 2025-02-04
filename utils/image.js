@@ -196,7 +196,6 @@ function waitForWorker(worker) {
  */
 export async function runImageJob(params) {
   if (process.env.API_TYPE === "ws") {
-    for (let i = 0; i < 3; i++) {
       const currentServer = await getIdeal(params);
       if (!currentServer) return {
         buffer: Buffer.alloc(0),
@@ -212,10 +211,9 @@ export async function runImageJob(params) {
         const output = await currentServer.getOutput(params.id);
         return output;
       } catch (e) {
-        if (i >= 2 && e !== "Request ended prematurely due to a closed connection") {
+      if (e !== "Request ended prematurely due to a closed connection") {
           if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
           throw e;
-        }
       }
     }
     return {
