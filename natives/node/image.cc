@@ -65,19 +65,19 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 
     string outType = GetArgumentWithFallback<bool>(Arguments, "togif", false) ? "gif" : type;
 
-    size_t length = 0;
     ArgumentMap outMap;
     if (obj.Has("data")) {
       Napi::ArrayBuffer data = obj.Get("data").As<Napi::ArrayBuffer>();
       outMap = FunctionMap.at(command)(type, outType, (char *)data.Data(), data.ByteLength(),
-                                    Arguments, length);
+                                    Arguments, NULL);
     } else {
-      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, length);
+      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, NULL);
     }
 
     vips_error_clear();
     vips_thread_shutdown();
 
+    size_t length = GetArgument<size_t>(outMap, "size");
     if (length > 0) {
       char* buf = GetArgument<char*>(outMap, "buf");
 

@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
@@ -33,7 +33,10 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
     out = in.flip(VIPS_DIRECTION_VERTICAL);
   }
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   out.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -42,6 +45,7 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

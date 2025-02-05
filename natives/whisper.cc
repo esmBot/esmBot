@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -54,7 +54,10 @@ ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata,
                           .replicate(1, nPages);
   VImage final = in.composite(replicated, VIPS_BLEND_MODE_OVER);
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -63,6 +66,7 @@ ArgumentMap Whisper(const string& type, string& outType, const char* bufferdata,
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

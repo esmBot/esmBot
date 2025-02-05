@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string top_text = GetArgument<string>(arguments, "topText");
   string bottom_text = GetArgument<string>(arguments, "bottomText");
@@ -115,13 +115,17 @@ ArgumentMap Motivate(const string& type, string& outType, const char* bufferdata
                      .extract_band(0, VImage::option()->set("n", 3));
   final.set(VIPS_META_PAGE_HEIGHT, height);
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

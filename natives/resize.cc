@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool stretch = GetArgumentWithFallback<bool>(arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(arguments, "wide", false);
@@ -55,11 +55,15 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
   }
   out.set(VIPS_META_PAGE_HEIGHT, finalHeight);
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

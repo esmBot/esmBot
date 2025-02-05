@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
@@ -28,12 +28,13 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
 
   // this command is useless with single-page images
   if (nPages < 2) {
-    dataSize = bufferLength;
+    size_t dataSize = bufferLength;
     char *data = reinterpret_cast<char*>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
 
     ArgumentMap output;
     output["buf"] = data;
+    output["size"] = dataSize;
 
     return output;
   }
@@ -68,12 +69,16 @@ ArgumentMap Reverse([[maybe_unused]] const string& type, string& outType, const 
 
   if (outType != "webp") outType = "gif";
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

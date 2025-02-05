@@ -377,7 +377,7 @@ const runJob = (job, ws) => {
         worker.removeAllListeners("message");
         worker.removeAllListeners("error");
         worker.terminate().then((val) => console.log(`Killed worker with exit code ${val}`));
-        reject(new Error("Job timed out"));
+        reject(new Error("image_job_killed"));
       }, 600000);
       log(`Job ${job.id} started`, job.num);
       worker.once("message", (data) => {

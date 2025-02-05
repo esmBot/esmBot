@@ -6,7 +6,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Watermark(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Watermark(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string water = GetArgument<string>(arguments, "water");
   int gravity = GetArgument<int>(arguments, "gravity");
@@ -153,7 +153,10 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight + addedHeight);
   }
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -162,6 +165,7 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

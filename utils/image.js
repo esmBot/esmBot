@@ -174,7 +174,7 @@ function waitForWorker(worker) {
       worker.removeAllListeners("message");
       worker.removeAllListeners("error");
       worker.terminate();
-      reject(new Error("Job timed out"));
+      reject(new Error("image_job_killed"));
     }, 600000);
     worker.once("message", (data) => {
       clearTimeout(timeout);

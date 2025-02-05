@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Sonic([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Sonic([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, bool* shouldKill)
 {
   string text = GetArgument<string>(arguments, "text");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -28,11 +28,15 @@ ArgumentMap Sonic([[maybe_unused]] const string& type, string& outType, Argument
   VImage out = bg.composite2(textImage, VIPS_BLEND_MODE_OVER,
                              VImage::option()->set("x", 391)->set("y", 84));
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

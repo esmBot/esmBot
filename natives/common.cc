@@ -57,3 +57,22 @@ vips::VOption* GetInputOptions(string type, bool sequential, bool sequentialIfAn
 
   return options;
 }
+
+static void TimeoutCallback(VipsImage *image, [[maybe_unused]] VipsProgress *progress, CallbackData *data) {
+  time_t now = time(0);
+  bool *shouldKill = data->shouldKill;
+
+  if (now > data->expiration || (shouldKill != NULL && *shouldKill)) {
+    if (shouldKill != NULL) *shouldKill = true;
+    vips_image_set_kill(image, true);
+  }
+}
+
+void SetupTimeoutCallback(vips::VImage image, bool *shouldKill) {
+  VipsImage *img = image.get_image();
+  CallbackData *cbData = VIPS_NEW(img, CallbackData);
+  cbData->expiration = time(0) + IMG_TIMEOUT;
+  cbData->shouldKill = shouldKill;
+  g_signal_connect(img, "eval", G_CALLBACK(TimeoutCallback), cbData);
+  vips_image_set_progress(img, true);
+}

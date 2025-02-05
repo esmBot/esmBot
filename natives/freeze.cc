@@ -8,12 +8,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool loop = GetArgumentWithFallback<bool>(arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(arguments, "frame", -1);
 
   ArgumentMap output;
+  size_t dataSize = 0;
 
   if (type == "gif") {
     char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
@@ -59,6 +60,8 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
       out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       out.set("loop", 1);
 
+      SetupTimeoutCallback(out, shouldKill);
+
       char *buf;
       out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
@@ -85,8 +88,7 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     WebPDataInit(&webp_data);
     webp_data.bytes = (const uint8_t *)bufferdata;
     webp_data.size = bufferLength;
-    int copy_data = 0;
-    WebPMux *mux = WebPMuxCreate(&webp_data, copy_data);
+    WebPMux *mux = WebPMuxCreate(&webp_data, 0);
 
     WebPMuxAnimParams anim;
     WebPMuxError err;
@@ -115,9 +117,10 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     WebPDataInit(&webp_data);
     WebPMuxDelete(mux);
   } else {
-    char *data = reinterpret_cast<char*>(malloc(dataSize));
-    memcpy(data, bufferdata, dataSize);
+    char *data = reinterpret_cast<char*>(malloc(bufferLength));
+    memcpy(data, bufferdata, bufferLength);
     output["buf"] = data;
+    output["size"] = bufferLength;
   }
 
   return output;

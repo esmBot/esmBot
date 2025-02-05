@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Homebrew([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Homebrew([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, bool* shouldKill)
 {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -28,11 +28,15 @@ ArgumentMap Homebrew([[maybe_unused]] const string& type, string& outType, Argum
                                  ->set("x", 400 - (text.width() / 2))
                                  ->set("y", 300 - (text.height() / 2) - 8));
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

@@ -10,7 +10,10 @@ class ImageAsyncWorker : public AsyncWorker {
   virtual ~ImageAsyncWorker(){};
 
   void Execute();
+  void OnError(const Error& e);
   void OnOK();
+
+  void SetKill() { shouldKill = true; }
 
   private:
     string command;
@@ -22,5 +25,6 @@ class ImageAsyncWorker : public AsyncWorker {
 
     ArgumentMap outArgs;
     string outType;
-    size_t outSize;
+
+    bool shouldKill;
 };

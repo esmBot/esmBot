@@ -31,7 +31,7 @@ VImage rectangularMap(int width, int height) {
 
 ArgumentMap Circle(const string& type, string& outType,
                    const char* bufferdata, size_t bufferLength,
-                   [[maybe_unused]] ArgumentMap arguments, size_t& dataSize) {
+                   [[maybe_unused]] ArgumentMap arguments, bool* shouldKill) {
 
   VImage in =
       VImage::new_from_buffer(bufferdata, bufferLength, "",
@@ -72,10 +72,14 @@ ArgumentMap Circle(const string& type, string& outType,
 
   VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char* buf;
+  size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf),
                       &dataSize, outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
   return output;
 }

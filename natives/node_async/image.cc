@@ -73,7 +73,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 
   ImageAsyncWorker* asyncWorker = new ImageAsyncWorker(callback, command, Arguments, type, bufData, bufSize);
   asyncWorker->Queue();
-  return env.Undefined();
+  return Napi::BigInt::From<intptr_t>(env, reinterpret_cast<intptr_t>(asyncWorker));
 }
 
 void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
