@@ -12,8 +12,6 @@
             "avatar": "Obtener el avatar de usuario",
             "banner": "Obtener el banner de usuario",
             "base64": "Codificar/decodificar una cadena en Base64",
-            "channel": "",
-            "command": "",
             "count": "Obtener cuántas veces fue usado cada comando",
             "donate": "Más información sobre cómo puede apoyar al desarrollo de esmBot",
             "eval": "Ejecutar código de JavaScript",
