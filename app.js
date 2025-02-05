@@ -29,7 +29,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
   process.exit(1);
 }
 
-import { reloadImageConnections, initImageLib } from "./utils/image.js";
+import { reloadImageConnections, initImageLib, disconnect } from "./utils/image.js";
 
 // main services
 import { Client, Constants } from "oceanic.js";
@@ -86,26 +86,26 @@ async function* getFiles(dir, ext = ".js") {
 
 process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit");
 console.log(`
-     ,*\`$                    z\`"v       
-    F zBw\`%                 A ,W "W     
-  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T    
-  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1   
- F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E  
- F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k  
- #  BFBBBBBBBBBBBBF"      "RBBBW    F  
-  V ' 4BBBBBBBBBBM            TBBL  F   
-   F  BBBBBBBBBBF              JBB  L   
-   F  FBBBBBBBEB                BBL 4   
-   E  [BB4BBBBEBL               BBL 4   
-   I   #BBBBBBBEB              4BBH  *w 
+     ,*\`$                    z\`"v
+    F zBw\`%                 A ,W "W
+  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T
+  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1
+ F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E
+ F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k
+ #  BFBBBBBBBBBBBBF"      "RBBBW    F
+  V ' 4BBBBBBBBBBM            TBBL  F
+   F  BBBBBBBBBBF              JBB  L
+   F  FBBBBBBBEB                BBL 4
+   E  [BB4BBBBEBL               BBL 4
+   I   #BBBBBBBEB              4BBH  *w
    A   4BBBBBBBBBEW,         ,BBBB  W  [
 .A  ,k  4BBBBBBBBBBBEBW####BBBBBBM BF  F
-k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  # 
- 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F  
-   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"    
-      *+,   " F'"'*^~~~^"^\`  V+*^       
-          \`"""                          
-          
+k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
+ 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F
+   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"
+      *+,   " F'"'*^~~~^"^\`  V+*^
+          \`"""
+
 esmBot ${packageJson.version} (${process.env.GIT_REV})
 `);
 
@@ -265,6 +265,14 @@ if (process.env.PM2_USAGE) {
 
 // connect to lavalink
 if (!connected) connect(client);
+
+process.on("SIGINT", async () => {
+  logger.info("SIGINT detected, shutting down...");
+  client.disconnect(false);
+  if (database) await database.stop();
+  disconnect();
+  process.exit();
+});
 
 try {
   await client.connect();

@@ -104,7 +104,7 @@ function connect(server, auth, name, tls) {
   connections.set(server, connection);
 }
 
-function disconnect() {
+export function disconnect() {
   for (const connection of connections.values()) {
     connection.close();
   }
