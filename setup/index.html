@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/esmbot.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
     
     
       
@@ -521,14 +521,14 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxing-dev<span class="w"> </span>libwebp-dev
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxing-dev
 </code></pre></div>
 On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.</p>
 </div>
 <div class="tabbed-block">
 <p>These instructions apply to Fedora 38/RHEL 9 or later.</p>
 <p>Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them <a href="https://rpmfusion.org/Configuration">here</a>.
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite<span class="w"> </span>gcc-c++<span class="w"> </span>ImageMagick-c++-devel<span class="w"> </span>vips-devel<span class="w"> </span>cabextract<span class="w"> </span>zxing-cpp-devel<span class="w"> </span>libwebp-devel
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite<span class="w"> </span>gcc-c++<span class="w"> </span>ImageMagick-c++-devel<span class="w"> </span>vips-devel<span class="w"> </span>cabextract<span class="w"> </span>zxing-cpp-devel
 </code></pre></div>
 On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add <a href="https://rpms.remirepo.net">Remi's RPM Repository</a> for the vips package.</p>
 <p>Some fonts used in the bot (e.g. Impact) require installing the MS Core Fonts package, which is unavailable through most RHEL repositories. You can install it using the following command (you're on your own regarding dependencies, each RHEL derivative handles them differently):
@@ -537,16 +537,16 @@ On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add <a hre
 </div>
 <div class="tabbed-block">
 <p>These instructions should apply to version 3.17 or later.
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>msttcorefonts-installer<span class="w"> </span>python3<span class="w"> </span>sqlite3<span class="w"> </span>alpine-sdk<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick-dev<span class="w"> </span>vips-dev<span class="w"> </span>zxing-cpp-dev<span class="w"> </span>libwebp-dev
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>msttcorefonts-installer<span class="w"> </span>python3<span class="w"> </span>sqlite3<span class="w"> </span>alpine-sdk<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick-dev<span class="w"> </span>vips-dev<span class="w"> </span>zxing-cpp-dev
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
-<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>npm<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>sqlite3<span class="w"> </span>zxing-cpp<span class="w"> </span>libwebp
+<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>npm<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>sqlite3<span class="w"> </span>zxing-cpp
 </code></pre></div>
 You'll also need to install <a href="https://aur.archlinux.org/packages/ttf-ms-win10-auto/"><code>ttf-ms-win10-auto</code></a> from the AUR.</p>
 </div>
 <div class="tabbed-block">
-<p><div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>webp
+<p><div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick<span class="w"> </span>libvips
 </code></pre></div>
 The <code>zxing-cpp</code> package is not available through Homebrew, so unfortunately the QR commands will be unavailable on macOS without further intervention.</p>
 </div>
@@ -700,7 +700,7 @@ pnpm<span class="w"> </span>install
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 3, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 7, 2025</span>
   </span>
 
     
@@ -806,7 +806,7 @@ pnpm<span class="w"> </span>install
     <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
