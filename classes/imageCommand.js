@@ -130,6 +130,7 @@ class ImageCommand extends Command {
         flags: this.options.ephemeral ? 64 : undefined
       };
     } catch (e) {
+      if (e.toString().includes("image_not_working")) return this.getString("image.notWorking");
       if (e.toString().includes("Request ended prematurely due to a closed connection")) return this.getString("image.tryAgain");
       if (e.toString().includes("image_job_killed") || e.toString().includes("Timeout")) return this.getString("image.tooLong");
       if (e.toString().includes("No available servers")) return this.getString("image.noServers");

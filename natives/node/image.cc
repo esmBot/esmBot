@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../common.h"
+#include "worker.h"
 
 #if defined(WIN32) && defined(MAGICK_ENABLED)
 #include <Magick++.h>
@@ -25,76 +26,54 @@ bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
 
 Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Object result = Napi::Object::New(env);
 
-  try {
-    string command = info[0].As<Napi::String>().Utf8Value();
-    Napi::Object obj = info[1].As<Napi::Object>();
-    string type =
-        obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : "png";
+  string command = info[0].As<Napi::String>().Utf8Value();
+  Napi::Object obj = info[1].As<Napi::Object>();
+  string type =
+      obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : "png";
+  Napi::Function callback = info[2].As<Napi::Function>();
 
-    Napi::Array properties = obj.GetPropertyNames();
+  Napi::Array properties = obj.GetPropertyNames();
 
-    ArgumentMap Arguments;
+  ArgumentMap Arguments;
 
-    for (unsigned int i = 0; i < properties.Length(); i++) {
-      string property =
-          properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
+  for (unsigned int i = 0; i < properties.Length(); i++) {
+    string property =
+        properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
 
-      if (property == "data") {
-        continue;
-      }
+    if (property == "data") {
+      continue;
+    }
 
-      auto val = obj.Get(property);
-      if (val.IsBoolean()) {
-        Arguments[property] = val.ToBoolean().Value();
-      } else if (val.IsString()) {
-        Arguments[property] = val.ToString().As<Napi::String>().Utf8Value();
-      } else if (val.IsNumber()) {
-        auto num = val.ToNumber();
-        if (isNapiValueInt(env, num) && property != "yscale" && property != "tolerance" && property != "pos") { // dumb hack
-          Arguments[property] = num.Int32Value();
-        } else {
-          Arguments[property] = num.FloatValue();
-        }
+    auto val = obj.Get(property);
+    if (val.IsBoolean()) {
+      Arguments[property] = val.ToBoolean().Value();
+    } else if (val.IsString()) {
+      Arguments[property] = val.ToString().As<Napi::String>().Utf8Value();
+    } else if (val.IsNumber()) {
+      auto num = val.ToNumber();
+      if (isNapiValueInt(env, num) && property != "yscale" && property != "tolerance" && property != "pos") { // dumb hack
+        Arguments[property] = num.Int32Value();
       } else {
-        throw "Unimplemented value type passed to image native.";
-        // Arguments[property] = val;
+        Arguments[property] = num.FloatValue();
       }
-    }
-
-    string outType = GetArgumentWithFallback<bool>(Arguments, "togif", false) ? "gif" : type;
-
-    ArgumentMap outMap;
-    if (obj.Has("data")) {
-      Napi::ArrayBuffer data = obj.Get("data").As<Napi::ArrayBuffer>();
-      outMap = FunctionMap.at(command)(type, outType, (char *)data.Data(), data.ByteLength(),
-                                    Arguments, NULL);
     } else {
-      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, NULL);
+      throw "Unimplemented value type passed to image native.";
+      // Arguments[property] = val;
     }
-
-    vips_error_clear();
-    vips_thread_shutdown();
-
-    size_t length = GetArgument<size_t>(outMap, "size");
-    if (length > 0) {
-      char* buf = GetArgument<char*>(outMap, "buf");
-
-      result.Set("data", Napi::Buffer<char>::Copy(env, buf, length));
-      g_free(buf);
-    } else {
-      result.Set("data", Napi::Buffer<char>::New(env, 0));
-    }
-    
-    result.Set("type", outType);
-  } catch (std::exception const& err) {
-    Napi::Error::New(env, err.what()).ThrowAsJavaScriptException();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error").ThrowAsJavaScriptException();
   }
 
-  return result;
+  char *bufData = NULL;
+  size_t bufSize = 0;
+  if (obj.Has("data")) {
+    Napi::ArrayBuffer data = obj.Get("data").As<Napi::ArrayBuffer>();
+    bufData = (char *)data.Data();
+    bufSize = data.ByteLength();
+  }
+
+  ImageAsyncWorker* asyncWorker = new ImageAsyncWorker(callback, command, Arguments, type, bufData, bufSize);
+  asyncWorker->Queue();
+  return Napi::BigInt::From<intptr_t>(env, reinterpret_cast<intptr_t>(asyncWorker));
 }
 
 void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {

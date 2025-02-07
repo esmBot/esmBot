@@ -1,4 +1,3 @@
-import { isMainThread, parentPort, workerData } from "node:worker_threads";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { img } from "./imageLib.js";
@@ -61,44 +60,18 @@ export default function run(object) {
         objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../");
-      if (process.env.NODE_ASYNC === "true") {
-        img.image(object.cmd, objectWithFixedType, (err, data, type) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-  
-          const returnObject = {
-            buffer: data,
-            fileExtension: type
-          };
-          resolve(returnObject);
-        });
-      } else {
-        try {
-          const result = img.image(object.cmd, objectWithFixedType);
-          const returnObject = {
-            buffer: result.data,
-            fileExtension: result.type
-          };
-          resolve(returnObject);
-        } catch (e) {
-          reject(e);
+      img.image(object.cmd, objectWithFixedType, (err, data, type) => {
+        if (err) {
+          reject(err);
+          return;
         }
-      }
+
+        const returnObject = {
+          buffer: data,
+          fileExtension: type
+        };
+        resolve(returnObject);
+      });
     });
   });
-}
-
-if (!isMainThread) {
-  run(workerData)
-    .then(returnObject => {
-      parentPort.postMessage(returnObject, [returnObject.buffer.buffer]);
-    })
-    .catch(err => {
-      // turn promise rejection into normal error
-      throw err;
-    });
-} else {
-  img.imageInit();
 }

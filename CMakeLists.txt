@@ -50,7 +50,6 @@ set(SOURCE_FILES natives/blur.cc
 
 option(WITH_MAGICK "Build with ImageMagick, enables the circle, magik, and spin commands" OFF)
 option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
-option(NODE_ASYNC "Build Node.js bindings using the AsyncWorker API" OFF)
 
 if (WITH_MAGICK)
   list(APPEND SOURCE_FILES natives/magik.cc
@@ -63,11 +62,7 @@ endif()
 
 if (CMAKE_JS_VERSION)
   include_directories(${CMAKE_JS_INC})
-  if (NODE_ASYNC)
-    add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node_async/image.cc natives/node_async/worker.cc)
-  else()
-    add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node/image.cc)
-  endif()
+  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node/image.cc natives/node/worker.cc)
   set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
   target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})
 else()
