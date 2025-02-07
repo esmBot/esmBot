@@ -14,13 +14,6 @@ void *memset16(void *m, uint16_t val, size_t count) {
   return m;
 }
 
-uint32_t readUint32LE(unsigned char *buffer) {
-  return static_cast<uint32_t>(buffer[0]) |
-          (static_cast<uint32_t>(buffer[1]) << 8) |
-          (static_cast<uint32_t>(buffer[2]) << 16) |
-          (static_cast<uint32_t>(buffer[3]) << 24);
-}
-
 char *vipsRemove(const char *data, size_t length, size_t& dataSize, int speed, string suffix, bool *shouldKill) {
   VOption *options = VImage::option()->set("access", "sequential");
 

@@ -76,3 +76,10 @@ void SetupTimeoutCallback(vips::VImage image, bool *shouldKill) {
   g_signal_connect(img, "eval", G_CALLBACK(TimeoutCallback), cbData);
   vips_image_set_progress(img, true);
 }
+
+uint32_t readUint32LE(unsigned char *buffer) {
+  return static_cast<uint32_t>(buffer[0]) |
+          (static_cast<uint32_t>(buffer[1]) << 8) |
+          (static_cast<uint32_t>(buffer[2]) << 16) |
+          (static_cast<uint32_t>(buffer[3]) << 24);
+}

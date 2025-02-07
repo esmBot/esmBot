@@ -4,6 +4,7 @@
 #include <fontconfig/fontconfig.h>
 
 #include <iostream>
+#include <cstdint>
 #include <map>
 #include <string>
 #include <unordered_map>
@@ -23,6 +24,8 @@ typedef struct {
   bool *shouldKill;
 } CallbackData;
 #define IMG_TIMEOUT 600
+
+uint32_t readUint32LE(unsigned char *buffer);
 
 #include "commands.h"
 

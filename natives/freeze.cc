@@ -1,12 +1,31 @@
 #include <algorithm>
 #include <map>
 #include <vips/vips8>
-#include <webp/mux.h>
 
 #include "common.h"
 
 using namespace std;
 using namespace vips;
+
+char *vipsTrim(const char *data, size_t length, size_t& dataSize, int frame, string suffix, string outType, bool *shouldKill) {
+  VImage in =
+      VImage::new_from_buffer(data, length, "",
+                              GetInputOptions(suffix, true, false));
+
+  int pageHeight = vips_image_get_page_height(in.get_image());
+  int nPages = vips_image_get_n_pages(in.get_image());
+  int framePos = clamp(frame, 1, (int)nPages);
+  VImage out = in.crop(0, 0, in.width(), pageHeight * framePos);
+  out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+  out.set("loop", 1);
+
+  SetupTimeoutCallback(out, shouldKill);
+
+  char *buf;
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
+
+  return buf;
+}
 
 ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
@@ -49,23 +68,9 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
 
       output["buf"] = newData;
     } else if (frame >= 0 && !loop) {
-      VImage in =
-          VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                  GetInputOptions(type, true, false));
-
-      int pageHeight = vips_image_get_page_height(in.get_image());
-      int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
-      int framePos = clamp(frame, 1, (int)nPages);
-      VImage out = in.crop(0, 0, in.width(), pageHeight * framePos);
-      out.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-      out.set("loop", 1);
-
-      SetupTimeoutCallback(out, shouldKill);
-
-      char *buf;
-      out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
-
+      char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
       output["buf"] = buf;
+      output["size"] = dataSize;
     } else {
       lastPos = reinterpret_cast<char*>(memchr(fileData, '\x21', bufferLength));
       while (lastPos != NULL) {
@@ -84,38 +89,33 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
       output["buf"] = fileData;
     }
   } else if (type == "webp") {
-    WebPData webp_data;
-    WebPDataInit(&webp_data);
-    webp_data.bytes = (const uint8_t *)bufferdata;
-    webp_data.size = bufferLength;
-    WebPMux *mux = WebPMuxCreate(&webp_data, 0);
+    if (frame >= 0 && !loop) {
+      char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
+      output["buf"] = buf;
+      output["size"] = dataSize;
+    } else {
+      char *fileData = reinterpret_cast<char*>(malloc(bufferLength));
+      memcpy(fileData, bufferdata, bufferLength);
 
-    WebPMuxAnimParams anim;
-    WebPMuxError err;
-    err = WebPMuxGetAnimationParams(mux, &anim);
-    if (err > 0) {
-      anim.loop_count = loop ? 0 : 1;
-      if (frame >= 0 && !loop) {
-        while (err > 0) {
-          err = WebPMuxDeleteFrame(mux, frame + 1);
+      size_t position = 12;
+
+      while (position + 8 <= bufferLength) {
+        const char* fourCC = &fileData[position];
+        uint32_t chunkSize = readUint32LE(reinterpret_cast<unsigned char*>(fileData) + position + 4);
+
+        if (memcmp(fourCC, "ANIM", 4) == 0) {
+          size_t dataStart = position + 8;
+
+          fileData[dataStart + 4] = loop ? 0 : 1;
+          fileData[dataStart + 5] = 0;
         }
+
+        position += 8 + chunkSize + (chunkSize % 2);
       }
-      WebPMuxSetAnimationParams(mux, &anim);
+
+      output["buf"] = fileData;
+      output["size"] = bufferLength;
     }
-
-    WebPData out;
-    WebPMuxAssemble(mux, &out);
-
-    dataSize = out.size;
-    char *data = reinterpret_cast<char*>(malloc(dataSize));
-    memcpy(data, out.bytes, dataSize);
-
-    WebPDataClear(&out);
-
-    output["buf"] = data;
-    
-    WebPDataInit(&webp_data);
-    WebPMuxDelete(mux);
   } else {
     char *data = reinterpret_cast<char*>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
