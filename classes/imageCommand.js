@@ -97,7 +97,7 @@ class ImageCommand extends Command {
     }
 
     let status;
-    if (imageParams.params.type === "image/gif" && this.type === "classic") {
+    if ((imageParams.params.type === "image/gif" || imageParams.params.type === "image/webp") && this.type === "classic") {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
