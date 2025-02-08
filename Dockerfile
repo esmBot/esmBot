@@ -11,7 +11,8 @@ COPY . /app
 WORKDIR /app
 RUN apk --no-cache upgrade
 RUN apk add --no-cache msttcorefonts-installer freetype fontconfig \
-		vips vips-cpp grep libltdl icu-libs zxing-cpp
+		vips vips-cpp grep libltdl icu-libs zxing-cpp jq
+RUN corepack install -g $(jq .packageManager package.json | tr -d '"')
 RUN update-ms-fonts && fc-cache -fv
 RUN mkdir /built
 
