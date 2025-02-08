@@ -9,7 +9,6 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 COPY . /app
 WORKDIR /app
-RUN apk --no-cache upgrade
 RUN apk add --no-cache msttcorefonts-installer freetype fontconfig \
 		vips vips-cpp grep libltdl icu-libs zxing-cpp jq
 RUN corepack install -g $(jq .packageManager package.json | tr -d '"')
