@@ -36,7 +36,7 @@ export default async (client, member, oldChannel) => {
           if (member.id !== newMember.id) {
             players.set(connection.voiceChannel.guildID, { player: connection.player, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
             waitMessage.edit({
-              content: `🔊 ${newMember.mention} is the new voice channel host.`
+              content: `🔊 ${getString("sound.newHost", { params: { member: newMember.mention } })}` // TODO: find a way to get locale
             });
           } else {
             try {
@@ -82,7 +82,7 @@ export default async (client, member, oldChannel) => {
             const randomMember = random(members);
             players.set(connection.voiceChannel.guildID, { player: connection.player, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
             waitMessage.edit({
-              content: `🔊 ${randomMember.mention} is the new voice channel host.`
+              content: `🔊 ${getString("sound.newHost", { params: { member: randomMember.mention } })}` // TODO: find a way to get locale
             });
           }
         }
@@ -109,7 +109,11 @@ async function handleExit(client, connection) {
   }
   try {
     await client.rest.channels.createMessage(connection.originalChannel.id, {
-      content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
+      content: `🔊 ${getString("sound.endedInChannel", { // TODO: find a way to get locale
+        params: {
+          channel: connection.voiceChannel.name
+        }
+      })}`
     });
   } catch {
     logger.warn(`Failed to post leave message in channel ${connection.originalChannel.id}`);

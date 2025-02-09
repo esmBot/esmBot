@@ -43,7 +43,7 @@ class HostCommand extends MusicCommand {
       object.host = member.id;
       players.set(this.guild.id, object);
       this.success = true;
-      return `🔊 ${this.getString("commands.responses.host.newHost", { params: { member: member.mention } })}`;
+      return `🔊 ${this.getString("sound.newHost", { params: { member: member.mention } })}`;
     }
     const member = this.guild.members.get(players.get(this.guild.id).host);
     this.success = true;

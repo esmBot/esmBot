@@ -717,7 +717,6 @@
       },
       "host": {
         "currentHost": "The current voice channel host is **{{member}}**",
-        "newHost": "{{member}} is the new voice channel host.",
         "notHost": "Only the current voice session host can choose another host!",
         "notMember": "That user isn't in this server!",
         "noUser": "I can't find that user!"
@@ -841,7 +840,6 @@
       },
       "stop": {
         "ended": "The current voice channel session has ended.",
-        "endedInChannel": "The voice channel session in `{{channel}}` has ended.",
         "notHost": "Only the current voice session host can stop the music!"
       },
       "toggle": {
@@ -924,12 +922,15 @@
     "noEmbedLinks": "I don't have the `Embed Links` permission!"
   },
   "sound": {
+    "addedToQueue": "Your {{type}} `{{name}}` has been added to the queue!",
     "artist": "Artist",
     "blank": "(blank)",
     "cantJoin": "I can't join this voice channel! Make sure I have the right permissions.",
     "channel": "Channel",
+    "endedInChannel": "The voice channel session in `{{channel}}` has ended.",
     "error": "Looks like there was an error during sound playback:",
     "looping": "Looping?",
+    "newHost": "{{member}} is the new voice channel host.",
     "no": "No",
     "noConnection": "Something odd happened to the voice connection; try playing your song again.",
     "node": "Node",

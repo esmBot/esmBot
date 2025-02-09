@@ -13,7 +13,7 @@ class StopCommand extends MusicCommand {
     skipVotes.delete(this.guild.id);
     await leaveChannel(this.guild.id);
     this.success = true;
-    return `🔊 ${this.getString(`commands.responses.stop.ended${this.connection ? "InChannel" : ""}`, this.connection ? {
+    return `🔊 ${this.getString(this.connection ? "sound.endedInChannel" : "commands.responses.stop.ended", this.connection ? {
       params: {
         channel: this.connection.voiceChannel.name
       }

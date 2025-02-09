@@ -136,7 +136,13 @@ export async function play(client, soundUrl, options) {
 
   queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
   if (oldQueue?.length) {
-    return `Your ${response.loadType} \`${playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : getString("sound.blank", { locale: options.locale }))}\` has been added to the queue!`;
+    return getString("sound.addedToQueue", {
+      locale: options.locale,
+      params: {
+        name: playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : getString("sound.blank", { locale: options.locale })),
+        type: response.loadType
+      }
+    });
   }
 
   nextSong(client, options, connection, tracks[0], info, voiceChannel, playerMeta?.host ?? options.member.id, playerMeta?.loop ?? false, playerMeta?.shuffle ?? false);
@@ -252,7 +258,12 @@ export async function nextSong(client, options, connection, track, info, voiceCh
       skipVotes.delete(voiceChannel.guildID);
       await manager.leaveVoiceChannel(voiceChannel.guildID);
       try {
-        const content = `🔊 The voice channel session in \`${voiceChannel.name}\` has ended.`;
+        const content = `🔊 ${getString("sound.endedInChannel", {
+          locale: options.locale,
+          params: {
+            channel: voiceChannel.name
+          }
+        })}`;
         if (options.type === "classic") {
           await client.rest.channels.createMessage(options.channel.id, { content });
         } else {
