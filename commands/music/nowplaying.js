@@ -16,7 +16,7 @@ class NowPlayingCommand extends MusicCommand {
     this.success = true;
     return {
       embeds: [{
-        color: 16711680,
+        color: 0xff0000,
         author: {
           name: this.getString("sound.nowPlaying"),
           iconURL: this.client.user.avatarURL()

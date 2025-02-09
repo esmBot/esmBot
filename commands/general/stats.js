@@ -24,7 +24,7 @@ class StatsCommand extends Command {
           iconURL: this.client.user.avatarURL()
         },
         description: `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
-        color: 16711680,
+        color: 0xff0000,
         fields: [{
           name: "Version",
           value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`

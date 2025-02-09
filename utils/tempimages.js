@@ -18,7 +18,7 @@ export async function upload(client, result, context, success = true, interactio
     flags: result.flags ?? (success ? 0 : 64)
   } : {
     embeds: [{
-      color: 16711680,
+      color: 0xff0000,
       title: getString("image.tempImageSent", interaction ? context.locale : undefined),
       url: imageURL,
       image: {

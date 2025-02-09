@@ -14,7 +14,7 @@ class InfoCommand extends Command {
     await this.acknowledge();
     return {
       embeds: [{
-        color: 16711680,
+        color: 0xff0000,
         author: {
           name: "esmBot Info/Credits",
           iconURL: this.client.user.avatarURL()

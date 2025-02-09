@@ -14,7 +14,7 @@ class ImageStatsCommand extends Command {
           name: "esmBot Image Statistics",
           iconURL: this.client.user.avatarURL()
         },
-        color: 16711680,
+        color: 0xff0000,
         description: `The bot is currently connected to ${connections.size} image server(s).`,
         fields: []
       }]

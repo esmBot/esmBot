@@ -18,7 +18,7 @@ class StickerCommand extends Command {
       this.success = true;
       return {
         embeds: [{
-          color: 16711680,
+          color: 0xff0000,
           description: `[${this.getString("commands.responses.sticker.apng")}](https://cdn.discordapp.com/stickers/${result.id}.png)`,
           image: {
             url: `https://cdn.discordapp.com/stickers/${result.id}.png`

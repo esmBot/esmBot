@@ -32,7 +32,7 @@ class HelpCommand extends Command {
           title: `${this.guild ? prefix : ""}${command}`,
           url: "https://esmbot.net/help.html",
           description: info.description,
-          color: 16711680,
+          color: 0xff0000,
           fields: [{
             name: "Aliases",
             value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
@@ -94,7 +94,7 @@ class HelpCommand extends Command {
           },
           title: value.title,
           description: value.page.join("\n"),
-          color: 16711680,
+          color: 0xff0000,
           footer: {
             text: `Page ${i + 1} of ${pages.length}`
           },

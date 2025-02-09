@@ -38,7 +38,7 @@ class CountCommand extends Command {
       embeds.push({
         embeds: [{
           title: "Command Usage Counts",
-          color: 16711680,
+          color: 0xff0000,
           footer: {
             text: `Page ${i + 1} of ${groups.length}`
           },

@@ -19,7 +19,7 @@ class ImageSearchCommand extends Command {
         embeds: [{
           title: value.title,
           url: encodeURI(value.url),
-          color: 16711680,
+          color: 0xff0000,
           footer: {
             text: `Page ${i + 1} of ${images.length}`
           },

@@ -163,7 +163,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
     try {
       const content = {
         embeds: [{
-          color: 16711680,
+          color: 0xff0000,
           author: {
             name: getString("sound.nowPlaying", options.locale),
             iconURL: client.user.avatarURL()
