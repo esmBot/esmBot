@@ -7,7 +7,7 @@ import { VoiceChannel } from "oceanic.js";
 import { getString } from "./i18n.js";
 
 /**
- * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message }} MapPlayer
+ * @typedef {{ player: import("shoukaku").Player; host: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop: boolean; shuffle: boolean; playMessage?: import("oceanic.js").Message; locale: string }} MapPlayer
  * @type {Map<string, MapPlayer>}
  */
 export const players = new Map();
@@ -220,7 +220,7 @@ export async function nextSong(client, options, connection, track, info, voiceCh
       encoded: track
     }
   });
-  players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage });
+  players.set(voiceChannel.guildID, { player: connection, host, voiceChannel, originalChannel: options.channel, loop, shuffle, playMessage: playingMessage, locale: options.locale });
   connection.once("exception", (exception) => errHandle(exception, client, connection, playingMessage, voiceChannel, options));
   connection.on("stuck", async () => {
     await connection.move();
