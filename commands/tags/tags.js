@@ -10,7 +10,7 @@ class TagsCommand extends Command {
     if (!this.guild) return this.getString("guildOnly");
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const cmd = this.type === "classic" ? (this.args[0] ?? "").toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
-    if (!cmd || !cmd.trim()) return "You need to provide the name of the tag you want to view!";
+    if (!cmd || !cmd.trim()) return this.getString("commands.responses.tags.noInput");
     const tagName = this.type === "classic" ? this.args.slice(1)[0] : this.interaction?.data.options.getString("name");
 
     switch (cmd) {
@@ -44,7 +44,7 @@ class TagsCommand extends Command {
     } else {
       getResult = await database.getTag(this.guild.id, this.type === "classic" ? cmd : tagName);
     }
-    if (!getResult) return "This tag doesn't exist!";
+    if (!getResult) return this.getString("commands.responses.tags.invalid");
     this.success = true;
     if (getResult.content.length > 2000) {
       return {
@@ -61,62 +61,88 @@ class TagsCommand extends Command {
    * @param {string} tagName
    */
   async create(tagName) {
-    if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to add!";
-    if (blacklist.includes(tagName)) return "You can't make a tag with that name!";
+    if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.addName");
+    if (blacklist.includes(tagName)) return this.getString("commands.responses.tags.invalidName");
     const getResult = await database.getTag(this.guild.id, tagName);
-    if (getResult) return "This tag already exists!";
+    if (getResult) return this.getString("commands.responses.tags.exists");
     const result = await database.setTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.interaction?.data.options.getString("content", true), author: this.member?.id }, this.guild);
     this.success = true;
     if (result) return result;
-    return `The tag \`${tagName}\` has been added!`;
+    return this.getString("commands.responses.tags.added", {
+      params: {
+        name: tagName
+      }
+    });
   }
 
   /**
    * @param {string} tagName
    */
   async delete(tagName) {
-    if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to delete!";
+    if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.deleteName");
     const getResult = await database.getTag(this.guild.id, tagName);
-    if (!getResult) return "This tag doesn't exist!";
+    if (!getResult) return this.getString("commands.responses.tags.invalid");
     const owners = process.env.OWNER?.split(",");
-    if (getResult.author !== this.author.id && !this.memberPermissions.has("MANAGE_MESSAGES") && !owners?.includes(this.author.id)) return "You don't own this tag!";
+    if (getResult.author !== this.author.id && !this.memberPermissions.has("MANAGE_MESSAGES") && !owners?.includes(this.author.id)) return this.getString("commands.responses.tags.notOwner");
     await database.removeTag(tagName, this.guild);
     this.success = true;
-    return `The tag \`${tagName}\` has been deleted!`;
+    return this.getString("commands.responses.tags.deleted", {
+      params: {
+        name: tagName
+      }
+    });
   }
 
   /**
    * @param {string} tagName
    */
   async modify(tagName) {
-    if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to edit!";
+    if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.editName");
     const getResult = await database.getTag(this.guild.id, tagName);
-    if (!getResult) return "This tag doesn't exist!";
+    if (!getResult) return this.getString("commands.responses.tags.invalid");
     const owners = process.env.OWNER?.split(",");
-    if (getResult.author !== this.author.id && !this.memberPermissions.has("MANAGE_MESSAGES") && !owners?.includes(this.author.id)) return "You don't own this tag!";
+    if (getResult.author !== this.author.id && !this.memberPermissions.has("MANAGE_MESSAGES") && !owners?.includes(this.author.id)) return this.getString("commands.responses.tags.notOwner");
     await database.editTag(tagName, { content: this.type === "classic" ? this.args.slice(2).join(" ") : this.interaction?.data.options.getString("content", true), author: this.member?.id }, this.guild);
     this.success = true;
-    return `The tag \`${tagName}\` has been edited!`;
+    return this.getString("commands.responses.tags.edited", {
+      params: {
+        name: tagName
+      }
+    });
   }
 
   /**
    * @param {string} tagName
    */
   async owner(tagName) {
-    if (!tagName || !tagName.trim()) return "You need to provide the name of the tag you want to check the owner of!";
+    if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.ownerName");
     const getResult = await database.getTag(this.guild.id, tagName);
-    if (!getResult) return "This tag doesn't exist!";
+    if (!getResult) return this.getString("commands.responses.tags.invalid");
     const user = this.client.users.get(getResult.author);
     this.success = true;
     if (!user) {
       try {
         const restUser = await this.client.rest.users.get(getResult.author);
-        return `This tag is owned by **${restUser.username}${restUser.discriminator === "0" ? `#${restUser.discriminator}` : ""}** (\`${getResult.author}\`).`;
+        return this.getString("commands.responses.tags.ownedBy", {
+          params: {
+            user: restUser.username,
+            id: getResult.author
+          }
+        });
       } catch {
-        return `I couldn't find exactly who owns this tag, but I was able to get their ID: \`${getResult.author}\``;
+        return this.getString("commands.responses.tags.ownedById", {
+          params: {
+            id: getResult.author
+          }
+        });
       }
     } else {
-      return `This tag is owned by **${user.username}${user.discriminator === "0" ? `#${user.discriminator}` : ""}** (\`${getResult.author}\`).`;
+      return this.getString("commands.responses.tags.ownedBy", {
+        params: {
+          user: user?.username,
+          id: getResult.author
+        }
+      });
     }
   }
 
@@ -132,7 +158,7 @@ class TagsCommand extends Command {
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [{
-          title: "Tag List",
+          title: this.getString("commands.responses.tags.list"),
           color: 0xff0000,
           footer: {
             text: this.getString("pagination.page", {
@@ -150,7 +176,7 @@ class TagsCommand extends Command {
         }]
       });
     }
-    if (embeds.length === 0) return "I couldn't find any tags!";
+    if (embeds.length === 0) return this.getString("commands.responses.tags.noTags");
     this.success = true;
     return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }

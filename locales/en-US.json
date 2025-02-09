@@ -718,6 +718,10 @@
       "dog": {
         "error": "I couldn't get a dog image in time. Maybe try again?"
       },
+      "donate": {
+        "support": "Like esmBot? Consider supporting the developer on Patreon to help keep it running!",
+        "thanks": "Thanks to the following patrons for their support:"
+      },
       "emote": {
         "invalidEmoji": "You need to provide a valid emoji to get an image!"
       },
@@ -869,6 +873,24 @@
       "stop": {
         "ended": "The current voice channel session has ended.",
         "notHost": "Only the current voice session host can stop the music!"
+      },
+      "tags": {
+        "added": "The tag `{{name}}` has been added!",
+        "addName": "You need to provide the name of the tag you want to add!",
+        "deleted": "The tag `{{name}}` has been deleted!",
+        "deleteName": "You need to provide the name of the tag you want to delete!",
+        "edited": "The tag `{{name}}` has been edited!",
+        "editName": "You need to provide the name of the tag you want to edit!",
+        "exists": "This tag already exists!",
+        "invalid": "That tag doesn't exist!",
+        "invalidName": "You can't make a tag with that name!",
+        "list": "Tag List",
+        "noInput": "You need to provide the name of the tag you want to view!",
+        "noTags": "I couldn't find any tags!",
+        "notOwner": "You don't own this tag!",
+        "ownedBy": "This tag is owned by **{{user}}** (`{{id}}`).",
+        "ownedById": "I couldn't find exactly who owns this tag, but I was able to get their ID: `{{id}}`",
+        "ownerName": "You need to provide the name of the tag you want to check the owner of!"
       },
       "toggle": {
         "notHost": "Only the current voice session host can pause/resume the music!",
