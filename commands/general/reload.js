@@ -5,14 +5,14 @@ import { paths } from "../../utils/collections.js";
 class ReloadCommand extends Command {
   async run() {
     const owners = process.env.OWNER.split(",");
-    if (!owners.includes(this.author.id)) return "Only the bot owner can reload commands!";
+    if (!owners.includes(this.author.id)) return this.getString("commands.responses.reload.botOwnerOnly");
     const commandName = this.options.cmd ?? this.args.join(" ");
-    if (!commandName || !commandName.trim()) return "You need to provide a command to reload!";
+    if (!commandName || !commandName.trim()) return this.getString("commands.responses.reload.noInput");
     await this.acknowledge();
     const path = paths.get(commandName);
-    if (!path) return "I couldn't find that command!";
+    if (!path) return this.getString("commands.responses.reload.noCommand");
     const result = await load(this.client, path, this.options.skipsend);
-    if (result !== commandName) return "I couldn't reload that command!";
+    if (result !== commandName) return this.getString("commands.responses.reload.reloadFailed");
     if (process.env.PM2_USAGE) {
       process.send?.({
         type: "process:msg",
@@ -22,7 +22,11 @@ class ReloadCommand extends Command {
         }
       });
     }
-    return `The command \`${commandName}\` has been reloaded.`;
+    return this.getString("commands.responses.reload.reloaded", {
+      params: {
+        command: commandName
+      }
+    });
   }
 
   static flags = [{

@@ -9,7 +9,7 @@ class HostCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return "Only the current voice session host can choose another host!";
+    if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return this.getString("commands.responses.host.notHost");
     const input = this.options.user ?? this.args.join(" ");
     if (input?.trim()) {
       let user;
@@ -33,21 +33,21 @@ class HostCommand extends MusicCommand {
       } else {
         user = this.client.users.get(input);
       }
-      if (!user) return "I can't find that user!";
+      if (!user) return this.getString("commands.responses.host.noUser");
       if (user.bot) return "https://www.youtube.com/watch?v=rmQFcVR6vEs";
       const member = this.guild.members.get(user.id) ?? await this.client.rest.guilds.getMember(this.guild.id, user.id).catch(e => {
         logger.warn(`Failed to get a member: ${e}`);
       });
-      if (!member) return "That user isn't in this server!";
+      if (!member) return this.getString("commands.responses.host.notMember");
       const object = this.connection;
       object.host = member.id;
       players.set(this.guild.id, object);
       this.success = true;
-      return `🔊 ${member.mention} is the new voice channel host.`;
+      return `🔊 ${this.getString("commands.responses.host.newHost", { params: { member: member.mention } })}`;
     }
     const member = this.guild.members.get(players.get(this.guild.id).host);
     this.success = true;
-    return `🔊 The current voice channel host is **${member?.username}${member?.discriminator === "0" ? `#${member?.discriminator}` : ""}**`;
+    return `🔊 ${this.getString("commands.responses.host.currentHost", { params: { member: member?.username } })}`;
   }
 
   static flags = [{

@@ -19,7 +19,7 @@ class InfoCommand extends Command {
           name: "esmBot Info/Credits",
           iconURL: this.client.user.avatarURL()
         },
-        description: this.getString("commands.responses.info.managedBy", { params: { owner: owner.username } }),
+        description: this.getString("managedBy", { params: { owner: owner.username } }),
         fields: [{
           name: `ℹ️ ${this.getString("commands.responses.info.version")}`,
           value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`

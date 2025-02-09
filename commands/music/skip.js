@@ -11,7 +11,7 @@ class SkipCommand extends MusicCommand {
     if (!player) return this.getString("sound.noConnection");
     if (player.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) {
       const votes = skipVotes.get(this.guild.id) ?? { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) };
-      if (votes.ids.includes(this.author.id)) return "You've already voted to skip!";
+      if (votes.ids.includes(this.author.id)) return this.getString("commands.responses.skip.alreadyVoted");
       const newObject = {
         count: votes.count + 1,
         ids: [...votes.ids, this.author.id].filter(item => !!item),
@@ -21,16 +21,21 @@ class SkipCommand extends MusicCommand {
         await player.player.stopTrack();
         skipVotes.set(this.guild.id, { count: 0, ids: [], max: Math.min(3, player.voiceChannel.voiceMembers.filter((i) => i.id !== this.client.user.id && !i.bot).length) });
         this.success = true;
-        if (this.type === "application") return "🔊 The current song has been skipped.";
+        if (this.type === "application") return `🔊 ${this.getString("commands.responses.skip.skipped")}`;
       } else {
         skipVotes.set(this.guild.id, newObject);
         this.success = true;
-        return `🔊 Voted to skip song (${votes.count + 1}/${votes.max} people have voted).`;
+        return `🔊 ${this.getString("commands.responses.skip.voted", {
+          params: {
+            count: votes.count + 1,
+            max: votes.max
+          }
+        })}`;
       }
     } else {
       await player.player.stopTrack();
       this.success = true;
-      if (this.type === "application") return "🔊 The current song has been skipped.";
+      if (this.type === "application") return `🔊 ${this.getString("commands.responses.skip.skipped")}`;
     }
   }
 

@@ -7,13 +7,17 @@ class StopCommand extends MusicCommand {
     if (!this.guild) return this.getString("guildOnly");
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
-    if (this.connection?.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can stop the music!";
+    if (this.connection?.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return this.getString("commands.responses.stop.notHost");
     players.delete(this.guild.id);
     queues.delete(this.guild.id);
     skipVotes.delete(this.guild.id);
     await leaveChannel(this.guild.id);
     this.success = true;
-    return this.connection ? `🔊 The voice channel session in \`${this.connection.voiceChannel.name}\` has ended.` : "🔊 The current voice channel session has ended.";
+    return `🔊 ${this.getString(`commands.responses.stop.ended${this.connection ? "InChannel" : ""}`, this.connection ? {
+      params: {
+        channel: this.connection.voiceChannel.name
+      }
+    } : undefined)}`;
   }
 
   static description = "Stops the music";

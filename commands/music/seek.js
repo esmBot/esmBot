@@ -7,10 +7,10 @@ class SeekCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id) return "Only the current voice session host can seek the music!";
+    if (this.connection.host !== this.author.id) return this.getString("commands.responses.seek.notHost");
     const player = this.connection.player;
     const track = await player.node.rest.decode(player.track);
-    if (!track?.info.isSeekable) return "This track isn't seekable!";
+    if (!track?.info.isSeekable) return this.getString("commands.responses.seek.notSeekable");
     const pos = this.options.position ?? this.args[0];
     let seconds;
     if (typeof pos === "string" && pos.includes(":")) {
@@ -18,10 +18,10 @@ class SeekCommand extends MusicCommand {
     } else {
       seconds = Number.parseFloat(pos);
     }
-    if (Number.isNaN(seconds) || (seconds * 1000) > track.info.length || (seconds * 1000) < 0) return "That's not a valid position!";
+    if (Number.isNaN(seconds) || (seconds * 1000) > track.info.length || (seconds * 1000) < 0) return this.getString("commands.responses.seek.invalidPosition");
     player.seekTo(seconds * 1000);
     this.success = true;
-    return `🔊 Seeked track to ${seconds} second(s).`;
+    return `🔊 ${this.getString("commands.responses.seek.seeked", { params: { seconds } })}`;
   }
 
   static flags = [{

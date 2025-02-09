@@ -715,11 +715,17 @@
         "prefix": "Prefix",
         "timesUsed": "Times used"
       },
+      "host": {
+        "currentHost": "The current voice channel host is **{{member}}**",
+        "newHost": "{{member}} is the new voice channel host.",
+        "notHost": "Only the current voice session host can choose another host!",
+        "notMember": "That user isn't in this server!",
+        "noUser": "I can't find that user!"
+      },
       "info": {
         "clickHere": "Click here!",
         "credits": "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo by **[MintBurrow](https://twitter.com/MintBurrow)**",
         "creditsHeader": "Credits:",
-        "managedBy": "This instance is managed by **{{owner}}**",
         "officialServer": "Official Server:",
         "privacyPolicy": "Privacy Policy:",
         "processOnly": "{{count}} (for this process only)",
@@ -771,24 +777,72 @@
       "raw": {
         "noInput": "You need to provide an image/GIF to get a raw URL!"
       },
+      "reload": {
+        "botOwnerOnly": "Only the bot owner can reload commands!",
+        "noCommand": "I couldn't find that command!",
+        "noInput": "You need to provide a command to reload!",
+        "reloaded": "The command `{{command}}` has been reloaded.",
+        "reloadFailed": "I couldn't reload that command!"
+      },
+      "remove": {
+        "invalidPosition": "That's not a valid position!",
+        "notHost": "Only the current voice session host can remove songs from the queue!",
+        "removed": "The song `{{song}}` has been removed from the queue."
+      },
       "restart": {
         "owner": "Only the bot owner can restart me!",
         "restarting": "esmBot is restarting."
+      },
+      "seek": {
+        "invalidPosition": "That's not a valid position!",
+        "notHost": "Only the current voice session host can seek the music!",
+        "notSeekable": "This track isn't seekable!",
+        "seeked": "Seeked track to {{seconds}} second(s)."
       },
       "shuffle": {
         "notHost": "Only the current voice session host can shuffle the music!",
         "notShuffling": "The player is no longer shuffling.",
         "nowShuffling": "The player is now shuffling."
       },
+      "skip": {
+        "alreadyVoted": "You've already voted to skip!",
+        "skipped": "The current song has been skipped.",
+        "voted": "Voted to skip song ({{count}}/{{max}} people have voted)."
+      },
       "snowflake": {
         "invalid": "That's not a valid snowflake!",
         "noInput": "You need to provide a snowflake ID!"
+      },
+      "soundreload": {
+        "connected": "Successfully connected to {{length}} Lavalink node(s).",
+        "botOwnerOnly": "Only the bot owner can reload Lavalink!",
+        "failed": "I couldn't connect to any Lavalink nodes!"
+      },
+      "stats": {
+        "botUptime": "Bot Uptime",
+        "bunVersion": "Bun Version",
+        "connectionUptime": "Connection Uptime",
+        "header": "esmBot Statistics",
+        "host": "Host",
+        "library": "Library",
+        "nodeJsVersion": "Node.js Version",
+        "processOnly": "{{count}} (for this process only)",
+        "processUsage": "Process Memory Usage",
+        "servers": "Servers",
+        "shard": "Shard",
+        "totalUsage": "Total Memory Usage",
+        "version": "Version"
       },
       "sticker": {
         "apng": "This sticker is an APNG; however, since Discord doesn't allow displaying APNGs outside of stickers, you'll have to save it or open it in your browser to view it.",
         "lottie": "I can't display this sticker because it uses the Lottie animation format; however, I can give you the raw JSON link to it:",
         "noInput": "You need to provide a sticker!",
         "unknown": "I don't recognize that sticker format!"
+      },
+      "stop": {
+        "ended": "The current voice channel session has ended.",
+        "endedInChannel": "The voice channel session in `{{channel}}` has ended.",
+        "notHost": "Only the current voice session host can stop the music!"
       },
       "toggle": {
         "notHost": "Only the current voice session host can pause/resume the music!",
@@ -853,6 +907,7 @@
     "tryAgain": "This image job couldn't be completed because the server it was running on went down. Try running your command again.",
     "unknown": "The image output wasn't in a recognizable format. Please try again."
   },
+  "managedBy": "This instance is managed by **{{owner}}**",
   "noDatabase": "This command is unavailable on stateless instances of esmBot.",
   "pagination": {
     "back": "Back",
@@ -896,5 +951,6 @@
     "waitingForSomeone": "Waiting 10 seconds for someone to return...",
     "yes": "Yes"
   },
+  "timeFormat": "{{days}} days, {{hours}} hrs, {{minutes}} mins, {{seconds}} secs",
   "tooLarge": "The result was too large, so here it is as a file:"
 }
