@@ -7,30 +7,35 @@ class CommandCommand extends Command {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
     const owners = process.env.OWNER.split(",");
-    if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return "You need to be an administrator to enable/disable me!";
-    if (this.args.length === 0) return "You need to provide whether you want to enable/disable a command!";
-    if (this.args[0] !== "disable" && this.args[0] !== "enable") return "That's not a valid option!";
-    if (!this.args[1]) return "You need to provide what command to enable/disable!";
-    if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase())) return "That isn't a command!";
+    if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return this.getString("commands.responses.command.adminOnly");
+    if (this.args.length === 0) return this.getString("commands.responses.command.noCmd");
+    if (this.args[0] !== "disable" && this.args[0] !== "enable") return this.getString("commands.responses.command.invalid");
+    if (!this.args[1]) return this.getString("commands.responses.command.noInput");
+    if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase())) return this.getString("commands.responses.command.invalidCmd");
 
     const guildDB = await db.getGuild(this.guild.id);
     const disabled = guildDB.disabled_commands ?? guildDB.disabledCommands;
     const command = collections.aliases.get(this.args[1].toLowerCase()) ?? this.args[1].toLowerCase();
 
     if (this.args[0].toLowerCase() === "disable") {
-      if (command === "command") return "You can't disable that command!";
-      if (disabled?.includes(command)) return "That command is already disabled!";
+      if (command === "command") return this.getString("commands.responses.command.cannotDisable");
+      if (disabled?.includes(command)) return this.getString("commands.responses.command.alreadyDisabled");
 
       await db.disableCommand(this.guild.id, command);
       this.success = true;
-      return `The command has been disabled. To re-enable it, just run \`${guildDB.prefix}command enable ${command}\`.`;
+      return this.getString("commands.responses.command.disabled", {
+        params: {
+          command,
+          prefix: guildDB.prefix
+        }
+      });
     }
     if (this.args[0].toLowerCase() === "enable") {
-      if (!disabled?.includes(command)) return "That command isn't disabled!";
+      if (!disabled?.includes(command)) return this.getString("commands.responses.command.notDisabled");
 
       await db.enableCommand(this.guild.id, command);
       this.success = true;
-      return `The command \`${command}\` has been re-enabled.`;
+      return this.getString("commands.responses.command.reEnabled", { params: { command } });
     }
   }
 

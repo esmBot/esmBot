@@ -686,6 +686,28 @@
       "cat": {
         "error": "I couldn't get a cat image in time. Maybe try again?"
       },
+      "channel": {
+        "adminOnly": "You need to be an administrator to enable/disable me in this channel!",
+        "alreadyDisabled": "I'm already disabled in this channel!",
+        "disabled": "I have been disabled in this channel. To re-enable me, just run `{{prefix}}channel enable`.",
+        "invalid": "That's not a valid option!",
+        "notDisabled": "I'm not disabled in this channel!",
+        "noCmd": "You need to provide whether you want to enable/disable me in this channel!",
+        "notInServer": "That channel isn't in this server!",
+        "reEnabled": "I have been re-enabled in this channel."
+      },
+      "command": {
+        "adminOnly": "You need to be an administrator to enable/disable commands!",
+        "alreadyDisabled": "That command is already disabled!",
+        "cannotDisable": "You can't disable that command!",
+        "disabled": "The command `{{command}}` has been disabled. To re-enable it, just run `{{prefix}}command enable {{command}}`.",
+        "invalid": "That's not a valid option!",
+        "invalidCmd": "That isn't a command!",
+        "notDisabled": "That command isn't disabled!",
+        "noCmd": "You need to provide whether you want to enable/disable a command!",
+        "noInput": "You need to provide what command to enable/disable!",
+        "reEnabled": "The command `{{command}}` has been re-enabled."
+      },
       "count": {
         "header": "Command Usage Counts",
         "single": "The command `{{command}}` has been run a total of {{count}} times."
@@ -772,6 +794,12 @@
       },
       "play": {
         "noInput": "You need to provide what you want to play!"
+      },
+      "prefix": {
+        "adminOnly": "You need to be an administrator to change the bot prefix!",
+        "changed": "The prefix has been changed to `{{prefix}}`.",
+        "current": "The current prefix is `{{prefix}}`.",
+        "stateless": "Setting a per-guild prefix is not possible on a stateless instance of esmBot!"
       },
       "raw": {
         "noInput": "You need to provide an image/GIF to get a raw URL!"
