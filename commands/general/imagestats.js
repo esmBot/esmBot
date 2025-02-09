@@ -11,11 +11,11 @@ class ImageStatsCommand extends Command {
     const embed = {
       embeds: [{
         author: {
-          name: "esmBot Image Statistics",
+          name: this.getString("commands.responses.imagestats.header"),
           iconURL: this.client.user.avatarURL()
         },
         color: 0xff0000,
-        description: `The bot is currently connected to ${connections.size} image server(s).`,
+        description: this.getString("commands.responses.imagestats.connected", { params: { length: connections.size } }),
         fields: []
       }]
     };
@@ -23,8 +23,8 @@ class ImageStatsCommand extends Command {
     for (const connection of connections.values()) {
       const count = await connection.getCount();
       embed.embeds[0].fields.push({
-        name: `Server ${i++}${connection.name ? ` (${connection.name})` : ""}`,
-        value: `Running Jobs: ${count}`
+        name: this.getString("commands.responses.imagestats.server", { params: { num: connection.name ? `${i++} (${connection.name})` : i++ } }),
+        value: this.getString("commands.responses.imagestats.runningJobs", { params: { count } })
       });
     }
     return embed;

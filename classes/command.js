@@ -75,9 +75,13 @@ class Command {
 
   /**
    * @param {string} key
+   * @param {{ returnNull?: boolean; params?: { [key: string]: any; }; }} [params]
    */
-  getString(key, returnNull = false) {
-    return getString(key, this.locale, returnNull);
+  getString(key, params) {
+    return getString(key, {
+      locale: this.locale,
+      ...params
+    });
   }
 
   static init() {

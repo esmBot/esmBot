@@ -14,18 +14,18 @@ export async function upload(client, result, context, success = true, interactio
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload = result.name.startsWith("SPOILER_") ? {
-    content: `${getString("image.tempSite", interaction ? context.locale : undefined)}\n|| ${imageURL} ||`,
+    content: `${getString("image.tempSite", { locale: interaction ? context.locale : undefined })}\n|| ${imageURL} ||`,
     flags: result.flags ?? (success ? 0 : 64)
   } : {
     embeds: [{
       color: 0xff0000,
-      title: getString("image.tempImageSent", interaction ? context.locale : undefined),
+      title: getString("image.tempImageSent", { locale: interaction ? context.locale : undefined }),
       url: imageURL,
       image: {
         url: imageURL
       },
       footer: {
-        text: getString("image.tempSite", interaction ? context.locale : undefined)
+        text: getString("image.tempSite", { locale: interaction ? context.locale : undefined })
       },
     }],
     flags: result.flags ?? (success ? 0 : 64)

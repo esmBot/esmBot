@@ -671,6 +671,8 @@
         "noUserBanner": "This user doesn't have a banner!"
       },
       "base64": {
+        "decodeNoInput": "You need to provide a string to decode!",
+        "encodeNoInput": "You need to provide a string to encode!",
         "noCmd": "You need to provide whether you want to encode or decode the text!"
       },
       "bird": {
@@ -684,6 +686,13 @@
       "cat": {
         "error": "I couldn't get a cat image in time. Maybe try again?"
       },
+      "count": {
+        "header": "Command Usage Counts",
+        "single": "The command `{{command}}` has been run a total of {{count}} times."
+      },
+      "dice": {
+        "landed": "The dice landed on {{number}}."
+      },
       "dog": {
         "error": "I couldn't get a dog image in time. Maybe try again?"
       },
@@ -696,14 +705,44 @@
       "exec": {
         "botOwnerOnly": "Only the bot owner can use exec!"
       },
+      "help": {
+        "aliases": "Aliases",
+        "flags": "Flags",
+        "header": "esmBot Help",
+        "name": "name",
+        "none": "None",
+        "parameters": "Parameters",
+        "prefix": "Prefix",
+        "timesUsed": "Times used"
+      },
+      "info": {
+        "clickHere": "Click here!",
+        "credits": "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo by **[MintBurrow](https://twitter.com/MintBurrow)**",
+        "creditsHeader": "Credits:",
+        "managedBy": "This instance is managed by **{{owner}}**",
+        "officialServer": "Official Server:",
+        "privacyPolicy": "Privacy Policy:",
+        "processOnly": "{{count}} (for this process only)",
+        "sourceCode": "Source Code:",
+        "totalServers": "Total Servers:",
+        "translate": "Translate:",
+        "version": "Version:"
+      },
       "image": {
         "noInput": "You need to provide something to search for!",
         "noResults": "I couldn't find any results!",
         "results": "Search Results"
       },
       "imagereload": {
+        "connected": "Successfully connected to {{length}} image server(s).",
         "couldNotConnect": "I couldn't connect to any image servers!",
         "owner": "Only the bot owner can reload the image servers!"
+      },
+      "imagestats": {
+        "connected": "The bot is currently connected to {{length}} image server(s).",
+        "header": "esmBot Image Statistics",
+        "runningJobs": "Running Jobs: {{count}}",
+        "server": "Server {{num}}"
       },
       "lengthen": {
         "noInput": "You need to provide a short URL to lengthen!",
@@ -719,6 +758,12 @@
       },
       "nowplaying": {
         "notPlaying": "I'm not playing anything!"
+      },
+      "ping": {
+        "latency": "Latency: {{latency}}ms",
+        "ping": "Ping?",
+        "pong": "Pong!",
+        "shardLatency": "Shard Latency: {{latency}}ms"
       },
       "play": {
         "noInput": "You need to provide what you want to play!"
@@ -752,6 +797,10 @@
       },
       "wikihow": {
         "error": "I couldn't get a WikiHow image in time. Maybe try again?"
+      },
+      "youtube": {
+        "noInput": "You need to provide something to search for!",
+        "noResults": "I couldn't find any results!"
       }
     }
   },
@@ -812,6 +861,7 @@
     "forward": "Forward",
     "jump": "Jump",
     "jumpTo": "What page do you want to jump to?",
+    "page": "Page {{page}} of {{amount}}",
     "pageNumber": "Page Number"
   },
   "permissions": {

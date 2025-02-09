@@ -8,7 +8,7 @@ class Base64Command extends Command {
     const command = this.type === "classic" ? this.args[0].toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
     if (command !== "decode" && command !== "encode") return this.getString("commands.responses.base64.noCmd");
     const string = this.interaction?.data.options.getString("text") ?? this.args.slice(1).join(" ");
-    if (!string || !string.trim()) return `You need to provide a string to ${command}!`;
+    if (!string || !string.trim()) return this.getString(`commands.responses.base64.${command}NoInput`);
     this.success = true;
     if (command === "decode") {
       const b64Decoded = Buffer.from(string, "base64").toString("utf8");

@@ -21,7 +21,12 @@ class ImageSearchCommand extends Command {
           url: encodeURI(value.url),
           color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${images.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: i + 1,
+                amount: images.length
+              }
+            })
           },
           image: {
             url: encodeURI(value.img_src)

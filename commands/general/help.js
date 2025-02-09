@@ -1,11 +1,9 @@
 import { Constants } from "oceanic.js";
 import database from "../../utils/database.js";
 import * as collections from "../../utils/collections.js";
-import { random } from "../../utils/misc.js";
 import paginator from "../../utils/pagination/pagination.js";
 import * as help from "../../utils/help.js";
 import Command from "../../classes/command.js";
-const tips = ["You can change the bot's prefix using the prefix command.", "Image commands also work with images previously posted in that channel.", "You can use the tags commands to save things for later use.", "You can visit https://esmbot.net/help.html for a web version of this command list.", "You can view a command's aliases by putting the command name after the help command (e.g. help image).", "Parameters wrapped in [] are required, while parameters wrapped in {} are optional.", "esmBot is hosted and paid for completely out-of-pocket by the main developer. If you want to support development, please consider leaving a tip! https://ko-fi.com/TheEssem"];
 
 class HelpCommand extends Command {
   async run() {
@@ -26,7 +24,7 @@ class HelpCommand extends Command {
       const embed = {
         embeds: [{
           author: {
-            name: "esmBot Help",
+            name: this.getString("commands.responses.help.header"),
             iconURL: this.client.user.avatarURL()
           },
           title: `${this.guild ? prefix : ""}${command}`,
@@ -34,18 +32,18 @@ class HelpCommand extends Command {
           description: info.description,
           color: 0xff0000,
           fields: [{
-            name: "Aliases",
-            value: info.aliases.length !== 0 ? info.aliases.join(", ") : "None"
+            name: this.getString("commands.responses.help.aliases"),
+            value: info.aliases.length !== 0 ? info.aliases.join(", ") : this.getString("commands.responses.help.none")
           }, {
-            name: "Parameters",
-            value: command === "tags" ? "[name]" : (params ? (params.length !== 0 ? params.join(" ") : "None") : "None"),
+            name: this.getString("commands.responses.help.parameters"),
+            value: command === "tags" ? `[${this.getString("commands.responses.help.name")}]` : (params ? (params.length !== 0 ? params.join(" ") : this.getString("commands.responses.help.none")) : this.getString("commands.responses.help.none")),
             inline: true
           }]
         }]
       };
       if (database) {
         embed.embeds[0].fields.push({
-          name: "Times used",
+          name: this.getString("commands.responses.help.timesUsed"),
           value: (await database.getCounts())[command],
           inline: true
         });
@@ -58,7 +56,7 @@ class HelpCommand extends Command {
         }
         if (flagInfo.length !== 0) {
           embed.embeds[0].fields.push({
-            name: "Flags",
+            name: this.getString("commands.responses.help.flags"),
             value: flagInfo.join("\n")
           });
         }
@@ -89,21 +87,24 @@ class HelpCommand extends Command {
       embeds.push({
         embeds: [{
           author: {
-            name: "esmBot Help",
+            name: this.getString("commands.responses.help.header"),
+            url: "https://esmbot.net/help.html",
             iconURL: this.client.user.avatarURL()
           },
           title: value.title,
           description: value.page.join("\n"),
           color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${pages.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: i + 1,
+                amount: pages.length
+              }
+            })
           },
           fields: [{
-            name: "Prefix",
+            name: this.getString("commands.responses.help.prefix"),
             value: prefix
-          }, {
-            name: "Tip",
-            value: random(tips)
           }]
         }]
       });

@@ -2,17 +2,36 @@ import { Base } from "oceanic.js";
 import Command from "../../classes/command.js";
 
 class PingCommand extends Command {
+  // help
   async run() {
     if (this.type === "classic") {
       const pingMessage = await this.client.rest.channels.createMessage(this.message.channelID, Object.assign({
-        content: "🏓 Ping?"
+        content: `🏓 ${this.getString("commands.responses.ping.ping")}`
       }, this.reference));
       await pingMessage.edit({
-        content: `🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.message.guildID ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.message.guildID]).latency)}ms` : ""}\n\`\`\``
+        content: `🏓 ${this.getString("commands.responses.ping.pong")}
+\`\`\`
+${this.getString("commands.responses.ping.latency", { params: { latency: pingMessage.timestamp - this.message.timestamp } })}
+${this.message.guildID ? `${this.getString("commands.responses.ping.shardLatency", {
+  params: {
+    latency: Math.round(this.client.shards.get(this.client.guildShardMap[this.message.guildID]).latency)
+  }
+})}\n` : ""}\`\`\``
       });
     } else {
       const pingMessage = await this.interaction?.getOriginal();
-      return `🏓 Pong!\n\`\`\`\nLatency: ${Math.abs(pingMessage.timestamp - Base.getCreatedAt(this.interaction.id)).toString()}ms${this.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]).latency)}ms` : ""}\n\`\`\``;
+      return `🏓 ${this.getString("commands.responses.ping.pong")}
+\`\`\`
+${this.getString("commands.responses.ping.latency", {
+  params: {
+    latency: Math.abs(pingMessage.timestamp - Base.getCreatedAt(this.interaction.id)).toString()
+  }
+})}
+${this.guild ? `${this.getString("commands.responses.ping.shardLatency", {
+  params: {
+    latency: Math.round(this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]).latency)
+  }
+})}\n` : ""}\`\`\``;
     }
   }
 

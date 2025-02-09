@@ -135,7 +135,12 @@ class TagsCommand extends Command {
           title: "Tag List",
           color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${groups.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: i + 1,
+                amount: groups.length
+              }
+            })
           },
           description: value?.join("\n"),
           author: {

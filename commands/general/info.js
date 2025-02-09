@@ -19,43 +19,43 @@ class InfoCommand extends Command {
           name: "esmBot Info/Credits",
           iconURL: this.client.user.avatarURL()
         },
-        description: `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
+        description: this.getString("commands.responses.info.managedBy", { params: { owner: owner.username } }),
         fields: [{
-          name: "ℹ️ Version:",
+          name: `ℹ️ ${this.getString("commands.responses.info.version")}`,
           value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
-          name: "📝 Credits:",
-          value: "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo by **[MintBurrow](https://twitter.com/MintBurrow)**"
+          name: `📝 ${this.getString("commands.responses.info.creditsHeader")}`,
+          value: this.getString("commands.responses.info.credits")
         },
         {
-          name: "💬 Total Servers:",
-          value: servers ? servers : `${this.client.guilds.size} (for this process only)`
+          name: `💬 ${this.getString("commands.responses.info.totalServers")}`,
+          value: servers ? servers : this.getString("commands.responses.info.processOnly", { params: { count: this.client.guilds.size } })
         },
         {
-          name: "✅ Official Server:",
-          value: "[Click here!](https://esmbot.net/support)"
+          name: `✅ ${this.getString("commands.responses.info.officialServer")}`,
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://esmbot.net/support)`
         },
         {
-          name: "💻 Source Code:",
-          value: "[Click here!](https://github.com/esmBot/esmBot)"
+          name: `💻 ${this.getString("commands.responses.info.sourceCode")}`,
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://github.com/esmBot/esmBot)`
         },
         {
-          name: "🌐 Translate:",
-          value: "[Click here!](https://translate.codeberg.org/projects/esmbot/esmbot/)"
+          name: `🌐 ${this.getString("commands.responses.info.translate")}`,
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://translate.codeberg.org/projects/esmbot/esmbot/)`
         },
         {
-          name: "🛡️ Privacy Policy:",
-          value: "[Click here!](https://esmbot.net/privacy.html)"
+          name: `🛡️ ${this.getString("commands.responses.info.privacyPolicy")}`,
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://esmbot.net/privacy.html)`
         },
         {
           name: "🐘 Mastodon:",
-          value: "[Click here!](https://wetdry.world/@esmBot)",
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://wetdry.world/@esmBot)`,
           inline: true
         },
         {
           name: "🦋 Bluesky:",
-          value: "[Click here!](https://bsky.app/profile/esmbot.net)",
+          value: `[${this.getString("commands.responses.info.clickHere")}](https://bsky.app/profile/esmbot.net)`,
           inline: true
         }
         ]

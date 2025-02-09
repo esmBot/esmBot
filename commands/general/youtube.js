@@ -7,13 +7,18 @@ class YouTubeCommand extends Command {
   async run() {
     const query = this.options.query ?? this.args.join(" ");
     this.success = false;
-    if (!query || !query.trim()) return "You need to provide something to search for!";
+    if (!query || !query.trim()) return this.getString("commands.responses.youtube.noInput");
     await this.acknowledge();
     const messages = [];
     const videos = await fetch(`${random(serversConfig.searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(query)}`).then(res => res.json());
-    if (videos.results.length === 0) return "I couldn't find any results!";
+    if (videos.results.length === 0) return this.getString("commands.responses.youtube.noResults");
     for (const [i, value] of videos.results.entries()) {
-      messages.push({ content: `Page ${i + 1} of ${videos.results.length}\n<:youtube:637020823005167626> **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
+      messages.push({ content: `${this.getString("pagination.page", {
+        params: {
+          page: i + 1,
+          amount: videos.results.length
+        }
+      })}\n▶️ **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
     this.success = true;
     return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, messages);

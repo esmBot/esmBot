@@ -19,7 +19,7 @@ class ImageReloadCommand extends Command {
           }
         });
       }
-      return `Successfully connected to ${length} image server(s).`;
+      return this.getString("commands.responses.imagereload.connected", { params: { length } });
     }
     return this.getString("commands.responses.imagereload.couldNotConnect");
   }

@@ -10,7 +10,7 @@ class CountCommand extends Command {
     if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
       const counts = await database.getCounts();
-      return `The command \`${command}\` has been run a total of ${counts[command]} times.`;
+      return this.getString("commands.responses.count.single", { params: { command, count: counts[command] } });
     }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
@@ -37,10 +37,15 @@ class CountCommand extends Command {
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [{
-          title: "Command Usage Counts",
+          title: this.getString("commands.responses.count.header"),
           color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${groups.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: i + 1,
+                amount: groups.length
+              }
+            })
           },
           description: value.join("\n"),
           author: {

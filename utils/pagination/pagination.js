@@ -27,7 +27,7 @@ export default async (client, info, pages) => {
       components: [
         {
           type: 2,
-          label: getString("pagination.back", info.type === "application" ? info.interaction.locale : undefined),
+          label: getString("pagination.back", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
             name: "◀"
@@ -37,7 +37,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: getString("pagination.forward", info.type === "application" ? info.interaction.locale : undefined),
+          label: getString("pagination.forward", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
             name: "▶"
@@ -47,7 +47,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: getString("pagination.jump", info.type === "application" ? info.interaction.locale : undefined),
+          label: getString("pagination.jump", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
             name: "🔢"
@@ -57,7 +57,7 @@ export default async (client, info, pages) => {
         },
         {
           type: 2,
-          label: getString("pagination.delete", info.type === "application" ? info.interaction.locale : undefined),
+          label: getString("pagination.delete", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
             name: "🗑"
@@ -123,7 +123,7 @@ export default async (client, info, pages) => {
                 components: [{
                   type: 3,
                   customID: "seekDropdown",
-                  placeholder: getString("pagination.pageNumber", interaction.locale),
+                  placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
                   options: []
                 }]
               }]
@@ -135,7 +135,7 @@ export default async (client, info, pages) => {
               };
               jumpComponents.components[0].components[0].options[i] = payload;
             }
-            const followup = await interaction.createFollowup(Object.assign({ content: getString("pagination.jumpTo", interaction.locale), flags: 64 }, jumpComponents));
+            const followup = await interaction.createFollowup(Object.assign({ content: getString("pagination.jumpTo", { locale: interaction.locale }), flags: 64 }, jumpComponents));
             const askMessage = await followup.getMessage();
             const dropdownCollector = new InteractionCollector(client, askMessage);
             let ended = false;
@@ -189,7 +189,7 @@ export default async (client, info, pages) => {
         }
       } else {
         await interaction.createFollowup({
-          content: getString("pagination.cantChangePage", interaction.locale),
+          content: getString("pagination.cantChangePage", { locale: interaction.locale }),
           flags: 64
         });
       }
