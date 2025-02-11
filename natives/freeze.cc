@@ -70,7 +70,6 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
     } else if (frame >= 0 && !loop) {
       char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
       output["buf"] = buf;
-      output["size"] = dataSize;
     } else {
       lastPos = reinterpret_cast<char*>(memchr(fileData, '\x21', bufferLength));
       while (lastPos != NULL) {
@@ -88,6 +87,7 @@ ArgumentMap Freeze(const string& type, string& outType, const char* bufferdata, 
 
       output["buf"] = fileData;
     }
+    output["size"] = dataSize;
   } else if (type == "webp") {
     if (frame >= 0 && !loop) {
       char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
