@@ -14,10 +14,6 @@ ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   bool multiPage = true;
-  if (nPages == 1) {
-    multiPage = false;
-    nPages = 30;
-  }
 
   try {
     in = NormalizeVips(in, &width, &pageHeight, nPages);
@@ -28,6 +24,11 @@ ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
       outType = "frames";
       return output;
     }
+  }
+
+  if (nPages == 1) {
+    multiPage = false;
+    nPages = 30;
   }
 
   vector<VImage> img;
