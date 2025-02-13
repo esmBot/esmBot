@@ -70,7 +70,12 @@
             "scott": "Tekee Scott the Woz esityksen kuvasta",
             "caption": "Lisää kuvatekstin",
             "imagestats": "Löytää tilastoja kuvapalvelimista",
-            "bounce": "Tekee kuvan pomppimaan"
+            "bounce": "Tekee kuvan pomppimaan",
+            "sepia": "Lisää seepia filtterin",
+            "sharpen": "Terävöittää kuvaa",
+            "shutterstock": "Lisää Shutterstock vesileiman kuvaan",
+            "slow": "Tekee liikkuvasta mediasta hitaamman",
+            "snapchat": "Lisää Snapchat tyylisen kuvatekstin kuvaan"
         }
     }
 }
