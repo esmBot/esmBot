@@ -95,13 +95,15 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
       } else {
         return;
       }
+      payload.type = "image/gif";
     } else if (giphyURLs.includes(host)) {
-      // Can result in an HTML page instead of a GIF
-      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.gif`;
+      // Can result in an HTML page instead of a WEBP
+      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4].split("-").pop()}/giphy.webp`;
+      payload.type = "image/webp";
     } else if (giphyMediaURLs.includes(host)) {
-      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.gif`;
+      payload.path = `https://media0.giphy.com/media/${image2.split("/")[4]}/giphy.webp`;
+      payload.type = "image/webp";
     }
-    payload.type = "image/gif";
   } else {
     let result;
     if ((imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net") && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))) {
