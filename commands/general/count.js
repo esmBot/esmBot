@@ -5,7 +5,8 @@ import Command from "../../classes/command.js";
 
 class CountCommand extends Command {
   async run() {
-    const cmd = (this.interaction?.data.options.getString("command") ?? this.args.join(" ")).trim();
+    if (!database) return this.getString("noDatabase");
+    const cmd = (this.getOptionString("command") ?? this.args.join(" ")).trim();
     const merged = new Map([...collections.commands, ...collections.messageCommands, ...collections.userCommands]);
     if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
@@ -42,12 +43,12 @@ class CountCommand extends Command {
           footer: {
             text: this.getString("pagination.page", {
               params: {
-                page: i + 1,
-                amount: groups.length
+                page: (i + 1).toString(),
+                amount: groups.length.toString()
               }
             })
           },
-          description: value.join("\n"),
+          description: value?.join("\n"),
           author: {
             name: this.author.username,
             iconURL: this.author.avatarURL()

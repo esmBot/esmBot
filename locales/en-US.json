@@ -736,6 +736,7 @@
         "flags": "Flags",
         "header": "esmBot Help",
         "name": "name",
+        "noInfo": "I couldn't get any info about that command!",
         "none": "None",
         "parameters": "Parameters",
         "prefix": "Prefix",

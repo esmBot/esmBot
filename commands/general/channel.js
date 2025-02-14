@@ -1,12 +1,15 @@
 import db from "../../utils/database.js";
 import Command from "../../classes/command.js";
+import { GuildChannel } from "oceanic.js";
 
 class ChannelCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
-    const owners = process.env.OWNER.split(",");
-    if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.member.id)) return this.getString("commands.responses.channel.adminOnly");
+    if (!db) return this.getString("noDatabase");
+    if (!this.channel) throw Error("No channel found");
+    const owners = process.env.OWNER?.split(",") ?? [];
+    if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id)) return this.getString("commands.responses.channel.adminOnly");
     if (this.args.length === 0) return this.getString("commands.responses.channel.noCmd");
     if (this.args[0] !== "disable" && this.args[0] !== "enable") return this.getString("commands.responses.channel.invalid");
 
@@ -14,7 +17,7 @@ class ChannelCommand extends Command {
 
     if (this.args[0].toLowerCase() === "disable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(this.args[1]) >= 21154535154122752n) {
         const id = this.args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
         if (guildDB.disabled.includes(id)) return this.getString("commands.responses.channel.alreadyDisabled");
         channel = this.guild.channels.get(id) ?? await this.client.rest.channels.get(id);
@@ -22,7 +25,7 @@ class ChannelCommand extends Command {
         if (guildDB.disabled.includes(this.channel.id)) return this.getString("commands.responses.channel.alreadyDisabled");
         channel = this.channel;
       }
-      if (channel.guildID !== this.guild.id) return this.getString("commands.responses.channel.notInServer");
+      if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id) return this.getString("commands.responses.channel.notInServer");
 
       await db.disableChannel(channel);
       this.success = true;
@@ -34,7 +37,7 @@ class ChannelCommand extends Command {
     }
     if (this.args[0].toLowerCase() === "enable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && this.args[1] >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(this.args[1]) >= 21154535154122752n) {
         const id = this.args[1].replaceAll("@", "").replaceAll("#", "").replaceAll("!", "").replaceAll("&", "").replaceAll("<", "").replaceAll(">", "");
         if (!guildDB.disabled.includes(id)) return this.getString("commands.responses.channel.notDisabled");
         channel = this.guild.channels.get(id) ?? await this.client.rest.channels.get(id);
@@ -42,7 +45,7 @@ class ChannelCommand extends Command {
         if (!guildDB.disabled.includes(this.channel.id)) return this.getString("commands.responses.channel.notDisabled");
         channel = this.channel;
       }
-      if (channel.guildID !== this.guild.id) return this.getString("commands.responses.channel.notInServer");
+      if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id) return this.getString("commands.responses.channel.notInServer");
 
       await db.enableChannel(channel);
       this.success = true;

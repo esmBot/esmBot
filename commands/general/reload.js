@@ -4,14 +4,14 @@ import { paths } from "../../utils/collections.js";
 
 class ReloadCommand extends Command {
   async run() {
-    const owners = process.env.OWNER.split(",");
+    const owners = process.env.OWNER?.split(",") ?? [];
     if (!owners.includes(this.author.id)) return this.getString("commands.responses.reload.botOwnerOnly");
-    const commandName = this.options.cmd ?? this.args.join(" ");
+    const commandName = this.getOptionString("cmd") ?? this.args.join(" ");
     if (!commandName || !commandName.trim()) return this.getString("commands.responses.reload.noInput");
     await this.acknowledge();
     const path = paths.get(commandName);
     if (!path) return this.getString("commands.responses.reload.noCommand");
-    const result = await load(this.client, path, this.options.skipsend);
+    const result = await load(this.client, path, this.getOptionBoolean("skipsend"));
     if (result !== commandName) return this.getString("commands.responses.reload.reloadFailed");
     if (process.env.PM2_USAGE) {
       process.send?.({

@@ -15,11 +15,12 @@ class HelpCommand extends Command {
     if (this.guild && database) {
       prefix = (await database.getGuild(this.guild.id)).prefix;
     } else {
-      prefix = process.env.PREFIX;
+      prefix = process.env.PREFIX ?? "&";
     }
     if (this.args.length !== 0 && (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))) {
       const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
       const info = collections.info.get(command);
+      if (!info) return this.getString("commands.responses.help.noInfo");
       const params = info.params.filter((v) => typeof v === "string");
       const embed = {
         embeds: [{
@@ -92,13 +93,13 @@ class HelpCommand extends Command {
             iconURL: this.client.user.avatarURL()
           },
           title: value.title,
-          description: value.page.join("\n"),
+          description: value.page?.join("\n"),
           color: 0xff0000,
           footer: {
             text: this.getString("pagination.page", {
               params: {
-                page: i + 1,
-                amount: pages.length
+                page: (i + 1).toString(),
+                amount: pages.length.toString()
               }
             })
           },

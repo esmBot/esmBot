@@ -8,8 +8,12 @@ class InfoCommand extends Command {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
+    const owners = process.env.OWNER?.split(",") ?? [];
+    let owner;
+    if (owners.length !== 0) {
+      owner = this.client.users.get(owners[0]);
+      if (!owner) owner = await this.client.rest.users.get(owners[0]);
+    }
     const servers = await getServers(this.client);
     await this.acknowledge();
     return {
@@ -19,7 +23,7 @@ class InfoCommand extends Command {
           name: "esmBot Info/Credits",
           iconURL: this.client.user.avatarURL()
         },
-        description: this.getString("managedBy", { params: { owner: owner.username } }),
+        description: this.getString("managedBy", { params: { owner: owner?.username ?? "N/A" } }),
         fields: [{
           name: `ℹ️ ${this.getString("commands.responses.info.version")}`,
           value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`

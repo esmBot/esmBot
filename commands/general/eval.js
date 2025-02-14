@@ -3,13 +3,13 @@ import Command from "../../classes/command.js";
 
 class EvalCommand extends Command {
   async run() {
-    const owners = process.env.OWNER.split(",");
+    const owners = process.env.OWNER?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.eval.botOwnerOnly");
     }
     await this.acknowledge();
-    const code = this.options.code ?? this.args.join(" ");
+    const code = this.getOptionString("code") ?? this.args.join(" ");
     try {
       // biome-ignore lint/security/noGlobalEval: the whole point of this command is to eval
       let evaled = eval(code);
@@ -20,7 +20,7 @@ class EvalCommand extends Command {
         return {
           content: this.getString("tooLarge"),
           files: [{
-            contents: cleaned,
+            contents: Buffer.from(cleaned),
             name: "result.txt"
           }]
         };

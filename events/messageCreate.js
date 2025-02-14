@@ -104,8 +104,8 @@ export default async (client, message) => {
     let disabledCmds = disabledCmdCache.get(message.guildID);
     if (!disabledCmds) {
       if (!guildDB) guildDB = await database.getGuild(message.guildID);
-      disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
-      disabledCmds = guildDB.disabled_commands ?? guildDB.disabledCommands;
+      disabledCmdCache.set(message.guildID, guildDB.disabled_commands);
+      disabledCmds = guildDB.disabled_commands;
     }
     if (disabledCmds.includes(cmdName)) return;
   }
