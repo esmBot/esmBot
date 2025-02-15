@@ -723,7 +723,8 @@
         "thanks": "Thanks to the following patrons for their support:"
       },
       "emote": {
-        "invalidEmoji": "You need to provide a valid emoji to get an image!"
+        "invalidEmoji": "You need to provide a valid emoji to get an image!",
+        "noInput": "I couldn't find an emoji in that message!"
       },
       "eval": {
         "botOwnerOnly": "Only the bot owner can use eval!"
