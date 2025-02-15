@@ -662,7 +662,17 @@
       "ancient": {
         "error": "I couldn't get a meme in time. Maybe try again?"
       },
+      "avatar": {
+        "invalidMention": "That's not a valid mention!"
+      },
+      "banner": {
+        "invalidMention": "That's not a valid mention!",
+        "noSelfBanner": "You don't have a banner!",
+        "noUserBanner": "This user doesn't have a banner!"
+      },
       "base64": {
+        "decodeNoInput": "You need to provide a string to decode!",
+        "encodeNoInput": "You need to provide a string to encode!",
         "noCmd": "You need to provide whether you want to encode or decode the text!"
       },
       "bird": {
@@ -676,18 +686,230 @@
       "cat": {
         "error": "I couldn't get a cat image in time. Maybe try again?"
       },
+      "channel": {
+        "adminOnly": "You need to be an administrator to enable/disable me in this channel!",
+        "alreadyDisabled": "I'm already disabled in this channel!",
+        "disabled": "I have been disabled in this channel. To re-enable me, just run `{{prefix}}channel enable`.",
+        "invalid": "That's not a valid option!",
+        "notDisabled": "I'm not disabled in this channel!",
+        "noCmd": "You need to provide whether you want to enable/disable me in this channel!",
+        "notInServer": "That channel isn't in this server!",
+        "reEnabled": "I have been re-enabled in this channel."
+      },
+      "command": {
+        "adminOnly": "You need to be an administrator to enable/disable commands!",
+        "alreadyDisabled": "That command is already disabled!",
+        "cannotDisable": "You can't disable that command!",
+        "disabled": "The command `{{command}}` has been disabled. To re-enable it, just run `{{prefix}}command enable {{command}}`.",
+        "invalid": "That's not a valid option!",
+        "invalidCmd": "That isn't a command!",
+        "notDisabled": "That command isn't disabled!",
+        "noCmd": "You need to provide whether you want to enable/disable a command!",
+        "noInput": "You need to provide what command to enable/disable!",
+        "reEnabled": "The command `{{command}}` has been re-enabled."
+      },
+      "count": {
+        "header": "Command Usage Counts",
+        "single": "The command `{{command}}` has been run a total of {{count}} times."
+      },
+      "dice": {
+        "landed": "The dice landed on {{number}}."
+      },
       "dog": {
         "error": "I couldn't get a dog image in time. Maybe try again?"
+      },
+      "donate": {
+        "support": "Like esmBot? Consider supporting the developer on Patreon to help keep it running!",
+        "thanks": "Thanks to the following patrons for their support:"
+      },
+      "emote": {
+        "invalidEmoji": "You need to provide a valid emoji to get an image!",
+        "noInput": "I couldn't find an emoji in that message!"
+      },
+      "eval": {
+        "botOwnerOnly": "Only the bot owner can use eval!"
+      },
+      "exec": {
+        "botOwnerOnly": "Only the bot owner can use exec!"
+      },
+      "help": {
+        "aliases": "Aliases",
+        "flags": "Flags",
+        "header": "esmBot Help",
+        "name": "name",
+        "noInfo": "I couldn't get any info about that command!",
+        "none": "None",
+        "parameters": "Parameters",
+        "prefix": "Prefix",
+        "timesUsed": "Times used"
+      },
+      "host": {
+        "currentHost": "The current voice channel host is **{{member}}**",
+        "notHost": "Only the current voice session host can choose another host!",
+        "notMember": "That user isn't in this server!",
+        "noUser": "I can't find that user!"
+      },
+      "info": {
+        "clickHere": "Click here!",
+        "credits": "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo by **[MintBurrow](https://twitter.com/MintBurrow)**",
+        "creditsHeader": "Credits:",
+        "officialServer": "Official Server:",
+        "privacyPolicy": "Privacy Policy:",
+        "processOnly": "{{count}} (for this process only)",
+        "sourceCode": "Source Code:",
+        "totalServers": "Total Servers:",
+        "translate": "Translate:",
+        "version": "Version:"
+      },
+      "image": {
+        "noInput": "You need to provide something to search for!",
+        "noResults": "I couldn't find any results!",
+        "results": "Search Results"
+      },
+      "imagereload": {
+        "connected": "Successfully connected to {{length}} image server(s).",
+        "couldNotConnect": "I couldn't connect to any image servers!",
+        "owner": "Only the bot owner can reload the image servers!"
+      },
+      "imagestats": {
+        "connected": "The bot is currently connected to {{length}} image server(s).",
+        "header": "esmBot Image Statistics",
+        "runningJobs": "Running Jobs: {{count}}",
+        "server": "Server {{num}}"
+      },
+      "lengthen": {
+        "noInput": "You need to provide a short URL to lengthen!",
+        "notURL": "That isn't a URL!"
+      },
+      "loop": {
+        "notHost": "Only the current voice session host can loop the music!",
+        "notLooping": "The player is no longer looping.",
+        "nowLooping": "The player is now looping."
       },
       "music": {
         "invalid": "That isn't a valid music command!"
       },
+      "nowplaying": {
+        "notPlaying": "I'm not playing anything!"
+      },
+      "ping": {
+        "latency": "Latency: {{latency}}ms",
+        "ping": "Ping?",
+        "pong": "Pong!",
+        "shardLatency": "Shard Latency: {{latency}}ms"
+      },
+      "play": {
+        "noInput": "You need to provide what you want to play!"
+      },
+      "prefix": {
+        "adminOnly": "You need to be an administrator to change the bot prefix!",
+        "changed": "The prefix has been changed to `{{prefix}}`.",
+        "current": "The current prefix is `{{prefix}}`.",
+        "stateless": "Setting a per-guild prefix is not possible on a stateless instance of esmBot!"
+      },
+      "raw": {
+        "noInput": "You need to provide an image/GIF to get a raw URL!"
+      },
+      "reload": {
+        "botOwnerOnly": "Only the bot owner can reload commands!",
+        "noCommand": "I couldn't find that command!",
+        "noInput": "You need to provide a command to reload!",
+        "reloaded": "The command `{{command}}` has been reloaded.",
+        "reloadFailed": "I couldn't reload that command!"
+      },
+      "remove": {
+        "invalidPosition": "That's not a valid position!",
+        "notHost": "Only the current voice session host can remove songs from the queue!",
+        "removed": "The song `{{song}}` has been removed from the queue."
+      },
+      "restart": {
+        "owner": "Only the bot owner can restart me!",
+        "restarting": "esmBot is restarting."
+      },
+      "seek": {
+        "invalidPosition": "That's not a valid position!",
+        "notHost": "Only the current voice session host can seek the music!",
+        "notSeekable": "This track isn't seekable!",
+        "seeked": "Seeked track to {{seconds}} second(s)."
+      },
+      "shuffle": {
+        "notHost": "Only the current voice session host can shuffle the music!",
+        "notShuffling": "The player is no longer shuffling.",
+        "nowShuffling": "The player is now shuffling."
+      },
+      "skip": {
+        "alreadyVoted": "You've already voted to skip!",
+        "skipped": "The current song has been skipped.",
+        "voted": "Voted to skip song ({{count}}/{{max}} people have voted)."
+      },
+      "snowflake": {
+        "invalid": "That's not a valid snowflake!",
+        "noInput": "You need to provide a snowflake ID!"
+      },
+      "soundreload": {
+        "connected": "Successfully connected to {{length}} Lavalink node(s).",
+        "botOwnerOnly": "Only the bot owner can reload Lavalink!",
+        "failed": "I couldn't connect to any Lavalink nodes!"
+      },
+      "stats": {
+        "botUptime": "Bot Uptime",
+        "bunVersion": "Bun Version",
+        "connectionUptime": "Connection Uptime",
+        "header": "esmBot Statistics",
+        "host": "Host",
+        "library": "Library",
+        "nodeJsVersion": "Node.js Version",
+        "processOnly": "{{count}} (for this process only)",
+        "processUsage": "Process Memory Usage",
+        "servers": "Servers",
+        "shard": "Shard",
+        "totalUsage": "Total Memory Usage",
+        "version": "Version"
+      },
+      "sticker": {
+        "apng": "This sticker is an APNG; however, since Discord doesn't allow displaying APNGs outside of stickers, you'll have to save it or open it in your browser to view it.",
+        "lottie": "I can't display this sticker because it uses the Lottie animation format; however, I can give you the raw JSON link to it:",
+        "noInput": "You need to provide a sticker!",
+        "unknown": "I don't recognize that sticker format!"
+      },
+      "stop": {
+        "ended": "The current voice channel session has ended.",
+        "notHost": "Only the current voice session host can stop the music!"
+      },
+      "tags": {
+        "added": "The tag `{{name}}` has been added!",
+        "addName": "You need to provide the name of the tag you want to add!",
+        "deleted": "The tag `{{name}}` has been deleted!",
+        "deleteName": "You need to provide the name of the tag you want to delete!",
+        "edited": "The tag `{{name}}` has been edited!",
+        "editName": "You need to provide the name of the tag you want to edit!",
+        "exists": "This tag already exists!",
+        "invalid": "That tag doesn't exist!",
+        "invalidName": "You can't make a tag with that name!",
+        "list": "Tag List",
+        "noInput": "You need to provide the name of the tag you want to view!",
+        "noTags": "I couldn't find any tags!",
+        "notOwner": "You don't own this tag!",
+        "ownedBy": "This tag is owned by **{{user}}** (`{{id}}`).",
+        "ownedById": "I couldn't find exactly who owns this tag, but I was able to get their ID: `{{id}}`",
+        "ownerName": "You need to provide the name of the tag you want to check the owner of!"
+      },
+      "toggle": {
+        "notHost": "Only the current voice session host can pause/resume the music!",
+        "paused": "The player has been paused.",
+        "resumed": "The player has been resumed."
+      },
       "wikihow": {
         "error": "I couldn't get a WikiHow image in time. Maybe try again?"
+      },
+      "youtube": {
+        "noInput": "You need to provide something to search for!",
+        "noResults": "I couldn't find any results!"
       }
     }
   },
   "error": "Uh oh! I ran into an error while running this command. Please report the content of the attached file at the following link or on the esmBot Support server:",
+  "errorCaps": "ERROR",
   "guildOnly": "This command only works in servers!",
   "image": {
     "badurl": "That URL is invalid!",
@@ -713,26 +935,29 @@
     "jobEnded": "Something happened to the image servers before I could receive the image. Try running your command again.",
     "large": "That image is too large (>= 40MB)! Try using a smaller image.",
     "nocmd": "That command isn't supported on this instance of esmBot.",
-    "nogif": "That isn't a GIF!",
+    "noanim": "That image isn't in an animated format (GIF or WEBP)!",
     "noImage": "You need to provide an image/GIF!",
     "noResult": "I couldn't get a response from the image server. Please try again.",
     "noServers": "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.",
-    "noTempServer": "The resulting image was more than 25MB in size, so I can't upload it.",
+    "noTempServer": "The resulting image was larger than Discord's upload limit, so I can't upload it.",
     "noText": "You need to provide some text!",
+    "notWorking": "I couldn't find a way to process this image; this likely means that I haven't been set up correctly. Please contact the bot owner.",
     "processing": "Processing... This might take a while",
     "ratelimit": "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.",
     "selected": "The image has been selected for your next command.",
     "slowDown": "Please slow down a bit.",
     "tempImageSent": "Here's your image!",
-    "tempSite": "The result image was more than 25MB in size, so it was uploaded to an external site instead.",
+    "tempSite": "The result image was larger than Discord's upload limit, so it was uploaded to an external site instead.",
     "tenor": "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.",
     "timeout": "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.",
+    "timeoutDownload": "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.",
     "tip": "(Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)",
     "tooLarge": "The resulting file was too large to upload. Try again with a smaller image if possible.",
     "tooLong": "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.",
     "tryAgain": "This image job couldn't be completed because the server it was running on went down. Try running your command again.",
     "unknown": "The image output wasn't in a recognizable format. Please try again."
   },
+  "managedBy": "This instance is managed by **{{owner}}**",
   "noDatabase": "This command is unavailable on stateless instances of esmBot.",
   "pagination": {
     "back": "Back",
@@ -741,6 +966,7 @@
     "forward": "Forward",
     "jump": "Jump",
     "jumpTo": "What page do you want to jump to?",
+    "page": "Page {{page}} of {{amount}}",
     "pageNumber": "Page Number"
   },
   "permissions": {
@@ -748,12 +974,15 @@
     "noEmbedLinks": "I don't have the `Embed Links` permission!"
   },
   "sound": {
+    "addedToQueue": "Your {{type}} `{{name}}` has been added to the queue!",
     "artist": "Artist",
     "blank": "(blank)",
     "cantJoin": "I can't join this voice channel! Make sure I have the right permissions.",
     "channel": "Channel",
+    "endedInChannel": "The voice channel session in `{{channel}}` has ended.",
     "error": "Looks like there was an error during sound playback:",
     "looping": "Looping?",
+    "newHost": "{{member}} is the new voice channel host.",
     "no": "No",
     "noConnection": "Something odd happened to the voice connection; try playing your song again.",
     "node": "Node",
@@ -774,5 +1003,7 @@
     "waitingForHost": "Waiting 10 seconds for the host to return...",
     "waitingForSomeone": "Waiting 10 seconds for someone to return...",
     "yes": "Yes"
-  }
+  },
+  "timeFormat": "{{days}} days, {{hours}} hrs, {{minutes}} mins, {{seconds}} secs",
+  "tooLarge": "The result was too large, so here it is as a file:"
 }

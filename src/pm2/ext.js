@@ -233,6 +233,9 @@ async function getGatewayData() {
         }]
       },
       intents: []
+    },
+    rest: {
+      baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
     }
   });
 

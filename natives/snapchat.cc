@@ -7,7 +7,7 @@ using namespace vips;
 
 const vector<double> zeroVec178 = {0, 0, 0, 178};
 
-ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string caption = GetArgument<string>(arguments, "caption");
   float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.565);
@@ -21,7 +21,7 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   int size = width / 20;
   int textWidth = width - ((width / 25) * 2);
 
@@ -54,7 +54,10 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
                           .replicate(1, nPages);
   VImage final = in.composite(replicated, VIPS_BLEND_MODE_OVER);
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -63,6 +66,7 @@ ArgumentMap Snapchat(const string& type, string& outType, const char* bufferdata
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

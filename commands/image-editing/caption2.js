@@ -1,15 +1,15 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import { cleanMessage } from "#utils/misc.js";
 const words = ["me irl", "dank", "follow my second account @esmBot_", "2016", "meme", "wholesome", "reddit", "instagram", "twitter", "facebook", "fortnite", "minecraft", "relatable", "gold", "funny", "template", "hilarious", "memes", "deep fried", "2020", "leafy", "pewdiepie"];
 
 class CaptionTwoCommand extends ImageCommand {
   params(url) {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const font = this.getOptionString("font");
     return {
-      caption: newArgs?.trim() ? cleanMessage(this.message ?? this.interaction, newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
-      top: !!this.options.top,
-      font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "helvetica"
+      caption: newArgs?.trim() ? this.clean(newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
+      top: this.getOptionBoolean("top"),
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica"
     };
   }
 

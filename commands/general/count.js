@@ -2,15 +2,17 @@ import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
 import database from "#database";
 import Command from "#cmd-classes/command.js";
+import { Constants } from "oceanic.js";
 
 class CountCommand extends Command {
   async run() {
-    const cmd = (this.interaction?.data.options.getString("command") ?? this.args.join(" ")).trim();
+    if (!database) return this.getString("noDatabase");
+    const cmd = (this.getOptionString("command") ?? this.args.join(" ")).trim();
     const merged = new Map([...collections.commands, ...collections.messageCommands, ...collections.userCommands]);
     if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
       const counts = await database.getCounts();
-      return `The command \`${command}\` has been run a total of ${counts[command]} times.`;
+      return this.getString("commands.responses.count.single", { params: { command, count: counts[command] } });
     }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
@@ -37,12 +39,17 @@ class CountCommand extends Command {
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [{
-          title: "Command Usage Counts",
-          color: 16711680,
+          title: this.getString("commands.responses.count.header"),
+          color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${groups.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: (i + 1).toString(),
+                amount: groups.length.toString()
+              }
+            })
           },
-          description: value.join("\n"),
+          description: value?.join("\n"),
           author: {
             name: this.author.username,
             iconURL: this.author.avatarURL()
@@ -57,7 +64,7 @@ class CountCommand extends Command {
   static aliases = ["counts"];
   static flags = [{
     name: "command",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "A specific command to view counts for",
     classic: true
   }];

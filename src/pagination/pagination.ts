@@ -1,8 +1,19 @@
 import InteractionCollector from "./awaitinteractions.js";
-import { collectors } from "../utils/collections.js";
-import logger from "../utils/logger.js";
-import { getString } from "../utils/i18n.js";
-import type { Client, CommandInteraction, EmbedOptions, Member, Message, MessageActionRow, MessageComponent, User } from "oceanic.js";
+import { collectors } from "#utils/collections.js";
+import logger from "#utils/logger.js";
+import { getString } from "#utils/i18n.js";
+import {
+  Constants,
+  type Client,
+  type CommandInteraction,
+  type EmbedOptions,
+  type InteractionContent,
+  type Member,
+  type Message,
+  type MessageActionRow,
+  type MessageComponent,
+  type User
+} from "oceanic.js";
 
 type PaginationInfo = {
   type: "classic" | "application";
@@ -24,51 +35,53 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
     }
   } : {};
   let page = 0;
-  const components: MessageActionRow[] = [{
-    type: 1,
-    components: [
-      {
-        type: 2,
-        label: getString("pagination.back", info.type === "application" ? info.interaction.locale : undefined),
-        emoji: {
-          id: null,
-          name: "◀"
+  const components: { components: MessageActionRow[] } & InteractionContent = {
+    components: [{
+      type: Constants.ComponentTypes.ACTION_ROW,
+      components: [
+        {
+          type: Constants.ComponentTypes.BUTTON,
+          label: getString("pagination.back", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          emoji: {
+            id: null,
+            name: "◀"
+          },
+          style: 1,
+          customID: "back"
         },
-        style: 1,
-        customID: "back"
-      },
-      {
-        type: 2,
-        label: getString("pagination.forward", info.type === "application" ? info.interaction.locale : undefined),
-        emoji: {
-          id: null,
-          name: "▶"
+        {
+          type: Constants.ComponentTypes.BUTTON,
+          label: getString("pagination.forward", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          emoji: {
+            id: null,
+            name: "▶"
+          },
+          style: 1,
+          customID: "forward"
         },
-        style: 1,
-        customID: "forward"
-      },
-      {
-        type: 2,
-        label: getString("pagination.jump", info.type === "application" ? info.interaction.locale : undefined),
-        emoji: {
-          id: null,
-          name: "🔢"
+        {
+          type: Constants.ComponentTypes.BUTTON,
+          label: getString("pagination.jump", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          emoji: {
+            id: null,
+            name: "🔢"
+          },
+          style: 1,
+          customID: "jump"
         },
-        style: 1,
-        customID: "jump"
-      },
-      {
-        type: 2,
-        label: getString("pagination.delete", info.type === "application" ? info.interaction.locale : undefined),
-        emoji: {
-          id: null,
-          name: "🗑"
-        },
-        style: 4,
-        customID: "delete"
-      }
-    ]
-  }];
+        {
+          type: Constants.ComponentTypes.BUTTON,
+          label: getString("pagination.delete", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          emoji: {
+            id: null,
+            name: "🗑"
+          },
+          style: 4,
+          customID: "delete"
+        }
+      ]
+    }]
+  };
   let currentPage: Message;
   if (info.type === "classic") {
     currentPage = await client.rest.channels.createMessage(info.message.channelID, Object.assign(pages[page], options, pages.length > 1 ? { components } : {}));
@@ -119,9 +132,9 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
             }
             interactionCollector.extend();
             const jumpComponent: MessageComponent = {
-              type: 3,
+              type: Constants.ComponentTypes.STRING_SELECT,
               customID: "seekDropdown",
-              placeholder: getString("pagination.pageNumber", interaction.locale),
+              placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
               options: []
             };
             for (let i = 0; i < pages.length && i < 25; i++) {
@@ -131,7 +144,7 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
               };
               jumpComponent.options[i] = payload;
             }
-            const followup = await interaction.createFollowup({ content: getString("pagination.jumpTo", interaction.locale), components: {
+            const followup = await interaction.createFollowup({ content: getString("pagination.jumpTo", { locale: interaction.locale }), components: {
               type: 1,
               components: [jumpComponent]
             }, flags: 64 });
@@ -188,7 +201,7 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
         }
       } else {
         await interaction.createFollowup({
-          content: getString("pagination.cantChangePage", interaction.locale),
+          content: getString("pagination.cantChangePage", { locale: interaction.locale }),
           flags: 64
         });
       }

@@ -13,63 +13,80 @@ class StatsCommand extends Command {
     }
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
-    let owner = this.client.users.get(process.env.OWNER.split(",")[0]);
-    if (!owner) owner = await this.client.rest.users.get(process.env.OWNER.split(",")[0]);
+    const owners = process.env.OWNER?.split(",") ?? [];
+    let owner;
+    if (owners.length !== 0) {
+      owner = this.client.users.get(owners[0]) ?? await this.client.rest.users.get(owners[0]);
+    }
     const servers = await getServers(this.client);
     const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
     return {
       embeds: [{
         author: {
-          name: "esmBot Statistics",
+          name: this.getString("commands.responses.stats.header"),
           iconURL: this.client.user.avatarURL()
         },
-        description: `This instance is managed by **${owner.username}${owner.discriminator === 0 ? `#${owner.discriminator}` : ""}**`,
-        color: 16711680,
+        description: this.getString("managedBy", { params: { owner: owner?.username ?? "N/A" } }),
+        color: 0xff0000,
         fields: [{
-          name: "Version",
+          name: this.getString("commands.responses.stats.version"),
           value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
         },
         {
-          name: "Process Memory Usage",
+          name: this.getString("commands.responses.stats.processUsage"),
           value: processMem,
           inline: true
         },
         {
-          name: "Total Memory Usage",
+          name: this.getString("commands.responses.stats.totalUsage"),
           value: process.env.PM2_USAGE ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB` : processMem,
           inline: true
         },
         {
-          name: "Bot Uptime",
-          value: `${Math.trunc(uptime / 86400000)} days, ${Math.trunc(uptime / 3600000) % 24} hrs, ${Math.trunc(uptime / 60000) % 60} mins, ${Math.trunc(uptime / 1000) % 60} secs`
+          name: this.getString("commands.responses.stats.botUptime"),
+          value: this.getString("timeFormat", {
+            params: {
+              days: Math.trunc(uptime / 86400000).toString(),
+              hours: (Math.trunc(uptime / 3600000) % 24).toString(),
+              minutes: (Math.trunc(uptime / 60000) % 60).toString(),
+              seconds: (Math.trunc(uptime / 1000) % 60).toString()
+            }
+          })
         },
         {
-          name: "Connection Uptime",
-          value: `${Math.trunc(connUptime / 86400000)} days, ${Math.trunc(connUptime / 3600000) % 24} hrs, ${Math.trunc(connUptime / 60000) % 60} mins, ${Math.trunc(connUptime / 1000) % 60} secs`
+          name: this.getString("commands.responses.stats.connectionUptime"),
+          value: this.getString("timeFormat", {
+            params: {
+              days: Math.trunc(connUptime / 86400000).toString(),
+              hours: (Math.trunc(connUptime / 3600000) % 24).toString(),
+              minutes: (Math.trunc(connUptime / 60000) % 60).toString(),
+              seconds: (Math.trunc(connUptime / 1000) % 60).toString()
+            }
+          })
         },
         {
-          name: "Host",
+          name: this.getString("commands.responses.stats.host"),
           value: `${os.type()} ${os.release()} (${os.arch()})`,
           inline: true
         },
         {
-          name: "Library",
+          name: this.getString("commands.responses.stats.library"),
           value: `Oceanic ${VERSION}`,
           inline: true
         },
         {
-          name: process.versions.bun ? "Bun Version" : "Node.js Version",
+          name: this.getString(`commands.responses.stats.${process.versions.bun ? "bunVersion" : "nodeJsVersion"}`),
           value: process.versions.bun ?? process.versions.node,
           inline: true
         },
         {
-          name: "Shard",
-          value: this.guild ? this.client.guildShardMap[this.guild.id] : "N/A",
+          name: this.getString("commands.responses.stats.shard"),
+          value: this.guild ? this.client.guildShardMap[this.guild.id].toString() : "N/A",
           inline: true
         },
         {
-          name: "Servers",
-          value: servers ? servers : `${this.client.guilds.size} (for this process only)`,
+          name: this.getString("commands.responses.stats.servers"),
+          value: servers ? servers.toString() : this.getString("commands.responses.stats.processOnly", { params: { count: this.client.guilds.size.toString() } }),
           inline: true
         }
         ]

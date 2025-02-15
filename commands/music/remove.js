@@ -1,5 +1,6 @@
 import { queues } from "#utils/soundplayer.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { Constants } from "oceanic.js";
 
 class RemoveCommand extends MusicCommand {
   async run() {
@@ -8,20 +9,20 @@ class RemoveCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return "Only the current voice session host can remove songs from the queue!";
-    const pos = Number.parseInt(this.options.position ?? this.args[0]);
-    if (Number.isNaN(pos) || pos > this.queue.length || pos < 1) return "That's not a valid position!";
+    if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return this.getString("commands.responses.remove.notHost");
+    const pos = this.getOptionInteger("position") ?? Number.parseInt(this.args[0]);
+    if (Number.isNaN(pos) || pos > this.queue.length || pos < 1) return this.getString("commands.responses.remove.invalidPosition");
     const removed = this.queue.splice(pos, 1);
-    if (removed.length === 0) return "That's not a valid position!";
+    if (removed.length === 0) return this.getString("commands.responses.remove.invalidPosition");
     const track = await this.connection.player.node.rest.decode(removed[0]);
     queues.set(this.guild.id, this.queue);
     this.success = true;
-    return `🔊 The song \`${track?.info.title ? track.info.title : "(blank)"}\` has been removed from the queue.`;
+    return `🔊 ${this.getString("commands.responses.remove.removed", { params: { song: track?.info.title ? track.info.title : this.getString("sound.blank") } })}`;
   }
 
   static flags = [{
     name: "position",
-    type: 4,
+    type: Constants.ApplicationCommandOptionTypes.INTEGER,
     description: "The queue position you want to remove",
     minValue: 1,
     required: true,

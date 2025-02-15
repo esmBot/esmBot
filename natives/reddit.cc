@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string text = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -21,7 +21,7 @@ ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, 
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   string captionText = "<span foreground=\"white\">" + text + "</span>";
 
@@ -52,7 +52,10 @@ ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, 
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + watermark.height());
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -61,6 +64,7 @@ ArgumentMap Reddit(const string& type, string& outType, const char* bufferdata, 
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

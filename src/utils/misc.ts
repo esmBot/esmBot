@@ -1,7 +1,7 @@
 import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { config } from "dotenv";
-import type { Client, Message } from "oceanic.js";
+import type { Client, CommandInteraction, Message } from "oceanic.js";
 import db from "#database";
 import { servers } from "./image.js";
 
@@ -134,7 +134,7 @@ export function getServers(bot: Client) {
 export function cleanMessage(message: Message, content: string) {
   let cleanContent = content?.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
 
-  const author = message.author ?? message.member ?? message.user;
+  const author = message.author;
   let authorName = author.username;
   if (message.member?.nick) {
     authorName = message.member.nick;
@@ -151,7 +151,7 @@ export function cleanMessage(message: Message, content: string) {
 
     if (message.guildID && message.mentions.roles) {
       for (const roleID of message.mentions.roles) {
-        const role = message.guild.roles.get(roleID);
+        const role = message.guild?.roles.get(roleID);
         const roleName = role ? role.name : "deleted-role";
         cleanContent = cleanContent.replace(new RegExp(`<@&${roleID}>`, "g"), `@${roleName}`);
       }
@@ -162,6 +162,39 @@ export function cleanMessage(message: Message, content: string) {
       if (channel?.name && channel.mention) {
         cleanContent = cleanContent.replace(channel.mention, `#${channel.name}`);
       }
+    }
+  }
+
+  return textEncode(cleanContent);
+}
+
+export function cleanInteraction(interaction: CommandInteraction, content: string) {
+  let cleanContent = content?.replace(/<a?(:\w+:)[0-9]+>/g, "$1") || "";
+
+  const author = interaction.user;
+  let authorName = author.username;
+  if (interaction.member?.nick) {
+    authorName = interaction.member.nick;
+  }
+  cleanContent = cleanContent.replace(new RegExp(`<@!?${author.id}>`, "g"), `@${authorName}`);
+
+  for (const mention of interaction.data.resolved.members.values()) {
+    if (mention.nick) {
+      cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.nick}`);
+    }
+    cleanContent = cleanContent.replace(new RegExp(`<@!?${mention.id}>`, "g"), `@${mention.username}`);
+  }
+
+  if (interaction.guildID && interaction.data.resolved.roles.size > 0) {
+    for (const role of interaction.data.resolved.roles.values()) {
+      const roleName = role ? role.name : "deleted-role";
+      cleanContent = cleanContent.replace(new RegExp(`<@&${role.id}>`, "g"), `@${roleName}`);
+    }
+  }
+
+  for (const channel of interaction.data.resolved.channels.values()) {
+    if (channel.name && channel.mention) {
+      cleanContent = cleanContent.replace(channel.mention, `#${channel.name}`);
     }
   }
 

@@ -25,7 +25,7 @@ jobs:
         node-version: 20
         cache: pnpm
     - name: Install dependencies
-      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev
+      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
     - name: Build
       run: pnpm install --frozen-lockfile --no-optional && pnpm run build
 

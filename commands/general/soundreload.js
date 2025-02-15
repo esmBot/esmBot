@@ -6,7 +6,7 @@ class SoundReloadCommand extends Command {
     const owners = process.env.OWNER.split(",");
     if (!owners.includes(this.author.id)) {
       this.success = false;
-      return "Only the bot owner can reload Lavalink!";
+      return this.getString("commands.responses.soundreload.botOwnerOnly");
     }
     await this.acknowledge();
     const length = await reload(this.client);
@@ -19,10 +19,9 @@ class SoundReloadCommand extends Command {
       });
     }
     if (length) {
-      return `Successfully connected to ${length} Lavalink node(s).`;
-    } else {
-      return "I couldn't connect to any Lavalink nodes!";
+      return this.getString("commands.responses.soundreload.failed", { params: { length } });
     }
+    return this.getString("commands.responses.soundreload.failed");
   }
 
   static description = "Attempts to reconnect to all available Lavalink nodes";

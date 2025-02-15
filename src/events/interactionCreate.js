@@ -44,7 +44,7 @@ export default async (client, interaction) => {
   }
 
   if (cmd.dbRequired && !database) {
-    await interaction.createFollowup({ content: getString("noDatabase", interaction.locale), flags: 64 });
+    await interaction.createFollowup({ content: getString("noDatabase", { locale: interaction.locale }), flags: 64 });
     return;
   }
 
@@ -63,13 +63,13 @@ export default async (client, interaction) => {
       });
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        const fileSize = 26214400;
+        const fileSize = 10485760;
         if (result.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
             await upload(client, result, interaction, commandClass.success, true);
           } else {
             await interaction[replyMethod]({
-              content: getString("image.noTempServer", interaction.locale),
+              content: getString("image.noTempServer", { locale: interaction.locale }),
               flags: 64
             });
           }
@@ -100,16 +100,16 @@ export default async (client, interaction) => {
       }
     });
     if (error.toString().includes("Request entity too large")) {
-      await interaction.createFollowup({ content: getString("image.tooLarge", interaction.locale), flags: 64 });
+      await interaction.createFollowup({ content: getString("image.tooLarge", { locale: interaction.locale }), flags: 64 });
     } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction.createFollowup({ content: getString("image.jobEnded", interaction.locale), flags: 64 });
+      await interaction.createFollowup({ content: getString("image.jobEnded", { locale: interaction.locale }), flags: 64 });
     } else {
       logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await interaction.createFollowup({
-          content: `${getString("error", interaction.locale)} <https://github.com/esmBot/esmBot/issues>`,
+          content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
             contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
             name: "error.txt"

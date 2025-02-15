@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
   params() {
-    const speed = Number.parseInt(this.options.multiplier ?? this.args[0]);
+    const speed = this.getOptionInteger("multiplier") ?? Number.parseInt(this.args[0]);
     return {
       speed: Number.isNaN(speed) || speed < 1 ? 2 : speed
     };
@@ -25,7 +25,7 @@ class SpeedCommand extends ImageCommand {
   static description = "Makes an image sequence faster";
   static aliases = ["speedup", "fast", "gifspeed", "faster"];
 
-  static requiresGIF = true;
+  static requiresAnim = true;
   static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to speed up!";
   static command = "speed";

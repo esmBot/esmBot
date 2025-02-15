@@ -26,7 +26,7 @@ export default async (client, member, oldChannel) => {
       isWaiting.set(oldChannel.id, true);
       connection.player.setPaused(true);
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: `🔊 ${getString("sound.waitingForSomeone")}` // TODO: find a way to get locale
+        content: `🔊 ${getString("sound.waitingForSomeone", { locale: connection.locale })}`
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, true, member.id);
       awaitRejoin.once("end", async (rejoined, newMember) => {
@@ -34,9 +34,9 @@ export default async (client, member, oldChannel) => {
         if (rejoined) {
           connection.player.setPaused(false);
           if (member.id !== newMember.id) {
-            players.set(connection.voiceChannel.guildID, { player: connection.player, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
+            players.set(connection.voiceChannel.guildID, { player: connection.player, host: newMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage, locale: connection.locale });
             waitMessage.edit({
-              content: `🔊 ${newMember.mention} is the new voice channel host.`
+              content: `🔊 ${getString("sound.newHost", { locale: connection.locale, params: { member: newMember.mention } })}`
             });
           } else {
             try {
@@ -58,7 +58,7 @@ export default async (client, member, oldChannel) => {
       if (isWaiting.has(oldChannel.id)) return;
       isWaiting.set(oldChannel.id, true);
       const waitMessage = await client.rest.channels.createMessage(connection.originalChannel.id, {
-        content: `🔊 ${getString("sound.waitingForHost")}` // TODO: find a way to get locale
+        content: `🔊 ${getString("sound.waitingForHost", { locale: connection.locale })}`
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, false, member.id);
       awaitRejoin.once("end", async (rejoined) => {
@@ -80,9 +80,9 @@ export default async (client, member, oldChannel) => {
             await handleExit(client, connection);
           } else {
             const randomMember = random(members);
-            players.set(connection.voiceChannel.guildID, { player: connection.player, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage });
+            players.set(connection.voiceChannel.guildID, { player: connection.player, host: randomMember.id, voiceChannel: connection.voiceChannel, originalChannel: connection.originalChannel, loop: connection.loop, shuffle: connection.shuffle, playMessage: connection.playMessage, locale: connection.locale });
             waitMessage.edit({
-              content: `🔊 ${randomMember.mention} is the new voice channel host.`
+              content: `🔊 ${getString("sound.newHost", { locale: connection.locale, params: { member: randomMember.mention } })}`
             });
           }
         }
@@ -96,7 +96,7 @@ export default async (client, member, oldChannel) => {
 
 /**
  * @param {import("oceanic.js").Client} client
- * @param {{ player?: import("shoukaku").Player; host?: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop?: boolean; shuffle?: boolean; playMessage?: import("oceanic.js").Message; }} connection
+ * @param {{ player?: import("shoukaku").Player; host?: string; voiceChannel: import("oceanic.js").VoiceChannel; originalChannel: import("oceanic.js").GuildChannel; loop?: boolean; shuffle?: boolean; playMessage?: import("oceanic.js").Message; locale: string; }} connection
  */
 async function handleExit(client, connection) {
   players.delete(connection.originalChannel.guildID);
@@ -109,7 +109,12 @@ async function handleExit(client, connection) {
   }
   try {
     await client.rest.channels.createMessage(connection.originalChannel.id, {
-      content: `🔊 The voice channel session in \`${connection.voiceChannel.name}\` has ended.`
+      content: `🔊 ${getString("sound.endedInChannel", {
+        locale: connection.locale,
+        params: {
+          channel: connection.voiceChannel.name
+        }
+      })}`
     });
   } catch {
     logger.warn(`Failed to post leave message in channel ${connection.originalChannel.id}`);

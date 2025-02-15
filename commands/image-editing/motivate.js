@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import { cleanMessage } from "#utils/misc.js";
 
 class MotivateCommand extends ImageCommand {
   async criteria(text, url) {
@@ -10,12 +9,13 @@ class MotivateCommand extends ImageCommand {
   }
 
   params(url) {
-    const newArgs = this.options.text ?? this.args.join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
+    const font = this.getOptionString("font");
     return {
-      topText: cleanMessage(this.message ?? this.interaction, topText),
-      bottomText: bottomText ? cleanMessage(this.message ?? this.interaction, bottomText) : "",
-      font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "times"
+      topText: this.clean(topText),
+      bottomText: bottomText ? this.clean(bottomText) : "",
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "times"
     };
   }
 

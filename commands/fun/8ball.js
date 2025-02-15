@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { random } from "#utils/misc.js";
 
@@ -31,7 +32,7 @@ class EightBallCommand extends Command {
 
   static flags = [{
     name: "question",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "A question you want to ask the ball",
     classic: true
   }];

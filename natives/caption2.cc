@@ -7,7 +7,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool top = GetArgument<bool>(arguments, "top");
   string caption = GetArgument<string>(arguments, "caption");
@@ -24,7 +24,7 @@ ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferda
   int width = in.width();
   int size = width / 13;
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   int textWidth = width - ((width / 25) * 2);
 
   string font_string =
@@ -65,7 +65,10 @@ ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferda
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -74,6 +77,7 @@ ArgumentMap CaptionTwo(const string& type, string& outType, const char* bufferda
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

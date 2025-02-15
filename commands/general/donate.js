@@ -12,15 +12,15 @@ class DonateCommand extends Command {
     try {
       const patrons = await fetch("https://projectlounge.pw/patrons", { signal: controller.signal }).then(data => data.json());
       clearTimeout(timeout);
-      prefix = "Thanks to the following patrons for their support:\n";
+      prefix = this.getString("commands.responses.donate.thanks");
       for (const patron of patrons) {
-        prefix += `**- ${patron}**\n`;
+        prefix += `\n**- ${patron}**`;
       }
       prefix += "\n";
     } catch (e) {
       logger.error(`Unable to get patron data: ${e}`);
     }
-    return `${prefix}Like esmBot? Consider supporting the developer on Patreon to help keep it running! https://patreon.com/TheEssem`;
+    return `${prefix}\n${this.getString("commands.responses.donate.support")} https://patreon.com/TheEssem`;
   }
 
   static description = "Learn more about how you can support esmBot's development";

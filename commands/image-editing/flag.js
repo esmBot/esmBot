@@ -6,7 +6,7 @@ class FlagCommand extends ImageCommand {
   flagPath = "";
 
   async criteria() {
-    const text = this.options.text ?? this.args[0];
+    const text = this.getOptionString("text") ?? this.args[0];
     const matched = text.match(emojiRegex());
     if (!matched) return false;
     let path;

@@ -1,78 +1,98 @@
 {
-  "commands": {
-    "descriptions": {
-      "bounce": "Faz uma imagem saltar para cima e para baixo",
-      "caption": "Adiciona uma legenda na imagem"
+    "commands": {
+        "descriptions": {
+            "bounce": "Faz uma imagem saltar para cima e para baixo",
+            "caption": "Adiciona uma legenda na imagem",
+            "bird": "Mostra uma imagem de pássaro aleatória",
+            "dice": "Gira o dado",
+            "dog": "Mostra uma imagem de cachorro aleatória",
+            "homebrew": "Cria uma edit do Homebrew Channel",
+            "sonic": "Cria uma imagem de balão de fala do Sonic",
+            "wikihow": "Mostra uma imagem aleatória do WikiHow",
+            "banner": "Mostra o banner de um usuário",
+            "base64": "Codifica/Decodifica uma chave de Base64",
+            "command": "Liga/desliga um comando clássico para um servidor (use as config. do serv. para comandos de barra)",
+            "count": "Mostra quantas vezes cada comando foi usado",
+            "donate": "Aprenda mais sobre como você pode ajudar no desenvolvimento do esmBot",
+            "emote": "Pega a imagem original de um emote",
+            "eval": "Roda código JavaScript",
+            "exec": "Roda um comando de terminal/shell",
+            "help": "Mostra uma lista de comandos",
+            "8ball": "Faz uma pergunta para a bola 8 mágica",
+            "cat": "Pega uma imagem de gato aleatória",
+            "ancient": "Mostra um meme muito antigo",
+            "avatar": "Mostra o avatar de um usuário",
+            "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)"
+        },
+        "flagNames": {
+            "caption": {
+                "font": "fonte",
+                "noegg": "semovo"
+            }
+        },
+        "flags": {
+            "caption": {
+                "font": "Especifica a fonte que deseja usar (padrão: futura)",
+                "noegg": "Desativa... algo. Não vou dizer o que é."
+            }
+        },
+        "names": {
+            "bounce": "saltar",
+            "caption": "legendar",
+            "Select Image": "Selecionar Imagem"
+        },
+        "noImage": {
+            "bounce": "Você precisa enviar uma imagem/GIF para saltar!",
+            "caption": "Você precisa enviar uma imagem/GIF para adicionar legenda!"
+        },
+        "noText": {
+            "caption": "Você precisa enviar texto para colocar na legenda!"
+        }
     },
-    "flagNames": {
-      "caption": {
-        "font": "fonte",
-        "noegg": "semovo"
-      }
+    "error": "Opa! Encontrei um erro ao executar este comando. Informe o conteúdo do arquivo anexado no link a seguir ou no servidor de suporte do esmBot:",
+    "image": {
+        "badurl": "Esse link é inválido!",
+        "couldNotFind": "Não pude encontrar uma imagem nessa mensagem!",
+        "empty": "O resultado estava vazio!",
+        "flagNames": {
+            "ephemeral": "efêmero",
+            "image": "imagem",
+            "text": "texto",
+            "togif": "paragif"
+        },
+        "flags": {
+            "ephemeral": "Tenta enviar o resultado como uma resposta efêmera/temporária",
+            "image": "Um anexo de uma imagem/GIF",
+            "link": "Um link de uma imagem/GIF",
+            "spoiler": "Tenta enviar o resultado como spoiler",
+            "text": "O texto para colocar na imagem",
+            "togif": "Força resultado como GIF"
+        },
+        "frames": "Esse GIF tem muitas frames (mais de 1000)!",
+        "jobEnded": "Algo aconteceu com os servidores de imagem antes que eu pudesse receber a imagem. Tente executar seu comando novamente.",
+        "large": "Essa imagem é muito grande (>= 40MB)! Tente usar uma imagem menor.",
+        "nocmd": "Esse comando não é compatível com esta instância do esmBot.",
+        "noanim": "Isso não é um GIF!",
+        "noImage": "Você precisa enviar uma imagem/GIF!",
+        "noResult": "Não consegui obter uma resposta do servidor de imagens. Por favor, tente novamente.",
+        "noServers": "Parece que não consigo entrar em contato com os servidores de imagem, eles podem estar inativos ou ainda iniciando. Por favor, aguarde um pouco.",
+        "noTempServer": "O resultado tinha mais de 25 MB de tamanho, portanto não posso carregá-la.",
+        "noText": "Você precisa enviar texto!",
+        "processing": "Processando... isto vai demorar um pouco",
+        "ratelimit": "Fui limitado pelo serviço que hospeda essa imagem. Tente enviar sua imagem em outro lugar.",
+        "selected": "A imagem foi selecionada para o seu próximo comando.",
+        "slowDown": "Por favor, diminua a velocidade um pouco.",
+        "tempImageSent": "Aqui está sua imagem!",
+        "tempSite": "A imagem resultante tinha mais de 25 MB de tamanho, portanto, foi enviada para um site externo.",
+        "tenor": "Fui limitado pelo Tenor. Tente enviar seu GIF em outro lugar.",
+        "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
+        "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente.)",
+        "tooLarge": "O arquivo resultante era muito grande para ser enviado. Tente novamente com uma imagem menor, se possível.",
+        "tooLong": "A imagem está demorando muito para ser processada (>=10 minutos), por isso o processsamento foi cancelado. Tente usar uma imagem menor.",
+        "tryAgain": "Não foi possível concluir o processamento dessa imagem porque o servidor em que ela estava sendo processada caiu. Tente executar seu comando novamente.",
+        "unknown": "A imagem resultante não estava em um formato reconhecível. Tente novamente."
     },
-    "flags": {
-      "caption": {
-        "font": "Especifica a fonte que deseja usar (padrão: futura)",
-        "noegg": "Desativa... algo. Não vou dizer o que é."
-      }
-    },
-    "names": {
-      "bounce": "saltar",
-      "caption": "legendar",
-      "Select Image": "Selecionar Imagem"
-    },
-    "noImage": {
-      "bounce": "Você precisa enviar uma imagem/GIF para saltar!",
-      "caption": "Você precisa enviar uma imagem/GIF para adicionar legenda!"
-    },
-    "noText": {
-      "caption": "Você precisa enviar texto para colocar na legenda!"
+    "permissions": {
+        "noAttachFiles": "Não tenho a permissão de anexar arquivos!"
     }
-  },
-  "error": "Opa! Encontrei um erro ao executar este comando. Informe o conteúdo do arquivo anexado no link a seguir ou no servidor de suporte do esmBot:",
-  "image": {
-    "badurl": "Esse link é inválido!",
-    "couldNotFind": "Não pude encontrar uma imagem nessa mensagem!",
-    "empty": "O resultado estava vazio!",
-    "flagNames": {
-      "ephemeral": "efêmero",
-      "image": "imagem",
-      "text": "texto",
-      "togif": "paragif"
-    },
-    "flags": {
-      "ephemeral": "Tenta enviar o resultado como uma resposta efêmera/temporária",
-      "image": "Um anexo de uma imagem/GIF",
-      "link": "Um link de uma imagem/GIF",
-      "spoiler": "Tenta enviar o resultado como spoiler",
-      "text": "O texto para colocar na imagem",
-      "togif": "Força resultado como GIF"
-    },
-    "frames": "Esse GIF tem muitas frames (mais de 1000)!",
-    "jobEnded": "Algo aconteceu com os servidores de imagem antes que eu pudesse receber a imagem. Tente executar seu comando novamente.",
-    "large": "Essa imagem é muito grande (>= 40MB)! Tente usar uma imagem menor.",
-    "nocmd": "Esse comando não é compatível com esta instância do esmBot.",
-    "nogif": "Isso não é um GIF!",
-    "noImage": "Você precisa enviar uma imagem/GIF!",
-    "noResult": "Não consegui obter uma resposta do servidor de imagens. Por favor, tente novamente.",
-    "noServers": "Parece que não consigo entrar em contato com os servidores de imagem, eles podem estar inativos ou ainda iniciando. Por favor, aguarde um pouco.",
-    "noTempServer": "O resultado tinha mais de 25 MB de tamanho, portanto não posso carregá-la.",
-    "noText": "Você precisa enviar texto!",
-    "processing": "Processando... isto vai demorar um pouco",
-    "ratelimit": "Fui limitado pelo serviço que hospeda essa imagem. Tente enviar sua imagem em outro lugar.",
-    "selected": "A imagem foi selecionada para o seu próximo comando.",
-    "slowDown": "Por favor, diminua a velocidade um pouco.",
-    "tempImageSent": "Aqui está sua imagem!",
-    "tempSite": "A imagem resultante tinha mais de 25 MB de tamanho, portanto, foi enviada para um site externo.",
-    "tenor": "Fui limitado pelo Tenor. Tente enviar seu GIF em outro lugar.",
-    "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
-    "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente).",
-    "tooLarge": "O arquivo resultante era muito grande para ser enviado. Tente novamente com uma imagem menor, se possível.",
-    "tooLong": "A imagem está demorando muito para ser processada (>=10 minutos), por isso o processsamento foi cancelado. Tente usar uma imagem menor.",
-    "tryAgain": "Não foi possível concluir o processamento dessa imagem porque o servidor em que ela estava sendo processada caiu. Tente executar seu comando novamente.",
-    "unknown": "A imagem resultante não estava em um formato reconhecível. Tente novamente."
-  },
-  "permissions": {
-    "noAttachFiles": "Não tenho a permissão de anexar arquivos!"
-  }
 }

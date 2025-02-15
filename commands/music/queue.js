@@ -32,9 +32,14 @@ class QueueCommand extends MusicCommand {
             name: this.getString("sound.queue"),
             iconURL: this.client.user.avatarURL()
           },
-          color: 16711680,
+          color: 0xff0000,
           footer: {
-            text: `Page ${i + 1} of ${groups.length}`
+            text: this.getString("pagination.page", {
+              params: {
+                page: i + 1,
+                amount: groups.length
+              }
+            })
           },
           fields: [{
             name: `🎶 ${this.getString("sound.nowPlaying")}`,

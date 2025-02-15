@@ -5,17 +5,18 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   int quality = GetArgumentWithFallback<int>(arguments, "quality", 1);
 
   char *buf;
+  size_t dataSize = 0;
 
   VImage in = VImage::new_from_buffer(
                     bufferdata, bufferLength, "",
                     GetInputOptions(type, true, false));
 
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   if (nPages > 1) {
     int width = in.width();
@@ -71,6 +72,7 @@ ArgumentMap Jpeg(const string& type, string& outType, const char* bufferdata, si
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

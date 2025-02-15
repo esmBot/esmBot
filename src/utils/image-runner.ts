@@ -1,4 +1,3 @@
-import { isMainThread, parentPort, workerData } from "node:worker_threads";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { img } from "./imageLib.js";
@@ -26,9 +25,9 @@ export default function run(object): Promise<{ buffer: Buffer, fileExtension: st
     // If the image has a path, it must also have a type
     let promise: Promise<string | ArrayBuffer> = Promise.resolve(null);
     if (object.path) {
-      if (object.params.type !== "image/gif" && object.onlyGIF) return resolve({
+      if ((object.params.type !== "image/gif" && object.params.type !== "image/webp") && object.onlyAnim) return resolve({
         buffer: Buffer.alloc(0),
-        fileExtension: "nogif"
+        fileExtension: "noanim"
       });
       const controller = new AbortController();
       const timeout = setTimeout(() => {
@@ -61,29 +60,18 @@ export default function run(object): Promise<{ buffer: Buffer, fileExtension: st
         objectWithFixedType.gravity = enumMap[objectWithFixedType.gravity];
       }
       objectWithFixedType.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
-      try {
-        const result = img.image(object.cmd, objectWithFixedType);
+      img.image(object.cmd, objectWithFixedType, (err, data, type) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
         const returnObject = {
-          buffer: result.data,
-          fileExtension: result.type
+          buffer: data,
+          fileExtension: type
         };
         resolve(returnObject);
-      } catch (e) {
-        reject(e);
-      }
+      });
     });
   });
-}
-
-if (!isMainThread) {
-  run(workerData)
-    .then(returnObject => {
-      parentPort.postMessage(returnObject, [returnObject.buffer.buffer]);
-    })
-    .catch(err => {
-      // turn promise rejection into normal error
-      throw err;
-    });
-} else {
-  img.imageInit();
 }

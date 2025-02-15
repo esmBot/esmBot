@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string overlay = GetArgument<string>(arguments, "overlay");
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -19,7 +19,7 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   string assetPath = basePath + overlay;
   VImage overlayInput = VImage::new_from_file(assetPath.c_str());
@@ -36,7 +36,10 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
   VImage replicated = overlayImage.replicate(1, nPages);
   VImage final = in.composite2(replicated, VIPS_BLEND_MODE_OVER);
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -45,6 +48,7 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

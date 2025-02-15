@@ -6,16 +6,14 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                      GetInputOptions(type, true, true))
-                  .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+                                      GetInputOptions(type, true, true));
 
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
   VImage out;
   if (flop) {
@@ -24,7 +22,6 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
     // libvips animation handling is both a blessing and a curse
     vector<VImage> img;
     int pageHeight = vips_image_get_page_height(in.get_image());
-    int nPages = vips_image_get_n_pages(in.get_image());
     for (int i = 0; i < nPages; i++) {
       VImage img_frame = in.crop(0, i * pageHeight, in.width(), pageHeight);
       VImage flipped = img_frame.flip(VIPS_DIRECTION_VERTICAL);
@@ -36,7 +33,10 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
     out = in.flip(VIPS_DIRECTION_VERTICAL);
   }
 
+  SetupTimeoutCallback(out, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   out.write_to_buffer(
       ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
       outType == "gif"
@@ -45,6 +45,7 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }

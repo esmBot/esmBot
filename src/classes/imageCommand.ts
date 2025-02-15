@@ -1,9 +1,8 @@
 import Command from "./command.js";
 import imageDetect from "#utils/imagedetect.js";
 import { runImageJob } from "#utils/image.js";
-import { runningCommands } from "#utils/collections.js";
+import { runningCommands, selectedImages } from "#utils/collections.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
-import { selectedImages } from "#utils/collections.js";
 import messages from "#config/messages.json" with { type: "json" };
 import { Constants, CommandInteraction } from "oceanic.js";
 import { getAllLocalizations } from "#utils/i18n.js";
@@ -30,7 +29,7 @@ class ImageCommand extends Command {
     const imageParams = {
       cmd: this.constructor.command,
       params: {
-        togif: !!this.options.togif
+        togif: !!this.getOptionBoolean("togif")
       },
       id: (this.interaction ?? this.message).id
     };
@@ -39,14 +38,17 @@ class ImageCommand extends Command {
     if (this.constructor.requiresImage) {
       try {
         const selection = selectedImages.get(this.author.id);
-        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, this.options, true).catch(e => {
+        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, {
+          image: this.getOptionString("image"),
+          link: this.getOptionString("link")
+        }, true).catch(e => {
           if (e.name === "AbortError") return { type: "timeout" };
           throw e;
         });
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return `${this.getString(`commands.noImage.${this.cmdName}`, true) || this.getString("image.noImage", true) || this.constructor.noImage} ${this.getString("image.tip")}`;
+          return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || this.constructor.noImage} ${this.getString("image.tip")}`;
         }
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
@@ -69,20 +71,21 @@ class ImageCommand extends Command {
         imageParams.params.type = image.type;
         imageParams.url = image.url; // technically not required but can be useful for text filtering
         imageParams.name = image.name;
-        if (this.constructor.requiresGIF) imageParams.onlyGIF = true;
+        if (this.constructor.requiresAnim) imageParams.onlyAnim = true;
       } catch (e) {
         runningCommands.delete(this.author.id);
         throw e;
       }
     }
 
-    if ("spoiler" in this.options) needsSpoiler = this.options.spoiler;
+    const spoiler = this.getOptionBoolean("spoiler");
+    if (spoiler != null) needsSpoiler = spoiler;
 
     if (this.constructor.requiresText) {
-      const text = this.options.text ?? this.args.join(" ").trim();
+      const text = this.getOptionString("text") ?? this.args.join(" ").trim();
       if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
-        return this.getString(`commands.noText.${this.cmdName}`, true) || this.getString("image.noText", true) || this.constructor.noText;
+        return this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) || this.getString("image.noText", { returnNull: true }) || this.constructor.noText;
       }
     }
 
@@ -93,12 +96,14 @@ class ImageCommand extends Command {
     }
 
     let status;
-    if (imageParams.params.type === "image/gif" && this.type === "classic") {
+    if ((imageParams.params.type === "image/gif" || imageParams.params.type === "image/webp") && this.type === "classic") {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
+    const ephemeral = this.getOptionBoolean("ephemeral");
+
     if (this.interaction) {
-      imageParams.ephemeral = this.options.ephemeral;
+      imageParams.ephemeral = ephemeral;
       imageParams.spoiler = needsSpoiler;
       imageParams.token = this.interaction.token;
     }
@@ -113,22 +118,23 @@ class ImageCommand extends Command {
       if (type === "noresult") return this.getString("image.noResult");
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
-      if (type === "nogif" && this.constructor.requiresGIF) return this.getString("image.nogif");
+      if (type === "noanim" && this.constructor.requiresAnim) return this.getString("image.noanim");
       if (type === "empty") return this.constructor.empty;
       this.success = true;
       if (type === "text") return {
         content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
-        flags: this.options.ephemeral ? 64 : undefined
+        flags: ephemeral ? 64 : undefined
       };
       return {
         contents: buffer,
         name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`,
-        flags: this.options.ephemeral ? 64 : undefined
+        flags: ephemeral ? 64 : undefined
       };
     } catch (e) {
-      if (e === "Request ended prematurely due to a closed connection") return this.getString("image.tryAgain");
-      if (e === "Job timed out" || e === "Timeout") return this.getString("image.tooLong");
-      if (e === "No available servers") return this.getString("image.noServers");
+      if (e.toString().includes("image_not_working")) return this.getString("image.notWorking");
+      if (e.toString().includes("Request ended prematurely due to a closed connection")) return this.getString("image.tryAgain");
+      if (e.toString().includes("image_job_killed") || e.toString().includes("Timeout")) return this.getString("image.tooLong");
+      if (e.toString().includes("No available servers")) return this.getString("image.noServers");
       throw e;
     } finally {
       try {
@@ -207,7 +213,7 @@ class ImageCommand extends Command {
   static requiresImage = true;
   static requiresText = false;
   static textOptional = false;
-  static requiresGIF = false;
+  static requiresAnim = false;
   static alwaysGIF = false;
   static noImage = "You need to provide an image/GIF!";
   static noText = "You need to provide some text!";

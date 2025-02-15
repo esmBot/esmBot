@@ -7,11 +7,11 @@ class ToggleCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can pause/resume the music!";
+    if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return this.getString("commands.responses.toggle.notHost");
     const player = this.connection.player;
     player.setPaused(!player.paused);
     this.success = true;
-    return `🔊 The player has been ${player.paused ? "paused" : "resumed"}.`;
+    return `🔊 ${this.getString(player.paused ? "commands.responses.toggle.paused" : "commands.responses.toggle.resumed")}`;
   }
 
   static description = "Pauses/resumes the current song";

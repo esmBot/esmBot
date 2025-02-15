@@ -69,10 +69,9 @@ nvm install 20
 nvm use 20
 ```
 
-esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to install it:
+esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:
 ```sh
 corepack enable
-corepack prepare pnpm@latest --activate
 ```
 
 ***

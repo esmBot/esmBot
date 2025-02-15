@@ -7,7 +7,7 @@ esmBot is a free and open-source Discord bot designed to entertain your server. 
 ## Features
 - Powerful, efficient, and performant image processing powered by [libvips](https://github.com/libvips/libvips)
 - Lots of image manipulation and processing commands out of the box
-- Handling of output images larger than 25MB via a local web server
+- Handling of output images larger than Discord's upload limit via a local web server
 - Optional WebSocket/HTTP-based external image API with load balancing
 - Music playback from many different configurable sources via [Lavalink](https://github.com/lavalink-devs/Lavalink)
 - Server tags system for saving/retrieving content
@@ -23,6 +23,13 @@ You can invite the main instance of esmBot to your server using this link: https
 A command list can be found [here](https://esmbot.net/help.html).
 
 If you want to self-host the bot, a guide can be found [here](https://docs.esmbot.net/setup).
+
+## Contributing
+esmBot is licensed under the MIT License. Issues and pull requests are accepted to introduce features and fix bugs, and translations into different languages are accepted via [Weblate](https://translate.codeberg.org/projects/esmbot/esmbot/).
+
+<a href="https://translate.codeberg.org/engage/esmbot/">
+<img src="https://translate.codeberg.org/widget/esmbot/esmbot/multi-auto.svg" alt="Translation status" />
+</a>
 
 ## Credits
 Icon by [Steel](https://twitter.com/MintBurrow).

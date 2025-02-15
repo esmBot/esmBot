@@ -1,18 +1,26 @@
 import { locales } from "./collections.js";
 
-export function getString(key: string, locale = process.env.LOCALE ?? "en-US", returnNull = false) {
+const templateRegex = /{{(\w+?)}}/g;
+
+export function getString(key: string, params?: { locale?: string; returnNull?: boolean; params?: { [key: string]: string; }; }) {
+  const locale = params?.locale ?? process.env.LOCALE ?? "en-US";
   const obj = locales.get(locale);
   const splitKey = key.split(".");
   let string: string;
   try {
-    string = splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || (returnNull ? null : key);
+    string = splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || (params?.returnNull ? null : key);
   } catch {
     try {
       string = splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US"));
     } catch {
-      return (returnNull ? null : key);
+      return (params?.returnNull ? null : key);
     }
   }
+
+  if (params?.params && string) {
+    string = string.replace(templateRegex, (match, name) => (params.params?.[name] ?? match));
+  }
+
   return string;
 }
 

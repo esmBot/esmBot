@@ -14,9 +14,16 @@ void imageInit() {
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
-  if (vips_init("")) vips_error_exit(NULL);
+  if (VIPS_INIT("")) vips_error_exit(NULL);
+  vips_cache_set_max(0);
 #if VIPS_MAJOR_VERSION >= 8 && VIPS_MINOR_VERSION >= 13
   vips_block_untrusted_set(true);
+  vips_operation_block_set("VipsForeignLoad", true);
+  vips_operation_block_set("VipsForeignLoadJpeg", false);
+  vips_operation_block_set("VipsForeignLoadPng", false);
+  vips_operation_block_set("VipsForeignLoadNsgif", false);
+  vips_operation_block_set("VipsForeignLoadWebp", false);
+  vips_operation_block_set("VipsForeignLoadHeif", false);
 #endif
   return;
 }
@@ -54,18 +61,17 @@ image_result *image(const char *command, const char *args, const char *data, siz
   string type = GetArgumentWithFallback<string>(Arguments, "type", "png");
   string outType = GetArgumentWithFallback<bool>(Arguments, "togif", false) ? "gif" : type;
 
-  size_t outLength = 0;
   ArgumentMap outMap;
   if (length != 0) {
     if (MapContainsKey(FunctionMap, command)) {
-      outMap = FunctionMap.at(command)(type, outType, data, length, Arguments, outLength);
+      outMap = FunctionMap.at(command)(type, outType, data, length, Arguments, NULL);
     } else { // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
       string cmd(command);
       throw "Error: \"FunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was not 0.";
     }
   } else {
     if (MapContainsKey(NoInputFunctionMap, command)) {
-      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, outLength);
+      outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, NULL);
     } else {
       string cmd(command);
       throw "Error: \"NoInputFunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was 0.";
@@ -80,7 +86,7 @@ image_result *image(const char *command, const char *args, const char *data, siz
   image_result *out = (image_result *)malloc(sizeof(image_result));
   out->buf = buf;
   out->type = type.c_str();
-  out->length = outLength;
+  out->length = GetArgument<size_t>(outMap, "size");
   return out;
 }
 

@@ -1,17 +1,19 @@
+import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class DiceCommand extends Command {
   async run() {
     const max = this.interaction?.data.options.getInteger("max") ?? Number.parseInt(this.args[0]);
-    if (!max) {
-      return `🎲 The dice landed on ${Math.floor(Math.random() * 6) + 1}.`;
-    }
-    return `🎲 The dice landed on ${Math.floor(Math.random() * max) + 1}.`;
+    return `🎲 ${this.getString("commands.responses.dice.landed", {
+      params: {
+        number: Math.floor(Math.random() * (max || 6)) + 1
+      }
+    })}`;
   }
 
   static flags = [{
     name: "max",
-    type: 4,
+    type: Constants.ApplicationCommandOptionTypes.INTEGER,
     description: "The maximum dice value",
     minValue: 1,
     classic: true

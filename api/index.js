@@ -1,14 +1,11 @@
 import "dotenv/config";
-import { Worker } from "node:worker_threads";
-import { join } from "node:path";
 import { createServer } from "node:http";
 import { WebSocketServer } from "ws";
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
 import EventEmitter from "node:events";
 import logger from "#utils/logger.js";
 import { img } from "#utils/imageLib.js";
 import { Client } from "oceanic.js";
+import run from "#utils/image-runner.js";
 
 img.imageInit();
 
@@ -35,7 +32,7 @@ class JobCache extends Map {
     super.set(key, value);
     setTimeout(() => {
       if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
-    }, 300000); // delete jobs if not requested after 5 minutes
+    }, 900000); // delete jobs if not requested after 15 minutes
     return this;
   }
 
@@ -59,7 +56,11 @@ const PASS = process.env.PASS ? process.env.PASS : undefined;
 let jobAmount = 0;
 
 // Used for direct image uploads
-const discord = new Client();
+const discord = new Client({
+  rest: {
+    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
+  }
+});
 const clientID = process.env.CLIENT_ID;
 
 discord.on("error", error);
@@ -109,7 +110,7 @@ wss.on("connection", (ws, request) => {
   cur.writeUInt16LE(jobAmount);
   const formats = {};
   for (const cmd of img.funcs) {
-    formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp"];
+    formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp", "image/avif"];
   }
   const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00, 0x00, 0x00]), cur, Buffer.from(JSON.stringify(formats))]);
   ws.send(init);
@@ -208,6 +209,9 @@ httpServer.on("request", async (req, res) => {
       case "webp":
         contentType = "image/webp";
         break;
+      case "avif":
+        contentType = "image/avif";
+        break;
     }
     if (contentType) res.setHeader("Content-Type", contentType);
     else res.setHeader("Content-Type", ext);
@@ -296,8 +300,51 @@ process.on("SIGINT", () => {
   });
 });
 
-const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp"];
-const fileSize = 26214400;
+const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
+const fileSize = 10485760;
+
+/**
+ * @param {{ buffer: ArrayBuffer; fileExtension: string; }} data
+ * @param {{ id: string; msg: object; num: number; }} job 
+ * @param {{ token: string; ephemeral: boolean; spoiler: boolean; cmd: string; }} object
+ * @param {import("ws").WebSocket} ws 
+ * @param {(value: void | PromiseLike<void>) => void} resolve
+ */
+function finishJob(data, job, object, ws, resolve) {
+  log(`Sending result of job ${job.id}`, job.num);
+  const jobObject = jobs.get(job.id);
+  jobObject.data = data.buffer;
+  jobObject.ext = data.fileExtension;
+  let verifyPromise;
+  if (!jobObject.tag) {
+    verifyPromise = waitForVerify(jobObject.verifyEvent);
+  } else {
+    verifyPromise = Promise.resolve(jobObject.tag);
+  }
+  let tag;
+  verifyPromise.then(t => {
+    tag = t;
+    jobs.set(job.id, jobObject);
+    if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
+      return discord.rest.interactions.createFollowupMessage(clientID, object.token, {
+        flags: object.ephemeral ? 64 : undefined,
+        files: [{
+          name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+          contents: jobObject.data
+        }]
+        }).catch((e) => {
+          error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
+          return;
+      });
+    }
+    return;
+  }).then((r) => {
+    if (r) jobs.delete(job.id);
+    const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
+    ws.send(waitResponse);
+    resolve();
+  });
+}
 
 /**
  * Run an image job.
@@ -315,55 +362,7 @@ const runJob = (job, ws) => {
       reject(new TypeError("Unknown image type"));
     }
 
-    const worker = new Worker(join(dirname(fileURLToPath(import.meta.url)), "../src/utils/image-runner.js"), {
-      workerData: object
-    });
-    const timeout = setTimeout(() => {
-      worker.removeAllListeners("message");
-      worker.removeAllListeners("error");
-      worker.terminate();
-      reject(new Error("Job timed out"));
-    }, 600000);
+    run(object).then(data => finishJob(data, job, object, ws, resolve), (e) => reject(e));
     log(`Job ${job.id} started`, job.num);
-    worker.once("message", (data) => {
-      clearTimeout(timeout);
-      log(`Sending result of job ${job.id}`, job.num);
-      const jobObject = jobs.get(job.id);
-      jobObject.data = data.buffer;
-      jobObject.ext = data.fileExtension;
-      let verifyPromise;
-      if (!jobObject.tag) {
-        verifyPromise = waitForVerify(jobObject.verifyEvent);
-      } else {
-        verifyPromise = Promise.resolve(jobObject.tag);
-      }
-      let tag;
-      verifyPromise.then(t => {
-        tag = t;
-        jobs.set(job.id, jobObject);
-        if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
-          return discord.rest.interactions.createFollowupMessage(clientID, object.token, {
-            flags: object.ephemeral ? 64 : undefined,
-            files: [{
-              name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
-              contents: jobObject.data
-            }]
-            }).catch((e) => {
-              error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
-              return;
-          });
-        }
-        return;
-      }).then((r) => {
-        if (r) jobs.delete(job.id);
-        const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
-        ws.send(waitResponse);
-        resolve();
-      });
-    });
-    worker.once("error", (e) => {
-      clearTimeout(timeout);
-      reject(e);
-    });
   });
 };

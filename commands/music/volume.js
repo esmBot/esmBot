@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class VolumeCommand extends MusicCommand {
@@ -8,7 +9,7 @@ class VolumeCommand extends MusicCommand {
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return "Only the current voice session host can change the volume!";
-    const vol = Number.parseInt(this.options.level ?? this.args[0]);
+    const vol = this.getOptionInteger("level") ?? Number.parseInt(this.args[0]);
     if (Number.isNaN(vol) || vol > 100 || vol < 0) return "You can only set the volume between 0 and 100!";
     await this.connection.player.setGlobalVolume(vol);
     this.success = true;
@@ -17,7 +18,7 @@ class VolumeCommand extends MusicCommand {
 
   static flags = [{
     name: "level",
-    type: 4,
+    type: Constants.ApplicationCommandOptionTypes.INTEGER,
     description: "The volume level",
     minValue: 0,
     maxValue: 100,

@@ -1,11 +1,16 @@
 import Command from "#cmd-classes/command.js";
 import imageDetect from "#utils/imagedetect.js";
 import { selectedImages } from "#utils/collections.js";
+import { Message } from "oceanic.js";
 
 class SelectImageCommand extends Command {
   async run() {
     const message = this.interaction?.data.target;
-    const image = await imageDetect(this.client, message, this.interaction, this.options, true, false, false, true).catch(e => {
+    if (!(message instanceof Message)) throw Error("Target is not a message");
+    const image = await imageDetect(this.client, message, this.interaction, {
+      image: this.getOptionString("image"),
+      link: this.getOptionString("link")
+    }, true, false, false, true).catch(e => {
       if (e.name === "AbortError") return { type: "timeout" };
       throw e;
     });

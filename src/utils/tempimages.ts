@@ -1,4 +1,4 @@
-import logger from "#utils/logger.js";
+import logger from "./logger.js";
 import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
 import { getString } from "./i18n.js";
 import { type Client, CommandInteraction, type Message } from "oceanic.js";
@@ -11,18 +11,18 @@ export async function upload(client: Client, result: { name: string; contents: B
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload = result.name.startsWith("SPOILER_") ? {
-    content: `${getString("image.tempSite", context instanceof CommandInteraction ? context.locale : undefined)}\n|| ${imageURL} ||`,
+    content: `${getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })}\n|| ${imageURL} ||`,
     flags: result.flags ?? (success ? 0 : 64)
   } : {
     embeds: [{
-      color: 16711680,
-      title: getString("image.tempImageSent", context instanceof CommandInteraction ? context.locale : undefined),
+      color: 0xff0000,
+      title: getString("image.tempImageSent", { locale: context instanceof CommandInteraction ? context.locale : undefined }),
       url: imageURL,
       image: {
         url: imageURL
       },
       footer: {
-        text: getString("image.tempSite", context instanceof CommandInteraction ? context.locale : undefined)
+        text: getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })
       },
     }],
     flags: result.flags ?? (success ? 0 : 64)

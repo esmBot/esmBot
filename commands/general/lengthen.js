@@ -1,17 +1,18 @@
+import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class LengthenCommand extends Command {
   async run() {
     await this.acknowledge();
-    const input = this.options.url ?? this.args.join(" ");
+    const input = this.getOptionString("url") ?? this.args.join(" ");
     this.success = false;
-    if (!input || !input.trim() || !this.urlCheck(input)) return "You need to provide a short URL to lengthen!";
+    if (!input || !input.trim() || !this.urlCheck(input)) return this.getString("commands.responses.lengthen.noInput");
     if (this.urlCheck(input)) {
       const url = await fetch(encodeURI(input), { method: "HEAD", redirect: "manual" });
       this.success = true;
       return url.headers.get("location") || input;
     }
-    return "That isn't a URL!";
+    return this.getString("commands.responses.lengthen.notURL");
   }
 
   /**
@@ -36,7 +37,7 @@ class LengthenCommand extends Command {
 
   static flags = [{
     name: "url",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The URL you want to lengthen",
     classic: true,
     required: true

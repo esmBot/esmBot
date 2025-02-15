@@ -104,8 +104,8 @@ export default async (client, message) => {
     let disabledCmds = disabledCmdCache.get(message.guildID);
     if (!disabledCmds) {
       if (!guildDB) guildDB = await database.getGuild(message.guildID);
-      disabledCmdCache.set(message.guildID, guildDB.disabled_commands ?? guildDB.disabledCommands);
-      disabledCmds = guildDB.disabled_commands ?? guildDB.disabledCommands;
+      disabledCmdCache.set(message.guildID, guildDB.disabled_commands);
+      disabledCmds = guildDB.disabled_commands;
     }
     if (disabledCmds.includes(cmdName)) return;
   }
@@ -138,14 +138,14 @@ export default async (client, message) => {
       }, reference));
     } else if (typeof result === "object") {
       if (result.contents && result.name) {
-        let fileSize = 26214400;
+        let fileSize = 10485760;
         if (message.guild) {
           switch (message.guild.premiumTier) {
             case 2:
-              fileSize = 52428308;
+              fileSize = 52428800;
               break;
             case 3:
-              fileSize = 104856616;
+              fileSize = 104857600;
               break;
           }
         }
@@ -184,7 +184,7 @@ export default async (client, message) => {
       }, reference));
     } else if (error.toString().includes("Timed out")) {
       await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size."
+        content: getString("image.timeoutDownload")
       }, reference));
     } else {
       _error(`Error occurred with command message ${message.content}: ${error.stack || error}`);

@@ -4,13 +4,13 @@ class RestartCommand extends Command {
   // eh, screw it
   run() {
     return new Promise((resolve) => {
-      const owners = process.env.OWNER.split(",");
+      const owners = process.env.OWNER?.split(",") ?? [];
       if (!owners.includes(this.author.id)) {
         this.success = false;
-        resolve("Only the bot owner can restart me!");
+        resolve(this.getString("commands.responses.restart.owner"));
         return;
       }
-      resolve("esmBot is restarting.");
+      resolve(this.getString("commands.responses.restart.restarting"));
       process.exit(1);
     });
   }

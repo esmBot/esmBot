@@ -1,11 +1,10 @@
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import { cleanMessage } from "#utils/misc.js";
 
 class SpotifyCommand extends ImageCommand {
   params(url) {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
-      caption: cleanMessage(this.message ?? this.interaction, newArgs),
+      caption: this.clean(newArgs),
     };
   }
 

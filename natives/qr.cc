@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-ArgumentMap QrCreate([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, size_t& dataSize) {
+ArgumentMap QrCreate([[maybe_unused]] const string& type, string& outType, ArgumentMap arguments, [[maybe_unused]] bool* shouldKill) {
   string text = GetArgument<string>(arguments, "text");
 
   auto writer = ZXing::MultiFormatWriter(ZXing::BarcodeFormat::QRCode).setMargin(1).setEncoding(ZXing::CharacterSet::UTF8);
@@ -26,15 +26,17 @@ ArgumentMap QrCreate([[maybe_unused]] const string& type, string& outType, Argum
                      .resize(4, vips::VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
 
   char *buf;
+  size_t dataSize = 0;
   img.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }
 
-ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, size_t& dataSize) {
+ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool* shouldKill) {
   vips::VOption *options = vips::VImage::option()->set("access", "sequential");
 
   vips::VImage in =
@@ -71,12 +73,13 @@ ArgumentMap QrRead([[maybe_unused]] const string& type, string& outType, const c
 #else
   string resultText = ZXing::TextUtfEncoding::ToUtf8(result.text());
 #endif
-  dataSize = resultText.length();
+  size_t dataSize = resultText.length();
 
   char *data = reinterpret_cast<char*>(malloc(dataSize));
   memcpy(data, resultText.c_str(), dataSize);
 
   output["buf"] = data;
+  output["size"] = dataSize;
   outType = "text";
   return output;
 }

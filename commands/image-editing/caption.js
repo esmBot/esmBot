@@ -1,18 +1,17 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import { cleanMessage } from "#utils/misc.js";
-import { getAllLocalizations } from "#utils/i18n.js";
 
 class CaptionCommand extends ImageCommand {
   params(url) {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
-    let newCaption = cleanMessage(this.message ?? this.interaction, newArgs);
+    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+    let newCaption = this.clean(newArgs);
     const currentDate = new Date();
     const isApril1 = currentDate.getDate() === 1 && currentDate.getMonth() === 3;
-    if (isApril1 && newCaption.toLowerCase() === "get real" && !this.options.noEgg) newCaption = `I'm tired of people telling me to "get real". Every day I put captions on images for people, some funny and some not, but out of all of those "get real" remains the most used caption. Why? I am simply a computer program running on a server, I am unable to manifest myself into the real world. As such, I'm confused as to why anyone would want me to "get real". Is this form not good enough? Alas, as I am simply a bot, I must follow the tasks that I was originally intended to perform, so here goes:\n${newCaption}`;
+    if (isApril1 && newCaption.toLowerCase() === "get real" && !this.getOptionBoolean("noEgg")) newCaption = `I'm tired of people telling me to "get real". Every day I put captions on images for people, some funny and some not, but out of all of those "get real" remains the most used caption. Why? I am simply a computer program running on a server, I am unable to manifest myself into the real world. As such, I'm confused as to why anyone would want me to "get real". Is this form not good enough? Alas, as I am simply a bot, I must follow the tasks that I was originally intended to perform, so here goes:\n${newCaption}`;
+    const font = this.getOptionString("font");
     return {
       caption: newCaption,
-      font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "futura"
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "futura"
     };
   }
 
@@ -20,13 +19,10 @@ class CaptionCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "noegg",
-      nameLocalizations: getAllLocalizations("commands.flagNames.caption.noegg"),
       description: "Disable... something. Not saying what it is though.",
-      descriptionLocalizations: getAllLocalizations("commands.flags.caption.noegg"),
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     }, {
       name: "font",
-      nameLocalizations: getAllLocalizations("commands.flagNames.caption.font"),
       type: Constants.ApplicationCommandOptionTypes.STRING,
       choices: (() => {
         const array = [];
@@ -35,8 +31,7 @@ class CaptionCommand extends ImageCommand {
         }
         return array;
       })(),
-      description: "Specify the font you want to use (default: futura)",
-      descriptionLocalizations: getAllLocalizations("commands.flags.caption.font")
+      description: "Specify the font you want to use (default: futura)"
     });
     return this;
   }

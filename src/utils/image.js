@@ -1,19 +1,17 @@
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { Worker } from "node:worker_threads";
 import { createRequire } from "node:module";
 import { lookup } from "node:dns/promises";
 import ipaddr from "ipaddr.js";
 import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
+const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
 
 /**
  * @typedef {{ cmd: string; params: object; id: string; }} JobObject
  */
 
-const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
+const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime", "image/avif"];
 export const connections = new Map();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
@@ -104,7 +102,7 @@ function connect(server, auth, name, tls) {
   connections.set(server, connection);
 }
 
-function disconnect() {
+export function disconnect() {
   for (const connection of connections.values()) {
     connection.close();
   }
@@ -165,38 +163,11 @@ async function getIdeal(object) {
 }
 
 /**
- * @param {Worker} worker 
- * @returns {Promise<{ buffer: Buffer; type: string; }>}
- */
-function waitForWorker(worker) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      worker.removeAllListeners("message");
-      worker.removeAllListeners("error");
-      worker.terminate();
-      reject(new Error("Job timed out"));
-    }, 600000);
-    worker.once("message", (data) => {
-      clearTimeout(timeout);
-      resolve({
-        buffer: Buffer.from([...data.buffer]),
-        type: data.fileExtension
-      });
-    });
-    worker.once("error", (e) => {
-      clearTimeout(timeout);
-      reject(e);
-    });
-  });
-}
-
-/**
  * @param {JobObject} params
  * @returns {Promise<{ buffer: Buffer; type: string; }>}
  */
 export async function runImageJob(params) {
   if (process.env.API_TYPE === "ws") {
-    for (let i = 0; i < 3; i++) {
       const currentServer = await getIdeal(params);
       if (!currentServer) return {
         buffer: Buffer.alloc(0),
@@ -212,10 +183,9 @@ export async function runImageJob(params) {
         const output = await currentServer.getOutput(params.id);
         return output;
       } catch (e) {
-        if (i >= 2 && e !== "Request ended prematurely due to a closed connection") {
+      if (e !== "Request ended prematurely due to a closed connection") {
           if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
           throw e;
-        }
       }
     }
     return {
@@ -223,9 +193,13 @@ export async function runImageJob(params) {
       type: "noresult"
     };
   }
+  if (run) {
     // Called from command (not using image API)
-    const worker = new Worker(path.join(path.dirname(fileURLToPath(import.meta.url)), "./image-runner.js"), {
-      workerData: params
-    });
-    return await waitForWorker(worker);
+    const data = await run(params);
+    return {
+      buffer: Buffer.from([...data.buffer]),
+      type: data.fileExtension
+    };
+  }
+  throw "image_not_working";
 }

@@ -2,17 +2,44 @@ import { Base } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class PingCommand extends Command {
+  // help
   async run() {
     if (this.type === "classic") {
+      if (!this.message) throw Error("No message found");
       const pingMessage = await this.client.rest.channels.createMessage(this.message.channelID, Object.assign({
-        content: "🏓 Ping?"
+        content: `🏓 ${this.getString("commands.responses.ping.ping")}`
       }, this.reference));
+      const shard = this.message.guildID ? this.client.shards.get(this.client.guildShardMap[this.message.guildID]) : undefined;
       await pingMessage.edit({
-        content: `🏓 Pong!\n\`\`\`\nLatency: ${pingMessage.timestamp - this.message.timestamp}ms${this.message.guildID ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.message.guildID]).latency)}ms` : ""}\n\`\`\``
+        content: `🏓 ${this.getString("commands.responses.ping.pong")}
+\`\`\`
+${this.getString("commands.responses.ping.latency", {
+  params: {
+    latency: Math.abs(pingMessage.timestamp.getTime() - this.message.timestamp.getTime()).toString()
+  }
+})}
+${shard ? `${this.getString("commands.responses.ping.shardLatency", {
+  params: {
+    latency: Math.round(shard.latency).toString()
+  }
+})}\n` : ""}\`\`\``
       });
     } else {
-      const pingMessage = await this.interaction?.getOriginal();
-      return `🏓 Pong!\n\`\`\`\nLatency: ${Math.abs(pingMessage.timestamp - Base.getCreatedAt(this.interaction.id)).toString()}ms${this.guild ? `\nShard Latency: ${Math.round(this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]).latency)}ms` : ""}\n\`\`\``;
+      if (!this.interaction) throw Error("No interaction found");
+      const pingMessage = await this.interaction.getOriginal();
+      const shard = this.interaction.guildID ? this.client.shards.get(this.client.guildShardMap[this.interaction.guildID]) : undefined;
+      return `🏓 ${this.getString("commands.responses.ping.pong")}
+\`\`\`
+${this.getString("commands.responses.ping.latency", {
+  params: {
+    latency: Math.abs(pingMessage.timestamp.getTime() - Base.getCreatedAt(this.interaction.id).getTime()).toString()
+  }
+})}
+${shard ? `${this.getString("commands.responses.ping.shardLatency", {
+  params: {
+    latency: Math.round(shard.latency).toString()
+  }
+})}\n` : ""}\`\`\``;
     }
   }
 

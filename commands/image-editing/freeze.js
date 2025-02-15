@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FreezeCommand extends ImageCommand {
   params() {
-    const frameCount = Number.parseInt(this.options.endframe ?? this.args[0]);
+    const frameCount = this.getOptionInteger("endframe") ?? Number.parseInt(this.args[0]);
     return {
       loop: false,
       frame: Number.isNaN(frameCount) ? -1 : frameCount
@@ -25,7 +25,7 @@ class FreezeCommand extends ImageCommand {
   static description = "Makes an image sequence only play once";
   static aliases = ["noloop", "once"];
 
-  static requiresGIF = true;
+  static requiresAnim = true;
   static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to freeze!";
   static command = "freeze";

@@ -8,12 +8,12 @@ class ShuffleCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id) return "Only the current voice session host can shuffle the music!";
+    if (this.connection.host !== this.author.id) return this.getString("commands.responses.shuffle.notHost");
     const object = this.connection;
     object.shuffle = !object.shuffle;
     players.set(this.guild.id, object);
     this.success = true;
-    return object.shuffle ? "🔊 The player is now shuffling." : "🔊 The player is no longer shuffling.";
+    return `🔊 ${this.getString(object.shuffle ? "commands.responses.shuffle.nowShuffling" : "commands.responses.shuffle.notShuffling")}`;
   }
 
   static description = "Shuffles the music";

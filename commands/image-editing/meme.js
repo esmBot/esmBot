@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import { cleanMessage } from "#utils/misc.js";
 
 class MemeCommand extends ImageCommand {
   async criteria(text, url) {
@@ -10,12 +9,13 @@ class MemeCommand extends ImageCommand {
   }
 
   params(url) {
-    const newArgs = this.options.text ?? this.args.join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
+    const font = this.getOptionString("font");
     return {
-      topText: cleanMessage(this.message ?? this.interaction, this.options.case ? topText : topText.toUpperCase()),
-      bottomText: bottomText ? cleanMessage(this.message ?? this.interaction, this.options.case ? bottomText : bottomText.toUpperCase()) : "",
-      font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "impact"
+      topText: this.clean(this.getOptionBoolean("case") ? topText : topText.toUpperCase()),
+      bottomText: bottomText ? this.clean(this.getOptionBoolean("case") ? bottomText : bottomText.toUpperCase()) : "",
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "impact"
     };
   }
 

@@ -4,6 +4,7 @@
 #include <fontconfig/fontconfig.h>
 
 #include <iostream>
+#include <cstdint>
 #include <map>
 #include <string>
 #include <unordered_map>
@@ -14,8 +15,17 @@ using std::map;
 using std::string;
 using std::variant;
 
-typedef variant<char*, string, float, bool, int> ArgumentVariant;
+typedef variant<char*, string, float, bool, int, size_t> ArgumentVariant;
 typedef map<string, ArgumentVariant> ArgumentMap;
+
+void SetupTimeoutCallback(vips::VImage image, bool *shouldKill);
+typedef struct {
+  time_t expiration;
+  bool *shouldKill;
+} CallbackData;
+#define IMG_TIMEOUT 600
+
+uint32_t readUint32LE(unsigned char *buffer);
 
 #include "commands.h"
 
@@ -49,8 +59,7 @@ const std::unordered_map<std::string, std::string> fontPaths{
 
 const std::map<std::string,
                ArgumentMap (*)(const string& type, string& outType, const char* bufferData,
-                               size_t bufferLength, ArgumentMap arguments,
-                               size_t& dataSize)>
+                               size_t bufferLength, ArgumentMap arguments, bool* shouldKill)>
     FunctionMap = {{"blur", &Blur},
                    {"bounce", &Bounce},
                    {"caption", &Caption},
@@ -98,7 +107,7 @@ const std::map<std::string,
 
 const std::map<std::string,
                ArgumentMap (*)(const string& type, string& outType,
-                               ArgumentMap arguments, size_t& dataSize)>
+                               ArgumentMap arguments, bool* shouldKill)>
     NoInputFunctionMap = {{"homebrew", &Homebrew},
 #if ZXING_ENABLED
     {"qrcreate", &QrCreate},

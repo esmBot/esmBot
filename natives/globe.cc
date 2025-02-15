@@ -5,7 +5,7 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, size_t& dataSize)
+ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
 {
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -18,12 +18,8 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
-  int nPages = vips_image_get_n_pages(in.get_image());
+  int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
   bool multiPage = true;
-  if (nPages == 1) {
-    multiPage = false;
-    nPages = 30;
-  }
 
   try {
     in = NormalizeVips(in, &width, &pageHeight, nPages);
@@ -34,6 +30,11 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
       outType = "frames";
       return output;
     }
+  }
+
+  if (nPages == 1) {
+    multiPage = false;
+    nPages = 30;
   }
 
   double size = min(width, pageHeight);
@@ -75,13 +76,17 @@ ArgumentMap Globe(const string& type, string& outType, const char* bufferdata, s
     final.set("delay", delay);
   }
 
+  SetupTimeoutCallback(final, shouldKill);
+
   char *buf;
+  size_t dataSize = 0;
   final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize);
 
   if (outType != "webp") outType = "gif";
 
   ArgumentMap output;
   output["buf"] = buf;
+  output["size"] = dataSize;
 
   return output;
 }
