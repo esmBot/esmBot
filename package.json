@@ -60,5 +60,13 @@
       7
     ]
   },
-  "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051"
+  "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@sentry/profiling-node",
+      "@biomejs/biome",
+      "better-sqlite3",
+      "bufferutil"
+    ]
+  }
 }
