@@ -541,7 +541,8 @@ As you can see, the first thing we do is import the Command class. We then creat
 - <code>this.getOptionString(key)</code>: Gets a command flag/option by name as a string.
 - <code>this.getOptionBoolean(key)</code>: Gets a command flag/option by name as a boolean.
 - <code>this.getOptionNumber(key)</code>: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
-- <code>this.getOptionInteger(key)</code>: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).</p>
+- <code>this.getOptionInteger(key)</code>: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
+- <code>this.clean(text)</code>: Strips and normalizes user, role, and channel mentions found in <code>text</code></p>
 <h2 id="the-run-function">The <code>run</code> Function</h2>
 <p>The main JS code of your command is specified in the <code>run</code> function. This function should return a <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise"><code>Promise</code></a> of your command output, which is why the <code>run</code> function <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function">is an async function by default</a>. The return value inside the <code>Promise</code> should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.</p>
 
