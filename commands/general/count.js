@@ -1,7 +1,7 @@
-import paginator from "../../utils/pagination/pagination.js";
-import * as collections from "../../utils/collections.js";
-import database from "../../utils/database.js";
-import Command from "../../classes/command.js";
+import paginator from "#pagination";
+import * as collections from "#utils/collections.js";
+import database from "#database";
+import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
 
 class CountCommand extends Command {

@@ -23,9 +23,9 @@ As you can see, each command is grouped into categories, which are represented b
     The `message` and `user` categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the `message` category show when selecting messages, while commands in the `user` category show when selecting users.
 
 ## Command Structure
-It's recommended to use the `Command` class located in `classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
+It's recommended to use the `Command` class located at `#cmd-classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
 ```js
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 
 class HelloCommand extends Command {
   async run() {

@@ -5,8 +5,8 @@ import db from "./database.js";
 import { servers } from "./image.js";
 
 // playing messages
-import messagesConfig from "../config/messages.json" with { type: "json" };
-import commandsConfig from "../config/commands.json" with { type: "json" };
+import messagesConfig from "#config/messages.json" with { type: "json" };
+import commandsConfig from "#config/commands.json" with { type: "json" };
 
 let broadcast = false;
 

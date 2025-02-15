@@ -1,5 +1,5 @@
-import { clean } from "../../utils/misc.js";
-import Command from "../../classes/command.js";
+import { clean } from "#utils/misc.js";
+import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
 
 class EvalCommand extends Command {

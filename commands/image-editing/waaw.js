@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class WaaWCommand extends ImageCommand {
   static description = "Mirrors the right side of an image onto the left";

@@ -1,5 +1,5 @@
-import { players } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import { players } from "#utils/soundplayer.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class LoopCommand extends MusicCommand {
   async run() {

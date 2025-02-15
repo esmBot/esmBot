@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class CropCommand extends ImageCommand {
   static description = "Crops an image to 1:1";

@@ -1,5 +1,5 @@
-import { queues } from "../../utils/soundplayer.js";
-import MusicCommand from "../../classes/musicCommand.js";
+import { queues } from "#utils/soundplayer.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
 import { Constants } from "oceanic.js";
 
 class RemoveCommand extends MusicCommand {

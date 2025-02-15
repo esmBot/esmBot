@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import { reloadImageConnections } from "../../utils/image.js";
+import Command from "#cmd-classes/command.js";
+import { reloadImageConnections } from "#utils/image.js";
 
 class ImageReloadCommand extends Command {
   async run() {

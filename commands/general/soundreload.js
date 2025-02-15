@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import { reload } from "../../utils/soundplayer.js";
+import Command from "#cmd-classes/command.js";
+import { reload } from "#utils/soundplayer.js";
 
 class SoundReloadCommand extends Command {
   async run() {

@@ -1,10 +1,10 @@
-import database from "../utils/database.js";
-import logger from "../utils/logger.js";
-import { collectors, commands, messageCommands, userCommands } from "../utils/collections.js";
-import { clean } from "../utils/misc.js";
-import { upload } from "../utils/tempimages.js";
+import database from "#database";
+import logger from "#utils/logger.js";
+import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
+import { clean } from "#utils/misc.js";
+import { upload } from "#utils/tempimages.js";
 import { InteractionTypes } from "oceanic.js";
-import { getString } from "../utils/i18n.js";
+import { getString } from "#utils/i18n.js";
 
 let Sentry;
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {

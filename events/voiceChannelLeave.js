@@ -1,9 +1,9 @@
-import { leaveChannel, players, queues, skipVotes } from "../utils/soundplayer.js";
-import AwaitRejoin from "../utils/awaitrejoin.js";
-import { random } from "../utils/misc.js";
-import logger from "../utils/logger.js";
+import { leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
+import AwaitRejoin from "#utils/awaitrejoin.js";
+import { random } from "#utils/misc.js";
+import logger from "#utils/logger.js";
 import { GuildChannel, VoiceChannel, StageChannel } from "oceanic.js";
-import { getString } from "../utils/i18n.js";
+import { getString } from "#utils/i18n.js";
 
 const isWaiting = new Map();
 

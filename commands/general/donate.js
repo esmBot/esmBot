@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import logger from "../../utils/logger.js";
+import Command from "#cmd-classes/command.js";
+import logger from "#utils/logger.js";
 
 class DonateCommand extends Command {
   async run() {

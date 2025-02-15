@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "../../classes/imageCommand.js";
-import { getAllLocalizations } from "../../utils/i18n.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class CaptionCommand extends ImageCommand {
   params(url) {
@@ -20,13 +19,10 @@ class CaptionCommand extends ImageCommand {
     super.init();
     this.flags.push({
       name: "noegg",
-      nameLocalizations: getAllLocalizations("commands.flagNames.caption.noegg"),
       description: "Disable... something. Not saying what it is though.",
-      descriptionLocalizations: getAllLocalizations("commands.flags.caption.noegg"),
       type: Constants.ApplicationCommandOptionTypes.BOOLEAN
     }, {
       name: "font",
-      nameLocalizations: getAllLocalizations("commands.flagNames.caption.font"),
       type: Constants.ApplicationCommandOptionTypes.STRING,
       choices: (() => {
         const array = [];
@@ -35,8 +31,7 @@ class CaptionCommand extends ImageCommand {
         }
         return array;
       })(),
-      description: "Specify the font you want to use (default: futura)",
-      descriptionLocalizations: getAllLocalizations("commands.flags.caption.font")
+      description: "Specify the font you want to use (default: futura)"
     });
     return this;
   }

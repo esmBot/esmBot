@@ -2,10 +2,10 @@ import "dotenv/config";
 import { createServer } from "node:http";
 import { WebSocketServer } from "ws";
 import EventEmitter from "node:events";
-import logger from "../utils/logger.js";
-import { img } from "../utils/imageLib.js";
+import logger from "#utils/logger.js";
+import { img } from "#utils/imageLib.js";
 import { Client } from "oceanic.js";
-import run from "../utils/image-runner.js";
+import run from "#utils/image-runner.js";
 
 img.imageInit();
 

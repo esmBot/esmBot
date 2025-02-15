@@ -1,6 +1,6 @@
-import Command from "../../classes/command.js";
-import imageDetect from "../../utils/imagedetect.js";
-import { selectedImages } from "../../utils/collections.js";
+import Command from "#cmd-classes/command.js";
+import imageDetect from "#utils/imagedetect.js";
+import { selectedImages } from "#utils/collections.js";
 import { Message } from "oceanic.js";
 
 class SelectImageCommand extends Command {

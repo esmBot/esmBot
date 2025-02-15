@@ -1,4 +1,4 @@
-import ImageCommand from "../../classes/imageCommand.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class GIFCommand extends ImageCommand {
   static description = "Converts an image into a GIF";

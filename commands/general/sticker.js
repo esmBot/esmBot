@@ -1,5 +1,5 @@
-import Command from "../../classes/command.js";
-import imagedetect from "../../utils/imagedetect.js";
+import Command from "#cmd-classes/command.js";
+import imagedetect from "#utils/imagedetect.js";
 
 class StickerCommand extends Command {
   async run() {

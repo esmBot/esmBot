@@ -1,5 +1,5 @@
-import database from "../../utils/database.js";
-import Command from "../../classes/command.js";
+import database from "#database";
+import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
 
 class PrefixCommand extends Command {

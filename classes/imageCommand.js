@@ -1,12 +1,11 @@
 import Command from "./command.js";
-import imageDetect from "../utils/imagedetect.js";
-import { runImageJob } from "../utils/image.js";
-import { runningCommands } from "../utils/collections.js";
-import { clean, isEmpty, random } from "../utils/misc.js";
-import { selectedImages } from "../utils/collections.js";
-import messages from "../config/messages.json" with { type: "json" };
+import imageDetect from "#utils/imagedetect.js";
+import { runImageJob } from "#utils/image.js";
+import { runningCommands, selectedImages } from "#utils/collections.js";
+import { clean, isEmpty, random } from "#utils/misc.js";
+import messages from "#config/messages.json" with { type: "json" };
 import { Constants, CommandInteraction } from "oceanic.js";
-import { getAllLocalizations } from "../utils/i18n.js";
+import { getAllLocalizations } from "#utils/i18n.js";
 
 class ImageCommand extends Command {
   /**

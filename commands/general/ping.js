@@ -1,5 +1,5 @@
 import { Base } from "oceanic.js";
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 
 class PingCommand extends Command {
   // help

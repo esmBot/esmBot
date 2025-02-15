@@ -1,8 +1,8 @@
-import { clean } from "../../utils/misc.js";
+import { clean } from "#utils/misc.js";
 import { promisify } from "node:util";
 import { exec as baseExec } from "node:child_process";
 const exec = promisify(baseExec);
-import Command from "../../classes/command.js";
+import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
 
 class ExecCommand extends Command {

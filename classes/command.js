@@ -1,6 +1,6 @@
 import { Constants, Permission, TextableChannel } from "oceanic.js";
-import { getString } from "../utils/i18n.js";
-import { cleanInteraction, cleanMessage } from "../utils/misc.js";
+import { getString } from "#utils/i18n.js";
+import { cleanInteraction, cleanMessage } from "#utils/misc.js";
 
 class Command {
   /**

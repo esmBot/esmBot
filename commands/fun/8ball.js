@@ -1,6 +1,6 @@
 import { Constants } from "oceanic.js";
-import Command from "../../classes/command.js";
-import { random } from "../../utils/misc.js";
+import Command from "#cmd-classes/command.js";
+import { random } from "#utils/misc.js";
 
 class EightBallCommand extends Command {
   static responses = [

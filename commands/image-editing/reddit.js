@@ -1,5 +1,5 @@
-import ImageCommand from "../../classes/imageCommand.js";
-import { random } from "../../utils/misc.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
+import { random } from "#utils/misc.js";
 const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "chonkers", "memes", "funny", "lies"];
 
 class RedditCommand extends ImageCommand {
