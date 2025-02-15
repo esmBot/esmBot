@@ -1,6 +1,6 @@
 import db from "../../utils/database.js";
 import Command from "../../classes/command.js";
-import { GuildChannel } from "oceanic.js";
+import { Constants, GuildChannel } from "oceanic.js";
 
 class ChannelCommand extends Command {
   async run() {
@@ -56,22 +56,22 @@ class ChannelCommand extends Command {
   static description = "Enables/disables classic commands in a channel (use server settings for slash commands)";
   static flags = [{
     name: "enable",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Enables classic commands in a channel",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to decode",
       classic: true,
       required: false
     }]
   }, {
     name: "disable",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Disables classic commands in a channel",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to encode",
       classic: true,
       required: false

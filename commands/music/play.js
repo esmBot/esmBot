@@ -1,5 +1,6 @@
 import { play } from "../../utils/soundplayer.js";
 import MusicCommand from "../../classes/musicCommand.js";
+import { Constants } from "oceanic.js";
 const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:"];
 if (process.env.YT_DISABLED !== "true") prefixes.push("ytsearch:", "ytmsearch:");
 
@@ -37,7 +38,7 @@ class PlayCommand extends MusicCommand {
 
   static flags = [{
     name: "query",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "An audio search query or URL",
     classic: true,
     required: true

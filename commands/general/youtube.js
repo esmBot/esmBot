@@ -2,6 +2,7 @@ import serversConfig from "../../config/servers.json" with { type: "json" };
 import { random } from "../../utils/misc.js";
 import paginator from "../../utils/pagination/pagination.js";
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 
 class YouTubeCommand extends Command {
   async run() {
@@ -26,7 +27,7 @@ class YouTubeCommand extends Command {
 
   static flags = [{
     name: "query",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The query you want to search for",
     classic: true,
     required: true

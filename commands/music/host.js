@@ -1,6 +1,7 @@
 import { players } from "../../utils/soundplayer.js";
 import logger from "../../utils/logger.js";
 import MusicCommand from "../../classes/musicCommand.js";
+import { Constants } from "oceanic.js";
 
 class HostCommand extends MusicCommand {
   async run() {
@@ -52,7 +53,7 @@ class HostCommand extends MusicCommand {
 
   static flags = [{
     name: "user",
-    type: 6,
+    type: Constants.ApplicationCommandOptionTypes.USER,
     description: "The user you want the new host to be",
     classic: true
   }];

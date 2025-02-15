@@ -2,6 +2,7 @@ import InteractionCollector from "./awaitinteractions.js";
 import { collectors } from "../collections.js";
 import logger from "../logger.js";
 import { getString } from "../i18n.js";
+import { Constants } from "oceanic.js";
 
 /**
  * @param {import("oceanic.js").Client} client
@@ -23,10 +24,10 @@ export default async (client, info, pages) => {
   let page = 0;
   const components = {
     components: [{
-      type: 1,
+      type: Constants.ComponentTypes.ACTION_ROW,
       components: [
         {
-          type: 2,
+          type: Constants.ComponentTypes.BUTTON,
           label: getString("pagination.back", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
@@ -36,7 +37,7 @@ export default async (client, info, pages) => {
           customID: "back"
         },
         {
-          type: 2,
+          type: Constants.ComponentTypes.BUTTON,
           label: getString("pagination.forward", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
@@ -46,7 +47,7 @@ export default async (client, info, pages) => {
           customID: "forward"
         },
         {
-          type: 2,
+          type: Constants.ComponentTypes.BUTTON,
           label: getString("pagination.jump", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
@@ -56,7 +57,7 @@ export default async (client, info, pages) => {
           customID: "jump"
         },
         {
-          type: 2,
+          type: Constants.ComponentTypes.BUTTON,
           label: getString("pagination.delete", { locale: info.type === "application" ? info.interaction.locale : undefined }),
           emoji: {
             id: null,
@@ -119,9 +120,9 @@ export default async (client, info, pages) => {
             interactionCollector.extend();
             const jumpComponents = {
               components: [{
-                type: 1,
+                type: Constants.ComponentTypes.ACTION_ROW,
                 components: [{
-                  type: 3,
+                  type: Constants.ComponentTypes.STRING_SELECT,
                   customID: "seekDropdown",
                   placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
                   options: []

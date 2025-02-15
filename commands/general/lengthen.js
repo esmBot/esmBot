@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import Command from "../../classes/command.js";
 
 class LengthenCommand extends Command {
@@ -36,7 +37,7 @@ class LengthenCommand extends Command {
 
   static flags = [{
     name: "url",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The URL you want to lengthen",
     classic: true,
     required: true

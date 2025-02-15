@@ -2,6 +2,7 @@ import database from "../../utils/database.js";
 import paginator from "../../utils/pagination/pagination.js";
 import { random } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
 
 class TagsCommand extends Command {
@@ -187,14 +188,14 @@ class TagsCommand extends Command {
   static subArgs(needsContent = false) {
     const args = [{
       name: "name",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The name of the tag",
       required: true,
       classic: true
     }];
     if (needsContent) args.push({
       name: "content",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The content of the tag",
       required: true,
       classic: true
@@ -204,36 +205,36 @@ class TagsCommand extends Command {
 
   static flags = [{
     name: "add",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Adds a new tag",
     options: this.subArgs(true)
   }, {
     name: "delete",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Deletes a tag",
     options: this.subArgs()
   }, {
     name: "edit",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Edits an existing tag",
     options: this.subArgs(true)
   }, {
     name: "get",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Gets a tag",
     options: this.subArgs()
   }, {
     name: "list",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Lists every tag in this server"
   }, {
     name: "owner",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Gets the owner of a tag",
     options: this.subArgs()
   }, {
     name: "random",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Gets a random tag"
   }];
   static directAllowed = false;

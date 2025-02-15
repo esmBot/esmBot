@@ -1,5 +1,6 @@
 import database from "../../utils/database.js";
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 
 class PrefixCommand extends Command {
   async run() {
@@ -36,7 +37,7 @@ class PrefixCommand extends Command {
   static aliases = ["setprefix", "changeprefix", "checkprefix"];
   static flags = [{
     name: "prefix",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The server prefix you want to use",
     classic: true
   }];

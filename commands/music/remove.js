@@ -1,5 +1,6 @@
 import { queues } from "../../utils/soundplayer.js";
 import MusicCommand from "../../classes/musicCommand.js";
+import { Constants } from "oceanic.js";
 
 class RemoveCommand extends MusicCommand {
   async run() {
@@ -21,7 +22,7 @@ class RemoveCommand extends MusicCommand {
 
   static flags = [{
     name: "position",
-    type: 4,
+    type: Constants.ApplicationCommandOptionTypes.INTEGER,
     description: "The queue position you want to remove",
     minValue: 1,
     required: true,

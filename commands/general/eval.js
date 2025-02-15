@@ -1,5 +1,6 @@
 import { clean } from "../../utils/misc.js";
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 
 class EvalCommand extends Command {
   async run() {
@@ -35,7 +36,7 @@ class EvalCommand extends Command {
 
   static flags = [{
     name: "code",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The code to execute",
     classic: true,
     required: true

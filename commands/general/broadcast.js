@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import Command from "../../classes/command.js";
 import database from "../../utils/database.js";
 import { endBroadcast, startBroadcast } from "../../utils/misc.js";
@@ -39,7 +40,7 @@ class BroadcastCommand extends Command {
 
   static flags = [{
     name: "message",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The message to broadcast"
   }];
 

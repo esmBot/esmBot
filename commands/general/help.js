@@ -117,7 +117,7 @@ class HelpCommand extends Command {
   static aliases = ["commands"];
   static flags = [{
     name: "command",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "A command to view info about",
     classic: true
   }];

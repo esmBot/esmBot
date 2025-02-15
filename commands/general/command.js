@@ -1,6 +1,7 @@
 import db from "../../utils/database.js";
 import Command from "../../classes/command.js";
 import * as collections from "../../utils/collections.js";
+import { Constants } from "oceanic.js";
 
 class CommandCommand extends Command {
   async run() {
@@ -43,22 +44,22 @@ class CommandCommand extends Command {
   static aliases = ["cmd"];
   static flags = [{
     name: "enable",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Enables a classic command",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to decode",
       classic: true,
       required: true
     }]
   }, {
     name: "disable",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Disables a classic command",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to encode",
       classic: true,
       required: true

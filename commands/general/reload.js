@@ -1,6 +1,7 @@
 import Command from "../../classes/command.js";
 import { load } from "../../utils/handler.js";
 import { paths } from "../../utils/collections.js";
+import { Constants } from "oceanic.js";
 
 class ReloadCommand extends Command {
   async run() {
@@ -31,13 +32,13 @@ class ReloadCommand extends Command {
 
   static flags = [{
     name: "cmd",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The command to reload",
     classic: true,
     required: true
   }, {
     name: "skipsend",
-    type: 5,
+    type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
     description: "Skips sending new application command data to Discord",
     classic: true
   }];

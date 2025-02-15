@@ -1,5 +1,5 @@
+import { Constants } from "oceanic.js";
 import Command from "../../classes/command.js";
-import { clean } from "../../utils/misc.js";
 
 class Base64Command extends Command {
   async run() {
@@ -22,22 +22,22 @@ class Base64Command extends Command {
 
   static flags = [{
     name: "decode",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Decodes a Base64 string",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to decode",
       classic: true,
       required: true
     }]
   }, {
     name: "encode",
-    type: 1,
+    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
     description: "Encodes a Base64 string",
     options: [{
       name: "text",
-      type: 3,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to encode",
       classic: true,
       required: true

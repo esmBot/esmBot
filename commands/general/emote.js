@@ -1,5 +1,6 @@
 import emojiRegex from "emoji-regex-xs";
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 
 class EmoteCommand extends Command {
   async run() {
@@ -28,7 +29,7 @@ class EmoteCommand extends Command {
 
   static flags = [{
     name: "emoji",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The emoji you want to get",
     classic: true,
     required: true

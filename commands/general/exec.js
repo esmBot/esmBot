@@ -3,6 +3,7 @@ import { promisify } from "node:util";
 import { exec as baseExec } from "node:child_process";
 const exec = promisify(baseExec);
 import Command from "../../classes/command.js";
+import { Constants } from "oceanic.js";
 
 class ExecCommand extends Command {
   async run() {
@@ -35,7 +36,7 @@ class ExecCommand extends Command {
 
   static flags = [{
     name: "cmd",
-    type: 3,
+    type: Constants.ApplicationCommandOptionTypes.STRING,
     description: "The command to execute",
     classic: true,
     required: true

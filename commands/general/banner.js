@@ -1,5 +1,5 @@
+import { Constants } from "oceanic.js";
 import Command from "../../classes/command.js";
-import { Routes } from "oceanic.js";
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 const imageSize = 4096
 
@@ -46,7 +46,7 @@ class BannerCommand extends Command {
   static aliases = ["userbanner"];
   static flags = [{
     name: "member",
-    type: 6,
+    type: Constants.ApplicationCommandOptionTypes.USER,
     description: "The member to get the banner from",
     classic: true,
     required: false
