@@ -1,5 +1,5 @@
 import ImageCommand from "../../classes/imageCommand.js";
-import { random, cleanMessage } from "../../utils/misc.js";
+import { random } from "../../utils/misc.js";
 import { readdirSync } from "node:fs";
 import { Constants } from "oceanic.js";
 import { resolve, dirname } from "node:path";
@@ -19,8 +19,8 @@ class UncannyCommand extends ImageCommand {
     const font = this.getOptionString("font");
     const phase = this.getOptionString("phase");
     return {
-      caption: text1?.trim() ? cleanMessage(this.message ?? this.interaction, text1) : random(prompts),
-      caption2: cleanMessage(this.message ?? this.interaction, text2),
+      caption: text1?.trim() ? this.clean(text1) : random(prompts),
+      caption2: this.clean(text2),
       path: `assets/images/uncanny/${phase && names.includes(phase.toLowerCase()) ? phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica"
     };

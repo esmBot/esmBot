@@ -1,5 +1,6 @@
 import { Constants, Permission, TextableChannel } from "oceanic.js";
 import { getString } from "../utils/i18n.js";
+import { cleanInteraction, cleanMessage } from "../utils/misc.js";
 
 class Command {
   /**
@@ -98,6 +99,7 @@ class Command {
     if (this.type === "application") {
       return this.interaction?.data.options.getString(key);
     }
+    throw Error("Unknown command type");
   }
 
   /**
@@ -111,6 +113,7 @@ class Command {
     if (this.type === "application") {
       return this.interaction?.data.options.getBoolean(key);
     }
+    throw Error("Unknown command type");
   }
 
   /**
@@ -124,6 +127,7 @@ class Command {
     if (this.type === "application") {
       return this.interaction?.data.options.getNumber(key);
     }
+    throw Error("Unknown command type");
   }
 
   /**
@@ -137,6 +141,20 @@ class Command {
     if (this.type === "application") {
       return this.interaction?.data.options.getInteger(key);
     }
+    throw Error("Unknown command type");
+  }
+
+  /**
+   * @param {string} text
+   */
+  clean(text) {
+    if (this.message) {
+      return cleanMessage(this.message, text);
+    }
+    if (this.interaction) {
+      return cleanInteraction(this.interaction, text);
+    }
+    throw Error("Unknown command type");
   }
 
   static init() {

@@ -1,11 +1,10 @@
 import ImageCommand from "../../classes/imageCommand.js";
-import { cleanMessage } from "../../utils/misc.js";
 
 class SonicCommand extends ImageCommand {
   params() {
-    const cleanedMessage = cleanMessage(this.message ?? this.interaction, this.getOptionString("text") ?? this.args.join(" "));
+    const inputText = this.getOptionString("text") ?? this.args.join(" ");
     return {
-      text: cleanedMessage
+      text: this.clean(inputText)
     };
   }
 

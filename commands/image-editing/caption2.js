@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "../../classes/imageCommand.js";
-import { cleanMessage } from "../../utils/misc.js";
 const words = ["me irl", "dank", "follow my second account @esmBot_", "2016", "meme", "wholesome", "reddit", "instagram", "twitter", "facebook", "fortnite", "minecraft", "relatable", "gold", "funny", "template", "hilarious", "memes", "deep fried", "2020", "leafy", "pewdiepie"];
 
 class CaptionTwoCommand extends ImageCommand {
@@ -8,7 +7,7 @@ class CaptionTwoCommand extends ImageCommand {
     const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
     const font = this.getOptionString("font");
     return {
-      caption: newArgs?.trim() ? cleanMessage(this.message ?? this.interaction, newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
+      caption: newArgs?.trim() ? this.clean(newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
       top: this.getOptionBoolean("top"),
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica"
     };

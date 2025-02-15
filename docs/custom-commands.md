@@ -96,6 +96,7 @@ In addition, a few helper functions are available inside the `Command` class:
 - `this.getOptionBoolean(key)`: Gets a command flag/option by name as a boolean.
 - `this.getOptionNumber(key)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
 - `this.getOptionInteger(key)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
+- `this.clean(text)`: Strips and normalizes user, role, and channel mentions found in `text`
 
 ## The `run` Function
 The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.
