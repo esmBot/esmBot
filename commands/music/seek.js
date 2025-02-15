@@ -11,10 +11,10 @@ class SeekCommand extends MusicCommand {
     const player = this.connection.player;
     const track = await player.node.rest.decode(player.track);
     if (!track?.info.isSeekable) return this.getString("commands.responses.seek.notSeekable");
-    const pos = this.options.position ?? this.args[0];
+    const pos = this.getOptionString("position") ?? this.args[0];
     let seconds;
     if (typeof pos === "string" && pos.includes(":")) {
-      seconds = +(pos.split(":").reduce((acc, time) => (60 * acc) + +time));
+      seconds = +(pos.split(":").reduce((acc, time) => ((60 * Number(acc)) + +Number(time)).toString()));
     } else {
       seconds = Number.parseFloat(pos);
     }

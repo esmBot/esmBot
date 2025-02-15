@@ -5,7 +5,7 @@ import Command from "../../classes/command.js";
 
 class YouTubeCommand extends Command {
   async run() {
-    const query = this.options.query ?? this.args.join(" ");
+    const query = this.getOptionString("query") ?? this.args.join(" ");
     this.success = false;
     if (!query || !query.trim()) return this.getString("commands.responses.youtube.noInput");
     await this.acknowledge();

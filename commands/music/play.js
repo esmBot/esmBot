@@ -13,7 +13,7 @@ class PlayCommand extends MusicCommand {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    const input = this.options.query ?? this.args.join(" ");
+    const input = this.getOptionString("query") ?? this.args.join(" ");
     if (!input && (!this.message || this.message?.attachments.size <= 0)) {
       this.success = false;
       return this.getString("commands.responses.play.noInput");

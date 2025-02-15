@@ -106,10 +106,36 @@ class Command {
    */
   getOptionBoolean(key) {
     if (this.type === "classic") {
-      return this.options?.[key];
+      return !!this.options?.[key];
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getBoolean(key);
+    }
+  }
+
+  /**
+   * @param {string} key
+   * @returns {number | undefined}
+   */
+  getOptionNumber(key) {
+    if (this.type === "classic") {
+      return Number.parseFloat(this.options?.[key]);
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getNumber(key);
+    }
+  }
+
+  /**
+   * @param {string} key
+   * @returns {number | undefined}
+   */
+  getOptionInteger(key) {
+    if (this.type === "classic") {
+      return Number.parseInt(this.options?.[key]);
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getInteger(key);
     }
   }
 

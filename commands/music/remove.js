@@ -9,7 +9,7 @@ class RemoveCommand extends MusicCommand {
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return this.getString("commands.responses.remove.notHost");
-    const pos = Number.parseInt(this.options.position ?? this.args[0]);
+    const pos = this.getOptionInteger("position") ?? Number.parseInt(this.args[0]);
     if (Number.isNaN(pos) || pos > this.queue.length || pos < 1) return this.getString("commands.responses.remove.invalidPosition");
     const removed = this.queue.splice(pos, 1);
     if (removed.length === 0) return this.getString("commands.responses.remove.invalidPosition");

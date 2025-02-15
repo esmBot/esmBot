@@ -4,11 +4,11 @@ import { cleanMessage } from "../../utils/misc.js";
 
 class SnapchatCommand extends ImageCommand {
   params(url) {
-    const newArgs = this.options.text ?? this.args.filter(item => !item.includes(url)).join(" ");
-    const position = Number.parseFloat(this.options.position);
+    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const position = this.getOptionNumber("position");
     return {
       caption: cleanMessage(this.message ?? this.interaction, newArgs),
-      pos: Number.isNaN(position) ? 0.565 : position
+      pos: position == null || Number.isNaN(position) ? 0.565 : position
     };
   }
 

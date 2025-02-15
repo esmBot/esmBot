@@ -10,12 +10,13 @@ class MotivateCommand extends ImageCommand {
   }
 
   params(url) {
-    const newArgs = this.options.text ?? this.args.join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     const [topText, bottomText] = newArgs.replaceAll(url, "").split(/(?<!\\),/).map(elem => elem.trim());
+    const font = this.getOptionString("font");
     return {
       topText: cleanMessage(this.message ?? this.interaction, topText),
       bottomText: bottomText ? cleanMessage(this.message ?? this.interaction, bottomText) : "",
-      font: typeof this.options.font === "string" && this.constructor.allowedFonts.includes(this.options.font.toLowerCase()) ? this.options.font.toLowerCase() : "times"
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "times"
     };
   }
 

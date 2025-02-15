@@ -3,15 +3,17 @@ import ImageCommand from "../../classes/imageCommand.js";
 
 class SpeechBubbleCommand extends ImageCommand {
   params() {
-    const parsedScale = Number.parseFloat(this.options.scale);
+    const parsedScale = this.getOptionNumber("scale");
+    const alpha = this.getOptionBoolean("alpha");
+    const bottom = this.getOptionBoolean("bottom");
     return {
-      water: this.options.alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
-      gravity: this.options.bottom ? "south" : "north",
+      water: alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
+      gravity: bottom ? "south" : "north",
       resize: true,
-      yscale: !Number.isNaN(parsedScale) ? parsedScale : 0.2,
-      alpha: this.options.alpha ? true : false,
-      flipX: this.options.flip ? true : false,
-      flipY: this.options.bottom ? true : false
+      yscale: parsedScale != null && !Number.isNaN(parsedScale) ? parsedScale : 0.2,
+      alpha: alpha,
+      flipX: this.getOptionBoolean("flip"),
+      flipY: bottom
     };
   }
 

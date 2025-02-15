@@ -34,7 +34,7 @@ class ImageCommand extends Command {
     const imageParams = {
       cmd: this.constructor.command,
       params: {
-        togif: !!this.options.togif
+        togif: !!this.getOptionBoolean("togif")
       },
       id: (this.interaction ?? this.message).id
     };
@@ -43,7 +43,10 @@ class ImageCommand extends Command {
     if (this.constructor.requiresImage) {
       try {
         const selection = selectedImages.get(this.author.id);
-        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, this.options, true).catch(e => {
+        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, {
+          image: this.getOptionString("image"),
+          link: this.getOptionString("link")
+        }, true).catch(e => {
           if (e.name === "AbortError") return { type: "timeout" };
           throw e;
         });
@@ -80,10 +83,11 @@ class ImageCommand extends Command {
       }
     }
 
-    if ("spoiler" in this.options) needsSpoiler = this.options.spoiler;
+    const spoiler = this.getOptionBoolean("spoiler");
+    if (spoiler != null) needsSpoiler = spoiler;
 
     if (this.constructor.requiresText) {
-      const text = this.options.text ?? this.args.join(" ").trim();
+      const text = this.getOptionString("text") ?? this.args.join(" ").trim();
       if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
         return this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) || this.getString("image.noText", { returnNull: true }) || this.constructor.noText;
@@ -101,8 +105,10 @@ class ImageCommand extends Command {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
+    const ephemeral = this.getOptionBoolean("ephemeral");
+
     if (this.interaction) {
-      imageParams.ephemeral = this.options.ephemeral;
+      imageParams.ephemeral = ephemeral;
       imageParams.spoiler = needsSpoiler;
       imageParams.token = this.interaction.token;
     }
@@ -122,12 +128,12 @@ class ImageCommand extends Command {
       this.success = true;
       if (type === "text") return {
         content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
-        flags: this.options.ephemeral ? 64 : undefined
+        flags: ephemeral ? 64 : undefined
       };
       return {
         contents: buffer,
         name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`,
-        flags: this.options.ephemeral ? 64 : undefined
+        flags: ephemeral ? 64 : undefined
       };
     } catch (e) {
       if (e.toString().includes("image_not_working")) return this.getString("image.notWorking");

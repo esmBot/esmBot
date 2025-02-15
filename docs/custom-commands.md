@@ -55,7 +55,7 @@ The parameters available to your command consist of the following:
 - `this.memberPermissions`: An Oceanic [`Permission`](https://docs.oceanic.ws/latest/classes/Permission.Permission.html) object of the user who ran the commands's current permissions for a channel.
 - `this.locale`: The language/locale being used. For classic commands, this is always the value of the `LOCALE` environment variable (or "en-US" if it hasn't been set), and for application commands this is the language set by the user that ran the command.
 - `this.cmdName`: The name of the running command. This should always be the same as the running command's filename without the .js extension.
-- `this.options`: When run as a "classic" command, this is an object of special arguments (e.g. `--argument=true`) passed to the command. These arguments are stored in a key/value format, so following the previous example, `this.options.argument` would return true. When run as a slash command, this is an object of every argument passed to the command.
+- `this.options`: When run as a "classic" command, this is an object of special arguments (e.g. `--argument=true`) passed to the command. These arguments are stored in a key/value format, so following the previous example, `this.options.argument` would return true. When run as a slash command, this is an object of every argument passed to the command. **This parameter is deprecated. It's recommended to use the `this.getOption*` helper functions instead.**
 
 Some options are only available depending on the context/original message type, which can be checked with `this.type`. The options only available with "classic" messages are listed below:
 
@@ -92,6 +92,10 @@ static flags = [{
 In addition, a few helper functions are available inside the `Command` class:
 - `this.acknowledge()`: Sends a typing indicator in the current channel. Only works with classic commands.
 - `this.getString(key, returnNull)`: Gets a localized string for the input locale. If `returnNull` is set to false (the default) and the string does not exist on the input or default locales, the `key` string will be returned; otherwise, `null` will be returned.
+- `this.getOptionString(key)`: Gets a command flag/option by name as a string.
+- `this.getOptionBoolean(key)`: Gets a command flag/option by name as a boolean.
+- `this.getOptionNumber(key)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
+- `this.getOptionInteger(key)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
 
 ## The `run` Function
 The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.

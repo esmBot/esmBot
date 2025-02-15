@@ -7,7 +7,7 @@ class ImageSearchCommand extends Command {
   async run() {
     this.success = false;
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
-    const query = this.options.query ?? this.args.join(" ");
+    const query = this.getOptionString("query") ?? this.args.join(" ");
     if (!query || !query.trim()) return this.getString("commands.responses.image.noInput");
     await this.acknowledge();
     const embeds = [];
@@ -23,8 +23,8 @@ class ImageSearchCommand extends Command {
           footer: {
             text: this.getString("pagination.page", {
               params: {
-                page: i + 1,
-                amount: images.length
+                page: (i + 1).toString(),
+                amount: images.length.toString()
               }
             })
           },

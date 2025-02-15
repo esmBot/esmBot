@@ -7,7 +7,7 @@ class StickerCommand extends Command {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    const result = await imagedetect(this.client, this.message, this.interaction, this.options, false, false, true);
+    const result = await imagedetect(this.client, this.message, this.interaction, null, false, false, true);
     this.success = false;
     if (!result) return this.getString("commands.responses.sticker.noInput");
     if (result.format_type === 1) { // PNG
