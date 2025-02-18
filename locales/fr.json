@@ -110,7 +110,10 @@
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
-            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)."
+            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule).",
+            "channel": "Active/désactive les commandes classiques dans un salon (utilise les paramètres du serveur pour les commandes slash)",
+            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)",
+            "tags": "La commande principale des tags. Consultez la page d'aide pour plus d'informations : https://esmbot.net/help.html"
         },
         "flagNames": {
             "8ball": {
@@ -366,7 +369,8 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente"
+                "alpha": "Rend le haut de la bulle de dialogue transparente",
+                "scale": "Multiplicateur pour redimensionner la bulle de dialogue (0,01 est le plus petit, 1,0 est le plus grand, la valeur par défaut est 0,2)"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
@@ -428,6 +432,12 @@
             "reload": {
                 "cmd": "La commande à recharger",
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
+            },
+            "snapchat": {
+                "position": "Définit la position du sous-titre sous forme décimale (0.0 est en haut, 1.0 est en bas, la valeur par défaut est 0.565)"
+            },
+            "uncaption": {
+                "tolerance": "Défini la tolérance d'ombre pour la détection de sous-titre (0,0 est la plus élevée, 1,0 est la plus basse, la valeur par défaut est 0,95)"
             }
         },
         "names": {
@@ -635,7 +645,9 @@
                 "sourcesNo": "Mes sources disent que non"
             },
             "base64": {
-                "noCmd": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !"
+                "noCmd": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !",
+                "decodeNoInput": "Vous devez fournir une chaîne de caractère pour décoder !",
+                "encodeNoInput": "Vous devez fournir une chaîne de caractères pour encoder !"
             },
             "bird": {
                 "error": "Je n'ai pas pu obtenir une photo d'oiseau à temps. Peut-être que tu devrais réessayer ?"
@@ -659,6 +671,29 @@
             },
             "cat": {
                 "error": "Je n'ai pas pu obtenir une photo du chat à temps. Peut-être que tu devrais réessayer ?"
+            },
+            "channel": {
+                "alreadyDisabled": "Je suis déjà désactivé dans ce salon !",
+                "adminOnly": "Vous devez être administrateur pour m'activer/désactiver dans ce salon !",
+                "invalid": "Ceci n'est pas une option valide !",
+                "notDisabled": "Je ne suis pas désactivé dans ce salon !",
+                "notInServer": "Ce salon n'est pas dans ce serveur !",
+                "reEnabled": "J'ai été réactivé dans ce salon.",
+                "disabled": "J'ai été désactivé dans ce salon. Pour me réactiver, exécutez juste `{{prefix}}channel enable`.",
+                "noCmd": "Vous devez indiquer si vous souhaitez m'activer/désactiver dans ce salon !"
+            },
+            "command": {
+                "adminOnly": "Vous devez être administrateur pour activer/désactiver des commandes !",
+                "alreadyDisabled": "Cette commande est déjà désactivée !",
+                "cannotDisable": "Vous ne pouvez pas désactiver cette commande !"
+            },
+            "avatar": {
+                "invalidMention": "Ceci n'est pas une mention valide !"
+            },
+            "banner": {
+                "invalidMention": "Ceci n'est pas une mention valide !",
+                "noSelfBanner": "Vous n'avez pas de bannière !",
+                "noUserBanner": "Cet utilisateur n'a pas de bannière !"
             }
         }
     },
