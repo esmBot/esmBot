@@ -1,23 +1,26 @@
 import { commands, info } from "./collections.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { promises } from "node:fs";
+import type { Param } from "./types.js";
 
 export const categoryTemplate = {
   general: [],
   tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
   "image-editing": ["> **These commands support the PNG, JPEG, WEBP, AVIF (static only), and GIF formats.**\n"]
 };
-export let categories = categoryTemplate;
+export let categories: {
+  [key: string]: string[];
+} = categoryTemplate;
 
 export let generated = false;
 
-function generateEntries(baseName: string, params, desc: string, categories, category: string) {
+function generateEntries(baseName: string, params: Param[], desc: string, category: string) {
   let entry = `**${baseName}**`;
   const sorted = [];
   let generated = false;
   for (const param of params) {
     if (typeof param !== "string") {
-      generateEntries(`${baseName} ${param.name}`, param.params ?? [], param.desc, categories, category);
+      generateEntries(`${baseName} ${param.name}`, param.params ?? [], param.desc, category);
       generated = true;
     } else {
       sorted.push(param);
@@ -34,7 +37,7 @@ export function generateList() {
     const cmd = info.get(command);
     if (!cmd.slashAllowed && !commandConfig.types.classic) continue;
     if (!categories[cmd.category]) categories[cmd.category] = [];
-    if (command !== "music") generateEntries(command, cmd.params, cmd.description, categories, cmd.category);
+    if (command !== "music") generateEntries(command, cmd.params, cmd.description, cmd.category);
   }
   generated = true;
 }

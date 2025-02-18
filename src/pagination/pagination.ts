@@ -1,29 +1,18 @@
 import InteractionCollector from "./awaitinteractions.js";
-import { collectors } from "#utils/collections.js";
-import logger from "#utils/logger.js";
-import { getString } from "#utils/i18n.js";
-import {
-  Constants,
-  type Client,
-  type CommandInteraction,
-  type EmbedOptions,
-  type InteractionContent,
-  type Member,
-  type Message,
-  type MessageActionRow,
-  type MessageComponent,
-  type User
-} from "oceanic.js";
+import { collectors } from "../utils/collections.js";
+import logger from "../utils/logger.js";
+import { getString } from "../utils/i18n.js";
+import { ComponentTypes, type Client, type CommandInteraction, type CreateMessageOptions, type EmbedOptions, type InteractionContent, type Member, type Message, type MessageActionRow, type StringSelectMenu, type User } from "oceanic.js";
 
-type PaginationInfo = {
-  type: "classic" | "application";
-  message: Message;
-  interaction: CommandInteraction;
+type Info = {
   author: User | Member;
+  message?: Message;
+  interaction?: CommandInteraction;
 };
+type Pages = (CreateMessageOptions | InteractionContent)[];
 
-export default async (client: Client, info: PaginationInfo, pages: { embeds: EmbedOptions[] }[]) => {
-  const options = info.type === "classic" ? {
+export default async (client: Client, info: Info, pages: Pages): Promise<undefined> => {
+  const options = info.message ? {
     messageReference: {
       channelID: info.message.channelID,
       messageID: info.message.id,
@@ -37,11 +26,11 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
   let page = 0;
   const components: { components: MessageActionRow[] } & InteractionContent = {
     components: [{
-      type: Constants.ComponentTypes.ACTION_ROW,
+      type: 1,
       components: [
         {
-          type: Constants.ComponentTypes.BUTTON,
-          label: getString("pagination.back", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          type: 2,
+          label: getString("pagination.back", { locale: info.interaction?.locale ?? undefined }),
           emoji: {
             id: null,
             name: "◀"
@@ -50,8 +39,8 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
           customID: "back"
         },
         {
-          type: Constants.ComponentTypes.BUTTON,
-          label: getString("pagination.forward", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          type: 2,
+          label: getString("pagination.forward", { locale: info.interaction?.locale ?? undefined }),
           emoji: {
             id: null,
             name: "▶"
@@ -60,8 +49,8 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
           customID: "forward"
         },
         {
-          type: Constants.ComponentTypes.BUTTON,
-          label: getString("pagination.jump", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          type: 2,
+          label: getString("pagination.jump", { locale: info.interaction?.locale ?? undefined }),
           emoji: {
             id: null,
             name: "🔢"
@@ -70,8 +59,8 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
           customID: "jump"
         },
         {
-          type: Constants.ComponentTypes.BUTTON,
-          label: getString("pagination.delete", { locale: info.type === "application" ? info.interaction.locale : undefined }),
+          type: 2,
+          label: getString("pagination.delete", { locale: info.interaction?.locale ?? undefined }),
           emoji: {
             id: null,
             name: "🗑"
@@ -83,12 +72,14 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
     }]
   };
   let currentPage: Message;
-  if (info.type === "classic") {
-    currentPage = await client.rest.channels.createMessage(info.message.channelID, Object.assign(pages[page], options, pages.length > 1 ? { components } : {}));
-  } else {
-    const response = await info.interaction.createFollowup(Object.assign(pages[page], pages.length > 1 ? { components } : {}));
+  if (info.message) {
+    currentPage = await client.rest.channels.createMessage(info.message.channelID, Object.assign(pages[page], options, pages.length > 1 ? components : {}));
+  } else if (info.interaction) {
+    const response = await info.interaction.createFollowup(Object.assign(pages[page], pages.length > 1 ? components : {}));
     currentPage = await response.getMessage();
     if (!currentPage) currentPage = await info.interaction.getOriginal();
+  } else {
+    throw Error("Unknown pagination context");
   }
   
   if (pages.length > 1) {
@@ -104,7 +95,7 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
         switch (interaction.data.customID) {
           case "back":
             page = page > 0 ? --page : pages.length - 1;
-            if (info.type === "application") {
+            if (info.interaction) {
               currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
             } else {
               currentPage = await currentPage.edit(Object.assign(pages[page], options));
@@ -113,7 +104,7 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
             break;
           case "forward":
             page = page + 1 < pages.length ? ++page : 0;
-            if (info.type === "application") {
+            if (info.interaction) {
               currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
             } else {
               currentPage = await currentPage.edit(Object.assign(pages[page], options));
@@ -121,33 +112,35 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
             interactionCollector.extend();
             break;
           case "jump": {
-            const newComponents: MessageActionRow[] = JSON.parse(JSON.stringify(components));
-            for (const index of newComponents[0].components.keys()) {
-              newComponents[0].components[index].disabled = true;
+            const newComponents = JSON.parse(JSON.stringify(components));
+            for (const index of newComponents.components[0].components.keys()) {
+              newComponents.components[0].components[index].disabled = true;
             }
-            if (info.type === "application") {
-              currentPage = await info.interaction.editOriginal({ components: newComponents });
+            if (info.interaction) {
+              currentPage = await info.interaction.editOriginal(newComponents);
             } else {
-              currentPage = await currentPage.edit({ components: newComponents });
+              currentPage = await currentPage.edit(newComponents);
             }
             interactionCollector.extend();
-            const jumpComponent: MessageComponent = {
-              type: Constants.ComponentTypes.STRING_SELECT,
-              customID: "seekDropdown",
-              placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
-              options: []
+            const jumpComponents: { components: Array<MessageActionRow> } & InteractionContent = {
+              components: [{
+                type: 1,
+                components: [{
+                  type: ComponentTypes.STRING_SELECT,
+                  customID: "seekDropdown",
+                  placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
+                  options: []
+                }]
+              }]
             };
             for (let i = 0; i < pages.length && i < 25; i++) {
               const payload = {
                 label: (i + 1).toString(),
                 value: i.toString()
               };
-              jumpComponent.options[i] = payload;
+              (jumpComponents.components[0].components[0] as StringSelectMenu).options[i] = payload;
             }
-            const followup = await interaction.createFollowup({ content: getString("pagination.jumpTo", { locale: interaction.locale }), components: {
-              type: 1,
-              components: [jumpComponent]
-            }, flags: 64 });
+            const followup = await interaction.createFollowup(Object.assign({ content: getString("pagination.jumpTo", { locale: interaction.locale }), flags: 64 }, jumpComponents));
             const askMessage = await followup.getMessage();
             const dropdownCollector = new InteractionCollector(client, askMessage);
             let ended = false;
@@ -159,10 +152,10 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
                 // no-op
               }
               page = Number(response.data.values.raw[0]);
-              if (info.type === "application") {
-                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, { components }));
+              if (info.interaction) {
+                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
               } else {
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, { components }));
+                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
               }
               ended = true;
               dropdownCollector.stop();
@@ -175,10 +168,10 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
               } catch {
                 // no-op
               }
-              if (info.type === "application") {
-                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, { components }));
+              if (info.interaction) {
+                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
               } else {
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, { components }));
+                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
               }
             });
             collectors.set(askMessage.id, dropdownCollector);
@@ -187,7 +180,7 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
           case "delete":
             interactionCollector.emit("end", true);
             try {
-              if (info.type === "application") {
+              if (info.interaction) {
                 await info.interaction.deleteOriginal();
               } else {
                 await currentPage.delete();
@@ -210,14 +203,14 @@ export default async (client: Client, info: PaginationInfo, pages: { embeds: Emb
       collectors.delete(currentPage.id);
       interactionCollector.removeAllListeners("interaction");
       if (!deleted) {
-        for (const index of components[0].components.keys()) {
-          components[0].components[index].disabled = true;
+        for (const index of components.components[0].components.keys()) {
+          components.components[0].components[index].disabled = true;
         }
         try {
-          if (info.type === "application") {
-            await info.interaction.editOriginal({ components });
+          if (info.interaction) {
+            await info.interaction.editOriginal(components);
           } else {
-            await currentPage.edit({ components });
+            await currentPage.edit(components);
           }
         } catch {
           // no-op

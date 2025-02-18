@@ -19,16 +19,17 @@ import {
 } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
 import { cleanInteraction, cleanMessage } from "#utils/misc.js";
-
-type CommandType = "classic" | "application";
+import type { CommandType } from "#utils/types.js";
 
 type CommandOptionsClassic = {
   type: "classic";
   cmdName: string;
   args: string[];
-  message: Message;
+  message: Message<Uncached | AnyTextableChannel>;
   content: string;
-  specialArgs: object;
+  specialArgs: {
+    [key: string]: string | boolean | number;
+  };
   locale?: Locale;
 };
 
@@ -51,7 +52,6 @@ class Command {
   author: User;
   permissions: Permission;
   memberPermissions: Permission;
-  options: object;
 
   message?: Message;
   interaction?: CommandInteraction;
@@ -60,6 +60,8 @@ class Command {
   member?: Member | null;
   content?: string;
   reference?: { messageReference: MessageReference, allowedMentions: AllowedMentions };
+  private options?: { [key: string]: string | number | boolean; } | null;
+
   constructor(client: Client, options: CommandOptions) {
     this.client = client;
     this.origOptions = options;
@@ -99,7 +101,7 @@ class Command {
       this.locale = options.interaction.locale as Locale;
       this.cmdName = options.interaction.data.name;
       this.args = [];
-      this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID };
+      this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID ?? undefined };
       if (!options.interaction.authorizingIntegrationOwners || options.interaction.authorizingIntegrationOwners[0] !== undefined) {
         this.guild = options.interaction.guild;
       } else {
@@ -109,10 +111,6 @@ class Command {
       this.member = options.interaction.member;
       this.permissions = options.interaction.appPermissions;
       this.memberPermissions = options.interaction.memberPermissions ?? new Permission(Constants.AllPermissions);
-      this.options = options.interaction.data.options.raw.reduce((obj, item) => {
-        obj[item.name] = item.value;
-        return obj;
-      }, {});
     }
   }
 
@@ -130,21 +128,18 @@ class Command {
   }
 
   getString(key: string, params?: { returnNull?: false; params?: { [key: string]: string; }; }): string;
-  getString(key: string, params: { returnNull?: true; params?: { [key: string]: string; }; }): string | undefined;
-  getString(key: string, params?: { returnNull?: boolean; params?: { [key: string]: string; }; }) {
+  getString(key: string, params: { returnNull: boolean; params?: { [key: string]: string; }; }): string | undefined;
+  getString(key: string, params?: { returnNull?: boolean; params?: { [key: string]: string; }; }): string | undefined {
     return getString(key, {
       locale: this.locale,
+      returnNull: params?.returnNull ?? false,
       ...params
     });
   }
 
-  /**
-   * @param {string} key
-   * @returns {string | undefined}
-   */
-  getOptionString(key) {
+  getOptionString(key: string): string | undefined {
     if (this.type === "classic") {
-      return this.options?.[key];
+      return this.options?.[key] as string;
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getString(key);
@@ -152,11 +147,7 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  /**
-   * @param {string} key
-   * @returns {boolean | undefined}
-   */
-  getOptionBoolean(key) {
+  getOptionBoolean(key: string): boolean | undefined {
     if (this.type === "classic") {
       return !!this.options?.[key];
     }
@@ -166,13 +157,9 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  /**
-   * @param {string} key
-   * @returns {number | undefined}
-   */
-  getOptionNumber(key) {
+  getOptionNumber(key: string) : number | undefined {
     if (this.type === "classic") {
-      return Number.parseFloat(this.options?.[key]);
+      return Number.parseFloat(this.options?.[key] as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getNumber(key);
@@ -180,13 +167,9 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  /**
-   * @param {string} key
-   * @returns {number | undefined}
-   */
-  getOptionInteger(key) {
+  getOptionInteger(key: string): number | undefined {
     if (this.type === "classic") {
-      return Number.parseInt(this.options?.[key]);
+      return Number.parseInt(this.options?.[key] as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getInteger(key);
@@ -194,10 +177,29 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  /**
-   * @param {string} text
-   */
-  clean(text) {
+  getOptionUser(key: string): User | undefined {
+    if (this.type === "classic") {
+      const id = this.options?.[key] as string;
+      return this.client.users.get(id);
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getUser(key);
+    }
+    throw Error("Unknown command type");
+  }
+
+  getOptionMember(key: string): Member | undefined {
+    if (this.type === "classic") {
+      const id = this.options?.[key] as string;
+      return this.guild?.members.get(id);
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getMember(key);
+    }
+    throw Error("Unknown command type");
+  }
+
+  clean(text: string) {
     if (this.message) {
       return cleanMessage(this.message, text);
     }
@@ -217,8 +219,9 @@ class Command {
 
   static description = "No description found";
   static aliases: string[] = [];
-  static flags: ({ classic: boolean } & ApplicationCommandOptions)[] = [];
+  static flags: ({ classic?: boolean } & ApplicationCommandOptions)[] = [];
   static ephemeral = false;
+  static dbRequired = false;
   static slashAllowed = true;
   static directAllowed = true;
   static userAllowed = true;

@@ -2,7 +2,7 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class UncaptionCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const tolerance = this.getOptionNumber("tolerance");
     return {
       tolerance: tolerance == null || Number.isNaN(tolerance) ? 0.95 : tolerance

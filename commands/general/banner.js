@@ -1,4 +1,4 @@
-import { Constants } from "oceanic.js";
+import { Constants, Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 const imageSize = 4096
@@ -6,10 +6,13 @@ const imageSize = 4096
 class BannerCommand extends Command {
   // this command sucks
   async run() {
-    const member = this.options.member ?? this.args[0];
+    const member = this.getOptionMember("member") ?? this.args[0];
     const self = await this.client.rest.users.get(this.author.id); // banners are only available over REST
     if (this.type === "classic" && this.message?.mentions.users[0]) {
       return this.message.mentions.users[0].bannerURL(undefined, imageSize) ?? self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
+    }
+    if (member instanceof Member) {
+      return member.bannerURL(undefined, imageSize) ?? self.bannerURL(undefined, imageSize) ?? this.getString("commands.responses.banner.noUserBanner");
     }
     if (member && member > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);

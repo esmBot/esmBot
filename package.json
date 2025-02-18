@@ -51,9 +51,10 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/better-sqlite3": "^7.6.12",
     "@types/bun": "^1.2.2",
+    "@types/node": "20",
     "@types/ws": "^8.5.14",
     "cmake-js": "^7.3.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "optionalDependencies": {
     "@sentry/node": "^8.54.0",
@@ -66,10 +67,22 @@
     ]
   },
   "imports": {
-    "#cmd-classes/*": "./dist/classes/*",
-    "#utils/*": "./dist/utils/*",
-    "#database": "./dist/database.js",
-    "#pagination": "./dist/pagination/pagination.js",
+    "#cmd-classes/*": {
+      "default": "./src/classes/*",
+      "node": "./dist/classes/*"
+    },
+    "#utils/*": {
+      "default": "./src/utils/*",
+      "node": "./dist/utils/*"
+    },
+    "#database": {
+      "default": "./src/database.js",
+      "node": "./dist/database.js"
+    },
+    "#pagination": {
+      "default": "./src/pagination/pagination.js",
+      "node": "./dist/pagination/pagination.js"
+    },
     "#config/*": "./config/*"
   },
   "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051",

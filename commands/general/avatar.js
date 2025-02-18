@@ -1,13 +1,16 @@
-import { Constants } from "oceanic.js";
+import { Constants, Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 const imageSize = 512;
 
 class AvatarCommand extends Command {
   async run() {
-    const member = this.options.member ?? this.args[0];
+    const member = this.getOptionMember("member") ?? this.args[0];
     const self = this.client.users.get(this.author.id) ?? await this.client.rest.users.get(this.author.id);
-    if (this.type === "classic" && this.message.mentions.users[0]) return this.message.mentions.users[0].avatarURL(undefined, imageSize);
+    if (this.type === "classic" && this.message?.mentions.users[0]) return this.message.mentions.users[0].avatarURL(undefined, imageSize);
+    if (member instanceof Member) {
+      return member.user.avatarURL(undefined, imageSize);
+    }
     if (member && member > 21154535154122752n) {
       const user = this.client.users.get(member) ?? await this.client.rest.users.get(member);
       if (user) return user.avatarURL(undefined, imageSize);

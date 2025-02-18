@@ -22,7 +22,7 @@ class YouTubeCommand extends Command {
       })}\n▶️ **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}` });
     }
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, messages);
+    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, messages);
   }
 
   static flags = [{

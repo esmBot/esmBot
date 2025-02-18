@@ -2,14 +2,12 @@ import { activityChanger, checkBroadcast } from "#utils/misc.js";
 import { send } from "#utils/handler.js";
 import { generateList, createPage } from "#utils/help.js";
 import logger from "#utils/logger.js";
+import type { Client } from "oceanic.js";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
 let ready = false;
 
-/**
- * @param {import("oceanic.js").Client} client
- */
-export default async (client) => {
+export default async (client: Client) => {
   if (ready) return;
 
   // send slash command data
@@ -17,7 +15,7 @@ export default async (client) => {
     try {
       await send(client);
     } catch (e) {
-      logger.log("error", e);
+      logger.log("error", e as string);
       logger.log("error", "Failed to send command data to Discord, slash/message commands may be unavailable.");
     }
   }

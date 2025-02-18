@@ -10,7 +10,7 @@ class SelectImageCommand extends Command {
     const image = await imageDetect(this.client, message, this.interaction, {
       image: this.getOptionString("image"),
       link: this.getOptionString("link")
-    }, true, false, false, true).catch(e => {
+    }, true, false, true).catch(e => {
       if (e.name === "AbortError") return { type: "timeout" };
       throw e;
     });

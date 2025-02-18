@@ -3,20 +3,19 @@ import logger from "#utils/logger.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
 import { clean } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
-import { InteractionTypes } from "oceanic.js";
+import { InteractionTypes, type AnyInteractionGateway, type Client } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
-let Sentry;
+let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
   Sentry = await import("@sentry/node");
 }
 
 /**
  * Runs when a slash command/interaction is executed.
- * @param {import("oceanic.js").Client} client
- * @param {import("oceanic.js").AnyInteractionGateway} interaction
  */
-export default async (client, interaction) => {
+export default async (client: Client, interaction: AnyInteractionGateway) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
@@ -62,11 +61,12 @@ export default async (client, interaction) => {
         flags: commandClass.success ? 0 : 64
       });
     } else if (typeof result === "object") {
-      if (result.contents && result.name) {
+      if (commandClass instanceof ImageCommand && result.files) {
         const fileSize = 10485760;
-        if (result.contents.length > fileSize) {
+        const file = result.files[0];
+        if (file.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
-            await upload(client, result, interaction, commandClass.success, true);
+            await upload(client, { ...file, flags: result.flags }, interaction, commandClass.success);
           } else {
             await interaction[replyMethod]({
               content: getString("image.noTempServer", { locale: interaction.locale }),
@@ -76,7 +76,7 @@ export default async (client, interaction) => {
         } else {
           await interaction[replyMethod]({
             flags: result.flags ?? (commandClass.success ? 0 : 64),
-            files: [result]
+            files: [file]
           });
         }
       } else {
@@ -91,7 +91,8 @@ export default async (client, interaction) => {
         flags: commandClass.success ? 0 : 64
       }, result));
     }
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error | Promise<Error>;
     if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
       tags: {
         process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
@@ -104,19 +105,19 @@ export default async (client, interaction) => {
     } else if (error.toString().includes("Job ended prematurely")) {
       await interaction.createFollowup({ content: getString("image.jobEnded", { locale: interaction.locale }), flags: 64 });
     } else {
-      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${error.stack || error}`);
+      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await interaction.createFollowup({
           content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
-            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
+            contents: Buffer.from(clean(err.toString())),
             name: "error.txt"
           }]
         });
-      } catch (e) {
-        logger.error(`While attempting to send the previous error message, another error occurred: ${e.stack || e}`);
+      } catch (err) {
+        logger.error(`While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`);
       }
     }
   } finally {

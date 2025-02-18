@@ -1,7 +1,7 @@
 import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
-import { config } from "dotenv";
-import type { Client, CommandInteraction, Message } from "oceanic.js";
+import { config, type DotenvParseOutput } from "dotenv";
+import type { Client, CommandInteraction, Message, AnyPrivateChannel, AnyChannel } from "oceanic.js";
 import db from "#database";
 import { servers } from "./image.js";
 
@@ -12,8 +12,7 @@ import commandsConfig from "#config/commands.json" with { type: "json" };
 let broadcast = false;
 
 // random(array) to select a random entry in array
-export function random(array: unknown[]) {
-  if (!array || array.length < 1) return null;
+export function random<T>(array: T[]) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -32,7 +31,7 @@ export function clean(input: string) {
     .replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   let { parsed } = config();
-  if (!parsed) parsed = process.env;
+  if (!parsed) parsed = process.env as DotenvParseOutput;
 
   if (servers?.length !== 0) {
     for (const { server, auth } of servers) {
@@ -90,11 +89,11 @@ export function endBroadcast(bot: Client) {
   broadcast = false;
 }
 
-export function getServers(bot: Client) {
+export function getServers(bot: Client): Promise<number> {
   return new Promise((resolve, reject) => {
     if (pm2) {
       pm2.launchBus((_err, pm2Bus) => {
-        const listener = (packet) => {
+        const listener = (packet: { data: { type: string; serverCount: number; }; }) => {
           if (packet.data?.type === "countResponse") {
             resolve(packet.data.serverCount);
             pm2Bus.off("process:msg");
@@ -112,7 +111,7 @@ export function getServers(bot: Client) {
             pm2Bus.off("process:msg");
             return resolve(bot.guilds.size);
           }
-          pm2.sendDataToProcessId(managerProc.pm_id, {
+          pm2.sendDataToProcessId(managerProc.pm_id as number, {
             id: managerProc.pm_id,
             type: "process:msg",
             data: {
@@ -158,7 +157,7 @@ export function cleanMessage(message: Message, content: string) {
     }
 
     for (const id of message.mentions.channels) {
-      const channel = message.client.getChannel(id);
+      const channel = message.client.getChannel<Exclude<AnyChannel, AnyPrivateChannel>>(id);
       if (channel?.name && channel.mention) {
         cleanContent = cleanContent.replace(channel.mention, `#${channel.name}`);
       }

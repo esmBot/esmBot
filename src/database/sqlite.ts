@@ -87,8 +87,8 @@ export async function upgrade(logger: Logger) {
     connection.transaction(() => {
       let version: number;
       if (connection instanceof BunDatabase) {
-        const { user_version } = connection.prepare<{ user_version: number }, []>("PRAGMA user_version").get();
-        version = user_version;
+        const result = connection.prepare<{ user_version: number }, []>("PRAGMA user_version").get();
+        version = result?.user_version ?? 0;
       } else {
         version = connection.pragma("user_version", { simple: true }) as number;
       }
@@ -200,7 +200,7 @@ export async function setPrefix(prefix: string, guild: Guild) {
 }
 
 export async function getGuild(query: string): Promise<DBGuild> {
-  let guild: DBGuild;
+  let guild: DBGuild | undefined;
   connection.transaction(() => {   
     guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as DBGuild;
     if (!guild) {
@@ -220,5 +220,10 @@ export async function getGuild(query: string): Promise<DBGuild> {
       };
     }
   })();
-  return guild;
+  return guild ?? {
+    guild_id: query,
+    prefix: process.env.PREFIX ?? "&",
+    disabled: [],
+    disabled_commands: []
+  };
 }

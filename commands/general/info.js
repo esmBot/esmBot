@@ -34,7 +34,7 @@ class InfoCommand extends Command {
         },
         {
           name: `💬 ${this.getString("commands.responses.info.totalServers")}`,
-          value: servers ? servers : this.getString("commands.responses.info.processOnly", { params: { count: this.client.guilds.size } })
+          value: servers ? servers.toString() : this.getString("commands.responses.info.processOnly", { params: { count: this.client.guilds.size.toString() } })
         },
         {
           name: `✅ ${this.getString("commands.responses.info.officialServer")}`,

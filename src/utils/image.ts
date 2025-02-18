@@ -5,14 +5,11 @@ import ipaddr from "ipaddr.js";
 import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
+import type { ImageParams, ImageTypeData } from "./types.js";
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
 
-/**
- * @typedef {{ cmd: string; params: object; id: string; }} JobObject
- */
-
 const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime", "image/avif"];
-export const connections = new Map();
+export const connections = new Map<string, ImageConnection>();
 export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
 
 export function initImageLib() {
@@ -21,21 +18,18 @@ export function initImageLib() {
   img.imageInit();
 }
 
-/**
- * @param {URL} image
- * @param {boolean} extraReturnTypes
- */
-export async function getType(image, extraReturnTypes) {
+export async function getType(image: URL, extraReturnTypes: boolean): Promise<ImageTypeData | undefined> {
   try {
     const remoteIP = await lookup(image.host);
     const parsedIP = ipaddr.parse(remoteIP.address);
     if (parsedIP.range() !== "unicast") return;
   } catch (e) {
-    if (e.code === "ENOTFOUND") return;
+    const err = e as Error;
+    if ("code" in err && err.code === "ENOTFOUND") return;
     throw e;
   }
-  let type;
-  let url;
+  let type: string | undefined;
+  let url: string;
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
@@ -97,7 +91,7 @@ export async function getType(image, extraReturnTypes) {
  * @param {string | undefined} name
  * @param {boolean} tls
  */
-function connect(server, auth, name, tls) {
+function connect(server: string, auth: string, name: string | undefined, tls: boolean) {
   const connection = new ImageConnection(server, auth, name, tls);
   connections.set(server, connection);
 }
@@ -129,7 +123,7 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-function chooseServer(ideal) {
+function chooseServer(ideal: ({ addr: string; load: number; } | null)[]) {
   if (ideal.length === 0) throw "No available servers";
   const sorted = ideal.filter((v) => !!v).sort((a, b) => {
     return a.load - b.load;
@@ -137,11 +131,7 @@ function chooseServer(ideal) {
   return sorted[0];
 }
 
-/**
- * @param {JobObject} object
- * @returns {Promise<ImageConnection>}
- */
-async function getIdeal(object) {
+async function getIdeal(object: ImageParams): Promise<ImageConnection | undefined> {
   const idealServers = [];
   for (const [address, connection] of connections) {
     if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
@@ -151,10 +141,12 @@ async function getIdeal(object) {
       idealServers.push(null);
       continue;
     }
-    if (object.params.type && !connection.formats[object.cmd]?.includes(object.params.type)) continue;
+    if (object.input.type && !connection.formats[object.cmd]?.includes(object.input.type)) continue;
+    const load = await connection.getCount();
+    if (load == null) continue;
     idealServers.push({
       addr: address,
-      load: await connection.getCount()
+      load: load
     });
   }
   const server = chooseServer(idealServers);
@@ -162,11 +154,7 @@ async function getIdeal(object) {
   return connections.get(server.addr);
 }
 
-/**
- * @param {JobObject} params
- * @returns {Promise<{ buffer: Buffer; type: string; }>}
- */
-export async function runImageJob(params) {
+export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string; }> {
   if (process.env.API_TYPE === "ws") {
       const currentServer = await getIdeal(params);
       if (!currentServer) return {

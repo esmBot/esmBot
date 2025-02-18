@@ -43,7 +43,6 @@ class ImageConnection {
     this.disconnected = false;
     this.formats = {};
     this.funcs = [];
-    this.wsproto = null;
     if (tls) {
       this.wsproto = "wss";
     } else {
@@ -129,7 +128,7 @@ class ImageConnection {
     this.conn.close();
   }
 
-  queue(jobid: bigint, jobobj) {
+  queue(jobid: bigint, jobobj: object) {
     logger.debug(`Queuing ${jobid} on image server ${this.host}`);
     const str = JSON.stringify(jobobj);
     const buf = Buffer.alloc(8);
@@ -151,13 +150,13 @@ class ImageConnection {
     return this.do(Tcancel, jobid, buf);
   }
 
-  async getOutput(jobid: bigint) {
+  async getOutput(jobid: string) {
     logger.debug(`Getting output of ${jobid} on image server ${this.host}`);
-    const req = await fetch(`${this.httpurl}/image?id=${jobid}`, {
+    const req = await fetch(`${this.httpurl}/image?id=${jobid}`, this.auth ? {
       headers: {
-        authentication: this.auth || undefined
+        authentication: this.auth
       }
-    });
+    } : undefined);
     const contentType = req.headers.get("content-type");
     let type: string;
     switch (contentType) {
@@ -184,11 +183,11 @@ class ImageConnection {
   }
 
   async getCount() {
-    const req = await fetch(`${this.httpurl}/count`, {
+    const req = await fetch(`${this.httpurl}/count`, this.auth ? {
       headers: {
-        authentication: this.auth || undefined
+        authentication: this.auth
       }
-    });
+    } : undefined);
     if (req.status !== 200) return;
     const res = Number.parseInt(await req.text());
     return res;

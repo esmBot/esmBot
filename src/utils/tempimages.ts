@@ -1,12 +1,19 @@
 import logger from "./logger.js";
 import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
 import { getString } from "./i18n.js";
-import { type Client, CommandInteraction, type Message } from "oceanic.js";
+import { type Client, CommandInteraction, type File, type Message } from "oceanic.js";
+
+type SizeSuffix = "K" | "M" | "G" | "T";
+type FileStats = {
+  name: string;
+  size: number;
+  ctime: Date;
+};
 
 let dirSizeCache: number;
-let threshold: number;
+let threshold: number | undefined;
 
-export async function upload(client: Client, result: { name: string; contents: Buffer; flags?: number; }, context: CommandInteraction | Message, success = true) {
+export async function upload(client: Client, result: { flags?: number; } & File, context: CommandInteraction | Message, success = true) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
@@ -61,11 +68,11 @@ async function removeOldImages(s: number) {
         name: file,
         size: stats.size,
         ctime: stats.ctime
-      };
+      } as FileStats;
     });
     
     const resolvedFiles = await Promise.all(files);
-    const oldestFiles = resolvedFiles.filter(Boolean).sort((a, b) => a.ctime.getTime() - b.ctime.getTime());
+    const oldestFiles = resolvedFiles.filter((item): item is FileStats => !!item).sort((a, b) => a.ctime.getTime() - b.ctime.getTime());
 
     do {
       if (!oldestFiles[0]) break;
@@ -93,7 +100,7 @@ export async function parseThreshold() {
     T: 1099511627776
   };
   if (matched?.[1] && matched[2]) {
-    threshold = Number(matched[1]) * sizes[matched[2]];
+    threshold = Number(matched[1]) * sizes[matched[2] as SizeSuffix];
   } else {
     logger.error("Invalid THRESHOLD config.");
     threshold = undefined;

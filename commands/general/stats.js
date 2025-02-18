@@ -95,12 +95,15 @@ class StatsCommand extends Command {
   }
 
   list() {
-    return new Promise((resolve, reject) => {
-      pm2.list((err, list) => {
-        if (err) return reject(err);
-        resolve(list.filter((v) => v.name.includes("esmBot-proc")));
+    if (pm2) {
+      return new Promise((resolve, reject) => {
+        pm2.list((err, list) => {
+          if (err) return reject(err);
+          resolve(list.filter((v) => v.name?.includes("esmBot-proc")));
+        });
       });
-    });
+    }
+    return Promise.resolve();
   }
 
   static description = "Gets some statistics about me";

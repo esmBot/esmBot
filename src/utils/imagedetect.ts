@@ -1,6 +1,7 @@
-import { AttachmentFlags, PrivateChannel, TextableChannel, ThreadChannel } from "oceanic.js";
+import { AttachmentFlags, PrivateChannel, TextableChannel, ThreadChannel, type Client, type CommandInteraction, type Message, type StickerItem } from "oceanic.js";
 import { getType } from "./image.js";
 import logger from "./logger.js";
+import type { ImageTypeData } from "./types.js";
 
 const tenorURLs = [
   "tenor.com",
@@ -30,19 +31,37 @@ const providerUrls = [
 const imageFormats = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "large"];
 const videoFormats = ["video/mp4", "video/webm", "video/mov"];
 
+type TenorMediaObject = {
+  url: string;
+  dims: number[];
+  duration: number;
+  size: number;
+};
+
+type TenorResponse = {
+  error?: {
+    code: number;
+    message: string;
+    status: string;
+  };
+  results: {
+    media_formats: { [key: string]: TenorMediaObject; };
+  }[];
+};
+
+type ImageMeta = {
+  path: string;
+  type?: string;
+  url: string;
+  name: string;
+  spoiler: boolean;
+};
+
 /**
  * Gets proper image paths.
- * @param {string} image
- * @param {string} image2
- * @param {boolean} video
- * @param {boolean} [spoiler]
- * @param {boolean} [extraReturnTypes]
- * @param {string | null} [type]
- * @param {import("oceanic.js").Client | undefined } client
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; spoiler: boolean; } | undefined>}
  */
-const getImage = async (image, image2, video, spoiler = false, extraReturnTypes = false, type = null, client = undefined) => {
-  let imageURL;
+const getImage = async (image: string, image2: string, video: boolean, spoiler = false, extraReturnTypes = false, type: string | null = null, client: Client | undefined = undefined): Promise<ImageMeta | undefined> => {
+  let imageURL: URL;
   try {
     imageURL = new URL(image);
     if (!imageURL.host) throw null;
@@ -59,7 +78,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
   const fileNameSplit = imageURL.pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
-  const payload = {
+  const payload: ImageMeta = {
     url: image2,
     path: image,
     name: fileNameNoExtension,
@@ -71,7 +90,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
       // Tenor doesn't let us access a raw GIF without going through their API,
       // so we use that if there's a key in the config
       if (process.env.TENOR !== "") {
-        let id;
+        let id: string | undefined;
         if (image2.includes("tenor.com/view/")) {
           id = image2.split("-").pop();
         } else if (image2.endsWith(".gif")) {
@@ -88,7 +107,7 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
             return payload;
           }
         }
-        const json = await data.json();
+        const json = await data.json() as TenorResponse;
         if (json.error) throw Error(json.error.message);
         if (json.results.length === 0) return;
         payload.path = json.results[0].media_formats.gif.url;
@@ -105,9 +124,9 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
       payload.type = "image/webp";
     }
   } else {
-    let result;
+    let result: ImageTypeData | undefined;
     if ((imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net") && (imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//))) {
-      let url;
+      let url: URL;
       if (client && isAttachmentExpired(imageURL)) {
         const refreshed = await client.rest.misc.refreshAttachmentURLs([image]);
         url = new URL(refreshed.refreshedURLs[0].refreshed);
@@ -129,39 +148,30 @@ const getImage = async (image, image2, video, spoiler = false, extraReturnTypes 
 
 /**
  * Checks a single message for stickers, videos, or images
- * @param {import("oceanic.js").Message} message 
- * @param {boolean} extraReturnTypes 
- * @param {boolean} video 
- * @param {boolean} sticker 
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | undefined>}
  */
-const checkImages = async (message, extraReturnTypes, video, sticker) => {
-  let type;
-  if (sticker && message.stickerItems) {
-    type = message.stickerItems[0];
-  } else {
-    // first check the embeds
-    if (message.embeds.length !== 0) {
-      let hasSpoiler = false;
-      if (message.embeds[0].url && message.content) {
-        const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
-        hasSpoiler = spoilerRegex.test(message.content);
-      }
-      // embeds can vary in types, we check for gifvs first
-      if (message.embeds[0].provider?.url && providerUrls.includes(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
-        type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
-      // then thumbnails
-      } else if (message.embeds[0].thumbnail) {
-        type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
-      // and finally direct images
-      } else if (message.embeds[0].image) {
-        type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
-      }
-      // then check the attachments
-    } else if (message.attachments.size !== 0) {
-      const firstAttachment = message.attachments.first();
-      if (firstAttachment?.width) type = await getImage(firstAttachment.proxyURL, firstAttachment.url, video, !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER));
+const checkImages = async (message: Message, extraReturnTypes: boolean, video: boolean): Promise<ImageMeta | undefined> => {
+  let type: ImageMeta | undefined;
+  // first check the embeds
+  if (message.embeds.length !== 0) {
+    let hasSpoiler = false;
+    if (message.embeds[0].url && message.content) {
+      const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
+      hasSpoiler = spoilerRegex.test(message.content);
     }
+    // embeds can vary in types, we check for gifvs first
+    if (message.embeds[0].provider?.url && providerUrls.includes(message.embeds[0].provider?.url) && message.embeds[0].video?.url && message.embeds[0].url) {
+      type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
+    // then thumbnails
+    } else if (message.embeds[0].thumbnail) {
+      type = await getImage(message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url, message.embeds[0].thumbnail.url, video, hasSpoiler, extraReturnTypes);
+    // and finally direct images
+    } else if (message.embeds[0].image) {
+      type = await getImage(message.embeds[0].image.proxyURL ?? message.embeds[0].image.url, message.embeds[0].image.url, video, hasSpoiler, extraReturnTypes);
+    }
+    // then check the attachments
+  } else if (message.attachments.size !== 0) {
+    const firstAttachment = message.attachments.first();
+    if (firstAttachment?.width) type = await getImage(firstAttachment.proxyURL, firstAttachment.url, video, !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER));
   }
   // if the return value exists then return it
   return type;
@@ -169,10 +179,8 @@ const checkImages = async (message, extraReturnTypes, video, sticker) => {
 
 /**
  * Checks whether an attachment URL has already expired
- * @param {URL} url
- * @returns {boolean}
  */
-function isAttachmentExpired(url) {
+function isAttachmentExpired(url: URL): boolean {
   try {
     const expiry = url.searchParams.get("ex");
     return !expiry 
@@ -184,15 +192,38 @@ function isAttachmentExpired(url) {
   return true;
 }
 
+export async function stickerDetect(client: Client, cmdMessage?: Message, interaction?: CommandInteraction): Promise<StickerItem | undefined> {
+  if (cmdMessage) {
+    // check if the message is a reply to another message
+    if (cmdMessage.messageReference?.channelID && cmdMessage.messageReference.messageID) {
+      const replyMessage = await client.rest.channels.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
+      if (replyMessage?.stickerItems) return replyMessage.stickerItems[0];
+    }
+    // then we check the current message
+    if (cmdMessage?.stickerItems) return cmdMessage.stickerItems[0];
+  }
+  if (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined) {
+    // if there aren't any replies then iterate over the last few messages in the channel
+    const context = interaction ?? cmdMessage;
+    if (context == null) throw Error("Unknown context");
+    const channel = context.channel ?? await client.rest.channels.get(context.channelID).catch(e => {
+      logger.warn(`Failed to get a text channel: ${e}`);
+    });
+    if (!(channel instanceof TextableChannel) && !(channel instanceof ThreadChannel) && !(channel instanceof PrivateChannel)) return;
+    const perms = (channel instanceof TextableChannel || channel instanceof ThreadChannel) ? channel.permissionsOf?.(client.user.id) : null;
+    if (perms && !perms.has("VIEW_CHANNEL")) return;
+    const messages = await channel.getMessages();
+    // iterate over each message
+    for (const message of messages) {
+      if (message?.stickerItems) return message.stickerItems[0];
+    }
+  }
+}
+
 /**
  * Checks for the latest message containing an image and returns the URL of the image.
- * @param {import("oceanic.js").Client} client
- * @param {import("oceanic.js").Message | null | undefined} cmdMessage
- * @param {import("oceanic.js").CommandInteraction | null | undefined} interaction
- * @param {{ image?: string; link?: string; } | null | undefined} options
- * @returns {Promise<{ path: string; type?: string; url: string; name: string; } | import("oceanic.js").StickerItem | undefined>}
  */
-export default async (client, cmdMessage, interaction, options, extraReturnTypes = false, video = false, sticker = false, singleMessage = false) => {
+export default async (client: Client, cmdMessage?: Message, interaction?: CommandInteraction, options?: { image?: string; link?: string; }, extraReturnTypes = false, video = false, singleMessage = false): Promise<ImageMeta | undefined> => {
   // we start by determining whether or not we're dealing with an interaction or a message
   if (interaction && options) {
     // we can get a raw attachment or a URL in the interaction itself
@@ -210,17 +241,19 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     if (cmdMessage.messageReference?.channelID && cmdMessage.messageReference.messageID && !singleMessage) {
       const replyMessage = await client.rest.channels.getMessage(cmdMessage.messageReference.channelID, cmdMessage.messageReference.messageID).catch(() => undefined);
       if (replyMessage) {
-        const replyResult = await checkImages(replyMessage, extraReturnTypes, video, sticker);
+        const replyResult = await checkImages(replyMessage, extraReturnTypes, video);
         if (replyResult) return replyResult;
       }
     }
     // then we check the current message
-    const result = await checkImages(cmdMessage, extraReturnTypes, video, sticker);
+    const result = await checkImages(cmdMessage, extraReturnTypes, video);
     if (result) return result;
   }
   if (!singleMessage && (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined)) {
     // if there aren't any replies or interaction attachments then iterate over the last few messages in the channel
-    const channel = (interaction ? interaction : cmdMessage)?.channel ?? await client.rest.channels.get((interaction ?? cmdMessage).channelID).catch(e => {
+    const context = interaction ?? cmdMessage;
+    if (context == null) throw Error("Unknown context");
+    const channel = context.channel ?? await client.rest.channels.get(context.channelID).catch(e => {
       logger.warn(`Failed to get a text channel: ${e}`);
     });
     if (!(channel instanceof TextableChannel) && !(channel instanceof ThreadChannel) && !(channel instanceof PrivateChannel)) return;
@@ -229,7 +262,7 @@ export default async (client, cmdMessage, interaction, options, extraReturnTypes
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {
-      const result = await checkImages(message, extraReturnTypes, video, sticker);
+      const result = await checkImages(message, extraReturnTypes, video);
       if (result) return result;
     }
   }

@@ -1,7 +1,7 @@
 import { players } from "#utils/soundplayer.js";
 import logger from "#utils/logger.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
-import { Constants } from "oceanic.js";
+import { Constants, User } from "oceanic.js";
 
 class HostCommand extends MusicCommand {
   async run() {
@@ -10,15 +10,18 @@ class HostCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id && !process.env.OWNER.split(",").includes(this.connection.host)) return this.getString("commands.responses.host.notHost");
-    const input = this.options.user ?? this.args.join(" ");
-    if (input?.trim()) {
+    const owners = process.env.OWNER?.split(",") ?? [];
+    if (this.connection.host !== this.author.id && !owners.includes(this.connection.host)) return this.getString("commands.responses.host.notHost");
+    const input = this.getOptionUser("user") ?? this.args.join(" ");
+    if (input instanceof User || input?.trim()) {
       let user;
-      if (this.type === "classic" && this.message) {
+      if (input instanceof User) {
+        user = input;
+      } else if (this.type === "classic" && this.message) {
         const getUser = this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
-        } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && input >= 21154535154122752n) {
+        } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(input) >= 21154535154122752n) {
           try {
             user = await this.client.rest.users.get(input);
           } catch {
@@ -46,9 +49,10 @@ class HostCommand extends MusicCommand {
       this.success = true;
       return `🔊 ${this.getString("sound.newHost", { params: { member: member.mention } })}`;
     }
-    const member = this.guild.members.get(players.get(this.guild.id).host);
+    const member = this.guild.members.get(this.connection.host);
+    if (!member) return this.getString("commands.responses.host.currentHostId", { params: { id: this.connection.host } });
     this.success = true;
-    return `🔊 ${this.getString("commands.responses.host.currentHost", { params: { member: member?.username } })}`;
+    return `🔊 ${this.getString("commands.responses.host.currentHost", { params: { member: member.username } })}`;
   }
 
   static flags = [{

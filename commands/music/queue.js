@@ -59,7 +59,7 @@ class QueueCommand extends MusicCommand {
     }
     if (embeds.length === 0) return this.getString("sound.noQueue");
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
+    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "Shows the current queue";

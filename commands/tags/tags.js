@@ -179,7 +179,7 @@ class TagsCommand extends Command {
     }
     if (embeds.length === 0) return this.getString("commands.responses.tags.noTags");
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
+    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "The main tags command. Check the help page for more info: https://esmbot.net/help.html";

@@ -1,5 +1,5 @@
 import Command from "#cmd-classes/command.js";
-import imagedetect from "#utils/imagedetect.js";
+import { stickerDetect } from "#utils/imagedetect.js";
 
 class StickerCommand extends Command {
   async run() {
@@ -7,7 +7,7 @@ class StickerCommand extends Command {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    const result = await imagedetect(this.client, this.message, this.interaction, null, false, false, true);
+    const result = await stickerDetect(this.client, this.message, this.interaction);
     this.success = false;
     if (!result) return this.getString("commands.responses.sticker.noInput");
     if (result.format_type === 1) { // PNG

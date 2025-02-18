@@ -4,10 +4,14 @@ import { runImageJob } from "#utils/image.js";
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
 import messages from "#config/messages.json" with { type: "json" };
-import { Constants, CommandInteraction } from "oceanic.js";
+import { Constants, CommandInteraction, type AnyTextableChannel, type Message } from "oceanic.js";
 import { getAllLocalizations } from "#utils/i18n.js";
+import type { ImageParams } from "#utils/types.js";
 
 class ImageCommand extends Command {
+  params?: object;
+  paramsFunc?(url: string, name: string): object;
+
   async criteria(_text: string, _url: string) {
     return true;
   }
@@ -26,16 +30,12 @@ class ImageCommand extends Command {
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
 
-    const imageParams = {
-      cmd: this.constructor.command,
-      params: {
-        togif: !!this.getOptionBoolean("togif")
-      },
-      id: (this.interaction ?? this.message).id
-    };
+    const staticProps = this.constructor as typeof ImageCommand;
+
+    let imageParams: ImageParams | undefined;
 
     let needsSpoiler = false;
-    if (this.constructor.requiresImage) {
+    if (staticProps.requiresImage) {
       try {
         const selection = selectedImages.get(this.author.id);
         const image = selection ?? await imageDetect(this.client, this.message, this.interaction, {
@@ -48,7 +48,7 @@ class ImageCommand extends Command {
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || this.constructor.noImage} ${this.getString("image.tip")}`;
+          return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip")}`;
         }
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
@@ -67,36 +67,47 @@ class ImageCommand extends Command {
           runningCommands.delete(this.author.id);
           return this.getString("image.badurl");
         }
-        imageParams.path = image.path;
-        imageParams.params.type = image.type;
-        imageParams.url = image.url; // technically not required but can be useful for text filtering
-        imageParams.name = image.name;
-        if (this.constructor.requiresAnim) imageParams.onlyAnim = true;
+        imageParams = {
+          cmd: staticProps.command,
+          params: {
+            togif: !!this.getOptionBoolean("togif")
+          },
+          input: {
+            type: image.type
+          },
+          id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
+          path: image.path,
+          url: image.url, // technically not required but can be useful for text filtering
+          name: image.name,
+          onlyAnim: !!staticProps.requiresAnim
+        }
       } catch (e) {
         runningCommands.delete(this.author.id);
         throw e;
       }
     }
 
+    if (!imageParams) throw Error("Params not assigned");
+
     const spoiler = this.getOptionBoolean("spoiler");
     if (spoiler != null) needsSpoiler = spoiler;
 
-    if (this.constructor.requiresText) {
+    if (staticProps.requiresText) {
       const text = this.getOptionString("text") ?? this.args.join(" ").trim();
       if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
         runningCommands.delete(this.author?.id);
-        return this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) || this.getString("image.noText", { returnNull: true }) || this.constructor.noText;
+        return this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) || this.getString("image.noText", { returnNull: true }) || staticProps.noText;
       }
     }
 
-    if (typeof this.params === "function") {
-      Object.assign(imageParams.params, this.params(imageParams.url, imageParams.name));
-    } else if (typeof this.params === "object") {
+    if (this.paramsFunc) {
+      Object.assign(imageParams.params, this.paramsFunc(imageParams.url, imageParams.name));
+    } else if (this.params) {
       Object.assign(imageParams.params, this.params);
     }
 
-    let status;
-    if ((imageParams.params.type === "image/gif" || imageParams.params.type === "image/webp") && this.type === "classic") {
+    let status: Message | undefined;
+    if ((imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") && this.message) {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 
@@ -118,24 +129,27 @@ class ImageCommand extends Command {
       if (type === "noresult") return this.getString("image.noResult");
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
-      if (type === "noanim" && this.constructor.requiresAnim) return this.getString("image.noanim");
-      if (type === "empty") return this.constructor.empty;
+      if (type === "noanim" && staticProps.requiresAnim) return this.getString("image.noanim");
+      if (type === "empty") return staticProps.empty;
       this.success = true;
       if (type === "text") return {
         content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
         flags: ephemeral ? 64 : undefined
       };
       return {
-        contents: buffer,
-        name: `${needsSpoiler ? "SPOILER_" : ""}${this.constructor.command}.${type}`,
+        files: [{
+          contents: buffer,
+          name: `${needsSpoiler ? "SPOILER_" : ""}${staticProps.command}.${type}`
+        }],
         flags: ephemeral ? 64 : undefined
       };
     } catch (e) {
-      if (e.toString().includes("image_not_working")) return this.getString("image.notWorking");
-      if (e.toString().includes("Request ended prematurely due to a closed connection")) return this.getString("image.tryAgain");
-      if (e.toString().includes("image_job_killed") || e.toString().includes("Timeout")) return this.getString("image.tooLong");
-      if (e.toString().includes("No available servers")) return this.getString("image.noServers");
-      throw e;
+      const err = e as Error;
+      if (err.toString().includes("image_not_working")) return this.getString("image.notWorking");
+      if (err.toString().includes("Request ended prematurely due to a closed connection")) return this.getString("image.tryAgain");
+      if (err.toString().includes("image_job_killed") || err.toString().includes("Timeout")) return this.getString("image.tooLong");
+      if (err.toString().includes("No available servers")) return this.getString("image.noServers");
+      throw err;
     } finally {
       try {
         if (status) await status.delete();
@@ -147,7 +161,7 @@ class ImageCommand extends Command {
 
   }
 
-  processMessage(channel) {
+  processMessage(channel: AnyTextableChannel): Promise<Message> {
     return channel.createMessage({
       content: `${random(messages.emotes) || "⚙️"} ${this.getString("image.processing")}`
     });

@@ -220,9 +220,11 @@ if (process.env.PM2_USAGE) {
       const managerProc = list.find((v) => v.name === "esmBot-manager");
       pm2Bus.on("process:msg", async (packet: { data: { type: string; message: string; }; }) => {
         switch (packet.data?.type) {
-          case "reload":
-            await load(client, paths.get(packet.data.message), true);
+          case "reload": {
+            const cmdPath = paths.get(packet.data.message);
+            if (cmdPath) await load(client, cmdPath, true);
             break;
+          }
           case "soundreload":
             await reload(client);
             break;

@@ -40,7 +40,7 @@ class ImageSearchCommand extends Command {
       });
     }
     this.success = true;
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
+    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static flags = [{

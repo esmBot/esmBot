@@ -110,7 +110,7 @@ class HelpCommand extends Command {
         }]
       });
     }
-    return paginator(this.client, { type: this.type, message: this.message, interaction: this.interaction, author: this.author }, embeds);
+    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, embeds);
   }
 
   static description = "Gets a list of commands";

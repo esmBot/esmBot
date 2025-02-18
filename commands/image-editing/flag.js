@@ -39,7 +39,7 @@ class FlagCommand extends ImageCommand {
     return String.fromCodePoint(...codepoints);
   }
 
-  params() {
+  paramsFunc() {
     return {
       overlay: this.flagPath
     };

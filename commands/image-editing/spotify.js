@@ -1,7 +1,7 @@
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SpotifyCommand extends ImageCommand {
-  params(url) {
+  paramsFunc(url) {
     const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
     return {
       caption: this.clean(newArgs),

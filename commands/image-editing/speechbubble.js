@@ -2,13 +2,13 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SpeechBubbleCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const parsedScale = this.getOptionNumber("scale");
     const alpha = this.getOptionBoolean("alpha");
     const bottom = this.getOptionBoolean("bottom");
     return {
       water: alpha ? "assets/images/speech.png" : "assets/images/speechbubble.png",
-      gravity: bottom ? "south" : "north",
+      gravity: bottom ? 8 : 2,
       resize: true,
       yscale: parsedScale != null && !Number.isNaN(parsedScale) ? parsedScale : 0.2,
       alpha: alpha,

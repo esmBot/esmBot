@@ -745,6 +745,7 @@
       },
       "host": {
         "currentHost": "The current voice channel host is **{{member}}**",
+        "currentHostId": "The current voice channel host is a user with the ID `{{id}}`.",
         "notHost": "Only the current voice session host can choose another host!",
         "notMember": "That user isn't in this server!",
         "noUser": "I can't find that user!"

@@ -1,14 +1,12 @@
 {
-  //"extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "outDir": "./dist",
     "rootDir": "./src",
     "allowJs": true,
     "resolveJsonModule": true,
-    "types": ["bun"],
     "paths": {
       "#cmd-classes/*": ["./src/classes/*"],
       "#utils/*": ["./src/utils/*"],

@@ -39,9 +39,9 @@ class AwaitRejoin extends EventEmitter {
         this.stop(random(filteredMembers), true);
         return true;
       }
-    } else {
       return false;
     }
+    return false;
   }
 
   stop(member?: Member | { id: string; }, rejoined = false) {

@@ -2,7 +2,7 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FreezeCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const frameCount = this.getOptionInteger("endframe") ?? Number.parseInt(this.args[0]);
     return {
       loop: false,

@@ -2,28 +2,12 @@ import { paths, commands, messageCommands, userCommands, info, categories, alias
 import { log } from "./logger.js";
 
 import commandConfig from "#config/commands.json" with { type: "json" };
-import { Constants, type ApplicationCommandOptions, type Client } from "oceanic.js";
+import { Constants, type Client, type CreateApplicationCommandOptions } from "oceanic.js";
 import { getAllLocalizations } from "./i18n.js";
 import Command from "#cmd-classes/command.js";
+import type { CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.js";
 
 let queryValue = 0;
-
-type CommandInfo = {
-  category: string;
-  description: string;
-  aliases: string[];
-  params: (string | object)[];
-  flags: ExtendedCommandOptions[];
-  slashAllowed: boolean;
-  directAllowed: boolean;
-  userAllowed: boolean;
-  adminOnly: boolean;
-  type: Constants.ApplicationCommandTypes;
-};
-
-type ExtendedCommandOptions = {
-  classic?: boolean;
-} & ApplicationCommandOptions;
 
 /**
  * Load a command into memory.
@@ -35,7 +19,7 @@ export async function load(client: Client | null, command: string, skipSend = fa
   let commandName = commandArray[commandArray.length - 1].split(".")[0];
   const category = commandArray[commandArray.length - 2];
 
-  if (commandConfig.blacklist.includes(commandName)) {
+  if ((commandConfig as CommandsConfig).blacklist.includes(commandName)) {
     log("warn", `Skipped loading blacklisted command ${command}...`);
     return;
   }
@@ -103,10 +87,10 @@ export async function load(client: Client | null, command: string, skipSend = fa
  * Convert command flags to params
  */
 function parseFlags(flags: ExtendedCommandOptions[]) {
-  const params: (string | object)[] = [];
+  const params: Param[] = [];
   for (const flag of flags) {
     if (flag.type === 1) {
-      const sub = { name: flag.name, desc: flag.description, params: undefined };
+      const sub = { name: flag.name, desc: flag.description, params: [] as Param[] };
       if (flag.options) sub.params = parseFlags(flag.options);
       params.push(sub);
     } else {
@@ -132,15 +116,15 @@ function extendFlags(flags: ExtendedCommandOptions[], name: string) {
 }
 
 export function update() {
-  const commandArray = [];
-  const privateCommandArray = [];
+  const commandArray: CreateApplicationCommandOptions[] = [];
+  const privateCommandArray: CreateApplicationCommandOptions[] = [];
   const merged = new Map([...commands, ...messageCommands, ...userCommands]);
   for (const [name, command] of merged.entries()) {
     let cmdInfo = info.get(name);
     if (command.postInit) {
       const cmd = command.postInit();
       cmdInfo = {
-        category: cmdInfo.category,
+        category: cmdInfo?.category ?? "unsorted",
         description: cmd.description,
         aliases: cmd.aliases,
         params: parseFlags(cmd.flags),
@@ -149,7 +133,7 @@ export function update() {
         directAllowed: cmd.directAllowed,
         userAllowed: cmd.userAllowed,
         adminOnly: cmd.adminOnly,
-        type: cmdInfo.type
+        type: cmdInfo?.type ?? Constants.ApplicationCommandTypes.CHAT_INPUT
       };
       info.set(name, cmdInfo);
     }

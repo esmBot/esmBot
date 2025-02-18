@@ -1,7 +1,7 @@
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class QrCreateCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const inputText = this.getOptionString("text") ?? this.args.join(" ");
     return {
       text: this.clean(inputText)

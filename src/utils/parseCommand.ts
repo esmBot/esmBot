@@ -1,7 +1,14 @@
+type Args = {
+  args: string[];
+  flags: {
+    [key: string]: string | boolean | number;
+  };
+};
+
 export default (cmd: string[] | string) => {
   let input = cmd;
   if (typeof input === "string") input = input.split(/\s+/g);
-  const args = { _: [] };
+  const args: Args = { args: [], flags: {} };
   let curr = null;
   let concated = "";
   for (let i = 0; i < input.length; i++) {
@@ -10,49 +17,49 @@ export default (cmd: string[] | string) => {
       if (a.includes("=")) {
         const [arg, value] = (a.startsWith("--") ? a.slice(2).split("=") : a.slice(1).split("="));
         let ended = true;
-        if (arg !== "_") {
+        if (arg !== "args") {
           if (value.startsWith("\"")) {
             if (value.endsWith("\"")) {
-              args[arg] = value.slice(1).slice(0, -1);
+              args.flags[arg] = value.slice(1).slice(0, -1);
             } else {
-              args[arg] = `${value.slice(1)} `;
+              args.flags[arg] = `${value.slice(1)} `;
               ended = false;
             }
           } else if (value.endsWith("\"")) {
-            args[arg] += a.slice(0, -1);
+            args.flags[arg] += a.slice(0, -1);
           } else if (value !== "") {
-            args[arg] = value;
+            args.flags[arg] = value;
           } else {
-            args[arg] = true;
+            args.flags[arg] = true;
           }
-          if (args[arg] === "true") {
-            args[arg] = true;
-          } else if (args[arg] === "false") {
-            args[arg] = false;
+          if (args.flags[arg] === "true") {
+            args.flags[arg] = true;
+          } else if (args.flags[arg] === "false") {
+            args.flags[arg] = false;
           }
           if (!ended) curr = arg;
         }
       } else {
-        args[a.slice(2)] = true;
+        args.flags[a.slice(2)] = true;
       }
     } else if (curr) {
       if (a.endsWith("\"")) {
-        args[curr] += a.slice(0, -1);
+        args.flags[curr] += a.slice(0, -1);
         curr = null;
       } else {
-        args[curr] += `${a} `;
+        args.flags[curr] += `${a} `;
       }
     } else {
       if (concated !== "") {
         concated += `${a} `;
       } else {
-        args._.push(a);
+        args.args.push(a);
       }
     }
   }
 
-  if (curr && args[curr] === "") {
-    args[curr] = true;
+  if (curr && args.flags[curr] === "") {
+    args.flags[curr] = true;
   }
 
   return args;

@@ -85,7 +85,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
   if (!(voiceChannel instanceof VoiceChannel)) return { content: getString("sound.notVoiceChannel", { locale: options.locale }), flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT")) return { content: getString("sound.cantJoin", { locale: options.locale }), flags: 64 };
   const node = manager.options.nodeResolver(manager.nodes);
-  let response: LavalinkResponse;
+  let response: LavalinkResponse | undefined;
   try {
     response = await node?.rest.resolve(soundUrl);
     if (!response) return { content: `🔊 ${getString("sound.noResponse", { locale: options.locale })}`, flags: 64 };
@@ -97,8 +97,8 @@ export async function play(client: Client, soundUrl: string, options: Options) {
   const oldQueue = queues.get(voiceChannel.guildID);
   if (!response?.data || (Array.isArray(response.data) && response.data.length === 0)) return { content: getString("sound.noSong", { locale: options.locale }), flags: 64 };
   let tracks: string[] = [];
-  let info: Track["info"];
-  let playlistInfo: Playlist["info"];
+  let info: Track["info"] | undefined;
+  let playlistInfo: Playlist["info"] | undefined;
   switch (response.loadType) {
     case "track":
       info = response.data.info;
@@ -116,7 +116,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
   }
   if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube") return { content: getString("sound.noYouTube", { locale: options.locale }), flags: 64 };
   const playerMeta = players.get(options.guild.id);
-  let player: Player;
+  let player: Player | undefined;
   if (manager.players.has(voiceChannel.guildID)) {
     player = manager.players.get(voiceChannel.guildID);
   } else if (playerMeta?.player) {
@@ -137,7 +137,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
     return getString("sound.addedToQueue", {
       locale: options.locale,
       params: {
-        name: playlistInfo ? playlistInfo.name.trim() : (info?.title !== "" ? info?.title.trim() : getString("sound.blank", { locale: options.locale })),
+        name: playlistInfo ? playlistInfo.name.trim() : (info?.title && info.title !== "" ? info.title.trim() : getString("sound.blank", { locale: options.locale })),
         type: response.loadType
       }
     });
@@ -148,51 +148,51 @@ export async function play(client: Client, soundUrl: string, options: Options) {
 
 export async function nextSong(client: Client, options: Options, connection: Player, track: string, info: Track["info"] | undefined, voiceChannel: VoiceChannel, host: string, loop = false, shuffle = false, lastTrack: string | null = null) {
   skipVotes.delete(voiceChannel.guildID);
-  let playingMessage: Message;
-  if (lastTrack === track && players.has(voiceChannel.guildID)) {
-    playingMessage = players.get(voiceChannel.guildID)?.playMessage;
+  let playingMessage: Message | undefined;
+  const oldPlayer = players.get(voiceChannel.guildID);
+  if (lastTrack === track && oldPlayer) {
+    playingMessage = oldPlayer.playMessage;
   } else {
-    try {
-      const content = {
-        embeds: [{
-          color: 0xff0000,
-          author: {
-            name: getString("sound.nowPlaying", { locale: options.locale }),
-            iconURL: client.user.avatarURL()
-          },
-          fields: [{
-            name: `ℹ️ ${getString("sound.title", { locale: options.locale })}`,
-            value: info && info.title.trim() !== "" ? info.title : getString("sound.blank", { locale: options.locale })
-          },
-          {
-            name: `🎤 ${getString("sound.artist", { locale: options.locale })}`,
-            value: info && info.author.trim() !== "" ? info.author : getString("sound.blank", { locale: options.locale })
-          },
-          {
-            name: `💬 ${getString("sound.channel", { locale: options.locale })}`,
-            value: voiceChannel.name
-          },
-          {
-            name: `🌐 ${getString("sound.node", { locale: options.locale })}`,
-            value: connection.node?.name ?? getString("sound.unknown", { locale: options.locale })
-          },
-          {
-            name: `🔘${"▬".repeat(10)}`,
-            value: `0:00/${info?.isStream ? "∞" : format(info?.length ?? 0)}`
-          }]
+    const content = {
+      embeds: [{
+        color: 0xff0000,
+        author: {
+          name: getString("sound.nowPlaying", { locale: options.locale }),
+          iconURL: client.user.avatarURL()
+        },
+        fields: [{
+          name: `ℹ️ ${getString("sound.title", { locale: options.locale })}`,
+          value: info && info.title.trim() !== "" ? info.title : getString("sound.blank", { locale: options.locale })
+        },
+        {
+          name: `🎤 ${getString("sound.artist", { locale: options.locale })}`,
+          value: info && info.author.trim() !== "" ? info.author : getString("sound.blank", { locale: options.locale })
+        },
+        {
+          name: `💬 ${getString("sound.channel", { locale: options.locale })}`,
+          value: voiceChannel.name
+        },
+        {
+          name: `🌐 ${getString("sound.node", { locale: options.locale })}`,
+          value: connection.node?.name ?? getString("sound.unknown", { locale: options.locale })
+        },
+        {
+          name: `🔘${"▬".repeat(10)}`,
+          value: `0:00/${info?.isStream ? "∞" : format(info?.length ?? 0)}`
         }]
-      };
-      if (options.type === "classic") {
-        playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
-      } else {
-        if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) { // discord interactions are only valid for 15 minutes
-          playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
-        } else if (lastTrack && lastTrack !== track) {
-          playingMessage = await (await options.interaction.createFollowup(content)).getMessage();
+      }]
+    };
+    try {
+      if (options.interaction && (Date.now() - options.interaction.createdAt.getTime()) < 900000) {
+        if (lastTrack && lastTrack !== track) {
+          const followup = await options.interaction.createFollowup(content);
+          playingMessage = await followup.getMessage();
         } else {
           playingMessage = await options.interaction.editOriginal(content);
           if (!playingMessage) playingMessage = await options.interaction.getOriginal();
         }
+      } else {
+        playingMessage = await client.rest.channels.createMessage(options.channel.id, content);
       }
     } catch (e) {
       logger.error(e);
@@ -214,20 +214,22 @@ export async function nextSong(client: Client, options: Options, connection: Pla
   });
   connection.on("end", async (data) => {
     if (data.reason === "replaced") return;
-    let queue = queues.get(voiceChannel.guildID);
+    let queue = queues.get(voiceChannel.guildID) ?? [];
     const player = players.get(voiceChannel.guildID);
     let newQueue: string[] = [];
     if (manager.connections.has(voiceChannel.guildID)) {
       if (player?.shuffle) {
         if (player.loop) {
-          queue.push(queue.shift());
+          const shifted = queue.shift();
+          if (shifted) queue.push(shifted);
         } else {
           queue = queue.slice(1);
         }
         queue.unshift(queue.splice(Math.floor(Math.random() * queue.length), 1)[0]);
         newQueue = queue;
       } else if (player?.loop) {
-        queue.push(queue.shift());
+        const shifted = queue.shift();
+        if (shifted) queue.push(shifted);
         newQueue = queue;
       } else {
         newQueue = queue ? queue.slice(1) : [];
@@ -250,14 +252,14 @@ export async function nextSong(client: Client, options: Options, connection: Pla
             channel: voiceChannel.name
           }
         })}`;
-        if (options.type === "classic") {
-          await client.rest.channels.createMessage(options.channel.id, { content });
-        } else {
+        if (options.interaction) {
           if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) {
             await client.rest.channels.createMessage(options.channel.id, { content });
           } else {
             await options.interaction.createFollowup({ content });
           }
+        } else {
+          await client.rest.channels.createMessage(options.channel.id, { content });
         }
       } catch {
         // no-op
@@ -265,7 +267,7 @@ export async function nextSong(client: Client, options: Options, connection: Pla
     }
     if (options.type === "classic") {
       try {
-        if (newQueue[0] !== track && playingMessage.channel.messages.has(playingMessage.id)) await playingMessage.delete();
+        if (newQueue[0] !== track && playingMessage?.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
         if (newQueue[0] !== track && player?.playMessage?.channel?.messages.has(player.playMessage.id)) await player.playMessage.delete();
       } catch {
         // no-op
@@ -274,9 +276,9 @@ export async function nextSong(client: Client, options: Options, connection: Pla
   });
 }
 
-export async function errHandle(exception: TrackExceptionEvent, client: Client, connection: Player, playingMessage: Message, voiceChannel: VoiceChannel, options: Options) {
+export async function errHandle(exception: TrackExceptionEvent, client: Client, connection: Player, playingMessage: Message | undefined, voiceChannel: VoiceChannel, options: Options) {
   try {
-    if (playingMessage.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
+    if (playingMessage?.channel?.messages.has(playingMessage.id)) await playingMessage.delete();
     const playMessage = players.get(voiceChannel.guildID)?.playMessage;
     if (playMessage?.channel?.messages.has(playMessage.id)) await playMessage.delete();
   } catch {
@@ -292,14 +294,14 @@ export async function errHandle(exception: TrackExceptionEvent, client: Client, 
   connection.removeAllListeners("end");
   try {
     const content = `🔊 ${getString("sound.error", { locale: options.locale })}\n\`\`\`${exception.exception.cause}: ${exception.exception.message}\`\`\``;
-    if (options.type === "classic") {
-      if (playingMessage.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
-    } else {
+    if (options.interaction) {
       if ((Date.now() - options.interaction.createdAt.getTime()) >= 900000) {
         await client.rest.channels.createMessage(options.channel.id, { content });
       } else {
         await options.interaction.createFollowup({ content });
       }
+    } else {
+      if (playingMessage?.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
     }
   } catch {
     // no-op

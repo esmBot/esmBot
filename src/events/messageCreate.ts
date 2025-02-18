@@ -4,22 +4,22 @@ import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from 
 import parseCommand from "#utils/parseCommand.js";
 import { clean } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
-import { GroupChannel, PrivateChannel, ThreadChannel } from "oceanic.js";
+import { GroupChannel, PrivateChannel, ThreadChannel, type AnyTextableChannel, type Client, type Message, type TextChannel } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
+import type { DBGuild } from "#utils/types.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
-let Sentry;
+let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
   Sentry = await import("@sentry/node");
 }
 
-let mentionRegex;
+let mentionRegex: RegExp;
 
 /**
  * Runs when someone sends a message.
- * @param {import("oceanic.js").Client} client
- * @param {import("oceanic.js").Message} message
  */
-export default async (client, message) => {
+export default async (client: Client, message: Message) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
@@ -27,10 +27,10 @@ export default async (client, message) => {
   if (message.author.bot) return;
 
   // don't run command if bot can't send messages
-  let permChannel;
+  let permChannel: AnyTextableChannel | undefined;
   if (message.channel instanceof ThreadChannel && !message.channel.parent) {
     try {
-      permChannel = await client.rest.channels.get(message.channel.parentID);
+      permChannel = await client.rest.channels.get<AnyTextableChannel>(message.channel.parentID);
     } catch {
       return;
     }
@@ -41,8 +41,8 @@ export default async (client, message) => {
 
   if (!mentionRegex) mentionRegex = new RegExp(`^<@!?${client.user.id}> `);
 
-  let guildDB;
-  let text;
+  let guildDB: DBGuild | undefined;
+  let text: string;
   const defaultPrefix = process.env.PREFIX ?? "&";
   const mentionResult = message.content.match(mentionRegex);
   if (mentionResult) {
@@ -127,7 +127,7 @@ export default async (client, message) => {
     // parse args
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
-    const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed._, content: text.replace(command, "").trim(), specialArgs: (({ _, ...o }) => o)(parsed) }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed.args, content: text.replace(command, "").trim(), specialArgs: parsed.flags }); // we also provide the message content as a parameter for cases where we need more accuracy
     const result = await commandClass.run();
     const endTime = new Date();
     if ((endTime.getTime() - startTime.getTime()) >= 180000) reference.allowedMentions.repliedUser = true;
@@ -137,7 +137,7 @@ export default async (client, message) => {
         content: result
       }, reference));
     } else if (typeof result === "object") {
-      if (result.contents && result.name) {
+      if (commandClass instanceof ImageCommand && result.files) {
         let fileSize = 10485760;
         if (message.guild) {
           switch (message.guild.premiumTier) {
@@ -149,9 +149,10 @@ export default async (client, message) => {
               break;
           }
         }
-        if (result.contents.length > fileSize) {
+        const file = result.files[0];
+        if (file.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && commandClass.permissions.has("EMBED_LINKS")) {
-            await upload(client, result, message);
+            await upload(client, { ...file, flags: result.flags }, message);
           } else {
             await client.rest.channels.createMessage(message.channelID, {
               content: getString("image.noTempServer")
@@ -159,14 +160,15 @@ export default async (client, message) => {
           }
         } else {
           await client.rest.channels.createMessage(message.channelID, Object.assign({
-            files: [result]
+            files: [file]
           }, reference));
         }
       } else {
         await client.rest.channels.createMessage(message.channelID, Object.assign(result, reference));
       }
     }
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error | Promise<Error>;
     if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
       tags: {
         process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
@@ -187,19 +189,19 @@ export default async (client, message) => {
         content: getString("image.timeoutDownload")
       }, reference));
     } else {
-      _error(`Error occurred with command message ${message.content}: ${error.stack || error}`);
+      _error(`Error occurred with command message ${message.content}: ${(error as Error).stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await client.rest.channels.createMessage(message.channelID, Object.assign({
           content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
-            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
+            contents: Buffer.from(clean(err.toString())),
             name: "error.txt"
           }]
         }, reference));
-      } catch (e) {
-        _error(`While attempting to send the previous error message, another error occurred: ${e.stack || e}`);
+      } catch (err) {
+        _error(`While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`);
       }
     }
   } finally {
