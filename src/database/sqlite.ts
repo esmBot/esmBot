@@ -3,7 +3,7 @@ import type { Guild, GuildChannel } from "oceanic.js";
 import type { Logger } from "#utils/logger.js";
 import type { DBGuild, Tag } from "#utils/types.js";
 import type { Database as BSQLite3Database, Statement as BSQLite3Statement } from "better-sqlite3";
-import { Database as BunDatabase, type Statement as BunStatement } from "bun:sqlite";
+import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
 
 // bun:sqlite is mostly compatible with better-sqlite3, but has a few minor type differences that don't really matter in our case
 // here we attempt to bring the two closer together
@@ -78,19 +78,19 @@ export async function stop() {
 }
 
 export async function upgrade(logger: Logger) {
-  if (connection instanceof BunDatabase) {
-    connection.exec("PRAGMA journal_mode = WAL;");
+  if (process.versions.bun) {
+    (connection as BunDatabase).exec("PRAGMA journal_mode = WAL;");
   } else {
-    connection.pragma("journal_mode = WAL");
+    (connection as BSQLite3Database).pragma("journal_mode = WAL");
   }
   try {
     connection.transaction(() => {
       let version: number;
-      if (connection instanceof BunDatabase) {
-        const result = connection.prepare<{ user_version: number }, []>("PRAGMA user_version").get();
+      if (process.versions.bun) {
+        const result = (connection as BunDatabase).prepare<{ user_version: number }, []>("PRAGMA user_version").get();
         version = result?.user_version ?? 0;
       } else {
-        version = connection.pragma("user_version", { simple: true }) as number;
+        version = (connection as BSQLite3Database).pragma("user_version", { simple: true }) as number;
       }
       const latestVersion = updates.length - 1;
       if (version === 0) {
@@ -107,10 +107,10 @@ export async function upgrade(logger: Logger) {
         throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
       }
       // prepared statements don't seem to work here
-      if (connection instanceof BunDatabase) {
+      if (process.versions.bun) {
         connection.exec(`PRAGMA user_version = ${latestVersion}`);
       } else {
-        connection.pragma(`user_version = ${latestVersion}`);
+        (connection as BSQLite3Database).pragma(`user_version = ${latestVersion}`);
       }
     })();
   } catch (e) {
