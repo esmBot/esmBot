@@ -1,4 +1,4 @@
-import pm2 from "pm2";
+import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";
 
 // load config from .env file
@@ -6,7 +6,7 @@ import { createServer } from "node:http";
 import "dotenv/config";
 
 // oceanic client used for getting shard counts
-import { Client } from "oceanic.js";
+import { Client, type ShardStatus } from "oceanic.js";
 
 import database from "#database";
 import { availableParallelism } from "node:os";
@@ -43,14 +43,37 @@ winston.addColors({
   error: "red"
 });
 
+type ShardData = {
+  id: number;
+  procId: number;
+  latency: number;
+  status: ShardStatus;
+};
+
+type BaseProcMessage = {
+  data?: {
+    type: string;
+  };
+};
+
+type ServerCountMessage = {
+  data: {
+    type: "serverCounts";
+    guilds: number;
+    shards: ShardData[];
+  }
+};
+
+type IncomingProcMessage = BaseProcMessage | ServerCountMessage;
+
 let serverCount = 0;
-let shardData = [];
+let shardData: ShardData[] = [];
 let clusterCount = 0;
 let responseCount = 0;
 
-let timeout;
+let timeout: ReturnType<typeof setTimeout> | undefined;
 
-process.on("message", (packet) => {
+process.on("message", (packet: IncomingProcMessage) => {
   if (packet.data?.type === "getCount") {
     process.send?.({
       type: "process:msg",
@@ -62,11 +85,11 @@ process.on("message", (packet) => {
   }
 });
 
-function getProcesses() {
+function getProcesses(): Promise<ProcessDescription[]> {
   return new Promise((resolve, reject) => {
     pm2.list((err, list) => {
       if (err) reject(err);
-      resolve(list.filter((v) => v.name.includes("esmBot-proc")));
+      resolve(list.filter((v) => v.name?.includes("esmBot-proc")));
     });
   });
 }
@@ -78,21 +101,21 @@ async function updateStats() {
   responseCount = 0;
   const processes = await getProcesses();
   clusterCount = processes.length;
-  const listener = (packet) => {
+  const listener = (packet: IncomingProcMessage) => {
     if (packet.data?.type === "serverCounts") {
+      const countData = packet as ServerCountMessage;
       clearTimeout(timeout);
-      serverCount += packet.data.guilds;
-      shardData = [...shardData, ...packet.data.shards].sort((a, b) => a.id - b.id);
+      serverCount += countData.data.guilds;
+      shardData = [...shardData, ...countData.data.shards].sort((a, b) => a.id - b.id);
       responseCount += 1;
       if (responseCount >= clusterCount) {
         process.removeListener("message", listener);
         return;
-      } else {
-        timeout = setTimeout(() => {
-          process.removeListener("message", listener);
-          logger.error("Timed out while waiting for stats");
-        }, 5000);
       }
+      timeout = setTimeout(() => {
+        process.removeListener("message", listener);
+        logger.error("Timed out while waiting for stats");
+      }, 5000);
     }
   };
   timeout = setTimeout(() => {
@@ -114,6 +137,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
       res.statusCode = 405;
       return res.end("GET only");
     }
+    if (!req.url) throw Error("URL not found");
 
     const reqUrl = new URL(req.url, `http://${req.headers.host}`);
     if (reqUrl.pathname === "/" || reqUrl.pathname === "/metrics") {
@@ -181,14 +205,14 @@ setTimeout(updateStats, 10000);
 logger.info("Started esmBot management process.");
 
 // from eris-fleet
-function calcShards(shards, procs) {
+function calcShards(shards: number[], procs: number) {
   if (procs < 2) return [shards];
 
   const length = shards.length;
   const r = [];
   let i = 0;
-  let size;
-  let remainder;
+  let size: number;
+  let remainder: number;
   let processes = procs;
 
   if (length % processes === 0) {
@@ -219,7 +243,7 @@ function calcShards(shards, procs) {
 }
 
 async function getGatewayData() {
-  logger.main("Getting gateway connection data...");
+  logger.log("main", "Getting gateway connection data...");
   const client = new Client({
     auth: `Bot ${process.env.TOKEN}`,
     gateway: {
@@ -251,11 +275,11 @@ async function getGatewayData() {
 
 (async function init() {
   const { procAmount, connectionData } = await getGatewayData();
-  logger.main(`Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
+  logger.log("main", `Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
 
   const runningProc = await getProcesses();
   if (runningProc.length === procAmount) {
-    logger.main("All processes already running");
+    logger.log("main", "All processes already running");
     return;
   }
 
@@ -269,7 +293,7 @@ async function getGatewayData() {
 
   if (runningProc.length < procAmount && runningProc.length !== 0) {
     i = runningProc.length;
-    logger.main(`Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes with offset ${i}...`);
+    logger.log("main", `Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes with offset ${i}...`);
   }
 
   for (i; i < shardArrays.length; i++) {
@@ -279,7 +303,7 @@ async function getGatewayData() {
   await updateStats();
 })();
 
-function awaitStart(i, shardArrays) {
+function awaitStart(i: number, shardArrays: number[][]): Promise<void> {
   return new Promise((resolve) => {
     pm2.start({
       name: `esmBot-proc${i}`,
