@@ -4,7 +4,7 @@ import type { Logger } from "#utils/logger.js";
 import type { Guild, GuildChannel } from "oceanic.js";
 import { type DBGuild, isError } from "#utils/types.js";
 
-interface DatabasePlugin {
+export interface DatabasePlugin {
   setup: () => Promise<void>;
   stop: () => Promise<void>;
   upgrade: (logger: Logger) => Promise<number>;
@@ -19,7 +19,7 @@ interface DatabasePlugin {
   setTag: (name: string, content: { content: string, author: string }, guild: Guild) => Promise<void>;
   removeTag: (name: string, guild: Guild) => Promise<void>;
   editTag: (name: string, content: { content: string, author: string }, guild: Guild) => Promise<void>;
-  setBroadcast: (msg: string) => Promise<void>;
+  setBroadcast: (msg: string | null) => Promise<void>;
   getBroadcast: () => Promise<string | null>;
   setPrefix: (prefix: string, guild: Guild) => Promise<void>;
   getGuild: (query: string) => Promise<DBGuild>;

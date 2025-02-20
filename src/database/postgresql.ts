@@ -1,12 +1,19 @@
 import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "#utils/collections.js";
-import { Logger } from "#utils/logger.js";
-import { Guild, GuildChannel } from "oceanic.js";
-import { DBGuild } from "#utils/types.js";
+import type { Logger } from "#utils/logger.js";
+import type { Guild, GuildChannel } from "oceanic.js";
+import type { Count, DBGuild, Tag } from "#utils/types.js";
 
 import Postgres from "postgres";
+import type { DatabasePlugin } from "#database";
 const sql = Postgres(process.env.DB as string, {
   onnotice: () => {}
 });
+
+interface Settings {
+  id: number;
+  version: number;
+  broadcast?: string;
+};
 
 const settingsSchema = `
 CREATE TABLE IF NOT EXISTS settings (
@@ -43,8 +50,8 @@ const updates = [
   "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text"
 ];
 
-export async function setup() {
-  const existingCommands = (await sql`SELECT command FROM counts`).map(x => x.command);
+async function setup() {
+  const existingCommands = (await sql<{ command: string; }[]>`SELECT command FROM counts`).map(x => x.command);
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const command of existingCommands) {
     if (!commandNames.includes(command)) {
@@ -58,16 +65,16 @@ export async function setup() {
   }
 }
 
-export async function upgrade(logger: Logger) {
+async function upgrade(logger: Logger) {
   try {
     await sql.begin(async (sql) => {
       await sql.unsafe(settingsSchema);
-      let version;
-      const settingsrow = (await sql`SELECT version FROM settings WHERE id = 1`);
-      if (settingsrow.length === 0) {
+      let version: number;
+      const [settingsrow]: [Settings?] = await sql`SELECT version FROM settings WHERE id = 1`;
+      if (!settingsrow) {
         version = 0;
       } else {
-        version = settingsrow[0].version;
+        version = settingsrow.version;
       }
       const latestVersion = updates.length - 1;
       if (version === 0) {
@@ -97,8 +104,8 @@ export async function upgrade(logger: Logger) {
 export function getGuild(query: string): Promise<DBGuild> {
   return new Promise((resolve) => {
     sql.begin(async (sql) => {
-      let guild = (await sql`SELECT * FROM guilds WHERE guild_id = ${query}`)[0] as DBGuild;
-      if (guild === undefined) {
+      let [guild]: [DBGuild?] = await sql`SELECT * FROM guilds WHERE guild_id = ${query}`;
+      if (!guild) {
         guild = { guild_id: query, prefix: process.env.PREFIX ?? "&", disabled: [], disabled_commands: [] };
         await sql`INSERT INTO guilds ${sql(guild)}`;
       }
@@ -107,79 +114,100 @@ export function getGuild(query: string): Promise<DBGuild> {
   });
 }
 
-export async function setPrefix(prefix: string, guild: Guild) {
+async function setPrefix(prefix: string, guild: Guild) {
   await sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild.id}`;
   prefixCache.set(guild.id, prefix);
 }
 
-export async function getTag(guild: string, tag: string) {
-  const tagResult = await sql`SELECT * FROM tags WHERE guild_id = ${guild} AND name = ${tag}`;
-  return tagResult[0] ? { content: tagResult[0].content, author: tagResult[0].author } : undefined;
+async function getTag(guild: string, tag: string) {
+  const [tagResult]: [Tag?] = await sql`SELECT * FROM tags WHERE guild_id = ${guild} AND name = ${tag}`;
+  return tagResult ? { content: tagResult.content, author: tagResult.author } : undefined;
 }
 
-export async function getTags(guild: string) {
-  const tagArray = await sql`SELECT * FROM tags WHERE guild_id = ${guild}`;
+async function getTags(guild: string) {
+  const tagArray = await sql<Tag[]>`SELECT * FROM tags WHERE guild_id = ${guild}`;
   const tags = new Map(tagArray.map(tag => [tag.name, { content: tag.content, author: tag.author }]));
   return tags;
 }
 
-export async function setTag(name: string, content: { content: string, author: string }, guild: Guild) {
+async function setTag(name: string, content: { content: string, author: string }, guild: Guild) {
   await sql`INSERT INTO tags ${sql({ guild_id: guild.id, name, content: content.content, author: content.author }, "guild_id", "name", "content", "author")}`;
 }
 
-export async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
+async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
   await sql`UPDATE tags SET content = ${content.content}, author = ${content.author} WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
-export async function removeTag(name: string, guild: Guild) {
+async function removeTag(name: string, guild: Guild) {
   await sql`DELETE FROM tags WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
-export async function setBroadcast(msg: string) {
+async function setBroadcast(msg: string | null) {
   await sql`UPDATE settings SET broadcast = ${msg} WHERE id = 1`;
 }
 
-export async function getBroadcast() {
-  const result = await sql`SELECT broadcast FROM settings WHERE id = 1`;
+async function getBroadcast() {
+  const result = await sql<Settings[]>`SELECT broadcast FROM settings WHERE id = 1`;
   return result[0].broadcast;
 }
 
-export async function disableCommand(guild: string, command: string) {
+async function disableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
   await sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
 }
 
-export async function enableCommand(guild: string, command: string) {
+async function enableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
   const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, newDisabled);
 }
 
-export async function disableChannel(channel: GuildChannel) {
+async function disableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
   await sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guildID}`;
   disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
 }
 
-export async function enableChannel(channel: GuildChannel) {
+async function enableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
   const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guildID}`;
   disabledCache.set(channel.guildID, newDisabled);
 }
 
-export async function getCounts() {
-  const counts = await sql`SELECT * FROM counts`;
+async function getCounts() {
+  const counts = await sql<Count[]>`SELECT * FROM counts`;
   const countMap = new Map(counts.map(val => [val.command, val.count]));
   return countMap;
 }
 
-export async function addCount(command: string) {
+async function addCount(command: string) {
   await sql`INSERT INTO counts ${sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
 }
 
-export async function stop() {
+async function stop() {
   await sql.end();
 }
+
+export default {
+  setup,
+  stop,
+  upgrade,
+  addCount,
+  getCounts,
+  disableCommand,
+  enableCommand,
+  disableChannel,
+  enableChannel,
+  getTag,
+  getTags,
+  setTag,
+  removeTag,
+  editTag,
+  setBroadcast,
+  getBroadcast,
+  setPrefix,
+  getGuild
+} as DatabasePlugin;

@@ -1,9 +1,10 @@
 import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 import type { Guild, GuildChannel } from "oceanic.js";
 import type { Logger } from "#utils/logger.js";
-import type { DBGuild, Tag } from "#utils/types.js";
+import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { Database as BSQLite3Database, Statement as BSQLite3Statement } from "better-sqlite3";
 import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
+import type { DatabasePlugin } from "#database";
 
 // bun:sqlite is mostly compatible with better-sqlite3, but has a few minor type differences that don't really matter in our case
 // here we attempt to bring the two closer together
@@ -58,7 +59,7 @@ const updates = [
   INSERT INTO settings (id) VALUES (1);`,
 ];
 
-export async function setup() {
+async function setup() {
   const existingCommands = (connection.prepare("SELECT command FROM counts").all() as { command: string }[]).map(x => x.command);
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const command of existingCommands) {
@@ -73,11 +74,11 @@ export async function setup() {
   }
 }
 
-export async function stop() {
+async function stop() {
   connection.close();
 }
 
-export async function upgrade(logger: Logger) {
+async function upgrade(logger: Logger) {
   if (process.versions.bun) {
     (connection as BunDatabase).exec("PRAGMA journal_mode = WAL;");
   } else {
@@ -120,54 +121,54 @@ export async function upgrade(logger: Logger) {
   }
 }
 
-export async function addCount(command: string) {
+async function addCount(command: string) {
   connection.prepare("UPDATE counts SET count = count + 1 WHERE command = ?").run(command);
 }
 
-export async function getCounts() {
-  const counts = connection.prepare("SELECT * FROM counts").all() as { command: string, count: number}[];
+async function getCounts() {
+  const counts = connection.prepare("SELECT * FROM counts").all() as Count[];
   const countMap = new Map(counts.map(val => [val.command, val.count]));
   return countMap;
 }
 
-export async function disableCommand(guild: string, command: string) {
+async function disableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
   connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify((guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)), guild);
   disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
 }
 
-export async function enableCommand(guild: string, command: string) {
+async function enableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
   const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
   connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), guild);
   disabledCmdCache.set(guild, newDisabled);
 }
 
-export async function disableChannel(channel: GuildChannel) {
+async function disableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
   connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify([...guildDB.disabled, channel.id]), channel.guildID);
   disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
 }
 
-export async function enableChannel(channel: GuildChannel) {
+async function enableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
   const newDisabled = guildDB.disabled.filter((item: string) => item !== channel.id);
   connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), channel.guildID);
   disabledCache.set(channel.guildID, newDisabled);
 }
 
-export async function getTag(guild: string, tag: string) {
+async function getTag(guild: string, tag: string) {
   const tagResult = connection.prepare("SELECT * FROM tags WHERE guild_id = ? AND name = ?").get(guild, tag) as Tag;
   return tagResult ? { content: tagResult.content, author: tagResult.author } : undefined;
 }
 
-export async function getTags(guild: string) {
+async function getTags(guild: string) {
   const tagArray = connection.prepare("SELECT * FROM tags WHERE guild_id = ?").all(guild) as Tag[];
   const tags = new Map(tagArray.map(tag => [tag.name, { content: tag.content, author: tag.author }]));
   return tags;
 }
 
-export async function setTag(name: string, content: Tag, guild: Guild) {
+async function setTag(name: string, content: Tag, guild: Guild) {
   const tag = {
     guild_id: guild.id,
     name: name,
@@ -177,29 +178,29 @@ export async function setTag(name: string, content: Tag, guild: Guild) {
   connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@guild_id, @name, @content, @author)").run(tag);
 }
 
-export async function removeTag(name: string, guild: Guild) {
+async function removeTag(name: string, guild: Guild) {
   connection.prepare("DELETE FROM tags WHERE guild_id = ? AND name = ?").run(guild.id, name);
 }
 
-export async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
+async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
   connection.prepare("UPDATE tags SET content = ?, author = ? WHERE guild_id = ? AND name = ?").run(content.content, content.author, guild.id, name);
 }
 
-export async function setBroadcast(msg: string) {
+async function setBroadcast(msg: string | null) {
   connection.prepare("UPDATE settings SET broadcast = ? WHERE id = 1").run(msg);
 }
 
-export async function getBroadcast() {
+async function getBroadcast() {
   const result = connection.prepare("SELECT broadcast FROM settings WHERE id = 1").get() as { broadcast: string | null };
   return result.broadcast;
 }
 
-export async function setPrefix(prefix: string, guild: Guild) {
+async function setPrefix(prefix: string, guild: Guild) {
   connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild.id);
   prefixCache.set(guild.id, prefix);
 }
 
-export async function getGuild(query: string): Promise<DBGuild> {
+async function getGuild(query: string): Promise<DBGuild> {
   let guild: DBGuild | undefined;
   connection.transaction(() => {   
     guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as DBGuild;
@@ -227,3 +228,24 @@ export async function getGuild(query: string): Promise<DBGuild> {
     disabled_commands: []
   };
 }
+
+export default {
+  setup,
+  stop,
+  upgrade,
+  addCount,
+  getCounts,
+  disableCommand,
+  enableCommand,
+  disableChannel,
+  enableChannel,
+  getTag,
+  getTags,
+  setTag,
+  removeTag,
+  editTag,
+  setBroadcast,
+  getBroadcast,
+  setPrefix,
+  getGuild
+} as DatabasePlugin;

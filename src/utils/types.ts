@@ -13,6 +13,11 @@ export type Tag = {
   author: string;
 };
 
+export interface Count {
+  command: string;
+  count: number;
+};
+
 export interface CommandsConfig {
   types: {
     classic: boolean,
