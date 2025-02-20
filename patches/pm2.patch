@@ -1,0 +1,13 @@
+diff --git a/types/index.d.ts b/types/index.d.ts
+index ab61446d3746f4c851204086dd5b558d4d188751..4775a64b3a42e7a01b4c2b7953102ed02e9e0db4 100644
+--- a/types/index.d.ts
++++ b/types/index.d.ts
+@@ -434,6 +434,8 @@ export interface StartOptions {
+   write?: any;
+   source_map_support?: any;
+   disable_source_map_support?: any;
++  exp_backoff_restart_delay?: number;
++  listen_timeout?: number;
+   /**
+    * The environment variables to pass on to the process.
+    */

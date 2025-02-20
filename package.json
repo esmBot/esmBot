@@ -94,7 +94,8 @@
       "bufferutil"
     ],
     "patchedDependencies": {
-      "bun-types": "patches/bun-types.patch"
+      "bun-types": "patches/bun-types.patch",
+      "pm2": "patches/pm2.patch"
     }
   }
 }
