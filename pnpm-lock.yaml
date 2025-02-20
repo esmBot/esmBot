@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  bun-types:
+    hash: 1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2
+    path: patches/bun-types.patch
+
 importers:
 
   .:
@@ -2003,7 +2008,7 @@ snapshots:
 
   '@types/bun@1.2.2':
     dependencies:
-      bun-types: 1.2.2
+      bun-types: 1.2.2(patch_hash=1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2)
 
   '@types/connect@3.4.36':
     dependencies:
@@ -2157,7 +2162,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bun-types@1.2.2:
+  bun-types@1.2.2(patch_hash=1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2):
     dependencies:
       '@types/node': 20.17.19
       '@types/ws': 8.5.14

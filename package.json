@@ -92,6 +92,9 @@
       "@biomejs/biome",
       "better-sqlite3",
       "bufferutil"
-    ]
+    ],
+    "patchedDependencies": {
+      "bun-types": "patches/bun-types.patch"
+    }
   }
 }

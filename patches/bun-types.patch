@@ -1,0 +1,31 @@
+diff --git a/globals.d.ts b/globals.d.ts
+index b51874e3e4d8957abd02019d892ba7dc1dcf6fa4..4dd49e165d9429c52d679d154f44d97ddd57fbcb 100644
+--- a/globals.d.ts
++++ b/globals.d.ts
+@@ -1166,26 +1166,6 @@ declare global {
+ 		): CustomEvent<T>;
+ 	};
+ 
+-	/**
+-	 * The URL interface represents an object providing static methods used for
+-	 * creating object URLs.
+-	 */
+-	interface URL {
+-		new (url: string | URL, base?: string | URL): URL;
+-		/** Not implemented yet */
+-		createObjectURL(obj: Blob): string;
+-		/** Not implemented yet */
+-		revokeObjectURL(url: string): void;
+-
+-		/**
+-		 * Check if `url` is a valid URL string
+-		 *
+-		 * @param url URL string to parse
+-		 * @param base URL to resolve against
+-		 */
+-		canParse(url: string, base?: string): boolean;
+-	}
+-
+ 	interface EventListener {
+ 		(evt: Event): void;
+ 	}
