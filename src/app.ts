@@ -190,7 +190,7 @@ const client = new Client({
 
 // register events
 logger.log("info", "Attempting to load events...");
-for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"))) {
+for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"), process.versions.bun ? ".ts" : ".js")) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
@@ -273,7 +273,6 @@ process.on("SIGINT", async () => {
 
 try {
   await client.connect();
-
 } catch (e) {
   logger.error("esmBot failed to connect to Discord!");
   logger.error(e);

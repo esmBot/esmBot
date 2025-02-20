@@ -20,7 +20,9 @@
     "docker:run-api": "docker run --rm --network=host --entrypoint='[\"node\", \"api/index.js\"]' esmbot",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml ghcr.io/lavalink-devs/lavalink:4",
     "start": "node dist/app.js",
+    "start:bun": "bun src/app.ts",
     "start:debug": "DEBUG=true node dist/app.js",
+    "start:bun:debug": "DEBUG=true bun src/app.ts",
     "start-api": "node api/index.js",
     "start-api:debug": "DEBUG=true node api/index.js"
   },
