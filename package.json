@@ -68,20 +68,20 @@
   },
   "imports": {
     "#cmd-classes/*": {
-      "default": "./src/classes/*",
-      "node": "./dist/classes/*"
+      "node": "./dist/classes/*",
+      "default": "./src/classes/*"
     },
     "#utils/*": {
-      "default": "./src/utils/*",
-      "node": "./dist/utils/*"
+      "node": "./dist/utils/*",
+      "default": "./src/utils/*"
     },
     "#database": {
-      "default": "./src/database.js",
-      "node": "./dist/database.js"
+      "node": "./dist/database.js",
+      "default": "./src/database.js"      
     },
     "#pagination": {
-      "default": "./src/pagination/pagination.js",
-      "node": "./dist/pagination/pagination.js"
+      "node": "./dist/pagination/pagination.js",
+      "default": "./src/pagination/pagination.js"
     },
     "#config/*": "./config/*"
   },
