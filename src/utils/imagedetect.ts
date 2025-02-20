@@ -147,7 +147,7 @@ const getImage = async (image: string, image2: string, video: boolean, spoiler =
 };
 
 /**
- * Checks a single message for stickers, videos, or images
+ * Checks a single message for videos or images
  */
 const checkImages = async (message: Message, extraReturnTypes: boolean, video: boolean): Promise<ImageMeta | undefined> => {
   let type: ImageMeta | undefined;
