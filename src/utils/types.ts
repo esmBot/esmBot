@@ -54,19 +54,17 @@ export type CommandInfo = {
 export type ImageParams = {
   cmd: string;
   params: {
-    /*data?: ArrayBuffer;
-    type?: string;*/
     [key: string]: string | number | boolean;
   };
-  input: {
+  input?: {
     data?: ArrayBuffer;
     type?: string;
   };
   id: string;
-  path: string;
-  url: string;
-  name: string;
-  onlyAnim: boolean;
+  path?: string;
+  url?: string;
+  name?: string;
+  onlyAnim?: boolean;
   ephemeral?: boolean;
   spoiler?: boolean;
   token?: string;

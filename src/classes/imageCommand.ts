@@ -10,9 +10,9 @@ import Command from "./command.js";
 
 class ImageCommand extends Command {
   params?: object;
-  paramsFunc?(url: string, name: string): object;
+  paramsFunc?(url?: string, name?: string): object;
 
-  async criteria(_text: string, _url: string) {
+  async criteria(_text?: string, _url?: string) {
     return true;
   }
 
@@ -32,7 +32,7 @@ class ImageCommand extends Command {
 
     const staticProps = this.constructor as typeof ImageCommand;
 
-    let imageParams: ImageParams | undefined;
+    let imageParams: ImageParams;
 
     let needsSpoiler = false;
     if (staticProps.requiresImage) {
@@ -85,9 +85,15 @@ class ImageCommand extends Command {
         runningCommands.delete(this.author.id);
         throw e;
       }
+    } else {
+      imageParams = {
+        cmd: staticProps.command,
+        params: {
+          togif: !!this.getOptionBoolean("togif")
+        },
+        id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString()
+      }
     }
-
-    if (!imageParams) throw Error("Params not assigned");
 
     const spoiler = this.getOptionBoolean("spoiler");
     if (spoiler != null) needsSpoiler = spoiler;
@@ -107,7 +113,7 @@ class ImageCommand extends Command {
     }
 
     let status: Message | undefined;
-    if ((imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") && this.message) {
+    if (imageParams.input && (imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") && this.message) {
       status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
     }
 

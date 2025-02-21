@@ -141,7 +141,7 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
       idealServers.push(null);
       continue;
     }
-    if (object.input.type && !connection.formats[object.cmd]?.includes(object.input.type)) continue;
+    if (object.input?.type && !connection.formats[object.cmd]?.includes(object.input.type)) continue;
     const load = await connection.getCount();
     if (load == null) continue;
     idealServers.push({
