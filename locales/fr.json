@@ -110,10 +110,7 @@
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
-            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule).",
-            "channel": "",
-            "command": "",
-            "tags": ""
+            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)."
         },
         "flagNames": {
             "8ball": {
@@ -369,8 +366,7 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": ""
+                "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
@@ -432,12 +428,6 @@
             "reload": {
                 "cmd": "La commande à recharger",
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
-            },
-            "snapchat": {
-                "position": ""
-            },
-            "uncaption": {
-                "tolerance": ""
             }
         },
         "names": {
