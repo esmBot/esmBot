@@ -30,7 +30,7 @@ let db = null;
 if (process.env.DB) {
   const dbtype = process.env.DB.split("://")[0];
   try {
-    db = await import(`./database/${dbtype}.js`);
+    db = (await import(`./database/${dbtype}.js`)).default;
   } catch (error) {
     if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {
       console.error(`DB config option has unknown database type '${dbtype}'`);
