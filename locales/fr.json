@@ -635,7 +635,9 @@
                 "sourcesNo": "Mes sources disent que non"
             },
             "base64": {
-                "noCmd": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !"
+                "noCmd": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !",
+                "decodeNoInput": "Vous devez fournir une chaîne de caractère pour décoder !",
+                "encodeNoInput": "Vous devez fournir une chaîne de caractères pour encoder !"
             },
             "bird": {
                 "error": "Je n'ai pas pu obtenir une photo d'oiseau à temps. Peut-être que tu devrais réessayer ?"
@@ -659,6 +661,29 @@
             },
             "cat": {
                 "error": "Je n'ai pas pu obtenir une photo du chat à temps. Peut-être que tu devrais réessayer ?"
+            },
+            "channel": {
+                "alreadyDisabled": "Je suis déjà désactivé dans ce salon !",
+                "adminOnly": "Vous devez être administrateur pour m'activer/désactiver dans ce salon !",
+                "invalid": "Ceci n'est pas une option valide !",
+                "notDisabled": "Je ne suis pas désactivé dans ce salon !",
+                "notInServer": "Ce salon n'est pas dans ce serveur !",
+                "reEnabled": "J'ai été réactivé dans ce salon.",
+                "disabled": "J'ai été désactivé dans ce salon. Pour me réactiver, exécutez juste `{{prefix}}channel enable`.",
+                "noCmd": "Vous devez indiquer si vous souhaitez m'activer/désactiver dans ce salon !"
+            },
+            "command": {
+                "adminOnly": "Vous devez être administrateur pour activer/désactiver des commandes !",
+                "alreadyDisabled": "Cette commande est déjà désactivée !",
+                "cannotDisable": "Vous ne pouvez pas désactiver cette commande !"
+            },
+            "avatar": {
+                "invalidMention": "Ceci n'est pas une mention valide !"
+            },
+            "banner": {
+                "invalidMention": "Ceci n'est pas une mention valide !",
+                "noSelfBanner": "Vous n'avez pas de bannière !",
+                "noUserBanner": "Cet utilisateur n'a pas de bannière !"
             }
         }
     },

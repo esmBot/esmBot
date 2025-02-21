@@ -1,1 +1,15 @@
-{}
+{
+    "commands": {
+        "descriptions": {
+            "8ball": "Stiller den mystiske 8-ball et spørgsmål",
+            "ancient": "Henter et tilfældigt gammelt meme",
+            "bird": "Henter et tilfældigt fuglebillede",
+            "cat": "Henter et tilfældigt kattebillede",
+            "dice": "Slår med en terning",
+            "dog": "Henter et tilfældigt hundebillede",
+            "wikihow": "Henter et tilfældigt WikiHow-billede",
+            "avatar": "Henter en brugers profilbillede",
+            "banner": "Henter en brugers banner"
+        }
+    }
+}
