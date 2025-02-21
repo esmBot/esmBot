@@ -12,22 +12,20 @@ const logger = winston.createLogger({
     warn: 1,
     info: 2,
     main: 3,
-    debug: 4
+    debug: 4,
   },
   transports: [
-    new winston.transports.Console({ format: winston.format.colorize({ all: true }), stderrLevels: ["error", "warn"] })
+    new winston.transports.Console({ format: winston.format.colorize({ all: true }), stderrLevels: ["error", "warn"] }),
   ],
   level: process.env.DEBUG_LOG ? "debug" : "main",
   format: winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     winston.format.printf((info) => {
-      const {
-        timestamp, level, message, ...args
-      } = info;
+      const { timestamp, level, message, ...args } = info;
 
       return `[${timestamp}]: [${level.toUpperCase()}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
     }),
-  )
+  ),
 });
 
 winston.addColors({
@@ -35,7 +33,7 @@ winston.addColors({
   main: "gray",
   debug: "magenta",
   warn: "yellow",
-  error: "red"
+  error: "red",
 });
 
 type ShardData = {
@@ -56,7 +54,7 @@ type ServerCountMessage = {
     type: "serverCounts";
     guilds: number;
     shards: ShardData[];
-  }
+  };
 };
 
 type IncomingProcMessage = BaseProcMessage | ServerCountMessage;
@@ -74,8 +72,8 @@ process.on("message", (packet: IncomingProcMessage) => {
       type: "process:msg",
       data: {
         type: "countResponse",
-        serverCount
-      }
+        serverCount,
+      },
     });
   }
 });
@@ -121,8 +119,8 @@ async function updateStats() {
   process.send?.({
     type: "process:msg",
     data: {
-      type: "serverCounts"
-    }
+      type: "serverCounts",
+    },
   });
 }
 
@@ -222,7 +220,7 @@ function calcShards(shards: number[], procs: number) {
         added = 1;
         remainder--;
       }
-      const end = i + size + (size * added);
+      const end = i + size + size * added;
       r.push(shards.slice(i, end));
       i = end;
     }
@@ -246,16 +244,18 @@ async function getGatewayData() {
       maxShards: "auto",
       presence: {
         status: "idle",
-        activities: [{
-          type: 0,
-          name: "Starting esmBot..."
-        }]
+        activities: [
+          {
+            type: 0,
+            name: "Starting esmBot...",
+          },
+        ],
       },
-      intents: []
+      intents: [],
     },
     rest: {
-      baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
-    }
+      baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
+    },
   });
 
   const connectionData = await client.rest.getBotGateway();
@@ -264,13 +264,16 @@ async function getGatewayData() {
   client.disconnect();
   return {
     procAmount,
-    connectionData
+    connectionData,
   };
 }
 
 (async function init() {
   const { procAmount, connectionData } = await getGatewayData();
-  logger.log("main", `Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`);
+  logger.log(
+    "main",
+    `Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`,
+  );
 
   const runningProc = await getProcesses();
   if (runningProc.length === procAmount) {
@@ -288,39 +291,45 @@ async function getGatewayData() {
 
   if (runningProc.length < procAmount && runningProc.length !== 0) {
     i = runningProc.length;
-    logger.log("main", `Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes with offset ${i}...`);
+    logger.log(
+      "main",
+      `Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes with offset ${i}...`,
+    );
   }
 
   for (i; i < shardArrays.length; i++) {
     await awaitStart(i, shardArrays);
   }
-  
+
   await updateStats();
 })();
 
 function awaitStart(i: number, shardArrays: number[][]): Promise<void> {
   return new Promise((resolve) => {
-    pm2.start({
-      name: `esmBot-proc${i}`,
-      script: "app.js",
-      autorestart: true,
-      exp_backoff_restart_delay: 1000,
-      wait_ready: true,
-      listen_timeout: 60000,
-      watch: false,
-      exec_mode: "cluster",
-      instances: 1,
-      env: {
-        SHARDS: JSON.stringify(shardArrays)
-      }
-    }, (err) => {
-      if (err) {
-        logger.error(`Failed to start esmBot process ${i}: ${err}`);
-        process.exit(0);
-      } else {
-        logger.info(`Started esmBot process ${i}.`);
-        resolve();
-      }
-    });
+    pm2.start(
+      {
+        name: `esmBot-proc${i}`,
+        script: "app.js",
+        autorestart: true,
+        exp_backoff_restart_delay: 1000,
+        wait_ready: true,
+        listen_timeout: 60000,
+        watch: false,
+        exec_mode: "cluster",
+        instances: 1,
+        env: {
+          SHARDS: JSON.stringify(shardArrays),
+        },
+      },
+      (err) => {
+        if (err) {
+          logger.error(`Failed to start esmBot process ${i}: ${err}`);
+          process.exit(0);
+        } else {
+          logger.info(`Started esmBot process ${i}.`);
+          resolve();
+        }
+      },
+    );
   });
 }

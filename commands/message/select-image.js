@@ -7,10 +7,18 @@ class SelectImageCommand extends Command {
   async run() {
     const message = this.interaction?.data.target;
     if (!(message instanceof Message)) throw Error("Target is not a message");
-    const image = await imageDetect(this.client, message, this.interaction, {
-      image: this.getOptionString("image"),
-      link: this.getOptionString("link")
-    }, true, false, true).catch(e => {
+    const image = await imageDetect(
+      this.client,
+      message,
+      this.interaction,
+      {
+        image: this.getOptionString("image"),
+        link: this.getOptionString("link"),
+      },
+      true,
+      false,
+      true,
+    ).catch((e) => {
       if (e.name === "AbortError") return { type: "timeout" };
       throw e;
     });

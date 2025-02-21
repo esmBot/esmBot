@@ -15,8 +15,8 @@ class ImageReloadCommand extends Command {
         process.send?.({
           type: "process:msg",
           data: {
-            type: "imagereload"
-          }
+            type: "imagereload",
+          },
         });
       }
       return this.getString("commands.responses.imagereload.connected", { params: { length } });

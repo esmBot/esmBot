@@ -2,7 +2,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class HooHCommand extends ImageCommand {
   params = {
-    vertical: true
+    vertical: true,
   };
 
   static description = "Mirrors the bottom of an image onto the top";

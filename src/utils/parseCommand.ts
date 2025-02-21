@@ -15,17 +15,17 @@ export default (cmd: string[] | string) => {
     const a = input[i];
     if ((a.startsWith("--") || a.startsWith("—")) && !curr) {
       if (a.includes("=")) {
-        const [arg, value] = (a.startsWith("--") ? a.slice(2).split("=") : a.slice(1).split("="));
+        const [arg, value] = a.startsWith("--") ? a.slice(2).split("=") : a.slice(1).split("=");
         let ended = true;
         if (arg !== "args") {
-          if (value.startsWith("\"")) {
-            if (value.endsWith("\"")) {
+          if (value.startsWith('"')) {
+            if (value.endsWith('"')) {
               args.flags[arg] = value.slice(1).slice(0, -1);
             } else {
               args.flags[arg] = `${value.slice(1)} `;
               ended = false;
             }
-          } else if (value.endsWith("\"")) {
+          } else if (value.endsWith('"')) {
             args.flags[arg] += a.slice(0, -1);
           } else if (value !== "") {
             args.flags[arg] = value;
@@ -43,7 +43,7 @@ export default (cmd: string[] | string) => {
         args.flags[a.slice(2)] = true;
       }
     } else if (curr) {
-      if (a.endsWith("\"")) {
+      if (a.endsWith('"')) {
         args.flags[curr] += a.slice(0, -1);
         curr = null;
       } else {
@@ -66,7 +66,7 @@ export default (cmd: string[] | string) => {
 };
 
 // /*
-// Format: 
+// Format:
 // [{name: "verbose", type: "bool"}, {name: "username", type: "string"}]
 // */
 // export default (input, format) => {
@@ -75,10 +75,10 @@ export default (cmd: string[] | string) => {
 //     format.forEach(element => {
 //         if(element.pos !== undefined) return;
 //         switch (element.type) {
-//             case "bool":                
-//                 res = text.match(`--${element.name}[ |=](.*?)($| )`);                
+//             case "bool":
+//                 res = text.match(`--${element.name}[ |=](.*?)($| )`);
 //                 if(res) {
-//                     text = text.replace(res[0], ""); 
+//                     text = text.replace(res[0], "");
 //                     results[element.name] = (res[1].toLowerCase() == "true");
 //                 } else {
 //                     res = text.match(`--${element.name}`);
@@ -87,9 +87,9 @@ export default (cmd: string[] | string) => {
 //                 }
 //                 break;
 //             case "string":
-//                 res = text.match(`--${element.name}[ |=](.*?)($| )`);              
-//                 if(res) text = text.replace(res[0], "");                
-//                 results[element.name] = (res ? res[1].replace('\\','') : null);                
+//                 res = text.match(`--${element.name}[ |=](.*?)($| )`);
+//                 if(res) text = text.replace(res[0], "");
+//                 results[element.name] = (res ? res[1].replace('\\','') : null);
 //                 break;
 //             case "int":
 //                 res = text.match(`--${element.name}[ |=](.*?)($| )`);
@@ -104,11 +104,11 @@ export default (cmd: string[] | string) => {
 //             default:
 //                 throw Error("unknown type");
 //                 break;
-//         }        
+//         }
 //     });
 //     let s = text.split(' ');
 //     results._ = text;
-//     format.forEach(element => {        
+//     format.forEach(element => {
 //         if(element.pos === undefined) return;
 //         if(element.pos <= s.length) {
 //             results[element.name] = s[element.pos];

@@ -19,8 +19,8 @@ class BroadcastCommand extends Command {
           type: "process:msg",
           data: {
             type: "broadcastStart",
-            message
-          }
+            message,
+          },
         });
       }
       return this.getString("commands.responses.broadcast.started");
@@ -31,18 +31,20 @@ class BroadcastCommand extends Command {
       process.send?.({
         type: "process:msg",
         data: {
-          type: "broadcastEnd"
-        }
+          type: "broadcastEnd",
+        },
       });
     }
     return this.getString("commands.responses.broadcast.ended");
   }
 
-  static flags = [{
-    name: "message",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The message to broadcast"
-  }];
+  static flags = [
+    {
+      name: "message",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The message to broadcast",
+    },
+  ];
 
   static description = "Broadcasts a playing message until the command is run again or the bot restarts";
   static adminOnly = true;

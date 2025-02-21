@@ -15,7 +15,11 @@ let connection: {
 
 if (process.versions.bun) {
   const { Database } = await import("bun:sqlite");
-  connection = new Database((process.env.DB as string).replace("sqlite://", ""), { create: true, readwrite: true, strict: true });
+  connection = new Database((process.env.DB as string).replace("sqlite://", ""), {
+    create: true,
+    readwrite: true,
+    strict: true,
+  });
 } else {
   const { default: sqlite3 } = await import("better-sqlite3");
   connection = sqlite3((process.env.DB as string).replace("sqlite://", ""));
@@ -60,7 +64,9 @@ const updates = [
 ];
 
 async function setup() {
-  const existingCommands = (connection.prepare("SELECT command FROM counts").all() as { command: string }[]).map(x => x.command);
+  const existingCommands = (connection.prepare("SELECT command FROM counts").all() as { command: string }[]).map(
+    (x) => x.command,
+  );
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const command of existingCommands) {
     if (!commandNames.includes(command)) {
@@ -105,7 +111,9 @@ async function upgrade(logger: Logger) {
           connection.exec(updates[version]);
         }
       } else if (version > latestVersion) {
-        throw new Error(`SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
+        throw new Error(
+          `SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`,
+        );
       }
       // prepared statements don't seem to work here
       if (process.versions.bun) {
@@ -127,33 +135,49 @@ async function addCount(command: string) {
 
 async function getCounts() {
   const counts = connection.prepare("SELECT * FROM counts").all() as Count[];
-  const countMap = new Map(counts.map(val => [val.command, val.count]));
+  const countMap = new Map(counts.map((val) => [val.command, val.count]));
   return countMap;
 }
 
 async function disableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
-  connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify((guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)), guild);
-  disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
+  connection
+    .prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?")
+    .run(
+      JSON.stringify(
+        (guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v),
+      ),
+      guild,
+    );
+  disabledCmdCache.set(
+    guild,
+    guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v),
+  );
 }
 
 async function enableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
-  const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
-  connection.prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), guild);
+  const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter((item) => item !== command) : [];
+  connection
+    .prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?")
+    .run(JSON.stringify(newDisabled), guild);
   disabledCmdCache.set(guild, newDisabled);
 }
 
 async function disableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
-  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify([...guildDB.disabled, channel.id]), channel.guildID);
+  connection
+    .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
+    .run(JSON.stringify([...guildDB.disabled, channel.id]), channel.guildID);
   disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
 }
 
 async function enableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
   const newDisabled = guildDB.disabled.filter((item: string) => item !== channel.id);
-  connection.prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?").run(JSON.stringify(newDisabled), channel.guildID);
+  connection
+    .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
+    .run(JSON.stringify(newDisabled), channel.guildID);
   disabledCache.set(channel.guildID, newDisabled);
 }
 
@@ -164,7 +188,7 @@ async function getTag(guild: string, tag: string) {
 
 async function getTags(guild: string) {
   const tagArray = connection.prepare("SELECT * FROM tags WHERE guild_id = ?").all(guild) as Tag[];
-  const tags = new Map(tagArray.map(tag => [tag.name, { content: tag.content, author: tag.author }]));
+  const tags = new Map(tagArray.map((tag) => [tag.name, { content: tag.content, author: tag.author }]));
   return tags;
 }
 
@@ -173,17 +197,21 @@ async function setTag(name: string, content: Tag, guild: Guild) {
     guild_id: guild.id,
     name: name,
     content: content.content,
-    author: content.author
+    author: content.author,
   };
-  connection.prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@guild_id, @name, @content, @author)").run(tag);
+  connection
+    .prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@guild_id, @name, @content, @author)")
+    .run(tag);
 }
 
 async function removeTag(name: string, guild: Guild) {
   connection.prepare("DELETE FROM tags WHERE guild_id = ? AND name = ?").run(guild.id, name);
 }
 
-async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
-  connection.prepare("UPDATE tags SET content = ?, author = ? WHERE guild_id = ? AND name = ?").run(content.content, content.author, guild.id, name);
+async function editTag(name: string, content: { content: string; author: string }, guild: Guild) {
+  connection
+    .prepare("UPDATE tags SET content = ?, author = ? WHERE guild_id = ? AND name = ?")
+    .run(content.content, content.author, guild.id, name);
 }
 
 async function setBroadcast(msg: string | null) {
@@ -191,7 +219,9 @@ async function setBroadcast(msg: string | null) {
 }
 
 async function getBroadcast() {
-  const result = connection.prepare("SELECT broadcast FROM settings WHERE id = 1").get() as { broadcast: string | null };
+  const result = connection.prepare("SELECT broadcast FROM settings WHERE id = 1").get() as {
+    broadcast: string | null;
+  };
   return result.broadcast;
 }
 
@@ -202,31 +232,37 @@ async function setPrefix(prefix: string, guild: Guild) {
 
 async function getGuild(query: string): Promise<DBGuild> {
   let guild: DBGuild | undefined;
-  connection.transaction(() => {   
+  connection.transaction(() => {
     guild = connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as DBGuild;
     if (!guild) {
       const guild_id = query;
       const prefix = process.env.PREFIX ?? "&";
-      connection.prepare("INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@guild_id, @prefix, @disabled, @disabled_commands)").run({
-        guild_id,
-        prefix,
-        disabled: "[]",
-        disabled_commands: "[]"
-      });
+      connection
+        .prepare(
+          "INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@guild_id, @prefix, @disabled, @disabled_commands)",
+        )
+        .run({
+          guild_id,
+          prefix,
+          disabled: "[]",
+          disabled_commands: "[]",
+        });
       guild = {
         guild_id,
         prefix,
         disabled: [],
-        disabled_commands: []
+        disabled_commands: [],
       };
     }
   })();
-  return guild ?? {
-    guild_id: query,
-    prefix: process.env.PREFIX ?? "&",
-    disabled: [],
-    disabled_commands: []
-  };
+  return (
+    guild ?? {
+      guild_id: query,
+      prefix: process.env.PREFIX ?? "&",
+      disabled: [],
+      disabled_commands: [],
+    }
+  );
 }
 
 export default {
@@ -247,5 +283,5 @@ export default {
   setBroadcast,
   getBroadcast,
   setPrefix,
-  getGuild
+  getGuild,
 } as DatabasePlugin;

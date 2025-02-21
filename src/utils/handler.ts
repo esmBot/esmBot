@@ -1,4 +1,12 @@
-import { aliases as _aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.js";
+import {
+  aliases as _aliases,
+  categories,
+  commands,
+  info,
+  messageCommands,
+  paths,
+  userCommands,
+} from "./collections.js";
 import { log } from "./logger.js";
 
 import { type Client, Constants, type CreateApplicationCommandOptions } from "oceanic.js";
@@ -13,7 +21,7 @@ let queryValue = 0;
  * Load a command into memory.
  */
 export async function load(client: Client | null, command: string, skipSend = false) {
-  const { default: props } = await import(`${command}?v=${queryValue}`) as { default: typeof Command };
+  const { default: props } = (await import(`${command}?v=${queryValue}`)) as { default: typeof Command };
   queryValue++;
   const commandArray = command.split("/");
   let commandName = commandArray[commandArray.length - 1].split(".")[0];
@@ -52,7 +60,7 @@ export async function load(client: Client | null, command: string, skipSend = fa
     directAllowed: props.directAllowed,
     userAllowed: props.userAllowed,
     adminOnly: props.adminOnly,
-    type: Constants.ApplicationCommandTypes.CHAT_INPUT
+    type: Constants.ApplicationCommandTypes.CHAT_INPUT,
   };
 
   if (category === "message") {
@@ -73,7 +81,7 @@ export async function load(client: Client | null, command: string, skipSend = fa
 
   const categoryCommands = categories.get(category);
   categories.set(category, categoryCommands ? [...categoryCommands, commandName] : [commandName]);
-  
+
   if (props.aliases) {
     for (const alias of props.aliases) {
       _aliases.set(alias, commandName);
@@ -104,8 +112,10 @@ function parseFlags(flags: ExtendedCommandOptions[]) {
 function extendFlags(flags: ExtendedCommandOptions[], name: string) {
   const outFlags: ExtendedCommandOptions[] = [];
   for (const flag of flags) {
-    if (!flag.nameLocalizations) flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
-    if (!flag.descriptionLocalizations) flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
+    if (!flag.nameLocalizations)
+      flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
+    if (!flag.descriptionLocalizations)
+      flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
     if (flag.type === 1 && flag.options) {
       const nameWithFlag = `${name} ${flag.name}`;
       extendFlags(flag.options, nameWithFlag);
@@ -133,17 +143,20 @@ export function update() {
         directAllowed: cmd.directAllowed,
         userAllowed: cmd.userAllowed,
         adminOnly: cmd.adminOnly,
-        type: cmdInfo?.type ?? Constants.ApplicationCommandTypes.CHAT_INPUT
+        type: cmdInfo?.type ?? Constants.ApplicationCommandTypes.CHAT_INPUT,
       };
       info.set(name, cmdInfo);
     }
-    if (cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE || cmdInfo?.type === Constants.ApplicationCommandTypes.USER) {
+    if (
+      cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE ||
+      cmdInfo?.type === Constants.ApplicationCommandTypes.USER
+    ) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         nameLocalizations: getAllLocalizations(`commands.names.${name}`),
         type: cmdInfo.type,
-        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
-        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
+        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter((v) => v !== null),
+        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter((v) => v !== null),
       });
     } else if (cmdInfo?.slashAllowed) {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
@@ -153,14 +166,14 @@ export function update() {
         description: cmdInfo.description,
         descriptionLocalizations: getAllLocalizations(`commands.descriptions.${name}`),
         options: cmdInfo.flags,
-        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter(v => v !== null),
-        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter(v => v !== null)
+        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter((v) => v !== null),
+        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter((v) => v !== null),
       });
     }
   }
   return {
     main: commandArray,
-    private: privateCommandArray
+    private: privateCommandArray,
   };
 }
 

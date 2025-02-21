@@ -22,10 +22,12 @@ class ExecCommand extends Command {
       if (sendString.length >= 2000) {
         return {
           content: this.getString("tooLarge"),
-          files: [{
-            contents: Buffer.from(cleaned),
-            name: "result.txt"
-          }]
+          files: [
+            {
+              contents: Buffer.from(cleaned),
+              name: "result.txt",
+            },
+          ],
         };
       }
       return sendString;
@@ -34,13 +36,15 @@ class ExecCommand extends Command {
     }
   }
 
-  static flags = [{
-    name: "cmd",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The command to execute",
-    classic: true,
-    required: true
-  }];
+  static flags = [
+    {
+      name: "cmd",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The command to execute",
+      classic: true,
+      required: true,
+    },
+  ];
 
   static description = "Executes a shell command";
   static aliases = ["runcmd"];

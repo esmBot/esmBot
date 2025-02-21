@@ -6,18 +6,20 @@ class DiceCommand extends Command {
     const max = this.interaction?.data.options.getInteger("max") ?? Number.parseInt(this.args[0]);
     return `🎲 ${this.getString("commands.responses.dice.landed", {
       params: {
-        number: (Math.floor(Math.random() * (max || 6)) + 1).toString()
-      }
+        number: (Math.floor(Math.random() * (max || 6)) + 1).toString(),
+      },
     })}`;
   }
 
-  static flags = [{
-    name: "max",
-    type: Constants.ApplicationCommandOptionTypes.INTEGER,
-    description: "The maximum dice value",
-    minValue: 1,
-    classic: true
-  }];
+  static flags = [
+    {
+      name: "max",
+      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      description: "The maximum dice value",
+      minValue: 1,
+      classic: true,
+    },
+  ];
 
   static description = "Rolls the dice";
   static aliases = ["roll", "die", "rng", "random"];

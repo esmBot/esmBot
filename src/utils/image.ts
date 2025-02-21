@@ -6,15 +6,34 @@ import ipaddr from "ipaddr.js";
 import ImageConnection from "./imageConnection.js";
 import logger from "./logger.js";
 import type { ImageParams, ImageTypeData } from "./types.js";
+import serversConfig from "#config/servers.json" with { type: "json" };
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
 
-const formats = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime", "image/avif"];
+interface ServerConfig {
+  name: string;
+  server: string;
+  auth?: string;
+  tls?: boolean;
+}
+
+const formats = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+  "image/avif",
+];
 export const connections = new Map<string, ImageConnection>();
-export let servers = process.env.API_TYPE === "ws" ? JSON.parse(fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" })).image : [];
+export let servers: ServerConfig[] = process.env.API_TYPE === "ws" ? serversConfig.image : [];
 
 export function initImageLib() {
   const nodeRequire = createRequire(import.meta.url);
-  const img = nodeRequire(`../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
+  const img = nodeRequire(
+    `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`,
+  );
   img.imageInit();
 }
 
@@ -37,7 +56,7 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Im
   try {
     const imageRequest = await fetch(image, {
       signal: controller.signal,
-      method: "HEAD"
+      method: "HEAD",
     });
     clearTimeout(timeout);
     if (imageRequest.redirected) {
@@ -55,7 +74,8 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Im
       const contentLength = imageRequest.headers.get("content-length");
       if (contentLength) size = Number.parseInt(contentLength);
     }
-    if (size > 41943040 && extraReturnTypes) { // 40 MB
+    if (size > 41943040 && extraReturnTypes) {
+      // 40 MB
       type = "large";
       return { type };
     }
@@ -69,8 +89,8 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Im
       const bufRequest = await fetch(url, {
         signal: controller.signal,
         headers: {
-          range: "bytes=0-1023"
-        }
+          range: "bytes=0-1023",
+        },
       });
       clearTimeout(timeout);
       const imageBuffer = await bufRequest.arrayBuffer();
@@ -85,13 +105,7 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Im
   return { type, url };
 }
 
-/**
- * @param {string} server
- * @param {string} auth
- * @param {string | undefined} name
- * @param {boolean} tls
- */
-function connect(server: string, auth: string, name: string | undefined, tls: boolean) {
+function connect(server: string, auth: string | undefined, name: string | undefined, tls?: boolean) {
   const connection = new ImageConnection(server, auth, name, tls);
   connections.set(server, connection);
 }
@@ -123,11 +137,13 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-function chooseServer(ideal: ({ addr: string; load: number; } | null)[]) {
+function chooseServer(ideal: ({ addr: string; load: number } | null)[]) {
   if (ideal.length === 0) throw "No available servers";
-  const sorted = ideal.filter((v) => !!v).sort((a, b) => {
-    return a.load - b.load;
-  });
+  const sorted = ideal
+    .filter((v) => !!v)
+    .sort((a, b) => {
+      return a.load - b.load;
+    });
   return sorted[0];
 }
 
@@ -146,7 +162,7 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
     if (load == null) continue;
     idealServers.push({
       addr: address,
-      load: load
+      load: load,
     });
   }
   const server = chooseServer(idealServers);
@@ -154,31 +170,33 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
   return connections.get(server.addr);
 }
 
-export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string; }> {
+export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string }> {
   if (process.env.API_TYPE === "ws") {
-      const currentServer = await getIdeal(params);
-      if (!currentServer) return {
+    const currentServer = await getIdeal(params);
+    if (!currentServer)
+      return {
         buffer: Buffer.alloc(0),
-        type: "nocmd"
+        type: "nocmd",
       };
-      try {
-        await currentServer.queue(BigInt(params.id), params);
-        const result = await currentServer.wait(BigInt(params.id));
-        if (result) return {
+    try {
+      await currentServer.queue(BigInt(params.id), params);
+      const result = await currentServer.wait(BigInt(params.id));
+      if (result)
+        return {
           buffer: Buffer.alloc(0),
-          type: "sent"
+          type: "sent",
         };
-        const output = await currentServer.getOutput(params.id);
-        return output;
-      } catch (e) {
+      const output = await currentServer.getOutput(params.id);
+      return output;
+    } catch (e) {
       if (e !== "Request ended prematurely due to a closed connection") {
-          if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
-          throw e;
+        if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
+        throw e;
       }
     }
     return {
       buffer: Buffer.alloc(0),
-      type: "noresult"
+      type: "noresult",
     };
   }
   if (run) {
@@ -186,7 +204,7 @@ export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer
     const data = await run(params);
     return {
       buffer: Buffer.from([...data.buffer]),
-      type: data.fileExtension
+      type: data.fileExtension,
     };
   }
   throw "image_not_working";

@@ -18,7 +18,7 @@ const Twait = 0x06;
 const Rwait = 0x07;
 const Rinit = 0x08;
 const Rsent = 0x09;
-const Rclose = 0xFF;
+const Rclose = 0xff;
 
 const log = (msg, jobNum) => {
   logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
@@ -58,8 +58,8 @@ let jobAmount = 0;
 // Used for direct image uploads
 const discord = new Client({
   rest: {
-    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
-  }
+    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
+  },
 });
 const clientID = process.env.CLIENT_ID;
 
@@ -67,32 +67,38 @@ discord.on("error", error);
 
 /**
  * Accept an image job.
- * @param {string} id 
- * @param {import("ws").WebSocket} sock 
+ * @param {string} id
+ * @param {import("ws").WebSocket} sock
  * @returns {Promise<void>}
  */
 const acceptJob = (id, sock) => {
   jobAmount++;
   const job = jobs.get(id);
-  return runJob({
-    id: id,
-    msg: job.msg,
-    num: job.num
-  }, sock).then(() => {
-    log(`Job ${id} has finished`);
-  }).catch((err) => {
-    error(`Error on job ${id}: ${err}`, job.num);
-    const newJob = jobs.get(id);
-    if (!newJob.tag) {
-      newJob.error = err.message;
-      jobs.set(id, newJob);
-      return;
-    }
-    jobs.delete(id);
-    sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
-  }).finally(() => {
-    jobAmount--;
-  });
+  return runJob(
+    {
+      id: id,
+      msg: job.msg,
+      num: job.num,
+    },
+    sock,
+  )
+    .then(() => {
+      log(`Job ${id} has finished`);
+    })
+    .catch((err) => {
+      error(`Error on job ${id}: ${err}`, job.num);
+      const newJob = jobs.get(id);
+      if (!newJob.tag) {
+        newJob.error = err.message;
+        jobs.set(id, newJob);
+        return;
+      }
+      jobs.delete(id);
+      sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
+    })
+    .finally(() => {
+      jobAmount--;
+    });
 };
 
 const waitForVerify = (event) => {
@@ -112,7 +118,12 @@ wss.on("connection", (ws, request) => {
   for (const cmd of img.funcs) {
     formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp", "image/avif"];
   }
-  const init = Buffer.concat([Buffer.from([Rinit]), Buffer.from([0x00, 0x00, 0x00, 0x00]), cur, Buffer.from(JSON.stringify(formats))]);
+  const init = Buffer.concat([
+    Buffer.from([Rinit]),
+    Buffer.from([0x00, 0x00, 0x00, 0x00]),
+    cur,
+    Buffer.from(JSON.stringify(formats)),
+  ]);
   ws.send(init);
 
   ws.on("error", (err) => {
@@ -131,9 +142,9 @@ wss.on("connection", (ws, request) => {
 
       const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
       ws.send(newBuffer);
-  
-        log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
-        acceptJob(id, ws);
+
+      log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
+      acceptJob(id, ws);
     } else if (opcode === Tcancel) {
       jobs.delete(req);
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
@@ -304,10 +315,10 @@ const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
 /**
- * @param {{ buffer: ArrayBuffer; fileExtension: string; }} data
- * @param {{ id: string; msg: object; num: number; }} job 
+ * @param {{ buffer: Buffer; fileExtension: string; }} data
+ * @param {{ id: string; msg: object; num: number; }} job
  * @param {{ token: string; ephemeral: boolean; spoiler: boolean; cmd: string; }} object
- * @param {import("ws").WebSocket} ws 
+ * @param {import("ws").WebSocket} ws
  * @param {(value: void | PromiseLike<void>) => void} resolve
  */
 function finishJob(data, job, object, ws, resolve) {
@@ -322,34 +333,40 @@ function finishJob(data, job, object, ws, resolve) {
     verifyPromise = Promise.resolve(jobObject.tag);
   }
   let tag;
-  verifyPromise.then(t => {
-    tag = t;
-    jobs.set(job.id, jobObject);
-    if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
-      return discord.rest.interactions.createFollowupMessage(clientID, object.token, {
-        flags: object.ephemeral ? 64 : undefined,
-        files: [{
-          name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
-          contents: jobObject.data
-        }]
-        }).catch((e) => {
-          error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
-          return;
-      });
-    }
-    return;
-  }).then((r) => {
-    if (r) jobs.delete(job.id);
-    const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
-    ws.send(waitResponse);
-    resolve();
-  });
+  verifyPromise
+    .then((t) => {
+      tag = t;
+      jobs.set(job.id, jobObject);
+      if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
+        return discord.rest.interactions
+          .createFollowupMessage(clientID, object.token, {
+            flags: object.ephemeral ? 64 : undefined,
+            files: [
+              {
+                name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+                contents: jobObject.data,
+              },
+            ],
+          })
+          .catch((e) => {
+            error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
+            return;
+          });
+      }
+      return;
+    })
+    .then((r) => {
+      if (r) jobs.delete(job.id);
+      const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
+      ws.send(waitResponse);
+      resolve();
+    });
 }
 
 /**
  * Run an image job.
- * @param {{ id: string; msg: object; num: number; }} job 
- * @param {import("ws").WebSocket} ws 
+ * @param {{ id: string; msg: object; num: number; }} job
+ * @param {import("ws").WebSocket} ws
  * @returns {Promise<void>}
  */
 const runJob = (job, ws) => {
@@ -362,7 +379,10 @@ const runJob = (job, ws) => {
       reject(new TypeError("Unknown image type"));
     }
 
-    run(object).then(data => finishJob(data, job, object, ws, resolve), (e) => reject(e));
+    run(object).then(
+      (data) => finishJob(data, job, object, ws, resolve),
+      (e) => reject(e),
+    );
     log(`Job ${job.id} started`, job.num);
   });
 };

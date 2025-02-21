@@ -8,7 +8,10 @@ class WikihowCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const req = await fetch("https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6", { signal: controller.signal });
+      const req = await fetch(
+        "https://www.wikihow.com/api.php?action=query&generator=random&prop=imageinfo&format=json&iiprop=url&grnnamespace=6",
+        { signal: controller.signal },
+      );
       clearTimeout(timeout);
       const json = await req.json();
       const id = Object.keys(json.query.pages)[0];

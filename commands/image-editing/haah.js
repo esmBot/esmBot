@@ -2,7 +2,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class HaaHCommand extends ImageCommand {
   params = {
-    first: true
+    first: true,
   };
 
   static description = "Mirrors the left side of an image onto the right";

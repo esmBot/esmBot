@@ -23,19 +23,21 @@ class EightBallCommand extends Command {
     "replyNo",
     "sourcesNo",
     "outlookBad",
-    "doubtful"
+    "doubtful",
   ];
 
   async run() {
     return `🎱 ${this.getString(`commands.responses.8ball.${random(EightBallCommand.responses)}`)}`;
   }
 
-  static flags = [{
-    name: "question",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "A question you want to ask the ball",
-    classic: true
-  }];
+  static flags = [
+    {
+      name: "question",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "A question you want to ask the ball",
+      classic: true,
+    },
+  ];
 
   static description = "Asks the magic 8-ball a question";
   static aliases = ["magicball", "magikball", "magic8ball", "magik8ball", "eightball"];

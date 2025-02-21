@@ -15,7 +15,7 @@ import {
   Permission,
   TextableChannel,
   type Uncached,
-  type User
+  type User,
 } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
 import { cleanInteraction, cleanMessage } from "#utils/misc.js";
@@ -55,12 +55,12 @@ class Command {
 
   message?: Message;
   interaction?: CommandInteraction;
-  channel?: AnyTextableChannel | ({ guildID?: string; } & Uncached);
+  channel?: AnyTextableChannel | ({ guildID?: string } & Uncached);
   guild?: Guild | null;
   member?: Member | null;
   content?: string;
-  reference?: { messageReference: MessageReference, allowedMentions: AllowedMentions };
-  private options?: { [key: string]: string | number | boolean; } | null;
+  reference?: { messageReference: MessageReference; allowedMentions: AllowedMentions };
+  private options?: { [key: string]: string | number | boolean } | null;
 
   constructor(client: Client, options: CommandOptions) {
     this.client = client;
@@ -71,7 +71,7 @@ class Command {
     if (options.type === "classic") {
       this.message = options.message;
       this.args = options.args;
-      this.locale = options.locale ?? process.env.LOCALE as Locale ?? "en-US";
+      this.locale = options.locale ?? (process.env.LOCALE as Locale) ?? "en-US";
       this.cmdName = options.cmdName;
       this.channel = options.message.channel;
       this.guild = options.message.guild;
@@ -90,19 +90,25 @@ class Command {
           channelID: this.message.channelID,
           messageID: this.message.id,
           guildID: this.message.guildID ?? undefined,
-          failIfNotExists: false
+          failIfNotExists: false,
         },
         allowedMentions: {
-          repliedUser: false
-        }
+          repliedUser: false,
+        },
       };
     } else {
       this.interaction = options.interaction;
       this.locale = options.interaction.locale as Locale;
       this.cmdName = options.interaction.data.name;
       this.args = [];
-      this.channel = options.interaction.channel ?? { id: options.interaction.channelID, guildID: options.interaction.guildID ?? undefined };
-      if (!options.interaction.authorizingIntegrationOwners || options.interaction.authorizingIntegrationOwners[0] !== undefined) {
+      this.channel = options.interaction.channel ?? {
+        id: options.interaction.channelID,
+        guildID: options.interaction.guildID ?? undefined,
+      };
+      if (
+        !options.interaction.authorizingIntegrationOwners ||
+        options.interaction.authorizingIntegrationOwners[0] !== undefined
+      ) {
         this.guild = options.interaction.guild;
       } else {
         this.guild = null;
@@ -127,13 +133,13 @@ class Command {
     }
   }
 
-  getString(key: string, params?: { returnNull?: false; params?: { [key: string]: string; }; }): string;
-  getString(key: string, params: { returnNull: boolean; params?: { [key: string]: string; }; }): string | undefined;
-  getString(key: string, params?: { returnNull?: boolean; params?: { [key: string]: string; }; }): string | undefined {
+  getString(key: string, params?: { returnNull?: false; params?: { [key: string]: string } }): string;
+  getString(key: string, params: { returnNull: boolean; params?: { [key: string]: string } }): string | undefined;
+  getString(key: string, params?: { returnNull?: boolean; params?: { [key: string]: string } }): string | undefined {
     return getString(key, {
       locale: this.locale,
       returnNull: params?.returnNull ?? false,
-      ...params
+      ...params,
     });
   }
 
@@ -157,7 +163,7 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionNumber(key: string) : number | undefined {
+  getOptionNumber(key: string): number | undefined {
     if (this.type === "classic") {
       return Number.parseFloat(this.options?.[key] as string);
     }

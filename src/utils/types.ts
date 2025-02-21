@@ -7,23 +7,23 @@ export interface DBGuild {
   disabled_commands: string[];
 }
 
-export type Tag = {
+export interface Tag {
   name: string;
   content: string;
   author: string;
-};
+}
 
 export interface Count {
   command: string;
   count: number;
-};
+}
 
 export interface CommandsConfig {
   types: {
-    classic: boolean,
-    application: boolean
-  },
-  blacklist: string[]
+    classic: boolean;
+    application: boolean;
+  };
+  blacklist: string[];
 }
 
 export type CommandType = "classic" | "application";
@@ -32,13 +32,15 @@ export type ExtendedCommandOptions = {
   classic?: boolean;
 } & ApplicationCommandOptions;
 
-export type Param = {
-  name: string;
-  desc: string;
-  params: Param[];
-} | string;
+export type Param =
+  | {
+      name: string;
+      desc: string;
+      params: Param[];
+    }
+  | string;
 
-export type CommandInfo = {
+export interface CommandInfo {
   category: string;
   description: string;
   aliases: string[];
@@ -49,9 +51,9 @@ export type CommandInfo = {
   userAllowed: boolean;
   adminOnly: boolean;
   type: Constants.ApplicationCommandTypes;
-};
+}
 
-export type ImageParams = {
+export interface ImageParams {
   cmd: string;
   params: {
     [key: string]: string | number | boolean;
@@ -68,12 +70,12 @@ export type ImageParams = {
   ephemeral?: boolean;
   spoiler?: boolean;
   token?: string;
-};
+}
 
-export type ImageTypeData = {
+export interface ImageTypeData {
   url?: string;
   type?: string;
-};
+}
 
 export function isError(error: unknown): error is NodeJS.ErrnoException {
   return error instanceof Error;

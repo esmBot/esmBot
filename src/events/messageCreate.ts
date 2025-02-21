@@ -1,4 +1,11 @@
-import { type AnyTextableChannel, type Client, GroupChannel, type Message, PrivateChannel, type TextChannel, ThreadChannel } from "oceanic.js";
+import {
+  type AnyTextableChannel,
+  type Client,
+  GroupChannel,
+  type Message,
+  PrivateChannel,
+  ThreadChannel,
+} from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import database from "#database";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
@@ -37,7 +44,13 @@ export default async (client: Client, message: Message) => {
   } else {
     permChannel = message.channel;
   }
-  if (message.guildID && (!(permChannel instanceof PrivateChannel) && !(permChannel instanceof GroupChannel)) && !permChannel?.permissionsOf(client.user.id).has("SEND_MESSAGES")) return;
+  if (
+    message.guildID &&
+    !(permChannel instanceof PrivateChannel) &&
+    !(permChannel instanceof GroupChannel) &&
+    !permChannel?.permissionsOf(client.user.id).has("SEND_MESSAGES")
+  )
+    return;
 
   if (!mentionRegex) mentionRegex = new RegExp(`^<@!?${client.user.id}> `);
 
@@ -86,7 +99,7 @@ export default async (client: Client, message: Message) => {
 
   if (cmd.dbRequired && !database) {
     await client.rest.channels.createMessage(message.channelID, {
-      content: getString("noDatabase")
+      content: getString("noDatabase"),
     });
     return;
   }
@@ -117,25 +130,38 @@ export default async (client: Client, message: Message) => {
       channelID: message.channelID,
       messageID: message.id,
       guildID: message.guildID ?? undefined,
-      failIfNotExists: false
+      failIfNotExists: false,
     },
     allowedMentions: {
-      repliedUser: false
-    }
+      repliedUser: false,
+    },
   };
   try {
     // parse args
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
-    const commandClass = new cmd(client, { type: "classic", cmdName, message, args: parsed.args, content: text.replace(command, "").trim(), specialArgs: parsed.flags }); // we also provide the message content as a parameter for cases where we need more accuracy
+    const commandClass = new cmd(client, {
+      type: "classic",
+      cmdName,
+      message,
+      args: parsed.args,
+      content: text.replace(command, "").trim(), // we also provide the message content as a parameter for cases where we need more accuracy
+      specialArgs: parsed.flags,
+    });
     const result = await commandClass.run();
     const endTime = new Date();
-    if ((endTime.getTime() - startTime.getTime()) >= 180000) reference.allowedMentions.repliedUser = true;
+    if (endTime.getTime() - startTime.getTime() >= 180000) reference.allowedMentions.repliedUser = true;
     if (typeof result === "string") {
       reference.allowedMentions.repliedUser = true;
-      await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: result
-      }, reference));
+      await client.rest.channels.createMessage(
+        message.channelID,
+        Object.assign(
+          {
+            content: result,
+          },
+          reference,
+        ),
+      );
     } else if (typeof result === "object") {
       if (commandClass instanceof ImageCommand && result.files) {
         let fileSize = 10485760;
@@ -155,13 +181,19 @@ export default async (client: Client, message: Message) => {
             await upload(client, { ...file, flags: result.flags }, message);
           } else {
             await client.rest.channels.createMessage(message.channelID, {
-              content: getString("image.noTempServer")
+              content: getString("image.noTempServer"),
             });
           }
         } else {
-          await client.rest.channels.createMessage(message.channelID, Object.assign({
-            files: [file]
-          }, reference));
+          await client.rest.channels.createMessage(
+            message.channelID,
+            Object.assign(
+              {
+                files: [file],
+              },
+              reference,
+            ),
+          );
         }
       } else {
         await client.rest.channels.createMessage(message.channelID, Object.assign(result, reference));
@@ -169,39 +201,68 @@ export default async (client: Client, message: Message) => {
     }
   } catch (e) {
     const error = e as Error | Promise<Error>;
-    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
-      tags: {
-        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
-        command,
-        args: JSON.stringify(preArgs)
-      }
-    });
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "")
+      Sentry.captureException(error, {
+        tags: {
+          process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+          command,
+          args: JSON.stringify(preArgs),
+        },
+      });
     if (error.toString().includes("Request entity too large")) {
-      await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: getString("image.tooLarge")
-      }, reference));
+      await client.rest.channels.createMessage(
+        message.channelID,
+        Object.assign(
+          {
+            content: getString("image.tooLarge"),
+          },
+          reference,
+        ),
+      );
     } else if (error.toString().includes("Job ended prematurely")) {
-      await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: getString("image.jobEnded")
-      }, reference));
+      await client.rest.channels.createMessage(
+        message.channelID,
+        Object.assign(
+          {
+            content: getString("image.jobEnded"),
+          },
+          reference,
+        ),
+      );
     } else if (error.toString().includes("Timed out")) {
-      await client.rest.channels.createMessage(message.channelID, Object.assign({
-        content: getString("image.timeoutDownload")
-      }, reference));
+      await client.rest.channels.createMessage(
+        message.channelID,
+        Object.assign(
+          {
+            content: getString("image.timeoutDownload"),
+          },
+          reference,
+        ),
+      );
     } else {
       _error(`Error occurred with command message ${message.content}: ${(error as Error).stack || error}`);
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
-        await client.rest.channels.createMessage(message.channelID, Object.assign({
-          content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
-          files: [{
-            contents: Buffer.from(clean(err.toString())),
-            name: "error.txt"
-          }]
-        }, reference));
+        await client.rest.channels.createMessage(
+          message.channelID,
+          Object.assign(
+            {
+              content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
+              files: [
+                {
+                  contents: Buffer.from(clean(err.toString())),
+                  name: "error.txt",
+                },
+              ],
+            },
+            reference,
+          ),
+        );
       } catch (err) {
-        _error(`While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`);
+        _error(
+          `While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`,
+        );
       }
     }
   } finally {

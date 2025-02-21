@@ -14,11 +14,11 @@ export interface DatabasePlugin {
   enableCommand: (guild: string, command: string) => Promise<void>;
   disableChannel: (channel: GuildChannel) => Promise<void>;
   enableChannel: (channel: GuildChannel) => Promise<void>;
-  getTag: (guild: string, tag: string) => Promise<{ content: string, author: string } | undefined>;
-  getTags: (guild: string) => Promise<Map<string, { content: string, author: string }>>;
-  setTag: (name: string, content: { content: string, author: string }, guild: Guild) => Promise<void>;
+  getTag: (guild: string, tag: string) => Promise<{ content: string; author: string } | undefined>;
+  getTags: (guild: string) => Promise<Map<string, { content: string; author: string }>>;
+  setTag: (name: string, content: { content: string; author: string }, guild: Guild) => Promise<void>;
   removeTag: (name: string, guild: Guild) => Promise<void>;
-  editTag: (name: string, content: { content: string, author: string }, guild: Guild) => Promise<void>;
+  editTag: (name: string, content: { content: string; author: string }, guild: Guild) => Promise<void>;
   setBroadcast: (msg: string | null) => Promise<void>;
   getBroadcast: () => Promise<string | null>;
   setPrefix: (prefix: string, guild: Guild) => Promise<void>;

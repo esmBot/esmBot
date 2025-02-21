@@ -2,9 +2,9 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class WhisperCommand extends ImageCommand {
   paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url)).join(" ");
     return {
-      caption: this.clean(newArgs)
+      caption: this.clean(newArgs),
     };
   }
 

@@ -21,10 +21,16 @@ class ImageCommand extends Command {
 
     if (!this.permissions.has("ATTACH_FILES")) return this.getString("permissions.noAttachFiles");
 
-    const timestamp = this.type === "application" && this.interaction ? CommandInteraction.getCreatedAt(this.interaction.id) : this.message?.createdAt ?? new Date();
+    const timestamp =
+      this.type === "application" && this.interaction
+        ? CommandInteraction.getCreatedAt(this.interaction.id)
+        : (this.message?.createdAt ?? new Date());
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
-    if (runningCommands.has(this.author?.id) && (runningCommands.get(this.author?.id).getTime() - timestamp.getTime()) < 5000) {
+    if (
+      runningCommands.has(this.author?.id) &&
+      runningCommands.get(this.author?.id).getTime() - timestamp.getTime() < 5000
+    ) {
       return this.getString("image.slowDown");
     }
     // before awaiting the command result, add this command to the set of running commands
@@ -38,13 +44,21 @@ class ImageCommand extends Command {
     if (staticProps.requiresImage) {
       try {
         const selection = selectedImages.get(this.author.id);
-        const image = selection ?? await imageDetect(this.client, this.message, this.interaction, {
-          image: this.getOptionString("image"),
-          link: this.getOptionString("link")
-        }, true).catch(e => {
-          if (e.name === "AbortError") return { type: "timeout" };
-          throw e;
-        });
+        const image =
+          selection ??
+          (await imageDetect(
+            this.client,
+            this.message,
+            this.interaction,
+            {
+              image: this.getOptionString("image"),
+              link: this.getOptionString("link"),
+            },
+            true,
+          ).catch((e) => {
+            if (e.name === "AbortError") return { type: "timeout" };
+            throw e;
+          }));
         if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
@@ -70,17 +84,17 @@ class ImageCommand extends Command {
         imageParams = {
           cmd: staticProps.command,
           params: {
-            togif: !!this.getOptionBoolean("togif")
+            togif: !!this.getOptionBoolean("togif"),
           },
           input: {
-            type: image.type
+            type: image.type,
           },
           id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
           path: image.path,
           url: image.url, // technically not required but can be useful for text filtering
           name: image.name,
-          onlyAnim: !!staticProps.requiresAnim
-        }
+          onlyAnim: !!staticProps.requiresAnim,
+        };
       } catch (e) {
         runningCommands.delete(this.author.id);
         throw e;
@@ -89,10 +103,10 @@ class ImageCommand extends Command {
       imageParams = {
         cmd: staticProps.command,
         params: {
-          togif: !!this.getOptionBoolean("togif")
+          togif: !!this.getOptionBoolean("togif"),
         },
-        id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString()
-      }
+        id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
+      };
     }
 
     const spoiler = this.getOptionBoolean("spoiler");
@@ -100,9 +114,13 @@ class ImageCommand extends Command {
 
     if (staticProps.requiresText) {
       const text = this.getOptionString("text") ?? this.args.join(" ").trim();
-      if (isEmpty(text) || !await this.criteria(text, imageParams.url)) {
+      if (isEmpty(text) || !(await this.criteria(text, imageParams.url))) {
         runningCommands.delete(this.author?.id);
-        return this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) || this.getString("image.noText", { returnNull: true }) || staticProps.noText;
+        return (
+          this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) ||
+          this.getString("image.noText", { returnNull: true }) ||
+          staticProps.noText
+        );
       }
     }
 
@@ -113,8 +131,14 @@ class ImageCommand extends Command {
     }
 
     let status: Message | undefined;
-    if (imageParams.input && (imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") && this.message) {
-      status = await this.processMessage(this.message.channel ?? await this.client.rest.channels.get(this.message.channelID));
+    if (
+      imageParams.input &&
+      (imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") &&
+      this.message
+    ) {
+      status = await this.processMessage(
+        this.message.channel ?? (await this.client.rest.channels.get(this.message.channelID)),
+      );
     }
 
     const ephemeral = this.getOptionBoolean("ephemeral");
@@ -138,22 +162,27 @@ class ImageCommand extends Command {
       if (type === "noanim" && staticProps.requiresAnim) return this.getString("image.noanim");
       if (type === "empty") return staticProps.empty;
       this.success = true;
-      if (type === "text") return {
-        content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
-        flags: ephemeral ? 64 : undefined
-      };
+      if (type === "text")
+        return {
+          content: `\`\`\`\n${await clean(buffer.toString("utf8"))}\n\`\`\``,
+          flags: ephemeral ? 64 : undefined,
+        };
       return {
-        files: [{
-          contents: buffer,
-          name: `${needsSpoiler ? "SPOILER_" : ""}${staticProps.command}.${type}`
-        }],
-        flags: ephemeral ? 64 : undefined
+        files: [
+          {
+            contents: buffer,
+            name: `${needsSpoiler ? "SPOILER_" : ""}${staticProps.command}.${type}`,
+          },
+        ],
+        flags: ephemeral ? 64 : undefined,
       };
     } catch (e) {
       const err = e as Error;
       if (err.toString().includes("image_not_working")) return this.getString("image.notWorking");
-      if (err.toString().includes("Request ended prematurely due to a closed connection")) return this.getString("image.tryAgain");
-      if (err.toString().includes("image_job_killed") || err.toString().includes("Timeout")) return this.getString("image.tooLong");
+      if (err.toString().includes("Request ended prematurely due to a closed connection"))
+        return this.getString("image.tryAgain");
+      if (err.toString().includes("image_job_killed") || err.toString().includes("Timeout"))
+        return this.getString("image.tooLong");
       if (err.toString().includes("No available servers")) return this.getString("image.noServers");
       throw err;
     } finally {
@@ -164,12 +193,11 @@ class ImageCommand extends Command {
       }
       runningCommands.delete(this.author?.id);
     }
-
   }
 
   processMessage(channel: AnyTextableChannel): Promise<Message> {
     return channel.createMessage({
-      content: `${random(messages.emotes) || "⚙️"} ${this.getString("image.processing")}`
+      content: `${random(messages.emotes) || "⚙️"} ${this.getString("image.processing")}`,
     });
   }
 
@@ -184,23 +212,26 @@ class ImageCommand extends Command {
         descriptionLocalizations: getAllLocalizations("image.flags.text"),
         maxLength: 4096,
         required: !this.textOptional,
-        classic: true
+        classic: true,
       });
     }
     if (this.requiresImage) {
-      this.flags.push({
-        name: "image",
-        nameLocalizations: getAllLocalizations("image.flagNames.image"),
-        type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
-        description: "An image/GIF attachment",
-        descriptionLocalizations: getAllLocalizations("image.flags.image"),
-      }, {
-        name: "link",
-        nameLocalizations: getAllLocalizations("image.flagNames.link"),
-        type: Constants.ApplicationCommandOptionTypes.STRING,
-        description: "An image/GIF URL",
-        descriptionLocalizations: getAllLocalizations("image.flags.link"),
-      });
+      this.flags.push(
+        {
+          name: "image",
+          nameLocalizations: getAllLocalizations("image.flagNames.image"),
+          type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
+          description: "An image/GIF attachment",
+          descriptionLocalizations: getAllLocalizations("image.flags.image"),
+        },
+        {
+          name: "link",
+          nameLocalizations: getAllLocalizations("image.flagNames.link"),
+          type: Constants.ApplicationCommandOptionTypes.STRING,
+          description: "An image/GIF URL",
+          descriptionLocalizations: getAllLocalizations("image.flags.link"),
+        },
+      );
     }
     if (!this.alwaysGIF) {
       this.flags.push({
@@ -208,27 +239,40 @@ class ImageCommand extends Command {
         nameLocalizations: getAllLocalizations("image.flagNames.togif"),
         type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
         description: "Force GIF output",
-        descriptionLocalizations: getAllLocalizations("image.flags.togif")
-      })
+        descriptionLocalizations: getAllLocalizations("image.flags.togif"),
+      });
     }
 
-    this.flags.push({
-      name: "spoiler",
-      nameLocalizations: getAllLocalizations("image.flagNames.spoiler"),
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-      description: "Attempt to send output as a spoiler",
-      descriptionLocalizations: getAllLocalizations("image.flags.spoiler")
-    }, {
-      name: "ephemeral",
-      nameLocalizations: getAllLocalizations("image.flagNames.ephemeral"),
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-      description: "Attempt to send output as an ephemeral/temporary response",
-      descriptionLocalizations: getAllLocalizations("image.flags.ephemeral")
-    });
+    this.flags.push(
+      {
+        name: "spoiler",
+        nameLocalizations: getAllLocalizations("image.flagNames.spoiler"),
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        description: "Attempt to send output as a spoiler",
+        descriptionLocalizations: getAllLocalizations("image.flags.spoiler"),
+      },
+      {
+        name: "ephemeral",
+        nameLocalizations: getAllLocalizations("image.flagNames.ephemeral"),
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        description: "Attempt to send output as an ephemeral/temporary response",
+        descriptionLocalizations: getAllLocalizations("image.flags.ephemeral"),
+      },
+    );
     return this;
   }
 
-  static allowedFonts = ["futura", "impact", "helvetica", "arial", "roboto", "noto", "times", "comic sans ms", "ubuntu"];
+  static allowedFonts = [
+    "futura",
+    "impact",
+    "helvetica",
+    "arial",
+    "roboto",
+    "noto",
+    "times",
+    "comic sans ms",
+    "ubuntu",
+  ];
 
   static requiresImage = true;
   static requiresText = false;

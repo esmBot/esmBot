@@ -4,7 +4,7 @@ class DeviantArtCommand extends ImageCommand {
   params = {
     water: "assets/images/deviantart.png",
     gravity: 5,
-    resize: true
+    resize: true,
   };
 
   static description = "Adds a DeviantArt watermark to an image";

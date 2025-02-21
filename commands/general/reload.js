@@ -19,29 +19,32 @@ class ReloadCommand extends Command {
         type: "process:msg",
         data: {
           type: "reload",
-          message: commandName
-        }
+          message: commandName,
+        },
       });
     }
     return this.getString("commands.responses.reload.reloaded", {
       params: {
-        command: commandName
-      }
+        command: commandName,
+      },
     });
   }
 
-  static flags = [{
-    name: "cmd",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The command to reload",
-    classic: true,
-    required: true
-  }, {
-    name: "skipsend",
-    type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-    description: "Skips sending new application command data to Discord",
-    classic: true
-  }];
+  static flags = [
+    {
+      name: "cmd",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The command to reload",
+      classic: true,
+      required: true,
+    },
+    {
+      name: "skipsend",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Skips sending new application command data to Discord",
+      classic: true,
+    },
+  ];
 
   static description = "Reloads a command";
   static adminOnly = true;

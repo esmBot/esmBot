@@ -11,14 +11,16 @@ class HostCommand extends MusicCommand {
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
     const owners = process.env.OWNER?.split(",") ?? [];
-    if (this.connection.host !== this.author.id && !owners.includes(this.connection.host)) return this.getString("commands.responses.host.notHost");
+    if (this.connection.host !== this.author.id && !owners.includes(this.connection.host))
+      return this.getString("commands.responses.host.notHost");
     const input = this.getOptionUser("user") ?? this.args.join(" ");
     if (input instanceof User || input?.trim()) {
       let user;
       if (input instanceof User) {
         user = input;
       } else if (this.type === "classic" && this.message) {
-        const getUser = this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
+        const getUser =
+          this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
         } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(input) >= 21154535154122752n) {
@@ -29,7 +31,7 @@ class HostCommand extends MusicCommand {
           }
         } else {
           const userRegex = new RegExp(input.split(" ").join("|"), "i");
-          const member = this.client.users.find(element => {
+          const member = this.client.users.find((element) => {
             return userRegex.test(element.username);
           });
           user = member;
@@ -39,9 +41,11 @@ class HostCommand extends MusicCommand {
       }
       if (!user) return this.getString("commands.responses.host.noUser");
       if (user.bot) return "https://www.youtube.com/watch?v=rmQFcVR6vEs";
-      const member = this.guild.members.get(user.id) ?? await this.client.rest.guilds.getMember(this.guild.id, user.id).catch(e => {
-        logger.warn(`Failed to get a member: ${e}`);
-      });
+      const member =
+        this.guild.members.get(user.id) ??
+        (await this.client.rest.guilds.getMember(this.guild.id, user.id).catch((e) => {
+          logger.warn(`Failed to get a member: ${e}`);
+        }));
       if (!member) return this.getString("commands.responses.host.notMember");
       const object = this.connection;
       object.host = member.id;
@@ -50,17 +54,20 @@ class HostCommand extends MusicCommand {
       return `🔊 ${this.getString("sound.newHost", { params: { member: member.mention } })}`;
     }
     const member = this.guild.members.get(this.connection.host);
-    if (!member) return this.getString("commands.responses.host.currentHostId", { params: { id: this.connection.host } });
+    if (!member)
+      return this.getString("commands.responses.host.currentHostId", { params: { id: this.connection.host } });
     this.success = true;
     return `🔊 ${this.getString("commands.responses.host.currentHost", { params: { member: member.username } })}`;
   }
 
-  static flags = [{
-    name: "user",
-    type: Constants.ApplicationCommandOptionTypes.USER,
-    description: "The user you want the new host to be",
-    classic: true
-  }];
+  static flags = [
+    {
+      name: "user",
+      type: Constants.ApplicationCommandOptionTypes.USER,
+      description: "The user you want the new host to be",
+      classic: true,
+    },
+  ];
   static description = "Gets or changes the host of the current voice session";
   static aliases = ["sethost"];
 }

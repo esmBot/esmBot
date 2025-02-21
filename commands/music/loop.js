@@ -8,7 +8,8 @@ class LoopCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS")) return this.getString("commands.responses.loop.notHost");
+    if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS"))
+      return this.getString("commands.responses.loop.notHost");
     const object = this.connection;
     object.loop = !object.loop;
     players.set(this.guild.id, object);

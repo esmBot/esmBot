@@ -16,18 +16,15 @@ export function random<T>(array: T[]) {
 }
 
 const optionalReplace = (token: string) => {
-  return token === undefined || token === "" ? "" : (token === "true" || token === "false" ? token : "<redacted>");
+  return token === undefined || token === "" ? "" : token === "true" || token === "false" ? token : "<redacted>";
 };
 
 // clean(text) to clean message of any private info or mentions
 export function clean(input: string) {
   let text = input;
-  if (typeof text !== "string")
-    text = util.inspect(text, { depth: 1 });
+  if (typeof text !== "string") text = util.inspect(text, { depth: 1 });
 
-  text = text
-    .replaceAll("`", `\`${String.fromCharCode(8203)}`)
-    .replaceAll("@", `@${String.fromCharCode(8203)}`);
+  text = text.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   let { parsed } = config();
   if (!parsed) parsed = process.env as DotenvParseOutput;
@@ -35,7 +32,7 @@ export function clean(input: string) {
   if (servers?.length !== 0) {
     for (const { server, auth } of servers) {
       text = text.replaceAll(server, optionalReplace(server));
-      text = text.replaceAll(auth, optionalReplace(auth));
+      if (auth) text = text.replaceAll(auth, optionalReplace(auth));
     }
   }
 
@@ -48,16 +45,26 @@ export function clean(input: string) {
 
 // textEncode(string) to encode characters for image processing
 export function textEncode(string: string) {
-  return string.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\n", "\n").replaceAll("\\:", ":").replaceAll("\\,", ",");
+  return string
+    .replaceAll("&", "&amp;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("<", "&lt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;")
+    .replaceAll("\\n", "\n")
+    .replaceAll("\\:", ":")
+    .replaceAll("\\,", ",");
 }
 
 // set activity (a.k.a. the gamer code)
 export async function activityChanger(bot: Client) {
   if (!broadcast) {
-    await bot.editStatus("dnd", [{
-      type: 0,
-      name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : "")
-    }]);
+    await bot.editStatus("dnd", [
+      {
+        type: 0,
+        name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
+      },
+    ]);
   }
   setTimeout(() => activityChanger(bot), 900000);
 }
@@ -73,18 +80,22 @@ export async function checkBroadcast(bot: Client) {
 }
 
 export function startBroadcast(bot: Client, message: string) {
-  bot.editStatus("dnd", [{
-    type: 0,
-    name: message + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : "")
-  }]);
+  bot.editStatus("dnd", [
+    {
+      type: 0,
+      name: message + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
+    },
+  ]);
   broadcast = true;
 }
 
 export function endBroadcast(bot: Client) {
-  bot.editStatus("dnd", [{
-    type: 0,
-    name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : "")
-  }]);
+  bot.editStatus("dnd", [
+    {
+      type: 0,
+      name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
+    },
+  ]);
   broadcast = false;
 }
 
@@ -92,7 +103,7 @@ export function getServers(bot: Client): Promise<number> {
   return new Promise((resolve, reject) => {
     if (pm2) {
       pm2.launchBus((_err, pm2Bus) => {
-        const listener = (packet: { data: { type: string; serverCount: number; }; }) => {
+        const listener = (packet: { data: { type: string; serverCount: number } }) => {
           if (packet.data?.type === "countResponse") {
             resolve(packet.data.serverCount);
             pm2Bus.off("process:msg");
@@ -110,16 +121,20 @@ export function getServers(bot: Client): Promise<number> {
             pm2Bus.off("process:msg");
             return resolve(bot.guilds.size);
           }
-          pm2.sendDataToProcessId(managerProc.pm_id as number, {
-            id: managerProc.pm_id,
-            type: "process:msg",
-            data: {
-              type: "getCount"
+          pm2.sendDataToProcessId(
+            managerProc.pm_id as number,
+            {
+              id: managerProc.pm_id,
+              type: "process:msg",
+              data: {
+                type: "getCount",
+              },
+              topic: true,
             },
-            topic: true
-          }, (err) => {
-            if (err) reject(err);
-          });
+            (err) => {
+              if (err) reject(err);
+            },
+          );
         });
       });
     } else {

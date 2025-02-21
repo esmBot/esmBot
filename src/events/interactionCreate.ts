@@ -36,7 +36,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
   if (!cmd) return;
 
   try {
-    await interaction.defer((cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false)) ? 64 : undefined);
+    await interaction.defer(cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false) ? 64 : undefined);
   } catch (e) {
     logger.warn(`Could not defer interaction, cannot continue further: ${e}`);
     return;
@@ -58,7 +58,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
     if (typeof result === "string") {
       await interaction[replyMethod]({
         content: result,
-        flags: commandClass.success ? 0 : 64
+        flags: commandClass.success ? 0 : 64,
       });
     } else if (typeof result === "object") {
       if (commandClass instanceof ImageCommand && result.files) {
@@ -70,54 +70,77 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
           } else {
             await interaction[replyMethod]({
               content: getString("image.noTempServer", { locale: interaction.locale }),
-              flags: 64
+              flags: 64,
             });
           }
         } else {
           await interaction[replyMethod]({
             flags: result.flags ?? (commandClass.success ? 0 : 64),
-            files: [file]
+            files: [file],
           });
         }
       } else {
-        await interaction[replyMethod](Object.assign({
-          flags: result.flags ?? (commandClass.success ? 0 : 64)
-        }, result));
+        await interaction[replyMethod](
+          Object.assign(
+            {
+              flags: result.flags ?? (commandClass.success ? 0 : 64),
+            },
+            result,
+          ),
+        );
       }
     } else {
       logger.debug(`Unknown return type for command ${command}: ${result} (${typeof result})`);
       if (!result) return;
-      await interaction[replyMethod](Object.assign({
-        flags: commandClass.success ? 0 : 64
-      }, result));
+      await interaction[replyMethod](
+        Object.assign(
+          {
+            flags: commandClass.success ? 0 : 64,
+          },
+          result,
+        ),
+      );
     }
   } catch (e) {
     const error = e as Error | Promise<Error>;
-    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") Sentry.captureException(error, {
-      tags: {
-        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
-        command,
-        args: JSON.stringify(interaction.data.options.raw)
-      }
-    });
+    if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "")
+      Sentry.captureException(error, {
+        tags: {
+          process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
+          command,
+          args: JSON.stringify(interaction.data.options.raw),
+        },
+      });
     if (error.toString().includes("Request entity too large")) {
-      await interaction.createFollowup({ content: getString("image.tooLarge", { locale: interaction.locale }), flags: 64 });
+      await interaction.createFollowup({
+        content: getString("image.tooLarge", { locale: interaction.locale }),
+        flags: 64,
+      });
     } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction.createFollowup({ content: getString("image.jobEnded", { locale: interaction.locale }), flags: 64 });
+      await interaction.createFollowup({
+        content: getString("image.jobEnded", { locale: interaction.locale }),
+        flags: 64,
+      });
     } else {
-      logger.error(`Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`);
+      logger.error(
+        `Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`,
+      );
       try {
         let err = error;
         if (error?.constructor?.name === "Promise") err = await error;
         await interaction.createFollowup({
           content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
-          files: [{
-            contents: Buffer.from(clean(err.toString())),
-            name: "error.txt"
-          }]
+          files: [
+            {
+              contents: Buffer.from(clean(err.toString())),
+              name: "error.txt",
+            },
+          ],
         });
       } catch (err) {
-        logger.error(`While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`);
+        logger.error(
+          `While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`,
+        );
       }
     }
   } finally {

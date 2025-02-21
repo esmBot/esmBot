@@ -14,8 +14,8 @@ class SoundReloadCommand extends Command {
       process.send?.({
         type: "process:msg",
         data: {
-          type: "soundreload"
-        }
+          type: "soundreload",
+        },
       });
     }
     if (length) {

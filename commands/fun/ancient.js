@@ -8,7 +8,11 @@ class AncientCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://files.esmbot.net/meme/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
+      const data = await fetch("https://files.esmbot.net/meme/", {
+        method: "HEAD",
+        signal: controller.signal,
+        redirect: "manual",
+      });
       clearTimeout(timeout);
       return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
@@ -16,7 +20,7 @@ class AncientCommand extends Command {
         this.success = false;
         return this.getString("commands.responses.ancient.error");
       }
-    } 
+    }
   }
 
   static description = "Gets a random ancient meme";

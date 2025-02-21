@@ -2,7 +2,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FlopCommand extends ImageCommand {
   params = {
-    flop: true
+    flop: true,
   };
 
   static description = "Flips an image";

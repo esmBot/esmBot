@@ -1,5 +1,5 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { type Client, CommandInteraction, type File, type Message } from "oceanic.js";
+import { type Client, CommandInteraction, type File, type InteractionContent, type Message } from "oceanic.js";
 import { getString } from "./i18n.js";
 import logger from "./logger.js";
 
@@ -13,41 +13,60 @@ type FileStats = {
 let dirSizeCache: number;
 let threshold: number | undefined;
 
-export async function upload(client: Client, result: { flags?: number; } & File, context: CommandInteraction | Message, success = true) {
+export async function upload(
+  client: Client,
+  result: { flags?: number } & File,
+  context: CommandInteraction | Message,
+  success = true,
+) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
-  const payload = result.name.startsWith("SPOILER_") ? {
-    content: `${getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })}\n|| ${imageURL} ||`,
-    flags: result.flags ?? (success ? 0 : 64)
-  } : {
-    embeds: [{
-      color: 0xff0000,
-      title: getString("image.tempImageSent", { locale: context instanceof CommandInteraction ? context.locale : undefined }),
-      url: imageURL,
-      image: {
-        url: imageURL
-      },
-      footer: {
-        text: getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })
-      },
-    }],
-    flags: result.flags ?? (success ? 0 : 64)
-  };
+  let payload: InteractionContent;
+  if (result.name.startsWith("SPOILER_")) {
+    payload = {
+      content: `${getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })}\n|| ${imageURL} ||`,
+      flags: result.flags ?? (success ? 0 : 64),
+    };
+  } else {
+    payload = {
+      embeds: [
+        {
+          color: 0xff0000,
+          title: getString("image.tempImageSent", {
+            locale: context instanceof CommandInteraction ? context.locale : undefined,
+          }),
+          url: imageURL,
+          image: {
+            url: imageURL,
+          },
+          footer: {
+            text: getString("image.tempSite", {
+              locale: context instanceof CommandInteraction ? context.locale : undefined,
+            }),
+          },
+        },
+      ],
+      flags: result.flags ?? (success ? 0 : 64),
+    };
+  }
   if (context instanceof CommandInteraction) {
     await context.createFollowup(payload);
   } else {
-    await client.rest.channels.createMessage(context.channelID, Object.assign(payload, {
-      messageReference: {
-        channelID: context.channelID,
-        messageID: context.id,
-        guildID: context.guildID ?? undefined,
-        failIfNotExists: false
-      },
-      allowedMentions: {
-        repliedUser: false
-      }
-    }));
+    await client.rest.channels.createMessage(
+      context.channelID,
+      Object.assign(payload, {
+        messageReference: {
+          channelID: context.channelID,
+          messageID: context.id,
+          guildID: context.guildID ?? undefined,
+          failIfNotExists: false,
+        },
+        allowedMentions: {
+          repliedUser: false,
+        },
+      }),
+    );
   }
   if (threshold) {
     const size = dirSizeCache + result.contents.length;
@@ -67,12 +86,14 @@ async function removeOldImages(s: number) {
       return {
         name: file,
         size: stats.size,
-        ctime: stats.ctime
+        ctime: stats.ctime,
       } as FileStats;
     });
-    
+
     const resolvedFiles = await Promise.all(files);
-    const oldestFiles = resolvedFiles.filter((item): item is FileStats => !!item).sort((a, b) => a.ctime.getTime() - b.ctime.getTime());
+    const oldestFiles = resolvedFiles
+      .filter((item): item is FileStats => !!item)
+      .sort((a, b) => a.ctime.getTime() - b.ctime.getTime());
 
     do {
       if (!oldestFiles[0]) break;
@@ -97,7 +118,7 @@ export async function parseThreshold() {
     K: 1024,
     M: 1048576,
     G: 1073741824,
-    T: 1099511627776
+    T: 1099511627776,
   };
   if (matched?.[1] && matched[2]) {
     threshold = Number(matched[1]) * sizes[matched[2] as SizeSuffix];

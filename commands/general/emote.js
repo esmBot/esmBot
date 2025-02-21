@@ -5,8 +5,14 @@ import Command from "#cmd-classes/command.js";
 class EmoteCommand extends Command {
   async run() {
     let emoji = this.getOptionString("emoji") ?? this.content;
-    if (this.type === "classic" && this.message?.messageReference?.channelID && this.message.messageReference.messageID) {
-      const replyMessage = await this.client.rest.channels.getMessage(this.message.messageReference.channelID, this.message.messageReference.messageID).catch(() => undefined);
+    if (
+      this.type === "classic" &&
+      this.message?.messageReference?.channelID &&
+      this.message.messageReference.messageID
+    ) {
+      const replyMessage = await this.client.rest.channels
+        .getMessage(this.message.messageReference.channelID, this.message.messageReference.messageID)
+        .catch(() => undefined);
       if (replyMessage) emoji = `${emoji} ${replyMessage.content}`;
     }
     if (!emoji) return this.getString("commands.responses.emote.noInput");
@@ -18,7 +24,7 @@ class EmoteCommand extends Command {
     const emojiMatches = emoji.match(emojiRegex());
     if (emojiMatches) {
       for (const emoji of emojiMatches) {
-        const codePoints = [...emoji].map(v => v.codePointAt(0)?.toString(16)).join("-");
+        const codePoints = [...emoji].map((v) => v.codePointAt(0)?.toString(16)).join("-");
         urls.push(`https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/${codePoints}.png`);
       }
     }
@@ -27,13 +33,15 @@ class EmoteCommand extends Command {
     return this.getString("commands.responses.emote.invalidEmoji");
   }
 
-  static flags = [{
-    name: "emoji",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The emoji you want to get",
-    classic: true,
-    required: true
-  }];
+  static flags = [
+    {
+      name: "emoji",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The emoji you want to get",
+      classic: true,
+      required: true,
+    },
+  ];
 
   static description = "Gets a raw emote image";
   static aliases = ["e", "em", "hugemoji", "hugeemoji", "emoji"];

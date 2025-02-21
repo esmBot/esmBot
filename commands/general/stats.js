@@ -16,81 +16,90 @@ class StatsCommand extends Command {
     const owners = process.env.OWNER?.split(",") ?? [];
     let owner;
     if (owners.length !== 0) {
-      owner = this.client.users.get(owners[0]) ?? await this.client.rest.users.get(owners[0]);
+      owner = this.client.users.get(owners[0]) ?? (await this.client.rest.users.get(owners[0]));
     }
     const servers = await getServers(this.client);
     const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
     return {
-      embeds: [{
-        author: {
-          name: this.getString("commands.responses.stats.header"),
-          iconURL: this.client.user.avatarURL()
-        },
-        description: this.getString("managedBy", { params: { owner: owner?.username ?? "N/A" } }),
-        color: 0xff0000,
-        fields: [{
-          name: this.getString("commands.responses.stats.version"),
-          value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`
-        },
+      embeds: [
         {
-          name: this.getString("commands.responses.stats.processUsage"),
-          value: processMem,
-          inline: true
+          author: {
+            name: this.getString("commands.responses.stats.header"),
+            iconURL: this.client.user.avatarURL(),
+          },
+          description: this.getString("managedBy", { params: { owner: owner?.username ?? "N/A" } }),
+          color: 0xff0000,
+          fields: [
+            {
+              name: this.getString("commands.responses.stats.version"),
+              value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`,
+            },
+            {
+              name: this.getString("commands.responses.stats.processUsage"),
+              value: processMem,
+              inline: true,
+            },
+            {
+              name: this.getString("commands.responses.stats.totalUsage"),
+              value: process.env.PM2_USAGE
+                ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB`
+                : processMem,
+              inline: true,
+            },
+            {
+              name: this.getString("commands.responses.stats.botUptime"),
+              value: this.getString("timeFormat", {
+                params: {
+                  days: Math.trunc(uptime / 86400000).toString(),
+                  hours: (Math.trunc(uptime / 3600000) % 24).toString(),
+                  minutes: (Math.trunc(uptime / 60000) % 60).toString(),
+                  seconds: (Math.trunc(uptime / 1000) % 60).toString(),
+                },
+              }),
+            },
+            {
+              name: this.getString("commands.responses.stats.connectionUptime"),
+              value: this.getString("timeFormat", {
+                params: {
+                  days: Math.trunc(connUptime / 86400000).toString(),
+                  hours: (Math.trunc(connUptime / 3600000) % 24).toString(),
+                  minutes: (Math.trunc(connUptime / 60000) % 60).toString(),
+                  seconds: (Math.trunc(connUptime / 1000) % 60).toString(),
+                },
+              }),
+            },
+            {
+              name: this.getString("commands.responses.stats.host"),
+              value: `${os.type()} ${os.release()} (${os.arch()})`,
+              inline: true,
+            },
+            {
+              name: this.getString("commands.responses.stats.library"),
+              value: `Oceanic ${VERSION}`,
+              inline: true,
+            },
+            {
+              name: this.getString(`commands.responses.stats.${process.versions.bun ? "bunVersion" : "nodeJsVersion"}`),
+              value: process.versions.bun ?? process.versions.node,
+              inline: true,
+            },
+            {
+              name: this.getString("commands.responses.stats.shard"),
+              value: this.guild ? this.client.guildShardMap[this.guild.id].toString() : "N/A",
+              inline: true,
+            },
+            {
+              name: this.getString("commands.responses.stats.servers"),
+              value: servers
+                ? servers.toString()
+                : this.getString("commands.responses.stats.processOnly", {
+                    params: { count: this.client.guilds.size.toString() },
+                  }),
+              inline: true,
+            },
+          ],
         },
-        {
-          name: this.getString("commands.responses.stats.totalUsage"),
-          value: process.env.PM2_USAGE ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB` : processMem,
-          inline: true
-        },
-        {
-          name: this.getString("commands.responses.stats.botUptime"),
-          value: this.getString("timeFormat", {
-            params: {
-              days: Math.trunc(uptime / 86400000).toString(),
-              hours: (Math.trunc(uptime / 3600000) % 24).toString(),
-              minutes: (Math.trunc(uptime / 60000) % 60).toString(),
-              seconds: (Math.trunc(uptime / 1000) % 60).toString()
-            }
-          })
-        },
-        {
-          name: this.getString("commands.responses.stats.connectionUptime"),
-          value: this.getString("timeFormat", {
-            params: {
-              days: Math.trunc(connUptime / 86400000).toString(),
-              hours: (Math.trunc(connUptime / 3600000) % 24).toString(),
-              minutes: (Math.trunc(connUptime / 60000) % 60).toString(),
-              seconds: (Math.trunc(connUptime / 1000) % 60).toString()
-            }
-          })
-        },
-        {
-          name: this.getString("commands.responses.stats.host"),
-          value: `${os.type()} ${os.release()} (${os.arch()})`,
-          inline: true
-        },
-        {
-          name: this.getString("commands.responses.stats.library"),
-          value: `Oceanic ${VERSION}`,
-          inline: true
-        },
-        {
-          name: this.getString(`commands.responses.stats.${process.versions.bun ? "bunVersion" : "nodeJsVersion"}`),
-          value: process.versions.bun ?? process.versions.node,
-          inline: true
-        },
-        {
-          name: this.getString("commands.responses.stats.shard"),
-          value: this.guild ? this.client.guildShardMap[this.guild.id].toString() : "N/A",
-          inline: true
-        },
-        {
-          name: this.getString("commands.responses.stats.servers"),
-          value: servers ? servers.toString() : this.getString("commands.responses.stats.processOnly", { params: { count: this.client.guilds.size.toString() } }),
-          inline: true
-        }
-        ]
-      }]
+      ],
     };
   }
 

@@ -4,7 +4,7 @@ class MemeCenterCommand extends ImageCommand {
   params = {
     water: "assets/images/memecenter.png",
     gravity: 9,
-    mc: true
+    mc: true,
   };
 
   static description = "Adds the MemeCenter watermark to an image";

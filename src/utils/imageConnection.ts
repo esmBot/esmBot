@@ -11,19 +11,19 @@ const Twait = 0x06;
 //const Rwait = 0x07;
 const Rinit = 0x08;
 const Rsent = 0x09;
-const Rclose = 0xFF;
+const Rclose = 0xff;
 
-type RequestState = {
-  resolve: (value?: unknown) => void,
-  reject: (reason?: unknown) => void,
-  id: bigint,
-  op: number
-};
+interface RequestState {
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+  id: bigint;
+  op: number;
+}
 
 class ImageConnection {
   requests: Map<number, RequestState>;
   host: string;
-  auth: string;
+  auth?: string;
   name?: string;
   tag: number;
   disconnected: boolean;
@@ -34,7 +34,7 @@ class ImageConnection {
   conn: WebSocket;
   httpurl: string;
   reconnect?: boolean;
-  constructor(host: string, auth: string, name?: string, tls = false) {
+  constructor(host: string, auth?: string, name?: string, tls = false) {
     this.requests = new Map();
     this.host = host.includes(":") ? host : `${host}:3762`;
     this.auth = auth;
@@ -108,12 +108,14 @@ class ImageConnection {
       this.requests.delete(tag);
     }
     if (!this.disconnected || this.reconnect) {
-      logger.warn(`${this.reconnect ? `${this.host} requested a reconnect` : `Lost connection to ${this.host}`}, attempting to reconnect in 5 seconds...`);
+      logger.warn(
+        `${this.reconnect ? `${this.host} requested a reconnect` : `Lost connection to ${this.host}`}, attempting to reconnect in 5 seconds...`,
+      );
       await setTimeout(5000);
       this.conn = new WebSocket(this.sockurl, {
         headers: {
-          Authentication: this.auth
-        }
+          Authentication: this.auth,
+        },
       });
       this.conn.on("message", (msg: Buffer) => this.onMessage(msg));
       this.conn.once("error", (err) => this.onError(err));
@@ -152,11 +154,16 @@ class ImageConnection {
 
   async getOutput(jobid: string) {
     logger.debug(`Getting output of ${jobid} on image server ${this.host}`);
-    const req = await fetch(`${this.httpurl}/image?id=${jobid}`, this.auth ? {
-      headers: {
-        authentication: this.auth
-      }
-    } : undefined);
+    const req = await fetch(
+      `${this.httpurl}/image?id=${jobid}`,
+      this.auth
+        ? {
+            headers: {
+              authentication: this.auth,
+            },
+          }
+        : undefined,
+    );
     const contentType = req.headers.get("content-type");
     let type: string;
     switch (contentType) {
@@ -183,11 +190,16 @@ class ImageConnection {
   }
 
   async getCount() {
-    const req = await fetch(`${this.httpurl}/count`, this.auth ? {
-      headers: {
-        authentication: this.auth
-      }
-    } : undefined);
+    const req = await fetch(
+      `${this.httpurl}/count`,
+      this.auth
+        ? {
+            headers: {
+              authentication: this.auth,
+            },
+          }
+        : undefined,
+    );
     if (req.status !== 200) return;
     const res = Number.parseInt(await req.text());
     return res;

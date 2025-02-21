@@ -33,6 +33,6 @@ export default async (client: Client) => {
   ready = true;
 
   if (process.env.PM2_USAGE) process.send?.("ready");
-  
+
   logger.log("info", "Started esmBot.");
 };

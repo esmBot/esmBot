@@ -9,7 +9,7 @@ class AwaitRejoin extends EventEmitter {
   channel: VoiceChannel | StageChannel;
   ended: boolean;
   bot: Client;
-  listener: (member: Member | { id: string; }, channel: VoiceChannel | StageChannel | { id: string; }) => boolean;
+  listener: (member: Member | { id: string }, channel: VoiceChannel | StageChannel | { id: string }) => boolean;
   stopTimeout: ReturnType<typeof setTimeout>;
   checkInterval: ReturnType<typeof setInterval>;
   constructor(channel: VoiceChannel | StageChannel, anyone: boolean, memberID: string) {
@@ -26,7 +26,7 @@ class AwaitRejoin extends EventEmitter {
     this.checkInterval = setInterval(() => this.verify({ id: memberID }, channel, true), 1000);
   }
 
-  verify(member: Member | { id: string; }, channel: VoiceChannel | StageChannel | { id: string; }, checked = false) {
+  verify(member: Member | { id: string }, channel: VoiceChannel | StageChannel | { id: string }, checked = false) {
     if (this.channel.id === channel.id) {
       if ((this.member === member.id && this.channel.voiceMembers.has(member.id)) || (this.anyone && !checked)) {
         clearTimeout(this.stopTimeout);
@@ -44,7 +44,7 @@ class AwaitRejoin extends EventEmitter {
     return false;
   }
 
-  stop(member?: Member | { id: string; }, rejoined = false) {
+  stop(member?: Member | { id: string }, rejoined = false) {
     if (this.ended) return;
     this.ended = true;
     clearInterval(this.checkInterval);

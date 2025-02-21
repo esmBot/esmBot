@@ -1,4 +1,4 @@
-const [ major, minor ] = process.versions.node.split(".").map(Number);
+const [major, minor] = process.versions.node.split(".").map(Number);
 if (major < 20 || (major === 20 && minor < 12)) {
   console.error(`You are currently running Node.js version ${process.version}.
 esmBot requires Node.js version 20.12.0 or above.
@@ -6,9 +6,13 @@ Please refer to step 2 of the setup guide: https://docs.esmbot.net/setup/#2-inst
   process.exit(1);
 }
 if (process.platform === "win32") {
-  console.error("\x1b[1m\x1b[31m\x1b[40m" + `WINDOWS IS NOT OFFICIALLY SUPPORTED!
+  console.error(
+    "\x1b[1m\x1b[31m\x1b[40m" +
+      `WINDOWS IS NOT OFFICIALLY SUPPORTED!
 Although there's a (very) slim chance of it working, multiple aspects of esmBot are built with UNIX-like systems in mind and could break on Win32-based systems. If you want to run esmBot on Windows, using Windows Subsystem for Linux is highly recommended.
-esmBot will continue to run past this message in 5 seconds, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` + "\x1b[0m");
+esmBot will continue to run past this message in 5 seconds, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` +
+      "\x1b[0m",
+  );
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
 }
 
@@ -50,11 +54,7 @@ import commandConfig from "#config/commands.json" with { type: "json" };
 import packageJson from "../package.json" with { type: "json" };
 process.env.ESMBOT_VER = packageJson.version;
 
-const intents = [
-  Constants.Intents.GUILD_VOICE_STATES,
-  Constants.Intents.DIRECT_MESSAGES,
-  Constants.Intents.GUILDS
-];
+const intents = [Constants.Intents.GUILD_VOICE_STATES, Constants.Intents.DIRECT_MESSAGES, Constants.Intents.GUILDS];
 if (commandConfig.types.classic) {
   intents.push(Constants.Intents.GUILD_MESSAGES);
   intents.push(Constants.Intents.MESSAGE_CONTENT);
@@ -74,7 +74,10 @@ async function* getFiles(dir: string, ext = ".js"): AsyncGenerator<string> {
 
 const exec = promisify(baseExec);
 
-process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit");
+process.env.GIT_REV = await exec("git rev-parse HEAD").then(
+  (output) => output.stdout.substring(0, 7),
+  () => "unknown commit",
+);
 console.log(`
      ,*\`$                    z\`"v
     F zBw\`%                 A ,W "W
@@ -100,7 +103,9 @@ esmBot ${packageJson.version} (${process.env.GIT_REV})
 `);
 
 if (!commandConfig.types.classic && !commandConfig.types.application) {
-  logger.error("Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.");
+  logger.error(
+    "Both classic and application commands are disabled! Please enable at least one command type in config/commands.json.",
+  );
   process.exit(1);
 }
 
@@ -148,7 +153,10 @@ if (database) {
 if (process.env.API_TYPE === "ws") await reloadImageConnections();
 else initImageLib();
 
-const shardArray = process.env.SHARDS && process.env.pm_id ? JSON.parse(process.env.SHARDS)[Number.parseInt(process.env.pm_id) - 1] : null;
+const shardArray =
+  process.env.SHARDS && process.env.pm_id
+    ? JSON.parse(process.env.SHARDS)[Number.parseInt(process.env.pm_id) - 1]
+    : null;
 
 // create the oceanic client
 const client = new Client({
@@ -157,7 +165,7 @@ const client = new Client({
     everyone: false,
     roles: false,
     users: true,
-    repliedUser: true
+    repliedUser: true,
   },
   gateway: {
     concurrency: "auto",
@@ -165,27 +173,32 @@ const client = new Client({
     shardIDs: shardArray,
     presence: {
       status: "idle",
-      activities: [{
-        type: 0,
-        name: "Starting esmBot..."
-      }]
+      activities: [
+        {
+          type: 0,
+          name: "Starting esmBot...",
+        },
+      ],
     },
-    intents
+    intents,
   },
   rest: {
-    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined
+    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
   },
   collectionLimits: {
     messages: 50,
     channels: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
     guildThreads: !commandConfig.types.classic ? 0 : Number.POSITIVE_INFINITY,
-    emojis: 0
-  }
+    emojis: 0,
+  },
 });
 
 // register events
 logger.log("info", "Attempting to load events...");
-for await (const file of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "./events/"), process.versions.bun ? ".ts" : ".js")) {
+for await (const file of getFiles(
+  resolve(dirname(fileURLToPath(import.meta.url)), "./events/"),
+  process.versions.bun ? ".ts" : ".js",
+)) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
@@ -213,7 +226,7 @@ if (process.env.PM2_USAGE) {
         return;
       }
       const managerProc = list.find((v) => v.name === "esmBot-manager");
-      pm2Bus.on("process:msg", async (packet: { data: { type: string; message: string; }; }) => {
+      pm2Bus.on("process:msg", async (packet: { data: { type: string; message: string } }) => {
         switch (packet.data?.type) {
           case "reload": {
             const cmdPath = paths.get(packet.data.message);
@@ -234,20 +247,29 @@ if (process.env.PM2_USAGE) {
             break;
           case "serverCounts":
             if (!managerProc) break;
-            pm2.sendDataToProcessId(managerProc.pm_id as number, {
-              id: managerProc.pm_id,
-              type: "process:msg",
-              data: {
-                type: "serverCounts",
-                guilds: client.guilds.size,
-                shards: client.shards.map((v) => {
-                  return { id: v.id, procId: Number.parseInt(process.env.pm_id as string) - 1, latency: v.latency, status: v.status };
-                })
+            pm2.sendDataToProcessId(
+              managerProc.pm_id as number,
+              {
+                id: managerProc.pm_id,
+                type: "process:msg",
+                data: {
+                  type: "serverCounts",
+                  guilds: client.guilds.size,
+                  shards: client.shards.map((v) => {
+                    return {
+                      id: v.id,
+                      procId: Number.parseInt(process.env.pm_id as string) - 1,
+                      latency: v.latency,
+                      status: v.status,
+                    };
+                  }),
+                },
+                topic: true,
               },
-              topic: true
-            }, (err) => {
-              if (err) logger.error(err);
-            });
+              (err) => {
+                if (err) logger.error(err);
+              },
+            );
             break;
         }
       });

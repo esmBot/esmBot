@@ -4,7 +4,7 @@ class HypercamCommand extends ImageCommand {
   params = {
     water: "assets/images/hypercam.png",
     gravity: 1,
-    resize: true
+    resize: true,
   };
 
   static description = "Adds the Hypercam watermark to an image";

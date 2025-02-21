@@ -5,7 +5,8 @@ class Base64Command extends Command {
   async run() {
     this.success = false;
     if (this.type === "classic" && this.args.length === 0) return this.getString("commands.responses.base64.noCmd");
-    const command = this.type === "classic" ? this.args[0].toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
+    const command =
+      this.type === "classic" ? this.args[0].toLowerCase() : this.interaction?.data.options.getSubCommand()?.[0];
     if (command !== "decode" && command !== "encode") return this.getString("commands.responses.base64.noCmd");
     const string = this.interaction?.data.options.getString("text") ?? this.args.slice(1).join(" ");
     if (!string || !string.trim()) return this.getString(`commands.responses.base64.${command}NoInput`);
@@ -20,29 +21,36 @@ class Base64Command extends Command {
     }
   }
 
-  static flags = [{
-    name: "decode",
-    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-    description: "Decodes a Base64 string",
-    options: [{
-      name: "text",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
-      description: "The text to decode",
-      classic: true,
-      required: true
-    }]
-  }, {
-    name: "encode",
-    type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-    description: "Encodes a Base64 string",
-    options: [{
-      name: "text",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
-      description: "The text to encode",
-      classic: true,
-      required: true
-    }]
-  }];
+  static flags = [
+    {
+      name: "decode",
+      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      description: "Decodes a Base64 string",
+      options: [
+        {
+          name: "text",
+          type: Constants.ApplicationCommandOptionTypes.STRING,
+          description: "The text to decode",
+          classic: true,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "encode",
+      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      description: "Encodes a Base64 string",
+      options: [
+        {
+          name: "text",
+          type: Constants.ApplicationCommandOptionTypes.STRING,
+          description: "The text to encode",
+          classic: true,
+          required: true,
+        },
+      ],
+    },
+  ];
 
   static description = "Encodes/decodes a Base64 string";
 }

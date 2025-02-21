@@ -10,23 +10,28 @@ class StickerCommand extends Command {
     const result = await stickerDetect(this.client, this.message, this.interaction);
     this.success = false;
     if (!result) return this.getString("commands.responses.sticker.noInput");
-    if (result.format_type === 1) { // PNG
+    if (result.format_type === 1) {
+      // PNG
       this.success = true;
       return `https://cdn.discordapp.com/stickers/${result.id}.png`;
     }
-    if (result.format_type === 2) { // APNG
+    if (result.format_type === 2) {
+      // APNG
       this.success = true;
       return {
-        embeds: [{
-          color: 0xff0000,
-          description: `[${this.getString("commands.responses.sticker.apng")}](https://cdn.discordapp.com/stickers/${result.id}.png)`,
-          image: {
-            url: `https://cdn.discordapp.com/stickers/${result.id}.png`
-          }
-        }]
+        embeds: [
+          {
+            color: 0xff0000,
+            description: `[${this.getString("commands.responses.sticker.apng")}](https://cdn.discordapp.com/stickers/${result.id}.png)`,
+            image: {
+              url: `https://cdn.discordapp.com/stickers/${result.id}.png`,
+            },
+          },
+        ],
       };
     }
-    if (result.format_type === 3) { // Lottie
+    if (result.format_type === 3) {
+      // Lottie
       this.success = true;
       return `${this.getString("commands.responses.sticker.lottie")} https://cdn.discordapp.com/stickers/${result.id}.json`;
     }
@@ -35,7 +40,7 @@ class StickerCommand extends Command {
 
   static description = "Gets a raw sticker image";
   static aliases = ["stick"];
-  
+
   static userAllowed = false;
 }
 

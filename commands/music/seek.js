@@ -15,23 +15,26 @@ class SeekCommand extends MusicCommand {
     const pos = this.getOptionString("position") ?? this.args[0];
     let seconds;
     if (typeof pos === "string" && pos.includes(":")) {
-      seconds = +(pos.split(":").reduce((acc, time) => ((60 * Number(acc)) + +Number(time)).toString()));
+      seconds = +pos.split(":").reduce((acc, time) => (60 * Number(acc) + +Number(time)).toString());
     } else {
       seconds = Number.parseFloat(pos);
     }
-    if (Number.isNaN(seconds) || (seconds * 1000) > track.info.length || (seconds * 1000) < 0) return this.getString("commands.responses.seek.invalidPosition");
+    if (Number.isNaN(seconds) || seconds * 1000 > track.info.length || seconds * 1000 < 0)
+      return this.getString("commands.responses.seek.invalidPosition");
     player.seekTo(seconds * 1000);
     this.success = true;
     return `🔊 ${this.getString("commands.responses.seek.seeked", { params: { seconds } })}`;
   }
 
-  static flags = [{
-    name: "position",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "Seek to this position",
-    required: true,
-    classic: true
-  }];
+  static flags = [
+    {
+      name: "position",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "Seek to this position",
+      required: true,
+      classic: true,
+    },
+  ];
   static description = "Seeks to a different position in the music";
   static aliases = ["pos"];
 }

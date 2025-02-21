@@ -5,28 +5,31 @@ const templateRegex = /{{(\w+?)}}/g;
 type GetStringParams = {
   locale?: string;
   returnNull?: boolean;
-  params?: { [key: string]: string; };
+  params?: { [key: string]: string };
 };
 
-export function getString(key: string, params?: { returnNull?: false; } & GetStringParams): string;
-export function getString(key: string, params: { returnNull: boolean; } & GetStringParams): string | undefined;
+export function getString(key: string, params?: { returnNull?: false } & GetStringParams): string;
+export function getString(key: string, params: { returnNull: boolean } & GetStringParams): string | undefined;
 export function getString(key: string, params?: GetStringParams): string | undefined {
   const locale = params?.locale ?? process.env.LOCALE ?? "en-US";
   const obj = locales.get(locale);
   const splitKey = key.split(".");
   let string: string;
   try {
-    string = splitKey.reduce((prev, cur) => prev[cur], obj) || splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) || (params?.returnNull ? null : key);
+    string =
+      splitKey.reduce((prev, cur) => prev[cur], obj) ||
+      splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US")) ||
+      (params?.returnNull ? null : key);
   } catch {
     try {
       string = splitKey.reduce((prev, cur) => prev[cur], locales.get("en-US"));
     } catch {
-      return (params?.returnNull ? undefined : key);
+      return params?.returnNull ? undefined : key;
     }
   }
 
   if (params?.params && string) {
-    string = string.replace(templateRegex, (match, name) => (params.params?.[name] ?? match));
+    string = string.replace(templateRegex, (match, name) => params.params?.[name] ?? match);
   }
 
   return string;
@@ -39,7 +42,9 @@ export function getAllLocalizations(key: string) {
     let str: string | undefined;
     try {
       str = splitKey.reduce((prev, cur) => prev[cur], data);
-    } catch {}
+    } catch {
+      /* empty */
+    }
     if (!str) continue;
     obj[locale] = str;
   }

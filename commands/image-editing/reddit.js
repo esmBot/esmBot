@@ -4,9 +4,9 @@ const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "
 
 class RedditCommand extends ImageCommand {
   paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url)).join(" ");
     return {
-      caption: newArgs?.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names)
+      caption: newArgs?.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names),
     };
   }
 

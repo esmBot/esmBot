@@ -5,7 +5,7 @@ class UncaptionCommand extends ImageCommand {
   paramsFunc() {
     const tolerance = this.getOptionNumber("tolerance");
     return {
-      tolerance: tolerance == null || Number.isNaN(tolerance) ? 0.95 : tolerance
+      tolerance: tolerance == null || Number.isNaN(tolerance) ? 0.95 : tolerance,
     };
   }
 
@@ -16,7 +16,7 @@ class UncaptionCommand extends ImageCommand {
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
       description: "Set the shade tolerance for the caption detection (0.0 is highest, 1.0 is lowest, default is 0.95)",
       minValue: 0,
-      maxValue: 1
+      maxValue: 1,
     });
     return this;
   }

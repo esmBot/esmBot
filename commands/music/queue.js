@@ -13,53 +13,72 @@ class QueueCommand extends MusicCommand {
     const player = this.connection;
     if (!player) return this.getString("sound.noConnection");
     const node = nodes.find((val) => val.name === player.player.node.name);
-    const tracks = await fetch(`http://${node.url}/v4/decodetracks`, { method: "POST", body: JSON.stringify(this.queue), headers: { authorization: node.auth, "content-type": "application/json" } }).then(res => res.json());
+    const tracks = await fetch(`http://${node.url}/v4/decodetracks`, {
+      method: "POST",
+      body: JSON.stringify(this.queue),
+      headers: { authorization: node.auth, "content-type": "application/json" },
+    }).then((res) => res.json());
     const trackList = [];
     const firstTrack = tracks.shift();
     for (const [i, track] of tracks.entries()) {
-      trackList.push(`${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : format(track.info.length)})`);
+      trackList.push(
+        `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : format(track.info.length)})`,
+      );
     }
     const pageSize = 5;
     const embeds = [];
-    const groups = trackList.map((_item, index) => {
-      return index % pageSize === 0 ? trackList.slice(index, index + pageSize) : null;
-    }).filter(Boolean);
+    const groups = trackList
+      .map((_item, index) => {
+        return index % pageSize === 0 ? trackList.slice(index, index + pageSize) : null;
+      })
+      .filter(Boolean);
     if (groups.length === 0) groups.push("del");
     for (const [i, value] of groups.entries()) {
       embeds.push({
-        embeds: [{
-          author: {
-            name: this.getString("sound.queue"),
-            iconURL: this.client.user.avatarURL()
+        embeds: [
+          {
+            author: {
+              name: this.getString("sound.queue"),
+              iconURL: this.client.user.avatarURL(),
+            },
+            color: 0xff0000,
+            footer: {
+              text: this.getString("pagination.page", {
+                params: {
+                  page: i + 1,
+                  amount: groups.length,
+                },
+              }),
+            },
+            fields: [
+              {
+                name: `🎶 ${this.getString("sound.nowPlaying")}`,
+                value: `${firstTrack.info.author !== "" ? firstTrack.info.author : this.getString("sound.blank")} - **${firstTrack.info.title !== "" ? firstTrack.info.title : this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`,
+              },
+              {
+                name: `🔁 ${this.getString("sound.looping")}`,
+                value: player.loop ? this.getString("sound.yes") : this.getString("sound.no"),
+              },
+              {
+                name: `🌐 ${this.getString("sound.node")}`,
+                value: player.player.node ? player.player.node.name : this.getString("sound.unknown"),
+              },
+              {
+                name: `🗒️ ${this.getString("sound.queue")}`,
+                value: value !== "del" ? value.join("\n") : this.getString("sound.noQueue"),
+              },
+            ],
           },
-          color: 0xff0000,
-          footer: {
-            text: this.getString("pagination.page", {
-              params: {
-                page: i + 1,
-                amount: groups.length
-              }
-            })
-          },
-          fields: [{
-            name: `🎶 ${this.getString("sound.nowPlaying")}`,
-            value: `${firstTrack.info.author !== "" ? firstTrack.info.author : this.getString("sound.blank")} - **${firstTrack.info.title !== "" ? firstTrack.info.title : this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`
-          }, {
-            name: `🔁 ${this.getString("sound.looping")}`,
-            value: player.loop ? this.getString("sound.yes") : this.getString("sound.no")
-          }, {
-            name: `🌐 ${this.getString("sound.node")}`,
-            value: player.player.node ? player.player.node.name : this.getString("sound.unknown")
-          }, {
-            name: `🗒️ ${this.getString("sound.queue")}`,
-            value: value !== "del" ? value.join("\n") : this.getString("sound.noQueue")
-          }]
-        }]
+        ],
       });
     }
     if (embeds.length === 0) return this.getString("sound.noQueue");
     this.success = true;
-    return paginator(this.client, { message: this.message, interaction: this.interaction, author: this.author }, embeds);
+    return paginator(
+      this.client,
+      { message: this.message, interaction: this.interaction, author: this.author },
+      embeds,
+    );
   }
 
   static description = "Shows the current queue";

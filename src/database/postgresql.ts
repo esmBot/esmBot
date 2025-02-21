@@ -6,14 +6,14 @@ import type { Count, DBGuild, Tag } from "#utils/types.js";
 import Postgres from "postgres";
 import type { DatabasePlugin } from "#database";
 const sql = Postgres(process.env.DB as string, {
-  onnotice: () => {}
+  onnotice: () => {},
 });
 
 interface Settings {
   id: number;
   version: number;
   broadcast?: string;
-};
+}
 
 const settingsSchema = `
 CREATE TABLE IF NOT EXISTS settings (
@@ -47,11 +47,11 @@ const updates = [
   "", // reserved
   "CREATE TABLE IF NOT EXISTS settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
   "ALTER TABLE guilds DROP COLUMN accessed",
-  "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text"
+  "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text",
 ];
 
 async function setup() {
-  const existingCommands = (await sql<{ command: string; }[]>`SELECT command FROM counts`).map(x => x.command);
+  const existingCommands = (await sql<{ command: string }[]>`SELECT command FROM counts`).map((x) => x.command);
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const command of existingCommands) {
     if (!commandNames.includes(command)) {
@@ -88,7 +88,9 @@ async function upgrade(logger: Logger) {
           await sql.unsafe(updates[version]);
         }
       } else if (version > latestVersion) {
-        throw new Error(`PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`);
+        throw new Error(
+          `PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`,
+        );
       } else {
         return;
       }
@@ -126,15 +128,15 @@ async function getTag(guild: string, tag: string) {
 
 async function getTags(guild: string) {
   const tagArray = await sql<Tag[]>`SELECT * FROM tags WHERE guild_id = ${guild}`;
-  const tags = new Map(tagArray.map(tag => [tag.name, { content: tag.content, author: tag.author }]));
+  const tags = new Map(tagArray.map((tag) => [tag.name, { content: tag.content, author: tag.author }]));
   return tags;
 }
 
-async function setTag(name: string, content: { content: string, author: string }, guild: Guild) {
+async function setTag(name: string, content: { content: string; author: string }, guild: Guild) {
   await sql`INSERT INTO tags ${sql({ guild_id: guild.id, name, content: content.content, author: content.author }, "guild_id", "name", "content", "author")}`;
 }
 
-async function editTag(name: string, content: { content: string, author: string }, guild: Guild) {
+async function editTag(name: string, content: { content: string; author: string }, guild: Guild) {
   await sql`UPDATE tags SET content = ${content.content}, author = ${content.author} WHERE guild_id = ${guild.id} AND name = ${name}`;
 }
 
@@ -154,12 +156,15 @@ async function getBroadcast() {
 async function disableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
   await sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
-  disabledCmdCache.set(guild, guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v));
+  disabledCmdCache.set(
+    guild,
+    guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v),
+  );
 }
 
 async function enableCommand(guild: string, command: string) {
   const guildDB = await getGuild(guild);
-  const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter(item => item !== command) : [];
+  const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter((item) => item !== command) : [];
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
   disabledCmdCache.set(guild, newDisabled);
 }
@@ -172,14 +177,14 @@ async function disableChannel(channel: GuildChannel) {
 
 async function enableChannel(channel: GuildChannel) {
   const guildDB = await getGuild(channel.guildID);
-  const newDisabled = guildDB.disabled.filter(item => item !== channel.id);
+  const newDisabled = guildDB.disabled.filter((item) => item !== channel.id);
   await sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guildID}`;
   disabledCache.set(channel.guildID, newDisabled);
 }
 
 async function getCounts() {
   const counts = await sql<Count[]>`SELECT * FROM counts`;
-  const countMap = new Map(counts.map(val => [val.command, val.count]));
+  const countMap = new Map(counts.map((val) => [val.command, val.count]));
   return countMap;
 }
 
@@ -209,5 +214,5 @@ export default {
   setBroadcast,
   getBroadcast,
   setPrefix,
-  getGuild
+  getGuild,
 } as DatabasePlugin;

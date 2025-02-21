@@ -6,7 +6,7 @@ import type { Param } from "./types.js";
 export const categoryTemplate = {
   general: [],
   tags: ["> **Every command in this category is a subcommand of the tag command.**\n"],
-  "image-editing": ["> **These commands support the PNG, JPEG, WEBP, AVIF (static only), and GIF formats.**\n"]
+  "image-editing": ["> **These commands support the PNG, JPEG, WEBP, AVIF (static only), and GIF formats.**\n"],
 };
 export let categories: {
   [key: string]: string[];
@@ -56,7 +56,8 @@ This page was last generated on \`${new Date().toString()}\`.
   for (const category of Object.keys(categories)) {
     const categoryStringArray = category.split("-");
     for (const index of categoryStringArray.keys()) {
-      categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
+      categoryStringArray[index] =
+        categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
     }
     template += `+ [**${categoryStringArray.join(" ")}**](#${category})\n`;
   }
@@ -65,7 +66,8 @@ This page was last generated on \`${new Date().toString()}\`.
   for (const category of Object.keys(categories)) {
     const categoryStringArray = category.split("-");
     for (const index of categoryStringArray.keys()) {
-      categoryStringArray[index] = categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
+      categoryStringArray[index] =
+        categoryStringArray[index].charAt(0).toUpperCase() + categoryStringArray[index].slice(1);
     }
     template += `\n## ${categoryStringArray.join(" ")}\n`;
     for (const command of categories[category]) {
