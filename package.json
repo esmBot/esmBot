@@ -19,6 +19,7 @@
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host --entrypoint='[\"node\", \"api/index.js\"]' esmbot",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml ghcr.io/lavalink-devs/lavalink:4",
+    "lint": "eslint .",
     "start": "node dist/app.js",
     "start:bun": "bun src/app.ts",
     "start:debug": "DEBUG=true node dist/app.js",
@@ -49,14 +50,18 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@eslint/js": "^9.20.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/better-sqlite3": "^7.6.12",
     "@types/bun": "^1.2.2",
     "@types/node": "20",
     "@types/ws": "^8.5.14",
     "cmake-js": "^7.3.0",
-    "typescript": "^5.7.3"
+    "eslint": "^9.20.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.1"
   },
   "optionalDependencies": {
     "@sentry/node": "^8.54.0",
@@ -79,7 +84,7 @@
     },
     "#database": {
       "node": "./dist/database.js",
-      "default": "./src/database.js"      
+      "default": "./src/database.js"
     },
     "#pagination": {
       "node": "./dist/pagination/pagination.js",
