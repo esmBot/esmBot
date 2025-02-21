@@ -15,9 +15,8 @@ class WikihowCommand extends Command {
       const data = json.query.pages[id];
       if (data.imageinfo) {
         return json.query.pages[id].imageinfo[0].url;
-      } else {
-        return await this.run();
       }
+      return await this.run();
     } catch (e) {
       if (e.name === "AbortError") {
         this.success = false;

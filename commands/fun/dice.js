@@ -6,7 +6,7 @@ class DiceCommand extends Command {
     const max = this.interaction?.data.options.getInteger("max") ?? Number.parseInt(this.args[0]);
     return `🎲 ${this.getString("commands.responses.dice.landed", {
       params: {
-        number: Math.floor(Math.random() * (max || 6)) + 1
+        number: (Math.floor(Math.random() * (max || 6)) + 1).toString()
       }
     })}`;
   }
