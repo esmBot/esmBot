@@ -375,7 +375,7 @@ const runJob = (job, ws) => {
 
     const object = JSON.parse(job.msg);
     // If the image has a path, it must also have a type
-    if (object.path && !object.params.type) {
+    if (object.path && !object.input.type) {
       reject(new TypeError("Unknown image type"));
     }
 
