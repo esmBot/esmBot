@@ -111,9 +111,9 @@
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule).",
-            "channel": "Active/désactive les commandes classiques dans un salon (utilise les paramètres du serveur pour les commandes slash)",
-            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)",
-            "tags": "La commande principale des tags. Consultez la page d'aide pour plus d'informations : https://esmbot.net/help.html"
+            "channel": "",
+            "command": "",
+            "tags": ""
         },
         "flagNames": {
             "8ball": {
@@ -370,7 +370,7 @@
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
                 "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": "Multiplicateur pour redimensionner la bulle de dialogue (0,01 est le plus petit, 1,0 est le plus grand, la valeur par défaut est 0,2)"
+                "scale": ""
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
@@ -434,10 +434,10 @@
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
             },
             "snapchat": {
-                "position": "Définit la position du sous-titre sous forme décimale (0.0 est en haut, 1.0 est en bas, la valeur par défaut est 0.565)"
+                "position": ""
             },
             "uncaption": {
-                "tolerance": "Défini la tolérance d'ombre pour la détection de sous-titre (0,0 est la plus élevée, 1,0 est la plus basse, la valeur par défaut est 0,95)"
+                "tolerance": ""
             }
         },
         "names": {
