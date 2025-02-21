@@ -1,8 +1,8 @@
+import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import database from "#database";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
-import database from "#database";
-import Command from "#cmd-classes/command.js";
-import { Constants } from "oceanic.js";
 
 class CountCommand extends Command {
   async run() {

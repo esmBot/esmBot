@@ -1,6 +1,6 @@
-import database from "#database";
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import database from "#database";
 
 class PrefixCommand extends Command {
   async run() {

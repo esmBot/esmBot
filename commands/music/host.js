@@ -1,7 +1,7 @@
-import { players } from "#utils/soundplayer.js";
-import logger from "#utils/logger.js";
-import MusicCommand from "#cmd-classes/musicCommand.js";
 import { Constants, User } from "oceanic.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
+import logger from "#utils/logger.js";
+import { players } from "#utils/soundplayer.js";
 
 class HostCommand extends MusicCommand {
   async run() {

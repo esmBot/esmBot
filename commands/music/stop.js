@@ -1,5 +1,5 @@
-import { leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
 
 class StopCommand extends MusicCommand {
   async run() {

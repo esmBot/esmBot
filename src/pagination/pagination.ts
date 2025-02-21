@@ -1,8 +1,8 @@
-import InteractionCollector from "./awaitinteractions.js";
+import { type Client, type CommandInteraction, ComponentTypes, type CreateMessageOptions, type EmbedOptions, type InteractionContent, type Member, type Message, type MessageActionRow, type StringSelectMenu, type User } from "oceanic.js";
 import { collectors } from "../utils/collections.js";
-import logger from "../utils/logger.js";
 import { getString } from "../utils/i18n.js";
-import { ComponentTypes, type Client, type CommandInteraction, type CreateMessageOptions, type EmbedOptions, type InteractionContent, type Member, type Message, type MessageActionRow, type StringSelectMenu, type User } from "oceanic.js";
+import logger from "../utils/logger.js";
+import InteractionCollector from "./awaitinteractions.js";
 
 type Info = {
   author: User | Member;

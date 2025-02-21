@@ -1,7 +1,7 @@
+import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import database from "#database";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";
-import { Constants } from "oceanic.js";
 
 class BroadcastCommand extends Command {
   async run() {

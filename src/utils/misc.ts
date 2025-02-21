@@ -1,13 +1,12 @@
 import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
-import { config, type DotenvParseOutput } from "dotenv";
-import type { Client, CommandInteraction, Message, AnyPrivateChannel, AnyChannel } from "oceanic.js";
+import { type DotenvParseOutput, config } from "dotenv";
+import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
 import db from "#database";
 import { servers } from "./image.js";
 
-// playing messages
-import messagesConfig from "#config/messages.json" with { type: "json" };
 import commandsConfig from "#config/commands.json" with { type: "json" };
+import messagesConfig from "#config/messages.json" with { type: "json" };
 
 let broadcast = false;
 

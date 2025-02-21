@@ -1,8 +1,8 @@
-import { activityChanger, checkBroadcast } from "#utils/misc.js";
-import { send } from "#utils/handler.js";
-import { generateList, createPage } from "#utils/help.js";
-import logger from "#utils/logger.js";
 import type { Client } from "oceanic.js";
+import { send } from "#utils/handler.js";
+import { createPage, generateList } from "#utils/help.js";
+import logger from "#utils/logger.js";
+import { activityChanger, checkBroadcast } from "#utils/misc.js";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
 let ready = false;

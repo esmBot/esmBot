@@ -1,10 +1,10 @@
-import logger from "./logger.js";
 import fs from "node:fs";
-import format from "format-duration";
-import { Shoukaku, Connectors, type Player, type NodeOption, type Track, type TrackExceptionEvent, type LavalinkResponse, type Playlist } from "shoukaku";
 import { setTimeout } from "node:timers/promises";
+import format from "format-duration";
 import { type Client, type CommandInteraction, type Guild, type GuildChannel, type Member, type Message, VoiceChannel } from "oceanic.js";
+import { Connectors, type LavalinkResponse, type NodeOption, type Player, type Playlist, Shoukaku, type Track, type TrackExceptionEvent } from "shoukaku";
 import { getString } from "./i18n.js";
+import logger from "./logger.js";
 
 export type SoundPlayer = {
   player: Player;

@@ -1,7 +1,7 @@
-import logger from "./logger.js";
-import { readdir, lstat, rm, writeFile, stat } from "node:fs/promises";
-import { getString } from "./i18n.js";
+import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { type Client, CommandInteraction, type File, type Message } from "oceanic.js";
+import { getString } from "./i18n.js";
+import logger from "./logger.js";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {

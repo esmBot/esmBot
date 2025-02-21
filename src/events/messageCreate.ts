@@ -1,13 +1,13 @@
-import database from "#database";
-import { log, error as _error } from "#utils/logger.js";
-import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "#utils/collections.js";
-import parseCommand from "#utils/parseCommand.js";
-import { clean } from "#utils/misc.js";
-import { upload } from "#utils/tempimages.js";
-import { GroupChannel, PrivateChannel, ThreadChannel, type AnyTextableChannel, type Client, type Message, type TextChannel } from "oceanic.js";
-import { getString } from "#utils/i18n.js";
-import type { DBGuild } from "#utils/types.js";
+import { type AnyTextableChannel, type Client, GroupChannel, type Message, PrivateChannel, type TextChannel, ThreadChannel } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
+import database from "#database";
+import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
+import { getString } from "#utils/i18n.js";
+import { error as _error, log } from "#utils/logger.js";
+import { clean } from "#utils/misc.js";
+import parseCommand from "#utils/parseCommand.js";
+import { upload } from "#utils/tempimages.js";
+import type { DBGuild } from "#utils/types.js";
 
 let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {

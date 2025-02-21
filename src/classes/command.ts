@@ -1,12 +1,10 @@
 import {
-  Constants,
-  Permission,
-  TextableChannel,
   type AllowedMentions,
   type AnyTextableChannel,
   type ApplicationCommandOptions,
   type Client,
   type CommandInteraction,
+  Constants,
   type CreateMessageOptions,
   type Guild,
   type InteractionContent,
@@ -14,6 +12,8 @@ import {
   type Member,
   type Message,
   type MessageReference,
+  Permission,
+  TextableChannel,
   type Uncached,
   type User
 } from "oceanic.js";

@@ -1,15 +1,10 @@
+import "dotenv/config";
+import { createServer } from "node:http";
+import { availableParallelism } from "node:os";
+import { Client, type ShardStatus } from "oceanic.js";
 import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";
-
-// load config from .env file
-import { createServer } from "node:http";
-import "dotenv/config";
-
-// oceanic client used for getting shard counts
-import { Client, type ShardStatus } from "oceanic.js";
-
 import database from "#database";
-import { availableParallelism } from "node:os";
 
 const logger = winston.createLogger({
   levels: {

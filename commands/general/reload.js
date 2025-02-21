@@ -1,7 +1,7 @@
-import Command from "#cmd-classes/command.js";
-import { load } from "#utils/handler.js";
-import { paths } from "#utils/collections.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import { paths } from "#utils/collections.js";
+import { load } from "#utils/handler.js";
 
 class ReloadCommand extends Command {
   async run() {

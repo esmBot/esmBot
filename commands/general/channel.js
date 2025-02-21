@@ -1,6 +1,6 @@
-import db from "#database";
-import Command from "#cmd-classes/command.js";
 import { Constants, GuildChannel } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import db from "#database";
 
 class ChannelCommand extends Command {
   async run() {

@@ -1,6 +1,6 @@
-import Command, { type CommandOptions } from "./command.js";
-import { players, queues, type SoundPlayer } from "#utils/soundplayer.js";
 import type { Client } from "oceanic.js";
+import { type SoundPlayer, players, queues } from "#utils/soundplayer.js";
+import Command, { type CommandOptions } from "./command.js";
 
 class MusicCommand extends Command {
   connection?: SoundPlayer;

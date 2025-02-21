@@ -1,10 +1,10 @@
+import { lookup } from "node:dns/promises";
 import fs from "node:fs";
 import { createRequire } from "node:module";
-import { lookup } from "node:dns/promises";
-import ipaddr from "ipaddr.js";
 import { fileTypeFromBuffer } from "file-type";
-import logger from "./logger.js";
+import ipaddr from "ipaddr.js";
 import ImageConnection from "./imageConnection.js";
+import logger from "./logger.js";
 import type { ImageParams, ImageTypeData } from "./types.js";
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
 

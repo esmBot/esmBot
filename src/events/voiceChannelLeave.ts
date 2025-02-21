@@ -1,9 +1,9 @@
-import { leaveChannel, players, queues, skipVotes, type SoundPlayer } from "#utils/soundplayer.js";
+import { type Client, GuildChannel, type Member, StageChannel, type Uncached, VoiceChannel } from "oceanic.js";
 import AwaitRejoin from "#utils/awaitrejoin.js";
-import { random } from "#utils/misc.js";
-import logger from "#utils/logger.js";
-import { GuildChannel, VoiceChannel, StageChannel, type Client, type Member, type Uncached } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
+import logger from "#utils/logger.js";
+import { random } from "#utils/misc.js";
+import { type SoundPlayer, leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
 
 const isWaiting = new Map();
 

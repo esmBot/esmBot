@@ -1,11 +1,11 @@
+import { type AnyInteractionGateway, type Client, InteractionTypes } from "oceanic.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 import database from "#database";
-import logger from "#utils/logger.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
+import { getString } from "#utils/i18n.js";
+import logger from "#utils/logger.js";
 import { clean } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
-import { InteractionTypes, type AnyInteractionGateway, type Client } from "oceanic.js";
-import { getString } from "#utils/i18n.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
 
 let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {

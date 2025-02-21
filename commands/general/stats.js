@@ -1,7 +1,7 @@
-import packageJson from "../../package.json" with { type: "json" };
 import os from "node:os";
-import Command from "#cmd-classes/command.js";
 import { VERSION } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import packageJson from "../../package.json" with { type: "json" };
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { getServers } from "#utils/misc.js";
 

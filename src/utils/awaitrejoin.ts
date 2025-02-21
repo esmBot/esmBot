@@ -1,7 +1,7 @@
 // this is a method to wait for someone to rejoin a voice channel
 import { EventEmitter } from "node:events";
-import { random } from "./misc.js";
 import type { Client, Member, StageChannel, VoiceChannel } from "oceanic.js";
+import { random } from "./misc.js";
 
 class AwaitRejoin extends EventEmitter {
   member: string;

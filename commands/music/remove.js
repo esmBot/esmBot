@@ -1,6 +1,6 @@
-import { queues } from "#utils/soundplayer.js";
-import MusicCommand from "#cmd-classes/musicCommand.js";
 import { Constants } from "oceanic.js";
+import MusicCommand from "#cmd-classes/musicCommand.js";
+import { queues } from "#utils/soundplayer.js";
 
 class RemoveCommand extends MusicCommand {
   async run() {

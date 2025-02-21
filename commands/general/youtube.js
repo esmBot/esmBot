@@ -1,8 +1,8 @@
-import serversConfig from "#config/servers.json" with { type: "json" };
-import { random } from "#utils/misc.js";
-import paginator from "#pagination";
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import serversConfig from "#config/servers.json" with { type: "json" };
+import paginator from "#pagination";
+import { random } from "#utils/misc.js";
 
 class YouTubeCommand extends Command {
   async run() {

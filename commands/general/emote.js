@@ -1,6 +1,6 @@
 import emojiRegex from "emoji-regex-xs";
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
 
 class EmoteCommand extends Command {
   async run() {

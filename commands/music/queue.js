@@ -1,7 +1,7 @@
 import format from "format-duration";
-import { nodes } from "#utils/soundplayer.js";
-import paginator from "#pagination";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import paginator from "#pagination";
+import { nodes } from "#utils/soundplayer.js";
 
 class QueueCommand extends MusicCommand {
   async run() {

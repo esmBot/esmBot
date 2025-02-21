@@ -1,6 +1,6 @@
-import { commands, info } from "./collections.js";
-import commandConfig from "#config/commands.json" with { type: "json" };
 import { promises } from "node:fs";
+import commandConfig from "#config/commands.json" with { type: "json" };
+import { commands, info } from "./collections.js";
 import type { Param } from "./types.js";
 
 export const categoryTemplate = {

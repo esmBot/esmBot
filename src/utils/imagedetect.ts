@@ -1,4 +1,4 @@
-import { AttachmentFlags, PrivateChannel, TextableChannel, ThreadChannel, type Client, type CommandInteraction, type Message, type StickerItem } from "oceanic.js";
+import { AttachmentFlags, type Client, type CommandInteraction, type Message, PrivateChannel, type StickerItem, TextableChannel, ThreadChannel } from "oceanic.js";
 import { getType } from "./image.js";
 import logger from "./logger.js";
 import type { ImageTypeData } from "./types.js";

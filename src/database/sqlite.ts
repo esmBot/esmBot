@@ -1,10 +1,10 @@
-import { commands, messageCommands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
+import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
+import type { Database as BSQLite3Database, Statement as BSQLite3Statement } from "better-sqlite3";
 import type { Guild, GuildChannel } from "oceanic.js";
+import type { DatabasePlugin } from "#database";
+import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";
 import type { Logger } from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
-import type { Database as BSQLite3Database, Statement as BSQLite3Statement } from "better-sqlite3";
-import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
-import type { DatabasePlugin } from "#database";
 
 // bun:sqlite is mostly compatible with better-sqlite3, but has a few minor type differences that don't really matter in our case
 // here we attempt to bring the two closer together

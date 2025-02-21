@@ -29,29 +29,22 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
   process.exit(1);
 }
 
-import { reloadImageConnections, initImageLib, disconnect } from "./utils/image.js";
-
-// main services
-import { Client, type ClientEvents, Constants } from "oceanic.js";
-// some utils
-import { promises } from "node:fs";
-import logger from "./utils/logger.js";
 import { exec as baseExec } from "node:child_process";
-import { promisify } from "node:util";
-import { resolve, dirname } from "node:path";
+import { promises } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-const exec = promisify(baseExec);
-// initialize command loader
-import { load } from "./utils/handler.js";
-// command collections
-import { locales, paths } from "./utils/collections.js";
-// database stuff
+import { promisify } from "node:util";
+
+import { Client, type ClientEvents, Constants } from "oceanic.js";
+
 import database from "#database";
-// lavalink stuff
-import { reload, connect, connected } from "./utils/soundplayer.js";
-// events
-import { endBroadcast, startBroadcast } from "./utils/misc.js";
-import { parseThreshold } from "./utils/tempimages.js";
+import { locales, paths } from "#utils/collections.js";
+import { load } from "#utils/handler.js";
+import { disconnect, initImageLib, reloadImageConnections } from "#utils/image.js";
+import logger from "#utils/logger.js";
+import { endBroadcast, startBroadcast } from "#utils/misc.js";
+import { connect, connected, reload } from "#utils/soundplayer.js";
+import { parseThreshold } from "#utils/tempimages.js";
 
 import commandConfig from "#config/commands.json" with { type: "json" };
 import packageJson from "../package.json" with { type: "json" };
@@ -78,6 +71,8 @@ async function* getFiles(dir: string, ext = ".js"): AsyncGenerator<string> {
     }
   }
 }
+
+const exec = promisify(baseExec);
 
 process.env.GIT_REV = await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit");
 console.log(`

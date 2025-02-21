@@ -1,6 +1,6 @@
-import { clean } from "#utils/misc.js";
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import { clean } from "#utils/misc.js";
 
 class EvalCommand extends Command {
   async run() {

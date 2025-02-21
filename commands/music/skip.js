@@ -1,5 +1,5 @@
-import { skipVotes } from "#utils/soundplayer.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { skipVotes } from "#utils/soundplayer.js";
 
 class SkipCommand extends MusicCommand {
   async run() {

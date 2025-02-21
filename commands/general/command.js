@@ -1,7 +1,7 @@
-import db from "#database";
-import Command from "#cmd-classes/command.js";
-import * as collections from "#utils/collections.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import db from "#database";
+import * as collections from "#utils/collections.js";
 
 class CommandCommand extends Command {
   async run() {

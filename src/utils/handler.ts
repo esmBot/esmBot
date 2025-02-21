@@ -1,10 +1,10 @@
-import { paths, commands, messageCommands, userCommands, info, categories, aliases as _aliases } from "./collections.js";
+import { aliases as _aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.js";
 import { log } from "./logger.js";
 
-import commandConfig from "#config/commands.json" with { type: "json" };
-import { Constants, type Client, type CreateApplicationCommandOptions } from "oceanic.js";
-import { getAllLocalizations } from "./i18n.js";
+import { type Client, Constants, type CreateApplicationCommandOptions } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
+import commandConfig from "#config/commands.json" with { type: "json" };
+import { getAllLocalizations } from "./i18n.js";
 import type { CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.js";
 
 let queryValue = 0;

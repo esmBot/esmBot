@@ -1,9 +1,9 @@
 import { Constants } from "oceanic.js";
-import database from "#database";
-import * as collections from "#utils/collections.js";
-import paginator from "#pagination";
-import * as help from "#utils/help.js";
 import Command from "#cmd-classes/command.js";
+import database from "#database";
+import paginator from "#pagination";
+import * as collections from "#utils/collections.js";
+import * as help from "#utils/help.js";
 
 class HelpCommand extends Command {
   async run() {

@@ -1,6 +1,6 @@
-import { prefixCache, disabledCmdCache, disabledCache, commands, messageCommands } from "#utils/collections.js";
-import type { Logger } from "#utils/logger.js";
 import type { Guild, GuildChannel } from "oceanic.js";
+import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";
+import type { Logger } from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 
 import Postgres from "postgres";
