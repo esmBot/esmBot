@@ -47,9 +47,11 @@ The job object is formatted like this:
   "path": string,      // canonical image URL, used for getting the actual image
   "url": string,       // original image URL, used for message filtering
   "params": {          // content varies depending on the command, some common parameters are listed here
-    "type": string,    // mime type of output, should usually be the same as input
     "togif": boolean,  // convert output to gif
     ...
+  },
+  "input": {
+    "type": string     // mime type of output, should usually be the same as input
   },
   "name": string,      // filename of the image, without extension
   "ephemeral": string, // whether to post the output as an ephemeral message (only when responding directly, see below section)
