@@ -12,6 +12,7 @@ class CaptionCommand extends ImageCommand {
     const font = this.getOptionString("font");
     return {
       caption: newCaption,
+      // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "futura",
     };
   }

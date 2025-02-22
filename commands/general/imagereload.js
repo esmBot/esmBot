@@ -3,7 +3,7 @@ import { reloadImageConnections } from "#utils/image.js";
 
 class ImageReloadCommand extends Command {
   async run() {
-    const owners = process.env.OWNER.split(",");
+    const owners = process.env.OWNER?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.imagereload.owner");
@@ -19,7 +19,7 @@ class ImageReloadCommand extends Command {
           },
         });
       }
-      return this.getString("commands.responses.imagereload.connected", { params: { length } });
+      return this.getString("commands.responses.imagereload.connected", { params: { length: length.toString() } });
     }
     return this.getString("commands.responses.imagereload.couldNotConnect");
   }

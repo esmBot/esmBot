@@ -55,7 +55,7 @@ class Command {
 
   message?: Message;
   interaction?: CommandInteraction;
-  channel?: AnyTextableChannel | ({ guildID?: string } & Uncached);
+  channel: AnyTextableChannel | ({ guildID?: string } & Uncached);
   guild?: Guild | null;
   member?: Member | null;
   content?: string;
@@ -73,7 +73,10 @@ class Command {
       this.args = options.args;
       this.locale = options.locale ?? (process.env.LOCALE as Locale) ?? "en-US";
       this.cmdName = options.cmdName;
-      this.channel = options.message.channel;
+      this.channel = options.message.channel ?? {
+        id: options.message.channelID,
+        guildID: options.message.guildID ?? undefined,
+      };
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;

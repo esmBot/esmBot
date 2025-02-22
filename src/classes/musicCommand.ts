@@ -4,12 +4,14 @@ import Command, { type CommandOptions } from "./command.js";
 
 class MusicCommand extends Command {
   connection?: SoundPlayer;
-  queue?: string[];
+  queue: string[];
   constructor(client: Client, options: CommandOptions) {
     super(client, options);
     if (this.guild) {
       this.connection = players.get(this.guild.id);
-      this.queue = queues.get(this.guild.id);
+      this.queue = queues.get(this.guild.id) ?? [];
+    } else {
+      this.queue = [];
     }
   }
 

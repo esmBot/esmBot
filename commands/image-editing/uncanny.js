@@ -40,6 +40,7 @@ class UncannyCommand extends ImageCommand {
       caption: text1?.trim() ? this.clean(text1) : random(prompts),
       caption2: this.clean(text2),
       path: `assets/images/uncanny/${phase && names.includes(phase.toLowerCase()) ? phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
+      // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica",
     };
   }

@@ -23,7 +23,7 @@ class SeekCommand extends MusicCommand {
       return this.getString("commands.responses.seek.invalidPosition");
     player.seekTo(seconds * 1000);
     this.success = true;
-    return `🔊 ${this.getString("commands.responses.seek.seeked", { params: { seconds } })}`;
+    return `🔊 ${this.getString("commands.responses.seek.seeked", { params: { seconds: seconds.toString() } })}`;
   }
 
   static flags = [

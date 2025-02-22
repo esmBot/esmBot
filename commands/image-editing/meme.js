@@ -21,6 +21,7 @@ class MemeCommand extends ImageCommand {
     return {
       topText: this.clean(this.getOptionBoolean("case") ? topText : topText.toUpperCase()),
       bottomText: bottomText ? this.clean(this.getOptionBoolean("case") ? bottomText : bottomText.toUpperCase()) : "",
+      // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "impact",
     };
   }
