@@ -60,13 +60,13 @@ if (commandConfig.types.classic) {
   intents.push(Constants.Intents.MESSAGE_CONTENT);
 }
 
-async function* getFiles(dir: string, ext = ".js"): AsyncGenerator<string> {
+async function* getFiles(dir: string, exts = [".js"]): AsyncGenerator<string> {
   const dirents = await promises.readdir(dir, { withFileTypes: true });
   for (const dirent of dirents) {
     const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
     if (dirent.isDirectory()) {
-      yield* getFiles(name, ext);
-    } else if (dirent.name.endsWith(ext)) {
+      yield* getFiles(name, exts);
+    } else if (exts.some((ext) => dirent.name.endsWith(ext))) {
       yield name;
     }
   }
@@ -122,7 +122,7 @@ if (process.env.TEMPDIR && process.env.THRESHOLD) {
 
 // register locales
 logger.log("info", "Attempting to load locale data...");
-for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../locales/"), ".json")) {
+for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../locales/"), [".json"])) {
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
@@ -137,7 +137,10 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-for await (const commandFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../commands/"))) {
+for await (const commandFile of getFiles(
+  resolve(dirname(fileURLToPath(import.meta.url)), "../commands/"),
+  process.versions.bun ? [".js", ".ts"] : [".js"],
+)) {
   logger.log("main", `Loading command from ${commandFile}...`);
   try {
     await load(null, commandFile);
@@ -197,7 +200,7 @@ const client = new Client({
 logger.log("info", "Attempting to load events...");
 for await (const file of getFiles(
   resolve(dirname(fileURLToPath(import.meta.url)), "./events/"),
-  process.versions.bun ? ".ts" : ".js",
+  process.versions.bun ? [".js", ".ts"] : [".js"],
 )) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
