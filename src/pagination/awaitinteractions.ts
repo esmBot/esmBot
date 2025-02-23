@@ -1,8 +1,12 @@
 // oceanic doesn't come with a method to wait for interactions by default, so we make our own
-import { EventEmitter } from "node:events";
-import type { Client, Message } from "oceanic.js";
+import { TypedEmitter, type Client, type ComponentInteraction, type Message } from "oceanic.js";
 
-class InteractionCollector extends EventEmitter {
+interface InteractionCollectorEvents {
+  interaction: [interaction: ComponentInteraction];
+  end: [deleted?: boolean];
+}
+
+class InteractionCollector extends TypedEmitter<InteractionCollectorEvents> {
   message: Message;
   ended: boolean;
   bot: Client;

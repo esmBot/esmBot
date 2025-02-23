@@ -24,9 +24,9 @@ export default async (client: Client, member: Member, oldChannel: VoiceChannel |
         content: `🔊 ${getString("sound.waitingForSomeone", { locale: connection.locale })}`,
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, true, member.id);
-      awaitRejoin.once("end", async (rejoined, newMember) => {
+      awaitRejoin.once("end", async (newMember) => {
         isWaiting.delete(oldChannel.id);
-        if (rejoined) {
+        if (newMember) {
           connection.player.setPaused(false);
           if (member.id !== newMember.id) {
             players.set(connection.voiceChannel.guildID, {
@@ -65,9 +65,9 @@ export default async (client: Client, member: Member, oldChannel: VoiceChannel |
         content: `🔊 ${getString("sound.waitingForHost", { locale: connection.locale })}`,
       });
       const awaitRejoin = new AwaitRejoin(fullChannel, false, member.id);
-      awaitRejoin.once("end", async (rejoined) => {
+      awaitRejoin.once("end", async (newMember) => {
         isWaiting.delete(oldChannel.id);
-        if (rejoined) {
+        if (newMember) {
           try {
             if (waitMessage.channel?.messages.has(waitMessage.id)) await waitMessage.delete();
           } catch {

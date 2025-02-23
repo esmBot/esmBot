@@ -174,7 +174,11 @@ export default async (client: Client, info: Info, pages: Pages): Promise<undefin
             const dropdownCollector = new InteractionCollector(client, askMessage);
             let ended = false;
             dropdownCollector.on("interaction", async (response) => {
-              if (response.data.customID !== "seekDropdown") return;
+              if (
+                response.data.customID !== "seekDropdown" ||
+                response.data.componentType !== ComponentTypes.STRING_SELECT
+              )
+                return;
               try {
                 await interaction.deleteFollowup(askMessage.id);
               } catch {
