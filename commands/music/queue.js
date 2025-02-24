@@ -27,11 +27,12 @@ class QueueCommand extends MusicCommand {
     }
     const pageSize = 5;
     const embeds = [];
-    const groups = trackList
-      .map((_item, index) => {
-        return index % pageSize === 0 ? trackList.slice(index, index + pageSize) : null;
-      })
-      .filter(Boolean);
+    let groups = [];
+    let arrIndex = 0;
+    for (let i = 0; i < trackList.length; i += pageSize) {
+      groups[arrIndex] = trackList.slice(i, i + pageSize);
+      arrIndex++;
+    }
     if (groups.length === 0) groups.push("del");
     for (const [i, value] of groups.entries()) {
       embeds.push({
@@ -45,8 +46,8 @@ class QueueCommand extends MusicCommand {
             footer: {
               text: this.getString("pagination.page", {
                 params: {
-                  page: i + 1,
-                  amount: groups.length,
+                  page: (i + 1).toString(),
+                  amount: groups.length.toString(),
                 },
               }),
             },

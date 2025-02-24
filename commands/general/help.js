@@ -85,13 +85,13 @@ class HelpCommand extends Command {
     const pages = [];
     if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
     for (const category of Object.keys(help.categories)) {
-      const splitPages = help.categories[category]
-        .map((_item, index) => {
-          return index % 15 === 0 ? help.categories[category].slice(index, index + 15) : null;
-        })
-        .filter((item) => {
-          return item;
-        });
+      let splitPages = [];
+      let arrIndex = 0;
+      const entries = help.categories[category];
+      for (let i = 0; i < entries.length; i += 15) {
+        splitPages[arrIndex] = entries.slice(i, i + 15);
+        arrIndex++;
+      }
       const categoryStringArray = category.split("-");
       for (const index of categoryStringArray.keys()) {
         categoryStringArray[index] =

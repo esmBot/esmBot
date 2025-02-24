@@ -31,13 +31,12 @@ class CountCommand extends Command {
       countArray2.push(`**${key}**: ${value}`);
     }
     const embeds = [];
-    const groups = countArray2
-      .map((_item, index) => {
-        return index % 15 === 0 ? countArray2.slice(index, index + 15) : null;
-      })
-      .filter((item) => {
-        return item;
-      });
+    let groups = [];
+    let arrIndex = 0;
+    for (let i = 0; i < countArray2.length; i += 15) {
+      groups[arrIndex] = countArray2.slice(i, i + 15);
+      arrIndex++;
+    }
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [

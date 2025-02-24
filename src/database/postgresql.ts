@@ -1,10 +1,10 @@
 import type { Guild, GuildChannel } from "oceanic.js";
+import type { DatabasePlugin } from "#database";
 import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";
 import type { Logger } from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 
 import Postgres from "postgres";
-import type { DatabasePlugin } from "#database";
 const sql = Postgres(process.env.DB as string, {
   onnotice: () => {},
 });
@@ -128,7 +128,10 @@ async function getTag(guild: string, tag: string) {
 
 async function getTags(guild: string) {
   const tagArray = await sql<Tag[]>`SELECT * FROM tags WHERE guild_id = ${guild}`;
-  const tags = new Map(tagArray.map((tag) => [tag.name, { content: tag.content, author: tag.author }]));
+  const tags: Record<string, { content: string; author: string }> = {};
+  for (const tag of tagArray) {
+    tags[tag.name] = { content: tag.content, author: tag.author };
+  }
   return tags;
 }
 

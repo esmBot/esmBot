@@ -186,14 +186,13 @@ class TagsCommand extends Command {
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const tagList = await database.getTags(this.guild.id);
     const embeds = [];
-    const groups = tagList
-      .keys()
-      .map((_item, index) => {
-        return index % 15 === 0 ? tagList.keys().slice(index, index + 15) : null;
-      })
-      .filter((item) => {
-        return item;
-      });
+    let groups = [];
+    let arrIndex = 0;
+    const keys = Object.keys(tagList);
+    for (let i = 0; i < keys.length; i += 15) {
+      groups[arrIndex] = keys.slice(i, i + 15);
+      arrIndex++;
+    }
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [
@@ -203,8 +202,8 @@ class TagsCommand extends Command {
             footer: {
               text: this.getString("pagination.page", {
                 params: {
-                  page: i + 1,
-                  amount: groups.length,
+                  page: (i + 1).toString(),
+                  amount: groups.length.toString(),
                 },
               }),
             },

@@ -188,7 +188,10 @@ async function getTag(guild: string, tag: string) {
 
 async function getTags(guild: string) {
   const tagArray = connection.prepare("SELECT * FROM tags WHERE guild_id = ?").all(guild) as Tag[];
-  const tags = new Map(tagArray.map((tag) => [tag.name, { content: tag.content, author: tag.author }]));
+  const tags: Record<string, { content: string; author: string }> = {};
+  for (const tag of tagArray) {
+    tags[tag.name] = { content: tag.content, author: tag.author };
+  }
   return tags;
 }
 
