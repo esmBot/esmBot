@@ -110,7 +110,9 @@
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
-            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)."
+            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule).",
+            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres du serveur pour les commandes slash)",
+            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)"
         },
         "flagNames": {
             "8ball": {
