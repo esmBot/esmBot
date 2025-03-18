@@ -72,7 +72,7 @@
             "squish": "Stringe/allarga un'immagine",
             "stretch": "Allarga un'immagine a un rapporto di aspetto 1:1",
             "swirl": "Vortica un'immagine",
-            "uncanny": "Crea un'immagine di Mr. Incredibile Diventa Perturbante (separa testo sinistra/destra con virgola)",
+            "uncanny": "Crea un'immagine di Mr. Incredibile Diventa Uncanny (separa testo sinistra/destra con virgola)",
             "uncaption": "Rimuove una didascalia da un'immagine",
             "vignette": "Aggiunge una vignettatura a un'immagine",
             "unfreeze": "Scongela di una sequenza di immagini",
@@ -388,7 +388,7 @@
             },
             "uncanny": {
                 "font": "Specifica il carattere che vuoi usare (predefinito: helvetica)",
-                "phase": "Specifica l'immagine perturbante che vuoi usare"
+                "phase": "Specifica l'immagine uncanny che vuoi usare"
             },
             "host": {
                 "user": "L'utente che vuoi che sia il nuovo host"
@@ -531,7 +531,7 @@
             "stretch": "allarga",
             "swirl": "vortica",
             "tile": "mattonella",
-            "uncanny": "perturbante",
+            "uncanny": "uncanny",
             "uncaption": "dedidascalizza",
             "unfreeze": "scongela",
             "vignette": "vignettatura",
@@ -608,7 +608,7 @@
             "stretch": "Devi fornire un'immagine/GIF da allargare!",
             "swirl": "Devi fornire un'immagine/GIF da vorticare!",
             "tile": "Devi fornire un'immagine/GIF di cui fare mattonelle!",
-            "uncanny": "Devi fornire un'immagine/GIF per creare un'immagine perturbante!",
+            "uncanny": "Devi fornire un'immagine/GIF per creare un'immagine uncanny!",
             "uncaption": "Devi fornire un'immagine/GIF a cui rimuovere la didascalia!",
             "unfreeze": "Devi fornire un'immagine/GIF da scongelare!",
             "vignette": "Devi fornire un'immagine/GIF a cui aggiungere una vignettatura!",
@@ -764,7 +764,7 @@
             },
             "donate": {
                 "thanks": "Grazie ai seguenti patroni per il loro supporto:",
-                "support": "Ti piace esmBot? Prendi in considerazione di supportare lo sviluppatore su Patreon per mantenerlo in funzione!"
+                "support": "Ti piace esmBot? Prendi in considerazione di supportare lə sviluppatorə su Patreon per mantenerlo in funzione!"
             },
             "prefix": {
                 "adminOnly": "Devi essere un amministratore per cambiare il prefisso del bot!",
