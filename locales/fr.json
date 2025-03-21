@@ -110,9 +110,10 @@
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
-            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule).",
-            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres du serveur pour les commandes slash)",
-            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)"
+            "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
+            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
+            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)",
+            "tags": "La commande principale des tags. Consultez la page d'aide pour en savoir plus : https://esmbot.net/help.html"
         },
         "flagNames": {
             "8ball": {
@@ -176,10 +177,11 @@
                 "query": "requête"
             },
             "lengthen": {
-                "url": "lien"
+                "url": "adresseweb"
             },
             "reload": {
-                "cmd": "cmd"
+                "cmd": "cmd",
+                "skipsend": "passerenvoi"
             },
             "snowflake": {
                 "id": "identifiant"
@@ -188,7 +190,8 @@
                 "query": "requête"
             },
             "caption": {
-                "font": "police"
+                "font": "police",
+                "noegg": "pasdoeuf"
             },
             "caption2": {
                 "font": "police",
@@ -272,6 +275,9 @@
             },
             "help": {
                 "command": "commande"
+            },
+            "freeze": {
+                "endframe": "fintrame"
             }
         },
         "flags": {
@@ -347,34 +353,35 @@
             },
             "caption2": {
                 "top": "Place la légende en haut d'une image plutôt qu'en bas",
-                "font": "Spécifie la police que tu souhaites utiliser (par défaut: helvetica)"
+                "font": "Spécifie la police que tu souhaites utiliser (par défaut : helvetica)"
             },
             "freeze": {
-                "endframe": "Défini la dernière image (par défaut: la dernière image)"
+                "endframe": "Défini la dernière image (par défaut : la dernière image)"
             },
             "jpeg": {
-                "quality": "Défini la qualité JPEG (par défaut: 1)"
+                "quality": "Défini la qualité JPEG (par défaut : 1)"
             },
             "meme": {
-                "font": "Spécifie la police que tu veux utiliser (par défaut: impact)",
+                "font": "Spécifie la police que tu veux utiliser (par défaut : impact)",
                 "case": "Défini le meme comme étant sensible à la casse (pour autoriser les textes en minuscule)"
             },
             "motivate": {
-                "font": "Spécifie la police que tu souhaites utiliser (par défaut: times)"
+                "font": "Spécifie la police que tu souhaites utiliser (par défaut : times)"
             },
             "slow": {
-                "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
+                "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
             },
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente"
+                "alpha": "Rend le haut de la bulle de dialogue transparente",
+                "scale": "Un multiplicateur pour redimensionner la bulle de dialogue (0,01 est le plus petit, 1,0 est le plus grand, par défaut : 0,2)"
             },
             "speed": {
-                "multiplier": "Défini le multiplicateur de vitesse (par défaut: 2)"
+                "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
             },
             "uncanny": {
-                "font": "Spécifie la police que tu souhaites utiliser (par défaut: helvetica)",
+                "font": "Spécifie la police que tu souhaites utiliser (par défaut : helvetica)",
                 "phase": "Spécifie l'image que tu souhaites utiliser"
             },
             "host": {
@@ -430,6 +437,12 @@
             "reload": {
                 "cmd": "La commande à recharger",
                 "skipsend": "Ignore l'envoi de nouvelles données de commande d'application à Discord"
+            },
+            "snapchat": {
+                "position": "Définit la position du sous-titre sous forme décimale (0,0 en haut, 1,0 en bas, par défaut : 0,565)"
+            },
+            "uncaption": {
+                "tolerance": "Définit la tolérance d'ombre pour la détection des sous-titres (0,0 est la plus élevée, 1,0 est la plus basse, par défaut : 0,95)"
             }
         },
         "names": {
@@ -535,7 +548,17 @@
             "tile": "mosaïque",
             "vignette": "vignette",
             "reverse": "inverse",
-            "Select Image": "Sélectionner une image"
+            "Select Image": "Sélectionner une image",
+            "speechbubble": "bulle",
+            "imagestats": "statistiquesimage",
+            "soundreload": "rechargementson",
+            "sharpen": "affiner",
+            "grayscale": "grisclair",
+            "8ball": "Boule_Magique",
+            "imagereload": "rechargimage",
+            "qrcreate": "qrcréer",
+            "qrread": "lireqr",
+            "nowplaying": "encours"
         },
         "noImage": {
             "9gag": "Vous devez fournir une image/GIF pour ajouter un filigrane 9GAG !",
@@ -677,7 +700,14 @@
             "command": {
                 "adminOnly": "Vous devez être administrateur pour activer/désactiver des commandes !",
                 "alreadyDisabled": "Cette commande est déjà désactivée !",
-                "cannotDisable": "Vous ne pouvez pas désactiver cette commande !"
+                "cannotDisable": "Vous ne pouvez pas désactiver cette commande !",
+                "disabled": "La commande `{{command}}` a été désactivée. Pour la réactiver, il suffit de lancer `{{prefix}}command enable {{command}}`.",
+                "invalid": "Ce n'est pas une option valide !",
+                "invalidCmd": "Ce n'est pas une commande !",
+                "notDisabled": "Cette commande n'est pas désactivée !",
+                "noCmd": "Vous devez indiquer si vous souhaitez activer/désactiver une commande !",
+                "noInput": "Vous devez indiquer quelle commande activer/désactiver !",
+                "reEnabled": "La commande `{{command}}` a été réactivée."
             },
             "avatar": {
                 "invalidMention": "Ceci n'est pas une mention valide !"
@@ -686,6 +716,41 @@
                 "invalidMention": "Ceci n'est pas une mention valide !",
                 "noSelfBanner": "Vous n'avez pas de bannière !",
                 "noUserBanner": "Cet utilisateur n'a pas de bannière !"
+            },
+            "count": {
+                "header": "Comptes d'utilisation des commandes",
+                "single": "La commande `{{command}}` a été exécutée un total de {{count}} fois."
+            },
+            "help": {
+                "name": "nom",
+                "none": "Aucun",
+                "parameters": "Paramètres",
+                "prefix": "Préfixe",
+                "timesUsed": "Nombre d'utilisations",
+                "aliases": "Alias",
+                "flags": "Drapeaux",
+                "header": "esmBot Aide",
+                "noInfo": "Je n'ai pas pu obtenir d'informations sur cette commande !"
+            },
+            "host": {
+                "currentHost": "L'hôte actuel du canal vocal est **{{member}}**"
+            },
+            "dice": {
+                "landed": "Le dé est tombé sur {{number}}."
+            },
+            "donate": {
+                "support": "Vous aimez esmBot ? Envisagez de soutenir le développeur sur Patreon pour aider à le maintenir en ligne !",
+                "thanks": "Merci aux suivants patrons pour leur soutien :"
+            },
+            "emote": {
+                "noInput": "Je n'ai pas trouvé d'émoticône dans ce message !",
+                "invalidEmoji": "Vous devez indiquer un émoticône valide pour obtenir une image !"
+            },
+            "eval": {
+                "botOwnerOnly": "Seul le propriétaire du bot peut utiliser eval !"
+            },
+            "exec": {
+                "botOwnerOnly": "Seul le propriétaire du bot peut utiliser exec !"
             }
         }
     },
@@ -697,7 +762,8 @@
             "image": "image",
             "link": "lien",
             "spoiler": "spoiler",
-            "text": "texte"
+            "text": "texte",
+            "togif": "versgif"
         },
         "flags": {
             "image": "Une image/un GIF en pièce jointe",
@@ -720,7 +786,7 @@
         "slowDown": "S'il vous plaît, ralentissez un peu.",
         "tempImageSent": "Voici votre image !",
         "tenor": "J'ai été limité par Tenor. Veuillez essayer de télécharger votre GIF ailleurs.",
-        "tip": "(Astuce: essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> Sélectionner une image, puis réessayez.)",
+        "tip": "(Astuce : essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> Sélectionner une image, puis réessayez.)",
         "tooLarge": "Le fichier résultant était trop volumineux pour être téléchargé. Réessayez avec une image plus petite si possible.",
         "unknown": "L'image de sortie n'était pas dans un format valide. Veuillez réessayer.",
         "noServers": "Je n'arrive pas à contacter les serveurs d'images, ils sont peut-être en panne ou tentent encore de démarrer. Veuillez patienter un peu.",
@@ -768,12 +834,12 @@
         "yes": "Oui",
         "notConnected": "Je ne suis connecté à aucun serveur audio !",
         "noYouTube": "La lecture YouTube est désactivée sur cette instance.",
-        "error": "Il semble qu'il y ait eu une erreur lors de la lecture du son:",
+        "error": "Il semble qu'il y ait eu une erreur lors de la lecture du son :",
         "noSong": "Je n'ai pas pu trouver cette musique !",
         "waitingForSomeone": "Attendre 10 secondes que quelqu'un revienne...",
         "serversDown": "Hmmm, il semblerait que tous les serveurs audio soient en panne. Réessayez dans quelques instants.",
-        "noConnection": "Quelque chose d'étrange est arrivé à la connexion vocale; essayez de jouer à nouveau votre musique."
+        "noConnection": "Quelque chose d'étrange est arrivé à la connexion vocale ; essayez de jouer à nouveau votre musique."
     },
     "guildOnly": "Cette commande ne fonctionne que sur les serveurs !",
-    "error": "Oh oh ! J'ai rencontré une erreur lors de l'exécution de cette commande. Veuillez signaler le contenu du fichier joint sur le lien suivant ou sur le serveur de support esmBot:"
+    "error": "Oh oh ! J'ai rencontré une erreur lors de l'exécution de cette commande. Veuillez signaler le contenu du fichier joint sur le lien suivant ou sur le serveur de support esmBot :"
 }
