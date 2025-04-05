@@ -18,7 +18,7 @@
       "command": "Enables/disables a classic command for a server (use server settings for slash commands)",
       "count": "Gets how many times every command was used",
       "donate": "Learn more about how you can support esmBot's development",
-      "emote": "Gets a raw emote image",
+      "emote": "Gets a raw emoji image",
       "eval": "Executes JavaScript code",
       "exec": "Executes a shell command",
       "help": "Gets a list of commands",
