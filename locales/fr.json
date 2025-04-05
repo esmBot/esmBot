@@ -112,8 +112,8 @@
             "skip": "Saute la musique en cours",
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
             "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
-            "command": "Active/désactive une commande classique pour un serveur (utilise les paramètres du serveur pour les commandes slash)",
-            "tags": "La commande principale des tags. Consultez la page d'aide pour en savoir plus : https://esmbot.net/help.html"
+            "command": "",
+            "tags": ""
         },
         "flagNames": {
             "8ball": {
@@ -375,7 +375,7 @@
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
                 "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": "Un multiplicateur pour redimensionner la bulle de dialogue (0,01 est le plus petit, 1,0 est le plus grand, par défaut : 0,2)"
+                "scale": ""
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -442,7 +442,7 @@
                 "position": "Définit la position du sous-titre sous forme décimale (0,0 en haut, 1,0 en bas, par défaut : 0,565)"
             },
             "uncaption": {
-                "tolerance": "Définit la tolérance d'ombre pour la détection des sous-titres (0,0 est la plus élevée, 1,0 est la plus basse, par défaut : 0,95)"
+                "tolerance": ""
             }
         },
         "names": {
