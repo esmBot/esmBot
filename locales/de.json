@@ -116,77 +116,77 @@
         },
         "flagNames": {
             "8ball": {
-                "question": "Frage"
+                "question": "frage"
             },
             "dice": {
                 "max": "max"
             },
             "avatar": {
-                "member": "Mitglied"
+                "member": "mitglied"
             },
             "banner": {
-                "member": "Mitglied"
+                "member": "mitglied"
             },
             "base64": {
                 "decode": "entschlüsseln",
                 "encode": "verschlüsseln"
             },
             "base64 decode": {
-                "text": "Text"
+                "text": "text"
             },
             "base64 encode": {
-                "text": "Text"
+                "text": "text"
             },
             "broadcast": {
-                "message": "Nachricht"
+                "message": "nachricht"
             },
             "channel": {
                 "enable": "aktivieren",
                 "disable": "deaktivieren"
             },
             "channel enable": {
-                "text": "Text"
+                "text": "text"
             },
             "channel disable": {
-                "text": "Text"
+                "text": "text"
             },
             "command": {
                 "enable": "aktivieren",
                 "disable": "deaktivieren"
             },
             "command enable": {
-                "text": "Text"
+                "text": "text"
             },
             "command disable": {
-                "text": "Text"
+                "text": "text"
             },
             "count": {
-                "command": "Befehl"
+                "command": "befehl"
             },
             "emote": {
-                "emoji": "Emoji"
+                "emoji": "emoji"
             },
             "eval": {
-                "code": "Code"
+                "code": "code"
             },
             "exec": {
                 "cmd": "cmd"
             },
             "help": {
-                "command": "Befehl"
+                "command": "befehl"
             },
             "image": {
-                "query": "Abfragen"
+                "query": "abfragen"
             },
             "lengthen": {
-                "url": "URL"
+                "url": "url"
             },
             "prefix": {
-                "prefix": "Prefix"
+                "prefix": "prefix"
             },
             "reload": {
                 "cmd": "cmd",
-                "skipsend": "Senden überpringen"
+                "skipsend": ""
             }
         }
     }
