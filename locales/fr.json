@@ -111,9 +111,7 @@
             "nowplaying": "Affiche la chanson en cours de lecture",
             "skip": "Saute la musique en cours",
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
-            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
-            "command": "",
-            "tags": ""
+            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)"
         },
         "flagNames": {
             "8ball": {
@@ -374,8 +372,7 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": ""
+                "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -440,9 +437,6 @@
             },
             "snapchat": {
                 "position": "Définit la position du sous-titre sous forme décimale (0,0 en haut, 1,0 en bas, par défaut : 0,565)"
-            },
-            "uncaption": {
-                "tolerance": ""
             }
         },
         "names": {
