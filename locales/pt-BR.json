@@ -23,7 +23,7 @@
             "ancient": "Mostra um meme muito antigo",
             "avatar": "Mostra o avatar de um usuário",
             "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)",
-            "broadcast": "Transmite uma mensagem em reprodução até que o comando seja executado novamente ou o bot seja reiniciado",
+            "broadcast": "",
             "image": "Pesquisar por imagens na web"
         },
         "flagNames": {
