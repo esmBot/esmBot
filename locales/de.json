@@ -185,8 +185,7 @@
                 "prefix": "prefix"
             },
             "reload": {
-                "cmd": "cmd",
-                "skipsend": ""
+                "cmd": "cmd"
             }
         }
     }
