@@ -1,1 +1,27 @@
-{}
+{
+    "commands": {
+        "descriptions": {
+            "bird": "Rastgele bir kuş resmi gönderir",
+            "cat": "Rastgele bir kedi resmi gönderir",
+            "dice": "Zar atar",
+            "dog": "Rastgele bir köpek resmi gönderir",
+            "wikihow": "Rastgele bir WikiHow resmi gönderir",
+            "avatar": "Bir kullanıcının avatar'ını gösterir",
+            "base64": "Bir Base64 dizesini encode veya decode eder",
+            "command": "Bir sunucuda, klasik komutları aktif/pasif hale getirir (eğik çizgi komutları için sunucu ayarları)",
+            "count": "Kaç defa command komutunun kullandığını gösterir",
+            "donate": "esmBot'un geliştirilmesine nasıl destek olabileceğinizle ilgili daha fazla bilgi edinin",
+            "help": "Komut listesini gösterir",
+            "image": "İnternette görseli aratır",
+            "imagereload": "Erişilebilir tüm resim işleme sunucularına tekrardan bağlanmayı dener",
+            "info": "Benim hakkımda bazı bilgileri ve katkıda bulunanları gösterir",
+            "lengthen": "Kısa bir URL'i uzatır",
+            "imagestats": "Resim işleme sunucuları ile ilgili bazı istatistikleri verir",
+            "sonic": "Sonic konuşma balonu resmi oluşturur",
+            "banner": "Bir kullanıcının profil kapağını gösterir",
+            "channel": "Bir kanalda, klasik komutları aktif/pasif hale getirir (eğik çizgi komutları için sunucu ayarları)",
+            "eval": "JavaScript kodu çalıştırır",
+            "exec": "Bir shell komutu çalıştırır"
+        }
+    }
+}

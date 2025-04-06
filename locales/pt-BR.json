@@ -22,7 +22,8 @@
             "cat": "Pega uma imagem de gato aleatória",
             "ancient": "Mostra um meme muito antigo",
             "avatar": "Mostra o avatar de um usuário",
-            "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)"
+            "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)",
+            "image": "Pesquisar por imagens na web"
         },
         "flagNames": {
             "caption": {

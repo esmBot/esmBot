@@ -78,7 +78,115 @@
             "emote": "Gibt die Bild Datei eines Emotes",
             "gamexplain": "Erstellt aus einem Bild ein GameXplain-Thumbnail",
             "jpeg": "Fügt Künstliche JPEG Komprimierung zu einem Bild hinzu",
-            "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein"
+            "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein",
+            "slow": "Verlangsamt eine Bildsequenz",
+            "soos": "„Wiederholt“ eine Bildsequenz durch umkehren wenn sie zu Ende ist",
+            "speechbubble": "Fügt eine Sprechblase zu einem Bild hinzu",
+            "speed": "Macht eine Bildsequenz schneller",
+            "spin": "Lässt ein Bild drehen",
+            "squish": "Staucht/Streckt ein Bild",
+            "stretch": "Streckt ein Bild zu einem 1:1-Seitenverhältnis",
+            "swirl": "Verstrudelt ein Bild",
+            "tile": "Erstellt ein Fliesenmuster von einem Bild",
+            "uncaption": "Entfernt die Bildunterschrift",
+            "unfreeze": "Setzt eine Bildsequenz fort",
+            "vignette": "Fügt einen Vignetteneffekt zu einem Bild hinzu",
+            "waaw": "Spiegelt die rechte Bildseite nach links",
+            "wall": "Erstellt eine Wand aus einem Bild",
+            "wide": "Streckt ein Bild auf 19x seine Breite",
+            "woow": "Spiegelt die obere Bildhälfte nach unten",
+            "Select Image": "Keine Beschreibung gefunden",
+            "host": "Holt oder ändert den Host der aktuellen Sprachsitzung",
+            "loop": "Wiederholt die Musik",
+            "music": "Handhabt die Musikwiedergabe",
+            "nowplaying": "Zeigt den aktuellen gespielten Song",
+            "play": "Spielt einen Song oder fügt ihn in die Reihe ein",
+            "queue": "Zeigt die aktuelle Reihe",
+            "remove": "Entfernt einen Song aus der Reihe",
+            "seek": "Springt zu einer anderen Stelle in der Musik",
+            "shuffle": "Durchmischt die Musik",
+            "skip": "Überspringt den aktuellen Song",
+            "stop": "Hält die Musik an",
+            "toggle": "Pausiert den aktuellen Song, oder setzt ihn fort",
+            "volume": "Stellt die Musiklautstärke ein",
+            "uncanny": "Macht ein Bild mit „Mr. Incredible Becomes Uncanny“ (links/rechts mit Komma trennen)",
+            "spotify": "Für einen Spotify-„Das-ist“-Header zu einem Bild hinzu",
+            "tags": "Der Hauptbefehl für Tags. Konsultiere die Hilfeseite: https://esmbot.net/help.html",
+            "snapchat": "Fügt einen Text wie bei Snapshat hinzu"
+        },
+        "flagNames": {
+            "8ball": {
+                "question": "frage"
+            },
+            "dice": {
+                "max": "max"
+            },
+            "avatar": {
+                "member": "mitglied"
+            },
+            "banner": {
+                "member": "mitglied"
+            },
+            "base64": {
+                "decode": "entschlüsseln",
+                "encode": "verschlüsseln"
+            },
+            "base64 decode": {
+                "text": "text"
+            },
+            "base64 encode": {
+                "text": "text"
+            },
+            "broadcast": {
+                "message": "nachricht"
+            },
+            "channel": {
+                "enable": "aktivieren",
+                "disable": "deaktivieren"
+            },
+            "channel enable": {
+                "text": "text"
+            },
+            "channel disable": {
+                "text": "text"
+            },
+            "command": {
+                "enable": "aktivieren",
+                "disable": "deaktivieren"
+            },
+            "command enable": {
+                "text": "text"
+            },
+            "command disable": {
+                "text": "text"
+            },
+            "count": {
+                "command": "befehl"
+            },
+            "emote": {
+                "emoji": "emoji"
+            },
+            "eval": {
+                "code": "code"
+            },
+            "exec": {
+                "cmd": "cmd"
+            },
+            "help": {
+                "command": "befehl"
+            },
+            "image": {
+                "query": "abfragen"
+            },
+            "lengthen": {
+                "url": "url"
+            },
+            "prefix": {
+                "prefix": "prefix"
+            },
+            "reload": {
+                "cmd": "cmd"
+            }
         }
     }
 }
