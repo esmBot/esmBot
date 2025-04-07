@@ -45,6 +45,7 @@ The default command name is the same as the filename that you save it as, exclud
 The parameters available to your command consist of the following:
 
 - `this.client`: An instance of an Oceanic [`Client`](https://docs.oceanic.ws/latest/classes/Client.Client.html), useful for getting info or performing lower-level communication with the Discord API.
+- `this.database`: An instance of the database client. This is undefined if the bot is running in stateless mode.
 - `this.origOptions`: The raw options object provided to the command by the command handler.
 - `this.type`: The type of message that activated the command. Can be "classic" (a regular message) or "application" (slash/context menu commands).
 - `this.channel`: An Oceanic [`TextChannel`](https://docs.oceanic.ws/latest/classes/TextChannel.TextChannel.html) object of the channel that the command was run in, useful for getting info about a server and how to respond to a message. Partial when classic commands are disabled.
