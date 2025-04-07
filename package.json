@@ -50,20 +50,20 @@
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.6",
-    "@eslint/js": "^9.20.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/better-sqlite3": "^7.6.12",
+    "@eslint/compat": "^1.2.8",
+    "@eslint/js": "^9.24.0",
+    "@tsconfig/node20": "^20.1.5",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "^1.2.8",
-    "@types/node": "20",
+    "@types/node": "^20.17.30",
     "@types/ws": "^8.18.1",
     "cmake-js": "^7.3.0",
-    "eslint": "^9.20.1",
-    "eslint-plugin-prettier": "^5.2.3",
+    "eslint": "^9.24.0",
+    "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
-    "prettier": "^3.5.1",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.1"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.29.0"
   },
   "optionalDependencies": {
     "@sentry/node": "^9.11.0",
