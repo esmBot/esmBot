@@ -38,8 +38,8 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
                   VImage::option()->set("vscale", 512.0 / (double)pageHeight));
     finalHeight = 512;
   } else if (wide) {
-    out = in.resize(9.5, VImage::option()->set("vscale", 0.5));
-    finalHeight = pageHeight / 2;
+    out = in.resize(19, VImage::option()->set("vscale", 1));
+    finalHeight = pageHeight;
   } else {
     // Pain. Pain. Pain. Pain. Pain.
     vector<VImage> img;
