@@ -3,10 +3,12 @@ import {
   type Client,
   type CommandInteraction,
   type Message,
+  type Permission,
   PrivateChannel,
   type StickerItem,
   TextableChannel,
   ThreadChannel,
+  type ThreadParentChannel,
 } from "oceanic.js";
 import { getType } from "./image.js";
 import logger from "./logger.js";
@@ -265,10 +267,17 @@ export async function stickerDetect(
       !(channel instanceof PrivateChannel)
     )
       return;
-    const perms =
-      channel instanceof TextableChannel || channel instanceof ThreadChannel
-        ? channel.permissionsOf?.(client.user.id)
-        : null;
+    let perms: Permission | null = null;
+    if (channel instanceof TextableChannel) {
+      perms = channel.permissionsOf(client.user.id);
+    } else if (channel instanceof ThreadChannel) {
+      try {
+        perms = channel.permissionsOf(client.user.id);
+      } catch {
+        const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
+        perms = parent.permissionsOf(client.user.id);
+      }
+    }
     if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
@@ -338,10 +347,17 @@ export default async (
       !(channel instanceof PrivateChannel)
     )
       return;
-    const perms =
-      channel instanceof TextableChannel || channel instanceof ThreadChannel
-        ? channel.permissionsOf?.(client.user.id)
-        : null;
+    let perms: Permission | null = null;
+    if (channel instanceof TextableChannel) {
+      perms = channel.permissionsOf(client.user.id);
+    } else if (channel instanceof ThreadChannel) {
+      try {
+        perms = channel.permissionsOf(client.user.id);
+      } catch {
+        const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
+        perms = parent.permissionsOf(client.user.id);
+      }
+    }
     if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
