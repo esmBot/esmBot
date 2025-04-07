@@ -16,7 +16,7 @@ class CatCommand extends Command {
       clearTimeout(timeout);
       return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
-      if (e.name === "AbortError") {
+      if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
         return this.getString("commands.responses.cat.error");
       }

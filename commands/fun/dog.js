@@ -13,7 +13,7 @@ class DogCommand extends Command {
       const json = await imageData.json();
       return json.message;
     } catch (e) {
-      if (e.name === "AbortError") {
+      if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
         return this.getString("commands.responses.dog.error");
       }

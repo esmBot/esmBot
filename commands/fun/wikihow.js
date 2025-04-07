@@ -21,7 +21,7 @@ class WikihowCommand extends Command {
       }
       return await this.run();
     } catch (e) {
-      if (e.name === "AbortError") {
+      if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
         return this.getString("commands.responses.wikihow.error");
       }
