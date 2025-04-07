@@ -120,6 +120,8 @@ libvips/
 # Databases
 data/
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
 
 # Other lockfiles
 package-lock.json
