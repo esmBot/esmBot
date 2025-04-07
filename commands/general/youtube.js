@@ -22,10 +22,10 @@ class YouTubeCommand extends Command {
       messages.push({
         content: `${this.getString("pagination.page", {
           params: {
-            page: i + 1,
-            amount: videos.results.length,
+            page: (i + 1).toString(),
+            amount: videos.results.length.toString(),
           },
-        })}\n▶️ **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author.replaceAll("*", "\\*")}**\n${value.url}`,
+        })}\n▶️ **${value.title.replaceAll("*", "\\*")}**\nUploaded by **${value.author?.replaceAll("*", "\\*") ?? "N/A"}**\n${value.url}`,
       });
     }
     this.success = true;

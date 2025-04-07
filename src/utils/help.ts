@@ -35,6 +35,7 @@ export function generateList() {
   categories = categoryTemplate;
   for (const [command] of commands) {
     const cmd = info.get(command);
+    if (!cmd) throw Error(`Command info missing for ${command}`);
     if (!cmd.slashAllowed && !commandConfig.types.classic) continue;
     if (!categories[cmd.category]) categories[cmd.category] = [];
     if (command !== "music") generateEntries(command, cmd.params, cmd.description, cmd.category);

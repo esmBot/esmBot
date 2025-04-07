@@ -19,9 +19,10 @@ class SelectImageCommand extends Command {
       false,
       true,
     ).catch((e) => {
-      if (e.name === "AbortError") return { type: "timeout" };
+      if (e.name === "AbortError") return this.getString("image.timeout");
       throw e;
     });
+    if (typeof image === "string") return image;
     this.success = false;
     if (image === undefined) {
       return this.getString("image.couldNotFind");
@@ -31,9 +32,6 @@ class SelectImageCommand extends Command {
     }
     if (image.type === "tenorlimit") {
       return this.getString("image.tenor");
-    }
-    if (image.type === "timeout") {
-      return this.getString("image.timeout");
     }
     if (image.type === "badurl") {
       return this.getString("image.badurl");

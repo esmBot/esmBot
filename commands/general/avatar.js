@@ -12,12 +12,12 @@ class AvatarCommand extends Command {
     if (member instanceof Member) {
       return member.user.avatarURL(undefined, imageSize);
     }
-    if (member && member > 21154535154122752n) {
+    if (member && BigInt(member) > 21154535154122752n) {
       const user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
       if (user) return user.avatarURL(undefined, imageSize);
       if (mentionRegex.test(member)) {
-        const id = member.match(mentionRegex)[1];
-        if (id < 21154535154122752n) {
+        const id = member.match(mentionRegex)?.[1];
+        if (!id || BigInt(id) < 21154535154122752n) {
           this.success = false;
           return this.getString("commands.responses.avatar.invalidMention");
         }

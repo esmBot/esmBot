@@ -22,7 +22,7 @@ class BannerCommand extends Command {
         this.getString("commands.responses.banner.noUserBanner")
       );
     }
-    if (member && member > 21154535154122752n) {
+    if (member && BigInt(member) > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);
       if (user?.banner)
         return (
@@ -31,8 +31,8 @@ class BannerCommand extends Command {
           this.getString("commands.responses.banner.noUserBanner")
         );
       if (mentionRegex.test(member)) {
-        const id = member.match(mentionRegex)[1];
-        if (id < 21154535154122752n) {
+        const id = member.match(mentionRegex)?.[1];
+        if (!id || BigInt(id) < 21154535154122752n) {
           this.success = false;
           return this.getString("commands.responses.banner.invalidMention");
         }

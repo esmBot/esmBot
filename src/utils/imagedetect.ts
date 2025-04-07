@@ -49,7 +49,7 @@ type TenorResponse = {
   }[];
 };
 
-type ImageMeta = {
+export type ImageMeta = {
   path: string;
   type?: string;
   url: string;

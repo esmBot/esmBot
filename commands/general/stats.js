@@ -42,7 +42,7 @@ class StatsCommand extends Command {
             {
               name: this.getString("commands.responses.stats.totalUsage"),
               value: process.env.PM2_USAGE
-                ? `${((await this.list()).reduce((prev, cur) => prev + cur.monit.memory, 0) / 1024 / 1024).toFixed(2)} MB`
+                ? `${((await this.list()).reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1024 / 1024).toFixed(2)} MB`
                 : processMem,
               inline: true,
             },
@@ -103,6 +103,9 @@ class StatsCommand extends Command {
     };
   }
 
+  /**
+   * @returns {Promise<import("pm2").ProcessDescription[]>}
+   */
   list() {
     if (pm2) {
       return new Promise((resolve, reject) => {
@@ -112,7 +115,7 @@ class StatsCommand extends Command {
         });
       });
     }
-    return Promise.resolve();
+    return Promise.resolve([]);
   }
 
   static description = "Gets some statistics about me";

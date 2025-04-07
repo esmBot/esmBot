@@ -58,7 +58,7 @@ class Command {
   message?: Message;
   interaction?: CommandInteraction;
   channel: AnyTextableChannel | ({ guildID?: string } & Uncached);
-  guild?: Guild | null;
+  guild: Guild | null;
   member?: Member | null;
   content?: string;
   reference?: { messageReference: MessageReference; allowedMentions: AllowedMentions };

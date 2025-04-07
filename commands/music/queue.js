@@ -33,7 +33,7 @@ class QueueCommand extends MusicCommand {
       groups[arrIndex] = trackList.slice(i, i + pageSize);
       arrIndex++;
     }
-    if (groups.length === 0) groups.push("del");
+    if (groups.length === 0) groups.push([]);
     for (const [i, value] of groups.entries()) {
       embeds.push({
         embeds: [
@@ -66,7 +66,7 @@ class QueueCommand extends MusicCommand {
               },
               {
                 name: `🗒️ ${this.getString("sound.queue")}`,
-                value: value !== "del" ? value.join("\n") : this.getString("sound.noQueue"),
+                value: value.length !== 0 ? value.join("\n") : this.getString("sound.noQueue"),
               },
             ],
           },

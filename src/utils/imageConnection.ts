@@ -200,7 +200,7 @@ class ImageConnection {
           }
         : undefined,
     );
-    if (req.status !== 200) return;
+    if (req.status !== 200) return -1;
     const res = Number.parseInt(await req.text());
     return res;
   }

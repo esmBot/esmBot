@@ -1,5 +1,7 @@
 import type Command from "#cmd-classes/command.js";
 import type InteractionCollector from "../pagination/awaitinteractions.js";
+import type { ImageMeta } from "./imagedetect.js";
+import type { CommandInfo } from "./types.js";
 
 export const commands = new Map<string, typeof Command>();
 export const messageCommands = new Map<string, typeof Command>();
@@ -7,7 +9,7 @@ export const userCommands = new Map<string, typeof Command>();
 
 export const paths = new Map<string, string>();
 export const aliases = new Map<string, string>();
-export const info = new Map();
+export const info = new Map<string, CommandInfo>();
 export const categories = new Map<string, string[]>();
 
 export const collectors = new Map<string, InteractionCollector>();
@@ -30,7 +32,7 @@ class TimedMap<K, V> extends Map {
 }
 
 export const runningCommands = new TimedMap<string, Date>(5000);
-export const selectedImages = new TimedMap(180000);
+export const selectedImages = new TimedMap<string, ImageMeta>(180000);
 
 class Cache<K, V> extends Map {
   maxValues: number;

@@ -20,9 +20,10 @@ class ImageSearchCommand extends Command {
     ).then((res) => res.json());
     if (rawImages.results.length === 0) return this.getString("commands.responses.image.noResults");
     const images = rawImages.results.filter(
-      (val) => val.img_src.startsWith("https://") && val.url.startsWith("https://"),
+      (val) => val.img_src?.startsWith("https://") && val.url.startsWith("https://"),
     );
     for (const [i, value] of images.entries()) {
+      if (!value.img_src) throw Error("Image not found despite filter");
       embeds.push({
         embeds: [
           {

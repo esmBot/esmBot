@@ -3,14 +3,17 @@ import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 import { runImageJob } from "#utils/image.js";
-import imageDetect from "#utils/imagedetect.js";
+import imageDetect, { type ImageMeta } from "#utils/imagedetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
 import type { ImageParams } from "#utils/types.js";
 import Command from "./command.js";
 
 class ImageCommand extends Command {
   params?: object;
-  paramsFunc?(url?: string, name?: string): object;
+
+  paramsFunc(_url?: string, _name?: string): object {
+    return {};
+  }
 
   async criteria(_text?: string, _url?: string) {
     return true;
@@ -43,7 +46,7 @@ class ImageCommand extends Command {
     let needsSpoiler = false;
     if (staticProps.requiresImage) {
       try {
-        const selection = selectedImages.get(this.author.id);
+        const selection = selectedImages.get(this.author.id) as ImageMeta | undefined;
         const image =
           selection ??
           (await imageDetect(
@@ -56,7 +59,10 @@ class ImageCommand extends Command {
             },
             true,
           ).catch((e) => {
-            if (e.name === "AbortError") return { type: "timeout" };
+            if (e.name === "AbortError") {
+              runningCommands.delete(this.author.id);
+              return this.getString("image.timeout");
+            }
             throw e;
           }));
         if (selection) selectedImages.delete(this.author.id);
@@ -64,6 +70,7 @@ class ImageCommand extends Command {
           runningCommands.delete(this.author.id);
           return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip")}`;
         }
+        if (typeof image === "string") return image;
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
           runningCommands.delete(this.author.id);
@@ -72,10 +79,6 @@ class ImageCommand extends Command {
         if (image.type === "tenorlimit") {
           runningCommands.delete(this.author.id);
           return this.getString("image.tenor");
-        }
-        if (image.type === "timeout") {
-          runningCommands.delete(this.author.id);
-          return this.getString("image.timeout");
         }
         if (image.type === "badurl") {
           runningCommands.delete(this.author.id);
@@ -124,10 +127,10 @@ class ImageCommand extends Command {
       }
     }
 
-    if (this.paramsFunc) {
-      Object.assign(imageParams.params, this.paramsFunc(imageParams.url, imageParams.name));
-    } else if (this.params) {
+    if (this.params) {
       Object.assign(imageParams.params, this.params);
+    } else {
+      Object.assign(imageParams.params, this.paramsFunc(imageParams.url, imageParams.name));
     }
 
     let status: Message | undefined;

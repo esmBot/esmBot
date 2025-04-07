@@ -34,7 +34,11 @@ class FlagCommand extends ImageCommand {
    * @param {string} flag
    */
   ccFromFlag(flag) {
-    const codepoints = [...flag].map((c) => c.codePointAt() - 127397);
+    const codepoints = [...flag].map((c) => {
+      const codepoint = c.codePointAt(0);
+      if (!codepoint) throw Error("Missing codepoint");
+      return codepoint - 127397;
+    });
     if (codepoints.find((v) => v < 65 || v > 90)) return;
     return String.fromCodePoint(...codepoints);
   }

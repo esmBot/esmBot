@@ -9,7 +9,12 @@ import {
 } from "./collections.js";
 import { log } from "./logger.js";
 
-import { type Client, Constants, type CreateApplicationCommandOptions } from "oceanic.js";
+import {
+  type Client,
+  Constants,
+  type CreateApplicationCommandOptions,
+  type CreateGuildApplicationCommandOptions,
+} from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { getAllLocalizations } from "./i18n.js";
@@ -182,7 +187,10 @@ export async function send(bot: Client) {
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;
   if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
-    await bot.application.bulkEditGuildCommands(process.env.ADMIN_SERVER, commandArray.private);
+    await bot.application.bulkEditGuildCommands(
+      process.env.ADMIN_SERVER,
+      commandArray.private as CreateGuildApplicationCommandOptions[],
+    );
   } else {
     cmdArray = [...commandArray.main, ...commandArray.private];
   }
