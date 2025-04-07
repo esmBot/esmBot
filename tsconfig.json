@@ -10,7 +10,6 @@
     "paths": {
       "#cmd-classes/*": ["./src/classes/*"],
       "#utils/*": ["./src/utils/*"],
-      "#database": ["./src/database.js"],
       "#pagination": ["./src/pagination/pagination.js"],
       "#config/*": ["./config/*"]
     }

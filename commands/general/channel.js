@@ -1,12 +1,11 @@
 import { Constants, GuildChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import db from "#database";
 
 class ChannelCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
-    if (!db) return this.getString("noDatabase");
+    if (!this.database) return this.getString("noDatabase");
     if (!this.channel) throw Error("No channel found");
     const owners = process.env.OWNER?.split(",") ?? [];
     if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id))
@@ -15,7 +14,7 @@ class ChannelCommand extends Command {
     if (this.args[0] !== "disable" && this.args[0] !== "enable")
       return this.getString("commands.responses.channel.invalid");
 
-    const guildDB = await db.getGuild(this.guild.id);
+    const guildDB = await this.database.getGuild(this.guild.id);
 
     if (this.args[0].toLowerCase() === "disable") {
       let channel;
@@ -37,7 +36,7 @@ class ChannelCommand extends Command {
       if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id)
         return this.getString("commands.responses.channel.notInServer");
 
-      await db.disableChannel(channel);
+      await this.database.disableChannel(channel);
       this.success = true;
       return this.getString("commands.responses.channel.disabled", {
         params: {
@@ -65,7 +64,7 @@ class ChannelCommand extends Command {
       if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id)
         return this.getString("commands.responses.channel.notInServer");
 
-      await db.enableChannel(channel);
+      await this.database.enableChannel(channel);
       this.success = true;
       return this.getString("commands.responses.channel.reEnabled");
     }

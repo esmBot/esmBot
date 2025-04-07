@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";
 
 class BroadcastCommand extends Command {
@@ -12,7 +11,7 @@ class BroadcastCommand extends Command {
     }
     const message = this.getOptionString("message") ?? this.args.join(" ");
     if (message?.trim()) {
-      await database?.setBroadcast(message);
+      await this.database?.setBroadcast(message);
       startBroadcast(this.client, message);
       if (process.env.PM2_USAGE) {
         process.send?.({
@@ -25,7 +24,7 @@ class BroadcastCommand extends Command {
       }
       return this.getString("commands.responses.broadcast.started");
     }
-    await database?.setBroadcast(null);
+    await this.database?.setBroadcast();
     endBroadcast(this.client);
     if (process.env.PM2_USAGE) {
       process.send?.({

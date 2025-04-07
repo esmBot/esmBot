@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 
 class PrefixCommand extends Command {
   async run() {
@@ -10,9 +9,9 @@ class PrefixCommand extends Command {
           prefix: process.env.PREFIX ?? "&",
         },
       });
-    const guild = await database?.getGuild(this.guild.id);
+    const guild = await this.database?.getGuild(this.guild.id);
     if (this.args.length !== 0) {
-      if (!database) {
+      if (!this.database) {
         return this.getString("commands.responses.prefix.stateless");
       }
       const owners = process.env.OWNER?.split(",") ?? [];
@@ -20,7 +19,7 @@ class PrefixCommand extends Command {
         this.success = false;
         return this.getString("commands.responses.prefix.adminOnly");
       }
-      await database.setPrefix(this.args[0], this.guild);
+      await this.database.setPrefix(this.args[0], this.guild);
       return this.getString("commands.responses.prefix.changed", {
         params: {
           prefix: this.args[0],

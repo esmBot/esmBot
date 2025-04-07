@@ -7,7 +7,7 @@ import {
   ThreadChannel,
 } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import database from "#database";
+import type { DatabasePlugin } from "../database.js";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import { error as _error, log } from "#utils/logger.js";
@@ -26,7 +26,7 @@ let mentionRegex: RegExp;
 /**
  * Runs when someone sends a message.
  */
-export default async (client: Client, message: Message) => {
+export default async (client: Client, database: DatabasePlugin | undefined, message: Message) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
@@ -140,7 +140,7 @@ export default async (client: Client, message: Message) => {
     // parse args
     const parsed = parseCommand(preArgs);
     const startTime = new Date();
-    const commandClass = new cmd(client, {
+    const commandClass = new cmd(client, database, {
       type: "classic",
       cmdName,
       message,

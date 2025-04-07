@@ -2,7 +2,7 @@ import util from "node:util";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { type DotenvParseOutput, config } from "dotenv";
 import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
-import db from "#database";
+import type { DatabasePlugin } from "../database.js";
 import { servers } from "./image.js";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
@@ -69,7 +69,7 @@ export async function activityChanger(bot: Client) {
   setTimeout(() => activityChanger(bot), 900000);
 }
 
-export async function checkBroadcast(bot: Client) {
+export async function checkBroadcast(bot: Client, db: DatabasePlugin) {
   if (!db) {
     return;
   }

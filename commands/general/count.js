@@ -1,24 +1,25 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
 
 class CountCommand extends Command {
   async run() {
-    if (!database) return this.getString("noDatabase");
+    if (!this.database) return this.getString("noDatabase");
     const cmd = (this.getOptionString("command") ?? this.args.join(" ")).trim();
     const merged = new Map([...collections.commands, ...collections.messageCommands, ...collections.userCommands]);
     if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
-      const counts = await database.getCounts();
-      return this.getString("commands.responses.count.single", { params: { command, count: counts[command] } });
+      const counts = await this.database.getCounts();
+      return this.getString("commands.responses.count.single", {
+        params: { command, count: counts.get(command)?.toString() ?? "0" },
+      });
     }
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    const counts = await database.getCounts();
+    const counts = await this.database.getCounts();
     const countArray = [];
     for (const entry of counts.entries()) {
       countArray.push(entry);

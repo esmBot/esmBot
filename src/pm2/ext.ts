@@ -4,7 +4,7 @@ import { availableParallelism } from "node:os";
 import { Client, type ShardStatus } from "oceanic.js";
 import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";
-import database from "#database";
+import { init as dbInit } from "../database.js";
 
 const logger = winston.createLogger({
   levels: {
@@ -125,6 +125,7 @@ async function updateStats() {
 }
 
 if (process.env.METRICS && process.env.METRICS !== "") {
+  const database = await dbInit();
   const httpServer = createServer(async (req, res) => {
     if (req.method !== "GET") {
       res.statusCode = 405;

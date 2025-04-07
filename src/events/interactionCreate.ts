@@ -1,6 +1,6 @@
 import { type AnyInteractionGateway, type Client, InteractionTypes } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import database from "#database";
+import type { DatabasePlugin } from "../database.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
@@ -15,7 +15,7 @@ if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
 /**
  * Runs when a slash command/interaction is executed.
  */
-export default async (client: Client, interaction: AnyInteractionGateway) => {
+export default async (client: Client, database: DatabasePlugin | undefined, interaction: AnyInteractionGateway) => {
   // block if client is not ready yet
   if (!client.ready) return;
 
@@ -52,7 +52,7 @@ export default async (client: Client, interaction: AnyInteractionGateway) => {
   // actually run the command
   logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
   try {
-    const commandClass = new cmd(client, { type: "application", interaction });
+    const commandClass = new cmd(client, database, { type: "application", interaction });
     const result = await commandClass.run();
     const replyMethod = commandClass.edit ? "editOriginal" : "createFollowup";
     if (typeof result === "string") {

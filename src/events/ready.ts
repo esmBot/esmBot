@@ -3,11 +3,12 @@ import { send } from "#utils/handler.js";
 import { createPage, generateList } from "#utils/help.js";
 import logger from "#utils/logger.js";
 import { activityChanger, checkBroadcast } from "#utils/misc.js";
+import type { DatabasePlugin } from "../database.js";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
 let ready = false;
 
-export default async (client: Client) => {
+export default async (client: Client, database: DatabasePlugin) => {
   if (ready) return;
 
   // send slash command data
@@ -27,7 +28,7 @@ export default async (client: Client) => {
     logger.log("info", "The help docs have been generated.");
   }
 
-  await checkBroadcast(client);
+  await checkBroadcast(client, database);
   activityChanger(client);
 
   ready = true;

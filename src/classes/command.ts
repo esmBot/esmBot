@@ -20,6 +20,7 @@ import {
 import { getString } from "#utils/i18n.js";
 import { cleanInteraction, cleanMessage } from "#utils/misc.js";
 import type { CommandType } from "#utils/types.js";
+import type { DatabasePlugin } from "../database.js";
 
 type CommandOptionsClassic = {
   type: "classic";
@@ -53,6 +54,7 @@ class Command {
   permissions: Permission;
   memberPermissions: Permission;
 
+  database?: DatabasePlugin;
   message?: Message;
   interaction?: CommandInteraction;
   channel: AnyTextableChannel | ({ guildID?: string } & Uncached);
@@ -62,8 +64,9 @@ class Command {
   reference?: { messageReference: MessageReference; allowedMentions: AllowedMentions };
   private options?: { [key: string]: string | number | boolean } | null;
 
-  constructor(client: Client, options: CommandOptions) {
+  constructor(client: Client, database: DatabasePlugin | undefined, options: CommandOptions) {
     this.client = client;
+    this.database = database;
     this.origOptions = options;
     this.type = options.type;
     this.success = true;

@@ -1,13 +1,12 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import db from "#database";
 import * as collections from "#utils/collections.js";
 
 class CommandCommand extends Command {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
-    if (!db) return this.getString("noDatabase");
+    if (!this.database) return this.getString("noDatabase");
     const owners = process.env.OWNER?.split(",") ?? [];
     if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id))
       return this.getString("commands.responses.command.adminOnly");
@@ -18,7 +17,7 @@ class CommandCommand extends Command {
     if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase()))
       return this.getString("commands.responses.command.invalidCmd");
 
-    const guildDB = await db.getGuild(this.guild.id);
+    const guildDB = await this.database.getGuild(this.guild.id);
     const command = collections.aliases.get(this.args[1].toLowerCase()) ?? this.args[1].toLowerCase();
 
     if (this.args[0].toLowerCase() === "disable") {
@@ -26,7 +25,7 @@ class CommandCommand extends Command {
       if (guildDB.disabled_commands.includes(command))
         return this.getString("commands.responses.command.alreadyDisabled");
 
-      await db.disableCommand(this.guild.id, command);
+      await this.database.disableCommand(this.guild.id, command);
       this.success = true;
       return this.getString("commands.responses.command.disabled", {
         params: {
@@ -38,7 +37,7 @@ class CommandCommand extends Command {
     if (this.args[0].toLowerCase() === "enable") {
       if (!guildDB.disabled_commands.includes(command)) return this.getString("commands.responses.command.notDisabled");
 
-      await db.enableCommand(this.guild.id, command);
+      await this.database.enableCommand(this.guild.id, command);
       this.success = true;
       return this.getString("commands.responses.command.reEnabled", { params: { command } });
     }

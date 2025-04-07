@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
 import * as help from "#utils/help.js";
@@ -12,8 +11,8 @@ class HelpCommand extends Command {
       return this.getString("permissions.noEmbedLinks");
     }
     let prefix;
-    if (this.guild && database) {
-      prefix = (await database.getGuild(this.guild.id)).prefix;
+    if (this.guild && this.database) {
+      prefix = (await this.database.getGuild(this.guild.id)).prefix;
     } else {
       prefix = process.env.PREFIX ?? "&";
     }
@@ -58,12 +57,16 @@ class HelpCommand extends Command {
           },
         ],
       };
-      if (database) {
-        embed.embeds[0].fields.push({
-          name: this.getString("commands.responses.help.timesUsed"),
-          value: (await database.getCounts()).get(command),
-          inline: true,
-        });
+      if (this.database) {
+        const counts = await this.database.getCounts();
+        const value = counts.get(command);
+        if (value) {
+          embed.embeds[0].fields.push({
+            name: this.getString("commands.responses.help.timesUsed"),
+            value: value.toString(),
+            inline: true,
+          });
+        }
       }
       if (info.flags.length !== 0) {
         const flagInfo = [];

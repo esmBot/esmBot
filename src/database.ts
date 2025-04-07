@@ -1,42 +1,45 @@
 // wrapper for the database drivers in ./database/
 import "dotenv/config";
 import type { Guild, GuildChannel } from "oceanic.js";
-import type { Logger } from "#utils/logger.js";
-import { type DBGuild, isError } from "#utils/types.js";
+import logger from "#utils/logger.js";
+import { type DBGuild, isError, type Tag } from "#utils/types.js";
 
-export interface DatabasePlugin {
+export declare class DatabasePlugin {
+  constructor(connectString: string);
   setup: () => Promise<void>;
   stop: () => Promise<void>;
-  upgrade: (logger: Logger) => Promise<number>;
+  upgrade: () => Promise<number | undefined>;
   addCount: (command: string) => Promise<void>;
   getCounts: () => Promise<Map<string, number>>;
   disableCommand: (guild: string, command: string) => Promise<void>;
   enableCommand: (guild: string, command: string) => Promise<void>;
   disableChannel: (channel: GuildChannel) => Promise<void>;
   enableChannel: (channel: GuildChannel) => Promise<void>;
-  getTag: (guild: string, tag: string) => Promise<{ content: string; author: string } | undefined>;
-  getTags: (guild: string) => Promise<Record<string, { content: string; author: string }>>;
-  setTag: (name: string, content: { content: string; author: string }, guild: Guild) => Promise<void>;
+  getTag: (guild: string, tag: string) => Promise<Tag | undefined>;
+  getTags: (guild: string) => Promise<Record<string, Tag>>;
+  setTag: (tag: Tag, guild: Guild) => Promise<void>;
   removeTag: (name: string, guild: Guild) => Promise<void>;
-  editTag: (name: string, content: { content: string; author: string }, guild: Guild) => Promise<void>;
-  setBroadcast: (msg: string | null) => Promise<void>;
-  getBroadcast: () => Promise<string | null>;
+  editTag: (tag: Tag, guild: Guild) => Promise<void>;
+  setBroadcast: (msg?: string) => Promise<void>;
+  getBroadcast: () => Promise<string | undefined>;
   setPrefix: (prefix: string, guild: Guild) => Promise<void>;
   getGuild: (query: string) => Promise<DBGuild>;
 }
 
-let db = null;
-
-if (process.env.DB) {
-  const dbtype = process.env.DB.split("://")[0];
-  try {
-    db = (await import(`./database/${dbtype}.js`)).default;
-  } catch (error) {
-    if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {
-      console.error(`DB config option has unknown database type '${dbtype}'`);
+export async function init(): Promise<DatabasePlugin | undefined> {
+  if (process.env.DB && process.env.DB.length !== 0) {
+    const dbtype = process.env.DB.split("://")[0];
+    try {
+      const construct = (await import(`./database/${dbtype}.js`)).default;
+      return new construct(process.env.DB);
+    } catch (error) {
+      if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {
+        logger.error(`DB config option has unknown database type '${dbtype}'`);
+      }
+      throw error;
     }
-    throw error;
+  } else {
+    logger.warn("No database configured, running in stateless mode...");
+    return;
   }
 }
-
-export default db as DatabasePlugin | null;

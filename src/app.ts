@@ -41,7 +41,7 @@ import { promisify } from "node:util";
 
 import { Client, type ClientEvents, Constants } from "oceanic.js";
 
-import database from "#database";
+import { init as dbInit } from "./database.js";
 import { locales, paths } from "#utils/collections.js";
 import { load } from "#utils/handler.js";
 import { disconnect, initImageLib, reloadImageConnections } from "#utils/image.js";
@@ -109,9 +109,10 @@ if (!commandConfig.types.classic && !commandConfig.types.application) {
   process.exit(1);
 }
 
+const database = await dbInit();
 if (database) {
   // database handling
-  const dbResult = await database.upgrade(logger);
+  const dbResult = await database.upgrade();
   if (dbResult === 1) process.exit(1);
 }
 
@@ -210,7 +211,7 @@ for await (const file of getFiles(
     continue;
   }
   const { default: event } = await import(file);
-  client.on(eventName as keyof ClientEvents, event.bind(null, client));
+  client.on(eventName as keyof ClientEvents, event.bind(null, client, database));
 }
 logger.log("info", "Finished loading events.");
 

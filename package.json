@@ -84,10 +84,6 @@
       "node": "./dist/utils/*",
       "default": "./src/utils/*"
     },
-    "#database": {
-      "node": "./dist/database.js",
-      "default": "./src/database.js"
-    },
     "#pagination": {
       "node": "./dist/pagination/pagination.js",
       "default": "./src/pagination/pagination.js"

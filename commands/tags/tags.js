@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 import paginator from "#pagination";
 import { random } from "#utils/misc.js";
 const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
@@ -8,6 +7,7 @@ const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random"
 class TagsCommand extends Command {
   async run() {
     this.success = false;
+    if (!this.database) return this.getString("noDatabase");
     if (!this.guild) return this.getString("guildOnly");
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const cmd =
@@ -37,16 +37,17 @@ class TagsCommand extends Command {
   }
 
   /**
-   * @param {string} tagName
+   * @param {string | undefined} tagName
    * @param {string} cmd
    */
   async get(tagName, cmd) {
+    if (!this.database || !this.guild || !tagName) return;
     let getResult;
     if (cmd === "random") {
-      const tagList = await database.getTags(this.guild.id);
+      const tagList = await this.database.getTags(this.guild.id);
       getResult = tagList[random(Object.keys(tagList))];
     } else {
-      getResult = await database.getTag(this.guild.id, this.type === "classic" ? cmd : tagName);
+      getResult = await this.database.getTag(this.guild.id, this.type === "classic" ? cmd : tagName);
     }
     if (!getResult) return this.getString("commands.responses.tags.invalid");
     this.success = true;
@@ -64,26 +65,25 @@ class TagsCommand extends Command {
   }
 
   /**
-   * @param {string} tagName
+   * @param {string | undefined} tagName
    */
   async create(tagName) {
+    if (!this.database || !this.guild) return;
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.addName");
     if (blacklist.includes(tagName)) return this.getString("commands.responses.tags.invalidName");
-    const getResult = await database.getTag(this.guild.id, tagName);
+    const getResult = await this.database.getTag(this.guild.id, tagName);
     if (getResult) return this.getString("commands.responses.tags.exists");
-    const result = await database.setTag(
-      tagName,
+    await this.database.setTag(
       {
-        content:
-          this.type === "classic"
-            ? this.args.slice(2).join(" ")
-            : this.interaction?.data.options.getString("content", true),
-        author: this.member?.id,
+        name: tagName,
+        content: this.interaction
+          ? this.interaction.data.options.getString("content", true)
+          : this.args.slice(2).join(" "),
+        author: this.author.id,
       },
       this.guild,
     );
     this.success = true;
-    if (result) return result;
     return this.getString("commands.responses.tags.added", {
       params: {
         name: tagName,
@@ -92,11 +92,12 @@ class TagsCommand extends Command {
   }
 
   /**
-   * @param {string} tagName
+   * @param {string | undefined} tagName
    */
   async delete(tagName) {
+    if (!this.database || !this.guild) return;
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.deleteName");
-    const getResult = await database.getTag(this.guild.id, tagName);
+    const getResult = await this.database.getTag(this.guild.id, tagName);
     if (!getResult) return this.getString("commands.responses.tags.invalid");
     const owners = process.env.OWNER?.split(",");
     if (
@@ -105,7 +106,7 @@ class TagsCommand extends Command {
       !owners?.includes(this.author.id)
     )
       return this.getString("commands.responses.tags.notOwner");
-    await database.removeTag(tagName, this.guild);
+    await this.database.removeTag(tagName, this.guild);
     this.success = true;
     return this.getString("commands.responses.tags.deleted", {
       params: {
@@ -115,11 +116,12 @@ class TagsCommand extends Command {
   }
 
   /**
-   * @param {string} tagName
+   * @param {string | undefined} tagName
    */
   async modify(tagName) {
+    if (!this.database || !this.guild) return;
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.editName");
-    const getResult = await database.getTag(this.guild.id, tagName);
+    const getResult = await this.database.getTag(this.guild.id, tagName);
     if (!getResult) return this.getString("commands.responses.tags.invalid");
     const owners = process.env.OWNER?.split(",");
     if (
@@ -128,14 +130,13 @@ class TagsCommand extends Command {
       !owners?.includes(this.author.id)
     )
       return this.getString("commands.responses.tags.notOwner");
-    await database.editTag(
-      tagName,
+    await this.database.editTag(
       {
-        content:
-          this.type === "classic"
-            ? this.args.slice(2).join(" ")
-            : this.interaction?.data.options.getString("content", true),
-        author: this.member?.id,
+        name: tagName,
+        content: this.interaction
+          ? this.interaction.data.options.getString("content", true)
+          : this.args.slice(2).join(" "),
+        author: this.author.id,
       },
       this.guild,
     );
@@ -148,11 +149,12 @@ class TagsCommand extends Command {
   }
 
   /**
-   * @param {string} tagName
+   * @param {string | undefined} tagName
    */
   async owner(tagName) {
+    if (!this.database || !this.guild) return;
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.ownerName");
-    const getResult = await database.getTag(this.guild.id, tagName);
+    const getResult = await this.database.getTag(this.guild.id, tagName);
     if (!getResult) return this.getString("commands.responses.tags.invalid");
     const user = this.client.users.get(getResult.author);
     this.success = true;
@@ -183,8 +185,9 @@ class TagsCommand extends Command {
   }
 
   async list() {
+    if (!this.database || !this.guild) return;
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
-    const tagList = await database.getTags(this.guild.id);
+    const tagList = await this.database.getTags(this.guild.id);
     const embeds = [];
     let groups = [];
     let arrIndex = 0;
