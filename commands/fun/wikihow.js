@@ -15,11 +15,7 @@ class WikihowCommand extends Command {
       clearTimeout(timeout);
       const json = await req.json();
       const id = Object.keys(json.query.pages)[0];
-      const data = json.query.pages[id];
-      if (data.imageinfo) {
-        return json.query.pages[id].imageinfo[0].url;
-      }
-      return await this.run();
+      return json.query.pages[id].imageinfo[0].url;
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
