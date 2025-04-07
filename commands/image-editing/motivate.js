@@ -2,12 +2,16 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class MotivateCommand extends ImageCommand {
+  /**
+   * @param {string} text
+   * @param {string | undefined} url
+   */
   async criteria(text, url) {
     const [topText, bottomText] = text
-      .replaceAll(url, "")
+      .replaceAll(url ?? "", "")
       .split(/(?<!\\),/)
       .map((elem) => elem.trim());
-    if (topText === "" && bottomText === "") return false;
+    if (topText === "" && (!bottomText || bottomText === "")) return false;
     return true;
   }
 
