@@ -8,8 +8,8 @@ class HostCommand extends MusicCommand {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
-    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
+    if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     const owners = process.env.OWNER?.split(",") ?? [];
     if (this.connection.host !== this.author.id && !owners.includes(this.connection.host))
       return this.getString("commands.responses.host.notHost");

@@ -17,10 +17,9 @@ class RemoveCommand extends MusicCommand {
       return this.getString("commands.responses.remove.invalidPosition");
     const removed = this.queue.splice(pos, 1);
     if (removed.length === 0) return this.getString("commands.responses.remove.invalidPosition");
-    const track = await this.connection.player.node.rest.decode(removed[0]);
     queues.set(this.guild.id, this.queue);
     this.success = true;
-    return `🔊 ${this.getString("commands.responses.remove.removed", { params: { song: track?.info.title ? track.info.title : this.getString("sound.blank") } })}`;
+    return `🔊 ${this.getString("commands.responses.remove.removed", { params: { song: removed[0].info.title ? removed[0].info.title : this.getString("sound.blank") } })}`;
   }
 
   static flags = [

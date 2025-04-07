@@ -14,16 +14,22 @@ class StopCommand extends MusicCommand {
     skipVotes.delete(this.guild.id);
     await leaveChannel(this.guild.id);
     this.success = true;
-    return `🔊 ${this.getString(
-      this.connection ? "sound.endedInChannel" : "commands.responses.stop.ended",
-      this.connection
-        ? {
-            params: {
-              channel: this.connection.voiceChannel.name,
-            },
-          }
-        : undefined,
-    )}`;
+    if (this.connection) {
+      const voiceChannel =
+        this.client.getChannel(this.connection.voiceChannel) ??
+        (await this.client.rest.channels.get(this.connection.voiceChannel));
+      if ("name" in voiceChannel && voiceChannel.name) {
+        return `🔊 ${this.getString("sound.endedInChannel", {
+          params: {
+            channel: voiceChannel.name,
+          },
+        })}`;
+      } else {
+        return `🔊 ${this.getString("commands.responses.stop.ended")}`;
+      }
+    } else {
+      return `🔊 ${this.getString("commands.responses.stop.ended")}`;
+    }
   }
 
   static description = "Stops the music";

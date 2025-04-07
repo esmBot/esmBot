@@ -10,8 +10,11 @@ class NowPlayingCommand extends MusicCommand {
     if (!this.connection) return this.getString("sound.noConnection");
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection.player;
-    if (!player || !player.track) return this.getString("commands.responses.nowplaying.notPlaying");
-    const track = await player.node.rest.decode(player.track);
+    if (!player || !player.track) return this.getString("sound.notPlaying");
+    const track = this.queue[0];
+    const voiceChannel =
+      this.client.getChannel(this.connection.voiceChannel) ??
+      (await this.client.rest.channels.get(this.connection.voiceChannel));
     const parts = Math.floor((player.position / track.info.length) * 10);
     this.success = true;
     return {
@@ -33,10 +36,7 @@ class NowPlayingCommand extends MusicCommand {
             },
             {
               name: `💬 ${this.getString("sound.channel")}`,
-              value: (
-                this.guild.channels.get(this.member.voiceState.channelID) ??
-                (await this.client.rest.channels.get(this.member.voiceState.channelID))
-              ).name,
+              value: "name" in voiceChannel && voiceChannel.name ? voiceChannel.name : this.connection.voiceChannel,
             },
             {
               name: `🌐 ${this.getString("sound.node")}`,

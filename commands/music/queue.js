@@ -1,7 +1,6 @@
 import format from "format-duration";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import paginator from "#pagination";
-import { nodes } from "#utils/soundplayer.js";
 
 class QueueCommand extends MusicCommand {
   async run() {
@@ -12,14 +11,10 @@ class QueueCommand extends MusicCommand {
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection;
     if (!player) return this.getString("sound.noConnection");
-    const node = nodes.find((val) => val.name === player.player.node.name);
-    const tracks = await fetch(`http://${node.url}/v4/decodetracks`, {
-      method: "POST",
-      body: JSON.stringify(this.queue),
-      headers: { authorization: node.auth, "content-type": "application/json" },
-    }).then((res) => res.json());
     const trackList = [];
+    const tracks = this.queue;
     const firstTrack = tracks.shift();
+    if (!firstTrack) return this.getString("sound.notPlaying");
     for (const [i, track] of tracks.entries()) {
       trackList.push(
         `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : format(track.info.length)})`,

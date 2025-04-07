@@ -8,6 +8,7 @@ import {
   type GuildChannel,
   type Member,
   type Message,
+  StageChannel,
   VoiceChannel,
 } from "oceanic.js";
 import {
@@ -26,16 +27,22 @@ import logger from "./logger.js";
 export type SoundPlayer = {
   player: Player;
   host: string;
-  voiceChannel: VoiceChannel;
-  originalChannel: GuildChannel;
+  voiceChannel: string;
+  guild: string;
+  originalChannel: string;
   loop: boolean;
   shuffle: boolean;
   playMessage?: Message;
   locale: string;
 };
 
+export type QueueEntry = {
+  encoded: string;
+  info: Track["info"];
+};
+
 export const players = new Map<string, SoundPlayer>();
-export const queues = new Map<string, string[]>();
+export const queues = new Map<string, QueueEntry[]>();
 export const skipVotes = new Map();
 
 type Options = {
@@ -105,7 +112,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
       logger.warn(`Failed to get a voice channel: ${e}`);
     }));
   if (!voiceChannel) return { content: getString("sound.cantJoin", { locale: options.locale }), flags: 64 };
-  if (!(voiceChannel instanceof VoiceChannel))
+  if (!(voiceChannel instanceof VoiceChannel) && !(voiceChannel instanceof StageChannel))
     return { content: getString("sound.notVoiceChannel", { locale: options.locale }), flags: 64 };
   if (!voiceChannel.permissionsOf(client.user.id).has("CONNECT"))
     return { content: getString("sound.cantJoin", { locale: options.locale }), flags: 64 };
@@ -123,26 +130,26 @@ export async function play(client: Client, soundUrl: string, options: Options) {
   const oldQueue = queues.get(voiceChannel.guildID);
   if (!response?.data || (Array.isArray(response.data) && response.data.length === 0))
     return { content: getString("sound.noSong", { locale: options.locale }), flags: 64 };
-  let tracks: string[] = [];
-  let info: Track["info"] | undefined;
+  const tracks: string[] = [];
+  const info: Track["info"][] = [];
   let playlistInfo: Playlist["info"] | undefined;
   switch (response.loadType) {
     case "track":
-      info = response.data.info;
+      info.push(response.data.info);
       tracks.push(response.data.encoded);
       break;
     case "search":
-      info = response.data[0].info;
+      info.push(response.data[0].info);
       tracks.push(response.data[0].encoded);
       break;
     case "playlist":
-      info = response.data.tracks[0].info;
       playlistInfo = response.data.info;
-      tracks = response.data.tracks.map((v) => v.encoded);
+      for (const track of response.data.tracks) {
+        info.push(track.info);
+        tracks.push(track.encoded);
+      }
       break;
   }
-  if (process.env.YT_DISABLED === "true" && info?.sourceName === "youtube")
-    return { content: getString("sound.noYouTube", { locale: options.locale }), flags: 64 };
   const playerMeta = players.get(options.guild.id);
   let player: Player | undefined;
   if (manager.players.has(voiceChannel.guildID)) {
@@ -162,14 +169,23 @@ export async function play(client: Client, soundUrl: string, options: Options) {
       deaf: true,
     }));
 
-  queues.set(voiceChannel.guildID, oldQueue ? [...oldQueue, ...tracks] : tracks);
+  const newQueue = oldQueue ?? [];
+  for (let i = 0; i < tracks.length; i++) {
+    newQueue.push({
+      encoded: tracks[i],
+      info: info[i],
+    });
+  }
+  queues.set(voiceChannel.guildID, newQueue);
   if (oldQueue?.length) {
     return getString("sound.addedToQueue", {
       locale: options.locale,
       params: {
         name:
           playlistInfo?.name.trim() ??
-          (info?.title && info.title !== "" ? info.title.trim() : getString("sound.blank", { locale: options.locale })),
+          (info[0].title && info[0].title !== ""
+            ? info[0].title.trim()
+            : getString("sound.blank", { locale: options.locale })),
         type: response.loadType,
       },
     });
@@ -180,7 +196,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
     options,
     connection,
     tracks[0],
-    info,
+    info[0],
     voiceChannel,
     playerMeta?.host ?? options.member.id,
     playerMeta?.loop ?? false,
@@ -193,8 +209,8 @@ export async function nextSong(
   options: Options,
   connection: Player,
   track: string,
-  info: Track["info"] | undefined,
-  voiceChannel: VoiceChannel,
+  info: Track["info"],
+  voiceChannel: VoiceChannel | StageChannel,
   host: string,
   loop = false,
   shuffle = false,
@@ -268,8 +284,9 @@ export async function nextSong(
   players.set(voiceChannel.guildID, {
     player: connection,
     host,
-    voiceChannel,
-    originalChannel: options.channel,
+    guild: voiceChannel.guildID,
+    voiceChannel: voiceChannel.id,
+    originalChannel: options.channel.id,
     loop,
     shuffle,
     playMessage: playingMessage,
@@ -286,7 +303,7 @@ export async function nextSong(
     if (data.reason === "replaced") return;
     let queue = queues.get(voiceChannel.guildID) ?? [];
     const player = players.get(voiceChannel.guildID);
-    let newQueue: string[] = [];
+    let newQueue: QueueEntry[] = [];
     if (manager.connections.has(voiceChannel.guildID)) {
       if (player?.shuffle) {
         if (player.loop) {
@@ -307,13 +324,12 @@ export async function nextSong(
       queues.set(voiceChannel.guildID, newQueue);
     }
     if (newQueue.length !== 0) {
-      const newTrack = await connection.node.rest.decode(newQueue[0]);
       nextSong(
         client,
         options,
         connection,
-        newQueue[0],
-        newTrack?.info,
+        newQueue[0].encoded,
+        newQueue[0].info,
         voiceChannel,
         host,
         player?.loop,
@@ -348,9 +364,9 @@ export async function nextSong(
     }
     if (options.type === "classic") {
       try {
-        if (newQueue[0] !== track && playingMessage?.channel?.messages.has(playingMessage.id))
+        if (newQueue[0].encoded !== track && playingMessage?.channel?.messages.has(playingMessage.id))
           await playingMessage.delete();
-        if (newQueue[0] !== track && player?.playMessage?.channel?.messages.has(player.playMessage.id))
+        if (newQueue[0].encoded !== track && player?.playMessage?.channel?.messages.has(player.playMessage.id))
           await player.playMessage.delete();
       } catch {
         // no-op
@@ -364,7 +380,7 @@ export async function errHandle(
   client: Client,
   connection: Player,
   playingMessage: Message | undefined,
-  voiceChannel: VoiceChannel,
+  voiceChannel: VoiceChannel | StageChannel,
   options: Options,
 ) {
   try {

@@ -10,6 +10,7 @@ class SeekCommand extends MusicCommand {
     if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id) return this.getString("commands.responses.seek.notHost");
     const player = this.connection.player;
+    if (!player || !player.track) return this.getString("sound.notPlaying");
     const track = await player.node.rest.decode(player.track);
     if (!track?.info.isSeekable) return this.getString("commands.responses.seek.notSeekable");
     const pos = this.getOptionString("position") ?? this.args[0];

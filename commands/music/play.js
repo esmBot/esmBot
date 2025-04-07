@@ -1,8 +1,7 @@
 import { Constants, GuildChannel } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { play } from "#utils/soundplayer.js";
-const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:"];
-if (process.env.YT_DISABLED !== "true") prefixes.push("ytsearch:", "ytmsearch:");
+const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:", "ytsearch:", "ytmsearch:"];
 
 class PlayCommand extends MusicCommand {
   async run() {
@@ -42,9 +41,7 @@ class PlayCommand extends MusicCommand {
         ? query
         : !query && attachment
           ? attachment.url
-          : process.env.YT_DISABLED !== "true"
-            ? `ytsearch:${query}`
-            : `dzsearch:${query}`;
+          : `ytsearch:${query}`;
       return play(this.client, search, {
         channel: this.channel,
         guild: this.guild,

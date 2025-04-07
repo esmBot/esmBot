@@ -1,11 +1,11 @@
 import type { Client } from "oceanic.js";
-import { type SoundPlayer, players, queues } from "#utils/soundplayer.js";
+import { type QueueEntry, type SoundPlayer, players, queues } from "#utils/soundplayer.js";
 import Command, { type CommandOptions } from "./command.js";
 import type { DatabasePlugin } from "../database.js";
 
 class MusicCommand extends Command {
   connection?: SoundPlayer;
-  queue: string[];
+  queue: QueueEntry[];
   constructor(client: Client, database: DatabasePlugin, options: CommandOptions) {
     super(client, database, options);
     if (this.guild) {
