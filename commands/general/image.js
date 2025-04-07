@@ -12,6 +12,9 @@ class ImageSearchCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.image.noInput");
     await this.acknowledge();
     const embeds = [];
+    /**
+     * @type {import("#utils/types.ts").SearXNGResults}
+     */
     const rawImages = await fetch(
       `${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`,
     ).then((res) => res.json());

@@ -11,6 +11,9 @@ class YouTubeCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.youtube.noInput");
     await this.acknowledge();
     const messages = [];
+    /**
+     * @type {import("#utils/types.ts").SearXNGResults}
+     */
     const videos = await fetch(
       `${random(serversConfig.searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(query)}`,
     ).then((res) => res.json());

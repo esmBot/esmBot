@@ -77,6 +77,16 @@ export interface ImageTypeData {
   type?: string;
 }
 
+export interface SearXNGResults {
+  query: string;
+  results: {
+    author?: string;
+    img_src?: string;
+    title: string;
+    url: string;
+  }[];
+}
+
 export function isError(error: unknown): error is NodeJS.ErrnoException {
   return error instanceof Error;
 }
