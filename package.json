@@ -29,30 +29,30 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
+    "better-sqlite3": "^11.9.1",
     "bufferutil": "^4.0.9",
     "dotenv": "^16.4.7",
     "emoji-regex-xs": "^1.0.0",
     "file-type": "^19.6.0",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.2.0",
-    "node-addon-api": "^8.3.0",
+    "node-addon-api": "^8.3.1",
     "oceanic.js": "1.11.2",
     "postgres": "^3.4.5",
     "shoukaku": "^4.1.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "ws": "^8.18.0"
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "^1.2.2",
-    "@types/ws": "^8.5.14",
+    "@types/bun": "^1.2.8",
+    "@types/ws": "^8.18.1",
     "cmake-js": "^7.3.0"
   },
   "optionalDependencies": {
-    "@sentry/node": "^8.54.0",
-    "@sentry/profiling-node": "^8.54.0",
+    "@sentry/node": "^8.55.0",
+    "@sentry/profiling-node": "^8.55.0",
     "pm2": "^5.4.3"
   },
   "binary": {
