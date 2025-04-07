@@ -26,8 +26,11 @@ const words = [
 ];
 
 class CaptionTwoCommand extends ImageCommand {
+  /**
+   * @param {string | undefined} url
+   */
   paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
     const font = this.getOptionString("font");
     return {
       caption: newArgs?.trim()

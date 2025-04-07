@@ -11,10 +11,13 @@ class MotivateCommand extends ImageCommand {
     return true;
   }
 
+  /**
+   * @param {string | undefined} url
+   */
   paramsFunc(url) {
     const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     const [topText, bottomText] = newArgs
-      .replaceAll(url, "")
+      .replaceAll(url ?? "", "")
       .split(/(?<!\\),/)
       .map((elem) => elem.trim());
     const font = this.getOptionString("font");

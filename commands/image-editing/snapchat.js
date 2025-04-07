@@ -2,8 +2,11 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SnapchatCommand extends ImageCommand {
+  /**
+   * @param {string | undefined} url
+   */
   paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
     const position = this.getOptionNumber("position");
     return {
       caption: this.clean(newArgs),

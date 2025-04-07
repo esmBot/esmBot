@@ -2,8 +2,11 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class CaptionCommand extends ImageCommand {
+  /**
+   * @param {string | undefined} url
+   */
   paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url)).join(" ");
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
     let newCaption = this.clean(newArgs);
     const currentDate = new Date();
     const isApril1 = currentDate.getDate() === 1 && currentDate.getMonth() === 3;

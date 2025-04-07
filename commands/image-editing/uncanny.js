@@ -27,10 +27,13 @@ const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../.
   });
 
 class UncannyCommand extends ImageCommand {
+  /**
+   * @param {string | undefined} url
+   */
   paramsFunc(url, name = "unknown") {
     const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     let [text1, text2] = newArgs
-      .replaceAll(url, "")
+      .replaceAll(url ?? "", "")
       .split(/(?<!\\),/)
       .map((elem) => elem.trim());
     if (!text2?.trim()) text2 = name;
