@@ -16,8 +16,8 @@ class ExecCommand extends Command {
     const code = this.getOptionString("cmd") ?? this.args.join(" ");
     try {
       const execed = await exec(code);
-      if (execed.stderr) return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${await clean(execed.stderr)}\n\`\`\``;
-      const cleaned = await clean(execed.stdout);
+      if (execed.stderr) return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${clean(execed.stderr)}\n\`\`\``;
+      const cleaned = clean(execed.stdout);
       const sendString = `\`\`\`bash\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
         return {
@@ -32,7 +32,7 @@ class ExecCommand extends Command {
       }
       return sendString;
     } catch (err) {
-      return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${await clean(err)}\n\`\`\``;
+      return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${clean(err)}\n\`\`\``;
     }
   }
 
