@@ -71,7 +71,6 @@ class BannerCommand extends Command {
       type: Constants.ApplicationCommandOptionTypes.USER,
       description: "The member to get the banner from",
       classic: true,
-      required: false,
     },
   ];
 }

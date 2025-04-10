@@ -52,7 +52,6 @@ class AvatarCommand extends Command {
       type: Constants.ApplicationCommandOptionTypes.USER,
       description: "The member to get the avatar from",
       classic: true,
-      required: false,
     },
   ];
 }
