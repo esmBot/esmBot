@@ -11,6 +11,14 @@
 #endif
 #include <vips/vips8>
 
+#ifdef WITH_BACKWARD
+#include "backward.hpp"
+
+namespace backward {
+  backward::SignalHandling sh;
+}
+#endif
+
 using namespace std;
 
 bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
