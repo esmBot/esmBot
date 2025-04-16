@@ -51,6 +51,7 @@ class ImageCommand extends Command {
           selection ??
           (await imageDetect(
             this.client,
+            this.permissions,
             this.message,
             this.interaction,
             {

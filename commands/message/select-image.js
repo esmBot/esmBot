@@ -9,6 +9,7 @@ class SelectImageCommand extends Command {
     if (!(message instanceof Message)) throw Error("Target is not a message");
     const image = await imageDetect(
       this.client,
+      this.permissions,
       message,
       this.interaction,
       {
