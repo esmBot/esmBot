@@ -267,18 +267,22 @@ export async function stickerDetect(
       !(channel instanceof PrivateChannel)
     )
       return;
-    let perms: Permission | null = null;
-    if (channel instanceof TextableChannel) {
-      perms = channel.permissionsOf(client.user.id);
-    } else if (channel instanceof ThreadChannel) {
-      try {
+    try {
+      let perms: Permission | null = null;
+      if (channel instanceof TextableChannel) {
         perms = channel.permissionsOf(client.user.id);
-      } catch {
-        const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
-        perms = parent.permissionsOf(client.user.id);
+      } else if (channel instanceof ThreadChannel) {
+        try {
+          perms = channel.permissionsOf(client.user.id);
+        } catch {
+          const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
+          perms = parent.permissionsOf(client.user.id);
+        }
       }
+      if (perms && !perms.has("VIEW_CHANNEL")) return;
+    } catch {
+      return;
     }
-    if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {
@@ -347,18 +351,22 @@ export default async (
       !(channel instanceof PrivateChannel)
     )
       return;
-    let perms: Permission | null = null;
-    if (channel instanceof TextableChannel) {
-      perms = channel.permissionsOf(client.user.id);
-    } else if (channel instanceof ThreadChannel) {
-      try {
+    try {
+      let perms: Permission | null = null;
+      if (channel instanceof TextableChannel) {
         perms = channel.permissionsOf(client.user.id);
-      } catch {
-        const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
-        perms = parent.permissionsOf(client.user.id);
+      } else if (channel instanceof ThreadChannel) {
+        try {
+          perms = channel.permissionsOf(client.user.id);
+        } catch {
+          const parent = await client.rest.channels.get<ThreadParentChannel>(channel.parentID);
+          perms = parent.permissionsOf(client.user.id);
+        }
       }
+      if (perms && !perms.has("VIEW_CHANNEL")) return;
+    } catch {
+      return;
     }
-    if (perms && !perms.has("VIEW_CHANNEL")) return;
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {
