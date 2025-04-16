@@ -67,7 +67,6 @@
   },
   "optionalDependencies": {
     "@sentry/node": "^9.11.0",
-    "@sentry/profiling-node": "^9.11.0",
     "pm2": "^6.0.5"
   },
   "binary": {

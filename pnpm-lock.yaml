@@ -105,9 +105,6 @@ importers:
       '@sentry/node':
         specifier: ^9.11.0
         version: 9.11.0
-      '@sentry/profiling-node':
-        specifier: ^9.11.0
-        version: 9.11.0
       pm2:
         specifier: ^6.0.5
         version: 6.0.5(patch_hash=58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4)(bufferutil@4.0.9)
@@ -421,10 +418,6 @@ packages:
     peerDependencies:
       '@opentelemetry/api': ^1.8
 
-  '@sentry-internal/node-cpu-profiler@2.1.0':
-    resolution: {integrity: sha512-/gPj8ARZ8Jw8gCQWToCiUyLoOxBDP8wuFNx07mAXegYiDa4NcIvo37ZzDWaTG+wjwa/LvCpHxHff6pejt4KOKg==}
-    engines: {node: '>=18'}
-
   '@sentry/core@9.11.0':
     resolution: {integrity: sha512-qfb4ahGZubbrNh1MnbEqyHFp87rIwQIZapyQLCaYpudXrP1biEpLOV3mMDvDJWCdX460hoOwQ3SkwipV3We/7w==}
     engines: {node: '>=18'}
@@ -443,11 +436,6 @@ packages:
       '@opentelemetry/instrumentation': ^0.57.1
       '@opentelemetry/sdk-trace-base': ^1.30.1
       '@opentelemetry/semantic-conventions': ^1.28.0
-
-  '@sentry/profiling-node@9.11.0':
-    resolution: {integrity: sha512-4bHN5LLEAMxPZZLThLn5tG6pHi6DICJiTwRFnO+xszzua/yS2WVw7F1z+782Jzo8D2humZ4iCcy1GA9prm4z2A==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
@@ -2320,12 +2308,6 @@ snapshots:
       - supports-color
     optional: true
 
-  '@sentry-internal/node-cpu-profiler@2.1.0':
-    dependencies:
-      detect-libc: 2.0.3
-      node-abi: 3.74.0
-    optional: true
-
   '@sentry/core@9.11.0':
     optional: true
 
@@ -2378,15 +2360,6 @@ snapshots:
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.30.0
       '@sentry/core': 9.11.0
-    optional: true
-
-  '@sentry/profiling-node@9.11.0':
-    dependencies:
-      '@sentry-internal/node-cpu-profiler': 2.1.0
-      '@sentry/core': 9.11.0
-      '@sentry/node': 9.11.0
-    transitivePeerDependencies:
-      - supports-color
     optional: true
 
   '@tokenizer/inflate@0.2.7':

@@ -7,7 +7,7 @@ import run from "#utils/image-runner.js";
 import { img } from "#utils/imageLib.js";
 import logger from "#utils/logger.js";
 
-img.imageInit();
+const formats = Object.keys(img.imageInit());
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
@@ -114,15 +114,15 @@ wss.on("connection", (ws, request) => {
   logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobAmount);
-  const formats = {};
+  const cmdFormats = {};
   for (const cmd of img.funcs) {
-    formats[cmd] = ["image/png", "image/gif", "image/jpeg", "image/webp", "image/avif"];
+    cmdFormats[cmd] = formats;
   }
   const init = Buffer.concat([
     Buffer.from([Rinit]),
     Buffer.from([0x00, 0x00, 0x00, 0x00]),
     cur,
-    Buffer.from(JSON.stringify(formats)),
+    Buffer.from(JSON.stringify(cmdFormats)),
   ]);
   ws.send(init);
 

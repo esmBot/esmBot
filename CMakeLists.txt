@@ -50,6 +50,7 @@ set(SOURCE_FILES natives/blur.cc
 
 option(WITH_MAGICK "Build with ImageMagick, enables the circle, magik, and spin commands" OFF)
 option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
+option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 if (WITH_MAGICK)
   list(APPEND SOURCE_FILES natives/magik.cc
@@ -100,6 +101,13 @@ if (WITH_ZXING)
     add_definitions(-DZXING_ENABLED)
     target_link_libraries(${PROJECT_NAME} ZXing::ZXing)
   endif()
+endif()
+
+if (WITH_BACKWARD)
+  FetchContent_Declare(backward GIT_REPOSITORY https://github.com/bombela/backward-cpp)
+  FetchContent_MakeAvailable(backward)
+  add_definitions(-DWITH_BACKWARD)
+  target_link_libraries(${PROJECT_NAME} Backward::Interface)
 endif()
 
 find_package(Fontconfig REQUIRED)

@@ -11,6 +11,14 @@
 #endif
 #include <vips/vips8>
 
+#ifdef WITH_BACKWARD
+#include "backward.hpp"
+
+namespace backward {
+  backward::SignalHandling sh;
+}
+#endif
+
 using namespace std;
 
 bool isNapiValueInt(Napi::Env& env, Napi::Value& num) {
@@ -73,7 +81,19 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
   return Napi::BigInt::From<intptr_t>(env, reinterpret_cast<intptr_t>(asyncWorker));
 }
 
-void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
+void *checkTypes(GType type, Napi::Object *formats) {
+	VipsObjectClass *c = VIPS_OBJECT_CLASS(g_type_class_ref(type));
+
+  if (strcmp(c->nickname, "jpegload")) formats->Set("image/jpeg", true);
+  if (strcmp(c->nickname, "pngload")) formats->Set("image/png", true);
+  if (strcmp(c->nickname, "gifload")) formats->Set("image/gif", true);
+  if (strcmp(c->nickname, "webpload")) formats->Set("image/webp", true);
+  if (strcmp(c->nickname, "heifload")) formats->Set("image/avif", true);
+
+	return NULL;
+}
+
+Napi::Value ImgInit(const Napi::CallbackInfo& info) {
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
@@ -88,7 +108,9 @@ void ImgInit([[maybe_unused]] const Napi::CallbackInfo& info) {
   vips_operation_block_set("VipsForeignLoadWebp", false);
   vips_operation_block_set("VipsForeignLoadHeif", false);
 #endif
-  return;
+  Napi::Object formats = Napi::Object::New(info.Env());
+  vips_type_map_all(g_type_from_name("VipsForeignLoad"), (VipsTypeMapFn)checkTypes, &formats);
+  return formats;
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
