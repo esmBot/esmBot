@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  bun-types:
-    hash: 1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2
-    path: patches/bun-types.patch
   pm2:
     hash: 58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4
     path: patches/pm2.patch
@@ -2383,7 +2380,7 @@ snapshots:
 
   '@types/bun@1.2.8':
     dependencies:
-      bun-types: 1.2.7(patch_hash=1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2)
+      bun-types: 1.2.7
 
   '@types/connect@3.4.38':
     dependencies:
@@ -2637,7 +2634,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bun-types@1.2.7(patch_hash=1542900b4f43dbfe165436421e83be8a7f4fdf1c3002a8b64cd69a4152e8e9d2):
+  bun-types@1.2.7:
     dependencies:
       '@types/node': 20.17.30
       '@types/ws': 8.18.1
