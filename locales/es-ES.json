@@ -8,7 +8,6 @@
             "cat": "Obtener una foto aleatoria de un gato",
             "dice": "Lanza el dado",
             "dog": "Obtener una foto aleatoria de un perro",
-            "wikihow": "Obtener una foto aleatoria de WikiHow",
             "avatar": "Obtener el avatar de usuario",
             "banner": "Obtener el banner de usuario",
             "base64": "Codificar/decodificar una cadena en Base64",
@@ -38,7 +37,6 @@
             "pixelate": "Pixelar una imagen",
             "soundreload": "Intentar reconectar a todos los nodos disponibles de Lavalink",
             "motivate": "Generar un póster motivacional",
-            "ancient": "Obtener un meme antiguo",
             "homebrew": "Crea una edición de el Canal Homebrew",
             "sonic": "Crea una imagen de Burbuja de texto de Sonic"
         },

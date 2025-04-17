@@ -5,7 +5,6 @@
             "cat": "Rastgele bir kedi resmi gönderir",
             "dice": "Zar atar",
             "dog": "Rastgele bir köpek resmi gönderir",
-            "wikihow": "Rastgele bir WikiHow resmi gönderir",
             "avatar": "Bir kullanıcının avatar'ını gösterir",
             "base64": "Bir Base64 dizesini encode veya decode eder",
             "command": "Bir sunucuda, klasik komutları aktif/pasif hale getirir (eğik çizgi komutları için sunucu ayarları)",

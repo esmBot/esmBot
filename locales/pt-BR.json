@@ -8,7 +8,6 @@
             "dog": "Mostra uma imagem de cachorro aleatória",
             "homebrew": "Cria uma edit do Homebrew Channel",
             "sonic": "Cria uma imagem de balão de fala do Sonic",
-            "wikihow": "Mostra uma imagem aleatória do WikiHow",
             "banner": "Mostra o banner de um usuário",
             "base64": "Codifica/Decodifica uma chave de Base64",
             "command": "Liga/desliga um comando clássico para um servidor (use as config. do serv. para comandos de barra)",
@@ -20,7 +19,6 @@
             "help": "Mostra uma lista de comandos",
             "8ball": "Faz uma pergunta para a bola 8 mágica",
             "cat": "Pega uma imagem de gato aleatória",
-            "ancient": "Mostra um meme muito antigo",
             "avatar": "Mostra o avatar de um usuário",
             "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)",
             "image": "Pesquisar por imagens na web"

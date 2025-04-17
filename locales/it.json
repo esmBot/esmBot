@@ -2,13 +2,11 @@
     "commands": {
         "descriptions": {
             "8ball": "Fa una domanda alla palla magica 8",
-            "ancient": "Invia un meme antico casuale",
             "bird": "Invia una foto casuale di un uccello",
             "cat": "Invia una foto casuale di un gatto",
             "dice": "Lancia i dadi",
             "homebrew": "Crea una variante dell'Homebrew Channel",
             "sonic": "Crea un'immagine di Sonic con un fumetto",
-            "wikihow": "Invia una foto casuale di WikiHow",
             "avatar": "Invia l'avatar di un utente",
             "banner": "Invia il banner di un utente",
             "command": "Attiva/disattiva comando classico in un canale (segue impostazioni server dei comandi applicazioni)",
@@ -447,14 +445,12 @@
         },
         "names": {
             "8ball": "palla8",
-            "ancient": "antico",
             "bird": "uccello",
             "cat": "gatto",
             "dice": "dadi",
             "dog": "cane",
             "homebrew": "homebrew",
             "sonic": "sonic",
-            "wikihow": "wikihow",
             "avatar": "avatar",
             "banner": "banner",
             "base64": "base64",
@@ -658,9 +654,6 @@
                 "withoutDoubt": "Senza dubbio",
                 "yes": "Sì",
                 "hazy": "Risposta fumosa, prova di nuovo"
-            },
-            "ancient": {
-                "error": "Non ho potuto recuperare un meme in tempo. Magari prova di nuovo?"
             },
             "base64": {
                 "decodeNoInput": "Devi fornire una stringa da decodificare!",
@@ -902,9 +895,6 @@
             "snowflake": {
                 "invalid": "Quello non è uno snowflake valido!",
                 "noInput": "Devi fornire un ID snowflake!"
-            },
-            "wikihow": {
-                "error": "Non ho potuto recuperare un'immagine WikiHow in tempo. Magari prova di nuovo?"
             }
         }
     },
