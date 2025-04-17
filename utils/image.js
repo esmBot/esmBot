@@ -5,6 +5,7 @@ import ipaddr from "ipaddr.js";
 import { fileTypeFromBuffer } from "file-type";
 import logger from "./logger.js";
 import ImageConnection from "./imageConnection.js";
+import { random } from "./misc.js";
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
 
 /**
@@ -129,14 +130,6 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-function chooseServer(ideal) {
-  if (ideal.length === 0) throw "No available servers";
-  const sorted = ideal.filter((v) => !!v).sort((a, b) => {
-    return a.load - b.load;
-  });
-  return sorted[0];
-}
-
 /**
  * @param {JobObject} object
  * @returns {Promise<ImageConnection>}
@@ -152,14 +145,10 @@ async function getIdeal(object) {
       continue;
     }
     if (object.params.type && !connection.formats[object.cmd]?.includes(object.params.type)) continue;
-    idealServers.push({
-      addr: address,
-      load: await connection.getCount()
-    });
+    idealServers.push(connection);
   }
-  const server = chooseServer(idealServers);
-  if (!server) return;
-  return connections.get(server.addr);
+  if (idealServers.length === 0) throw "No available servers";
+  return random(idealServers.filter((v) => !!v));
 }
 
 /**
