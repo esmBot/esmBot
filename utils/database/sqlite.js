@@ -50,11 +50,6 @@ const updates = [
 export async function setup() {
   const existingCommands = connection.prepare("SELECT command FROM counts").all().map(x => x.command);
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
-  for (const command of existingCommands) {
-    if (!commandNames.includes(command)) {
-      connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
-    }
-  }
   for (const command of commandNames) {
     if (!existingCommands.includes(command)) {
       connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
@@ -116,8 +111,9 @@ export async function addCount(command) {
 export async function getCounts() {
   const counts = connection.prepare("SELECT * FROM counts").all();
   const countObject = {};
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const { command, count } of counts) {
-    countObject[command] = count;
+    if (commandNames.includes(command)) countObject[command] = count;
   }
   return countObject;
 }

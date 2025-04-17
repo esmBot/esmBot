@@ -43,11 +43,6 @@ const updates = [
 export async function setup() {
   const existingCommands = (await sql`SELECT command FROM counts`).map(x => x.command);
   const commandNames = [...commands.keys(), ...messageCommands.keys()];
-  for (const command of existingCommands) {
-    if (!commandNames.includes(command)) {
-      await sql`DELETE FROM counts WHERE command = ${command}`;
-    }
-  }
   for (const command of commandNames) {
     if (!existingCommands.includes(command)) {
       await sql`INSERT INTO counts ${sql({ command, count: 0 }, "command", "count")}`;
@@ -172,8 +167,9 @@ export async function enableChannel(channel) {
 export async function getCounts() {
   const counts = await sql`SELECT * FROM counts`;
   const countObject = {};
+  const commandNames = [...commands.keys(), ...messageCommands.keys()];
   for (const { command, count } of counts) {
-    countObject[command] = count;
+    if (commandNames.includes(command)) countObject[command] = count;
   }
   return countObject;
 }
