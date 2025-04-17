@@ -24,8 +24,10 @@
     "start:bun": "bun src/app.ts",
     "start:debug": "DEBUG=true node dist/app.js",
     "start:bun:debug": "DEBUG=true bun src/app.ts",
-    "start-api": "node api/index.js",
-    "start-api:debug": "DEBUG=true node api/index.js"
+    "start-api": "node dist/api/index.js",
+    "start-api:bun": "bun src/api/index.js",
+    "start-api:debug": "DEBUG=true node dist/api/index.js",
+    "start-api:bun:debug": "DEBUG=true bun src/api/index.js"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",

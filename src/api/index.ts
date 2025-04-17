@@ -2,10 +2,12 @@ import "dotenv/config";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";
 import { Client } from "oceanic.js";
-import { WebSocketServer } from "ws";
+import type WebSocket from "ws";
+import { WebSocketServer, type ErrorEvent } from "ws";
 import run from "#utils/image-runner.js";
 import { img } from "#utils/imageLib.js";
 import logger from "#utils/logger.js";
+import type { ImageParams } from "#utils/types.ts";
 
 const formats = Object.keys(img.imageInit());
 
@@ -20,15 +22,36 @@ const Rinit = 0x08;
 const Rsent = 0x09;
 const Rclose = 0xff;
 
-const log = (msg, jobNum) => {
+const log = (msg: string, jobNum?: number) => {
   logger.log("main", `${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
 };
-const error = (msg, jobNum) => {
+const error = (msg: string | Error | ErrorEvent, jobNum?: number) => {
   logger.error(`${jobNum != null ? `[Job ${jobNum}] ` : ""}${msg}`);
 };
 
-class JobCache extends Map {
-  set(key, value) {
+interface VerifyEvents {
+  error: [err: string];
+  end: [tag: Buffer];
+}
+
+interface Job {
+  num: number;
+  msg: ImageParams;
+  verifyEvent: EventEmitter<VerifyEvents>;
+  tag?: Buffer;
+  error?: string;
+  data?: Buffer;
+  ext?: string;
+}
+
+interface MiniJob {
+  id: BigInt;
+  msg: ImageParams;
+  num: number;
+}
+
+class JobCache<K, V extends Job> extends Map {
+  set(key: K, value: V) {
     super.set(key, value);
     setTimeout(() => {
       if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
@@ -36,20 +59,24 @@ class JobCache extends Map {
     return this;
   }
 
-  _delListener(_size) {}
+  _delListener(_size: number) {}
 
-  delete(key) {
+  delete(key: K) {
     const out = super.delete(key);
     this._delListener(this.size);
     return out;
   }
 
-  delListen(func) {
+  delListen(func: (size: number) => void) {
     this._delListener = func;
+  }
+
+  get(key: K): V {
+    return super.get(key);
   }
 }
 
-const jobs = new JobCache();
+const jobs = new JobCache<BigInt, Job>();
 // Should look like ID : { msg: "request", num: <job number> }
 
 const PASS = process.env.PASS ? process.env.PASS : undefined;
@@ -67,41 +94,40 @@ discord.on("error", error);
 
 /**
  * Accept an image job.
- * @param {string} id
- * @param {import("ws").WebSocket} sock
- * @returns {Promise<void>}
  */
-const acceptJob = (id, sock) => {
+async function acceptJob(id: BigInt, sock: WebSocket): Promise<void> {
   jobAmount++;
   const job = jobs.get(id);
-  return runJob(
-    {
-      id: id,
-      msg: job.msg,
-      num: job.num,
-    },
-    sock,
-  )
-    .then(() => {
-      log(`Job ${id} has finished`);
-    })
-    .catch((err) => {
-      error(`Error on job ${id}: ${err}`, job.num);
-      const newJob = jobs.get(id);
-      if (!newJob.tag) {
-        newJob.error = err.message;
-        jobs.set(id, newJob);
-        return;
-      }
-      jobs.delete(id);
-      sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
-    })
-    .finally(() => {
+  try {
+    await runJob(
+      {
+        id: id,
+        msg: job.msg,
+        num: job.num,
+      },
+      sock,
+    );
+    log(`Job ${id} has finished`);
+  } catch (err) {
+    if (!(err instanceof Error)) {
       jobAmount--;
-    });
+      return;
+    }
+    error(`Error on job ${id}: ${err}`, job.num);
+    const newJob = jobs.get(id);
+    if (!newJob.tag) {
+      newJob.error = err.message;
+      jobs.set(id, newJob);
+      jobAmount--;
+      return;
+    }
+    jobs.delete(id);
+    sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
+  }
+  jobAmount--;
 };
 
-const waitForVerify = (event) => {
+function waitForVerify(event: EventEmitter<VerifyEvents>): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     event.once("end", (r) => resolve(r));
     event.once("error", (e) => reject(e));
@@ -112,9 +138,10 @@ const wss = new WebSocketServer({ clientTracking: true, noServer: true });
 
 wss.on("connection", (ws, request) => {
   logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
+  ws.binaryType = "nodebuffer";
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobAmount);
-  const cmdFormats = {};
+  const cmdFormats: { [cmd: string]: string[] } = {};
   for (const cmd of img.funcs) {
     cmdFormats[cmd] = formats;
   }
@@ -126,27 +153,28 @@ wss.on("connection", (ws, request) => {
   ]);
   ws.send(init);
 
-  ws.on("error", (err) => {
+  ws.addEventListener("error", (err) => {
     error(err);
   });
 
-  ws.on("message", (msg) => {
+  ws.addEventListener("message", ({ data: msg }) => {
+    if (!(msg instanceof Buffer)) return;
     const opcode = msg.readUint8(0);
-    const tag = msg.slice(1, 3);
+    const tag = msg.subarray(1, 3);
     const req = msg.toString().slice(3);
     if (opcode === Tqueue) {
       const id = msg.readBigInt64LE(3);
-      const obj = msg.slice(11);
-      const job = { msg: obj, num: jobAmount, verifyEvent: new EventEmitter() };
+      const obj = msg.subarray(11).toString();
+      const job = { msg: JSON.parse(obj), num: jobAmount, verifyEvent: new EventEmitter<VerifyEvents>() };
       jobs.set(id, job);
 
       const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
       ws.send(newBuffer);
 
-      log(`Got WS request for job ${job.msg} with id ${id}`, job.num);
+      log(`Got WS request for job ${obj} with id ${id}`, job.num);
       acceptJob(id, ws);
     } else if (opcode === Tcancel) {
-      jobs.delete(req);
+      jobs.delete(BigInt(req));
       const cancelResponse = Buffer.concat([Buffer.from([Rcancel]), tag]);
       ws.send(cancelResponse);
     } else if (opcode === Twait) {
@@ -172,7 +200,7 @@ wss.on("connection", (ws, request) => {
     }
   });
 
-  ws.on("close", () => {
+  ws.addEventListener("close", () => {
     logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has disconnected`);
   });
 });
@@ -192,20 +220,25 @@ httpServer.on("request", async (req, res) => {
     res.statusCode = 401;
     return res.end("401 Unauthorized");
   }
+  if (!req.url) {
+    res.statusCode = 400;
+    return res.end("400 Bad Request");
+  }
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   if (reqUrl.pathname === "/image" && req.method === "GET") {
-    if (!reqUrl.searchParams.has("id")) {
+    const param = reqUrl.searchParams.get("id");
+    if (!param) {
       res.statusCode = 400;
       return res.end("400 Bad Request");
     }
-    const id = BigInt(reqUrl.searchParams.get("id"));
+    const id = BigInt(param);
     if (!jobs.has(id)) {
-      res.statusCode = 410;
-      return res.end("410 Gone");
+      res.statusCode = 404;
+      return res.end("404 Not Found");
     }
     log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     const ext = jobs.get(id).ext;
-    let contentType;
+    let contentType: string | undefined;
     switch (ext) {
       case "gif":
         contentType = "image/gif";
@@ -225,24 +258,25 @@ httpServer.on("request", async (req, res) => {
         break;
     }
     if (contentType) res.setHeader("Content-Type", contentType);
-    else res.setHeader("Content-Type", ext);
+    else res.setHeader("Content-Type", ext ?? "application/octet-stream");
     const data = jobs.get(id).data;
     jobs.delete(id);
-    return res.end(data, (err) => {
-      if (err) error(err);
-    });
+    return res.end(data);
   }
   if (reqUrl.pathname === "/count" && req.method === "GET") {
     log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    return res.end(jobAmount.toString(), (err) => {
-      if (err) error(err);
-    });
+    return res.end(jobAmount.toString());
   }
   res.statusCode = 404;
   return res.end("404 Not Found");
 });
 
 httpServer.on("upgrade", (req, sock, head) => {
+  if (!req.url) {
+    sock.write("HTTP/1.1 400 Bad Request\r\n\r\n");
+    sock.destroy();
+    return;
+  }
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
 
   if (PASS && req.headers.authentication !== PASS) {
@@ -261,7 +295,7 @@ httpServer.on("upgrade", (req, sock, head) => {
 });
 
 httpServer.on("error", (e) => {
-  error("An HTTP error occurred: ", e);
+  error("An HTTP error occurred: " + e);
 });
 const port = process.env.PORT && process.env.PORT !== "" ? Number.parseInt(process.env.PORT) : 3762;
 httpServer.listen(port, () => {
@@ -314,28 +348,24 @@ process.on("SIGINT", () => {
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
-/**
- * @param {{ buffer: Buffer; fileExtension: string; }} data
- * @param {{ id: string; msg: object; num: number; }} job
- * @param {{ token: string; ephemeral: boolean; spoiler: boolean; cmd: string; }} object
- * @param {import("ws").WebSocket} ws
- * @param {(value: void | PromiseLike<void>) => void} resolve
- */
-function finishJob(data, job, object, ws, resolve) {
+function finishJob(data: { buffer: Buffer; fileExtension: string }, job: MiniJob, object: ImageParams, ws: WebSocket, resolve: (value: void | PromiseLike<void>) => void) {
   log(`Sending result of job ${job.id}`, job.num);
   const jobObject = jobs.get(job.id);
   jobObject.data = data.buffer;
   jobObject.ext = data.fileExtension;
-  let verifyPromise;
+  let verifyPromise: Promise<Buffer>;
   if (!jobObject.tag) {
     verifyPromise = waitForVerify(jobObject.verifyEvent);
   } else {
     verifyPromise = Promise.resolve(jobObject.tag);
   }
-  let tag;
+  let tag: Buffer;
   verifyPromise
     .then((t) => {
       tag = t;
+      if (!jobObject.ext || !jobObject.data) {
+        throw Error("Job result not found despite finish signal");
+      }
       jobs.set(job.id, jobObject);
       if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
         return discord.rest.interactions
@@ -365,17 +395,14 @@ function finishJob(data, job, object, ws, resolve) {
 
 /**
  * Run an image job.
- * @param {{ id: string; msg: object; num: number; }} job
- * @param {import("ws").WebSocket} ws
- * @returns {Promise<void>}
  */
-const runJob = (job, ws) => {
+function runJob(job: MiniJob, ws: WebSocket): Promise<void> {
   return new Promise((resolve, reject) => {
     log(`Job ${job.id} starting...`, job.num);
 
-    const object = JSON.parse(job.msg);
+    const object = job.msg;
     // If the image has a path, it must also have a type
-    if (object.path && !object.input.type) {
+    if (object.path && !object.input?.type) {
       reject(new TypeError("Unknown image type"));
     }
 
