@@ -168,24 +168,24 @@ async function getIdeal(object) {
  */
 export async function runImageJob(params) {
   if (process.env.API_TYPE === "ws") {
-      const currentServer = await getIdeal(params);
-      if (!currentServer) return {
+    const currentServer = await getIdeal(params);
+    if (!currentServer) return {
+      buffer: Buffer.alloc(0),
+      type: "nocmd"
+    };
+    try {
+      await currentServer.queue(BigInt(params.id), params);
+      const result = await currentServer.wait(BigInt(params.id));
+      if (result) return {
         buffer: Buffer.alloc(0),
-        type: "nocmd"
+        type: "sent"
       };
-      try {
-        await currentServer.queue(BigInt(params.id), params);
-        const result = await currentServer.wait(BigInt(params.id));
-        if (result) return {
-          buffer: Buffer.alloc(0),
-          type: "sent"
-        };
-        const output = await currentServer.getOutput(params.id);
-        return output;
-      } catch (e) {
+      const output = await currentServer.getOutput(params.id);
+      return output;
+    } catch (e) {
       if (e !== "Request ended prematurely due to a closed connection") {
-          if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
-          throw e;
+        if (e === "No available servers") throw "Request ended prematurely due to a closed connection";
+        throw e;
       }
     }
     return {
