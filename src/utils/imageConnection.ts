@@ -1,5 +1,5 @@
 import { setTimeout } from "node:timers/promises";
-import WebSocket from "ws";
+import WebSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.js";
 
 const Rerror = 0x01;
@@ -62,12 +62,13 @@ class ImageConnection {
       httpproto = "http";
     }
     this.httpurl = `${httpproto}://${this.host}`;
-    this.conn.on("message", (msg: Buffer) => this.onMessage(msg));
-    this.conn.once("error", (err) => this.onError(err));
-    this.conn.once("close", () => this.onClose());
+    this.conn.addEventListener("message", (msg) => this.onMessage(msg.data));
+    this.conn.addEventListener("error", (err) => this.onError(err), { once: true });
+    this.conn.addEventListener("close", () => this.onClose(), { once: true });
   }
 
-  async onMessage(msg: Buffer) {
+  async onMessage(msg: Data) {
+    if (!(msg instanceof Buffer)) return;
     const op = msg.readUint8(0);
     logger.debug(`Received message from image server ${this.host} with opcode ${op}`);
     if (op === Rinit) {
@@ -98,8 +99,8 @@ class ImageConnection {
     }
   }
 
-  onError(e: Error) {
-    logger.error(e.toString());
+  onError(e: Error | ErrorEvent) {
+    logger.error(e);
   }
 
   async onClose() {
@@ -117,9 +118,9 @@ class ImageConnection {
           Authentication: this.auth,
         },
       });
-      this.conn.on("message", (msg: Buffer) => this.onMessage(msg));
-      this.conn.once("error", (err) => this.onError(err));
-      this.conn.once("close", () => this.onClose());
+      this.conn.addEventListener("message", (msg) => this.onMessage(msg.data));
+      this.conn.addEventListener("error", (err) => this.onError(err), { once: true });
+      this.conn.addEventListener("close", () => this.onClose(), { once: true });
     }
     this.reconnect = false;
     this.disconnected = false;
