@@ -262,7 +262,7 @@ if (process.env.PM2_USAGE) {
                   shards: client.shards.map((v) => {
                     return {
                       id: v.id,
-                      procId: Number.parseInt(process.env.pm_id as string) - 1,
+                      procId: Number.parseInt(process.env.pm_id as string),
                       latency: v.latency,
                       status: v.status,
                     };

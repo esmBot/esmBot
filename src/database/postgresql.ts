@@ -59,11 +59,6 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   async setup() {
     const existingCommands = (await this.sql<{ command: string }[]>`SELECT command FROM counts`).map((x) => x.command);
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
-    for (const command of existingCommands) {
-      if (!commandNames.includes(command)) {
-        await this.sql`DELETE FROM counts WHERE command = ${command}`;
-      }
-    }
     for (const command of commandNames) {
       if (!existingCommands.includes(command)) {
         await this.sql`INSERT INTO counts ${this.sql({ command, count: 0 }, "command", "count")}`;
@@ -197,7 +192,8 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async getCounts() {
     const counts = await this.sql<Count[]>`SELECT * FROM counts`;
-    const countMap = new Map(counts.map((val) => [val.command, val.count]));
+    const commandNames = [...commands.keys(), ...messageCommands.keys()];
+    const countMap = new Map(counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]));
     return countMap;
   }
 

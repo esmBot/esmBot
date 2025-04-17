@@ -87,11 +87,6 @@ export default class SQLitePlugin implements DatabasePlugin {
       (x) => x.command,
     );
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
-    for (const command of existingCommands) {
-      if (!commandNames.includes(command)) {
-        this.connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
-      }
-    }
     for (const command of commandNames) {
       if (!existingCommands.includes(command)) {
         this.connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
@@ -156,7 +151,8 @@ export default class SQLitePlugin implements DatabasePlugin {
 
   async getCounts() {
     const counts = this.connection.prepare("SELECT * FROM counts").all() as Count[];
-    const countMap = new Map(counts.map((val) => [val.command, val.count]));
+    const commandNames = [...commands.keys(), ...messageCommands.keys()];
+    const countMap = new Map(counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]));
     return countMap;
   }
 

@@ -288,17 +288,17 @@ async function getGatewayData() {
   }
   const shardArrays = calcShards(shardArray, procAmount);
 
-  let i = 0;
+  let i = 1;
 
   if (runningProc.length < procAmount && runningProc.length !== 0) {
-    i = runningProc.length;
+    i = runningProc.length + 1;
     logger.log(
       "main",
-      `Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes with offset ${i}...`,
+      `Some processes already running, attempting to start ${shardArrays.length - runningProc.length} missing processes starting from ${i}...`,
     );
   }
 
-  for (i; i < shardArrays.length; i++) {
+  for (i; i <= shardArrays.length; i++) {
     await awaitStart(i, shardArrays);
   }
 
