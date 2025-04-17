@@ -2,14 +2,12 @@
   "commands": {
     "descriptions": {
       "8ball": "Asks the magic 8-ball a question",
-      "ancient": "Gets a random ancient meme",
       "bird": "Gets a random bird picture",
       "cat": "Gets a random cat picture",
       "dice": "Rolls the dice",
       "dog": "Gets a random dog picture",
       "homebrew": "Creates a Homebrew Channel edit",
       "sonic": "Creates a Sonic speech bubble image",
-      "wikihow": "Gets a random WikiHow image",
       "avatar": "Gets a user's avatar",
       "banner": "Gets a user's banner",
       "base64": "Encodes/decodes a Base64 string",
@@ -447,14 +445,12 @@
     },
     "names": {
       "8ball": "8ball",
-      "ancient": "ancient",
       "bird": "bird",
       "cat": "cat",
       "dice": "dice",
       "dog": "dog",
       "homebrew": "homebrew",
       "sonic": "sonic",
-      "wikihow": "wikihow",
       "avatar": "avatar",
       "banner": "banner",
       "base64": "base64",
@@ -658,9 +654,6 @@
         "sourcesNo": "My sources say no",
         "withoutDoubt": "Without a doubt",
         "yes": "Yes"
-      },
-      "ancient": {
-        "error": "I couldn't get a meme in time. Maybe try again?"
       },
       "avatar": {
         "invalidMention": "That's not a valid mention!"
@@ -898,9 +891,6 @@
         "notHost": "Only the current voice session host can pause/resume the music!",
         "paused": "The player has been paused.",
         "resumed": "The player has been resumed."
-      },
-      "wikihow": {
-        "error": "I couldn't get a WikiHow image in time. Maybe try again?"
       },
       "youtube": {
         "noInput": "You need to provide something to search for!",
