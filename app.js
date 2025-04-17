@@ -249,7 +249,7 @@ if (process.env.PM2_USAGE) {
                 guilds: client.guilds.size,
                 shards: client.shards.map((v) => {
                   if (!process.env.pm_id) return;
-                  return { id: v.id, procId: Number.parseInt(process.env.pm_id) - 1, latency: v.latency, status: v.status };
+                  return { id: v.id, procId: Number.parseInt(process.env.pm_id), latency: v.latency, status: v.status };
                 })
               },
               topic: true
