@@ -7,10 +7,8 @@
             "avatar": "Récupère l'avatar d'un utilisateur",
             "base64": "Encode/Décode un texte en Base64",
             "count": "Combien de fois chaque commande a été utilisée",
-            "ancient": "Meme \"ancient\" aléatoire",
             "bird": "Image d'oiseau aléatoire",
             "cat": "Image de chat aléatoire",
-            "wikihow": "Image aléatoire de WikiHow",
             "donate": "Découvrez comment vous pouvez soutenir le développement d'esmBot",
             "emote": "Récupère l'image d'un émoji",
             "exec": "Execute une commande shell",
@@ -440,7 +438,6 @@
             }
         },
         "names": {
-            "ancient": "ancient",
             "bird": "oiseau",
             "cat": "chat",
             "dice": "dé",
@@ -535,7 +532,6 @@
             "toggle": "activer",
             "volume": "volume",
             "tags": "tags",
-            "wikihow": "wikihow",
             "broadcast": "diffuser",
             "restart": "redémarrer",
             "crop": "rogner",
@@ -670,12 +666,6 @@
             },
             "music": {
                 "invalid": "Ce n’est pas une commande pour la musique valide !"
-            },
-            "wikihow": {
-                "error": "Je n'ai pas pu obtenir une image WikiHow à temps. Peut-être que tu devrais réessayer ?"
-            },
-            "ancient": {
-                "error": "Je n'ai pas pu obtenir de meme à temps. Peut-être que tu devrais réessayer ?"
             },
             "cat": {
                 "error": "Je n'ai pas pu obtenir une photo du chat à temps. Peut-être que tu devrais réessayer ?"

@@ -31,9 +31,7 @@
             "memecenter": "Adaugă filigranul MemeCenter la o imagine",
             "shutterstock": "Adaugă filigranul Shutterstock la o imagine",
             "8ball": "Pune o întrebare mingii magice 8-ball",
-            "ancient": "Obține o imagine aleatorie a unui meme antic",
             "homebrew": "Creează o editare Homebrew Channel",
-            "wikihow": "Obține o imagine aleatorie WikiHow",
             "sonic": "Creează o imagine cu o bulă de dialog Sonic",
             "info": "Obține niște informații și atribuții despre mine",
             "imagereload": "Încearcă reconectarea la toate serverele disponibile de procesare a imaginilor",
@@ -328,12 +326,6 @@
             "base64": {
                 "noCmd": "Trebuie să precizezi dacă vrei să codezi sau să decodezi textul!"
             },
-            "ancient": {
-                "error": "Nu am putut obține un meme la timp. Poate mai încearcă o dată?"
-            },
-            "wikihow": {
-                "error": "Nu am putut obține o imagine WikiHow la timp. Poate mai încearcă o dată?"
-            },
             "music": {
                 "invalid": "Comanda muzicală nu este una validă!"
             },
@@ -511,13 +503,11 @@
         },
         "names": {
             "8ball": "8ball",
-            "ancient": "antic",
             "bird": "pasăre",
             "dice": "zar",
             "dog": "câine",
             "homebrew": "homebrew",
             "sonic": "sonic",
-            "wikihow": "wikihow",
             "avatar": "avatar",
             "banner": "fundal",
             "base64": "base64",

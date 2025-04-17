@@ -1,13 +1,11 @@
 {
     "commands": {
         "descriptions": {
-            "ancient": "Gibt einen random uralten meme",
             "bird": "Gibt ein random Bild eines Vogels",
             "cat": "Gibt ein random Katzenbild",
             "dice": "Rollt den Würfel",
             "homebrew": "Erzeugt ein Homebrew Channel edit",
             "sonic": "Erzeugt ein Sonic Sprechblase bild",
-            "wikihow": "Gibt ein random WikiHow bild",
             "avatar": "Gibt den Avatar eines Users",
             "banner": "Gibt den Banner eines Users",
             "broadcast": "Schickt eine nachricht bis the befehl nochmal ausgeführt wird oder der bot neugestartet wird",

@@ -2,14 +2,12 @@
     "commands": {
         "descriptions": {
             "8ball": "Mengajukan pertanyaan kepada bola ajaib 8",
-            "ancient": "Mendapatkan meme kuno secara acak",
             "bird": "Mendapatkan gambar burung secara acak",
             "cat": "Mendapatkan gambar kucing secara acak",
             "dice": "Melempar dadu",
             "dog": "Mendapatkan gambar anjing secara acak",
             "homebrew": "Membuat suntingan Saluran Homebrew",
             "sonic": "Membuat gambar gelembung ucapan Sonic",
-            "wikihow": "Mendapatkan gambar WikiHow secara acak",
             "avatar": "Mendapatkan avatar pengguna",
             "banner": "Mendapatkan spanduk pengguna",
             "base64": "Mengkodekan/mendekodekan string Base64",

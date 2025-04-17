@@ -2,14 +2,12 @@
     "commands": {
         "descriptions": {
             "8ball": "Kysyy taianomaiselta 8-pallolta kysymyksen",
-            "ancient": "Löytää satunnaisen muinaisen meemin",
             "bird": "Löytää satunnaisen kuvan linnusta",
             "cat": "Löytää satunnaisen kuvan kissasta",
             "dice": "Heittää noppaa",
             "dog": "Löytää satunnaisen kuvan koirasta",
             "homebrew": "Tekee Homebrew Channel editin",
             "sonic": "Tekee Sonic puhekupla kuvan",
-            "wikihow": "Löytää satunnaisen WikiHow kuvan",
             "avatar": "Löytää käyttäjän avatarin",
             "banner": "Löytää käyttäjän bannerin",
             "base64": "Tekee/purkaa Base64 merkkijonon",

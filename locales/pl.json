@@ -2,12 +2,10 @@
     "commands": {
         "descriptions": {
             "8ball": "Zadaj ósemce pytanie",
-            "ancient": "Podaje losowe starożytne imię",
             "bird": "Podaje losowe zdjęcie ptaka",
             "cat": "Podaje losowe zdjęcie kota",
             "dice": "Rzuca kością",
-            "dog": "Podaje losowe zdjęcie psa",
-            "wikihow": "Podaje losowy obraz z WikiHow"
+            "dog": "Podaje losowe zdjęcie psa"
         }
     }
 }
