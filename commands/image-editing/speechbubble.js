@@ -11,9 +11,9 @@ class SpeechBubbleCommand extends ImageCommand {
       gravity: bottom ? 8 : 2,
       resize: true,
       yscale: parsedScale != null && !Number.isNaN(parsedScale) ? parsedScale : 0.2,
-      alpha: alpha,
-      flipX: this.getOptionBoolean("flip"),
-      flipY: bottom,
+      alpha: !!alpha,
+      flipX: !!this.getOptionBoolean("flip"),
+      flipY: !!bottom,
     };
   }
 

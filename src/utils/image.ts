@@ -5,6 +5,7 @@ import { fileTypeFromBuffer } from "file-type";
 import ipaddr from "ipaddr.js";
 import ImageConnection from "./imageConnection.js";
 import logger from "./logger.js";
+import { random } from "./misc.js";
 import type { ImageParams, ImageTypeData } from "./types.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
@@ -137,16 +138,6 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-function chooseServer(ideal: ({ addr: string; load: number } | null)[]) {
-  if (ideal.length === 0) throw "No available servers";
-  const sorted = ideal
-    .filter((v) => !!v)
-    .sort((a, b) => {
-      return a.load - b.load;
-    });
-  return sorted[0];
-}
-
 async function getIdeal(object: ImageParams): Promise<ImageConnection | undefined> {
   const idealServers = [];
   for (const [address, connection] of connections) {
@@ -158,16 +149,10 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
       continue;
     }
     if (object.input?.type && !connection.formats[object.cmd]?.includes(object.input.type)) continue;
-    const load = await connection.getCount();
-    if (load == null) continue;
-    idealServers.push({
-      addr: address,
-      load: load,
-    });
+    idealServers.push(connection);
   }
-  const server = chooseServer(idealServers);
-  if (!server) return;
-  return connections.get(server.addr);
+  if (idealServers.length === 0) throw "No available servers";
+  return random(idealServers.filter((v) => !!v));
 }
 
 export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string }> {
