@@ -66,7 +66,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
         Arguments[property] = num.FloatValue();
       }
     } else {
-      callback.Call({Napi::Error::New(env, "Unimplemented value type passed to image native.").Value()});
+      callback.Call({Napi::Error::New(env, "Type of property \"" + property + "\" is unknown").Value()});
       return Napi::BigInt::New(env, (int64_t)0);
       // Arguments[property] = val;
     }
