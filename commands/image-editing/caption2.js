@@ -8,7 +8,7 @@ class CaptionTwoCommand extends ImageCommand {
     const font = this.getOptionString("font");
     return {
       caption: newArgs?.trim() ? this.clean(newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
-      top: this.getOptionBoolean("top"),
+      top: !!this.getOptionBoolean("top"),
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica"
     };
   }
