@@ -194,7 +194,7 @@ export default async (client, message) => {
         await client.rest.channels.createMessage(message.channelID, Object.assign({
           content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
-            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
+            contents: Buffer.from(clean(err)),
             name: "error.txt"
           }]
         }, reference));

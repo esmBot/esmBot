@@ -111,7 +111,7 @@ export default async (client, interaction) => {
         await interaction.createFollowup({
           content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
           files: [{
-            contents: Buffer.from(`Message: ${clean(err)}\n\nStack Trace: ${clean(err.stack)}`),
+            contents: Buffer.from(clean(err)),
             name: "error.txt"
           }]
         });
