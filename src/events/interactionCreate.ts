@@ -62,7 +62,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
       });
     } else if (typeof result === "object") {
       if (commandClass instanceof ImageCommand && result.files) {
-        const fileSize = 10485760;
+        const fileSize = interaction.attachmentSizeLimit;
         const file = result.files[0];
         if (file.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
