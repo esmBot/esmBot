@@ -880,9 +880,6 @@
             "music": {
                 "invalid": "Quello non è un comando musica valido!"
             },
-            "nowplaying": {
-                "notPlaying": "Non sto riproducendo niente!"
-            },
             "restart": {
                 "owner": "Solo il proprietario del bot può riavviarmi!",
                 "restarting": "esmBot si sta riavviando."
