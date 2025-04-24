@@ -161,7 +161,9 @@ class Command {
 
   getOptionBoolean(key: string): boolean | undefined {
     if (this.type === "classic") {
-      return !!this.options?.[key];
+      const option = this.options?.[key];
+      if (option) return !!option;
+      else return;
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getBoolean(key);
