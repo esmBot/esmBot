@@ -1,5 +1,13 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { type Client, CommandInteraction, type File, type InteractionContent, type Message } from "oceanic.js";
+import {
+  type Client,
+  CommandInteraction,
+  ComponentTypes,
+  type File,
+  type InteractionContent,
+  type Message,
+  MessageFlags,
+} from "oceanic.js";
 import { getString } from "./i18n.js";
 import logger from "./logger.js";
 
@@ -22,34 +30,26 @@ export async function upload(
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
-  let payload: InteractionContent;
-  if (result.name.startsWith("SPOILER_")) {
-    payload = {
-      content: `${getString("image.tempSite", { locale: context instanceof CommandInteraction ? context.locale : undefined })}\n|| ${imageURL} ||`,
-      flags: result.flags ?? (success ? 0 : 64),
-    };
-  } else {
-    payload = {
-      embeds: [
-        {
-          color: 0xff0000,
-          title: getString("image.tempImageSent", {
-            locale: context instanceof CommandInteraction ? context.locale : undefined,
-          }),
-          url: imageURL,
-          image: {
-            url: imageURL,
+  const payload: InteractionContent = {
+    components: [
+      {
+        type: ComponentTypes.MEDIA_GALLERY,
+        items: [
+          {
+            media: { url: imageURL },
+            spoiler: result.name.startsWith("SPOILER_"),
           },
-          footer: {
-            text: getString("image.tempSite", {
-              locale: context instanceof CommandInteraction ? context.locale : undefined,
-            }),
-          },
-        },
-      ],
-      flags: result.flags ?? (success ? 0 : 64),
-    };
-  }
+        ],
+      },
+      {
+        type: ComponentTypes.TEXT_DISPLAY,
+        content: `-# ${getString("image.tempSite", {
+          locale: context instanceof CommandInteraction ? context.locale : undefined,
+        })}`,
+      },
+    ],
+    flags: (result.flags ?? (success ? 0 : 64)) | MessageFlags.IS_COMPONENTS_V2,
+  };
   if (context instanceof CommandInteraction) {
     await context.createFollowup(payload);
   } else {
