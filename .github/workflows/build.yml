@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
       - name: Build
-        run: pnpm install --frozen-lockfile --no-optional && pnpm run build
+        run: pnpm install --frozen-lockfile && pnpm run build
 
   darwin:
     runs-on: macos-latest
@@ -46,4 +46,4 @@ jobs:
       - name: Install dependencies
         run: brew install imagemagick vips
       - name: Build
-        run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF
+        run: pnpm install --frozen-lockfile && pnpm run build --CDWITH_ZXING=OFF
