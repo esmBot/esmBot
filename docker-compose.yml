@@ -1,9 +1,6 @@
-version: '3.0'
-
 services:
   bot:
-    build:
-      context: .
+    build: .
     image: esmbot
     restart: unless-stopped
     volumes:
