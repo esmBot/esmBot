@@ -58,9 +58,9 @@ RUN git clone https://github.com/ImageMagick/ImageMagick.git ~/ImageMagick \
 RUN cp -a /built/* /usr
 
 FROM native-build-${MAGICK} AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-optional --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Detect ImageMagick usage and adjust build accordingly
-RUN if [[ "$MAGICK" -eq "1" ]] ; then pnpm run build ; else pnpm run build:no-magick ; fi
+RUN if [[ "$MAGICK" -eq "1" ]] ; then pnpm run build --CDWITH_BACKWARD=OFF ; else pnpm run build:no-magick --CDWITH_BACKWARD=OFF ; fi
 
 FROM native-build-${MAGICK} AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-optional --frozen-lockfile
@@ -70,9 +70,11 @@ COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build/Release /app/build/Release
 COPY --from=build /built /usr
 RUN rm .env
+RUN rm -rf config src natives
 
+RUN mkdir /app/config && chmod 777 /app/config
 RUN mkdir /app/help && chmod 777 /app/help
 RUN mkdir /app/temp && chmod 777 /app/temp
 RUN mkdir /app/logs && chmod 777 /app/logs
 
-ENTRYPOINT ["node", "app.js"]
+ENTRYPOINT ["node", "dist/app.js"]
