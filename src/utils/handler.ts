@@ -167,7 +167,7 @@ export function update() {
       (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
         name,
         nameLocalizations: getAllLocalizations(`commands.names.${name}`),
-        type: cmdInfo.type,
+        type: cmdInfo.type.valueOf(),
         description: cmdInfo.description,
         descriptionLocalizations: getAllLocalizations(`commands.descriptions.${name}`),
         options: cmdInfo.flags,
