@@ -193,7 +193,9 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   async getCounts() {
     const counts = await this.sql<Count[]>`SELECT * FROM counts`;
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
-    const countMap = new Map(counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]));
+    const countMap = new Map(
+      counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]),
+    );
     return countMap;
   }
 

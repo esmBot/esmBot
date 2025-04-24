@@ -1,16 +1,16 @@
 site_name: esmBot
 docs_dir: docs/
-repo_name: 'esmBot/esmBot'
-repo_url: 'https://github.com/esmBot/esmBot'
+repo_name: "esmBot/esmBot"
+repo_url: "https://github.com/esmBot/esmBot"
 copyright: Copyright &copy; 2018 - 2025 <a href="https://essem.space">Essem</a>
 nav:
-    - Home: index.md
-    - setup.md
-    - config.md
-    - custom-commands.md
-    - bun.md
-    - containers.md
-    - postgresql.md
+  - Home: index.md
+  - setup.md
+  - config.md
+  - custom-commands.md
+  - bun.md
+  - containers.md
+  - postgresql.md
 markdown_extensions:
   - def_list
   - attr_list
@@ -20,9 +20,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
 theme:
-  name: 'material'
+  name: "material"
   features:
     - toc.integrate
     - content.tabs.link

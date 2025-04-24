@@ -1,4 +1,4 @@
-version: '3.0'
+version: "3.0"
 
 services:
   bot:
@@ -36,11 +36,11 @@ services:
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
     healthcheck:
-        test: "curl -H \"Authorization: $$(cat /opt/Lavalink/application.yml | grep password: | sed 's/^ *password: //g' | tr -d '\"')\" -f http://localhost:2333/version"
-        interval: 10s
-        timeout: 10s
-        retries: 5
-        start_period: 10s
+      test: 'curl -H "Authorization: $$(cat /opt/Lavalink/application.yml | grep password: | sed ''s/^ *password: //g'' | tr -d ''"'')" -f http://localhost:2333/version'
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     networks:
       esmbot:
         ipv4_address: 172.20.0.3

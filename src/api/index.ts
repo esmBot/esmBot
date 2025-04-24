@@ -125,14 +125,14 @@ async function acceptJob(id: BigInt, sock: WebSocket): Promise<void> {
     sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
   }
   jobAmount--;
-};
+}
 
 function waitForVerify(event: EventEmitter<VerifyEvents>): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     event.once("end", (r) => resolve(r));
     event.once("error", (e) => reject(e));
   });
-};
+}
 
 const wss = new WebSocketServer({ clientTracking: true, noServer: true });
 
@@ -348,7 +348,13 @@ process.on("SIGINT", () => {
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
-function finishJob(data: { buffer: Buffer; fileExtension: string }, job: MiniJob, object: ImageParams, ws: WebSocket, resolve: (value: void | PromiseLike<void>) => void) {
+function finishJob(
+  data: { buffer: Buffer; fileExtension: string },
+  job: MiniJob,
+  object: ImageParams,
+  ws: WebSocket,
+  resolve: (value: void | PromiseLike<void>) => void,
+) {
   log(`Sending result of job ${job.id}`, job.num);
   const jobObject = jobs.get(job.id);
   jobObject.data = data.buffer;
@@ -412,4 +418,4 @@ function runJob(job: MiniJob, ws: WebSocket): Promise<void> {
     );
     log(`Job ${job.id} started`, job.num);
   });
-};
+}

@@ -1,17 +1,23 @@
 # esmBot Image API
+
 The esmBot image API is a combined HTTP and WebSocket API. The default port to access the API is 3762. The API supports very basic authentication, which is defined on the server via the `PASS` environment variable and is sent from the client via the Authentication header in both HTTP and WS requests.
 
 ## HTTP
 
 ### GET `/image/?id=<job id>`
+
 Get image data after job is finished running. The Content-Type header is properly set.
 
 ### GET `/count`
+
 Get the current amount of running jobs. Response is a plaintext number value.
 
 ## WebSockets
-A client sends *requests* (T-messages) to a server, which subsequently *replies* (R-messages) to the client.
+
+A client sends _requests_ (T-messages) to a server, which subsequently _replies_ (R-messages) to the client.
+
 ### Message IDs
+
 - Rerror 0x01
 - Tqueue 0x02
 - Rqueue 0x03
@@ -24,10 +30,12 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 - Rclose 0xFF
 
 ### Messages
+
 [n] means n bytes.
 [s] means a string that goes until the end of the message.
 [j] means JSON data that goes until the end of the message.
 `tag` is used to identify a request/response pair. `jid` is used to identify a job. `job` is a job object.
+
 - Rerror tag[2] error[s]
 - Tqueue tag[2] jid[8] job[j]
 - Rqueue tag[2]
@@ -40,7 +48,9 @@ A client sends *requests* (T-messages) to a server, which subsequently *replies*
 - Rclose
 
 ### Job Object
+
 The job object is formatted like this:
+
 ```js
 {
   "cmd": string,       // name of internal image command, e.g. caption
@@ -60,7 +70,9 @@ The job object is formatted like this:
 ```
 
 ### Direct Posting
+
 The image API will attempt to respond to a command by itself if all of the following criteria is met:
+
 - The original request was done through an interaction/slash command
 - The bot's application/user ID is specified on the API server through the `CLIENT_ID` environment variable
 - The incoming job object has an interaction token set in the job object with the key `token`

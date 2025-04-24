@@ -152,7 +152,9 @@ export default class SQLitePlugin implements DatabasePlugin {
   async getCounts() {
     const counts = this.connection.prepare("SELECT * FROM counts").all() as Count[];
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
-    const countMap = new Map(counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]));
+    const countMap = new Map(
+      counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]),
+    );
     return countMap;
   }
 
