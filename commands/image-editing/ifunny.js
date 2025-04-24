@@ -5,7 +5,7 @@ class iFunnyCommand extends ImageCommand {
     water: "assets/images/ifunny.png",
     gravity: 8,
     resize: true,
-    append: true
+    append: true,
   };
 
   static description = "Adds the iFunny watermark to an image";

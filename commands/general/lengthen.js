@@ -35,13 +35,15 @@ class LengthenCommand extends Command {
     return false;
   }
 
-  static flags = [{
-    name: "url",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The URL you want to lengthen",
-    classic: true,
-    required: true
-  }];
+  static flags = [
+    {
+      name: "url",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The URL you want to lengthen",
+      classic: true,
+      required: true,
+    },
+  ];
 
   static description = "Lengthens a short URL";
   static aliases = ["longurl", "lengthenurl", "longuri", "lengthenuri", "unshorten"];

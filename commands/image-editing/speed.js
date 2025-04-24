@@ -2,10 +2,10 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const speed = this.getOptionInteger("multiplier") ?? Number.parseInt(this.args[0]);
     return {
-      speed: Number.isNaN(speed) || speed < 1 ? 2 : speed
+      speed: Number.isNaN(speed) || speed < 1 ? 2 : speed,
     };
   }
 
@@ -17,7 +17,7 @@ class SpeedCommand extends ImageCommand {
       description: "Set the speed multiplier (default: 2)",
       minValue: 1,
       maxValue: 1000,
-      classic: true
+      classic: true,
     });
     return this;
   }

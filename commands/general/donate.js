@@ -10,7 +10,9 @@ class DonateCommand extends Command {
       controller.abort();
     }, 5000);
     try {
-      const patrons = await fetch("https://projectlounge.pw/patrons", { signal: controller.signal }).then(data => data.json());
+      const patrons = await fetch("https://projectlounge.pw/patrons", { signal: controller.signal }).then((data) =>
+        data.json(),
+      );
       clearTimeout(timeout);
       prefix = this.getString("commands.responses.donate.thanks");
       for (const patron of patrons) {

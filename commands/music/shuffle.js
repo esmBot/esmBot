@@ -1,5 +1,5 @@
-import { players } from "#utils/soundplayer.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { players } from "#utils/soundplayer.js";
 
 class ShuffleCommand extends MusicCommand {
   async run() {

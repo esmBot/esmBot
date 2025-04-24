@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 class NineGagCommand extends ImageCommand {
   params = {
     water: "assets/images/9gag.png",
-    gravity: 6
+    gravity: 6,
   };
 
   static description = "Adds the 9GAG watermark to an image";

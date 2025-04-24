@@ -5,9 +5,9 @@ import imageDetect from "#utils/imagedetect.js";
 class RawCommand extends Command {
   async run() {
     await this.acknowledge();
-    const image = await imageDetect(this.client, this.message, this.interaction, {
+    const image = await imageDetect(this.client, this.permissions, this.message, this.interaction, {
       image: this.getOptionString("image"),
-      link: this.getOptionString("link")
+      link: this.getOptionString("link"),
     });
     if (image === undefined) {
       this.success = false;
@@ -18,15 +18,18 @@ class RawCommand extends Command {
 
   static description = "Gets a direct image URL (useful for saving GIFs from sites like Tenor)";
   static aliases = ["giflink", "imglink", "getimg", "rawgif", "rawimg"];
-  static flags = [{
-    name: "image",
-    type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
-    description: "An image/GIF attachment"
-  }, {
-    name: "link",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "An image/GIF URL"
-  }];
+  static flags = [
+    {
+      name: "image",
+      type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
+      description: "An image/GIF attachment",
+    },
+    {
+      name: "link",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "An image/GIF URL",
+    },
+  ];
 }
 
 export default RawCommand;

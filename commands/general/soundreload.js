@@ -3,7 +3,7 @@ import { reload } from "#utils/soundplayer.js";
 
 class SoundReloadCommand extends Command {
   async run() {
-    const owners = process.env.OWNER.split(",");
+    const owners = process.env.OWNER?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.soundreload.botOwnerOnly");
@@ -14,12 +14,12 @@ class SoundReloadCommand extends Command {
       process.send?.({
         type: "process:msg",
         data: {
-          type: "soundreload"
-        }
+          type: "soundreload",
+        },
       });
     }
     if (length) {
-      return this.getString("commands.responses.soundreload.failed", { params: { length } });
+      return this.getString("commands.responses.soundreload.failed", { params: { length: length.toString() } });
     }
     return this.getString("commands.responses.soundreload.failed");
   }

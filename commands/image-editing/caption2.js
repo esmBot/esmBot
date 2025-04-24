@@ -1,36 +1,71 @@
 import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-const words = ["me irl", "dank", "follow my second account @esmBot_", "2016", "meme", "wholesome", "reddit", "instagram", "twitter", "facebook", "fortnite", "minecraft", "relatable", "gold", "funny", "template", "hilarious", "memes", "deep fried", "2020", "leafy", "pewdiepie"];
+const words = [
+  "me irl",
+  "dank",
+  "follow my second account @esmBot_",
+  "2016",
+  "meme",
+  "wholesome",
+  "reddit",
+  "instagram",
+  "twitter",
+  "facebook",
+  "fortnite",
+  "minecraft",
+  "relatable",
+  "gold",
+  "funny",
+  "template",
+  "hilarious",
+  "memes",
+  "deep fried",
+  "2020",
+  "leafy",
+  "pewdiepie",
+];
 
 class CaptionTwoCommand extends ImageCommand {
-  params(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter(item => !item.includes(url)).join(" ");
+  /**
+   * @param {string | undefined} url
+   */
+  paramsFunc(url) {
+    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
     const font = this.getOptionString("font");
     return {
-      caption: newArgs?.trim() ? this.clean(newArgs) : words.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * words.length + 1)).join(" "),
+      caption: newArgs?.trim()
+        ? this.clean(newArgs)
+        : words
+            .sort(() => 0.5 - Math.random())
+            .slice(0, Math.floor(Math.random() * words.length + 1))
+            .join(" "),
       top: !!this.getOptionBoolean("top"),
-      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica"
+      // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
+      font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "helvetica",
     };
   }
 
   static init() {
     super.init();
-    this.flags.push({
-      name: "top",
-      description: "Put the caption on the top of an image instead of the bottom",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-    }, {
-      name: "font",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
-      choices: (() => {
-        const array = [];
-        for (const font of this.allowedFonts) {
-          array.push({ name: font, value: font });
-        }
-        return array;
-      })(),
-      description: "Specify the font you want to use (default: helvetica)"
-    });
+    this.flags.push(
+      {
+        name: "top",
+        description: "Put the caption on the top of an image instead of the bottom",
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      },
+      {
+        name: "font",
+        type: Constants.ApplicationCommandOptionTypes.STRING,
+        choices: (() => {
+          const array = [];
+          for (const font of this.allowedFonts) {
+            array.push({ name: font, value: font });
+          }
+          return array;
+        })(),
+        description: "Specify the font you want to use (default: helvetica)",
+      },
+    );
     return this;
   }
 

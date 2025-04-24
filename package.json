@@ -2,25 +2,32 @@
   "name": "esmbot",
   "version": "2025.1.1",
   "description": "A Discord bot with miscellaneous features",
-  "exports": "./app.js",
-  "bin": "./app.js",
+  "exports": "./dist/app.js",
+  "bin": "./dist/app.js",
   "type": "module",
   "engines": {
     "node": ">=20.12.0"
   },
   "scripts": {
-    "build": "cmake-js compile --CDWITH_MAGICK=ON",
-    "build:debug": "cmake-js compile -BDebug --CDWITH_MAGICK=ON",
-    "build:no-magick": "cmake-js compile --CDWITH_MAGICK=OFF",
-    "build:debug-no-magick": "cmake-js compile -BDebug --CDWITH_MAGICK=OFF",
+    "build": "tsc && pnpm build:natives",
+    "build:debug": "tsc && pnpm build:natives:debug",
+    "build:natives": "cmake-js compile --CDWITH_MAGICK=ON",
+    "build:natives:debug": "cmake-js compile -BDebug --CDWITH_MAGICK=ON",
+    "build:natives:no-magick": "cmake-js compile --CDWITH_MAGICK=OFF",
+    "build:natives:debug-no-magick": "cmake-js compile -BDebug --CDWITH_MAGICK=OFF",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host --entrypoint='[\"node\", \"api/index.js\"]' esmbot",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml ghcr.io/lavalink-devs/lavalink:4",
-    "start": "node app.js",
-    "start:debug": "DEBUG=true node app.js",
-    "start-api": "node api/index.js",
-    "start-api:debug": "DEBUG=true node app.js"
+    "lint": "eslint .",
+    "start": "node dist/app.js",
+    "start:bun": "bun src/app.ts",
+    "start:debug": "DEBUG=true node dist/app.js",
+    "start:bun:debug": "DEBUG=true bun src/app.ts",
+    "start-api": "node dist/api/index.js",
+    "start-api:bun": "bun src/api/index.js",
+    "start-api:debug": "DEBUG=true node dist/api/index.js",
+    "start-api:bun:debug": "DEBUG=true bun src/api/index.js"
   },
   "author": "Essem <essem@essem.space>",
   "license": "MIT",
@@ -45,10 +52,20 @@
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@eslint/compat": "^1.2.8",
+    "@eslint/js": "^9.25.1",
+    "@tsconfig/node20": "^20.1.5",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "^1.2.10",
+    "@types/node": "^20.17.30",
     "@types/ws": "^8.18.1",
-    "cmake-js": "^7.3.1"
+    "cmake-js": "^7.3.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0"
   },
   "optionalDependencies": {
     "@sentry/node": "^9.14.0",
@@ -60,18 +77,32 @@
     ]
   },
   "imports": {
-    "#cmd-classes/*": "./classes/*",
-    "#utils/*": "./utils/*",
-    "#database": "./utils/database.js",
-    "#pagination": "./utils/pagination/pagination.js",
+    "#cmd-classes/*": {
+      "node": "./dist/classes/*",
+      "default": "./src/classes/*"
+    },
+    "#utils/*": {
+      "node": "./dist/utils/*",
+      "default": "./src/utils/*"
+    },
+    "#pagination": {
+      "node": "./dist/pagination/pagination.js",
+      "default": "./src/pagination/pagination.js"
+    },
     "#config/*": "./config/*"
   },
   "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051",
   "pnpm": {
+    "ignoredOptionalDependencies": [
+      "@discordjs/voice"
+    ],
     "onlyBuiltDependencies": [
       "@biomejs/biome",
       "better-sqlite3",
       "bufferutil"
-    ]
+    ],
+    "patchedDependencies": {
+      "pm2": "patches/pm2.patch"
+    }
   }
 }

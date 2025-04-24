@@ -119,7 +119,9 @@ libvips/
 
 # Databases
 data/
-*sqlite*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 
 # Other lockfiles
 package-lock.json
@@ -129,5 +131,8 @@ yarn.lock
 bot-temp/
 bot-help/
 
-#Kate stuff
+# Kate stuff
 *.kate*
+
+# Typescript outputs
+dist/

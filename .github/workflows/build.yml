@@ -2,9 +2,9 @@ name: Build Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 env:
   BUILD_TYPE: Release
@@ -13,38 +13,37 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v3.0.0
-      with:
-        version: 9.4.0
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v4.0.1
-      with:
-        node-version: 20
-        cache: pnpm
-    - name: Install dependencies
-      run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
-    - name: Build
-      run: pnpm install --frozen-lockfile --no-optional && pnpm run build
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3.0.0
+        with:
+          version: 9.4.0
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
+      - name: Build
+        run: pnpm install --frozen-lockfile --no-optional && pnpm run build
 
   darwin:
     runs-on: macos-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v3.0.0
-      with:
-        version: 9.4.0
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v4.0.1
-      with:
-        node-version: 20
-        cache: pnpm
-    - name: Install dependencies
-      run: brew install imagemagick vips
-    - name: Build
-      run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF
-
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3.0.0
+        with:
+          version: 9.4.0
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install dependencies
+        run: brew install imagemagick vips
+      - name: Build
+        run: pnpm install --frozen-lockfile --no-optional && pnpm run build --CDWITH_ZXING=OFF

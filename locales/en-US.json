@@ -738,6 +738,7 @@
       },
       "host": {
         "currentHost": "The current voice channel host is **{{member}}**",
+        "currentHostId": "The current voice channel host is a user with the ID `{{id}}`.",
         "notHost": "Only the current voice session host can choose another host!",
         "notMember": "That user isn't in this server!",
         "noUser": "I can't find that user!"
@@ -783,7 +784,7 @@
         "invalid": "That isn't a valid music command!"
       },
       "nowplaying": {
-        "notPlaying": "I'm not playing anything!"
+        "noTrack": "There was an issue getting the current track."
       },
       "ping": {
         "latency": "Latency: {{latency}}ms",
@@ -982,6 +983,7 @@
     "noSong": "I couldn't find that song!",
     "notConnected": "I'm not connected to any audio servers!",
     "notInVoice": "I'm not in a voice channel!",
+    "notPlaying": "I'm not playing anything!",
     "notVoiceChannel": "The channel I was given isn't a voice channel!",
     "noVoiceState": "You need to be in a voice channel first!",
     "nowPlaying": "Now Playing",

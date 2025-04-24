@@ -10,38 +10,45 @@ class NowPlayingCommand extends MusicCommand {
     if (!this.connection) return this.getString("sound.noConnection");
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const player = this.connection.player;
-    if (!player || !player.track) return this.getString("commands.responses.nowplaying.notPlaying");
-    const track = await player.node.rest.decode(player.track);
+    if (!player || !player.track) return this.getString("sound.notPlaying");
+    const track = this.queue[0];
+    const voiceChannel =
+      this.client.getChannel(this.connection.voiceChannel) ??
+      (await this.client.rest.channels.get(this.connection.voiceChannel));
     const parts = Math.floor((player.position / track.info.length) * 10);
     this.success = true;
     return {
-      embeds: [{
-        color: 0xff0000,
-        author: {
-          name: this.getString("sound.nowPlaying"),
-          iconURL: this.client.user.avatarURL()
-        },
-        fields: [{
-          name: `ℹ️ ${this.getString("sound.title")}`,
-          value: track.info.title ?? this.getString("sound.unknown")
-        },
+      embeds: [
         {
-          name: `🎤 ${this.getString("sound.artist")}`,
-          value: track.info.author ?? this.getString("sound.unknown")
+          color: 0xff0000,
+          author: {
+            name: this.getString("sound.nowPlaying"),
+            iconURL: this.client.user.avatarURL(),
+          },
+          fields: [
+            {
+              name: `ℹ️ ${this.getString("sound.title")}`,
+              value: track.info.title ?? this.getString("sound.unknown"),
+            },
+            {
+              name: `🎤 ${this.getString("sound.artist")}`,
+              value: track.info.author ?? this.getString("sound.unknown"),
+            },
+            {
+              name: `💬 ${this.getString("sound.channel")}`,
+              value: "name" in voiceChannel && voiceChannel.name ? voiceChannel.name : this.connection.voiceChannel,
+            },
+            {
+              name: `🌐 ${this.getString("sound.node")}`,
+              value: player.node ? player.node.name : this.getString("sound.unknown"),
+            },
+            {
+              name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
+              value: `${format(player.position)}/${track.info.isStream ? "∞" : format(track.info.length)}`,
+            },
+          ],
         },
-        {
-          name: `💬 ${this.getString("sound.channel")}`,
-          value: (this.guild.channels.get(this.member.voiceState.channelID) ?? await this.client.rest.channels.get(this.member.voiceState.channelID)).name
-        },
-        {
-          name: `🌐 ${this.getString("sound.node")}`,
-          value: player.node ? player.node.name : this.getString("sound.unknown")
-        },
-        {
-          name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-          value: `${format(player.position)}/${track.info.isStream ? "∞" : format(track.info.length)}`
-        }]
-      }]
+      ],
     };
   }
 

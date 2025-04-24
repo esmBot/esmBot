@@ -1,6 +1,6 @@
-import { clean } from "#utils/misc.js";
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
+import { clean } from "#utils/misc.js";
 
 class EvalCommand extends Command {
   async run() {
@@ -20,10 +20,12 @@ class EvalCommand extends Command {
       if (sendString.length >= 2000) {
         return {
           content: this.getString("tooLarge"),
-          files: [{
-            contents: Buffer.from(cleaned),
-            name: "result.txt"
-          }]
+          files: [
+            {
+              contents: Buffer.from(cleaned),
+              name: "result.txt",
+            },
+          ],
         };
       }
       return sendString;
@@ -34,13 +36,15 @@ class EvalCommand extends Command {
     }
   }
 
-  static flags = [{
-    name: "code",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The code to execute",
-    classic: true,
-    required: true
-  }];
+  static flags = [
+    {
+      name: "code",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The code to execute",
+      classic: true,
+      required: true,
+    },
+  ];
 
   static description = "Executes JavaScript code";
   static aliases = ["run"];

@@ -2,10 +2,10 @@ import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class JPEGCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const quality = this.getOptionInteger("quality") ?? Number.parseInt(this.args[0]);
     return {
-      quality: Number.isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100))
+      quality: Number.isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100)),
     };
   }
 
@@ -17,7 +17,7 @@ class JPEGCommand extends ImageCommand {
       description: "Set the JPEG quality (default: 1)",
       minValue: 1,
       maxValue: 100,
-      classic: true
+      classic: true,
     });
     return this;
   }

@@ -5,7 +5,7 @@ class VignetteCommand extends ImageCommand {
     water: "assets/images/vignette.png",
     yscale: 1.0,
     gravity: 1,
-    resize: true
+    resize: true,
   };
 
   static description = "Adds a vignette to an image";

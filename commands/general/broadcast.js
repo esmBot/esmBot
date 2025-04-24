@@ -1,6 +1,5 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import database from "#database";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";
 
 class BroadcastCommand extends Command {
@@ -12,37 +11,39 @@ class BroadcastCommand extends Command {
     }
     const message = this.getOptionString("message") ?? this.args.join(" ");
     if (message?.trim()) {
-      await database?.setBroadcast(message);
+      await this.database?.setBroadcast(message);
       startBroadcast(this.client, message);
       if (process.env.PM2_USAGE) {
         process.send?.({
           type: "process:msg",
           data: {
             type: "broadcastStart",
-            message
-          }
+            message,
+          },
         });
       }
       return this.getString("commands.responses.broadcast.started");
     }
-    await database?.setBroadcast(null);
+    await this.database?.setBroadcast();
     endBroadcast(this.client);
     if (process.env.PM2_USAGE) {
       process.send?.({
         type: "process:msg",
         data: {
-          type: "broadcastEnd"
-        }
+          type: "broadcastEnd",
+        },
       });
     }
     return this.getString("commands.responses.broadcast.ended");
   }
 
-  static flags = [{
-    name: "message",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "The message to broadcast"
-  }];
+  static flags = [
+    {
+      name: "message",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The message to broadcast",
+    },
+  ];
 
   static description = "Broadcasts a playing message until the command is run again or the bot restarts";
   static adminOnly = true;

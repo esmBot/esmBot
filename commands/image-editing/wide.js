@@ -2,11 +2,11 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 import { Constants } from "oceanic.js";
 
 class WideCommand extends ImageCommand {
-  params() {
+  paramsFunc() {
     const amount = this.getOptionInteger("scale");
     return {
       wide: true,
-      amount: amount != null && !Number.isNaN(amount) ? amount : 19
+      amount: amount != null && !Number.isNaN(amount) ? amount : 19,
     };
   }
 
@@ -17,7 +17,7 @@ class WideCommand extends ImageCommand {
       description: "The amount to widen the image by (1 is smallest, 19 is largest, default is 19)",
       type: Constants.ApplicationCommandOptionTypes.INTEGER,
       minValue: 1,
-      maxValue: 19
+      maxValue: 19,
     });
     return this;
   }

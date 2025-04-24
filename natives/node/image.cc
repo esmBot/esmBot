@@ -37,9 +37,10 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 
   string command = info[0].As<Napi::String>().Utf8Value();
   Napi::Object obj = info[1].As<Napi::Object>();
+  Napi::Object input = info[2].As<Napi::Object>();
   string type =
-      obj.Has("type") ? obj.Get("type").As<Napi::String>().Utf8Value() : "png";
-  Napi::Function callback = info[2].As<Napi::Function>();
+      input.Has("type") ? input.Get("type").As<Napi::String>().Utf8Value() : "png";
+  Napi::Function callback = info[3].As<Napi::Function>();
 
   Napi::Array properties = obj.GetPropertyNames();
 
@@ -48,10 +49,6 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
   for (unsigned int i = 0; i < properties.Length(); i++) {
     string property =
         properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
-
-    if (property == "data") {
-      continue;
-    }
 
     auto val = obj.Get(property);
     if (val.IsBoolean()) {
@@ -74,8 +71,8 @@ Napi::Value ProcessImage(const Napi::CallbackInfo& info) {
 
   char *bufData = NULL;
   size_t bufSize = 0;
-  if (obj.Has("data")) {
-    Napi::ArrayBuffer data = obj.Get("data").As<Napi::ArrayBuffer>();
+  if (input.Has("data")) {
+    Napi::ArrayBuffer data = input.Get("data").As<Napi::ArrayBuffer>();
     bufData = (char *)data.Data();
     bufSize = data.ByteLength();
   }

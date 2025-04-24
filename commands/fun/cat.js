@@ -8,11 +8,15 @@ class CatCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://files.esmbot.net/cta/", { method: "HEAD", signal: controller.signal, redirect: "manual" });
+      const data = await fetch("https://files.esmbot.net/cta/", {
+        method: "HEAD",
+        signal: controller.signal,
+        redirect: "manual",
+      });
       clearTimeout(timeout);
       return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
-      if (e.name === "AbortError") {
+      if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
         return this.getString("commands.responses.cat.error");
       }

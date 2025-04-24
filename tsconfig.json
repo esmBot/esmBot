@@ -1,0 +1,19 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "#cmd-classes/*": ["./src/classes/*"],
+      "#utils/*": ["./src/utils/*"],
+      "#pagination": ["./src/pagination/pagination.js"],
+      "#config/*": ["./config/*"]
+    }
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["./dist/**/*", "./commands/**/*"]
+}

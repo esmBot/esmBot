@@ -1,12 +1,11 @@
-import { play } from "#utils/soundplayer.js";
+import { Constants, GuildChannel } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
-import { Constants } from "oceanic.js";
-const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:"];
-if (process.env.YT_DISABLED !== "true") prefixes.push("ytsearch:", "ytmsearch:");
+import { play } from "#utils/soundplayer.js";
+const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:", "ytsearch:", "ytmsearch:"];
 
 class PlayCommand extends MusicCommand {
   async run() {
-    if (!this.guild) {
+    if (!this.guild || !this.member || !(this.channel instanceof GuildChannel)) {
       this.success = false;
       return this.getString("guildOnly");
     }
@@ -29,20 +28,40 @@ class PlayCommand extends MusicCommand {
     }
     try {
       const url = new URL(query);
-      return play(this.client, url.toString(), { channel: this.channel, guild: this.guild, member: this.member, type: this.type, interaction: this.interaction, locale: this.locale });
+      return play(this.client, url.toString(), {
+        channel: this.channel,
+        guild: this.guild,
+        member: this.member,
+        type: this.type,
+        interaction: this.interaction,
+        locale: this.locale,
+      });
     } catch {
-      const search = prefixes.some(v => query.startsWith(v)) ? query : !query && attachment ? attachment.url : (process.env.YT_DISABLED !== "true" ? `ytsearch:${query}` : `dzsearch:${query}`);
-      return play(this.client, search, { channel: this.channel, guild: this.guild, member: this.member, type: this.type, interaction: this.interaction, locale: this.locale });
+      const search = prefixes.some((v) => query.startsWith(v))
+        ? query
+        : !query && attachment
+          ? attachment.url
+          : `ytsearch:${query}`;
+      return play(this.client, search, {
+        channel: this.channel,
+        guild: this.guild,
+        member: this.member,
+        type: this.type,
+        interaction: this.interaction,
+        locale: this.locale,
+      });
     }
   }
 
-  static flags = [{
-    name: "query",
-    type: Constants.ApplicationCommandOptionTypes.STRING,
-    description: "An audio search query or URL",
-    classic: true,
-    required: true
-  }];
+  static flags = [
+    {
+      name: "query",
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "An audio search query or URL",
+      classic: true,
+      required: true,
+    },
+  ];
   static description = "Plays a song or adds it to the queue";
   static aliases = ["p"];
 }
