@@ -310,7 +310,7 @@ function awaitStart(i: number, shardArrays: number[][]): Promise<void> {
     pm2.start(
       {
         name: `esmBot-proc${i}`,
-        script: "app.js",
+        script: "dist/app.js",
         autorestart: true,
         exp_backoff_restart_delay: 1000,
         wait_ready: true,
