@@ -1,1 +1,570 @@
-{}
+{
+    "commands": {
+        "descriptions": {
+            "gamexplain": "Tạo ảnh thu nhỏ GameXplain từ ảnh",
+            "globe": "Cho ảnh quay vòng",
+            "grayscale": "Chèn bộ lọc trắng đen",
+            "scott": "Cho Scott the Woz khoe ảnh",
+            "youtube": "Tìm kiếm trên YouTube",
+            "ifunny": "Chèn hình mờ iFunny vô ảnh",
+            "spotify": "Chèn tiêu đề \"This is\" của Spotify vô ảnh",
+            "seek": "Tìm đến vị trí khác trong bài hát",
+            "broadcast": "Phát thông báo đang chơi cho đến khi lệnh được chạy lại hoặc bot bị khởi động lại",
+            "donate": "Khám phá các cách mà bạn có thể đóng góp vô sự phát triển của esmBot",
+            "lengthen": "Mở rộng URL bị rút gọn",
+            "bounce": "Tạo hiệu ứng nhún lên nhún xuống cho ảnh",
+            "unfreeze": "Ngừng đóng băng chuỗi ảnh",
+            "wide": "Dãn ảnh gấp 19 lần chiều rộng của nó",
+            "play": "Phát một bài hát hoặc thêm vào danh sách chờ",
+            "channel": "Bật/tắt lệnh truyền thống cho kênh (vô cài đặt server cho lệnh gạch chéo)",
+            "raw": "Lấy URL gốc của hình ảnh (hữu ích để lưu GIF từ các trang như Tenor)",
+            "deviantart": "Chèn hình mờ DeviantArt vô ảnh",
+            "magik": "Chèn hiệu ứng kéo giãn ảnh theo nội dung (bóp méo ảnh)",
+            "toggle": "Tạm dừng/tiếp tục bài hát hiện tại",
+            "tags": "Các lệnh thẻ chính. Xem trang trợ giúp để biết thêm thông tin: https://esmbot.net/help.html",
+            "8ball": "Hỏi quả cầu tiên tri",
+            "bird": "Lấy ảnh chim ngẫu nhiên",
+            "cat": "Lấy ảnh mèo ngẫu nhiên",
+            "dice": "Quăng xúc xắc",
+            "sharpen": "Làm bén/nét ảnh",
+            "shutterstock": "Chèn hình mờ Shutterstock vô ảnh",
+            "slow": "Làm chuỗi ảnh chậm hơn",
+            "snapchat": "Chèn chú thích theo phong cách Snapchat vô ảnh",
+            "soos": "\"Lặp lại\" chuỗi ảnh bằng cách đảo ngược nó khi hoàn thành",
+            "host": "Lấy hoặc thay đổi người điều hành của phiên thoại hiện tại",
+            "emote": "Lấy ảnh gốc của emoji",
+            "dog": "Lấy ảnh chó ngẫu nhiên",
+            "homebrew": "Tạo bản edit Homebrew Channel",
+            "sonic": "Tạo ảnh bóng thoại Sonic",
+            "avatar": "Lấy ảnh đại diện của một người dùng",
+            "banner": "Lấy ảnh banner của một người dùng",
+            "base64": "Mã hóa/giải mã chuỗi Base64",
+            "command": "Bật/tắt lệnh truyền thống cho server (vô cài đặt server cho lệnh gạch chéo)",
+            "count": "Lấy bao nhiêu lần lệnh đã được sử dụng",
+            "eval": "Chạy mã JavaScript",
+            "exec": "Chạy lệnh shell",
+            "help": "Lấy danh sách các lệnh",
+            "image": "Tìm kiếm ảnh trên mạng",
+            "imagereload": "Thử kết nối lại với tất cả máy chủ xử lý hình ảnh có sẵn",
+            "imagestats": "Lấy thống kê về các máy chủ hình ảnh",
+            "info": "Lấy thông tin và công nhận của tôi",
+            "ping": "Kiểm tra kết nối với các máy chủ của Discord",
+            "prefix": "Kiểm tra/thay đổi tiền tố của server",
+            "qrcreate": "Tạo mã QR",
+            "qrread": "Đọc mã QR",
+            "reload": "Chạy lại lệnh",
+            "restart": "Khởi động tôi lại",
+            "snowflake": "Chuyển đổi ID snowflake của Discord thành dấu thời gian",
+            "soundreload": "Thử kết nối lại với tất cả các node Lavalink có sẵn",
+            "stats": "Lấy thông tin về tôi",
+            "sticker": "Lấy ảnh sticker gốc",
+            "9gag": "Chèn hình mờ 9GAG vô ảnh",
+            "avs4you": "Chèn hình mờ avs4you vô ảnh",
+            "bandicam": "Chèn hình mờ Bandicam vô ảnh",
+            "blur": "Làm mờ hình ảnh",
+            "caption": "Chèn chú thích vào ảnh",
+            "caption2": "Chèn danh sách thẻ/chú thích phía dưới ảnh",
+            "circle": "Áp dụng hiệu ứng làm mờ vòng tròn lên ảnh",
+            "crop": "Cắt ảnh thành 1:1",
+            "deepfry": "Deepfry ảnh",
+            "explode": "Nổ tung tấm ảnh",
+            "flag": "Chồng một lá cờ lên ảnh",
+            "flip": "Lật ảnh",
+            "flop": "Lật ảnh",
+            "freeze": "Làm cho chuỗi ảnh chỉ phát một lần",
+            "funky": "Chèn banner New Funky Mode vô ảnh",
+            "gif": "Chuyển đổi hình ảnh thành GIF",
+            "haah": "Phản chiếu bên trái của ảnh sang bên phải",
+            "hooh": "Phản chiếu phần dưới của ảnh lên trên",
+            "hypercam": "Chèn hình mờ Hypercam vô ảnh",
+            "implode": "Làm lõm ảnh",
+            "invert": "Đảo ngược màu ảnh",
+            "jpeg": "Chèn hiệu ứng bể ảnh JPEG",
+            "kinemaster": "Chèn hình mờ KineMaster vô ảnh",
+            "meme": "Tạo meme từ ảnh (phân tách chữ trên/dưới bằng dấu phẩy)",
+            "memecenter": "Chèn hình mờ MemeCenter vô ảnh",
+            "motivate": "Tạo poster truyền cảm hứng",
+            "pixelate": "Pixel hóa ảnh",
+            "reddit": "Chèn hình mờ Reddit vô ảnh",
+            "reverse": "Đảo ngược chuỗi ảnh",
+            "sepia": "Áp dụng bộ lọc sepia",
+            "speechbubble": "Chèn bong bóng thoại vô ảnh",
+            "speed": "Làm chuỗi ảnh nhanh hơn",
+            "spin": "Xoay hình ảnh",
+            "squish": "Ép/dãn ảnh",
+            "stretch": "Dãn ảnh thành tỉ lệ 1:1",
+            "swirl": "Chèn vòng xoáy vô ảnh",
+            "tile": "Tạo mẫu gạch từ ảnh",
+            "uncanny": "Tạo ảnh Mr. Incredible Becomes Uncanny (phân tách chữ trái/phải bằng dấu phẩy)",
+            "uncaption": "Xóa chú thích khỏi ảnh",
+            "vignette": "Chèn hiệu ứng viền tối vào ảnh",
+            "waaw": "Phản chiếu phần bên phải của ảnh sang bên trái",
+            "wall": "Tạo tường từ ảnh",
+            "whisper": "Chèn chú thích theo phong cách Whisper vô ảnh",
+            "woow": "Phản chiếu phần trên của ảnh xuống phần dưới",
+            "Select Image": "Không tìm thấy mô tả",
+            "loop": "Lặp nhạc",
+            "music": "Xử lý việc phát nhạc",
+            "nowplaying": "Hiển thị bài hát đang phát",
+            "queue": "Hiển thị danh sách chờ hiện tại",
+            "remove": "Xóa nhạc trong danh sách chờ",
+            "shuffle": "Xáo trộn nhạc",
+            "skip": "Bỏ qua bài hát hiện tại",
+            "stop": "Dừng nhạc",
+            "volume": "Điều chỉnh âm lượng của bài hát"
+        },
+        "flags": {
+            "channel disable": {
+                "text": "Nội dung để mã hóa"
+            },
+            "prefix": {
+                "prefix": "Tiền tố mã bạn muốn server sử dụng"
+            },
+            "caption": {
+                "noegg": "Nó sẽ tắt... cái gì đó. Không nói là gì đâu nhé.",
+                "font": "Chọn phông chữ mà bạn muốn dùng (mặc định: Futura)"
+            },
+            "base64": {
+                "decode": "Giải mã chuỗi Base64",
+                "encode": "Mã hóa chuỗi Base64"
+            },
+            "eval": {
+                "code": "Mã để chạy"
+            },
+            "snapchat": {
+                "position": "Đặt vị trí của chú thích ở dạng số thập phân (0.0 là trên cùng, 1.0 là dưới cùng, mặc định là 0.565)"
+            },
+            "tags edit": {
+                "content": "Nội dung của thẻ",
+                "name": "Tên của thẻ"
+            },
+            "host": {
+                "user": "Người dùng mà bạn muốn làm người điều hành mới"
+            },
+            "tags": {
+                "list": "Hiển thị tất cả thẻ trong server",
+                "get": "Lấy thẻ",
+                "add": "Thêm một thẻ mới",
+                "delete": "Xóa thẻ",
+                "edit": "Chỉnh sửa một thẻ đã có",
+                "owner": "Lấy chủ sở hữu của thẻ",
+                "random": "Lấy một thẻ ngẫu nhiên"
+            },
+            "play": {
+                "query": "Truy vấn tìm kiếm của âm thanh hoặc URL"
+            },
+            "dice": {
+                "max": "Giá trị xúc xắc tối đa"
+            },
+            "8ball": {
+                "question": "Câu hỏi mà bạn muốn hỏi quả cầu"
+            },
+            "avatar": {
+                "member": "Thành viên để lấy ảnh đại diện"
+            },
+            "base64 encode": {
+                "text": "Nội dung để mã hóa"
+            },
+            "count": {
+                "command": "Một lệnh để xem lượt xem của"
+            },
+            "meme": {
+                "case": "Làm nội dung meme phân biệt chữ hoa và chữ thường (để cho phép chữ thường)",
+                "font": "Chọn phông chữ mà bạn muốn dùng (mặc định: Impact)"
+            },
+            "motivate": {
+                "font": "Chọn phông chữ mà bạn muốn dùng (mặc định: Times)"
+            },
+            "caption2": {
+                "top": "Để chú thích lền đầu ảnh thay vì ở dưới",
+                "font": "Chọn phông chữ mà bạn muốn dùng (mặc định: Helvetica)"
+            },
+            "freeze": {
+                "endframe": "Đặt vị trí khung cuối cùng"
+            },
+            "jpeg": {
+                "quality": "Đặt chất lượng JPEG (mặc định: 1)"
+            },
+            "slow": {
+                "multiplier": "Đặt hệ số gấp tốc độ (mặc định: 2)"
+            },
+            "speechbubble": {
+                "flip": "Lật bong bóng thoại",
+                "bottom": "Đặt bóng thoại ở phần dưới của ảnh",
+                "scale": "Một hệ số gấp để thay đổi kích thước bóng thoại (0.01 là nhỏ nhất, 1.0 là lớn nhất, mặc định là 0.2)",
+                "alpha": "Làm cho phần trên của bong bóng thoại trong suốt"
+            },
+            "speed": {
+                "multiplier": "Đặt hệ số gấp tốc độ (mặc định: 2)"
+            },
+            "uncanny": {
+                "font": "Chọn phông chữ mà bạn muốn dùng (mặc định: Helvetica)",
+                "phase": "Chọn ảnh uncanny mà bạn muốn sử dụng"
+            },
+            "banner": {
+                "member": "Thành viên để lấy ảnh banner"
+            },
+            "base64 decode": {
+                "text": "Nội dung để giải mã"
+            },
+            "broadcast": {
+                "message": "Thông điệp để phát"
+            },
+            "channel": {
+                "enable": "Bật lệnh truyền thống trong kênh",
+                "disable": "Tắt lệnh truyền thống trong kênh"
+            },
+            "channel enable": {
+                "text": "Nội dung dễ giải mã"
+            },
+            "command": {
+                "enable": "Bật một lệnh truyền thống",
+                "disable": "Tắt một lệnh truyền thống"
+            },
+            "command enable": {
+                "text": "Nội dung để giải mã"
+            },
+            "command disable": {
+                "text": "Nội dung để mã hóa"
+            },
+            "emote": {
+                "emoji": "Emoji mà bạn muốn lấy"
+            },
+            "exec": {
+                "cmd": "Lệnh để chạy"
+            },
+            "help": {
+                "command": "Một lệnh để xem thông tin về"
+            },
+            "image": {
+                "query": "Đoạn truy vấn bạn muốn tìm"
+            },
+            "lengthen": {
+                "url": "URL mà bạn muốn kéo dài"
+            },
+            "reload": {
+                "cmd": "Lệnh để chạy lại",
+                "skipsend": "Bỏ qua việc gửi dữ liệu lệnh ứng dụng mới tới Discord"
+            },
+            "snowflake": {
+                "id": "ID snowflake"
+            },
+            "youtube": {
+                "query": "Đoạn truy vấn bạn muốn tìm"
+            },
+            "uncaption": {
+                "tolerance": "Đặt biên độ chấp nhận để phát hiện chú thích (0.0 là cao nhất, 1.0 là thấp nhất, mặc định là 0.95)"
+            },
+            "remove": {
+                "position": "Vị trí trong danh sách chờ mà bạn muốn xóa"
+            },
+            "seek": {
+                "position": "Tìm đến vị trí này"
+            },
+            "volume": {
+                "level": "Mức độ âm lượng"
+            },
+            "tags add": {
+                "name": "Tên của thẻ",
+                "content": "Nội dung của thẻ"
+            },
+            "tags delete": {
+                "name": "Tên của thẻ"
+            },
+            "tags get": {
+                "name": "Tên của thẻ"
+            },
+            "tags owner": {
+                "name": "Tên của thẻ"
+            }
+        },
+        "flagNames": {
+            "speed": {
+                "multiplier": "gap"
+            },
+            "tags add": {
+                "content": "noidung",
+                "name": "ten"
+            },
+            "freeze": {
+                "endframe": "khungcuoi"
+            },
+            "meme": {
+                "case": "hoa",
+                "font": "phong"
+            },
+            "remove": {
+                "position": "vitri"
+            },
+            "seek": {
+                "position": "vitri"
+            },
+            "volume": {
+                "level": "muc"
+            },
+            "tags": {
+                "add": "them",
+                "delete": "xoa",
+                "edit": "chinh",
+                "get": "lay",
+                "list": "danhsach",
+                "owner": "chu",
+                "random": "ngau"
+            },
+            "tags get": {
+                "name": "ten"
+            },
+            "tags owner": {
+                "name": "ten"
+            },
+            "emote": {
+                "emoji": "emoji"
+            },
+            "exec": {
+                "cmd": "cmd"
+            },
+            "lengthen": {
+                "url": "url"
+            },
+            "reload": {
+                "cmd": "cmd",
+                "skipsend": "boquagui"
+            },
+            "snowflake": {
+                "id": "id"
+            },
+            "youtube": {
+                "query": "truy"
+            },
+            "speechbubble": {
+                "alpha": "alpha",
+                "flip": "lat",
+                "bottom": "duoi",
+                "scale": "tyle"
+            },
+            "image": {
+                "query": "truy"
+            },
+            "8ball": {
+                "question": "cauhoi"
+            },
+            "dice": {
+                "max": "toida"
+            },
+            "avatar": {
+                "member": "thanhvien"
+            },
+            "banner": {
+                "member": "thanhvien"
+            },
+            "base64": {
+                "decode": "giaima",
+                "encode": "mahoa"
+            },
+            "base64 decode": {
+                "text": "noidung"
+            },
+            "base64 encode": {
+                "text": "noidung"
+            },
+            "broadcast": {
+                "message": "thongdiep"
+            },
+            "channel": {
+                "enable": "bat",
+                "disable": "tat"
+            },
+            "channel enable": {
+                "text": "noidung"
+            },
+            "channel disable": {
+                "text": "noidung"
+            },
+            "command": {
+                "enable": "bat",
+                "disable": "tat"
+            },
+            "command enable": {
+                "text": "noidung"
+            },
+            "command disable": {
+                "text": "noidung"
+            },
+            "count": {
+                "command": "lenh"
+            },
+            "eval": {
+                "code": "ma"
+            },
+            "help": {
+                "command": "lenh"
+            },
+            "prefix": {
+                "prefix": "tiento"
+            },
+            "caption": {
+                "noegg": "khongegg",
+                "font": "phong"
+            },
+            "caption2": {
+                "top": "tren",
+                "font": "phong"
+            },
+            "jpeg": {
+                "quality": "chatluong"
+            },
+            "motivate": {
+                "font": "phong"
+            },
+            "slow": {
+                "multiplier": "gap"
+            },
+            "snapchat": {
+                "position": "vitri"
+            },
+            "play": {
+                "query": "truy"
+            },
+            "uncanny": {
+                "font": "phong",
+                "phase": "giaidoan"
+            },
+            "uncaption": {
+                "tolerance": "bien"
+            },
+            "host": {
+                "user": "thanhvien"
+            },
+            "tags delete": {
+                "name": "ten"
+            },
+            "tags edit": {
+                "name": "ten",
+                "content": "noidung"
+            }
+        },
+        "names": {
+            "donate": "ungho",
+            "speechbubble": "bongthoai",
+            "caption2": "chuthich2",
+            "flag": "laco",
+            "gamexplain": "gamexplain",
+            "dice": "xucxac",
+            "image": "anh",
+            "imagereload": "anhchaylai",
+            "imagestats": "anhthongke",
+            "info": "thongtin",
+            "lengthen": "morong",
+            "ping": "ping",
+            "prefix": "tiento",
+            "qrcreate": "qrtao",
+            "qrread": "qrdoc",
+            "raw": "goc",
+            "reload": "chaylai",
+            "restart": "khoidonglai",
+            "snowflake": "snowflake",
+            "flip": "lat",
+            "gif": "gif",
+            "sharpen": "ben",
+            "meme": "meme",
+            "memecenter": "memecenter",
+            "motivate": "camhung",
+            "pixelate": "pixelhoa",
+            "reddit": "reddit",
+            "reverse": "nguoc",
+            "scott": "scott",
+            "sepia": "sepia",
+            "shutterstock": "shutterstock",
+            "waaw": "phaitrai",
+            "wall": "tuong",
+            "whisper": "whisper",
+            "wide": "dananh",
+            "woow": "trenduoi",
+            "Select Image": "Chọn ảnh",
+            "host": "nguoidieuhanh",
+            "loop": "laplai",
+            "music": "nhac",
+            "nowplaying": "dangphat",
+            "play": "phat",
+            "queue": "danhsachcho",
+            "remove": "xoa",
+            "seek": "timden",
+            "shuffle": "xaotron",
+            "skip": "boqua",
+            "stop": "dung",
+            "8ball": "quacautientri",
+            "bird": "chim",
+            "cat": "meo",
+            "dog": "cho",
+            "homebrew": "homebrew",
+            "sonic": "sonic",
+            "banner": "banner",
+            "base64": "base64",
+            "avatar": "daidien",
+            "broadcast": "phatsong",
+            "channel": "kenh",
+            "command": "lenh",
+            "count": "dem",
+            "emote": "bieutuongcamxuc",
+            "eval": "eval",
+            "exec": "exec",
+            "help": "giup",
+            "soundreload": "amluongchaylai",
+            "stats": "thongke",
+            "sticker": "sticker",
+            "youtube": "youtube",
+            "9gag": "9gag",
+            "avs4you": "avs4you",
+            "bandicam": "bandicam",
+            "blur": "lammo",
+            "bounce": "nhun",
+            "caption": "chuthich",
+            "circle": "vongtron",
+            "crop": "catanh",
+            "deepfry": "deepfry",
+            "deviantart": "deviantart",
+            "explode": "notung",
+            "flop": "latroi",
+            "freeze": "dongbang",
+            "funky": "funky",
+            "globe": "quacau",
+            "grayscale": "trangden",
+            "hypercam": "hypercam",
+            "haah": "traiphai",
+            "hooh": "duoitren",
+            "ifunny": "ifunny",
+            "implode": "lom",
+            "invert": "daonguoc",
+            "jpeg": "jpeg",
+            "kinemaster": "kinemaster",
+            "magik": "magik",
+            "slow": "cham",
+            "snapchat": "snapchat",
+            "soos": "lapchuoianh",
+            "speed": "tocdo",
+            "spin": "quay",
+            "spotify": "spotify",
+            "squish": "bop",
+            "stretch": "keodan",
+            "swirl": "vongxoay",
+            "tile": "gach",
+            "uncanny": "uncanny",
+            "uncaption": "xoachuthich",
+            "unfreeze": "ngungdongbang",
+            "vignette": "vientoi",
+            "toggle": "battat",
+            "volume": "amluong",
+            "tags": "the"
+        }
+    },
+    "image": {
+        "flagNames": {
+            "ephemeral": "tamthoi",
+            "image": "anh",
+            "link": "link",
+            "spoiler": "tietlo",
+            "text": "noidung",
+            "togif": "sanggif"
+        }
+    }
+}
