@@ -974,7 +974,8 @@
         "title": "Titolo",
         "unknown": "Sconosciuto",
         "waitingForHost": "Aspetto 10 secondi che ritorni l'host...",
-        "waitingForSomeone": "Aspetto 10 secondi che ritorni qualcuno..."
+        "waitingForSomeone": "Aspetto 10 secondi che ritorni qualcuno...",
+        "notPlaying": "Non sto riproducendo nulla!"
     },
     "guildOnly": "Questo comando funziona solo nei server!",
     "timeFormat": "{{days}} giorni, {{hours}} ore, {{minutes}} minuti, {{seconds}} secondi",
