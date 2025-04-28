@@ -691,7 +691,8 @@
                 "currentHost": "L'host del canale vocale attuale è **{{member}}**",
                 "notHost": "Solo l'host della sessione vocale attuale può scegliere un'altro host!",
                 "notMember": "Quell'utente non è in questo server!",
-                "noUser": "Non ho potuto trovare quell'utente!"
+                "noUser": "Non ho potuto trovare quell'utente!",
+                "currentHostId": "L'host del canale vocale attuale è un utente con l'ID `{{id}}`."
             },
             "imagereload": {
                 "connected": "Connesso con successo a {{length}} server di elaborazione immagini.",
@@ -892,6 +893,9 @@
             "snowflake": {
                 "invalid": "Quello non è uno snowflake valido!",
                 "noInput": "Devi fornire un ID snowflake!"
+            },
+            "nowplaying": {
+                "noTrack": "Si è verificato un problema nel recupero della traccia attuale."
             }
         }
     },
