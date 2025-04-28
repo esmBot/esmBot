@@ -98,7 +98,8 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
         await sql`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
       });
     } catch (e) {
-      logger.error(`PostgreSQL migration failed: ${e}`);
+      logger.error(`PostgreSQL migration failed:`);
+      logger.error(`${e.stack}`);
       logger.error("Unable to start the bot, quitting now.");
       return 1;
     }
