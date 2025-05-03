@@ -10,7 +10,7 @@
             "sonic": "Tekee Sonic puhekupla kuvan",
             "avatar": "Löytää käyttäjän avatarin",
             "banner": "Löytää käyttäjän bannerin",
-            "base64": "Tekee/purkaa Base64 merkkijonon",
+            "base64": "Muuntaa/purkaa Base64 merkkijonon",
             "channel": "Ottaa/poistaa käytöstä klassisia komentoja kanavalla (käytä palvelinasetuksia kautta komentoihin)",
             "command": "Ottaa/poistaa käytöstä klassisia komentoja palvelimella (käytä palvelinasetuksia kautta komentoihin)",
             "count": "Löytää montako kertaa jokaista komentoa on käytetty",
@@ -73,7 +73,331 @@
             "sharpen": "Terävöittää kuvaa",
             "shutterstock": "Lisää Shutterstock vesileiman kuvaan",
             "slow": "Tekee liikkuvasta mediasta hitaamman",
-            "snapchat": "Lisää Snapchat tyylisen kuvatekstin kuvaan"
+            "snapchat": "Lisää Snapchat tyylisen kuvatekstin kuvaan",
+            "tags": "Päätunnisteiden komento. Tarkista apua sivu lisätietoja varten: https://esmbot.net/help.html",
+            "host": "Löytää tai vaihtaa tämänhetkisen ääni-istunnon isännän",
+            "broadcast": "Lähettää viestin kunnes toiminto suoritetaan uudelleen tai botti käynnistetään uudelleen",
+            "freeze": "Tekee kuvasarjan toistamaan vain kerran",
+            "magik": "Lisää kuvaan sisältötietoisen skaalaustehosteen",
+            "speed": "Nopeuttaa kuvasarjan",
+            "soos": "Kiertää kuvasarjan peruuttamalla sen kun se on valmis",
+            "speechbubble": "Lisää kuvaan puhekuplan",
+            "spin": "Pyörittää kuvan",
+            "spotify": "Lisää Spotifyn \"This is\" otsikon kuvaan",
+            "uncanny": "Tekee Mr. Incredible Becomes Uncanny kuvan (erota vasen/oikea teksti pilkulla)",
+            "uncaption": "Poistaa kuvasta otsikon",
+            "unfreeze": "Lopettaa kuvasarjan jäädytyksen",
+            "vignette": "Lisää vinjetin kuvaan",
+            "waaw": "Peilaa oikean puolen kuvasta vasemmalle",
+            "wall": "Tekee kuvasta seinän",
+            "whisper": "Lisää Whisper tyylisen otsikon kuvaan",
+            "loop": "Kiertää musiikin",
+            "music": "Hoitaa musiikin soiton",
+            "nowplaying": "Näyttää tämän hetkisen kappaleen",
+            "shuffle": "Sekoittaa musiikin",
+            "remove": "Poistaa kappaleen jonosta",
+            "seek": "Vaihtaa musiikin soiton sijaintia",
+            "skip": "Ohittaa kappaleen",
+            "raw": "Löytää kuvan URL osoitteen (hyödyllinen GIF:in tallentamiseen sivuilta kuin Tenor)",
+            "reverse": "Kääntää kuvasarjan",
+            "swirl": "Pyöräyttää kuvan",
+            "squish": "Liiskaa/venyttää kuvan",
+            "stretch": "Venyttää kuvan 1:1 suhteeseen",
+            "tile": "Tekee kuvasta laatta kuvion",
+            "wide": "Venyttää kuvan 19 kertaa leveämmäksi",
+            "woow": "Peilaa kuvan yläosan alhaalle",
+            "Select Image": "Kuvausta ei löydy",
+            "play": "Soittaa kappaleen tai lisää sen jonoon",
+            "queue": "Näyttää jonon",
+            "stop": "Lopettaa musiikinsoiton",
+            "toggle": "Pysäyttää/jatkaa kappaleen",
+            "volume": "Vaihtaa musiikin äänenvoimakkuutta"
+        },
+        "flags": {
+            "command": {
+                "disable": "Poistaa käytöstä klassisen komennon",
+                "enable": "Ottaa käytöön klassisen komennon"
+            },
+            "help": {
+                "command": "Komento josta haluat hankkia tietoa"
+            },
+            "speechbubble": {
+                "bottom": "Asettaa puhekuplan kuvan alaosaan",
+                "alpha": "Tee puhekuplan yläosasta läpinäkyvä",
+                "flip": "Kääntää puhekuplan",
+                "scale": "Kerroin jolla muuttaa puhekuplan kokoa (0.01 on pienin, 1.0 on isoin, oletus on 0.2)"
+            },
+            "caption2": {
+                "font": "Mitä fonttia haluat käyttää (oletus: helvetica)",
+                "top": "Laita otsikko kuvan yläosaan alaosan sijaan"
+            },
+            "8ball": {
+                "question": "Kysymys jonka haluat kysyä pallolta"
+            },
+            "dice": {
+                "max": "Maksimi nopan arvo"
+            },
+            "avatar": {
+                "member": "Käyttäjä kenen avatari löytää"
+            },
+            "base64": {
+                "decode": "Purkaa Base64 merkkijonon",
+                "encode": "Muuntaa Base64 merkkijonon"
+            },
+            "banner": {
+                "member": "Käyttäjä kenen banneri löytää"
+            },
+            "base64 decode": {
+                "text": "Purettava teksti"
+            },
+            "base64 encode": {
+                "text": "Muunnettava teksti"
+            },
+            "broadcast": {
+                "message": "Lähetettävä viesti"
+            },
+            "channel": {
+                "enable": "Ottaa klassiset komennot käyttöön kanavalla",
+                "disable": "Poistaa klassiset komennot käytöstä kanavalla"
+            },
+            "channel enable": {
+                "text": "Purettava teksti"
+            },
+            "channel disable": {
+                "text": "Muunnettava teksti"
+            },
+            "snowflake": {
+                "id": "Snowflake ID"
+            },
+            "youtube": {
+                "query": "Mitä haluat hakea"
+            },
+            "prefix": {
+                "prefix": "Palvelimen etuliite jota haluat käyttää"
+            },
+            "reload": {
+                "cmd": "Uudelleen ladattava komento",
+                "skipsend": "Ohittaa uusien sovelluskomentotietojen lähettämisen Discordiin"
+            },
+            "caption": {
+                "noegg": "Poista käytöstä... jotakin. En kuitenkaan kerro mitä se on.",
+                "font": "Mitä fonttia haluat käyttää (oletus: futura)"
+            },
+            "meme": {
+                "font": "Mitä fonttia haluat käyttää (oletus: impact)",
+                "case": "Tee meemi tekstistä kirjainkoko herkkä (sallii pienet kirjaimet)"
+            },
+            "motivate": {
+                "font": "Mitä fonttia haluat käyttää (oletus: times)"
+            },
+            "slow": {
+                "multiplier": "Aseta nopeuden kerroin (oletus: 2)"
+            },
+            "snapchat": {
+                "position": "Aseta otsikon asema desimaali (0.0 on yläosa, 1.0 on alaosa, oletus on 0.565)"
+            },
+            "command enable": {
+                "text": "Purettava teksti"
+            },
+            "command disable": {
+                "text": "Muunnettava teksti"
+            },
+            "count": {
+                "command": "Tietyn komennon käyttökerrat"
+            },
+            "emote": {
+                "emoji": "Emoji jonka haluat löytää"
+            },
+            "eval": {
+                "code": "Suoritettava koodi"
+            },
+            "exec": {
+                "cmd": "Suoritettava komento"
+            },
+            "lengthen": {
+                "url": "URL osoite jonka haluat pidentää"
+            },
+            "image": {
+                "query": "Mitä haluat hakea"
+            },
+            "freeze": {
+                "endframe": "Aseta päätykehys (oletus: viimeinen ruutu)"
+            },
+            "jpeg": {
+                "quality": "Aseta JPEG laatu (oletus: 1)"
+            },
+            "speed": {
+                "multiplier": "Aseta nopeuden kerroin (oletus: 2)"
+            },
+            "uncanny": {
+                "font": "Mitä fonttia haluat käyttää (oletus: helvetica)",
+                "phase": "Mitä outoa kuvaa haluat käyttää"
+            }
+        },
+        "flagNames": {
+            "slow": {
+                "multiplier": "kerroin"
+            },
+            "dice": {
+                "max": "max"
+            },
+            "avatar": {
+                "member": "jäsen"
+            },
+            "banner": {
+                "member": "jäsen"
+            },
+            "base64": {
+                "decode": "pura",
+                "encode": "muunna"
+            },
+            "base64 encode": {
+                "text": "teksti"
+            },
+            "broadcast": {
+                "message": "viesti"
+            },
+            "base64 decode": {
+                "text": "teksti"
+            },
+            "channel disable": {
+                "text": "teksti"
+            },
+            "channel": {
+                "enable": "käytä",
+                "disable": "hylkää"
+            },
+            "channel enable": {
+                "text": "teksti"
+            },
+            "command": {
+                "enable": "käytä",
+                "disable": "hylkää"
+            },
+            "eval": {
+                "code": "koodi"
+            },
+            "exec": {
+                "cmd": "cmd"
+            },
+            "help": {
+                "command": "komento"
+            },
+            "lengthen": {
+                "url": "url"
+            },
+            "prefix": {
+                "prefix": "etuliite"
+            },
+            "reload": {
+                "cmd": "cmd",
+                "skipsend": "ohitalähetys"
+            },
+            "image": {
+                "query": "haku"
+            },
+            "caption": {
+                "noegg": "noegg",
+                "font": "fontti"
+            },
+            "caption2": {
+                "top": "ylhäälle",
+                "font": "fontti"
+            },
+            "youtube": {
+                "query": "haku"
+            },
+            "snapchat": {
+                "position": "asema"
+            },
+            "speechbubble": {
+                "alpha": "alfa",
+                "flip": "käännä",
+                "bottom": "alhalle",
+                "scale": "mittakaava"
+            },
+            "speed": {
+                "multiplier": "kerroin"
+            },
+            "tags": {
+                "add": "lisää",
+                "delete": "poista",
+                "edit": "muokkaa",
+                "get": "löydä",
+                "list": "lista",
+                "owner": "omistaja",
+                "random": "satunnainen"
+            },
+            "tags add": {
+                "name": "nimi",
+                "content": "sisältö"
+            },
+            "tags edit": {
+                "name": "nimi",
+                "content": "sisältö"
+            },
+            "tags get": {
+                "name": "nimi"
+            },
+            "tags owner": {
+                "name": "nimi"
+            },
+            "8ball": {
+                "question": "kysymys"
+            },
+            "command enable": {
+                "text": "teksti"
+            },
+            "command disable": {
+                "text": "teksti"
+            },
+            "count": {
+                "command": "komento"
+            },
+            "emote": {
+                "emoji": "emoji"
+            },
+            "snowflake": {
+                "id": "id"
+            },
+            "freeze": {
+                "endframe": "päätykehys"
+            },
+            "jpeg": {
+                "quality": "laatu"
+            },
+            "meme": {
+                "case": "kirjainkoko",
+                "font": "fontti"
+            },
+            "motivate": {
+                "font": "fontti"
+            },
+            "uncanny": {
+                "font": "fontti",
+                "phase": "vaihe"
+            },
+            "uncaption": {
+                "tolerance": "toleranssi"
+            },
+            "host": {
+                "user": "käyttäjä"
+            },
+            "remove": {
+                "position": "asema"
+            },
+            "seek": {
+                "position": "asema"
+            },
+            "volume": {
+                "level": "taso"
+            },
+            "tags delete": {
+                "name": "nimi"
+            },
+            "play": {
+                "query": "haku"
+            }
         }
     }
 }
