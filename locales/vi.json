@@ -8,7 +8,7 @@
             "youtube": "Tìm kiếm trên YouTube",
             "ifunny": "Chèn hình mờ iFunny vô ảnh",
             "spotify": "Chèn tiêu đề \"This is\" của Spotify vô ảnh",
-            "seek": "Tìm đến vị trí khác trong bài hát",
+            "seek": "Tìm tới vị trí khác trong bài hát",
             "broadcast": "Phát thông báo đang chơi cho đến khi lệnh được chạy lại hoặc bot bị khởi động lại",
             "donate": "Khám phá các cách mà bạn có thể đóng góp vô sự phát triển của esmBot",
             "lengthen": "Mở rộng URL bị rút gọn",
@@ -555,6 +555,348 @@
             "toggle": "battat",
             "volume": "amluong",
             "tags": "the"
+        },
+        "responses": {
+            "info": {
+                "clickHere": "Nhấn vào đây!",
+                "creditsHeader": "Công nhận:",
+                "officialServer": "Server chính thức:",
+                "privacyPolicy": "Chính sách bảo mật:",
+                "credits": "Bot bởi **[Essem](https://essem.space)** và **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo bởi **[MintBurrow](https://twitter.com/MintBurrow)**",
+                "processOnly": "{{count}} (chỉ dành cho quá trình này)",
+                "sourceCode": "Mã nguồn:",
+                "version": "Phiên bản:",
+                "totalServers": "Tổng cộng server:",
+                "translate": "Dịch:"
+            },
+            "imagestats": {
+                "connected": "Bot hiện đang được kết nối tới {{length}} server ảnh.",
+                "header": "Thống kê hình ảnh của esmBot",
+                "runningJobs": "Các công việc đang chạy: {{count}}",
+                "server": "Server {{num}}"
+            },
+            "nowplaying": {
+                "noTrack": "Đã có sự cố khi lấy bài hát hiện tại."
+            },
+            "ping": {
+                "shardLatency": "Độ trễ của Shard: {{latency}}ms",
+                "latency": "Độ trễ: {{latency}}ms",
+                "ping": "Ping?",
+                "pong": "Pong!"
+            },
+            "reload": {
+                "botOwnerOnly": "Chỉ chủ sở hữu bot mới có thể tải lại lệnh!",
+                "noCommand": "Tôi không thể tìm thấy lệnh đó!",
+                "noInput": "Bạn cần phải cho tôi biết lệnh để tải lại!",
+                "reloaded": "Lệnh `{{command}}` đã được tải lại.",
+                "reloadFailed": "Tôi không thể tải lại lệnh đó!"
+            },
+            "remove": {
+                "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể xóa bài hát khỏi danh sách chờ!",
+                "invalidPosition": "Đó không phải là một vị trí hợp lệ!",
+                "removed": "Bài `{{song}}`đã bị xóa khỏi danh sách chờ."
+            },
+            "seek": {
+                "notSeekable": "Bạn không thể tìm tới trong bài này!",
+                "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể tìm tới vị trí nhạc!",
+                "invalidPosition": "Đó không phải là một vị trí hợp lệ!",
+                "seeked": "Đã tìm đến vị trí {{seconds}} giây."
+            },
+            "skip": {
+                "voted": "Đã bỏ phiếu bỏ qua bài hát ({{count}}/{{max}} người đã bỏ phiếu).",
+                "alreadyVoted": "Bạn đã bỏ phiếu bỏ qua rồi!",
+                "skipped": "Bài hát hiện tại đã được bỏ qua."
+            },
+            "snowflake": {
+                "invalid": "Snowflake không hợp lệ!",
+                "noInput": "Bạn phải cung cấp ID snowflake!"
+            },
+            "soundreload": {
+                "connected": "Đã kết nối thành công tới {{length}} node Lavalink.",
+                "botOwnerOnly": "Chỉ có chủ sở hữu bot mới có thể tải lại Lavalink!",
+                "failed": "Tôi không thể kết nối tới node nào của Lavalink!"
+            },
+            "stats": {
+                "servers": "Server",
+                "totalUsage": "Tổng bộ nhớ đã sử dụng",
+                "version": "Phiên bản",
+                "botUptime": "Phiên chạy của bot",
+                "library": "Thư viện",
+                "nodeJsVersion": "Phiên bản Node.js",
+                "processOnly": "{{count}} (chỉ dành cho quá trình này)",
+                "processUsage": "Bộ nhớ đang được sử dụng của quá trình",
+                "host": "Điều hành",
+                "connectionUptime": "Phiên kết nối",
+                "header": "Thống kê esmBot",
+                "shard": "Shard",
+                "bunVersion": "Phiên bản của Bun"
+            },
+            "tags": {
+                "addName": "Bạn phải cung cấp tên thẻ mà bạn muốn thêm vô!",
+                "deleted": "Thẻ với tên `{{name}}` đã bị xóa!",
+                "list": "Danh sách thẻ",
+                "noTags": "Tôi không thể tìm thấy thẻ nào hết!",
+                "notOwner": "Bạn không sở hửu thẻ này!",
+                "noInput": "Bạn phải cung cấp tên của thẻ mà bạn muốn xem!",
+                "invalid": "Thẻ ấy không tồn tại!",
+                "invalidName": "Bạn không thể tạo thẻ với cái tên đó!",
+                "exists": "Thẻ này đã tồn tại rồi!",
+                "added": "Thẻ với tên `{{name}}` đã được thêm vô!",
+                "edited": "Thẻ với tên `{{name}}` đã được chỉnh sửa!",
+                "editName": "Bạn cần cung cấp tên thẻ mà bạn muốn chỉnh!",
+                "deleteName": "Bạn cần cung cấp tên thẻ mà bạn muốn xóa!",
+                "ownerName": "Bạn cần cung cấp tên của thẻ mà bạn muốn kiểm tra chủ sở hữu!",
+                "ownedBy": "Thẻ này thuộc sở hữu của **{{user}}** (`{{id}}`).",
+                "ownedById": "Tôi không thể tìm ra ai là chủ sở hữu của thẻ này, nhưng tôi đã lấy được ID của người dùng đó: `{{id}}`"
+            },
+            "8ball": {
+                "concentrate": "Hãy tâm tư rồi hỏi tôi lại",
+                "dontCount": "Đừng trông chờ vào điều đó",
+                "doubtful": "Chắc là không đâu",
+                "hazy": "Câu hỏi mịt mờ, thử lại nhé",
+                "later": "Hỏi lại sau đi",
+                "likely": "Rất có thể nhé",
+                "betterNot": "Tốt nhất là không nên nói bạn bây giờ",
+                "cannotPredict": "Hiện tại tôi không thể đoán được",
+                "certain": "Chắc chắn rồi",
+                "decidedly": "Điều đó quá là hiển nhiên",
+                "definitely": "Đúng, đúng là vậy",
+                "outlookBad": "Triển vọng khá là không tốt lắm",
+                "outlookGood": "Triển vọng tốt nhé",
+                "rely": "Bạn có thể tin tưởng vào điều đó",
+                "replyNo": "Câu trả lời của tôi là không",
+                "seeIt": "Theo tôi nhận thấy thì... Có",
+                "signs": "Bao nhiêu dấu hiệu đều chỉ đến có",
+                "sourcesNo": "Theo nguồn của tôi thì không",
+                "withoutDoubt": "Không phải cãi, chắc chắn luôn",
+                "yes": "Đúng"
+            },
+            "host": {
+                "currentHostId": "Người giữ quyền điều khiển kênh thoại hiện tại là người dùng với ID `{{id}}`.",
+                "currentHost": "Người giữ quyền điều khiển kênh thoại hiện tại là **{{member}}**",
+                "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể chọn người giữ mới!",
+                "notMember": "Người dùng đó không có trong server này!",
+                "noUser": "Tôi không thể tìm thấy người dùng đó!"
+            },
+            "prefix": {
+                "changed": "Tiền tố đã được thay đổi thành `{{prefix}}`.",
+                "stateless": "Việc thiết lập tiền tố riêng cho từng server là không thể trên các phiên bản esmBot không lưu trạng thái!",
+                "adminOnly": "Bạn phải là quản trị viên để thay đổi tiền tố của bot!",
+                "current": "Tiền tố hiện tại là `{{prefix}}`."
+            },
+            "base64": {
+                "decodeNoInput": "Bạn phải cho tôi chuỗi để giải nó!",
+                "encodeNoInput": "Bạn cần phải cho tôi chuỗi để mã hóa nó!",
+                "noCmd": "Bạn cần cung cấp xem bạn muốn mã hóa hay giải mã nội dung!"
+            },
+            "count": {
+                "header": "Số lần lệnh được sử dụng",
+                "single": "Lệnh `{{command}}` đã được sử dụng tổng cộng {{count}} lần."
+            },
+            "channel": {
+                "adminOnly": "Bạn phải là quản trị viên để bật/tắt tôi trong kênh này!",
+                "alreadyDisabled": "Tôi đã bị tắt từ trước trong kênh này rồi!",
+                "disabled": "Tỗi đã bị tắt trong kênh này. Để bật lại, chỉ cần chạy lênh `{{prefix}}channel enable`.",
+                "invalid": "Đó không phải là một lựa chọn hợp lệ!",
+                "notDisabled": "Tôi không bị tắt trong kênh này!",
+                "noCmd": "Bạn cần phải chọn xem bạn muốn bật hay tắt tôi trong kênh này!",
+                "notInServer": "Cái kênh đó làm gì có trong server này!",
+                "reEnabled": "Tôi đã được bật lại trong kênh này."
+            },
+            "command": {
+                "invalid": "Lựa chọn không hợp lệ!",
+                "adminOnly": "Bạn phải là quản trị viên để bật/tắt lệnh!",
+                "alreadyDisabled": "Lệnh đó đã bị tắt từ trước rồi!",
+                "cannotDisable": "Bạn không thể tắt lệnh đó được!",
+                "disabled": "Lệnh `{{command}}` đã được tắt. Để bật lại, chỉ cần chạy lệnh `{{prefix}}command enable {{command}}`.",
+                "invalidCmd": "Làm gì có lệnh đó!",
+                "notDisabled": "Lệnh đó chưa được tắt!",
+                "noCmd": "Bạn cần chọn xem bạn muốn bật hay tắt lệnh!",
+                "noInput": "Bạn phải cung cấp lệnh mà bạn muốn bặt/tắt!",
+                "reEnabled": "Lệnh `{{command}}` đã được bật lại."
+            },
+            "donate": {
+                "support": "Thích esmBot hả? Hãy ủng hộ nhà phát triển trên Patreon để giúp nó phát triển và tồn tại nhé!",
+                "thanks": "Cảm ơn các nhà tài trợ sau đây vì sự ủng hộ của họ:"
+            },
+            "imagereload": {
+                "connected": "Đã kết nối thành công tới {{length}} server ảnh.",
+                "couldNotConnect": "Tôi không thể kết nối tới server ảnh nào hết!",
+                "owner": "Chỉ có chủ sở hữu bot mới có thể tải lại server ảnh!"
+            },
+            "help": {
+                "noInfo": "Tôi không hề tìm thấy thông tin gì hết về lệnh đó!",
+                "aliases": "Tên phụ",
+                "flags": "Cờ",
+                "header": "Trợ giúp của esmBot",
+                "name": "tên",
+                "none": "Không",
+                "parameters": "Tham số",
+                "prefix": "Tiền tố",
+                "timesUsed": "Lần được sử dụng"
+            },
+            "shuffle": {
+                "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể xáo nhạc!",
+                "notShuffling": "Nhạc không còn được xáo nữa.",
+                "nowShuffling": "Nhạc hiện đang được xáo."
+            },
+            "stop": {
+                "notHost": "Chỉ người chủ phiên kênh thoại hiện tại mới có thể dừng nhạc!",
+                "ended": "Phiên kênh thoại hiện tại đã kết thúc."
+            },
+            "youtube": {
+                "noInput": "Bạn phải cung cấp cái gì đó để tôi tìm chứ!",
+                "noResults": "Tôi không thể tìm thấy kết quả nào hết!"
+            },
+            "dice": {
+                "landed": "Xúc xắc ra số {{number}}."
+            },
+            "emote": {
+                "noInput": "Tôi không thể tìm thấy emoji trong tin nhắn ấy!",
+                "invalidEmoji": "Bạn cần cung cấp một emoji hợp lệ để lấy ảnh!"
+            },
+            "bird": {
+                "error": "Tôi không thể lấy ảnh chim kịp thời. Hay là thử lại nhé?"
+            },
+            "avatar": {
+                "invalidMention": "Đây không phải ping hợp lệ!"
+            },
+            "banner": {
+                "invalidMention": "Đây không phải ping hợp lệ!",
+                "noSelfBanner": "Bạn không có banner!",
+                "noUserBanner": "Người dùng này không có banner!"
+            },
+            "broadcast": {
+                "ended": "Đã kết thúc thông báo.",
+                "owner": "Chỉ có chủ sở hữu bot mới có thể thông báo tin nhắn!",
+                "started": "Đã bắt đầu thông báo."
+            },
+            "cat": {
+                "error": "Tôi không thể lấy ảnh mèo kịp thời. Hay là thử lại nhé?"
+            },
+            "dog": {
+                "error": "Tôi không thể lấy ảnh chó kịp thời. Hay là thử lại nhé?"
+            },
+            "eval": {
+                "botOwnerOnly": "Chỉ có chủ sở hửu bot mới có thể sử dụng eval!"
+            },
+            "exec": {
+                "botOwnerOnly": "Chỉ có chủ sở hửu bot mới có thể sử dụng exec!"
+            },
+            "image": {
+                "noInput": "Bạn phải cung cấp thì tôi mới tìm được chứ!",
+                "noResults": "Tôi không thể tìm thấy gì hết!",
+                "results": "Kết quả tìm kiếm"
+            },
+            "lengthen": {
+                "noInput": "Bạn cần cung cấp một URL ngắn để làm dài!",
+                "notURL": "Đó không phải là URL!"
+            },
+            "loop": {
+                "notLooping": "Nhạc hiện không ở chế độ lặp.",
+                "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể lặp nhạc!",
+                "nowLooping": "Nhạc hiện đang ở chế độ lặp."
+            },
+            "music": {
+                "invalid": "Đó không phải là lệnh nhạc hợp lệ!"
+            },
+            "play": {
+                "noInput": "Bạn phải cho tôi biết bạn muốn nghe bài gì chứ!"
+            },
+            "raw": {
+                "noInput": "Bạn phải cung cấp ảnh/GIF để lấy URL gốc!"
+            },
+            "restart": {
+                "restarting": "esmBot đang khởi động lại.",
+                "owner": "Chỉ có chủ sở hữu bot mới có thể khởi động tôi lại!"
+            },
+            "sticker": {
+                "apng": "Sticker này là định dạng APNG, tuy nhiên, vì Discord không cho phép hiển thị APNG ngoài sticker, bạn sẽ phải lưu nó hoặc mở trong trình duyệt để xem.",
+                "lottie": "Tôi không thể hiển thị sticker này vì nó sử dụng định dạng hoạt hình Lottie. Tuy nhiên, tôi có thể cung cấp cho bạn liên kết JSON gốc của nó:",
+                "noInput": "Bạn cần phải cung cấp sticker chứ!",
+                "unknown": "Tôi không thể nhận diện được định dạng sticker đó!"
+            },
+            "toggle": {
+                "notHost": "Chỉ người chủ phiên âm thanh hiện tại mới có thể tạm dừng/phát nhạc!",
+                "paused": "Nhạc đã được tạm dừng.",
+                "resumed": "Nhạc đã được phát lại."
+            }
+        },
+        "noText": {
+            "spotify": "Bạn cần cung cấp nội dung để chèn chữ \"This is\" của Spotify!",
+            "homebrew": "Bạn cần cung cấp nội dung để tạo edit Homebrew Channel!",
+            "flag": "Bạn cần cung cấp emoji của một lá cờ để chèn lên!",
+            "caption2": "Bạn cần cung cấp nội dung để chèn chú thích!",
+            "sonic": "Bạn cần cung cấp nội dung để tạo meme Sonic!",
+            "qrcreate": "Bạn cần cung cấp nội dung để tạo mã QR!",
+            "caption": "Bạn cần cung cấp nội dung để chèn chú thích!",
+            "meme": "Bạn cần cung cấp nội dung để tạo meme!",
+            "motivate": "Bạn cần cung cấp nội dung để tạo poster truyền cảm hứng!",
+            "reddit": "Bạn cần cung cấp nội dung để tạo hình mờ Reddit!",
+            "snapchat": "Bạn cần cung cấp nội dung để chèn chú thích!",
+            "whisper": "Bạn cần cung cấp nội dung để chèn chú thích!"
+        },
+        "noImage": {
+            "gif": "Bạn cần cung cấp ảnh để chuyển thành GIF!",
+            "haah": "Bạn cần cung cấp ảnh/GIF để đổi ngược!",
+            "uncanny": "Bạn cần cung cấp ảnh/GIF để tạo ảnh uncanny!",
+            "spotify": "Bạn cần cung cấp ảnh/GIF để chèn chữ \"This is\" của Spotify!",
+            "caption": "Bạn cần cung cấp ảnh/GIF để chèn chú thích!",
+            "caption2": "Bạn cần cung cấp ảnh/GIF để chèn chú thích!",
+            "circle": "Bạn cần cung cấp ảnh/GIF để làm mờ tròn!",
+            "crop": "Bạn cần cung cấp ảnh/GIF để cắt!",
+            "deepfry": "Bạn cần cung cấp ảnh/GIF để fry!",
+            "deviantart": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ DeviantArt!",
+            "hypercam": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Hypercam!",
+            "ifunny": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ iFunny!",
+            "implode": "Bạn cần cung cấp ảnh/GIF để làm lõm!",
+            "invert": "Bạn cần cung cấp ảnh/GIF để đảo ngược màu!",
+            "jpeg": "Bạn cần cung cấp ảnh/GIF để cho nó JPEG hơn!",
+            "kinemaster": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ KineMaster!",
+            "magik": "Bạn cần cung cấp ảnh/GIF để thêm hiệu ứng \"magik\"!",
+            "meme": "Bạn cần cung cấp ảnh/GIF để tạo meme!",
+            "memecenter": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ MemeCenter!",
+            "motivate": "Bạn cần cung cấp ảnh/GIF để tạo poster truyền cảm hứng!",
+            "pixelate": "Bạn cần cung cấp ảnh/GIF để pixel hóa!",
+            "reverse": "Bạn cần cung cấp ảnh/GIF để lật ngược!",
+            "sharpen": "Bạn cần cung cấp ảnh/GIF để làm bén!",
+            "scott": "Bạn cần cung cấp ảnh/GIF để Scott khoe nó!",
+            "sepia": "Bạn cần cung cấp ảnh/GIF để áp dụng bộ lọc sepia!",
+            "shutterstock": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Shutterstock!",
+            "slow": "Bạn cần cung cấp ảnh/GIF để làm nó chậm lại!",
+            "soos": "Bạn cần cung cấp ảnh/GIF để lặp!",
+            "speechbubble": "Bạn cần cung cấp ảnh/GIF để thêm bóng thoại!",
+            "speed": "Bạn cần cung cấp ảnh/GIF để làm nhanh!",
+            "stretch": "Bạn cần cung cấp ảnh/GIF để dãn!",
+            "vignette": "Bạn cần cung cấp ảnh/GIF để thêm hiệu ứng viền tối!",
+            "waaw": "Bạn cần cung cấp ảnh/GIF để đảo ảnh!",
+            "wall": "Bạn cần cung cấp ảnh/GIF để làm thành tường!",
+            "whisper": "Bạn cần cung cấp ảnh/GIF để thêm chú thích!",
+            "qrread": "Bạn cần cung cấp ảnh/GIF có mã QR để quét!",
+            "9gag": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ 9GAG!",
+            "avs4you": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ avs4you!",
+            "bandicam": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Bandicam!",
+            "blur": "Bạn cần cung cấp ảnh/GIF để làm mờ!",
+            "bounce": "Bạn cần cung cấp ảnh/GIF để làm ảnh nhún!",
+            "explode": "Bạn cần cung cấp ảnh/GIF để nổ!",
+            "flag": "Bạn cần cung cấp ảnh/GIF để chèn cờ lên!",
+            "flip": "Bạn cần cung cấp ảnh/GIF để lật!",
+            "flop": "Bạn cần cung cấp ảnh/GIF để lật!",
+            "freeze": "Bạn cần cung cấp ảnh/GIF để đóng băng!",
+            "funky": "Bạn cần cung cấp ảnh/GIF để tạo banner Funky!",
+            "gamexplain": "Bạn cần cung cấp ảnh/GIF để tạo ảnh thu nhỏ GameXplain!",
+            "globe": "Bạn cần cung cấp ảnh/GIF để xoay!",
+            "grayscale": "Bạn cần cung cấp ảnh/GIF để làm trắng đen!",
+            "hooh": "Bạn cần cung cấp ảnh/GIF để đổi ngược!",
+            "snapchat": "Bạn cần cung cấp ảnh/GIF để thêm chú thích!",
+            "spin": "Bạn cần cung cấp ảnh/GIF để xoay vòng!",
+            "squish": "Bạn cần cung cấp ảnh/GIF để bóp!",
+            "swirl": "Bạn cần cung cấp ảnh/GIF để xoáy vòng!",
+            "tile": "Bạn cần cung cấp ảnh/GIF để làm thành mẫu gạch!",
+            "uncaption": "Bạn cần cung cấp ảnh/GIF để xóa chú thích!",
+            "unfreeze": "Bạn cần cung cấp ảnh/GIF để ngưng đóng băng!",
+            "wide": "Bạn cần cung cấp ảnh/GIF để dãn!",
+            "woow": "Bạn cần cung cấp ảnh/GIF để đảo ngược!"
         }
     },
     "image": {
@@ -565,6 +907,95 @@
             "spoiler": "tietlo",
             "text": "noidung",
             "togif": "sanggif"
-        }
-    }
+        },
+        "tempImageSent": "Ảnh của bạn đây nhé!",
+        "notWorking": "Có vẻ như tôi không thể xử lý được tấm ảnh này, điều này có thể do cấu hình của tôi chưa được thiết lập đúng cách. Bạn có thể liên hệ với người sở hữu bot để được hỗ trợ.",
+        "badurl": "URL không hợp lệ!",
+        "couldNotFind": "Tôi không thể tìm thấy ảnh trong tin nhắn ấy!",
+        "empty": "Kết quả được trở về là trống!",
+        "flags": {
+            "image": "Ảnh/GIF đính kèm",
+            "link": "URL của ảnh/GIF",
+            "ephemeral": "Thử gửi kết quả dưới dạng phản hồi tạm thời",
+            "spoiler": "Thử gửi kết quả dưới dạng tiết lộ",
+            "text": "Chữ mà sẽ được chèn lên ảnh",
+            "togif": "Bắt kết quả là GIF"
+        },
+        "nocmd": "Lệnh đó không được hỗ trợ trên phiên esmBot này.",
+        "frames": "Tấm GIF này có quá nhiều khung hình (hơn 1000)!",
+        "jobEnded": "Đã có sự cố xảy ra với các server hình ảnh trước khi tôi có thể nhận được ảnh. Hãy thử chạy lại lệnh nhé.",
+        "large": "Tấm ảnh đó quá lớn (>=40MB)! Hãy gửi tấm ảnh bé hơn.",
+        "noanim": "Tấm đó không phải định dạng hoạt ảnh (GIF hoặc WEBP)!",
+        "noTempServer": "Kích thước của ảnh tạo ra lớn hơn giới hạn tải lên của Discord, vì vậy tôi không thể tải nó lên.",
+        "noImage": "Bạn phải cung cấp ảnh/GIF!",
+        "noResult": "Tôi không thể nhận được phản hồi từ server hình ảnh. Vui lòng thử lại.",
+        "noServers": "Có vẻ là tôi không thể liên lạc với các server hình ảnh, chắc có thể là chúng đang gặp sự cố hoặc đang khởi động lại. Vui lòng chờ một chút nhé.",
+        "noText": "Bạn phải thêm nội dung chứ!",
+        "processing": "Đang xử lý... Xin hãy chờ chút nhé",
+        "tenor": "Tôi đã bị giới hạn yêu cầu bởi Tenor. Vui lòng thử tải GIF của bạn ở chỗ khác.",
+        "ratelimit": "Có vẻ như server lưu trữ hình ảnh đã giới hạn yêu cầu của tôi. Bạn có thể thử tải hình ảnh lên ở chỗ khác.",
+        "timeout": "Yêu cầu để tải ảnh đã hết hạn. Vui lòng thử lại, hay tải ảnh của bạn ở chỗ khác, hoặc là sử dụng ảnh khác.",
+        "selected": "Tấm ảnh này đã được chọn cho lệnh tiếp theo của bạn.",
+        "slowDown": "Xin hãy từ từ thôi.",
+        "tempSite": "Hình ảnh được tạo ra quá lớn so với giới hạn tải lên của Discord, vì vậy nó đã được tải lên một trang web bên ngoài.",
+        "tooLong": "Hình ảnh mất quá nhiều thời gian để xử lý (>=10 phút), nên tác vụ đã bị hủy. Hãy thử sử dụng hình ảnh bé hơn.",
+        "timeoutDownload": "Yêu cầu đã hết hạn trước khi tôi có thể tải ảnh đó. Bạn hãy thử tải ảnh lên ở chỗ khác hoặc là giảm kích thước ảnh.",
+        "tip": "(Mẹo: hãy thử nhấp chuột phải/nhấn giữ vào tin nhắn, chọn Ứng dụng -> Chọn hình ảnh, rồi thử lại.)",
+        "tooLarge": "Kết quả của tệp có kích thước quá lớn để tải lên. Hãy thử lại với một tấm ảnh bé hơn nhé.",
+        "tryAgain": "Không thể hoàn tất tác vụ xử lý hình ảnh này vì server đang chạy đã đột nhiên ngừng hoạt động. Hãy thử chạy lại lệnh nhé.",
+        "unknown": "Ảnh xuất ra không ở định dạng mà tôi có thể nhận diện được. Vui lòng thử lại."
+    },
+    "managedBy": "Phiên này được quản lý bởi **{{owner}}}**",
+    "pagination": {
+        "back": "Về",
+        "delete": "Xóa",
+        "forward": "Tiếp",
+        "jump": "Nhảy",
+        "jumpTo": "Bạn muốn nhảy đến trang mấy?",
+        "page": "Trang {{page}} trên tổng số {{amount}} trang",
+        "pageNumber": "Trang số",
+        "cantChangePage": "Bạn không thể chuyển trang của một lệnh mà bạn không chạy!"
+    },
+    "permissions": {
+        "noAttachFiles": "Tôi không có quyền `Đính kèm tệp`!",
+        "noEmbedLinks": "Tôi không có quyền `Nhúng liên kết`!"
+    },
+    "sound": {
+        "artist": "Sáng tác",
+        "blank": "(trống)",
+        "cantJoin": "Tôi không thể tham gia kênh thoại này! Hãy chắc chắn rằng tôi đã có quyền thích hợp.",
+        "endedInChannel": "Phiên thoại trong `{{channel}}` đã kết thúc.",
+        "notPlaying": "Tôi chưa có phát gì hết!",
+        "notVoiceChannel": "Kênh mà tôi được bảo vô không phải là kênh thoại!",
+        "queue": "Danh sách chờ",
+        "title": "Tiêu đề",
+        "unknown": "Không rõ",
+        "waitingForHost": "Đang chờ 10 giây để người điều hành quay trở lại...",
+        "newHost": "{{member}} là người chủ kênh thoại mới.",
+        "serversDown": "Hmmm, có vẻ là các server âm thanh đã sập hoặc bảo trì. Thử lại sau nhé.",
+        "addedToQueue": "{{type}} của `{{name}}` đã được thêm vào hàng chờ!",
+        "notConnected": "Tôi không được kết nối tới server âm thanh nào hết!",
+        "yes": "Có",
+        "waitingForSomeone": "Đang chờ 10 giây để ai đó quay trở lại...",
+        "channel": "Kênh",
+        "notInVoice": "Tôi không có ở trong kênh thoại nào hết!",
+        "noConnection": "Đã có điều gì đó kỳ lạ đã xảy ra với kết nối âm thanh, hãy thử phát lại bài hát của bạn.",
+        "noManager": "Các lệnh âm thanh vẫn đang được thiết lập!",
+        "noQueue": "Không có gì trong danh sách chờ hết!",
+        "noResponse": "Tôi nhận được phản hồi từ server âm thanh.",
+        "noSong": "Tôi không thể tìm thấy bài đó!",
+        "error": "Có vẻ như đã có lỗi trong quá trình phát âm thanh:",
+        "looping": "Đang lặp?",
+        "no": "Không",
+        "node": "Node",
+        "noVoiceState": "Bạn phải ở trong một kênh thoại trước!",
+        "nowPlaying": "Đang phát",
+        "noYouTube": "Phát lại từ YouTube đã bị vô hiệu hóa trên phiên này."
+    },
+    "tooLarge": "Kết quả có kích thước quá lơn, nên đây là tệp của nó:",
+    "noDatabase": "Lệnh này không khả dụng trên các phiên bản không trạng thái (stateless) của esmBot.",
+    "timeFormat": "{{days}} ngày, {{hours}} giờ, {{minutes}} phút, {{seconds}} giây",
+    "errorCaps": "LỖI",
+    "guildOnly": "Lệnh này chỉ sử dụng được trong server!",
+    "error": "Chết rồi! Tôi đã gặp phải lỗi khi thực thi lệnh này. Xin bạn hãy báo cáo nội dung của tệp đính kèm vô liên kết dưới đây hoặc trên server hỗ trợ của esmBot:"
 }
