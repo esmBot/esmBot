@@ -13,36 +13,30 @@ class AvatarCommand extends Command {
     if (member instanceof Member) {
       return member.user.avatarURL(undefined, imageSize);
     }
-    if (member && safeBigInt(member) > 21154535154122752n) {
-      const user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
-      if (user) return user.avatarURL(undefined, imageSize);
-      if (mentionRegex.test(member)) {
+    if (member) {
+      let user;
+      if (safeBigInt(member) > 21154535154122752n) {
+        user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
+      } else if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)?.[1];
-        if (!id || safeBigInt(id) < 21154535154122752n) {
-          this.success = false;
-          return this.getString("commands.responses.avatar.invalidMention");
+        if (id && safeBigInt(id) > 21154535154122752n) {
+          user = this.client.users.get(id) ?? (await this.client.rest.users.get(id));
         }
-        try {
-          const user = this.client.users.get(id) ?? (await this.client.rest.users.get(id));
-          return user.avatarURL(undefined, imageSize);
-        } catch {
-          return self.avatarURL(undefined, imageSize);
-        }
-      } else {
-        return self.avatarURL(undefined, imageSize);
       }
-    } else if (this.args.join(" ") !== "" && this.guild) {
+      if (user) return user.avatarURL(undefined, imageSize);
+    }
+    if (this.args.join(" ") !== "" && this.guild) {
       const searched = await this.guild.searchMembers({
         query: this.args.join(" "),
         limit: 1,
       });
-      if (searched.length === 0) return self.avatarURL(undefined, imageSize);
-      const user =
-        this.client.users.get(searched[0].user.id) ?? (await this.client.rest.users.get(searched[0].user.id));
-      return user ? user.avatarURL(undefined, imageSize) : self.avatarURL(undefined, imageSize);
-    } else {
-      return self.avatarURL(undefined, imageSize);
+      if (searched.length > 0) {
+        const user =
+          this.client.users.get(searched[0].user.id) ?? (await this.client.rest.users.get(searched[0].user.id));
+        if (user) return user.avatarURL(undefined, imageSize);
+      }
     }
+    return self.avatarURL(undefined, imageSize);
   }
 
   static description = "Gets a user's avatar";
