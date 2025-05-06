@@ -655,11 +655,7 @@
         "withoutDoubt": "Without a doubt",
         "yes": "Yes"
       },
-      "avatar": {
-        "invalidMention": "That's not a valid mention!"
-      },
       "banner": {
-        "invalidMention": "That's not a valid mention!",
         "noSelfBanner": "You don't have a banner!",
         "noUserBanner": "This user doesn't have a banner!"
       },
