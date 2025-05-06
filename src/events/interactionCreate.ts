@@ -132,7 +132,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
           content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
           files: [
             {
-              contents: Buffer.from(clean(err.toString())),
+              contents: Buffer.from(clean(err)),
               name: "error.txt",
             },
           ],

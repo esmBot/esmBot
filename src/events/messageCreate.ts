@@ -251,7 +251,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, mess
               content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
               files: [
                 {
-                  contents: Buffer.from(clean(err.toString())),
+                  contents: Buffer.from(clean(err)),
                   name: "error.txt",
                 },
               ],

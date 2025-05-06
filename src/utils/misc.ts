@@ -20,7 +20,7 @@ const optionalReplace = (token: string) => {
 };
 
 // clean(text) to clean message of any private info or mentions
-export function clean(input: string) {
+export function clean(input: any) {
   let text = input;
   if (typeof text !== "string") text = util.inspect(text, { depth: 1 });
 
