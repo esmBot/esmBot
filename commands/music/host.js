@@ -2,6 +2,7 @@ import { Constants, User } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";
 import { players } from "#utils/soundplayer.js";
+import { safeBigInt } from "#utils/misc.js";
 
 class HostCommand extends MusicCommand {
   async run() {
@@ -23,7 +24,7 @@ class HostCommand extends MusicCommand {
           this.message.mentions.users.length >= 1 ? this.message.mentions.users[0] : this.client.users.get(input);
         if (getUser) {
           user = getUser;
-        } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(input) >= 21154535154122752n) {
+        } else if (input.match(/^<?[@#]?[&!]?\d+>?$/) && safeBigInt(input) >= 21154535154122752n) {
           try {
             user = await this.client.rest.users.get(input);
           } catch {

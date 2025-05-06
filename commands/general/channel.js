@@ -1,5 +1,6 @@
 import { Constants, GuildChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
+import { safeBigInt } from "#utils/misc.js";
 
 class ChannelCommand extends Command {
   async run() {
@@ -18,7 +19,7 @@ class ChannelCommand extends Command {
 
     if (this.args[0].toLowerCase() === "disable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(this.args[1]) >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && safeBigInt(this.args[1]) >= 21154535154122752n) {
         const id = this.args[1]
           .replaceAll("@", "")
           .replaceAll("#", "")
@@ -46,7 +47,7 @@ class ChannelCommand extends Command {
     }
     if (this.args[0].toLowerCase() === "enable") {
       let channel;
-      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && BigInt(this.args[1]) >= 21154535154122752n) {
+      if (this.args[1]?.match(/^<?[@#]?[&!]?\d+>?$/) && safeBigInt(this.args[1]) >= 21154535154122752n) {
         const id = this.args[1]
           .replaceAll("@", "")
           .replaceAll("#", "")

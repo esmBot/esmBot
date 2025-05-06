@@ -1,5 +1,6 @@
 import { Constants, Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
+import { safeBigInt } from "#utils/misc.js";
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 const imageSize = 4096;
 
@@ -22,7 +23,7 @@ class BannerCommand extends Command {
         this.getString("commands.responses.banner.noUserBanner")
       );
     }
-    if (member && BigInt(member) > 21154535154122752n) {
+    if (member && safeBigInt(member) > 21154535154122752n) {
       const user = await this.client.rest.users.get(member);
       if (user?.banner)
         return (
@@ -32,7 +33,7 @@ class BannerCommand extends Command {
         );
       if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)?.[1];
-        if (!id || BigInt(id) < 21154535154122752n) {
+        if (!id || safeBigInt(id) < 21154535154122752n) {
           this.success = false;
           return this.getString("commands.responses.banner.invalidMention");
         }
