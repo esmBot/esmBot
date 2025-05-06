@@ -758,11 +758,7 @@
             "bird": {
                 "error": "Tôi không thể lấy ảnh chim kịp thời. Hay là thử lại nhé?"
             },
-            "avatar": {
-                "invalidMention": "Đây không phải ping hợp lệ!"
-            },
             "banner": {
-                "invalidMention": "Đây không phải ping hợp lệ!",
                 "noSelfBanner": "Bạn không có banner!",
                 "noUserBanner": "Người dùng này không có banner!"
             },

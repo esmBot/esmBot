@@ -835,11 +835,7 @@
                 "noInput": "Devi fornire qualcosa da ricercare!",
                 "noResults": "Non ho potuto trovare alcun risultato!"
             },
-            "avatar": {
-                "invalidMention": "Quella non è una menzione valida!"
-            },
             "banner": {
-                "invalidMention": "Quella non è una menzione valida!",
                 "noSelfBanner": "Non hai un banner!",
                 "noUserBanner": "Quell'utente non ha un banner!"
             },

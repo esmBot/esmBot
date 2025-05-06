@@ -692,11 +692,7 @@
                 "noInput": "Vous devez indiquer quelle commande activer/désactiver !",
                 "reEnabled": "La commande `{{command}}` a été réactivée."
             },
-            "avatar": {
-                "invalidMention": "Ceci n'est pas une mention valide !"
-            },
             "banner": {
-                "invalidMention": "Ceci n'est pas une mention valide !",
                 "noSelfBanner": "Vous n'avez pas de bannière !",
                 "noUserBanner": "Cet utilisateur n'a pas de bannière !"
             },
