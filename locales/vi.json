@@ -16,7 +16,7 @@
             "unfreeze": "Ngừng đóng băng chuỗi ảnh",
             "wide": "Dãn ảnh gấp 19 lần chiều rộng của nó",
             "play": "Phát một bài hát hoặc thêm vào danh sách chờ",
-            "channel": "Bật/tắt lệnh truyền thống cho kênh (vô cài đặt server cho lệnh gạch chéo)",
+            "channel": "Bật/tắt lệnh truyền thống cho kênh (vô cài đặt máy chủ cho lệnh gạch chéo)",
             "raw": "Lấy URL gốc của hình ảnh (hữu ích để lưu GIF từ các trang như Tenor)",
             "deviantart": "Chèn hình mờ DeviantArt vô ảnh",
             "magik": "Chèn hiệu ứng kéo giãn ảnh theo nội dung (bóp méo ảnh)",
@@ -39,7 +39,7 @@
             "avatar": "Lấy ảnh đại diện của một người dùng",
             "banner": "Lấy ảnh banner của một người dùng",
             "base64": "Mã hóa/giải mã chuỗi Base64",
-            "command": "Bật/tắt lệnh truyền thống cho server (vô cài đặt server cho lệnh gạch chéo)",
+            "command": "Bật/tắt lệnh truyền thống cho server (vô cài đặt máy chủ cho lệnh gạch chéo)",
             "count": "Lấy bao nhiêu lần lệnh đã được sử dụng",
             "eval": "Chạy mã JavaScript",
             "exec": "Chạy lệnh shell",
@@ -49,7 +49,7 @@
             "imagestats": "Lấy thống kê về các máy chủ hình ảnh",
             "info": "Lấy thông tin và công nhận của tôi",
             "ping": "Kiểm tra kết nối với các máy chủ của Discord",
-            "prefix": "Kiểm tra/thay đổi tiền tố của server",
+            "prefix": "Kiểm tra/thay đổi tiền tố của máy chủ",
             "qrcreate": "Tạo mã QR",
             "qrread": "Đọc mã QR",
             "reload": "Chạy lại lệnh",
@@ -118,7 +118,7 @@
                 "text": "Nội dung để mã hóa"
             },
             "prefix": {
-                "prefix": "Tiền tố mã bạn muốn server sử dụng"
+                "prefix": "Tiền tố mã bạn muốn máy chủ sử dụng"
             },
             "caption": {
                 "noegg": "Nó sẽ tắt... cái gì đó. Không nói là gì đâu nhé.",
@@ -142,7 +142,7 @@
                 "user": "Người dùng mà bạn muốn làm người điều hành mới"
             },
             "tags": {
-                "list": "Hiển thị tất cả thẻ trong server",
+                "list": "Hiển thị tất cả thẻ trong máy chủ",
                 "get": "Lấy thẻ",
                 "add": "Thêm một thẻ mới",
                 "delete": "Xóa thẻ",
@@ -560,20 +560,20 @@
             "info": {
                 "clickHere": "Nhấn vào đây!",
                 "creditsHeader": "Công nhận:",
-                "officialServer": "Server chính thức:",
+                "officialServer": "Máy chủ chính thức:",
                 "privacyPolicy": "Chính sách bảo mật:",
                 "credits": "Bot bởi **[Essem](https://essem.space)** và **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo bởi **[MintBurrow](https://twitter.com/MintBurrow)**",
                 "processOnly": "{{count}} (chỉ dành cho quá trình này)",
                 "sourceCode": "Mã nguồn:",
                 "version": "Phiên bản:",
-                "totalServers": "Tổng cộng server:",
+                "totalServers": "Tổng cộng máy chủ:",
                 "translate": "Dịch:"
             },
             "imagestats": {
-                "connected": "Bot hiện đang được kết nối tới {{length}} server ảnh.",
+                "connected": "Bot hiện đang được kết nối tới {{length}} máy chủ ảnh.",
                 "header": "Thống kê hình ảnh của esmBot",
                 "runningJobs": "Các công việc đang chạy: {{count}}",
-                "server": "Server {{num}}"
+                "server": "Máy chủ {{num}}"
             },
             "nowplaying": {
                 "noTrack": "Đã có sự cố khi lấy bài hát hiện tại."
@@ -675,7 +675,7 @@
                 "currentHostId": "Người giữ quyền điều khiển kênh thoại hiện tại là người dùng với ID `{{id}}`.",
                 "currentHost": "Người giữ quyền điều khiển kênh thoại hiện tại là **{{member}}**",
                 "notHost": "Chỉ người giữ quyền điều khiển phiên thoại hiện tại mới có thể chọn người giữ mới!",
-                "notMember": "Người dùng đó không có trong server này!",
+                "notMember": "Người dùng đó không có trong máy chủ này!",
                 "noUser": "Tôi không thể tìm thấy người dùng đó!"
             },
             "prefix": {
@@ -700,7 +700,7 @@
                 "invalid": "Đó không phải là một lựa chọn hợp lệ!",
                 "notDisabled": "Tôi không bị tắt trong kênh này!",
                 "noCmd": "Bạn cần phải chọn xem bạn muốn bật hay tắt tôi trong kênh này!",
-                "notInServer": "Cái kênh đó làm gì có trong server này!",
+                "notInServer": "Cái kênh đó làm gì có trong máy chủ này!",
                 "reEnabled": "Tôi đã được bật lại trong kênh này."
             },
             "command": {
@@ -720,9 +720,9 @@
                 "thanks": "Cảm ơn các nhà tài trợ sau đây vì sự ủng hộ của họ:"
             },
             "imagereload": {
-                "connected": "Đã kết nối thành công tới {{length}} server ảnh.",
-                "couldNotConnect": "Tôi không thể kết nối tới server ảnh nào hết!",
-                "owner": "Chỉ có chủ sở hữu bot mới có thể tải lại server ảnh!"
+                "connected": "Đã kết nối thành công tới {{length}} máy chủ ảnh.",
+                "couldNotConnect": "Tôi không thể kết nối tới máy chủ ảnh nào hết!",
+                "owner": "Chỉ có chủ sở hữu bot mới có thể tải lại máy chủ ảnh!"
             },
             "help": {
                 "noInfo": "Tôi không hề tìm thấy thông tin gì hết về lệnh đó!",
