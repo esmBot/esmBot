@@ -232,6 +232,50 @@
             "uncanny": {
                 "font": "Mitä fonttia haluat käyttää (oletus: helvetica)",
                 "phase": "Mitä outoa kuvaa haluat käyttää"
+            },
+            "play": {
+                "query": "Äänen hakusana tai URL-osoite"
+            },
+            "remove": {
+                "position": "Jonon paikka, jonka haluat poistaa"
+            },
+            "seek": {
+                "position": "Hakeudu tähän paikkaan"
+            },
+            "volume": {
+                "level": "Volyymi"
+            },
+            "tags": {
+                "add": "Lisää uusi merkki",
+                "delete": "Poistaa merkin",
+                "edit": "Muokkaa olemassaolevaa merkintää",
+                "get": "Hankkii merkinnän",
+                "list": "Antaa listan jokaisesta merkinnästä tällä palvelimella",
+                "owner": "Kertoo merkinnän omistajan",
+                "random": "Hankkii satunnaisen merkinnän"
+            },
+            "tags get": {
+                "name": "Merkinnän nimi"
+            },
+            "uncaption": {
+                "tolerance": "Aseta varjotoleranssi otsikon tunnistamista varten (0.0 on korkein, 1.0 alhaisin, oletus 0.95)"
+            },
+            "host": {
+                "user": "Käyttäjä, jonka haluat uudeksi isännäksi"
+            },
+            "tags add": {
+                "name": "Merkinnän nimi",
+                "content": "Merkinnän sisältö"
+            },
+            "tags delete": {
+                "name": "Merkkinnän nimi"
+            },
+            "tags edit": {
+                "name": "Merkinnän nimi",
+                "content": "Merkinnän sisältö"
+            },
+            "tags owner": {
+                "name": "Merkinnän nimi"
             }
         },
         "flagNames": {
@@ -398,6 +442,112 @@
             "play": {
                 "query": "haku"
             }
+        },
+        "names": {
+            "cat": "kissa",
+            "dice": "noppa",
+            "channel": "kanava",
+            "command": "komento",
+            "dog": "koira",
+            "homebrew": "homebrew",
+            "sonic": "sonic",
+            "broadcast": "lähetys",
+            "count": "laske",
+            "image": "kuva",
+            "qrcreate": "luoqr",
+            "imagereload": "lataakuva",
+            "imagestats": "kuvantiedot",
+            "qrread": "lueqr",
+            "info": "tietoja",
+            "lengthen": "pidennä",
+            "prefix": "alkuliite",
+            "restart": "uudelleenkäynnistä",
+            "snowflake": "lumihiutale",
+            "soundreload": "lataaääni",
+            "stats": "tiedot",
+            "sticker": "tarra",
+            "blur": "sumenna",
+            "bounce": "hypytä",
+            "caption": "otsikko",
+            "caption2": "otsikko2",
+            "circle": "ympyrä",
+            "crop": "rajaa",
+            "deepfry": "uppopaista",
+            "explode": "räjäytä",
+            "flag": "lippu",
+            "flip": "käännä",
+            "freeze": "jäädytä",
+            "funky": "outo",
+            "gamexplain": "selitäpeli",
+            "grayscale": "mustavalkoinen",
+            "motivate": "motivoi",
+            "pixelate": "pixelöi",
+            "reverse": "",
+            "sharpen": "terävännä",
+            "slow": "hidasta",
+            "speechbubble": "puhekupla",
+            "speed": "nopeuta",
+            "spin": "pyöritä",
+            "stretch": "vääristä",
+            "swirl": "pyöristä",
+            "tile": "laatta",
+            "uncaption": "poistaotsikko",
+            "unfreeze": "epäjäädytä",
+            "wall": "seinä",
+            "whisper": "kuiskaa",
+            "wide": "leveä",
+            "Select Image": "Valitse Kuva",
+            "host": "isäntä",
+            "loop": "silmukka",
+            "music": "musiikki",
+            "nowplaying": "soinyt",
+            "play": "soita",
+            "queue": "jono",
+            "remove": "",
+            "shuffle": "sekoita",
+            "skip": "ohita",
+            "stop": "pysäytä",
+            "toggle": "vaihda",
+            "tags": "merkinnät",
+            "reload": "lataauudelleen",
+            "invert": "vääristävärit",
+            "raw": "raaka",
+            "8ball": "ennustuspallo",
+            "bird": "lintu",
+            "donate": "lahjoita",
+            "help": "apua"
+        },
+        "noImage": {
+            "flip": "Tarvitset kuvan tai GIF:in kääntääksesi sen!",
+            "hypercam": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Hypercam-vesileiman!",
+            "ifunny": "Tarvitset kuvan tai GIF:in lisätäksesi siihen iFunny-vesileiman!",
+            "memecenter": "Tarvitset kuvan tai GIF:in lisätäksesi siihen MemeCenter-vesileiman!",
+            "pixelate": "Tarvitset kuvan tai GIF:in pixelöidäksesis sen!",
+            "kinemaster": "Tarvitset kuvan tai GIF:in lisätäksesi siihen KineMaster-vesileiman!",
+            "magik": "Tarvitset kuvan tai GIF:in lisätäksesi siihen jotain taikuutta :)!",
+            "meme": "Tarvitset kuvan tai GIF:in luodaksesi meemin!",
+            "shutterstock": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Shutterstock-vesileiman!",
+            "sharpen": "Tarvitset kuvan tai GIF:in, jos haluat siitä terävämmän!",
+            "9gag": "Tarvitset kuvan tai GIF:in lisätäksesi siihen 9GAG-vesileiman!",
+            "caption2": "Tarvitset kuvan tai GIF:in lisätäksesi siihen avs4you otsikon2!",
+            "snapchat": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Snapchat-otsikon!",
+            "qrread": "Sinun täytyy antaa kuva tai GIF, joka sisältää QR-koodin!",
+            "gif": "Tarvitset kuvan muuttaksesi sen GIF:iksi!",
+            "bandicam": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Bandicam-vesileiman!",
+            "avs4you": "Tarvitset kuvan tai GIF:in lisätäksesi siihen avs4you vesileiman!",
+            "blur": "Tarvitset kuvan tai GIF:in sumentaaksesi sitä!",
+            "caption": "Tarvitset kuvan tai GIF:in lisätäksesi siihen otsikon!",
+            "crop": "Tarvitset kuvan tai GIF:in rajataksesi sitä!",
+            "deepfry": "Tarvitset kuvan tai GIF:in uppopaistaaksesi sen!",
+            "deviantart": "Tarvitset kuvan tai GIF:in lisätäksesi siihen DeviantArt-vesileiman!",
+            "explode": "Tarvitset kuvan tai GIF:in räjäyttääksesi sen!",
+            "grayscale": "Tarvitset kuvan tai GIF:in muuttaksesi sen mustavalkoiseksi!",
+            "haah": "Tarvitset kuvan tai GIF:in peilataksesi sen!",
+            "slow": "Tarvitset kuvan tai GIF:in hidastaaksesi sitä!",
+            "soos": "Tarvitset kuvan tai GIF:in tehdäksesi siitä silmukan!",
+            "speechbubble": "Tarvitset kuvan tai GIF:in lisätäksesi siihen puhekuplan!",
+            "spin": "Tarvitset kuvan tai GIF:in pyörittääksesi sitä!",
+            "stretch": "Tarvitset kuvan tai GIF:in venyttääksesi sitä!"
         }
     }
 }
