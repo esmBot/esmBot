@@ -12,10 +12,6 @@ class SelectImageCommand extends Command {
       this.permissions,
       message,
       this.interaction,
-      {
-        image: this.getOptionString("image"),
-        link: this.getOptionString("link"),
-      },
       true,
       false,
       true,

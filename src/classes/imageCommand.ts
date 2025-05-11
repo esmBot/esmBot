@@ -54,10 +54,6 @@ class ImageCommand extends Command {
             this.permissions,
             this.message,
             this.interaction,
-            {
-              image: this.getOptionString("image"),
-              link: this.getOptionString("link"),
-            },
             true,
           ).catch((e) => {
             if (e.name === "AbortError") {

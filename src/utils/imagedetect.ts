@@ -285,27 +285,26 @@ export default async (
   perms: Permission,
   cmdMessage?: Message,
   interaction?: CommandInteraction,
-  options?: { image?: string; link?: string },
   extraReturnTypes = false,
   video = false,
   singleMessage = false,
 ): Promise<ImageMeta | undefined> => {
   // we start by determining whether or not we're dealing with an interaction or a message
-  if (interaction && options) {
+  if (interaction) {
     // we can get a raw attachment or a URL in the interaction itself
-    if (options.image) {
-      const attachment = interaction.data.resolved.attachments.get(options.image);
-      if (attachment) {
-        return getImage(
-          attachment.proxyURL,
-          attachment.url,
-          video,
-          !!(attachment.flags & AttachmentFlags.IS_SPOILER),
-          !!attachment.contentType,
-        );
-      }
-    } else if (options.link) {
-      return getImage(options.link, options.link, video, false, extraReturnTypes, null, interaction.client);
+    const attachment = interaction.data.options.getAttachment("image");
+    if (attachment) {
+      return getImage(
+        attachment.proxyURL,
+        attachment.url,
+        video,
+        !!(attachment.flags & AttachmentFlags.IS_SPOILER),
+        !!attachment.contentType,
+      );
+    }
+    const link = interaction.data.options.getString("link");
+    if (link) {
+      return getImage(link, link, video, false, extraReturnTypes, null, interaction.client);
     }
   }
   if (cmdMessage) {
