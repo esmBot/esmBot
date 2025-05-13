@@ -8,7 +8,6 @@ import {
   type StickerItem,
   TextableChannel,
   ThreadChannel,
-  type ThreadParentChannel,
 } from "oceanic.js";
 import { getType } from "./image.js";
 import logger from "./logger.js";

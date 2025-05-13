@@ -45,7 +45,7 @@ interface Job {
 }
 
 interface MiniJob {
-  id: BigInt;
+  id: bigint;
   msg: ImageParams;
   num: number;
 }
@@ -76,7 +76,7 @@ class JobCache<K, V extends Job> extends Map {
   }
 }
 
-const jobs = new JobCache<BigInt, Job>();
+const jobs = new JobCache<bigint, Job>();
 // Should look like ID : { msg: "request", num: <job number> }
 
 const PASS = process.env.PASS ? process.env.PASS : undefined;
@@ -95,7 +95,7 @@ discord.on("error", error);
 /**
  * Accept an image job.
  */
-async function acceptJob(id: BigInt, sock: WebSocket): Promise<void> {
+async function acceptJob(id: bigint, sock: WebSocket): Promise<void> {
   jobAmount++;
   const job = jobs.get(id);
   try {

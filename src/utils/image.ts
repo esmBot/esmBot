@@ -140,7 +140,7 @@ export async function reloadImageConnections() {
 
 async function getIdeal(object: ImageParams): Promise<ImageConnection | undefined> {
   const idealServers = [];
-  for (const [address, connection] of connections) {
+  for (const connection of connections.values()) {
     if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
       continue;
     }

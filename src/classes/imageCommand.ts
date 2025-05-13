@@ -49,13 +49,7 @@ class ImageCommand extends Command {
         const selection = selectedImages.get(this.author.id) as ImageMeta | undefined;
         const image =
           selection ??
-          (await imageDetect(
-            this.client,
-            this.permissions,
-            this.message,
-            this.interaction,
-            true,
-          ).catch((e) => {
+          (await imageDetect(this.client, this.permissions, this.message, this.interaction, true).catch((e) => {
             if (e.name === "AbortError") {
               runningCommands.delete(this.author.id);
               return this.getString("image.timeout");
