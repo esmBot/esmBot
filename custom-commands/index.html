@@ -461,7 +461,7 @@
 <h1 id="custom-commands">Custom Commands</h1>
 <p>esmBot has a powerful and flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.</p>
 <h2 id="directory-structure">Directory Structure</h2>
-<p>The bot loads commands from subdirectories inside of the <code>commands</code> directory, which looks something like this by default:
+<p>The bot loads commands from subdirectories inside of the <code>commands</code> directory, which looks something like this by default:</p>
 <div class="highlight"><pre><span></span><code>commands/
   - fun
     &gt; cat.js
@@ -475,13 +475,13 @@
     &gt; speed.js
     &gt; ...
 </code></pre></div>
-As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the <code>commands</code> directory, and to create a new command, you can create a new JS file under one of those subdirectories.</p>
+<p>As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the <code>commands</code> directory, and to create a new command, you can create a new JS file under one of those subdirectories.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>The <code>message</code> and <code>user</code> categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the <code>message</code> category show when selecting messages, while commands in the <code>user</code> category show when selecting users.</p>
 </div>
 <h2 id="command-structure">Command Structure</h2>
-<p>It's recommended to use the <code>Command</code> class located at <code>#cmd-classes/command.js</code> to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
+<p>It's recommended to use the <code>Command</code> class located at <code>#cmd-classes/command.js</code> to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">Command</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;#cmd-classes/command.js&quot;</span><span class="p">;</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nx">HelloCommand</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Command</span><span class="w"> </span><span class="p">{</span>
@@ -495,7 +495,7 @@ As you can see, each command is grouped into categories, which are represented b
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">HelloCommand</span><span class="p">;</span>
 </code></pre></div>
-As you can see, the first thing we do is import the Command class. We then create a new class for the command that extends that class to provide the needed parameters. We then define the command function, which is named <code>run</code>. Some static parameters, including the command description and an alias for the command, <code>helloworld</code>, are also defined. Finally, once everything in the command class is defined, we export the new class to be loaded as a module by the command handler.</p>
+<p>As you can see, the first thing we do is import the Command class. We then create a new class for the command that extends that class to provide the needed parameters. We then define the command function, which is named <code>run</code>. Some static parameters, including the command description and an alias for the command, <code>helloworld</code>, are also defined. Finally, once everything in the command class is defined, we export the new class to be loaded as a module by the command handler.</p>
 <p>The default command name is the same as the filename that you save it as, excluding the <code>.js</code> file extension. If you ever want to change the name of the command, just rename the file.</p>
 <p>The parameters available to your command consist of the following:</p>
 <ul>
@@ -530,28 +530,32 @@ As you can see, the first thing we do is import the Command class. We then creat
 <ul>
 <li><code>description</code>: Your command's description, which is shown in the help command.</li>
 <li><code>aliases</code>: An array of command aliases. People will be able to run the command using these as well as the normal command name.</li>
-<li><code>flags</code>: An array of objects specifying command flags, or special arguments, that will be shown when running <code>help &lt;command&gt;</code> or a slash command. Example:
+<li><code>flags</code>: An array of objects specifying command flags, or special arguments, that will be shown when running <code>help &lt;command&gt;</code> or a slash command. Example:</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;argument&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">Constants</span><span class="p">.</span><span class="nx">ApplicationCommandOptionTypes</span><span class="p">.</span><span class="nx">STRING</span><span class="p">,</span><span class="w"> </span><span class="c1">// translates to 3, see https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type</span>
 <span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Does a thing&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">...</span>
 <span class="p">}];</span>
-</code></pre></div></li>
+</code></pre></div>
+<ul>
 <li><code>ephemeral</code>: Specifies whether or not the command output should be ephemeral.</li>
 <li><code>slashAllowed</code>: Specifies whether or not the command is available via slash commands.</li>
 <li><code>directAllowed</code>: Specifies whether or not a command is available in direct messages.</li>
 <li><code>userAllowed</code>: Specifies whether or not a command is available when run in a user installation context.</li>
 <li><code>adminOnly</code>: Specifies whether or not a command should be limited to the bot owner(s).</li>
 </ul>
-<p>In addition, a few helper functions are available inside the <code>Command</code> class:
-- <code>this.acknowledge()</code>: Sends a typing indicator in the current channel. Only works with classic commands.
-- <code>this.getString(key, returnNull)</code>: Gets a localized string for the input locale. If <code>returnNull</code> is set to false (the default) and the string does not exist on the input or default locales, the <code>key</code> string will be returned; otherwise, <code>null</code> will be returned.
-- <code>this.getOptionString(key)</code>: Gets a command flag/option by name as a string.
-- <code>this.getOptionBoolean(key)</code>: Gets a command flag/option by name as a boolean.
-- <code>this.getOptionNumber(key)</code>: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
-- <code>this.getOptionInteger(key)</code>: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
-- <code>this.clean(text)</code>: Strips and normalizes user, role, and channel mentions found in <code>text</code></p>
+<p>In addition, a few helper functions are available inside the <code>Command</code> class:</p>
+<ul>
+<li><code>this.acknowledge()</code>: Sends a typing indicator in the current channel. Only works with classic commands.</li>
+<li><code>this.getString(key, returnNull)</code>: Gets a localized string for the input locale. If <code>returnNull</code> is set to false (the default) and the string does not exist on the input or default locales, the <code>key</code> string will be returned; otherwise, <code>null</code> will be returned.</li>
+<li><code>this.getOptionString(key)</code>: Gets a command flag/option by name as a string.</li>
+<li><code>this.getOptionBoolean(key)</code>: Gets a command flag/option by name as a boolean.</li>
+<li><code>this.getOptionNumber(key)</code>: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).</li>
+<li><code>this.getOptionInteger(key)</code>: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).</li>
+<li><code>this.clean(text)</code>: Strips and normalizes user, role, and channel mentions found in <code>text</code></li>
+</ul>
 <h2 id="the-run-function">The <code>run</code> Function</h2>
 <p>The main JS code of your command is specified in the <code>run</code> function. This function should return a <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise"><code>Promise</code></a> of your command output, which is why the <code>run</code> function <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function">is an async function by default</a>. The return value inside the <code>Promise</code> should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.</p>
 
@@ -574,7 +578,7 @@ As you can see, the first thing we do is import the Command class. We then creat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 7, 2025 04:20:02">April 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 13, 2025 20:31:31">May 13, 2025</span>
   </span>
 
     

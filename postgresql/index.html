@@ -494,29 +494,29 @@
 <hr />
 <h3 id="3-create-the-bot-user-and-database">3. Create the bot user and database.</h3>
 <p>When you install PostgreSQL, it'll create a new user on your system that acts as the "superuser" of the database. You'll need to run Postgres commands as this user; however, you can run a command as that user without switching to it by using <code>sudo</code>.</p>
-<p>First, you'll need to create a user that the bot can interact with as well as the database itself:
+<p>First, you'll need to create a user that the bot can interact with as well as the database itself:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;createuser esmbot&quot;</span>
 sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;createdb esmbot&quot;</span>
 </code></pre></div>
-Then, launch the PostgreSQL shell for the next few commands:
+<p>Then, launch the PostgreSQL shell for the next few commands:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
 </code></pre></div>
-If you want to give the user a password, you can do so like this:
+<p>If you want to give the user a password, you can do so like this:</p>
 <div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">esmbot</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;new_password&#39;</span><span class="p">;</span>
 </code></pre></div>
-Once you're inside the shell, you'll need to make sure the bot owns the database and has permissions:
+<p>Once you're inside the shell, you'll need to make sure the bot owns the database and has permissions:</p>
 <div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">esmbot</span><span class="w"> </span><span class="k">OWNER</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">esmbot</span><span class="p">;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>You're done!</p>
 <hr />
 <h3 id="troubleshooting">Troubleshooting</h3>
-<p>If you get an error like <code>error: permission denied for table counts</code> when attempting to run the bot, try running these commands in the PostgreSQL shell:
+<p>If you get an error like <code>error: permission denied for table counts</code> when attempting to run the bot, try running these commands in the PostgreSQL shell:</p>
 <div class="highlight"><pre><span></span><code><span class="err">\</span><span class="k">c</span><span class="w"> </span><span class="n">esmbot</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">guilds</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">esmbot</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">counts</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">esmbot</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">esmbot</span><span class="p">;</span>
 <span class="err">\</span><span class="n">q</span>
-</code></pre></div></p>
+</code></pre></div>
 
 
 
@@ -537,7 +537,7 @@ Once you're inside the shell, you'll need to make sure the bot owns the database
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2022 21:31:00">November 26, 2022</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 13, 2025 20:31:31">May 13, 2025</span>
   </span>
 
     

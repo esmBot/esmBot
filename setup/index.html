@@ -563,16 +563,16 @@ The <code>zxing-cpp</code> package is not available through Homebrew, so unfortu
 <hr />
 <h3 id="2-install-nodejs">2. Install Node.js.</h3>
 <p>Node.js is the runtime that esmBot is built on top of. The bot requires version 20.12.0 or above to run.</p>
-<p>We suggest using nvm to manage your Node.js install. Run the following command to install it:
+<p>We suggest using nvm to manage your Node.js install. Run the following command to install it:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-o-<span class="w"> </span>https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
-</code></pre></div></p>
-<p>Then run the following to install Node.js:
+</code></pre></div>
+<p>Then run the following to install Node.js:</p>
 <div class="highlight"><pre><span></span><code>nvm<span class="w"> </span>install<span class="w"> </span><span class="m">20</span>
 nvm<span class="w"> </span>use<span class="w"> </span><span class="m">20</span>
-</code></pre></div></p>
-<p>esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:
+</code></pre></div>
+<p>esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:</p>
 <div class="highlight"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="3-set-up-the-database">3. Set up the database.</h3>
 <p>esmBot officially supports two database systems: SQLite and PostgreSQL. While SQLite is smaller and requires no initial setup, PostgreSQL has better performance (especially in large environments).</p>
@@ -603,44 +603,44 @@ pnpm<span class="w"> </span>build
 <p class="admonition-title">Warning</p>
 <p>There are websites out there providing lists of public Lavalink instances that can be used with the bot. However, these are not recommended due to performance/security concerns and missing features, and it is highly recommended to set one up yourself instead using the steps below.</p>
 </div>
-<p>esmBot requires Lavalink version v4 or later, which requires a Java (17 or later) installation. You can use <a href="https://sdkman.io">SDKMAN</a> to install Eclipse Temurin, a popular Java distribution:
+<p>esmBot requires Lavalink version v4 or later, which requires a Java (17 or later) installation. You can use <a href="https://sdkman.io">SDKMAN</a> to install Eclipse Temurin, a popular Java distribution:</p>
 <div class="highlight"><pre><span></span><code>sdk<span class="w"> </span>install<span class="w"> </span>java<span class="w"> </span><span class="m">17</span>.0.11-tem
-</code></pre></div></p>
-<p>Initial setup is like this:
+</code></pre></div>
+<p>Initial setup is like this:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
 mkdir<span class="w"> </span>Lavalink
 <span class="nb">cd</span><span class="w"> </span>Lavalink
 curl<span class="w"> </span>-OL<span class="w"> </span>https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar
 ln<span class="w"> </span>-s<span class="w"> </span>~/esmBot/application.yml<span class="w"> </span>.
 </code></pre></div>
-To run Lavalink, you can use this command:
+<p>To run Lavalink, you can use this command:</p>
 <div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>Lavalink.jar
-</code></pre></div></p>
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>You'll need to run Lavalink alongside the bot in order to use it. There are a few methods to do this, such as the <code>screen</code> command, creating a new systemd service, or simply just opening a new terminal session alongside your current one.</p>
 </div>
 <hr />
 <h3 id="6-configure-the-bot">6. Configure the bot.</h3>
-<p>Configuration is done via environment variables which can be specified through a <code>.env</code> file. Copy <code>.env.example</code> to get a starter config file:
+<p>Configuration is done via environment variables which can be specified through a <code>.env</code> file. Copy <code>.env.example</code> to get a starter config file:</p>
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div></p>
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If you can't see either of these files, don't worry - Linux treats files whose names start with a . as hidden files.</p>
 </div>
-<p>To edit this file in the terminal, run this command:
+<p>To edit this file in the terminal, run this command:</p>
 <div class="highlight"><pre><span></span><code>nano<span class="w"> </span>.env
 </code></pre></div>
-This will launch a text editor with the file ready to go. Create a Discord application <a href="https://discord.com/developers/applications">here</a> and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the <code>TOKEN</code> variable.</p>
+<p>This will launch a text editor with the file ready to go. Create a Discord application <a href="https://discord.com/developers/applications">here</a> and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the <code>TOKEN</code> variable.</p>
 <p>When you're finished editing the file, press Ctrl + X, then Y and Enter.</p>
 <p>An overview of each of the variables in the <code>.env</code> file can be found <a href="https://docs.esmbot.net/config">here</a>.</p>
 <hr />
 <h3 id="7-run-the-bot">7. Run the bot.</h3>
-<p>Once everything else is set up, you can start the bot like so:
+<p>Once everything else is set up, you can start the bot like so:</p>
 <div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>start
 </code></pre></div>
-If the bot starts successfully, you're done! You can invite the bot to your server by generating an invite link under OAuth -&gt; URL Generator in the Discord application dashboard.</p>
+<p>If the bot starts successfully, you're done! You can invite the bot to your server by generating an invite link under OAuth -&gt; URL Generator in the Discord application dashboard.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You will need to select the <code>bot</code> and <code>applications.commands</code> scopes.
@@ -650,12 +650,12 @@ The following permissions are needed in most cases for the bot to work properly:
 <figcaption>click to enlarge</figcaption>
 </figure></p>
 </div>
-<p>If you want the bot to run 24/7, you can use the <a href="https://pm2.keymetrics.io">PM2</a> process manager. Install it using the following command:
+<p>If you want the bot to run 24/7, you can use the <a href="https://pm2.keymetrics.io">PM2</a> process manager. Install it using the following command:</p>
 <div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>add<span class="w"> </span>-g<span class="w"> </span>pm2
-</code></pre></div></p>
-<p>Once you've done that, you can start the bot using the following command:
+</code></pre></div>
+<p>Once you've done that, you can start the bot using the following command:</p>
 <div class="highlight"><pre><span></span><code>pm2<span class="w"> </span>start<span class="w"> </span>ecosystem.config.cjs
-</code></pre></div></p>
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If you wish to update the bot to the latest version/commit at any time, run the following commands:
@@ -708,7 +708,7 @@ pnpm<span class="w"> </span>install
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2025 06:20:04">February 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 13, 2025 20:31:31">May 13, 2025</span>
   </span>
 
     
