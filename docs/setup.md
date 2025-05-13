@@ -1,4 +1,5 @@
 # Setup
+
 Here are some instructions to get esmBot up and running from source.
 
 ??? check "Recommended system requirements"
@@ -16,7 +17,9 @@ If you have any further questions regarding setup, feel free to ask in the #supp
     You can run the bot using Docker or Podman for a somewhat simpler setup experience. [Click here to go to the container setup guide.](https://docs.esmbot.net/containers)
 
 ### 1. Install the required native dependencies.
+
 Choose the OS you're using below for insallation instructions.
+
 === "Debian/Ubuntu"
     These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
     ```sh
@@ -59,17 +62,20 @@ Choose the OS you're using below for insallation instructions.
 Node.js is the runtime that esmBot is built on top of. The bot requires version 20.12.0 or above to run.
 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
+
 ```sh
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 ```
 
 Then run the following to install Node.js:
+
 ```sh
 nvm install 20
 nvm use 20
 ```
 
 esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:
+
 ```sh
 corepack enable
 ```
@@ -90,6 +96,7 @@ If you would like to use the PostgreSQL database, view the setup instructions [h
 ***
 
 ### 4. Clone the repo and install the required Node modules.
+
 ```sh
 cd ~
 git clone --recursive https://github.com/esmBot/esmBot
@@ -114,11 +121,13 @@ Lavalink is the audio server used by esmBot for music playback. If you do not pl
     There are websites out there providing lists of public Lavalink instances that can be used with the bot. However, these are not recommended due to performance/security concerns and missing features, and it is highly recommended to set one up yourself instead using the steps below.
 
 esmBot requires Lavalink version v4 or later, which requires a Java (17 or later) installation. You can use [SDKMAN](https://sdkman.io) to install Eclipse Temurin, a popular Java distribution:
+
 ```sh
 sdk install java 17.0.11-tem
 ```
 
 Initial setup is like this:
+
 ```sh
 cd ~
 mkdir Lavalink
@@ -126,7 +135,9 @@ cd Lavalink
 curl -OL https://github.com/lavalink-devs/Lavalink/releases/latest/download/Lavalink.jar
 ln -s ~/esmBot/application.yml .
 ```
+
 To run Lavalink, you can use this command:
+
 ```sh
 java -jar Lavalink.jar
 ```
@@ -139,6 +150,7 @@ java -jar Lavalink.jar
 ### 6. Configure the bot.
 
 Configuration is done via environment variables which can be specified through a `.env` file. Copy `.env.example` to get a starter config file:
+
 ```sh
 cp .env.example .env
 ```
@@ -147,9 +159,11 @@ cp .env.example .env
     If you can't see either of these files, don't worry - Linux treats files whose names start with a . as hidden files.
 
 To edit this file in the terminal, run this command:
+
 ```sh
 nano .env
 ```
+
 This will launch a text editor with the file ready to go. Create a Discord application [here](https://discord.com/developers/applications) and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the `TOKEN` variable.
 
 When you're finished editing the file, press Ctrl + X, then Y and Enter.
@@ -161,9 +175,11 @@ An overview of each of the variables in the `.env` file can be found [here](http
 ### 7. Run the bot.
 
 Once everything else is set up, you can start the bot like so:
+
 ```sh
 pnpm start
 ```
+
 If the bot starts successfully, you're done! You can invite the bot to your server by generating an invite link under OAuth -> URL Generator in the Discord application dashboard.
 
 !!! note
@@ -176,11 +192,13 @@ If the bot starts successfully, you're done! You can invite the bot to your serv
     </figure>
 
 If you want the bot to run 24/7, you can use the [PM2](https://pm2.keymetrics.io) process manager. Install it using the following command:
+
 ```sh
 pnpm add -g pm2
 ```
 
 Once you've done that, you can start the bot using the following command:
+
 ```sh
 pm2 start ecosystem.config.cjs
 ```
@@ -196,6 +214,7 @@ pm2 start ecosystem.config.cjs
 ***
 
 ## Troubleshooting
+
 ??? faq "Error: Cannot find module './build/Release/image.node'"
     The native image functions haven't been built. Run `pnpm build` to build them.
 

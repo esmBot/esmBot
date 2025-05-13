@@ -1,8 +1,11 @@
 # Custom Commands
+
 esmBot has a powerful and flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.
 
 ## Directory Structure
+
 The bot loads commands from subdirectories inside of the `commands` directory, which looks something like this by default:
+
 ```
 commands/
   - fun
@@ -17,13 +20,16 @@ commands/
     > speed.js
     > ...
 ```
+
 As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the `commands` directory, and to create a new command, you can create a new JS file under one of those subdirectories.
 
 !!! tip
     The `message` and `user` categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the `message` category show when selecting messages, while commands in the `user` category show when selecting users.
 
 ## Command Structure
+
 It's recommended to use the `Command` class located at `#cmd-classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
+
 ```js
 import Command from "#cmd-classes/command.js";
 
@@ -38,6 +44,7 @@ class HelloCommand extends Command {
 
 export default HelloCommand;
 ```
+
 As you can see, the first thing we do is import the Command class. We then create a new class for the command that extends that class to provide the needed parameters. We then define the command function, which is named `run`. Some static parameters, including the command description and an alias for the command, `helloworld`, are also defined. Finally, once everything in the command class is defined, we export the new class to be loaded as a module by the command handler.
 
 The default command name is the same as the filename that you save it as, excluding the `.js` file extension. If you ever want to change the name of the command, just rename the file.
@@ -76,6 +83,7 @@ Some static fields are also available and can be set depending on your command. 
 - `description`: Your command's description, which is shown in the help command.
 - `aliases`: An array of command aliases. People will be able to run the command using these as well as the normal command name.
 - `flags`: An array of objects specifying command flags, or special arguments, that will be shown when running `help <command>` or a slash command. Example:
+
 ```js
 static flags = [{
   name: "argument",
@@ -84,6 +92,7 @@ static flags = [{
   ...
 }];
 ```
+
 - `ephemeral`: Specifies whether or not the command output should be ephemeral.
 - `slashAllowed`: Specifies whether or not the command is available via slash commands.
 - `directAllowed`: Specifies whether or not a command is available in direct messages.
@@ -91,6 +100,7 @@ static flags = [{
 - `adminOnly`: Specifies whether or not a command should be limited to the bot owner(s).
 
 In addition, a few helper functions are available inside the `Command` class:
+
 - `this.acknowledge()`: Sends a typing indicator in the current channel. Only works with classic commands.
 - `this.getString(key, returnNull)`: Gets a localized string for the input locale. If `returnNull` is set to false (the default) and the string does not exist on the input or default locales, the `key` string will be returned; otherwise, `null` will be returned.
 - `this.getOptionString(key)`: Gets a command flag/option by name as a string.
@@ -100,4 +110,5 @@ In addition, a few helper functions are available inside the `Command` class:
 - `this.clean(text)`: Strips and normalizes user, role, and channel mentions found in `text`
 
 ## The `run` Function
+
 The main JS code of your command is specified in the `run` function. This function should return a [`Promise`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) of your command output, which is why the `run` function [is an async function by default](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function). The return value inside the `Promise` should be either a string or an object; you should return a string whenever you intend to reply with plain text, or an object if you intend to reply with something else, such as an embed or attachment.

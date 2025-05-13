@@ -1,10 +1,13 @@
 # Config
+
 esmBot uses a mix of environment variables and JSON for configuration.
 
 ## Environment Variables (.env)
+
 To make managing environment variables easier, an example `.env` file is included with the bot at `.env.example` and can be used to load the variables on startup.
 
 ### Required
+
 - `NODE_ENV`: Used for tuning the bot to different environments. If you don't know what to set it to, leave it as is.
 - `TOKEN`: Your bot's token. You can find this [here](https://discord.com/developers/applications) under your application's Bot tab.
 - `DB`: The database connection string. By default the `sqlite` and `postgresql` protocols are available, but this can be expanded by putting proper DB driver scripts into `utils/database/`.
@@ -13,6 +16,7 @@ To make managing environment variables easier, an example `.env` file is include
 - `LOCALE`: The default language/locale for messages sent by the bot. A corresponding locale JSON must be present in the `locales` directory, and if the command is an interaction, it will be overridden by the user's set client language.
 
 ### Optional
+
 These variables that are not necessarily required for the bot to run, but can greatly enhance its functionality:
 
 - `STAYVC`: Set this to true if you want the bot to stay in voice chat after playing music/a sound effect. You can make it leave by using the stop command.
@@ -28,9 +32,11 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
 
 ## JSON
+
 The JSON-based configuration files are located in `config/`.
 
 ### commands.json
+
 ```js
 {
   "types": {
@@ -44,6 +50,7 @@ The JSON-based configuration files are located in `config/`.
 ```
 
 ### messages.json
+
 ```js
 {
   "emotes": [
@@ -56,6 +63,7 @@ The JSON-based configuration files are located in `config/`.
 ```
 
 ### servers.json
+
 ```js
 {
   "lava": [ // Objects containing info for connecting to Lavalink audio server(s)
