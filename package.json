@@ -39,11 +39,11 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
-    "better-sqlite3": "^11.9.1",
+    "better-sqlite3": "^11.10.0",
     "bufferutil": "^4.0.9",
     "dotenv": "^16.5.0",
     "emoji-regex-xs": "^2.0.1",
-    "file-type": "^20.4.1",
+    "file-type": "^20.5.0",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.2.0",
     "node-addon-api": "^8.3.1",
@@ -52,26 +52,27 @@
     "shoukaku": "^4.1.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "ws": "^8.18.1"
+    "ws": "^8.18.2"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.8",
-    "@eslint/js": "^9.25.1",
+    "@eslint/compat": "^1.2.9",
+    "@eslint/js": "^9.26.0",
     "@tsconfig/node20": "^20.1.5",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/bun": "^1.2.10",
-    "@types/node": "^20.17.30",
+    "@types/bun": "^1.2.13",
+    "@types/node": "^20.17.46",
     "@types/ws": "^8.18.1",
     "cmake-js": "^7.3.1",
-    "eslint": "^9.25.1",
-    "eslint-plugin-prettier": "^5.2.6",
-    "globals": "^16.0.0",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "globals": "^16.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.0"
+    "typescript-eslint": "^8.32.1"
   },
   "optionalDependencies": {
-    "@sentry/node": "^9.14.0",
+    "@sentry/node": "^9.17.0",
     "pm2": "^6.0.5"
   },
   "binary": {
