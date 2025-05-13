@@ -5,29 +5,36 @@ Here are some instructions for setting up PostgreSQL for use with esmBot.
 ### 1. Install PostgreSQL.
 
 === "Debian/Ubuntu"
+
     ```sh
     sudo apt-get install postgresql postgresql-client
     ```
+
 === "Fedora/RHEL"
+
     ```sh
     sudo dnf install postgresql postgresql-server
     ```
+
 === "Alpine"
+
     ```sh
     doas apk add postgresql
     ```
+
 === "Arch/Manjaro"
+
     ```sh
     sudo pacman -S postgresql
     ```
 
-***
+---
 
 ### 2. (Optional) Tune PostgreSQL.
 
 [PGTune](https://pgtune.leopard.in.ua/) is a useful tool for generating configuration files for your PostgreSQL database. It is highly recommended that you generate a config using this tool as it can increase stability and performance.
 
-***
+---
 
 ### 3. Create the bot user and database.
 
@@ -60,7 +67,7 @@ ALTER DATABASE esmbot OWNER TO esmbot;
 
 You're done!
 
-***
+---
 
 ### Troubleshooting
 

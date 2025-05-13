@@ -22,22 +22,21 @@ You should then modify the `config/servers.json` file to change the IP addresses
 
 ```json
 {
-  "lava": [
-    { "name": "localhost", "url": "lavalink:2333", "auth": "youshallnotpass" }
-  ],
-  "image": [
-    { "server": "api", "auth": "verycoolpass100", "tls": false }
-  ]
+  "lava": [{ "name": "localhost", "url": "lavalink:2333", "auth": "youshallnotpass" }],
+  "image": [{ "server": "api", "auth": "verycoolpass100", "tls": false }]
 }
 ```
 
 Finally, start the bot by running the following command (click to select your container runtime):
 
 === "Podman"
+
     ```sh
     podman-compose up -d
     ```
+
 === "Docker"
+
     ```sh
     docker compose up -d
     ```

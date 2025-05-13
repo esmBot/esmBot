@@ -24,6 +24,7 @@ commands/
 As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the `commands` directory, and to create a new command, you can create a new JS file under one of those subdirectories.
 
 !!! tip
+
     The `message` and `user` categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the `message` category show when selecting messages, while commands in the `user` category show when selecting users.
 
 ## Command Structure

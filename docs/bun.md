@@ -3,6 +3,7 @@
 [Bun](https://bun.sh) is a JavaScript and TypeScript runtime that aims to be performant while retaining compatibility with Node.js applications and modules. This page exists to document details about esmBot when running on Bun.
 
 !!! warning
+
     Bun support is still very experimental and prone to bugs. If you find any issues while running the bot on Bun, please test if the same issue occurs on Node; if it doesn't, then specify that it's a Bun-specific issue and provide the version you used (you can find this by running `bun --version`).
 
 ## Setup
