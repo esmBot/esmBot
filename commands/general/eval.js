@@ -14,7 +14,7 @@ class EvalCommand extends Command {
     try {
       // biome-ignore lint/security/noGlobalEval: the whole point of this command is to eval
       let evaled = eval(code);
-      if (evaled?.constructor?.name === "Promise") evaled = await evaled;
+      if (evaled instanceof Promise) evaled = await evaled;
       const cleaned = clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
       if (sendString.length >= 2000) {
@@ -30,9 +30,7 @@ class EvalCommand extends Command {
       }
       return sendString;
     } catch (err) {
-      let error = err;
-      if (err?.constructor?.name === "Promise") error = await err;
-      return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${clean(error)}\n\`\`\``;
+      return `\`${this.getString("errorCaps")}\` \`\`\`xl\n${clean(err)}\n\`\`\``;
     }
   }
 

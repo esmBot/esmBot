@@ -200,7 +200,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, mess
       }
     }
   } catch (e) {
-    const error = e as Error | Promise<Error>;
+    const error = e as Error;
     if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "")
       Sentry.captureException(error, {
         tags: {
@@ -242,8 +242,6 @@ export default async (client: Client, database: DatabasePlugin | undefined, mess
     } else {
       _error(`Error occurred with command message ${message.content}: ${(error as Error).stack || error}`);
       try {
-        let err = error;
-        if (error?.constructor?.name === "Promise") err = await error;
         await client.rest.channels.createMessage(
           message.channelID,
           Object.assign(
@@ -251,7 +249,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, mess
               content: `${getString("error")} <https://github.com/esmBot/esmBot/issues>`,
               files: [
                 {
-                  contents: Buffer.from(clean(err)),
+                  contents: Buffer.from(clean(error)),
                   name: "error.txt",
                 },
               ],
