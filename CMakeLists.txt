@@ -17,6 +17,7 @@ set(SOURCE_FILES natives/blur.cc
   natives/crop.cc
   natives/deepfry.cc
   natives/distort.cc
+  natives/fade.cc
   natives/flag.cc
   natives/flip.cc
   natives/freeze.cc

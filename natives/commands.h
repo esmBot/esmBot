@@ -15,6 +15,7 @@ declare_input_func(Colors);
 declare_input_func(Crop);
 declare_input_func(Deepfry);
 declare_input_func(Distort);
+declare_input_func(Fade);
 declare_input_func(Flag);
 declare_input_func(Flip);
 declare_input_func(Freeze);
