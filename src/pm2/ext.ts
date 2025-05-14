@@ -240,6 +240,7 @@ async function getGatewayData() {
   logger.log("main", "Getting gateway connection data...");
   const client = new Client({
     auth: `Bot ${process.env.TOKEN}`,
+    disableCache: "no-warning",
     gateway: {
       concurrency: "auto",
       maxShards: "auto",
