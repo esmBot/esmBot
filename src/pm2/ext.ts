@@ -317,8 +317,6 @@ function awaitStart(i: number, shardArrays: number[][]): Promise<void> {
         wait_ready: true,
         listen_timeout: 60000,
         watch: false,
-        exec_mode: "cluster",
-        instances: 1,
         env: {
           SHARDS: JSON.stringify(shardArrays),
         },
