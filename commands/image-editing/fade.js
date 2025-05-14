@@ -22,6 +22,7 @@ class FadeCommand extends ImageCommand {
   static description = "Fades in an image";
   static aliases = ["fadein"];
 
+  static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to fade in!";
   static command = "fade";
 }
