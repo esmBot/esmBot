@@ -48,6 +48,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, mess
     message.guildID &&
     !(permChannel instanceof PrivateChannel) &&
     !(permChannel instanceof GroupChannel) &&
+    permChannel?.guild.roles.size !== 0 &&
     !permChannel?.permissionsOf(client.user.id).has("SEND_MESSAGES")
   )
     return;

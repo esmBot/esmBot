@@ -83,7 +83,7 @@ class Command {
       this.guild = options.message.guild;
       this.author = options.message.author;
       this.member = options.message.member;
-      if (this.channel instanceof TextableChannel) {
+      if (this.channel instanceof TextableChannel && (!this.guild || this.guild.roles.size !== 0)) {
         this.permissions = this.channel.permissionsOf(client.user.id);
       } else {
         this.permissions = new Permission(Constants.AllPermissions);
