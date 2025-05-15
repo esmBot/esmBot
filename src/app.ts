@@ -206,10 +206,6 @@ for await (const file of getFiles(
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
-  if (eventName === "interactionCreate" && !commandConfig.types.application) {
-    logger.log("warn", `Skipped loading event from ${file} because application commands are disabled`);
-    continue;
-  }
   const { default: event } = await import(file);
   client.on(eventName as keyof ClientEvents, event.bind(null, client, database));
 }
