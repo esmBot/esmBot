@@ -149,6 +149,12 @@ const getImage = async (
       }
       url.searchParams.set("animated", "true");
       result = await getType(url, extraReturnTypes);
+    } else if (
+      (imageURL.host === "images-ext-1.discordapp.net" || imageURL.host === "images-ext-2.discordapp.net") &&
+      imageURL.pathname.match(/^\/external\/[\w-]+\//)
+    ) {
+      imageURL.searchParams.set("animated", "true");
+      result = await getType(imageURL, extraReturnTypes);
     } else {
       result = await getType(imageURL, extraReturnTypes);
     }
