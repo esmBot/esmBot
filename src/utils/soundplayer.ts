@@ -61,6 +61,7 @@ export let nodes = JSON.parse(
 export let connected = false;
 
 export function connect(client: Client) {
+  if (nodes.length === 0) return true;
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true });
   manager.on("error", (node, error) => {
     logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
@@ -75,10 +76,10 @@ export function connect(client: Client) {
 }
 
 export async function reload(client: Client) {
-  if (!manager) connect(client);
-  const activeNodes = manager.nodes;
   const json = await fs.promises.readFile(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" });
   nodes = JSON.parse(json).lava;
+  if (!manager && connect(client)) return;
+  const activeNodes = manager.nodes;
   const names = nodes.map((a) => a.name);
   for (const name in activeNodes) {
     if (!names.includes(name)) {
