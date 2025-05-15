@@ -190,11 +190,14 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     disabledCache.set(channel.guildID, newDisabled);
   }
 
-  async getCounts() {
+  async getCounts(all?: boolean) {
     const counts = await this.sql<Count[]>`SELECT * FROM counts`;
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
     const countMap = new Map(
-      counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]),
+      (all ? counts : counts.filter((val) => commandNames.includes(val.command))).map((val) => [
+        val.command,
+        val.count,
+      ]),
     );
     return countMap;
   }

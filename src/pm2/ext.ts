@@ -139,7 +139,7 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 # TYPE esmbot_command_count counter
 `);
       if (database) {
-        const counts = await database.getCounts();
+        const counts = await database.getCounts(true);
         for (const [i, w] of counts.entries()) {
           res.write(`esmbot_command_count{command="${i}"} ${w}\n`);
         }

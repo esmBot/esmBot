@@ -149,11 +149,14 @@ export default class SQLitePlugin implements DatabasePlugin {
     this.connection.prepare("UPDATE counts SET count = count + 1 WHERE command = ?").run(command);
   }
 
-  async getCounts() {
+  async getCounts(all?: boolean) {
     const counts = this.connection.prepare("SELECT * FROM counts").all() as Count[];
     const commandNames = [...commands.keys(), ...messageCommands.keys()];
     const countMap = new Map(
-      counts.filter((val) => commandNames.includes(val.command)).map((val) => [val.command, val.count]),
+      (all ? counts : counts.filter((val) => commandNames.includes(val.command))).map((val) => [
+        val.command,
+        val.count,
+      ]),
     );
     return countMap;
   }
