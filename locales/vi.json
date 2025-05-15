@@ -111,7 +111,8 @@
             "shuffle": "Xáo trộn nhạc",
             "skip": "Bỏ qua bài hát hiện tại",
             "stop": "Dừng nhạc",
-            "volume": "Điều chỉnh âm lượng của bài hát"
+            "volume": "Điều chỉnh âm lượng của bài hát",
+            "fade": "Làm ảnh mờ dần"
         },
         "flags": {
             "channel disable": {
@@ -276,6 +277,9 @@
             },
             "tags owner": {
                 "name": "Tên của thẻ"
+            },
+            "fade": {
+                "alpha": "Làm mờ dần từ trong suốt đến rõ"
             }
         },
         "flagNames": {
@@ -441,6 +445,9 @@
             "tags edit": {
                 "name": "ten",
                 "content": "noidung"
+            },
+            "fade": {
+                "alpha": "alpha"
             }
         },
         "names": {
@@ -554,7 +561,8 @@
             "vignette": "vientoi",
             "toggle": "battat",
             "volume": "amluong",
-            "tags": "the"
+            "tags": "the",
+            "fade": "modan"
         },
         "responses": {
             "info": {
@@ -643,9 +651,9 @@
                 "exists": "Thẻ này đã tồn tại rồi!",
                 "added": "Thẻ với tên `{{name}}` đã được thêm vô!",
                 "edited": "Thẻ với tên `{{name}}` đã được chỉnh sửa!",
-                "editName": "Bạn cần cung cấp tên thẻ mà bạn muốn chỉnh!",
-                "deleteName": "Bạn cần cung cấp tên thẻ mà bạn muốn xóa!",
-                "ownerName": "Bạn cần cung cấp tên của thẻ mà bạn muốn kiểm tra chủ sở hữu!",
+                "editName": "Bạn phải cung cấp tên thẻ mà bạn muốn chỉnh!",
+                "deleteName": "Bạn phải cung cấp tên thẻ mà bạn muốn xóa!",
+                "ownerName": "Bạn phải cung cấp tên của thẻ mà bạn muốn kiểm tra chủ sở hữu!",
                 "ownedBy": "Thẻ này thuộc sở hữu của **{{user}}** (`{{id}}`).",
                 "ownedById": "Tôi không thể tìm ra ai là chủ sở hữu của thẻ này, nhưng tôi đã lấy được ID của người dùng đó: `{{id}}`"
             },
@@ -687,7 +695,7 @@
             "base64": {
                 "decodeNoInput": "Bạn phải cho tôi chuỗi để giải nó!",
                 "encodeNoInput": "Bạn cần phải cho tôi chuỗi để mã hóa nó!",
-                "noCmd": "Bạn cần cung cấp xem bạn muốn mã hóa hay giải mã nội dung!"
+                "noCmd": "Bạn phải cung cấp xem bạn muốn mã hóa hay giải mã nội dung!"
             },
             "count": {
                 "header": "Số lần lệnh được sử dụng",
@@ -753,7 +761,7 @@
             },
             "emote": {
                 "noInput": "Tôi không thể tìm thấy emoji trong tin nhắn ấy!",
-                "invalidEmoji": "Bạn cần cung cấp một emoji hợp lệ để lấy ảnh!"
+                "invalidEmoji": "Bạn phải cung cấp một emoji hợp lệ để lấy ảnh!"
             },
             "bird": {
                 "error": "Tôi không thể lấy ảnh chim kịp thời. Hay là thử lại nhé?"
@@ -785,7 +793,7 @@
                 "results": "Kết quả tìm kiếm"
             },
             "lengthen": {
-                "noInput": "Bạn cần cung cấp một URL ngắn để làm dài!",
+                "noInput": "Bạn phải cung cấp một URL ngắn để làm dài!",
                 "notURL": "Đó không phải là URL!"
             },
             "loop": {
@@ -819,80 +827,81 @@
             }
         },
         "noText": {
-            "spotify": "Bạn cần cung cấp nội dung để chèn chữ \"This is\" của Spotify!",
-            "homebrew": "Bạn cần cung cấp nội dung để tạo edit Homebrew Channel!",
-            "flag": "Bạn cần cung cấp emoji của một lá cờ để chèn lên!",
-            "caption2": "Bạn cần cung cấp nội dung để chèn chú thích!",
-            "sonic": "Bạn cần cung cấp nội dung để tạo meme Sonic!",
-            "qrcreate": "Bạn cần cung cấp nội dung để tạo mã QR!",
-            "caption": "Bạn cần cung cấp nội dung để chèn chú thích!",
-            "meme": "Bạn cần cung cấp nội dung để tạo meme!",
-            "motivate": "Bạn cần cung cấp nội dung để tạo poster truyền cảm hứng!",
-            "reddit": "Bạn cần cung cấp nội dung để tạo hình mờ Reddit!",
-            "snapchat": "Bạn cần cung cấp nội dung để chèn chú thích!",
-            "whisper": "Bạn cần cung cấp nội dung để chèn chú thích!"
+            "spotify": "Bạn phải cung cấp nội dung để chèn chữ \"This is\" của Spotify!",
+            "homebrew": "Bạn phải cung cấp nội dung để tạo edit Homebrew Channel!",
+            "flag": "Bạn phải cung cấp emoji của một lá cờ để chèn lên!",
+            "caption2": "Bạn phải cung cấp nội dung để chèn chú thích!",
+            "sonic": "Bạn phải cung cấp nội dung để tạo meme Sonic!",
+            "qrcreate": "Bạn phải cung cấp nội dung để tạo mã QR!",
+            "caption": "Bạn phải cung cấp nội dung để chèn chú thích!",
+            "meme": "Bạn phải cung cấp nội dung để tạo meme!",
+            "motivate": "Bạn phải cung cấp nội dung để tạo poster truyền cảm hứng!",
+            "reddit": "Bạn phải cung cấp nội dung để tạo hình mờ Reddit!",
+            "snapchat": "Bạn phải cung cấp nội dung để chèn chú thích!",
+            "whisper": "Bạn phải cung cấp nội dung để chèn chú thích!"
         },
         "noImage": {
-            "gif": "Bạn cần cung cấp ảnh để chuyển thành GIF!",
-            "haah": "Bạn cần cung cấp ảnh/GIF để đổi ngược!",
-            "uncanny": "Bạn cần cung cấp ảnh/GIF để tạo ảnh uncanny!",
-            "spotify": "Bạn cần cung cấp ảnh/GIF để chèn chữ \"This is\" của Spotify!",
-            "caption": "Bạn cần cung cấp ảnh/GIF để chèn chú thích!",
-            "caption2": "Bạn cần cung cấp ảnh/GIF để chèn chú thích!",
-            "circle": "Bạn cần cung cấp ảnh/GIF để làm mờ tròn!",
-            "crop": "Bạn cần cung cấp ảnh/GIF để cắt!",
-            "deepfry": "Bạn cần cung cấp ảnh/GIF để fry!",
-            "deviantart": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ DeviantArt!",
-            "hypercam": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Hypercam!",
-            "ifunny": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ iFunny!",
-            "implode": "Bạn cần cung cấp ảnh/GIF để làm lõm!",
-            "invert": "Bạn cần cung cấp ảnh/GIF để đảo ngược màu!",
-            "jpeg": "Bạn cần cung cấp ảnh/GIF để cho nó JPEG hơn!",
-            "kinemaster": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ KineMaster!",
-            "magik": "Bạn cần cung cấp ảnh/GIF để thêm hiệu ứng \"magik\"!",
-            "meme": "Bạn cần cung cấp ảnh/GIF để tạo meme!",
-            "memecenter": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ MemeCenter!",
-            "motivate": "Bạn cần cung cấp ảnh/GIF để tạo poster truyền cảm hứng!",
-            "pixelate": "Bạn cần cung cấp ảnh/GIF để pixel hóa!",
-            "reverse": "Bạn cần cung cấp ảnh/GIF để lật ngược!",
-            "sharpen": "Bạn cần cung cấp ảnh/GIF để làm bén!",
-            "scott": "Bạn cần cung cấp ảnh/GIF để Scott khoe nó!",
-            "sepia": "Bạn cần cung cấp ảnh/GIF để áp dụng bộ lọc sepia!",
-            "shutterstock": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Shutterstock!",
-            "slow": "Bạn cần cung cấp ảnh/GIF để làm nó chậm lại!",
-            "soos": "Bạn cần cung cấp ảnh/GIF để lặp!",
-            "speechbubble": "Bạn cần cung cấp ảnh/GIF để thêm bóng thoại!",
-            "speed": "Bạn cần cung cấp ảnh/GIF để làm nhanh!",
-            "stretch": "Bạn cần cung cấp ảnh/GIF để dãn!",
-            "vignette": "Bạn cần cung cấp ảnh/GIF để thêm hiệu ứng viền tối!",
-            "waaw": "Bạn cần cung cấp ảnh/GIF để đảo ảnh!",
-            "wall": "Bạn cần cung cấp ảnh/GIF để làm thành tường!",
-            "whisper": "Bạn cần cung cấp ảnh/GIF để thêm chú thích!",
-            "qrread": "Bạn cần cung cấp ảnh/GIF có mã QR để quét!",
-            "9gag": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ 9GAG!",
-            "avs4you": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ avs4you!",
-            "bandicam": "Bạn cần cung cấp ảnh/GIF để thêm hình mờ Bandicam!",
-            "blur": "Bạn cần cung cấp ảnh/GIF để làm mờ!",
-            "bounce": "Bạn cần cung cấp ảnh/GIF để làm ảnh nhún!",
-            "explode": "Bạn cần cung cấp ảnh/GIF để nổ!",
-            "flag": "Bạn cần cung cấp ảnh/GIF để chèn cờ lên!",
-            "flip": "Bạn cần cung cấp ảnh/GIF để lật!",
-            "flop": "Bạn cần cung cấp ảnh/GIF để lật!",
-            "freeze": "Bạn cần cung cấp ảnh/GIF để đóng băng!",
-            "funky": "Bạn cần cung cấp ảnh/GIF để tạo banner Funky!",
-            "gamexplain": "Bạn cần cung cấp ảnh/GIF để tạo ảnh thu nhỏ GameXplain!",
-            "globe": "Bạn cần cung cấp ảnh/GIF để xoay!",
-            "grayscale": "Bạn cần cung cấp ảnh/GIF để làm trắng đen!",
-            "hooh": "Bạn cần cung cấp ảnh/GIF để đổi ngược!",
-            "snapchat": "Bạn cần cung cấp ảnh/GIF để thêm chú thích!",
-            "spin": "Bạn cần cung cấp ảnh/GIF để xoay vòng!",
-            "squish": "Bạn cần cung cấp ảnh/GIF để bóp!",
-            "swirl": "Bạn cần cung cấp ảnh/GIF để xoáy vòng!",
-            "tile": "Bạn cần cung cấp ảnh/GIF để làm thành mẫu gạch!",
-            "uncaption": "Bạn cần cung cấp ảnh/GIF để xóa chú thích!",
-            "unfreeze": "Bạn cần cung cấp ảnh/GIF để ngưng đóng băng!",
-            "wide": "Bạn cần cung cấp ảnh/GIF để dãn!",
-            "woow": "Bạn cần cung cấp ảnh/GIF để đảo ngược!"
+            "gif": "Bạn phải cung cấp ảnh để chuyển thành GIF!",
+            "haah": "Bạn phải cung cấp ảnh/GIF để đổi ngược!",
+            "uncanny": "Bạn phải cung cấp ảnh/GIF để tạo ảnh uncanny!",
+            "spotify": "Bạn phải cung cấp ảnh/GIF để chèn chữ \"This is\" của Spotify!",
+            "caption": "Bạn phải cung cấp ảnh/GIF để chèn chú thích!",
+            "caption2": "Bạn phải cung cấp ảnh/GIF để chèn chú thích!",
+            "circle": "Bạn phải cung cấp ảnh/GIF để làm mờ tròn!",
+            "crop": "Bạn phải cung cấp ảnh/GIF để cắt!",
+            "deepfry": "Bạn phải cung cấp ảnh/GIF để fry!",
+            "deviantart": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ DeviantArt!",
+            "hypercam": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ Hypercam!",
+            "ifunny": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ iFunny!",
+            "implode": "Bạn phải cung cấp ảnh/GIF để làm lõm!",
+            "invert": "Bạn phải cung cấp ảnh/GIF để đảo ngược màu!",
+            "jpeg": "Bạn phải cung cấp ảnh/GIF để cho nó JPEG hơn!",
+            "kinemaster": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ KineMaster!",
+            "magik": "Bạn phải cung cấp ảnh/GIF để thêm hiệu ứng \"magik\"!",
+            "meme": "Bạn phải cung cấp ảnh/GIF để tạo meme!",
+            "memecenter": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ MemeCenter!",
+            "motivate": "Bạn phải cung cấp ảnh/GIF để tạo poster truyền cảm hứng!",
+            "pixelate": "Bạn phải cung cấp ảnh/GIF để pixel hóa!",
+            "reverse": "Bạn phải cung cấp ảnh/GIF để lật ngược!",
+            "sharpen": "Bạn phải cung cấp ảnh/GIF để làm bén!",
+            "scott": "Bạn phải cung cấp ảnh/GIF để Scott khoe nó!",
+            "sepia": "Bạn phải cung cấp ảnh/GIF để áp dụng bộ lọc sepia!",
+            "shutterstock": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ Shutterstock!",
+            "slow": "Bạn phải cung cấp ảnh/GIF để làm nó chậm lại!",
+            "soos": "Bạn phải cung cấp ảnh/GIF để lặp!",
+            "speechbubble": "Bạn phải cung cấp ảnh/GIF để thêm bóng thoại!",
+            "speed": "Bạn phải cung cấp ảnh/GIF để làm nhanh!",
+            "stretch": "Bạn phải cung cấp ảnh/GIF để dãn!",
+            "vignette": "Bạn phải cung cấp ảnh/GIF để thêm hiệu ứng viền tối!",
+            "waaw": "Bạn phải cung cấp ảnh/GIF để đảo ảnh!",
+            "wall": "Bạn phải cung cấp ảnh/GIF để làm thành tường!",
+            "whisper": "Bạn phải cung cấp ảnh/GIF để thêm chú thích!",
+            "qrread": "Bạn phải cung cấp ảnh/GIF có mã QR để quét!",
+            "9gag": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ 9GAG!",
+            "avs4you": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ avs4you!",
+            "bandicam": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ Bandicam!",
+            "blur": "Bạn phải cung cấp ảnh/GIF để làm mờ!",
+            "bounce": "Bạn phải cung cấp ảnh/GIF để làm ảnh nhún!",
+            "explode": "Bạn phải cung cấp ảnh/GIF để nổ!",
+            "flag": "Bạn phải cung cấp ảnh/GIF để chèn cờ lên!",
+            "flip": "Bạn phải cung cấp ảnh/GIF để lật!",
+            "flop": "Bạn phải cung cấp ảnh/GIF để lật!",
+            "freeze": "Bạn phải cung cấp ảnh/GIF để đóng băng!",
+            "funky": "Bạn phải cung cấp ảnh/GIF để tạo banner Funky!",
+            "gamexplain": "Bạn phải cung cấp ảnh/GIF để tạo ảnh thu nhỏ GameXplain!",
+            "globe": "Bạn phải cung cấp ảnh/GIF để xoay!",
+            "grayscale": "Bạn phải cung cấp ảnh/GIF để làm trắng đen!",
+            "hooh": "Bạn phải cung cấp ảnh/GIF để đổi ngược!",
+            "snapchat": "Bạn phải cung cấp ảnh/GIF để thêm chú thích!",
+            "spin": "Bạn phải cung cấp ảnh/GIF để xoay vòng!",
+            "squish": "Bạn phải cung cấp ảnh/GIF để bóp!",
+            "swirl": "Bạn phải cung cấp ảnh/GIF để xoáy vòng!",
+            "tile": "Bạn phải cung cấp ảnh/GIF để làm thành mẫu gạch!",
+            "uncaption": "Bạn phải cung cấp ảnh/GIF để xóa chú thích!",
+            "unfreeze": "Bạn phải cung cấp ảnh/GIF để ngưng đóng băng!",
+            "wide": "Bạn phải cung cấp ảnh/GIF để dãn!",
+            "woow": "Bạn phải cung cấp ảnh/GIF để đảo ngược!",
+            "fade": "Bạn phải cung cấp ảnh/GIF để làm mờ!"
         }
     },
     "image": {
