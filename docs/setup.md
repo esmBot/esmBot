@@ -118,13 +118,6 @@ pnpm install
 pnpm build
 ```
 
-!!! note
-
-    On macOS, you'll need to replace the last command in the above list with the following:
-    ```sh
-    pnpm build --CDWITH_ZXING=OFF
-    ```
-
 ---
 
 ### 5. (Optional) Set up Lavalink.

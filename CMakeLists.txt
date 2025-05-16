@@ -47,8 +47,14 @@ set(SOURCE_FILES natives/blur.cc
   natives/watermark.cc
   natives/whisper.cc)
 
+if (APPLE)
+  set(WITH_ZXING_DEFAULT OFF)
+else()
+  set(WITH_ZXING_DEFAULT ON)
+endif()
+
 option(WITH_MAGICK "Build with ImageMagick, enables the circle, magik, and spin commands" OFF)
-option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ON)
+option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ${WITH_ZXING_DEFAULT})
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 if (WITH_MAGICK)
