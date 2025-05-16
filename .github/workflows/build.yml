@@ -13,8 +13,24 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
+  build_natives:
+    strategy:
+      matrix:
+        platform:
+          - name: Linux amd64
+            os: ubuntu-latest
+            key: linux-amd64
+            arch: amd64
+          - name: Linux aarch64
+            os: ubuntu-latest
+            key: linux-aarch64
+            arch: aarch64
+          - name: macOS aarch64
+            os: macos-latest
+            key: macos-aarch64
+            arch: aarch64
+    name: Build natives (${{matrix.platform.name}})
+    runs-on: ${{matrix.platform.os}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,24 +41,11 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      - name: Install dependencies
+      - name: Install dependencies (Linux)
+        if: matrix.platform.os == 'ubuntu-latest'
         run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
-      - name: Build
-        run: pnpm install --frozen-lockfile && pnpm run build
-
-  darwin:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - name: Install dependencies
+      - name: Install dependencies (macOS)
+        if: matrix.platform.os == 'macos-latest'
         run: brew install imagemagick vips
       - name: Build
-        run: pnpm install --frozen-lockfile && pnpm run build --CDWITH_ZXING=OFF
+        run: pnpm install --frozen-lockfile && pnpm run build
