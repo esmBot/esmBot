@@ -61,7 +61,7 @@ export type ImageMeta = {
 /**
  * Gets proper image paths.
  */
-const getImage = async (
+async function getImage(
   image: string,
   image2: string,
   video: boolean,
@@ -69,7 +69,7 @@ const getImage = async (
   extraReturnTypes = false,
   type: string | null = null,
   client: Client | undefined = undefined,
-): Promise<ImageMeta | undefined> => {
+): Promise<ImageMeta | undefined> {
   let imageURL: URL;
   try {
     imageURL = new URL(image);
@@ -168,7 +168,7 @@ const getImage = async (
       return;
   }
   return payload;
-};
+}
 
 /**
  * Checks a single message for videos or images
