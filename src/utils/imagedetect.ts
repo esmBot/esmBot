@@ -138,7 +138,7 @@ const getImage = async (
     let result: ImageTypeData | undefined;
     if (
       (imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net") &&
-      imageURL.pathname.match(/^\/attachments\/\d+\/\d+\//)
+      imageURL.pathname.match(/^\/(?:ephemeral-)?attachments\/\d+\/\d+\//)
     ) {
       let url: URL;
       if (client && isAttachmentExpired(imageURL)) {
