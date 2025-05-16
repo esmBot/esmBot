@@ -54,9 +54,8 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
   try {
     const commandClass = new cmd(client, database, { type: "application", interaction });
     const result = await commandClass.run();
-    const replyMethod = commandClass.edit ? "editOriginal" : "createFollowup";
     if (typeof result === "string") {
-      await interaction[replyMethod]({
+      await interaction.createFollowup({
         content: result,
         flags: commandClass.success ? 0 : 64,
       });
@@ -68,19 +67,19 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
             await upload(client, { ...file, flags: result.flags }, interaction, commandClass.success);
           } else {
-            await interaction[replyMethod]({
+            await interaction.createFollowup({
               content: getString("image.noTempServer", { locale: interaction.locale }),
               flags: 64,
             });
           }
         } else {
-          await interaction[replyMethod]({
+          await interaction.createFollowup({
             flags: result.flags ?? (commandClass.success ? 0 : 64),
             files: [file],
           });
         }
       } else {
-        await interaction[replyMethod](
+        await interaction.createFollowup(
           Object.assign(
             {
               flags: result.flags ?? (commandClass.success ? 0 : 64),
@@ -92,7 +91,7 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
     } else {
       logger.debug(`Unknown return type for command ${command}: ${result} (${typeof result})`);
       if (!result) return;
-      await interaction[replyMethod](
+      await interaction.createFollowup(
         Object.assign(
           {
             flags: commandClass.success ? 0 : 64,

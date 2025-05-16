@@ -46,7 +46,6 @@ class Command {
   origOptions: CommandOptions;
   type: CommandType;
   success: boolean;
-  edit: boolean;
   args: string[];
   locale: Locale;
   cmdName: string;
@@ -70,7 +69,6 @@ class Command {
     this.origOptions = options;
     this.type = options.type;
     this.success = true;
-    this.edit = false;
     if (options.type === "classic") {
       this.message = options.message;
       this.args = options.args;
