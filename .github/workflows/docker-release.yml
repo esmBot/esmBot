@@ -1,0 +1,19 @@
+name: Build release image
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    uses: ./.github/workflows/docker.yml
+    with:
+      stable: true
+      tags: |
+        type=semver,pattern={{version}}
+    secrets: inherit

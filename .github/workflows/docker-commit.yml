@@ -1,0 +1,20 @@
+name: Build commit/edge image
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    if: github.repository == 'esmBot/esmBot'
+    uses: ./.github/workflows/docker.yml
+    with:
+      stable: false
+      tags: |
+        type=raw,value=edge
+        type=sha
+    secrets: inherit
