@@ -17,22 +17,13 @@ jobs:
     strategy:
       matrix:
         platform:
-          - name: Linux amd64
-            os: ubuntu-22.04
+          - os: ubuntu-22.04
             key: linux-amd64
-            arch: amd64
-            type: linux
-          - name: Linux aarch64
-            os: ubuntu-22.04-arm
+          - os: ubuntu-22.04-arm
             key: linux-aarch64
-            arch: aarch64
-            type: linux
-          - name: macOS aarch64
-            os: macos-14
+          - os: macos-14
             key: macos-aarch64
-            arch: aarch64
-            type: macos
-    name: Build natives (${{matrix.platform.name}})
+    name: Build natives (${{matrix.platform.key}})
     runs-on: ${{matrix.platform.os}}
     steps:
       - name: Checkout
@@ -46,10 +37,10 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies (Linux)
-        if: matrix.platform.type == 'linux'
+        if: contains(matrix.platform.key, 'linux')
         run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev
       - name: Install dependencies (macOS)
-        if: matrix.platform.type == 'macos'
+        if: contains(matrix.platform.key, 'macos')
         run: brew install imagemagick vips
 
       - name: Build
