@@ -70,7 +70,7 @@ COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build/Release /app/build/Release
 COPY --from=build /app/dist /app/dist
 COPY --from=build /built /usr
-RUN rm .env
+RUN rm -f .env
 RUN rm -rf config src natives
 
 RUN mkdir /app/config && chmod 777 /app/config
