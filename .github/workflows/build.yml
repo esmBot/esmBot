@@ -18,17 +18,20 @@ jobs:
       matrix:
         platform:
           - name: Linux amd64
-            os: ubuntu-latest
+            os: ubuntu-22.04
             key: linux-amd64
             arch: amd64
+            type: linux
           - name: Linux aarch64
-            os: ubuntu-latest
+            os: ubuntu-22.04-arm
             key: linux-aarch64
             arch: aarch64
+            type: linux
           - name: macOS aarch64
-            os: macos-latest
+            os: macos-14
             key: macos-aarch64
             arch: aarch64
+            type: macos
     name: Build natives (${{matrix.platform.name}})
     runs-on: ${{matrix.platform.os}}
     steps:
@@ -41,12 +44,14 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+
       - name: Install dependencies (Linux)
-        if: matrix.platform.os == 'ubuntu-latest'
-        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
+        if: matrix.platform.type == 'linux'
+        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev
       - name: Install dependencies (macOS)
-        if: matrix.platform.os == 'macos-latest'
+        if: matrix.platform.type == 'macos'
         run: brew install imagemagick vips
+
       - name: Build
         run: pnpm install --frozen-lockfile && pnpm run build
       - name: Upload natives
