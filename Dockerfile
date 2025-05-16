@@ -63,11 +63,12 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN if [[ "$MAGICK" -eq "1" ]] ; then pnpm run build --CDWITH_BACKWARD=OFF ; else pnpm run build:no-magick --CDWITH_BACKWARD=OFF ; fi
 
 FROM native-build-${MAGICK} AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-optional --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build/Release /app/build/Release
+COPY --from=build /app/dist /app/dist
 COPY --from=build /built /usr
 RUN rm .env
 RUN rm -rf config src natives
