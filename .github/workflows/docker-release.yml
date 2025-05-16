@@ -13,7 +13,17 @@ jobs:
   build:
     uses: ./.github/workflows/docker.yml
     with:
+      imagemagick: true
       stable: true
       tags: |
         type=semver,pattern={{version}}
+    secrets: inherit
+
+  build-no-magick:
+    uses: ./.github/workflows/docker.yml
+    with:
+      stable: false
+      tags: |
+        type=raw,value=no-magick
+        type=semver,pattern={{version}},suffix=-no-magick
     secrets: inherit

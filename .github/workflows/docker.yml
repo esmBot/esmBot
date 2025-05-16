@@ -6,6 +6,9 @@ on:
       stable:
         type: boolean
         default: false
+      imagemagick:
+        type: boolean
+        default: false
       tags:
         type: string
 
@@ -22,7 +25,7 @@ jobs:
             key: linux/amd64
           - os: ubuntu-24.04-arm
             key: linux/arm64
-    name: Build and Publish Docker Image (${{matrix.platform.key}})
+    name: Build and Publish Docker Image (${{matrix.platform.key}}) (${{ inputs.imagemagick && 'With' || 'Without' }} ImageMagick)
     runs-on: ${{matrix.platform.os}}
     steps:
       - uses: actions/checkout@v4
@@ -52,6 +55,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            MAGICK=${{ inputs.imagemagick && '1' || '0' }}
           platforms: ${{ matrix.platform.key }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.REGISTRY_IMAGE }}
