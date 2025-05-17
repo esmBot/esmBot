@@ -10,6 +10,8 @@ import {
 } from "oceanic.js";
 import { getString } from "./i18n.js";
 import logger from "./logger.js";
+import { selectedImages } from "./collections.js";
+import { getType } from "./image.js";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {
@@ -26,6 +28,7 @@ export async function upload(
   result: { flags?: number } & File,
   context: CommandInteraction | Message,
   success = true,
+  save = false,
 ) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
@@ -50,9 +53,12 @@ export async function upload(
     ],
     flags: (result.flags ?? (success ? 0 : 64)) | MessageFlags.IS_COMPONENTS_V2,
   };
+  let authorId: string;
   if (context instanceof CommandInteraction) {
+    authorId = context.user.id;
     await context.createFollowup(payload);
   } else {
+    authorId = context.author.id;
     await client.rest.channels.createMessage(
       context.channelID,
       Object.assign(payload, {
@@ -67,6 +73,16 @@ export async function upload(
         },
       }),
     );
+  }
+  if (save) {
+    const type = await getType(new URL(imageURL), true);
+    selectedImages.set(authorId, {
+      url: imageURL,
+      path: type?.url ?? imageURL,
+      name: filename,
+      type: type?.type,
+      spoiler: result.name.startsWith("SPOILER_"),
+    });
   }
   if (threshold) {
     const size = dirSizeCache + result.contents.length;

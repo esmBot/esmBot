@@ -166,9 +166,9 @@ export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer
     try {
       await currentServer.queue(BigInt(params.id), params);
       const result = await currentServer.wait(BigInt(params.id));
-      if (result)
+      if (result.sent)
         return {
-          buffer: Buffer.alloc(0),
+          buffer: result.data,
           type: "sent",
         };
       const output = await currentServer.getOutput(params.id);

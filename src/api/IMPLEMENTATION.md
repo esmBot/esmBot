@@ -44,7 +44,7 @@ A client sends _requests_ (T-messages) to a server, which subsequently _replies_
 - Twait tag[2] jid[8]
 - Rwait tag[2]
 - Rinit tag[2] max_jobs[2] running_jobs[2] formats[j]
-- Rsent tag[2]
+- Rsent tag[2] attachment[j]
 - Rclose
 
 ### Job Object

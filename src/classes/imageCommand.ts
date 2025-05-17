@@ -1,4 +1,4 @@
-import { type AnyTextableChannel, CommandInteraction, Constants, type Message } from "oceanic.js";
+import { type AnyTextableChannel, CommandInteraction, Constants, type JSONAttachment, type Message } from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
@@ -147,7 +147,21 @@ class ImageCommand extends Command {
       const result = await runImageJob(imageParams);
       const buffer = result.buffer;
       const type = result.type;
-      if (type === "sent") return;
+      if (type === "sent") {
+        if (buffer.length > 2 && this.interaction && this.interaction.authorizingIntegrationOwners[0] === undefined) {
+          const attachment = JSON.parse(buffer.toString()) as JSONAttachment;
+          const path = new URL(attachment.proxyURL);
+          path.searchParams.set("animated", "true");
+          selectedImages.set(this.interaction.user.id, {
+            url: attachment.url,
+            path: path.toString(),
+            name: attachment.filename,
+            type: attachment.contentType,
+            spoiler: attachment.filename.startsWith("SPOILER_"),
+          });
+        }
+        return;
+      }
       if (type === "frames") return this.getString("image.frames");
       if (type === "unknown") return this.getString("image.unknown");
       if (type === "noresult") return this.getString("image.noResult");

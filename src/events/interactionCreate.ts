@@ -1,7 +1,7 @@
 import { type AnyInteractionGateway, type Client, InteractionTypes } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import type { DatabasePlugin } from "../database.js";
-import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
+import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
 import { clean } from "#utils/misc.js";
@@ -65,7 +65,13 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
         const file = result.files[0];
         if (file.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
-            await upload(client, { ...file, flags: result.flags }, interaction, commandClass.success);
+            await upload(
+              client,
+              { ...file, flags: result.flags },
+              interaction,
+              commandClass.success,
+              interaction.authorizingIntegrationOwners[0] === undefined,
+            );
           } else {
             await interaction.createFollowup({
               content: getString("image.noTempServer", { locale: interaction.locale }),
@@ -73,10 +79,24 @@ export default async (client: Client, database: DatabasePlugin | undefined, inte
             });
           }
         } else {
-          await interaction.createFollowup({
+          const imgMessage = await interaction.createFollowup({
             flags: result.flags ?? (commandClass.success ? 0 : 64),
             files: [file],
           });
+          if (interaction.authorizingIntegrationOwners[0] === undefined) {
+            const attachment = imgMessage.message.attachments.first();
+            if (attachment) {
+              const path = new URL(attachment.proxyURL);
+              path.searchParams.set("animated", "true");
+              selectedImages.set(interaction.user.id, {
+                url: attachment.url,
+                path: path.toString(),
+                name: attachment.filename,
+                type: attachment.contentType,
+                spoiler: attachment.filename.startsWith("SPOILER_"),
+              });
+            }
+          }
         }
       } else {
         await interaction.createFollowup(

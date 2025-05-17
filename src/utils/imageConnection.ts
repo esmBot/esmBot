@@ -8,7 +8,7 @@ const Tqueue = 0x02;
 const Tcancel = 0x04;
 //const Rcancel = 0x05;
 const Twait = 0x06;
-//const Rwait = 0x07;
+const Rwait = 0x07;
 const Rinit = 0x08;
 const Rsent = 0x09;
 const Rclose = 0xff;
@@ -19,6 +19,8 @@ interface RequestState {
   id: bigint;
   op: number;
 }
+
+type WaitResponse = { sent: true; data: Buffer } | { sent: false };
 
 class ImageConnection {
   requests: Map<number, RequestState>;
@@ -89,14 +91,18 @@ class ImageConnection {
     }
     this.requests.delete(tag);
     if (op === Rerror) {
-      promise.reject(new Error(msg.slice(3, msg.length).toString()));
+      promise.reject(new Error(msg.subarray(3, msg.length).toString()));
       return;
     }
     if (op === Rsent) {
-      promise.resolve(true);
-    } else {
-      promise.resolve();
+      promise.resolve({ sent: true, data: msg.subarray(3, msg.length) });
+      return;
     }
+    if (op === Rwait) {
+      promise.resolve({ sent: false });
+      return;
+    }
+    promise.resolve();
   }
 
   onError(e: Error | ErrorEvent) {
@@ -131,7 +137,7 @@ class ImageConnection {
     this.conn.close();
   }
 
-  queue(jobid: bigint, jobobj: object) {
+  queue(jobid: bigint, jobobj: object): Promise<void> {
     logger.debug(`Queuing ${jobid} on image server ${this.host}`);
     const str = JSON.stringify(jobobj);
     const buf = Buffer.alloc(8);
@@ -139,14 +145,14 @@ class ImageConnection {
     return this.do(Tqueue, jobid, Buffer.concat([buf, Buffer.from(str)]));
   }
 
-  wait(jobid: bigint) {
+  wait(jobid: bigint): Promise<WaitResponse> {
     logger.debug(`Waiting for ${jobid} on image server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
     return this.do(Twait, jobid, buf);
   }
 
-  cancel(jobid: bigint) {
+  cancel(jobid: bigint): Promise<void> {
     logger.debug(`Cancelling ${jobid} on image server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
@@ -206,15 +212,15 @@ class ImageConnection {
     return res;
   }
 
-  async do(op: number, id: bigint, data: Buffer) {
+  async do<T>(op: number, id: bigint, data: Buffer): Promise<T> {
     const buf = Buffer.alloc(1 + 2);
     let tag = this.tag++;
     if (tag > 65535) tag = this.tag = 0;
     buf.writeUint8(op);
     buf.writeUint16LE(tag, 1);
     this.conn.send(Buffer.concat([buf, data]));
-    const promise = new Promise((resolve, reject) => {
-      this.requests.set(tag, { resolve, reject, id, op });
+    const promise = new Promise<T>((resolve, reject) => {
+      this.requests.set(tag, { resolve, reject, id, op } as RequestState);
     });
     return promise;
   }

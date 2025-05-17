@@ -392,9 +392,15 @@ function finishJob(
       return;
     })
     .then((r) => {
-      if (r) jobs.delete(job.id);
-      const waitResponse = Buffer.concat([Buffer.from([r ? Rsent : Rwait]), tag]);
-      ws.send(waitResponse);
+      let response: Buffer;
+      if (r) {
+        jobs.delete(job.id);
+        const attachment = r.attachments.first();
+        response = Buffer.concat([Buffer.from([Rsent]), tag, Buffer.from(JSON.stringify(attachment ?? {}))]);
+      } else {
+        response = Buffer.concat([Buffer.from([Rwait]), tag]);
+      }
+      ws.send(response);
       resolve();
     });
 }
