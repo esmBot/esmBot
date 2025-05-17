@@ -25,7 +25,7 @@ jobs:
             key: linux/amd64
           - os: ubuntu-24.04-arm
             key: linux/arm64
-    name: Build and Publish Docker Image (${{matrix.platform.key}}) (${{ inputs.imagemagick && 'With' || 'Without' }} ImageMagick)
+    name: Build and Publish Docker Image (${{matrix.platform.key}})
     runs-on: ${{matrix.platform.os}}
     steps:
       - uses: actions/checkout@v4
