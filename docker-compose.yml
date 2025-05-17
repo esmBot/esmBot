@@ -1,7 +1,8 @@
 services:
   bot:
-    build: .
-    image: esmbot
+    # Uncomment the below line to build locally:
+    # build: .
+    image: ghcr.io/esmbot/esmbot:edge
     restart: unless-stopped
     volumes:
       - ./logs:/app/logs
