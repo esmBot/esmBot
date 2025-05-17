@@ -58,14 +58,14 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
-    "@eslint/js": "^9.26.0",
+    "@eslint/js": "^9.27.0",
     "@tsconfig/node20": "^20.1.5",
     "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "^1.2.13",
-    "@types/node": "^20.17.46",
+    "@types/node": "^20.17.47",
     "@types/ws": "^8.18.1",
     "cmake-js": "^7.3.1",
-    "eslint": "^9.26.0",
+    "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
     "globals": "^16.1.0",
@@ -74,8 +74,8 @@
     "typescript-eslint": "^8.32.1"
   },
   "optionalDependencies": {
-    "@sentry/node": "^9.17.0",
-    "pm2": "^6.0.5"
+    "@sentry/node": "^9.19.0",
+    "pm2": "^6.0.6"
   },
   "binary": {
     "napi_versions": [
