@@ -12,7 +12,7 @@ export default async (client: Client, database: DatabasePlugin) => {
   if (ready) return;
 
   // send slash command data
-  if (commandsConfig.types.application) {
+  if (commandsConfig.types.application && !(process.env.PM2_USAGE && process.env.pm_id !== "1")) {
     try {
       await send(client);
     } catch (e) {
