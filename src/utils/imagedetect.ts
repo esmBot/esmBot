@@ -273,7 +273,7 @@ export async function stickerDetect(
       !(channel instanceof PrivateChannel)
     )
       return;
-    if (perms && !perms.has("VIEW_CHANNEL")) return;
+    if (perms && !perms.has("READ_MESSAGE_HISTORY")) return;
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {
@@ -342,7 +342,7 @@ export default async (
       !(channel instanceof PrivateChannel)
     )
       return;
-    if (perms && !perms.has("VIEW_CHANNEL")) return;
+    if (perms && !perms.has("READ_MESSAGE_HISTORY")) return;
     const messages = await channel.getMessages();
     // iterate over each message
     for (const message of messages) {
