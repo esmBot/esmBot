@@ -73,7 +73,7 @@
             "flop": "Spiegelt ein Bild",
             "help": "Zeigt eine liste aller Befehle",
             "raw": "Zeigt die direkte image URL eines bildes (nützlich um GIFs von seiten wie Tenor zu speichern)",
-            "emote": "Gibt die Bild Datei eines Emotes",
+            "emote": "Gibt die Bild Datei eines Emojis",
             "gamexplain": "Erstellt aus einem Bild ein GameXplain-Thumbnail",
             "jpeg": "Fügt Künstliche JPEG Komprimierung zu einem Bild hinzu",
             "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein",
@@ -110,7 +110,8 @@
             "uncanny": "Macht ein Bild mit „Mr. Incredible Becomes Uncanny“ (links/rechts mit Komma trennen)",
             "spotify": "Für einen Spotify-„Das-ist“-Header zu einem Bild hinzu",
             "tags": "Der Hauptbefehl für Tags. Konsultiere die Hilfeseite: https://esmbot.net/help.html",
-            "snapchat": "Fügt einen Text wie bei Snapshat hinzu"
+            "snapchat": "Fügt einen Text wie bei Snapshat hinzu",
+            "fade": "Blendet ein Bild aus"
         },
         "flagNames": {
             "8ball": {
