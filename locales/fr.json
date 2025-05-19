@@ -609,7 +609,8 @@
             "soos": "Vous devez fournir une image/GIF à boucler !",
             "spotify": "Vous devez fournir une image/GIF pour ajouter un en-tête Spotify \"This is\" !",
             "uncanny": "Vous devez fournir une image/GIF pour créer une image étrange !",
-            "wide": "Vous devez fournir une image/GIF à étirer !"
+            "wide": "Vous devez fournir une image/GIF à étirer !",
+            "fade": "Vous devez fournir une image/GIF pour faire apparaître progressivement !"
         },
         "noText": {
             "homebrew": "Vous devez fournir du texte pour créer un montage Homebrew Channel !",
