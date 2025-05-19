@@ -13,7 +13,7 @@ Although there's a (very) slim chance of it working, multiple aspects of esmBot 
 esmBot will continue to run past this message in 5 seconds, but keep in mind that it could break at any time. Continue running at your own risk; alternatively, stop the bot using Ctrl+C and install WSL.` +
       "\x1b[0m",
   );
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 }
 
 // load config from .env file
