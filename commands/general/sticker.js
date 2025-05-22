@@ -35,6 +35,11 @@ class StickerCommand extends Command {
       this.success = true;
       return `${this.getString("commands.responses.sticker.lottie")} https://cdn.discordapp.com/stickers/${result.id}.json`;
     }
+    if (result.format_type === 4) {
+      // GIF
+      this.success = true;
+      return `https://media.discordapp.net/stickers/${result.id}.gif`;
+    }
     return this.getString("commands.responses.sticker.unknown");
   }
 
