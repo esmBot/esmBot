@@ -103,7 +103,6 @@
       "@discordjs/voice"
     ],
     "onlyBuiltDependencies": [
-      "@biomejs/biome",
       "better-sqlite3",
       "bufferutil"
     ],

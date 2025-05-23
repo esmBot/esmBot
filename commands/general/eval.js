@@ -12,7 +12,6 @@ class EvalCommand extends Command {
     await this.acknowledge();
     const code = this.getOptionString("code") ?? this.args.join(" ");
     try {
-      // biome-ignore lint/security/noGlobalEval: the whole point of this command is to eval
       let evaled = eval(code);
       if (evaled instanceof Promise) evaled = await evaled;
       const cleaned = clean(evaled);
