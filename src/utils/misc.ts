@@ -69,7 +69,7 @@ export async function activityChanger(bot: Client) {
   setTimeout(() => activityChanger(bot), 900000);
 }
 
-export async function checkBroadcast(bot: Client, db: DatabasePlugin) {
+export async function checkBroadcast(bot: Client, db: DatabasePlugin | undefined) {
   if (!db) {
     return;
   }

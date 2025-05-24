@@ -8,7 +8,7 @@ import type { DatabasePlugin } from "../database.js";
 import commandsConfig from "#config/commands.json" with { type: "json" };
 let ready = false;
 
-export default async (client: Client, database: DatabasePlugin) => {
+export default async (client: Client, database: DatabasePlugin | undefined) => {
   if (ready) return;
 
   // send slash command data
