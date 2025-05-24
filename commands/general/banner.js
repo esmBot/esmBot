@@ -5,20 +5,24 @@ const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 const imageSize = 4096;
 
 class BannerCommand extends Command {
-  // this command now sucks slightly less
+  // this command sucks a little bit more again
   async run() {
     const member = this.getOptionMember("member") ?? this.args[0];
-    const self = await this.client.rest.users.get(this.author.id); // banners are only available over REST
+    const server = !!this.getOptionBoolean("server");
+    const self =
+      server && this.guild
+        ? await this.client.rest.guilds.getMember(this.guild.id, this.author.id)
+        : await this.client.rest.users.get(this.author.id); // banners are only available over REST
     if (this.type === "classic" && this.message?.mentions.users[0]) {
       return (
-        this.message.mentions.users[0].bannerURL(undefined, imageSize) ??
+        (server ? this.message.mentions.members[0] : this.message.mentions.users[0])?.bannerURL(undefined, imageSize) ??
         self.bannerURL(undefined, imageSize) ??
         this.getString("commands.responses.banner.noUserBanner")
       );
     }
     if (member instanceof Member) {
       return (
-        member.bannerURL(undefined, imageSize) ??
+        (server ? member : member.user).bannerURL(undefined, imageSize) ??
         self.bannerURL(undefined, imageSize) ??
         this.getString("commands.responses.banner.noUserBanner")
       );
@@ -26,11 +30,19 @@ class BannerCommand extends Command {
     if (member) {
       let user;
       if (safeBigInt(member) > 21154535154122752n) {
-        user = await this.client.rest.users.get(member);
+        if (server && this.guild) {
+          user = await this.client.rest.guilds.getMember(this.guild.id, member);
+        } else {
+          user = await this.client.rest.users.get(member);
+        }
       } else if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)?.[1];
         if (id && safeBigInt(id) > 21154535154122752n) {
-          user = await this.client.rest.users.get(id);
+          if (server && this.guild) {
+            user = await this.client.rest.guilds.getMember(this.guild.id, id);
+          } else {
+            user = await this.client.rest.users.get(id);
+          }
         }
       }
       if (user?.banner)
@@ -46,7 +58,10 @@ class BannerCommand extends Command {
         limit: 1,
       });
       if (searched.length > 0) {
-        const user = await this.client.rest.users.get(searched[0].user.id);
+        const user =
+          server && this.guild
+            ? await this.client.rest.guilds.getMember(this.guild.id, searched[0].user.id)
+            : await this.client.rest.users.get(searched[0].user.id);
         return (
           user.bannerURL(undefined, imageSize) ??
           self.bannerURL(undefined, imageSize) ??
@@ -65,6 +80,13 @@ class BannerCommand extends Command {
       type: Constants.ApplicationCommandOptionTypes.USER,
       description: "The member to get the banner from",
       classic: true,
+    },
+    {
+      name: "server",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Gets a user's server banner",
+      classic: true,
+      default: false,
     },
   ];
 }

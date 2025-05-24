@@ -7,20 +7,34 @@ const imageSize = 512;
 class AvatarCommand extends Command {
   async run() {
     const member = this.getOptionMember("member") ?? this.args[0];
-    const self = this.client.users.get(this.author.id) ?? (await this.client.rest.users.get(this.author.id));
+    const server = !!this.getOptionBoolean("server");
+    let self;
+    if (server && this.guild) {
+      self = this.member ?? this.author;
+    } else {
+      self = this.author;
+    }
     if (this.type === "classic" && this.message?.mentions.users[0])
-      return this.message.mentions.users[0].avatarURL(undefined, imageSize);
+      return (this.message.mentions.members[0] ?? this.message.mentions.users[0])?.avatarURL(undefined, imageSize);
     if (member instanceof Member) {
-      return member.user.avatarURL(undefined, imageSize);
+      return (server ? member : member.user).avatarURL(undefined, imageSize);
     }
     if (member) {
       let user;
       if (safeBigInt(member) > 21154535154122752n) {
-        user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
+        if (server && this.guild) {
+          user = this.guild.members.get(member) ?? (await this.client.rest.guilds.getMember(this.guild.id, member));
+        } else {
+          user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
+        }
       } else if (mentionRegex.test(member)) {
         const id = member.match(mentionRegex)?.[1];
         if (id && safeBigInt(id) > 21154535154122752n) {
-          user = this.client.users.get(id) ?? (await this.client.rest.users.get(id));
+          if (server && this.guild) {
+            user = this.guild.members.get(id) ?? (await this.client.rest.guilds.getMember(this.guild.id, id));
+          } else {
+            user = this.client.users.get(id) ?? (await this.client.rest.users.get(id));
+          }
         }
       }
       if (user) return user.avatarURL(undefined, imageSize);
@@ -31,8 +45,14 @@ class AvatarCommand extends Command {
         limit: 1,
       });
       if (searched.length > 0) {
-        const user =
-          this.client.users.get(searched[0].user.id) ?? (await this.client.rest.users.get(searched[0].user.id));
+        let user;
+        if (server && this.guild) {
+          user =
+            this.guild.members.get(searched[0].user.id) ??
+            (await this.client.rest.guilds.getMember(this.guild.id, searched[0].user.id));
+        } else {
+          user = this.client.users.get(searched[0].user.id) ?? (await this.client.rest.users.get(searched[0].user.id));
+        }
         if (user) return user.avatarURL(undefined, imageSize);
       }
     }
@@ -47,6 +67,13 @@ class AvatarCommand extends Command {
       type: Constants.ApplicationCommandOptionTypes.USER,
       description: "The member to get the avatar from",
       classic: true,
+    },
+    {
+      name: "server",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Gets a user's server avatar",
+      classic: true,
+      default: false,
     },
   ];
 }
