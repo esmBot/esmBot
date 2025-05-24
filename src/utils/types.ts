@@ -1,4 +1,5 @@
-import type { ApplicationCommandOptions, Constants } from "oceanic.js";
+import type { ApplicationCommandOptions, Client, Constants } from "oceanic.js";
+import type { DatabasePlugin } from "../database.js";
 
 export interface DBGuild {
   guild_id: string;
@@ -85,6 +86,11 @@ export interface SearXNGResults {
     title: string;
     url: string;
   }[];
+}
+
+export interface EventParams {
+  client: Client;
+  database: DatabasePlugin | undefined;
 }
 
 export function isError(error: unknown): error is NodeJS.ErrnoException {

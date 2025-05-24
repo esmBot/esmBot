@@ -207,7 +207,7 @@ for await (const file of getFiles(
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
   const { default: event } = await import(file);
-  client.on(eventName as keyof ClientEvents, event.bind(null, client, database));
+  client.on(eventName as keyof ClientEvents, event.bind(null, { client, database }));
 }
 logger.log("info", "Finished loading events.");
 

@@ -4,13 +4,12 @@ import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
 import { type SoundPlayer, leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
-import type { DatabasePlugin } from "../database.js";
+import type { EventParams } from "#utils/types.js";
 
 const isWaiting = new Map();
 
 export default async (
-  client: Client,
-  _db: DatabasePlugin | undefined,
+  { client }: EventParams,
   member: Member,
   oldChannel: VoiceChannel | StageChannel | Uncached | null,
 ) => {

@@ -1,20 +1,12 @@
-import {
-  type AnyTextableChannel,
-  type Client,
-  GroupChannel,
-  type Message,
-  PrivateChannel,
-  ThreadChannel,
-} from "oceanic.js";
+import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, ThreadChannel } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import type { DatabasePlugin } from "../database.js";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import { error as _error, log } from "#utils/logger.js";
 import { clean } from "#utils/misc.js";
 import parseCommand from "#utils/parseCommand.js";
 import { upload } from "#utils/tempimages.js";
-import type { DBGuild } from "#utils/types.js";
+import type { DBGuild, EventParams } from "#utils/types.js";
 
 let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
@@ -26,7 +18,7 @@ let mentionRegex: RegExp;
 /**
  * Runs when someone sends a message.
  */
-export default async (client: Client, database: DatabasePlugin | undefined, message: Message) => {
+export default async ({ client, database }: EventParams, message: Message) => {
   // block if client is not ready yet
   if (!client.ready) return;
 

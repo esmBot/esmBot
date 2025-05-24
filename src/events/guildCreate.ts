@@ -1,8 +1,8 @@
-import type { Client, Guild } from "oceanic.js";
-import { info } from "../utils/logger.js";
-import type { DatabasePlugin } from "../database.js";
+import type { Guild } from "oceanic.js";
+import { info } from "#utils/logger.js";
+import type { EventParams } from "#utils/types.js";
 
 // run when the bot is added to a guild
-export default async (_client: Client, _db: DatabasePlugin | undefined, guild: Guild) => {
+export default async (_: EventParams, guild: Guild) => {
   info(`[GUILD JOIN] ${guild.name} (${guild.id}) added the bot.`);
 };

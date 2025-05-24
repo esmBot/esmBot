@@ -1,11 +1,11 @@
-import { type AnyInteractionGateway, type Client, InteractionTypes } from "oceanic.js";
+import { type AnyInteractionGateway, InteractionTypes } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
-import type { DatabasePlugin } from "../database.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
 import { clean } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
+import type { EventParams } from "#utils/types.js";
 
 let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
@@ -15,7 +15,7 @@ if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
 /**
  * Runs when a slash command/interaction is executed.
  */
-export default async (client: Client, database: DatabasePlugin | undefined, interaction: AnyInteractionGateway) => {
+export default async ({ client, database }: EventParams, interaction: AnyInteractionGateway) => {
   // block if client is not ready yet
   if (!client.ready) return;
 

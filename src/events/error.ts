@@ -1,7 +1,6 @@
-import type { Client } from "oceanic.js";
-import { error } from "../utils/logger.js";
-import type { DatabasePlugin } from "../database.js";
+import { error } from "#utils/logger.js";
+import type { EventParams } from "#utils/types.js";
 
-export default async (_client: Client, _db: DatabasePlugin | undefined, message: string | Error) => {
+export default async (_: EventParams, message: string | Error) => {
   error(message);
 };

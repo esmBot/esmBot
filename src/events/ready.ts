@@ -1,14 +1,13 @@
-import type { Client } from "oceanic.js";
 import { send } from "#utils/handler.js";
 import { createPage, generateList } from "#utils/help.js";
 import logger from "#utils/logger.js";
 import { activityChanger, checkBroadcast } from "#utils/misc.js";
-import type { DatabasePlugin } from "../database.js";
+import type { EventParams } from "#utils/types.js";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
 let ready = false;
 
-export default async (client: Client, database: DatabasePlugin | undefined) => {
+export default async ({ client, database }: EventParams) => {
   if (ready) return;
 
   // send slash command data
