@@ -1,5 +1,4 @@
 import { setTimeout } from "node:timers/promises";
-import WebSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.js";
 
 const Rerror = 0x01;
@@ -33,6 +32,7 @@ class ImageConnection {
   funcs: string[];
   wsproto: string;
   sockurl: string;
+  decoder: TextDecoder;
   conn: WebSocket;
   httpurl: string;
   reconnect?: boolean;
@@ -55,8 +55,9 @@ class ImageConnection {
     if (auth) {
       headers.Authentication = auth;
     }
+    this.decoder = new TextDecoder();
     this.conn = new WebSocket(this.sockurl, { headers });
-    this.conn.binaryType = "nodebuffer";
+    this.conn.binaryType = "arraybuffer";
     let httpproto: string;
     if (tls) {
       httpproto = "https";
@@ -69,12 +70,12 @@ class ImageConnection {
     this.conn.addEventListener("close", () => this.onClose(), { once: true });
   }
 
-  async onMessage(msg: Data) {
-    if (!(msg instanceof Buffer)) return;
-    const op = msg.readUint8(0);
+  async onMessage(msg: ArrayBuffer) {
+    const view = new DataView(msg);
+    const op = view.getUint8(0);
     logger.debug(`Received message from image server ${this.host} with opcode ${op}`);
     if (op === Rinit) {
-      this.formats = JSON.parse(msg.toString("utf8", 7));
+      this.formats = JSON.parse(this.decoder.decode(msg.slice(7)));
       this.funcs = Object.keys(this.formats);
       return;
     }
@@ -83,7 +84,7 @@ class ImageConnection {
       this.close();
       return;
     }
-    const tag = msg.readUint16LE(1);
+    const tag = view.getUint16(1, true);
     const promise = this.requests.get(tag);
     if (!promise) {
       logger.error(`Received response for unknown request ${tag}`);
@@ -91,11 +92,11 @@ class ImageConnection {
     }
     this.requests.delete(tag);
     if (op === Rerror) {
-      promise.reject(new Error(msg.subarray(3, msg.length).toString()));
+      promise.reject(new Error(this.decoder.decode(msg.slice(3, msg.byteLength))));
       return;
     }
     if (op === Rsent) {
-      promise.resolve({ sent: true, data: msg.subarray(3, msg.length) });
+      promise.resolve({ sent: true, data: Buffer.from(msg.slice(3, msg.byteLength)) });
       return;
     }
     if (op === Rwait) {
@@ -105,7 +106,7 @@ class ImageConnection {
     promise.resolve();
   }
 
-  onError(e: Error | ErrorEvent) {
+  onError(e: Error | Event) {
     logger.error(e);
   }
 
@@ -124,6 +125,7 @@ class ImageConnection {
           Authentication: this.auth,
         },
       });
+      this.conn.binaryType = "arraybuffer";
       this.conn.addEventListener("message", (msg) => this.onMessage(msg.data));
       this.conn.addEventListener("error", (err) => this.onError(err), { once: true });
       this.conn.addEventListener("close", () => this.onClose(), { once: true });
