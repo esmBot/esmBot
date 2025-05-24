@@ -45,12 +45,12 @@
     "bufferutil": "^4.0.9",
     "dotenv": "^16.5.0",
     "emoji-regex-xs": "^2.0.1",
-    "file-type": "^20.5.0",
+    "file-type": "^21.0.0",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.2.0",
     "node-addon-api": "^8.3.1",
     "oceanic.js": "1.12.0",
-    "postgres": "^3.4.5",
+    "postgres": "^3.4.7",
     "shoukaku": "^4.1.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
@@ -61,8 +61,8 @@
     "@eslint/js": "^9.27.0",
     "@tsconfig/node20": "^20.1.5",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/bun": "^1.2.13",
-    "@types/node": "^20.17.47",
+    "@types/bun": "^1.2.14",
+    "@types/node": "^20.17.50",
     "@types/ws": "^8.18.1",
     "cmake-js": "^7.3.1",
     "eslint": "^9.27.0",
@@ -74,7 +74,7 @@
     "typescript-eslint": "^8.32.1"
   },
   "optionalDependencies": {
-    "@sentry/node": "^9.19.0",
+    "@sentry/node": "^9.22.0",
     "pm2": "^6.0.6"
   },
   "binary": {
