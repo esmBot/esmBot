@@ -46,7 +46,10 @@ class ImageCommand extends Command {
     let needsSpoiler = false;
     if (staticProps.requiresImage) {
       try {
-        const selection = selectedImages.get(this.author.id) as ImageMeta | undefined;
+        let selection: ImageMeta | undefined;
+        if (!this.getOptionAttachment("image") && !this.getOptionString("link")) {
+          selection = selectedImages.get(this.author.id);
+        }
         const image =
           selection ??
           (await imageDetect(this.client, this.permissions, this.message, this.interaction, true).catch((e) => {
@@ -56,12 +59,12 @@ class ImageCommand extends Command {
             }
             throw e;
           }));
-        if (selection) selectedImages.delete(this.author.id);
         if (image === undefined) {
           runningCommands.delete(this.author.id);
           return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip")}`;
         }
         if (typeof image === "string") return image;
+        selectedImages.delete(this.author.id);
         needsSpoiler = image.spoiler;
         if (image.type === "large") {
           runningCommands.delete(this.author.id);

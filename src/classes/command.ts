@@ -2,6 +2,7 @@ import {
   type AllowedMentions,
   type AnyTextableChannel,
   type ApplicationCommandOptions,
+  type Attachment,
   type Client,
   type CommandInteraction,
   Constants,
@@ -207,6 +208,17 @@ class Command {
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getMember(key);
+    }
+    throw Error("Unknown command type");
+  }
+
+  // Note: the key is unused in a classic command context.
+  getOptionAttachment(key: string): Attachment | undefined {
+    if (this.type === "classic") {
+      return this.message?.attachments.first();
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getAttachment(key);
     }
     throw Error("Unknown command type");
   }

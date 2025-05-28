@@ -107,6 +107,7 @@ In addition, a few helper functions are available inside the `Command` class:
 - `this.getOptionBoolean(key)`: Gets a command flag/option by name as a boolean.
 - `this.getOptionNumber(key)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
 - `this.getOptionInteger(key)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
+- `this.getOptionAttachment(key)`: Gets a command flag/option by name as an attachment. When used with classic commands, `key` is ignored.
 - `this.clean(text)`: Strips and normalizes user, role, and channel mentions found in `text`
 
 ## The `run` Function
