@@ -7,7 +7,7 @@ const imageSize = 4096;
 class BannerCommand extends Command {
   // this command sucks a little bit more again
   async run() {
-    const member = this.getOptionMember("member") ?? this.args[0];
+    const member = this.getOptionMember("member") ?? this.getOptionUser("member") ?? this.args[0];
     const server = !!this.getOptionBoolean("server");
     const self =
       server && this.guild
@@ -20,9 +20,9 @@ class BannerCommand extends Command {
         this.getString("commands.responses.banner.noUserBanner")
       );
     }
-    if (member instanceof Member) {
+    if (member && typeof member !== "string") {
       return (
-        (server ? member : member.user).bannerURL(undefined, imageSize) ??
+        (member instanceof Member && !server ? member.user : member).bannerURL(undefined, imageSize) ??
         self.bannerURL(undefined, imageSize) ??
         this.getString("commands.responses.banner.noUserBanner")
       );

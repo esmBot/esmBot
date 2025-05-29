@@ -6,7 +6,7 @@ const imageSize = 512;
 
 class AvatarCommand extends Command {
   async run() {
-    const member = this.getOptionMember("member") ?? this.args[0];
+    const member = this.getOptionMember("member") ?? this.getOptionUser("member") ?? this.args[0];
     const server = !!this.getOptionBoolean("server");
     let self;
     if (server && this.guild) {
@@ -16,8 +16,8 @@ class AvatarCommand extends Command {
     }
     if (this.type === "classic" && this.message?.mentions.users[0])
       return (this.message.mentions.members[0] ?? this.message.mentions.users[0])?.avatarURL(undefined, imageSize);
-    if (member instanceof Member) {
-      return (server ? member : member.user).avatarURL(undefined, imageSize);
+    if (member && typeof member !== "string") {
+      return (member instanceof Member && !server ? member.user : member).avatarURL(undefined, imageSize);
     }
     if (member) {
       let user;
