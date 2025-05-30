@@ -111,7 +111,8 @@
             "toggle": "Mette in pausa/riprende la canzone attuale",
             "tags": "Il comando principale dei tag. Apri la pagina di aiuto per più info: https://esmbot.net/help.html",
             "broadcast": "Diffondi messaggio \"Sta giocando a\" finchè il comando non viene inviato di nuovo o il bot si riavvia",
-            "wall": "Crea un muro da un'immagine"
+            "wall": "Crea un muro da un'immagine",
+            "fade": "Applica una dissolvenza in entrata a un'immagine"
         },
         "flagNames": {
             "8ball": {
@@ -276,6 +277,9 @@
             },
             "base64 encode": {
                 "text": "testo"
+            },
+            "fade": {
+                "alpha": "alfa"
             }
         },
         "flags": {
@@ -441,6 +445,9 @@
             },
             "count": {
                 "command": "Un comando specifico di cui vedere i conteggi"
+            },
+            "fade": {
+                "alpha": "Applica la dissolvenza in entrata dalla trasparenza"
             }
         },
         "names": {
@@ -554,7 +561,8 @@
             "reload": "ricarica",
             "caption2": "didascalia2",
             "grayscale": "scaladigrigi",
-            "sepia": "seppia"
+            "sepia": "seppia",
+            "fade": "dissolvenza"
         },
         "noImage": {
             "9gag": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di 9GAG!",
@@ -616,7 +624,8 @@
             "deviantart": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di DeviantArt!",
             "qrread": "Devi fornire un'immagine/GIF con un QR code da leggere!",
             "bandicam": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di Bandicam!",
-            "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!"
+            "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!",
+            "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!"
         },
         "noText": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
