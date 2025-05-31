@@ -22,6 +22,8 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   bool mc = MapContainsKey(arguments, "mc");
 
+  bool crop = GetArgumentWithFallback<bool>(arguments, "crop", false);
+
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in =
@@ -30,12 +32,45 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
           .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
-  string merged = basePath + water;
-  VImage watermark = VImage::new_from_file(merged.c_str());
-
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
+
+  VImage image_to_process = in; // holds the image after potential cropping
+
+  if (crop) {
+    vector<VImage> cropped_frames;
+    int final_cropped_dimension = 0;
+
+    for (int i = 0; i < nPages; i++) {
+      VImage current_frame = (nPages > 1) ? 
+                             in.crop(0, i * pageHeight, width, pageHeight) : 
+                             in;
+      
+      int frame_width = current_frame.width();
+      int frame_height = current_frame.height();
+      int crop_size = std::min(frame_width, frame_height);
+      
+      VImage cropped_frame = current_frame.smartcrop(
+          crop_size, crop_size,
+          VImage::option()->set("interesting", VIPS_INTERESTING_CENTRE));
+      
+      cropped_frames.push_back(cropped_frame);
+      if (i == 0) {
+        final_cropped_dimension = crop_size;
+      }
+    }
+
+    if (!cropped_frames.empty()) {
+      image_to_process = VImage::arrayjoin(cropped_frames, VImage::option()->set("across", 1));
+      image_to_process.set(VIPS_META_PAGE_HEIGHT, final_cropped_dimension);
+      width = final_cropped_dimension;
+      pageHeight = final_cropped_dimension;
+    }
+  }
+
+  string merged = basePath + water;
+  VImage watermark = VImage::new_from_file(merged.c_str());
 
   if (flipX) {
     watermark = watermark.flip(VIPS_DIRECTION_HORIZONTAL);
@@ -90,7 +125,7 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
   VImage final;
   if (!append && !mc && !alpha) {
     VImage replicated = watermark.embed(x, y, width, pageHeight).replicate(1, nPages);
-    final = in.composite2(replicated, VIPS_BLEND_MODE_OVER);
+    final = image_to_process.composite2(replicated, VIPS_BLEND_MODE_OVER);
   } else {
     vector<VImage> img;
     int addedHeight = 0;
@@ -100,7 +135,7 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
     VImage frame;
     for (int i = 0; i < nPages; i++) {
       VImage img_frame =
-          nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+          nPages > 1 ? image_to_process.crop(0, i * pageHeight, width, pageHeight) : image_to_process;
       if (append) {
         VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
                                         VImage::option()->set("expand", true));
