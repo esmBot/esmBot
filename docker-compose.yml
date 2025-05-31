@@ -9,18 +9,16 @@ services:
       - ./bot-help:/app/help
       - ./bot-temp:/app/temp
       - ./config:/app/config
+      - ./db:/app/db
     env_file:
       - .env
     environment:
       OUTPUT: /app/help/help.md
       TEMPDIR: /app/temp
-    user: root
     links:
       - lavalink
     depends_on:
       lavalink:
-        condition: service_healthy
-      postgres:
         condition: service_healthy
 
     networks:
@@ -43,24 +41,9 @@ services:
       esmbot:
         ipv4_address: 172.20.0.3
 
-  postgres:
-    container_name: postgres
-    image: postgres:13-alpine
-    restart: unless-stopped
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: verycoolpass100
-      POSTGRES_USER: esmbot
-      POSTGRES_DB: esmbot
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.4
-
 volumes:
   bot-help:
   bot-temp:
-  pg-data:
 
 networks:
   esmbot:
