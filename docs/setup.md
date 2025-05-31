@@ -192,7 +192,7 @@ cp .env.example .env
 
 !!! tip
 
-    If you can't see either of these files, don't worry - Linux treats files whose names start with a . as hidden files.
+    If you can't see either of these files, don't worry - Linux and macOS treat files whose names start with a . as hidden files.
 
 To edit this file in the terminal, run this command:
 
