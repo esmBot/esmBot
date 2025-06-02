@@ -206,9 +206,20 @@ class ImageCommand extends Command {
     }
   }
 
-  processMessage(channel: AnyTextableChannel): Promise<Message> {
+  async processMessage(channel: AnyTextableChannel): Promise<Message> {
+   const url = process.env.STATUS_MESSAGES;
+   var emotes;
+
+   if (!url || url.trim() === '') {
+      emotes = messages.emotes;
+    } else {
+      const res = await fetch(url);
+      const json: any = await res.json();
+      emotes = json.emotes;
+    }
+
     return channel.createMessage({
-      content: `${random(messages.emotes) || "⚙️"} ${this.getString("image.processing")}`,
+      content: `${random(emotes) || "⚙️"} ${this.getString("image.processing")}`,
     });
   }
 

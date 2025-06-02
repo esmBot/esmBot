@@ -62,7 +62,7 @@ export async function activityChanger(bot: Client) {
     await bot.editStatus("dnd", [
       {
         type: 0,
-        name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
+        name: random(await getNewBotStatus() || messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
       },
     ]);
   }
@@ -89,11 +89,11 @@ export function startBroadcast(bot: Client, message: string) {
   broadcast = true;
 }
 
-export function endBroadcast(bot: Client) {
+export async function endBroadcast(bot: Client) {
   bot.editStatus("dnd", [
     {
       type: 0,
-      name: random(messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
+      name: random(await getNewBotStatus() || messagesConfig.messages) + (commandsConfig.types.classic ? ` | @${bot.user.username} help` : ""),
     },
   ]);
   broadcast = false;
@@ -224,4 +224,16 @@ export function safeBigInt(input: string | number | bigint | boolean) {
   } catch {
     return -1;
   }
+}
+
+export async function getNewBotStatus() {
+  const url = process.env.STATUS_MESSAGES;
+
+  if (!url || url.trim() === '') {
+    return messagesConfig.messages;
+  }
+
+  const res = await fetch(url);
+  const json: any = await res.json();
+  return json.messages;
 }
