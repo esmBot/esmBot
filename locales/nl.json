@@ -1,1 +1,12 @@
-{}
+{
+    "commands": {
+        "descriptions": {
+            "8ball": "Vraag de magische 8-bal een vraag",
+            "bird": "Krijg een willekeurige vogel foto",
+            "cat": "Krijg een willekeurige kat foto",
+            "dice": "Gooit de dobbelsteen",
+            "dog": "Krijg een willekeurige hond foto",
+            "sonic": "Maakt een Sonic tekstballon plaatje"
+        }
+    }
+}
