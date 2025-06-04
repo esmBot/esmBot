@@ -38,7 +38,7 @@ image_result *image(const char *command, const char *args, const char *data, siz
   nlohmann::json parsedArgs = nlohmann::json::parse(args);
   ArgumentMap Arguments;
 
-  for (auto& pair : parsedArgs.items()) {
+  for (auto &pair : parsedArgs.items()) {
     auto key = pair.key();
     if (key == "data") {
       continue;
@@ -67,14 +67,16 @@ image_result *image(const char *command, const char *args, const char *data, siz
       outMap = FunctionMap.at(command)(type, outType, data, length, Arguments, NULL);
     } else { // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
       string cmd(command);
-      throw "Error: \"FunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was not 0.";
+      throw "Error: \"FunctionMap\" does not contain \"" + cmd +
+        "\", which was requested because \"length\" parameter was not 0.";
     }
   } else {
     if (MapContainsKey(NoInputFunctionMap, command)) {
       outMap = NoInputFunctionMap.at(command)(type, outType, Arguments, NULL);
     } else {
       string cmd(command);
-      throw "Error: \"NoInputFunctionMap\" does not contain \"" + cmd + "\", which was requested because \"length\" parameter was 0.";
+      throw "Error: \"NoInputFunctionMap\" does not contain \"" + cmd +
+        "\", which was requested because \"length\" parameter was 0.";
     }
   }
 
@@ -90,21 +92,19 @@ image_result *image(const char *command, const char *args, const char *data, siz
   return out;
 }
 
-void img_free(void *ptr, [[maybe_unused]] void *ctx) {
-  g_free(ptr);
-}
+void img_free(void *ptr, [[maybe_unused]] void *ctx) { g_free(ptr); }
 
 char *get_funcs() {
   nlohmann::json funcs = nlohmann::json::array();
-  for (auto const& imap : FunctionMap) {
+  for (auto const &imap : FunctionMap) {
     funcs.push_back(imap.first);
   }
-  for (auto const& imap : NoInputFunctionMap) {
+  for (auto const &imap : NoInputFunctionMap) {
     funcs.push_back(imap.first);
   }
   string dumped = funcs.dump();
   size_t length = dumped.length();
-  char* out = new char[length + 1];
+  char *out = new char[length + 1];
   out[length] = 0;
   dumped.copy(out, length);
   return out;

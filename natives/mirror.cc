@@ -5,14 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Mirror(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   ArgumentMap arguments, bool *shouldKill) {
   bool vertical = GetArgumentWithFallback<bool>(arguments, "vertical", false);
   bool first = GetArgumentWithFallback<bool>(arguments, "first", false);
 
-  VImage in = VImage::new_from_buffer(
-                  bufferdata, bufferLength, "",
-                  GetInputOptions(type, false, false));
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
@@ -28,9 +26,8 @@ ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, 
         int x = (i * pageHeight) + (first ? 0 : (pageHeight / 2));
         VImage cropped = in.crop(0, x, in.width(), pageHeight / 2);
         VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
-        VImage final = VImage::arrayjoin(
-            {first ? cropped : flipped, first ? flipped : cropped},
-            VImage::option()->set("across", 1));
+        VImage final =
+          VImage::arrayjoin({first ? cropped : flipped, first ? flipped : cropped}, VImage::option()->set("across", 1));
         img.push_back(final);
       }
       out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -39,14 +36,12 @@ ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, 
       if (first) {
         VImage cropped = in.extract_area(0, 0, in.width(), in.height() / 2);
         VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
-        out = VImage::arrayjoin({cropped, flipped},
-                                VImage::option()->set("across", 1));
+        out = VImage::arrayjoin({cropped, flipped}, VImage::option()->set("across", 1));
       } else {
         int size = in.height() / 2;
         VImage cropped = in.extract_area(0, size, in.width(), size);
         VImage flipped = cropped.flip(VIPS_DIRECTION_VERTICAL);
-        out = VImage::arrayjoin({flipped, cropped},
-                                VImage::option()->set("across", 1));
+        out = VImage::arrayjoin({flipped, cropped}, VImage::option()->set("across", 1));
       }
     }
   } else {
@@ -66,7 +61,7 @@ ArgumentMap Mirror(const string& type, string& outType, const char* bufferdata, 
 
   char *buf;
   size_t dataSize = 0;
-  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;

@@ -7,17 +7,14 @@
 using namespace std;
 using namespace vips;
 
-VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870,
-                                   0.1140, 0.2392, 0.4696, 0.0912);
+VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);
 
-ArgumentMap Colors(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Colors(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   ArgumentMap arguments, bool *shouldKill) {
   string color = GetArgument<string>(arguments, "color");
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
 
   VImage out;
 
@@ -31,7 +28,7 @@ ArgumentMap Colors(const string& type, string& outType, const char* bufferdata, 
 
   char *buf;
   size_t dataSize = 0;
-  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;

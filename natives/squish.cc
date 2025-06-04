@@ -7,12 +7,9 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, bool* shouldKill)
-{
-  VImage in =
-      VImage::new_from_buffer(
-          bufferdata, bufferLength, "",
-          GetInputOptions(type, true, true));
+ArgumentMap Squish(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -39,13 +36,11 @@ ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, 
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double newWidth = (sin(i * mult) / 4) + 0.75;
     double newHeight = (cos(i * mult) / 4) + 0.75;
-    VImage resized =
-        img_frame.resize(newWidth, VImage::option()->set("vscale", newHeight))
-            .gravity(VIPS_COMPASS_DIRECTION_CENTRE, width, pageHeight);
+    VImage resized = img_frame.resize(newWidth, VImage::option()->set("vscale", newHeight))
+                       .gravity(VIPS_COMPASS_DIRECTION_CENTRE, width, pageHeight);
     img.push_back(resized);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -59,7 +54,7 @@ ArgumentMap Squish(const string& type, string& outType, const char* bufferdata, 
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize);
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
 
   if (outType != "webp") outType = "gif";
 

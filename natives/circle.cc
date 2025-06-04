@@ -29,13 +29,10 @@ VImage rectangularMap(int width, int height) {
   return index;
 }
 
-ArgumentMap Circle(const string& type, string& outType,
-                   const char* bufferdata, size_t bufferLength,
-                   [[maybe_unused]] ArgumentMap arguments, bool* shouldKill) {
+ArgumentMap Circle(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, false, false));
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -54,19 +51,16 @@ ArgumentMap Circle(const string& type, string& outType,
 
   VImage rectIndex = rectangularMap(width, pageHeight);
   VImage polarIndex = polarMap(width, pageHeight);
-  VImage gaussmat =
-      VImage::gaussmat(5, 0.2, VImage::option()->set("separable", true)).rot90();
+  VImage gaussmat = VImage::gaussmat(5, 0.2, VImage::option()->set("separable", true)).rot90();
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage result = img_frame.mapim(rectIndex).replicate(1, 3)
-            .conv(gaussmat,
-                  VImage::option()->set("precision", VIPS_PRECISION_INTEGER))
-            .crop(0, pageHeight, width, pageHeight)
-            .mapim(polarIndex,
-                     VImage::option()->set("extend", VIPS_EXTEND_MIRROR));
+    VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage result = img_frame.mapim(rectIndex)
+                      .replicate(1, 3)
+                      .conv(gaussmat, VImage::option()->set("precision", VIPS_PRECISION_INTEGER))
+                      .crop(0, pageHeight, width, pageHeight)
+                      .mapim(polarIndex, VImage::option()->set("extend", VIPS_EXTEND_MIRROR));
     img.push_back(result);
   }
 
@@ -74,10 +68,10 @@ ArgumentMap Circle(const string& type, string& outType,
 
   SetupTimeoutCallback(out, shouldKill);
 
-  char* buf;
+  char *buf;
   size_t dataSize = 0;
-  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf),
-                      &dataSize, outType == "gif" ? VImage::option()->set("dither", 0) : 0);
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                      outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   ArgumentMap output;
   output["buf"] = buf;
   output["size"] = dataSize;

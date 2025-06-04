@@ -5,14 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Scott(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Scott(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  ArgumentMap arguments, bool *shouldKill) {
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
@@ -36,19 +34,13 @@ ArgumentMap Scott(const string& type, string& outType, const char* bufferdata, s
   string distortPath = basePath + "assets/images/scottmap.png";
   VImage distort = VImage::new_from_file(distortPath.c_str());
 
-  VImage distortImage =
-      ((distort[1] / 255) * 414).bandjoin((distort[0] / 255) * 233);
+  VImage distortImage = ((distort[1] / 255) * 414).bandjoin((distort[0] / 255) * 233);
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage resized = img_frame.resize(
-        415 / (double)width,
-        VImage::option()->set("vscale", 234 / (double)pageHeight));
-    VImage mapped = resized.mapim(distortImage)
-                        .extract_band(0, VImage::option()->set("n", 3))
-                        .bandjoin(distort[2]);
+    VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage resized = img_frame.resize(415 / (double)width, VImage::option()->set("vscale", 234 / (double)pageHeight));
+    VImage mapped = resized.mapim(distortImage).extract_band(0, VImage::option()->set("n", 3)).bandjoin(distort[2]);
     VImage offset = mapped.embed(127, 181, 864, 481);
     VImage composited = bg.composite2(offset, VIPS_BLEND_MODE_OVER);
     img.push_back(composited);
@@ -60,9 +52,8 @@ ArgumentMap Scott(const string& type, string& outType, const char* bufferdata, s
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif" ? VImage::option()->set("dither", 1) : 0);
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

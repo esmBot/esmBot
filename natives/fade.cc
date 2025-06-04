@@ -7,12 +7,11 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Fade(const string& type, string& outType, const char* bufferdata,
-                 size_t bufferLength, ArgumentMap arguments, bool* shouldKill) {
+ArgumentMap Fade(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 ArgumentMap arguments, bool *shouldKill) {
   bool alpha = GetArgumentWithFallback<bool>(arguments, "alpha", false);
 
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                      GetInputOptions(type, true, true))
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
                 .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -42,16 +41,13 @@ ArgumentMap Fade(const string& type, string& outType, const char* bufferdata,
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-      multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double mult = (double)i / (nPages - 1);
-    VImage faded = img_frame.extract_band(
-      0, VImage::option()->set("n", img_frame.bands() - 1));
+    VImage faded = img_frame.extract_band(0, VImage::option()->set("n", img_frame.bands() - 1));
     if (outType == "gif") {
       faded *= mult;
     } else {
-      faded =
-        faded.bandjoin(img_frame.extract_band(img_frame.bands() - 1) * mult);
+      faded = faded.bandjoin(img_frame.extract_band(img_frame.bands() - 1) * mult);
     }
     img.push_back(faded);
   }
@@ -65,10 +61,9 @@ ArgumentMap Fade(const string& type, string& outType, const char* bufferdata,
 
   SetupTimeoutCallback(final, shouldKill);
 
-  char* buf;
+  char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif",
-                        reinterpret_cast<void**>(&buf), &dataSize);
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;

@@ -5,15 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Flag(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 ArgumentMap arguments, bool *shouldKill) {
   string overlay = GetArgument<string>(arguments, "overlay");
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
 
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -23,10 +21,9 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
 
   string assetPath = basePath + overlay;
   VImage overlayInput = VImage::new_from_file(assetPath.c_str());
-  VImage overlayImage = overlayInput.resize(
-      (double)width / (double)overlayInput.width(),
-      VImage::option()->set(
-          "vscale", (double)pageHeight / (double)overlayInput.height()));
+  VImage overlayImage =
+    overlayInput.resize((double)width / (double)overlayInput.width(),
+                        VImage::option()->set("vscale", (double)pageHeight / (double)overlayInput.height()));
   if (!overlayImage.has_alpha()) {
     overlayImage = overlayImage.bandjoin(127);
   } else {
@@ -40,11 +37,8 @@ ArgumentMap Flag(const string& type, string& outType, const char* bufferdata, si
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif"
-          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-          : 0);
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

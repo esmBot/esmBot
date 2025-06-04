@@ -5,10 +5,9 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
-                 size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, bool* shouldKill) {
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                      GetInputOptions(type, true, true));
+ArgumentMap Spin(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -33,14 +32,11 @@ ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double rotation = (double)360 * i / nPages;
-    VImage rotated = img_frame.similarity(
-        VImage::option()->set("angle", rotation));
-    VImage embedded = rotated.embed(
-        (width / 2) - (rotated.width() / 2),
-        (pageHeight / 2) - (rotated.height() / 2), width, pageHeight);
+    VImage rotated = img_frame.similarity(VImage::option()->set("angle", rotation));
+    VImage embedded =
+      rotated.embed((width / 2) - (rotated.width() / 2), (pageHeight / 2) - (rotated.height() / 2), width, pageHeight);
     img.push_back(embedded);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -52,9 +48,9 @@ ArgumentMap Spin(const string& type, string& outType, const char* bufferdata,
 
   SetupTimeoutCallback(final, shouldKill);
 
-  char* buf;
+  char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize);
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
 
   if (outType != "webp") outType = "gif";
 

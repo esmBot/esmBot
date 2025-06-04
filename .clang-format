@@ -1,1 +1,14 @@
-BasedOnStyle: google
+BasedOnStyle: microsoft
+IndentWidth: 2
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: true
+AlignArrayOfStructures: Left
+BreakAfterReturnType: Automatic
+BreakBeforeBraces: Attach
+NamespaceIndentation: All
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLambdasOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+IndentCaseLabels: true

@@ -5,15 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Resize(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   ArgumentMap arguments, bool *shouldKill) {
   bool stretch = GetArgumentWithFallback<bool>(arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(arguments, "wide", false);
   int wideAmount = GetArgumentWithFallback<int>(arguments, "amount", 19);
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false));
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));
 
   VImage out;
 
@@ -34,9 +32,7 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
 
   int finalHeight = 0;
   if (stretch) {
-    out =
-        in.resize(512.0 / (double)width,
-                  VImage::option()->set("vscale", 512.0 / (double)pageHeight));
+    out = in.resize(512.0 / (double)width, VImage::option()->set("vscale", 512.0 / (double)pageHeight));
     finalHeight = 512;
   } else if (wide) {
     out = in.resize(wideAmount, VImage::option()->set("vscale", 1));
@@ -45,10 +41,8 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
     // Pain. Pain. Pain. Pain. Pain.
     vector<VImage> img;
     for (int i = 0; i < nPages; i++) {
-      VImage img_frame =
-          nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-      VImage resized = img_frame.resize(0.1).resize(
-          10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
+      VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+      VImage resized = img_frame.resize(0.1).resize(10, VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
       img.push_back(resized);
       finalHeight = resized.height();
     }
@@ -60,7 +54,7 @@ ArgumentMap Resize(const string& type, string& outType, const char* bufferdata, 
 
   char *buf;
   size_t dataSize = 0;
-  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize);
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
   ArgumentMap output;
   output["buf"] = buf;

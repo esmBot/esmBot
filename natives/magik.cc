@@ -10,8 +10,8 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Magik([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool* shouldKill)
-{
+ArgumentMap Magik([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool *shouldKill) {
   Blob blob;
 
   list<Image> frames;
@@ -47,7 +47,7 @@ ArgumentMap Magik([[maybe_unused]] const string& type, string& outType, const ch
 
   size_t dataSize = blob.length();
 
-  char *data = reinterpret_cast<char*>(malloc(dataSize));
+  char *data = reinterpret_cast<char *>(malloc(dataSize));
   memcpy(data, blob.data(), dataSize);
 
   ArgumentMap output;

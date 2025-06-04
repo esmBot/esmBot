@@ -6,11 +6,9 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, bool* shouldKill)
-{
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false));
+ArgumentMap Deepfry(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                    [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -26,9 +24,7 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
       VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
       void *jpgBuf;
       size_t jpgLength;
-      img_frame.write_to_buffer(
-          ".jpg", &jpgBuf, &jpgLength,
-          VImage::option()->set("Q", 1)->set("strip", true));
+      img_frame.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", 1)->set("strip", true));
       VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "");
       jpeged.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       jpeged.set("delay", in.get_array_int("delay"));
@@ -39,8 +35,7 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
   } else {
     void *jpgBuf;
     size_t jpgLength;
-    fried.write_to_buffer(".jpg", &jpgBuf, &jpgLength,
-                          VImage::option()->set("Q", 1)->set("strip", true));
+    fried.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", 1)->set("strip", true));
     final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     if (nPages > 1) final.set("delay", fried.get_array_int("delay"));
@@ -50,9 +45,8 @@ ArgumentMap Deepfry(const string& type, string& outType, const char* bufferdata,
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif" ? VImage::option()->set("dither", 0) : 0);
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

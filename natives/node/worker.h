@@ -1,30 +1,31 @@
 #pragma once
-#include <napi.h>
 #include "../common.h"
+#include <napi.h>
 
 using namespace Napi;
 
 class ImageAsyncWorker : public AsyncWorker {
- public:
-  ImageAsyncWorker(Function& callback, string command, ArgumentMap inArgs, string type, const char *bufData, size_t bufSize);
-  virtual ~ImageAsyncWorker(){};
+public:
+  ImageAsyncWorker(Function &callback, string command, ArgumentMap inArgs, string type, const char *bufData,
+                   size_t bufSize);
+  virtual ~ImageAsyncWorker() {};
 
   void Execute();
-  void OnError(const Error& e);
+  void OnError(const Error &e);
   void OnOK();
 
   void SetKill() { shouldKill = true; }
 
-  private:
-    string command;
-    ArgumentMap inArgs;
-    string type;
+private:
+  string command;
+  ArgumentMap inArgs;
+  string type;
 
-    const char *bufData;
-    size_t bufSize;
+  const char *bufData;
+  size_t bufSize;
 
-    ArgumentMap outArgs;
-    string outType;
+  ArgumentMap outArgs;
+  string outType;
 
-    bool shouldKill;
+  bool shouldKill;
 };

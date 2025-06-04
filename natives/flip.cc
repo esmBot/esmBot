@@ -6,12 +6,11 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Flip(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 ArgumentMap arguments, bool *shouldKill) {
   bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "",
-                                      GetInputOptions(type, true, true));
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
 
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
@@ -37,11 +36,8 @@ ArgumentMap Flip(const string& type, string& outType, const char* bufferdata, si
 
   char *buf;
   size_t dataSize = 0;
-  out.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif"
-          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-          : 0);
+  out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                      outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

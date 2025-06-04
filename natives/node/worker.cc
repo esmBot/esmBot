@@ -3,22 +3,22 @@
 
 using namespace std;
 
-ImageAsyncWorker::ImageAsyncWorker(Function& callback, string command, ArgumentMap inArgs, string type, const char *bufData, size_t bufSize)
-    : AsyncWorker(callback), command(command), inArgs(inArgs), type(type), bufData(bufData), bufSize(bufSize){}
+ImageAsyncWorker::ImageAsyncWorker(Function &callback, string command, ArgumentMap inArgs, string type,
+                                   const char *bufData, size_t bufSize)
+    : AsyncWorker(callback), command(command), inArgs(inArgs), type(type), bufData(bufData), bufSize(bufSize) {}
 
 void ImageAsyncWorker::Execute() {
   outType = GetArgumentWithFallback<bool>(inArgs, "togif", false) ? "gif" : type;
   shouldKill = false;
 
   if (bufSize != 0) {
-    outArgs = FunctionMap.at(command)(type, outType, bufData, bufSize,
-                                  inArgs, &shouldKill);
+    outArgs = FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
   } else {
     outArgs = NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
   }
 }
 
-void ImageAsyncWorker::OnError(const Error& e) {
+void ImageAsyncWorker::OnError(const Error &e) {
   vips_error_clear();
   vips_thread_shutdown();
   if (shouldKill) {
@@ -34,7 +34,7 @@ void ImageAsyncWorker::OnOK() {
   Buffer nodeBuf = Buffer<char>::New(Env(), 0);
   size_t outSize = GetArgument<size_t>(outArgs, "size");
   if (outSize > 0) {
-    char* buf = GetArgument<char*>(outArgs, "buf");
+    char *buf = GetArgument<char *>(outArgs, "buf");
     nodeBuf = Buffer<char>::Copy(Env(), buf, outSize);
     g_free(buf);
   }

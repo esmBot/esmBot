@@ -2,8 +2,11 @@
 
 // Vultu: These are both bad, but I wanted to clean up code at least a little
 using std::string;
-#define declare_input_func(NAME) ArgumentMap NAME(const string& type, string& outType, const char* bufferData, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-#define declare_noinput_func(NAME) ArgumentMap NAME(const string& type, string& outType, ArgumentMap arguments, bool* shouldKill)
+#define declare_input_func(NAME)                                                                                       \
+  ArgumentMap NAME(const string &type, string &outType, const char *bufferData, size_t bufferLength,                   \
+                   ArgumentMap arguments, bool *shouldKill)
+#define declare_noinput_func(NAME)                                                                                     \
+  ArgumentMap NAME(const string &type, string &outType, ArgumentMap arguments, bool *shouldKill)
 
 // Declare our Input Functions
 declare_input_func(Blur);

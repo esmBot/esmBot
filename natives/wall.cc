@@ -10,8 +10,8 @@
 using namespace std;
 using namespace Magick;
 
-ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool* shouldKill)
-{
+ArgumentMap Wall([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool *shouldKill) {
   Blob blob;
 
   list<Image> frames;
@@ -32,8 +32,7 @@ ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const cha
     image.matteColor("none");
     image.backgroundColor("none");
     image.scale(Geometry("512x512"));
-    double arguments[16] = {0,   0, 57,  42, 0,   128, 63,  130,
-                            128, 0, 140, 60, 128, 128, 140, 140};
+    double arguments[16] = {0, 0, 57, 42, 0, 128, 63, 130, 128, 0, 140, 60, 128, 128, 140, 140};
     image.distort(Magick::PerspectiveDistortion, 16, arguments);
     image.scale(Geometry("800x800>"));
     image.magick(outType);
@@ -53,7 +52,7 @@ ArgumentMap Wall([[maybe_unused]] const string& type, string& outType, const cha
 
   size_t dataSize = blob.length();
 
-  char *data = reinterpret_cast<char*>(malloc(dataSize));
+  char *data = reinterpret_cast<char *>(malloc(dataSize));
   memcpy(data, blob.data(), dataSize);
 
   ArgumentMap output;

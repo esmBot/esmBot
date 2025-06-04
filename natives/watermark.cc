@@ -6,8 +6,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Watermark(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Watermark(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                      ArgumentMap arguments, bool *shouldKill) {
   string water = GetArgument<string>(arguments, "water");
   int gravity = GetArgument<int>(arguments, "gravity");
 
@@ -24,10 +24,8 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   string merged = basePath + water;
@@ -49,13 +47,11 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
     if (append) {
       watermark = watermark.resize((double)width / (double)watermark.width());
     } else if (yscale) {
-      watermark = watermark.resize(
-          (double)width / (double)watermark.width(),
-          VImage::option()->set("vscale", (double)(pageHeight * yscale) /
-                                              (double)watermark.height()));
-    } else {
       watermark =
-          watermark.resize((double)pageHeight / (double)watermark.height());
+        watermark.resize((double)width / (double)watermark.width(),
+                         VImage::option()->set("vscale", (double)(pageHeight * yscale) / (double)watermark.height()));
+    } else {
+      watermark = watermark.resize((double)pageHeight / (double)watermark.height());
     }
   }
 
@@ -99,52 +95,39 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
     VImage bg;
     VImage frame;
     for (int i = 0; i < nPages; i++) {
-      VImage img_frame =
-          nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+      VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       if (append) {
-        VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL,
-                                        VImage::option()->set("expand", true));
+        VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL, VImage::option()->set("expand", true));
         addedHeight = watermark.height();
         img.push_back(appended);
       } else if (mc) {
-        VImage padded =
-            img_frame.embed(0, 0, width, pageHeight + 15,
-                            VImage::option()->set("background", 0xffffff));
-        VImage composited =
-            padded.composite2(watermark, VIPS_BLEND_MODE_OVER,
-                              VImage::option()
-                                  ->set("x", width - 190)
-                                  ->set("y", padded.height() - 22));
+        VImage padded = img_frame.embed(0, 0, width, pageHeight + 15, VImage::option()->set("background", 0xffffff));
+        VImage composited = padded.composite2(watermark, VIPS_BLEND_MODE_OVER,
+                                              VImage::option()->set("x", width - 190)->set("y", padded.height() - 22));
         addedHeight = 15;
         img.push_back(composited);
       } else {
         VImage composited;
         if (alpha) {
           if (i == 0) {
-            contentAlpha = watermark.extract_band(0).embed(
-                x, y, width, pageHeight,
-                VImage::option()->set("extend", "white"));
-            frameAlpha = watermark.extract_band(1).embed(
-                x, y, width, pageHeight,
-                VImage::option()->set("extend", "black"));
-            bg = frameAlpha.new_from_image({0, 0, 0}).copy(VImage::option()->set(
-                "interpretation", VIPS_INTERPRETATION_sRGB));
+            contentAlpha =
+              watermark.extract_band(0).embed(x, y, width, pageHeight, VImage::option()->set("extend", "white"));
+            frameAlpha =
+              watermark.extract_band(1).embed(x, y, width, pageHeight, VImage::option()->set("extend", "black"));
+            bg = frameAlpha.new_from_image({0, 0, 0}).copy(
+              VImage::option()->set("interpretation", VIPS_INTERPRETATION_sRGB));
             frame = bg.bandjoin(frameAlpha);
             if (outType == "jpg" || outType == "jpeg") {
               outType = "png";
             }
           }
           VImage content =
-              img_frame.extract_band(0, VImage::option()->set("n", 3))
-                  .bandjoin(contentAlpha & img_frame.extract_band(3));
+            img_frame.extract_band(0, VImage::option()->set("n", 3)).bandjoin(contentAlpha & img_frame.extract_band(3));
 
-          composited =
-              content.composite2(frame, VIPS_BLEND_MODE_OVER,
-                                VImage::option()->set("x", x)->set("y", y));
+          composited = content.composite2(frame, VIPS_BLEND_MODE_OVER, VImage::option()->set("x", x)->set("y", y));
         } else {
           composited =
-              img_frame.composite2(watermark, VIPS_BLEND_MODE_OVER,
-                                  VImage::option()->set("x", x)->set("y", y));
+            img_frame.composite2(watermark, VIPS_BLEND_MODE_OVER, VImage::option()->set("x", x)->set("y", y));
         }
         img.push_back(composited);
       }
@@ -157,11 +140,8 @@ ArgumentMap Watermark(const string& type, string& outType, const char* bufferdat
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif"
-          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-          : 0);
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

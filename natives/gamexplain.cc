@@ -5,14 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Gamexplain(const string& type, string& outType, const char* bufferdata, size_t bufferLength, ArgumentMap arguments, bool* shouldKill)
-{
+ArgumentMap Gamexplain(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                       ArgumentMap arguments, bool *shouldKill) {
   string basePath = GetArgument<string>(arguments, "basePath");
 
-  VImage in =
-      VImage::new_from_buffer(bufferdata, bufferLength, "",
-                              GetInputOptions(type, true, false))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   string assetPath = basePath + "assets/images/gamexplain.png";
@@ -24,13 +22,10 @@ ArgumentMap Gamexplain(const string& type, string& outType, const char* bufferda
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage resized =
-        img_frame
-            .resize(1181.0 / (double)width,
-                    VImage::option()->set("vscale", 571.0 / (double)pageHeight))
-            .embed(10, 92, 1200, 675, VImage::option()->set("extend", "white"));
+      img_frame.resize(1181.0 / (double)width, VImage::option()->set("vscale", 571.0 / (double)pageHeight))
+        .embed(10, 92, 1200, 675, VImage::option()->set("extend", "white"));
     VImage composited = resized.composite2(tmpl, VIPS_BLEND_MODE_OVER);
     img.push_back(composited);
   }
@@ -41,11 +36,8 @@ ArgumentMap Gamexplain(const string& type, string& outType, const char* bufferda
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(
-      ("." + outType).c_str(), reinterpret_cast<void**>(&buf), &dataSize,
-      outType == "gif"
-          ? VImage::option()->set("dither", 0)->set("reoptimise", 1)
-          : 0);
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                        outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
   ArgumentMap output;
   output["buf"] = buf;

@@ -7,13 +7,10 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, size_t bufferLength, [[maybe_unused]] ArgumentMap arguments, bool* shouldKill)
-{
-  VImage in =
-      VImage::new_from_buffer(
-          bufferdata, bufferLength, "",
-          GetInputOptions(type, true, true))
-          .colourspace(VIPS_INTERPRETATION_sRGB);
+ArgumentMap Bounce(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
@@ -42,11 +39,9 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
-    VImage img_frame =
-        multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     double height = halfHeight * (-sin(i * mult) + 1);
-    VImage embedded =
-        img_frame.embed(0, height, width, pageHeight + halfHeight);
+    VImage embedded = img_frame.embed(0, height, width, pageHeight + halfHeight);
     img.push_back(embedded);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -60,7 +55,7 @@ ArgumentMap Bounce(const string& type, string& outType, const char* bufferdata, 
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void**>(&buf), &dataSize);
+  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
 
   if (outType != "webp") outType = "gif";
 
