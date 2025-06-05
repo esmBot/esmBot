@@ -15,14 +15,23 @@ class BannerCommand extends Command {
         : await this.client.rest.users.get(this.author.id); // banners are only available over REST
     if (this.type === "classic" && this.message?.mentions.users[0]) {
       return (
-        (server ? this.message.mentions.members[0] : this.message.mentions.users[0])?.bannerURL(undefined, imageSize) ??
+        (server && this.guild
+          ? await this.client.rest.guilds.getMember(this.guild.id, this.message.mentions.members[0].id)
+          : await this.client.rest.users.get(this.message.mentions.users[0].id)
+        )?.bannerURL(undefined, imageSize) ??
         self.bannerURL(undefined, imageSize) ??
         this.getString("commands.responses.banner.noUserBanner")
       );
     }
     if (member && typeof member !== "string") {
+      let restMember;
+      if (member instanceof Member && server && this.guild) {
+        restMember = await this.client.rest.guilds.getMember(this.guild.id, member.id);
+      } else {
+        restMember = await this.client.rest.users.get(member.id);
+      }
       return (
-        (member instanceof Member && !server ? member.user : member).bannerURL(undefined, imageSize) ??
+        restMember.bannerURL(undefined, imageSize) ??
         self.bannerURL(undefined, imageSize) ??
         this.getString("commands.responses.banner.noUserBanner")
       );
