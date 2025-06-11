@@ -121,9 +121,12 @@ if (process.env.TEMPDIR && process.env.THRESHOLD) {
   await parseThreshold();
 }
 
+const basePath = dirname(fileURLToPath(import.meta.url));
+
 // register locales
 logger.log("info", "Attempting to load locale data...");
-for await (const localeFile of getFiles(resolve(dirname(fileURLToPath(import.meta.url)), "../locales/"), [".json"])) {
+const resolvedLocalePath = resolve(basePath, "..", "locales");
+for await (const localeFile of getFiles(resolvedLocalePath, [".json"])) {
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
@@ -138,10 +141,8 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-for await (const commandFile of getFiles(
-  resolve(dirname(fileURLToPath(import.meta.url)), "../commands/"),
-  process.versions.bun ? [".js", ".ts"] : [".js"],
-)) {
+const resolvedCommandPath = resolve(basePath, "..", "commands");
+for await (const commandFile of getFiles(resolvedCommandPath, process.versions.bun ? [".js", ".ts"] : [".js"])) {
   logger.log("main", `Loading command from ${commandFile}...`);
   try {
     await load(null, commandFile);
@@ -199,10 +200,8 @@ const client = new Client({
 
 // register events
 logger.log("info", "Attempting to load events...");
-for await (const file of getFiles(
-  resolve(dirname(fileURLToPath(import.meta.url)), "./events/"),
-  process.versions.bun ? [".js", ".ts"] : [".js"],
-)) {
+const resolvedEventPath = resolve(basePath, "events");
+for await (const file of getFiles(resolvedEventPath, process.versions.bun ? [".js", ".ts"] : [".js"])) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
