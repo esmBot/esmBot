@@ -1,6 +1,7 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { aliases, categories, commands, info } from "#utils/collections.js";
+import { getAllLocalizations } from "#utils/i18n.js";
 
 // all-in-one music command
 class MusicAIOCommand extends Command {
@@ -41,8 +42,10 @@ class MusicAIOCommand extends Command {
       if (!cmdInfo) throw Error(`Command info missing for ${cmd}`);
       this.flags.push({
         name: cmd,
+        nameLocalizations: getAllLocalizations(`commands.names.${cmd}`),
         type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
         description: cmdInfo.description,
+        descriptionLocalizations: getAllLocalizations(`commands.descriptions.${cmd}`),
         options: cmdInfo.flags,
       });
     }
