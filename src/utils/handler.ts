@@ -1,12 +1,4 @@
-import {
-  aliases as _aliases,
-  categories,
-  commands,
-  info,
-  messageCommands,
-  paths,
-  userCommands,
-} from "./collections.js";
+import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.js";
 import { log } from "./logger.js";
 
 import {
@@ -89,7 +81,7 @@ export async function load(client: Client | null, command: string, skipSend = fa
 
   if (props.aliases) {
     for (const alias of props.aliases) {
-      _aliases.set(alias, commandName);
+      aliases.set(alias, commandName);
       paths.set(alias, command);
     }
   }
