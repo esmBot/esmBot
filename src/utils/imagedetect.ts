@@ -3,6 +3,7 @@ import {
   type Client,
   type CommandInteraction,
   type Message,
+  type MessageSnapshotMessage,
   type Permission,
   PrivateChannel,
   type StickerItem,
@@ -173,48 +174,20 @@ async function getImage(
 /**
  * Checks a single message for videos or images
  */
-const checkImages = async (
+async function checkImages(
   message: Message,
   extraReturnTypes: boolean,
   video: boolean,
-): Promise<ImageMeta | undefined> => {
+): Promise<ImageMeta | undefined> {
   let type: ImageMeta | undefined;
+
   // first check the embeds
   if (message.embeds.length !== 0) {
-    let hasSpoiler = false;
-    if (message.embeds[0].url && message.content) {
-      const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
-      hasSpoiler = spoilerRegex.test(message.content);
-    }
-    // embeds can vary in types, we check for gifvs first
-    if (
-      message.embeds[0].provider?.url &&
-      providerUrls.includes(message.embeds[0].provider?.url) &&
-      message.embeds[0].video?.url &&
-      message.embeds[0].url
-    ) {
-      type = await getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
-      // then thumbnails
-    } else if (message.embeds[0].thumbnail) {
-      type = await getImage(
-        message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url,
-        message.embeds[0].thumbnail.url,
-        video,
-        hasSpoiler,
-        extraReturnTypes,
-      );
-      // and finally direct images
-    } else if (message.embeds[0].image) {
-      type = await getImage(
-        message.embeds[0].image.proxyURL ?? message.embeds[0].image.url,
-        message.embeds[0].image.url,
-        video,
-        hasSpoiler,
-        extraReturnTypes,
-      );
-    }
-    // then check the attachments
-  } else if (message.attachments.size !== 0) {
+    type = await checkEmbeds(message, extraReturnTypes, video);
+  }
+
+  // then check the attachments
+  if (!type && message.attachments.size !== 0) {
     const firstAttachment = message.attachments.first();
     if (firstAttachment?.width)
       type = await getImage(
@@ -224,9 +197,61 @@ const checkImages = async (
         !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER),
       );
   }
+
+  // then check embeds and attachments inside forwards
+  if (!type && message.messageSnapshots?.[0]) {
+    const forward = message.messageSnapshots?.[0].message;
+    if (forward.embeds.length !== 0) type = await checkEmbeds(forward, extraReturnTypes, video);
+
+    if (!type && forward.attachments.length !== 0) {
+      if (forward.attachments[0].width)
+        type = await getImage(
+          forward.attachments[0].proxyURL,
+          forward.attachments[0].url,
+          video,
+          !!(forward.attachments[0].flags & AttachmentFlags.IS_SPOILER),
+        );
+    }
+  }
+
   // if the return value exists then return it
   return type;
-};
+}
+
+async function checkEmbeds(message: Message | MessageSnapshotMessage, extraReturnTypes: boolean, video: boolean) {
+  let hasSpoiler = false;
+  if (message.embeds[0].url && message.content) {
+    const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
+    hasSpoiler = spoilerRegex.test(message.content);
+  }
+  // embeds can vary in types, we check for gifvs first
+  if (
+    message.embeds[0].provider?.url &&
+    providerUrls.includes(message.embeds[0].provider?.url) &&
+    message.embeds[0].video?.url &&
+    message.embeds[0].url
+  ) {
+    return getImage(message.embeds[0].video.url, message.embeds[0].url, video, hasSpoiler, extraReturnTypes);
+    // then thumbnails
+  } else if (message.embeds[0].thumbnail) {
+    return getImage(
+      message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url,
+      message.embeds[0].thumbnail.url,
+      video,
+      hasSpoiler,
+      extraReturnTypes,
+    );
+    // and finally direct images
+  } else if (message.embeds[0].image) {
+    return getImage(
+      message.embeds[0].image.proxyURL ?? message.embeds[0].image.url,
+      message.embeds[0].image.url,
+      video,
+      hasSpoiler,
+      extraReturnTypes,
+    );
+  }
+}
 
 /**
  * Checks whether an attachment URL has already expired
