@@ -16,6 +16,7 @@ class ImageReloadCommand extends Command {
           type: "process:msg",
           data: {
             type: "imagereload",
+            from: process.env.pm_id,
           },
         });
       }

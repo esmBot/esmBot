@@ -225,7 +225,8 @@ if (process.env.PM2_USAGE) {
         return;
       }
       const managerProc = list.find((v) => v.name === "esmBot-manager");
-      pm2Bus.on("process:msg", async (packet: { data: { type: string; message: string } }) => {
+      pm2Bus.on("process:msg", async (packet: { data?: { type: string; from?: string; message: string } }) => {
+        if (packet.data?.from === process.env.pm_id) return;
         switch (packet.data?.type) {
           case "reload": {
             const cmdPath = paths.get(packet.data.message);

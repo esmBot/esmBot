@@ -15,6 +15,7 @@ class SoundReloadCommand extends Command {
         type: "process:msg",
         data: {
           type: "soundreload",
+          from: process.env.pm_id,
         },
       });
     }

@@ -18,6 +18,7 @@ class BroadcastCommand extends Command {
           type: "process:msg",
           data: {
             type: "broadcastStart",
+            from: process.env.pm_id,
             message,
           },
         });
@@ -31,6 +32,7 @@ class BroadcastCommand extends Command {
         type: "process:msg",
         data: {
           type: "broadcastEnd",
+          from: process.env.pm_id,
         },
       });
     }

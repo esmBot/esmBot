@@ -19,6 +19,7 @@ class ReloadCommand extends Command {
         type: "process:msg",
         data: {
           type: "reload",
+          from: process.env.pm_id,
           message: commandName,
         },
       });
