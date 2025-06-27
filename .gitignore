@@ -111,6 +111,7 @@ libvips/
 
 # Debugging
 *.heap
+*.heapsnapshot
 *.out.*
 
 # vscode stuff
