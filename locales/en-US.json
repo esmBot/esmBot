@@ -167,6 +167,7 @@
         "emoji": "emoji"
       },
       "eval": {
+        "broadcast": "broadcast",
         "code": "code"
       },
       "exec": {
@@ -335,6 +336,7 @@
         "emoji": "The emoji you want to get"
       },
       "eval": {
+        "broadcast": "Execute on all bot processes (only use if you know what you're doing!)",
         "code": "The code to execute"
       },
       "exec": {

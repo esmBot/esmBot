@@ -245,6 +245,9 @@ if (process.env.PM2_USAGE) {
           case "broadcastEnd":
             endBroadcast(client);
             break;
+          case "eval":
+            eval(packet.data.message);
+            break;
           case "serverCounts":
             if (!managerProc) break;
             pm2.sendDataToProcessId(

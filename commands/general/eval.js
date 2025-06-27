@@ -13,6 +13,16 @@ class EvalCommand extends Command {
     const code = this.getOptionString("code") ?? this.args.join(" ");
     try {
       let evaled = eval(code);
+      if (process.env.PM2_USAGE && this.getOptionBoolean("broadcast")) {
+        process.send?.({
+          type: "process:msg",
+          data: {
+            type: "eval",
+            from: process.env.pm_id,
+            message: code,
+          },
+        });
+      }
       if (evaled instanceof Promise) evaled = await evaled;
       const cleaned = clean(evaled);
       const sendString = `\`\`\`js\n${cleaned}\n\`\`\``;
@@ -40,6 +50,11 @@ class EvalCommand extends Command {
       description: "The code to execute",
       classic: true,
       required: true,
+    },
+    {
+      name: "broadcast",
+      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      description: "Execute on all bot processes (only use if you know what you're doing!)",
     },
   ];
 
