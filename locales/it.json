@@ -161,7 +161,8 @@
                 "emoji": "emoji"
             },
             "eval": {
-                "code": "codice"
+                "code": "codice",
+                "broadcast": "broadcast"
             },
             "exec": {
                 "cmd": "cmd"
@@ -332,7 +333,8 @@
                 "emoji": "L'emoji che vuoi inviare"
             },
             "eval": {
-                "code": "Il codice da eseguire"
+                "code": "Il codice da eseguire",
+                "broadcast": "Esegui su tutti i processi del bot (usa solo se sai quello che stai facendo!)"
             },
             "exec": {
                 "cmd": "Il comando da eseguire"
