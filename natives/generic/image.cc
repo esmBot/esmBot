@@ -1,4 +1,5 @@
 #include "../common.h"
+#include "image.h"
 
 #if defined(WIN32) && defined(MAGICK_ENABLED)
 #include <Magick++.h>
@@ -10,7 +11,7 @@
 extern "C" {
 #endif
 
-void imageInit() {
+void esmb_image_init() {
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
@@ -28,13 +29,7 @@ void imageInit() {
   return;
 }
 
-struct image_result {
-  const char *type;
-  size_t length;
-  void *buf;
-};
-
-image_result *image(const char *command, const char *args, const char *data, size_t length) {
+image_result *esmb_image_process(const char *command, const char *args, const char *data, size_t length) {
   nlohmann::json parsedArgs = nlohmann::json::parse(args);
   ArgumentMap Arguments;
 
@@ -92,27 +87,7 @@ image_result *image(const char *command, const char *args, const char *data, siz
   return out;
 }
 
-void img_free(void *ptr, [[maybe_unused]] void *ctx) { g_free(ptr); }
-
-char *get_funcs() {
-  nlohmann::json funcs = nlohmann::json::array();
-  for (auto const &imap : FunctionMap) {
-    funcs.push_back(imap.first);
-  }
-  for (auto const &imap : NoInputFunctionMap) {
-    funcs.push_back(imap.first);
-  }
-  string dumped = funcs.dump();
-  size_t length = dumped.length();
-  char *out = new char[length + 1];
-  out[length] = 0;
-  dumped.copy(out, length);
-  return out;
-}
-
-const char *get_type(image_result *result) { return result->type; }
-void *get_data(image_result *result) { return result->buf; }
-size_t get_size(image_result *result) { return result->length; }
+void esmb_image_free(void *ptr, [[maybe_unused]] void *ctx) { g_free(ptr); }
 
 #ifdef __cplusplus
 }
