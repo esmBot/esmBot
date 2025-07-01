@@ -4,8 +4,10 @@
 #if defined(WIN32) && defined(MAGICK_ENABLED)
 #include <Magick++.h>
 #endif
-#include <nlohmann/json.hpp>
+#include <simdjson.h>
 #include <vips/vips8>
+
+using namespace simdjson;
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,26 +32,30 @@ void esmb_image_init() {
 }
 
 image_result *esmb_image_process(const char *command, const char *args, const char *data, size_t length) {
-  nlohmann::json parsedArgs = nlohmann::json::parse(args);
+  ondemand::parser parser;
+  ondemand::document parsedArgs = parser.iterate(args);
+  ondemand::object obj(parsedArgs);
   ArgumentMap Arguments;
 
-  for (auto &pair : parsedArgs.items()) {
-    auto key = pair.key();
-    if (key == "data") {
-      continue;
-    }
-
+  for (auto pair : obj) {
+    std::string key(pair.escaped_key().value());
     auto val = pair.value();
-    if (val.is_boolean()) {
-      Arguments[key] = val.template get<bool>();
-    } else if (val.is_string()) {
-      Arguments[key] = val.template get<string>();
-    } else if (val.is_number_integer()) {
-      Arguments[key] = val.template get<int>();
-    } else if (val.is_number_float()) {
-      Arguments[key] = val.template get<float>();
-    } else {
-      throw "Unimplemented value type passed to image native.";
+    switch (val.type()) {
+      case ondemand::json_type::boolean:
+        Arguments[key] = val.get_bool();
+        break;
+      case ondemand::json_type::string:
+        Arguments[key] = std::string(val.get_string().value());
+        break;
+      case ondemand::json_type::number:
+        if (val.is_integer()) {
+          Arguments[key] = val.get_int64();
+        } else {
+          Arguments[key] = val.get_double();
+        }
+        break;
+      default:
+        throw "Unimplemented value type passed to image native.";
     }
   }
 

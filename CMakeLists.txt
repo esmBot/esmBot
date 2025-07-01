@@ -125,9 +125,9 @@ link_directories(${VIPS_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${VIPS_LDFLAGS})
 
 if (NOT CMAKE_JS_VERSION)
-  FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
-  FetchContent_MakeAvailable(json)
-  target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
+  find_package(simdjson REQUIRED)
+  include_directories(${simdjson_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} ${simdjson_LIBRARIES})
 endif()
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET AND CMAKE_JS_VERSION)
