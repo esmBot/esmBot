@@ -125,9 +125,14 @@ link_directories(${VIPS_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${VIPS_LDFLAGS})
 
 if (NOT CMAKE_JS_VERSION)
-  find_package(simdjson REQUIRED)
-  include_directories(${simdjson_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} ${simdjson_LIBRARIES})
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  FetchContent_Declare(
+    simdjson
+    GIT_REPOSITORY https://github.com/simdjson/simdjson.git
+    GIT_TAG  tags/v3.13.0
+    GIT_SHALLOW TRUE)
+  FetchContent_MakeAvailable(simdjson)
+  target_link_libraries(${PROJECT_NAME} simdjson)
 endif()
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET AND CMAKE_JS_VERSION)
