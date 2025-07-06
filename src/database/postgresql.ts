@@ -88,10 +88,6 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
             logger.info(`Running version ${version} update script...`);
             await sql.unsafe(updates[version]);
           }
-        } else if (version > latestVersion) {
-          throw new Error(
-            `PostgreSQL database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`,
-          );
         } else {
           return;
         }

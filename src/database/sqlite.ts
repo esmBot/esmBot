@@ -126,10 +126,8 @@ export default class SQLitePlugin implements DatabasePlugin {
             logger.info(`Running version ${version} update script...`);
             this.connection.exec(updates[version]);
           }
-        } else if (version > latestVersion) {
-          throw new Error(
-            `SQLite database is at version ${version}, but this version of the bot only supports up to version ${latestVersion}.`,
-          );
+        } else {
+          return;
         }
         // prepared statements don't seem to work here
         if (process.versions.bun) {
