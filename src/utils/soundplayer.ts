@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { setTimeout } from "node:timers/promises";
 import format from "format-duration";
 import {
+  type AnyVoiceChannel,
   type Client,
   type CommandInteraction,
   type Guild,
@@ -107,11 +108,11 @@ export async function play(client: Client, soundUrl: string, options: Options) {
     return { content: getString("sound.noVoiceState", { locale: options.locale }), flags: 64 };
   if (!options.guild.permissionsOf(client.user.id).has("CONNECT"))
     return { content: getString("sound.cantJoin", { locale: options.locale }), flags: 64 };
-  const voiceChannel =
-    options.guild.channels.get(options.member.voiceState.channelID) ??
-    (await client.rest.channels.get(options.member.voiceState.channelID).catch((e) => {
+  const voiceChannel = await client.rest.channels
+    .get<AnyVoiceChannel>(options.member.voiceState.channelID)
+    .catch((e) => {
       logger.warn(`Failed to get a voice channel: ${e}`);
-    }));
+    });
   if (!voiceChannel) return { content: getString("sound.cantJoin", { locale: options.locale }), flags: 64 };
   if (!(voiceChannel instanceof VoiceChannel) && !(voiceChannel instanceof StageChannel))
     return { content: getString("sound.notVoiceChannel", { locale: options.locale }), flags: 64 };
