@@ -79,8 +79,10 @@ class StatsCommand extends Command {
               inline: true,
             },
             {
-              name: this.getString(`commands.responses.stats.${process.versions.bun ? "bunVersion" : "nodeJsVersion"}`),
-              value: process.versions.bun ?? process.versions.node,
+              name: this.getString(
+                `commands.responses.stats.${process.versions.bun ? "bunVersion" : process.versions.deno ? "denoVersion" : "nodeJsVersion"}`,
+              ),
+              value: process.versions.bun ?? process.versions.deno ?? process.versions.node,
               inline: true,
             },
             {
