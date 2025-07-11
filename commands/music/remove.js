@@ -12,7 +12,7 @@ class RemoveCommand extends MusicCommand {
     const owners = process.env.OWNER?.split(",") ?? [];
     if (this.connection.host !== this.author.id && !owners.includes(this.connection.host))
       return this.getString("commands.responses.remove.notHost");
-    const pos = this.getOptionInteger("position") ?? Number.parseInt(this.args[0]);
+    const pos = this.getOptionInteger("position", true) ?? Number.parseInt(this.args[0]);
     if (Number.isNaN(pos) || pos > this.queue.length || pos < 1)
       return this.getString("commands.responses.remove.invalidPosition");
     const removed = this.queue.splice(pos, 1);

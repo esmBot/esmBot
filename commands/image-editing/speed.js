@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SpeedCommand extends ImageCommand {
   paramsFunc() {
-    const speed = this.getOptionInteger("multiplier") ?? Number.parseInt(this.args[0]);
+    const speed = this.getOptionInteger("multiplier", true) ?? Number.parseInt(this.args[0]);
     return {
       speed: Number.isNaN(speed) || speed < 1 ? 2 : speed,
     };

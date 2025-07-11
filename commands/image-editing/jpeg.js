@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class JPEGCommand extends ImageCommand {
   paramsFunc() {
-    const quality = this.getOptionInteger("quality") ?? Number.parseInt(this.args[0]);
+    const quality = this.getOptionInteger("quality", true) ?? Number.parseInt(this.args[0]);
     return {
       quality: Number.isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100)),
     };

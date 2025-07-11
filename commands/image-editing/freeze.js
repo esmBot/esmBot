@@ -3,7 +3,7 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FreezeCommand extends ImageCommand {
   paramsFunc() {
-    const frameCount = this.getOptionInteger("endframe") ?? Number.parseInt(this.args[0]);
+    const frameCount = this.getOptionInteger("endframe", true) ?? Number.parseInt(this.args[0]);
     return {
       loop: false,
       frame: Number.isNaN(frameCount) ? -1 : frameCount,
