@@ -218,7 +218,7 @@ async function checkImages(
   return type;
 }
 
-async function checkEmbeds(message: Message | MessageSnapshotMessage, extraReturnTypes: boolean, video: boolean) {
+function checkEmbeds(message: Message | MessageSnapshotMessage, extraReturnTypes: boolean, video: boolean) {
   let hasSpoiler = false;
   if (message.embeds[0].url && message.content) {
     const spoilerRegex = /\|\|.*https?:\/\/.*\|\|/s;
