@@ -148,6 +148,23 @@ class Command {
     });
   }
 
+  getOption(key: string, type: Constants.ApplicationCommandOptionTypes, defaultArg?: boolean) {
+    switch (type) {
+      case Constants.ApplicationCommandOptionTypes.STRING:
+        return this.getOptionString(key, defaultArg);
+      case Constants.ApplicationCommandOptionTypes.BOOLEAN:
+        return this.getOptionBoolean(key, defaultArg);
+      case Constants.ApplicationCommandOptionTypes.NUMBER:
+        return this.getOptionNumber(key, defaultArg);
+      case Constants.ApplicationCommandOptionTypes.INTEGER:
+        return this.getOptionInteger(key, defaultArg);
+      case Constants.ApplicationCommandOptionTypes.USER:
+        return this.getOptionUser(key, defaultArg);
+      case Constants.ApplicationCommandOptionTypes.ATTACHMENT:
+        return this.getOptionAttachment(key);
+    }
+  }
+
   getOptionString(key: string, defaultArg?: boolean): string | undefined {
     if (this.type === "classic") {
       return defaultArg ? this.args.join(" ").trim() : (this.options?.[key] as string);

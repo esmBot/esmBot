@@ -107,6 +107,7 @@ In addition, a few helper functions are available inside the `Command` class:
 
 The below helper functions can be used for getting command options. The `key` parameter is the key of the option, while the `defaultArg` optional parameter reads from a classic command's args directly:
 
+- `this.getOption(key, type, defaultArg)`: A catch-all wrapper for the below functions. Use `type` to select which one to call.
 - `this.getOptionString(key, defaultArg)`: Gets a command flag/option by name as a string.
 - `this.getOptionBoolean(key, defaultArg)`: Gets a command flag/option by name as a boolean.
 - `this.getOptionNumber(key, defaultArg)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
