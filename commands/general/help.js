@@ -89,7 +89,7 @@ class HelpCommand extends Command {
     const pages = [];
     if (help.categories === help.categoryTemplate && !help.generated) help.generateList();
     for (const category of Object.keys(help.categories)) {
-      let splitPages = [];
+      const splitPages = [];
       let arrIndex = 0;
       const entries = help.categories[category];
       for (let i = 0; i < entries.length; i += 15) {

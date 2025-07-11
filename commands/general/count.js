@@ -32,7 +32,7 @@ class CountCommand extends Command {
       countArray2.push(`**${key}**: ${value}`);
     }
     const embeds = [];
-    let groups = [];
+    const groups = [];
     let arrIndex = 0;
     for (let i = 0; i < countArray2.length; i += 15) {
       groups[arrIndex] = countArray2.slice(i, i + 15);

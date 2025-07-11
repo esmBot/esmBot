@@ -190,7 +190,7 @@ class TagsCommand extends Command {
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
     const tagList = await this.database.getTags(this.guild.id);
     const embeds = [];
-    let groups = [];
+    const groups = [];
     let arrIndex = 0;
     const keys = Object.keys(tagList);
     for (let i = 0; i < keys.length; i += 15) {

@@ -22,7 +22,7 @@ class QueueCommand extends MusicCommand {
     }
     const pageSize = 5;
     const embeds = [];
-    let groups = [];
+    const groups = [];
     let arrIndex = 0;
     for (let i = 0; i < trackList.length; i += pageSize) {
       groups[arrIndex] = trackList.slice(i, i + pageSize);
