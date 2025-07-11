@@ -83,7 +83,7 @@
             "bounce": "¡Necesitas subir una imágen o GIF para que rebote!",
             "caption": "¡Necesitas subir una imágen o GIF para añadirle un encabezado!"
         },
-        "noText": {
+        "noParam": {
             "caption": "¡Necesitas incluir un texto para añadirlo como encabezado!"
         }
     },
@@ -115,7 +115,7 @@
         "noResult": "No recibí respuesta del servidor de imágenes. Por favor inténtalo de nuevo.",
         "noServers": "No me pude conectar a los servidores de imágenes, puede que estén caídos o que se estén reiniciando. Por favor espera.",
         "noTempServer": "La imágen que resultó del comando pesa más de 25MB, así que no la puedo subir.",
-        "noText": "¡Necesitas incluir un texto!",
+        "noParam": "¡Necesitas incluir un texto!",
         "processing": "Procesando... Puede que esto tarde",
         "ratelimit": "El servidor en el que está subida tu imágen está bloqueándome temporariamente. Intenta subir tu imágen a otro lado.",
         "selected": "Se he seleccionado la imágen para tu siguiente comando.",

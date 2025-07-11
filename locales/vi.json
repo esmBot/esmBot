@@ -826,7 +826,7 @@
                 "resumed": "Nhạc đã được phát lại."
             }
         },
-        "noText": {
+        "noParam": {
             "spotify": "Bạn phải cung cấp nội dung để chèn chữ \"This is\" của Spotify!",
             "homebrew": "Bạn phải cung cấp nội dung để tạo edit Homebrew Channel!",
             "flag": "Bạn phải cung cấp emoji của một lá cờ để chèn lên!",
@@ -935,7 +935,7 @@
         "noImage": "Bạn phải cung cấp ảnh/GIF!",
         "noResult": "Tôi không thể nhận được phản hồi từ server hình ảnh. Vui lòng thử lại.",
         "noServers": "Có vẻ là tôi không thể liên lạc với các server hình ảnh, chắc có thể là chúng đang gặp sự cố hoặc đang khởi động lại. Vui lòng chờ một chút nhé.",
-        "noText": "Bạn phải thêm nội dung chứ!",
+        "noParam": "Bạn phải thêm nội dung chứ!",
         "processing": "Đang xử lý... Xin hãy chờ chút nhé",
         "tenor": "Tôi đã bị giới hạn yêu cầu bởi Tenor. Vui lòng thử tải GIF của bạn ở chỗ khác.",
         "ratelimit": "Có vẻ như server lưu trữ hình ảnh đã giới hạn yêu cầu của tôi. Bạn có thể thử tải hình ảnh lên ở chỗ khác.",

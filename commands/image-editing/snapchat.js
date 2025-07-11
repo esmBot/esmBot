@@ -16,6 +16,7 @@ class SnapchatCommand extends ImageCommand {
 
   static init() {
     super.init();
+    this.addTextParam();
     this.flags.push({
       name: "position",
       type: Constants.ApplicationCommandOptionTypes.NUMBER,
@@ -29,8 +30,8 @@ class SnapchatCommand extends ImageCommand {
   static description = "Adds a Snapchat style caption to an image";
   static aliases = ["snap", "caption3"];
 
-  static requiresText = true;
-  static noText = "You need to provide some text to add a caption!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to add a caption!";
   static noImage = "You need to provide an image/GIF to add a caption!";
   static command = "snapchat";
 }

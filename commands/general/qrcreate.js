@@ -8,11 +8,17 @@ class QrCreateCommand extends ImageCommand {
     };
   }
 
+  static init() {
+    super.init();
+    this.addTextParam();
+    return this;
+  }
+
   static description = "Generates a QR code";
 
   static requiresImage = false;
-  static requiresText = true;
-  static noText = "You need to provide some text to generate a QR code!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to generate a QR code!";
   static command = "qrcreate";
 }
 

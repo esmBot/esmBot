@@ -278,7 +278,7 @@
                 "position": "poziție"
             }
         },
-        "noText": {
+        "noParam": {
             "caption": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
             "caption2": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
             "qrcreate": "Trebuie să furnizezi un text pentru a genera un cod QR!",
@@ -694,7 +694,7 @@
         "noImage": "Trebuie să introduci o imagine sau un GIF!",
         "noResult": "Nu am reușit să obțin un răspuns de la serverul de imagini. Te rog să încerci din nou.",
         "noServers": "Nu pot contacta serverele de imagini, s-ar putea ca ele să nu fie în stare funcțională sau să fie în curs de pornire. Te rog să aștepți puțin.",
-        "noText": "Trebuie să furnizezi un text!",
+        "noParam": "Trebuie să furnizezi un text!",
         "badurl": "Adresa URL nu este validă!",
         "couldNotFind": "Nu am găsit o imagine în acel mesaj!",
         "empty": "Rezultatul a fost gol!",

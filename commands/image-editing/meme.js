@@ -3,10 +3,11 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class MemeCommand extends ImageCommand {
   /**
-   * @param {string} text
+   * @param {string | number | boolean | import("oceanic.js").User | import("oceanic.js").Attachment} text
    * @param {string | undefined} url
    */
   async criteria(text, url) {
+    if (typeof text !== "string") return false;
     const [topText, bottomText] = text
       .replaceAll(url ?? "", "")
       .split(/(?<!\\),/)
@@ -35,6 +36,7 @@ class MemeCommand extends ImageCommand {
 
   static init() {
     super.init();
+    this.addTextParam();
     this.flags.push(
       {
         name: "case",
@@ -59,8 +61,8 @@ class MemeCommand extends ImageCommand {
 
   static description = "Generates a meme from an image (separate top/bottom text with a comma)";
 
-  static requiresText = true;
-  static noText = "You need to provide some text to generate a meme!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to generate a meme!";
   static noImage = "You need to provide an image/GIF to generate a meme!";
   static command = "meme";
 }

@@ -11,11 +11,17 @@ class WhisperCommand extends ImageCommand {
     };
   }
 
+  static init() {
+    super.init();
+    this.addTextParam();
+    return this;
+  }
+
   static description = "Adds a Whisper style caption to an image";
   static aliases = ["caption4"];
 
-  static requiresText = true;
-  static noText = "You need to provide some text to add a caption!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to add a caption!";
   static noImage = "You need to provide an image/GIF to add a caption!";
   static command = "whisper";
 }

@@ -8,11 +8,17 @@ class SonicCommand extends ImageCommand {
     };
   }
 
+  static init() {
+    super.init();
+    this.addTextParam();
+    return this;
+  }
+
   static description = "Creates a Sonic speech bubble image";
 
   static requiresImage = false;
-  static requiresText = true;
-  static noText = "You need to provide some text to make a Sonic meme!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to make a Sonic meme!";
   static command = "sonic";
 }
 

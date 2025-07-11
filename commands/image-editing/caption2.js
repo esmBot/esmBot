@@ -47,6 +47,7 @@ class CaptionTwoCommand extends ImageCommand {
 
   static init() {
     super.init();
+    this.addTextParam();
     this.flags.push(
       {
         name: "top",
@@ -73,7 +74,7 @@ class CaptionTwoCommand extends ImageCommand {
   static aliases = ["tags2", "meirl", "memecaption", "medotmecaption"];
 
   static textOptional = true;
-  static noText = "You need to provide some text to add a caption!";
+  static noParam = "You need to provide some text to add a caption!";
   static noImage = "You need to provide an image/GIF to add a caption!";
   static command = "captionTwo";
 }

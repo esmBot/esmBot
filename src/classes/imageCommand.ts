@@ -1,4 +1,12 @@
-import { type AnyTextableChannel, CommandInteraction, Constants, type JSONAttachment, type Message } from "oceanic.js";
+import {
+  type AnyTextableChannel,
+  type Attachment,
+  CommandInteraction,
+  Constants,
+  type JSONAttachment,
+  type Message,
+  type User,
+} from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
@@ -15,7 +23,7 @@ class ImageCommand extends Command {
     return {};
   }
 
-  async criteria(_text?: string, _url?: string) {
+  async criteria(_text?: string | number | boolean | User | Attachment, _url?: string) {
     return true;
   }
 
@@ -109,14 +117,19 @@ class ImageCommand extends Command {
     const spoiler = this.getOptionBoolean("spoiler");
     if (spoiler != null) needsSpoiler = spoiler;
 
-    if (staticProps.requiresText) {
-      const text = this.getOptionString("text") ?? this.args.join(" ").trim();
-      if (isEmpty(text) || !(await this.criteria(text, imageParams.url))) {
+    if (staticProps.requiresParam) {
+      const text =
+        this.getOption(
+          staticProps.requiredParam,
+          staticProps.requiredParamType,
+          staticProps.requiredParamType !== Constants.ApplicationCommandOptionTypes.STRING,
+        ) ?? this.args.join(" ").trim();
+      if (!text || (typeof text === "string" && isEmpty(text)) || !(await this.criteria(text, imageParams.url))) {
         runningCommands.delete(this.author?.id);
         return (
-          this.getString(`commands.noText.${this.cmdName}`, { returnNull: true }) ||
-          this.getString("image.noText", { returnNull: true }) ||
-          staticProps.noText
+          this.getString(`commands.noParam.${this.cmdName}`, { returnNull: true }) ||
+          this.getString("image.noParam", { returnNull: true }) ||
+          staticProps.noParam
         );
       }
     }
@@ -212,20 +225,21 @@ class ImageCommand extends Command {
     });
   }
 
+  static addTextParam() {
+    this.flags.unshift({
+      name: "text",
+      nameLocalizations: getAllLocalizations("image.flagNames.text"),
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description: "The text to put on the image",
+      descriptionLocalizations: getAllLocalizations("image.flags.text"),
+      maxLength: 4096,
+      required: !this.textOptional,
+      classic: true,
+    });
+  }
+
   static init() {
     this.flags = [];
-    if (this.requiresText || this.textOptional) {
-      this.flags.push({
-        name: "text",
-        nameLocalizations: getAllLocalizations("image.flagNames.text"),
-        type: Constants.ApplicationCommandOptionTypes.STRING,
-        description: "The text to put on the image",
-        descriptionLocalizations: getAllLocalizations("image.flags.text"),
-        maxLength: 4096,
-        required: !this.textOptional,
-        classic: true,
-      });
-    }
     if (this.requiresImage) {
       this.flags.push(
         {
@@ -286,12 +300,14 @@ class ImageCommand extends Command {
   ];
 
   static requiresImage = true;
-  static requiresText = false;
+  static requiresParam = false;
+  static requiredParam = "text";
+  static requiredParamType = Constants.ApplicationCommandOptionTypes.STRING;
   static textOptional = false;
   static requiresAnim = false;
   static alwaysGIF = false;
   static noImage = "You need to provide an image/GIF!";
-  static noText = "You need to provide some text!";
+  static noParam = "You need to provide some text!";
   static empty = "The resulting output was empty!";
   static command = "";
 }

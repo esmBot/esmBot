@@ -189,7 +189,7 @@
             "bounce": "¡Necesitas subir una imagen o GIF para que rebote!",
             "caption": "¡Necesitas subir una imagen o GIF para añadirle una leyenda!"
         },
-        "noText": {
+        "noParam": {
             "caption": "¡Necesitas incluir un texto para añadirlo como leyenda!"
         },
         "responses": {
@@ -227,7 +227,7 @@
         "noResult": "No recibí respuesta del servidor de imágenes. Por favor inténtalo de nuevo.",
         "noServers": "No me pude conectar a los servidores de imágenes, puede que estén caídos o que se estén reiniciando. Por favor espera.",
         "noTempServer": "La imagen que resultó del comando pesa más de 25MB, así que no la puedo subir.",
-        "noText": "¡Necesitas incluir un texto!",
+        "noParam": "¡Necesitas incluir un texto!",
         "processing": "Procesando... Puede que esto tarde",
         "ratelimit": "El servidor en el que está subida tu imagen está bloqueándome temporariamente. Intenta subir tu imagen a otro lado.",
         "selected": "Se he seleccionado la imagen para tu siguiente comando.",

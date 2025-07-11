@@ -629,7 +629,7 @@
             "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!",
             "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!"
         },
-        "noText": {
+        "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
             "sonic": "Devi fornire del testo da cui fare un meme di Sonic!",
             "qrcreate": "Devi fornire del testo da cui generare un QR code!",
@@ -914,7 +914,7 @@
         "noanim": "Quell'immagine non è in un formato animato (GIF o WEBP)!",
         "noImage": "Devi fornire un'immagine/GIF!",
         "noServers": "Non sto riuscendo a contattare i server di elaborazione immagini, potrebbero essere spenti o in fase di avvio. Per piacere, attendi un attimo.",
-        "noText": "Devi fornire del testo!",
+        "noParam": "Devi fornire del testo!",
         "badurl": "Quell'URL non è valido!",
         "couldNotFind": "Non ho potuto trovare un'immagine in quel messaggio!",
         "empty": "L'output risultante era vuoto!",

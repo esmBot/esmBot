@@ -49,10 +49,16 @@ class FlagCommand extends ImageCommand {
     };
   }
 
+  static init() {
+    super.init();
+    this.addTextParam();
+    return this;
+  }
+
   static description = "Overlays a flag onto an image";
 
-  static requiresText = true;
-  static noText = "You need to provide an emoji of a flag to overlay!";
+  static requiresParam = true;
+  static noParam = "You need to provide an emoji of a flag to overlay!";
   static noImage = "You need to provide an image/GIF to overlay a flag onto!";
   static command = "flag";
 }

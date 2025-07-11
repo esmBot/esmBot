@@ -3,10 +3,11 @@ import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class MotivateCommand extends ImageCommand {
   /**
-   * @param {string} text
+   * @param {string | number | boolean | import("oceanic.js").User | import("oceanic.js").Attachment} text
    * @param {string | undefined} url
    */
   async criteria(text, url) {
+    if (typeof text !== "string") return false;
     const [topText, bottomText] = text
       .replaceAll(url ?? "", "")
       .split(/(?<!\\),/)
@@ -35,6 +36,7 @@ class MotivateCommand extends ImageCommand {
 
   static init() {
     super.init();
+    this.addTextParam();
     this.flags.push({
       name: "font",
       type: Constants.ApplicationCommandOptionTypes.STRING,
@@ -53,8 +55,8 @@ class MotivateCommand extends ImageCommand {
   static description = "Generates a motivational poster";
   static aliases = ["motivational", "motiv", "demotiv", "demotivational", "poster", "motivation", "demotivate"];
 
-  static requiresText = true;
-  static noText = "You need to provide some text to generate a motivational poster!";
+  static requiresParam = true;
+  static noParam = "You need to provide some text to generate a motivational poster!";
   static noImage = "You need to provide an image/GIF to generate a motivational poster!";
   static command = "motivate";
 }

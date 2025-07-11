@@ -44,7 +44,7 @@
             "bounce": "Você precisa enviar uma imagem/GIF para saltar!",
             "caption": "Você precisa enviar uma imagem/GIF para adicionar legenda!"
         },
-        "noText": {
+        "noParam": {
             "caption": "Você precisa enviar texto para colocar na legenda!"
         }
     },
@@ -76,7 +76,7 @@
         "noResult": "Não consegui obter uma resposta do servidor de imagens. Por favor, tente novamente.",
         "noServers": "Parece que não consigo entrar em contato com os servidores de imagem, eles podem estar inativos ou ainda iniciando. Por favor, aguarde um pouco.",
         "noTempServer": "O resultado tinha mais de 25 MB de tamanho, portanto não posso carregá-la.",
-        "noText": "Você precisa enviar texto!",
+        "noParam": "Você precisa enviar texto!",
         "processing": "Processando... isto vai demorar um pouco",
         "ratelimit": "Fui limitado pelo serviço que hospeda essa imagem. Tente enviar sua imagem em outro lugar.",
         "selected": "A imagem foi selecionada para o seu próximo comando.",

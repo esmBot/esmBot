@@ -50,6 +50,7 @@ class UncannyCommand extends ImageCommand {
 
   static init() {
     super.init();
+    this.addTextParam();
     this.flags.push(
       {
         name: "font",

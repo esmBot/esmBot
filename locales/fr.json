@@ -612,7 +612,7 @@
             "wide": "Vous devez fournir une image/GIF à étirer !",
             "fade": "Vous devez fournir une image/GIF pour faire apparaître progressivement !"
         },
-        "noText": {
+        "noParam": {
             "homebrew": "Vous devez fournir du texte pour créer un montage Homebrew Channel !",
             "sonic": "Vous devez fournir du texte pour créer un meme Sonic !",
             "flag": "Vous devez fournir l'emoji d'un drapeau à superposer !",
@@ -759,7 +759,7 @@
         "noanim": "Cette image n'est pas dans un format animé (GIF ou WEBP) !",
         "noImage": "Vous devez fournir une image/GIF !",
         "noTempServer": "L'image résultante était plus grande que la limite de téléchargement de Discord, je ne peux donc pas la télécharger.",
-        "noText": "Vous devez fournir un texte !",
+        "noParam": "Vous devez fournir un texte !",
         "processing": "Traitement en cours... Cela peut prendre un certain temps",
         "ratelimit": "J'ai été limité par le serveur hébergeant cette image. Essayez de télécharger votre image ailleurs.",
         "selected": "L'image a été sélectionnée pour votre prochaine commande.",

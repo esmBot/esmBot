@@ -629,7 +629,7 @@
       "wide": "You need to provide an image/GIF to stretch!",
       "woow": "You need to provide an image/GIF to mirror!"
     },
-    "noText": {
+    "noParam": {
       "homebrew": "You need to provide some text to make a Homebrew Channel edit!",
       "sonic": "You need to provide some text to make a Sonic meme!",
       "qrcreate": "You need to provide some text to generate a QR code!",
@@ -939,7 +939,7 @@
     "noResult": "I couldn't get a response from the image server. Please try again.",
     "noServers": "I can't seem to contact the image servers, they might be down or still trying to start up. Please wait a little bit.",
     "noTempServer": "The resulting image was larger than Discord's upload limit, so I can't upload it.",
-    "noText": "You need to provide some text!",
+    "noParam": "You need to provide some text!",
     "notWorking": "I couldn't find a way to process this image; this likely means that I haven't been set up correctly. Please contact the bot owner.",
     "processing": "Processing... This might take a while",
     "ratelimit": "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.",
