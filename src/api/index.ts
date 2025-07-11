@@ -213,7 +213,7 @@ wss.on("error", (err) => {
 
 const httpServer = createServer();
 
-httpServer.on("request", async (req, res) => {
+httpServer.on("request", (req, res) => {
   if (req.method !== "GET") {
     res.statusCode = 405;
     return res.end("405 Method Not Allowed");

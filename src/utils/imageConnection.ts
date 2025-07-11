@@ -70,7 +70,7 @@ class ImageConnection {
     this.conn.addEventListener("close", () => this.onClose(), { once: true });
   }
 
-  async onMessage(msg: Data) {
+  onMessage(msg: Data) {
     if (!(msg instanceof Buffer)) return;
     const op = msg.readUint8(0);
     logger.debug(`Received message from image server ${this.host} with opcode ${op}`);
@@ -213,7 +213,7 @@ class ImageConnection {
     return res;
   }
 
-  async do<T>(op: number, id: bigint, data: Buffer): Promise<T> {
+  do<T>(op: number, id: bigint, data: Buffer): Promise<T> {
     const buf = Buffer.alloc(1 + 2);
     let tag = this.tag++;
     if (tag > 65535) tag = this.tag = 0;
