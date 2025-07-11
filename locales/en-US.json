@@ -61,6 +61,7 @@
       "grayscale": "Adds a grayscale filter",
       "haah": "Mirrors the left side of an image onto the right",
       "hooh": "Mirrors the bottom of an image onto the top",
+      "hue": "Hue shifts an image",
       "hypercam": "Adds the Hypercam watermark to an image",
       "ifunny": "Adds the iFunny watermark to an image",
       "implode": "Implodes an image",
@@ -208,6 +209,9 @@
       },
       "freeze": {
         "endframe": "endframe"
+      },
+      "hue": {
+        "shift": "shift"
       },
       "jpeg": {
         "quality": "quality"
@@ -378,6 +382,9 @@
       "freeze": {
         "endframe": "Set the end frame (default: last frame)"
       },
+      "hue": {
+        "shift": "Set the amount to shift by"
+      },
       "jpeg": {
         "quality": "Set the JPEG quality (default: 1)"
       },
@@ -513,6 +520,7 @@
       "grayscale": "grayscale",
       "haah": "haah",
       "hooh": "hooh",
+      "hue": "hue",
       "hypercam": "hypercam",
       "ifunny": "ifunny",
       "implode": "implode",
@@ -592,6 +600,7 @@
       "grayscale": "You need to provide an image/GIF to turn grayscale!",
       "haah": "You need to provide an image/GIF to mirror!",
       "hooh": "You need to provide an image/GIF to mirror!",
+      "hue": "You need to provide an image/GIF to hue shift!",
       "hypercam": "You need to provide an image/GIF to add a Hypercam watermark!",
       "ifunny": "You need to provide an image/GIF to add an iFunny watermark!",
       "implode": "You need to provide an image/GIF to implode!",
@@ -636,6 +645,7 @@
       "caption": "You need to provide some text to add a caption!",
       "caption2": "You need to provide some text to add a caption!",
       "flag": "You need to provide an emoji of a flag to overlay!",
+      "hue": "You need to provide the amount you want to hue shift by!",
       "meme": "You need to provide some text to generate a meme!",
       "motivate": "You need to provide some text to generate a motivational poster!",
       "reddit": "You need to provide some text to add a Reddit watermark!",
