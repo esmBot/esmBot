@@ -148,9 +148,9 @@ class Command {
     });
   }
 
-  getOptionString(key: string): string | undefined {
+  getOptionString(key: string, defaultArg?: boolean): string | undefined {
     if (this.type === "classic") {
-      return this.options?.[key] as string;
+      return defaultArg ? this.args.join(" ").trim() : (this.options?.[key] as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getString(key);
@@ -158,9 +158,9 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionBoolean(key: string): boolean | undefined {
+  getOptionBoolean(key: string, defaultArg?: boolean): boolean | undefined {
     if (this.type === "classic") {
-      const option = this.options?.[key];
+      const option = defaultArg ? this.args.join(" ").trim() : this.options?.[key];
       if (option) return !!option;
       else return;
     }
@@ -170,9 +170,9 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionNumber(key: string): number | undefined {
+  getOptionNumber(key: string, defaultArg?: boolean): number | undefined {
     if (this.type === "classic") {
-      return Number.parseFloat(this.options?.[key] as string);
+      return Number.parseFloat((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getNumber(key);
@@ -180,9 +180,9 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionInteger(key: string): number | undefined {
+  getOptionInteger(key: string, defaultArg?: boolean): number | undefined {
     if (this.type === "classic") {
-      return Number.parseInt(this.options?.[key] as string);
+      return Number.parseInt((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getInteger(key);
@@ -190,10 +190,10 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionUser(key: string): User | undefined {
+  getOptionUser(key: string, defaultArg?: boolean): User | undefined {
     if (this.type === "classic") {
-      const id = this.options?.[key] as string;
-      return this.client.users.get(id);
+      const id = defaultArg ? this.args.join(" ").trim() : this.options?.[key];
+      return this.client.users.get(id as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getUser(key);
@@ -201,10 +201,10 @@ class Command {
     throw Error("Unknown command type");
   }
 
-  getOptionMember(key: string): Member | undefined {
+  getOptionMember(key: string, defaultArg?: boolean): Member | undefined {
     if (this.type === "classic") {
-      const id = this.options?.[key] as string;
-      return this.guild?.members.get(id);
+      const id = defaultArg ? this.args.join(" ").trim() : this.options?.[key];
+      return this.guild?.members.get(id as string);
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getMember(key);

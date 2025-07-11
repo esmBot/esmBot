@@ -103,12 +103,17 @@ In addition, a few helper functions are available inside the `Command` class:
 
 - `this.acknowledge()`: Sends a typing indicator in the current channel. Only works with classic commands.
 - `this.getString(key, returnNull)`: Gets a localized string for the input locale. If `returnNull` is set to false (the default) and the string does not exist on the input or default locales, the `key` string will be returned; otherwise, `null` will be returned.
-- `this.getOptionString(key)`: Gets a command flag/option by name as a string.
-- `this.getOptionBoolean(key)`: Gets a command flag/option by name as a boolean.
-- `this.getOptionNumber(key)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
-- `this.getOptionInteger(key)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
-- `this.getOptionAttachment(key)`: Gets a command flag/option by name as an attachment. When used with classic commands, `key` is ignored.
 - `this.clean(text)`: Strips and normalizes user, role, and channel mentions found in `text`
+
+The below helper functions can be used for getting command options. The `key` parameter is the key of the option, while the `defaultArg` optional parameter reads from a classic command's args directly:
+
+- `this.getOptionString(key, defaultArg)`: Gets a command flag/option by name as a string.
+- `this.getOptionBoolean(key, defaultArg)`: Gets a command flag/option by name as a boolean.
+- `this.getOptionNumber(key, defaultArg)`: Gets a command flag/option by name as a number (in Discord terminology, this is a float/decimal number).
+- `this.getOptionInteger(key, defaultArg)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
+- `this.getOptionUser(key, defaultArg)`: Gets a command flag/option by name as a user.
+- `this.getOptionMember(key, defaultArg)`: Gets a command flag/option by name as a member.
+- `this.getOptionAttachment(key)`: Gets a command flag/option by name as an attachment. When used with classic commands, `key` is ignored.
 
 ## The `run` Function
 
