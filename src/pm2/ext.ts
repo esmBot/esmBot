@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { createServer } from "node:http";
 import { availableParallelism } from "node:os";
+import process from "node:process";
 import { Client, type ShardStatus } from "oceanic.js";
 import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";

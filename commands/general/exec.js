@@ -1,4 +1,6 @@
+import { Buffer } from "node:buffer";
 import { exec as baseExec } from "node:child_process";
+import process from "node:process";
 import { promisify } from "node:util";
 import { clean } from "#utils/misc.js";
 const exec = promisify(baseExec);

@@ -1,3 +1,5 @@
+import { Buffer } from "node:buffer";
+import process from "node:process";
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { clean } from "#utils/misc.js";

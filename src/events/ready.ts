@@ -1,3 +1,4 @@
+import process from "node:process";
 import { send } from "#utils/handler.js";
 import { createPage, generateList } from "#utils/help.js";
 import logger from "#utils/logger.js";

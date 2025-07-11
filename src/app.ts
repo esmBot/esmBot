@@ -19,6 +19,8 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
 // load config from .env file
 import "dotenv/config";
 
+import process from "node:process";
+
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.js");
 
 if (!process.env.TOKEN) {

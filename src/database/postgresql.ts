@@ -1,3 +1,4 @@
+import process from "node:process";
 import type { Guild, GuildChannel } from "oceanic.js";
 import type { DatabasePlugin } from "../database.js";
 import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";

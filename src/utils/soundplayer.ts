@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import process from "node:process";
 import { setTimeout } from "node:timers/promises";
 import format from "format-duration";
 import {

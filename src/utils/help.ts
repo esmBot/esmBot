@@ -1,4 +1,5 @@
 import { promises } from "node:fs";
+import process from "node:process";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { commands, info } from "./collections.js";
 import type { Param } from "./types.js";

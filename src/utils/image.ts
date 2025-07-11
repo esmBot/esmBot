@@ -1,6 +1,8 @@
+import { Buffer } from "node:buffer";
 import { lookup } from "node:dns/promises";
 import fs from "node:fs";
 import { createRequire } from "node:module";
+import process from "node:process";
 import { fileTypeFromBuffer } from "file-type";
 import ipaddr from "ipaddr.js";
 import ImageConnection from "./imageConnection.js";

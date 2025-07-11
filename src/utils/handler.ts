@@ -1,3 +1,4 @@
+import process from "node:process";
 import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.js";
 import { log } from "./logger.js";
 

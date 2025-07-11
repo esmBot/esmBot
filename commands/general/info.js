@@ -1,3 +1,4 @@
+import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { getServers } from "#utils/misc.js";
 import packageJson from "../../package.json" with { type: "json" };

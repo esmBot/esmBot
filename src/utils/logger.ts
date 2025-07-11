@@ -1,3 +1,4 @@
+import process from "node:process";
 import winston from "winston";
 import "winston-daily-rotate-file";
 

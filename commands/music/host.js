@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Constants, User } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";

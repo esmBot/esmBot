@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { setTimeout } from "node:timers/promises";
 import WebSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.js";

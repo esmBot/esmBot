@@ -1,3 +1,4 @@
+import process from "node:process";
 import {
   AttachmentFlags,
   type Client,

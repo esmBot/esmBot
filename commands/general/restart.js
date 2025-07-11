@@ -1,3 +1,4 @@
+import process from "node:process";
 import Command from "#cmd-classes/command.js";
 
 class RestartCommand extends Command {

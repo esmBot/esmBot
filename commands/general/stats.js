@@ -1,4 +1,5 @@
 import os from "node:os";
+import process from "node:process";
 import { VERSION } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import packageJson from "../../package.json" with { type: "json" };

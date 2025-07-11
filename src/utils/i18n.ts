@@ -1,3 +1,4 @@
+import process from "node:process";
 import { locales } from "./collections.js";
 
 const templateRegex = /{{(\w+?)}}/g;

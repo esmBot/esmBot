@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 

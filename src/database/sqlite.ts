@@ -1,4 +1,5 @@
 import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
+import process from "node:process";
 import type {
   Database as BSQLite3Database,
   Options as BSQLite3Options,

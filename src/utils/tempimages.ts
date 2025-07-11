@@ -1,4 +1,5 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
+import process from "node:process";
 import {
   type Client,
   CommandInteraction,

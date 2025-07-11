@@ -1,5 +1,6 @@
 // wrapper for the database drivers in ./database/
 import "dotenv/config";
+import process from "node:process";
 import type { Guild, GuildChannel } from "oceanic.js";
 import logger from "#utils/logger.js";
 import { type DBGuild, isError, type Tag } from "#utils/types.js";

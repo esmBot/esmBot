@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";

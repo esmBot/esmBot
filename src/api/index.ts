@@ -1,6 +1,8 @@
 import "dotenv/config";
+import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";
+import process from "node:process";
 import { Client } from "oceanic.js";
 import type WebSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";

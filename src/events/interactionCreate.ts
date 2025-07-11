@@ -1,3 +1,5 @@
+import { Buffer } from "node:buffer";
+import process from "node:process";
 import { type AnyInteractionGateway, InteractionTypes } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";

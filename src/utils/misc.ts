@@ -1,4 +1,5 @@
 import util from "node:util";
+import process from "node:process";
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { type DotenvParseOutput, config } from "dotenv";
 import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
