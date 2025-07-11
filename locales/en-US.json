@@ -856,6 +856,7 @@
         "botUptime": "Bot Uptime",
         "bunVersion": "Bun Version",
         "connectionUptime": "Connection Uptime",
+        "denoVersion": "Deno Version",
         "header": "esmBot Statistics",
         "host": "Host",
         "library": "Library",
