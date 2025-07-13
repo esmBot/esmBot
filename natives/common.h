@@ -15,7 +15,7 @@ using std::map;
 using std::string;
 using std::variant;
 
-typedef variant<char *, string, float, bool, int, size_t, long, double> ArgumentVariant;
+typedef variant<char *, string, float, bool, int, size_t> ArgumentVariant;
 typedef map<string, ArgumentVariant> ArgumentMap;
 
 void SetupTimeoutCallback(vips::VImage image, bool *shouldKill);

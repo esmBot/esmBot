@@ -12,7 +12,7 @@ struct image_result {
 };
 
 void esmb_image_init();
-image_result *esmb_image_process(const char *command, const char *args, const char *data, size_t length);
+image_result *esmb_image_process(const char *command, const char *args, size_t args_length, const char *type, const char *data, size_t length);
 void esmb_image_free(void *ptr, [[maybe_unused]] void *ctx);
 
 inline const char *esmb_image_get_type(image_result *result) { return result->type; }

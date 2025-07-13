@@ -31,9 +31,10 @@ void esmb_image_init() {
   return;
 }
 
-image_result *esmb_image_process(const char *command, const char *args, const char *data, size_t length) {
+image_result *esmb_image_process(const char *command, const char *args, size_t args_length, const char *type, const char *data, size_t length) {
   ondemand::parser parser;
-  ondemand::document parsedArgs = parser.iterate(args);
+  padded_string padded(args, args_length);
+  ondemand::document parsedArgs = parser.iterate(padded);
   ondemand::object obj(parsedArgs);
   ArgumentMap Arguments;
 
@@ -49,9 +50,9 @@ image_result *esmb_image_process(const char *command, const char *args, const ch
         break;
       case ondemand::json_type::number:
         if (val.is_integer()) {
-          Arguments[key] = val.get_int64();
+          Arguments[key] = static_cast<int>(val.get_int64());
         } else {
-          Arguments[key] = val.get_double();
+          Arguments[key] = static_cast<float>(val.get_double());
         }
         break;
       default:
@@ -59,7 +60,6 @@ image_result *esmb_image_process(const char *command, const char *args, const ch
     }
   }
 
-  string type = GetArgumentWithFallback<string>(Arguments, "type", "png");
   string outType = GetArgumentWithFallback<bool>(Arguments, "togif", false) ? "gif" : type;
 
   ArgumentMap outMap;
@@ -88,7 +88,7 @@ image_result *esmb_image_process(const char *command, const char *args, const ch
 
   image_result *out = (image_result *)malloc(sizeof(image_result));
   out->buf = buf;
-  out->type = type.c_str();
+  out->type = outType.c_str();
   out->length = GetArgument<size_t>(outMap, "size");
   return out;
 }
