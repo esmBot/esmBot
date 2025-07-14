@@ -112,7 +112,8 @@
             "tags": "Il comando principale dei tag. Apri la pagina di aiuto per più info: https://esmbot.net/help.html",
             "broadcast": "Diffondi messaggio \"Sta giocando a\" finchè il comando non viene inviato di nuovo o il bot si riavvia",
             "wall": "Crea un muro da un'immagine",
-            "fade": "Applica una dissolvenza in entrata a un'immagine"
+            "fade": "Applica una dissolvenza in entrata a un'immagine",
+            "hue": "Cambia la tonalità di un'immagine"
         },
         "flagNames": {
             "8ball": {
@@ -281,6 +282,9 @@
             },
             "fade": {
                 "alpha": "alfa"
+            },
+            "hue": {
+                "shift": "cambiamento"
             }
         },
         "flags": {
