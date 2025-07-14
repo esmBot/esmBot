@@ -111,7 +111,9 @@
             "spotify": "Für einen Spotify-„Das-ist“-Header zu einem Bild hinzu",
             "tags": "Der Hauptbefehl für Tags. Konsultiere die Hilfeseite: https://esmbot.net/help.html",
             "snapchat": "Fügt einen Text wie bei Snapshat hinzu",
-            "fade": "Blendet ein Bild aus"
+            "fade": "Blendet ein Bild aus",
+            "whisper": "Fügt einem Bild eine Beschriftung im Whisper-Stil hinzu",
+            "hue": "Farbtonverschiebung eines Bildes"
         },
         "flagNames": {
             "8ball": {
@@ -166,7 +168,8 @@
                 "emoji": "emoji"
             },
             "eval": {
-                "code": "code"
+                "code": "code",
+                "broadcast": "übertragen"
             },
             "exec": {
                 "cmd": "cmd"
@@ -185,6 +188,32 @@
             },
             "reload": {
                 "cmd": "cmd"
+            },
+            "youtube": {
+                "query": "abfrage"
+            },
+            "caption": {
+                "noegg": "keinei",
+                "font": "schriftart"
+            },
+            "caption2": {
+                "top": "oben",
+                "font": "schriftart"
+            },
+            "fade": {
+                "alpha": "alpha"
+            },
+            "freeze": {
+                "endframe": "letzterframe"
+            },
+            "jpeg": {
+                "quality": "qualität"
+            },
+            "hue": {
+                "shift": "verschiebung"
+            },
+            "snowflake": {
+                "id": "id"
             }
         }
     }
