@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import { createRequire } from "node:module";
 import process from "node:process";
-import type { ImageParams } from "./types";
+import type { ImageParams } from "./types.js";
 
 export interface ImageLib {
   funcs: string[];
