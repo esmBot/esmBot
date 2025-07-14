@@ -91,8 +91,12 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   https://sourceware.org/pipermail/libc-help/2020-September/005457.html
 */
 Napi::Value Trim(const Napi::CallbackInfo &info) {
+#ifdef __GLIBC__
   int res = malloc_trim(0);
   return Napi::Number::From(info.Env(), res);
+#else
+  return Napi::Number::From(info.Env(), 0);
+#endif
 }
 
 void *checkTypes(GType type, Napi::Object *formats) {
