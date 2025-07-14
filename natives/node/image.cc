@@ -1,3 +1,4 @@
+#include <malloc.h>
 #include <napi.h>
 
 #include <map>
@@ -74,6 +75,26 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   return Napi::BigInt::From<intptr_t>(env, reinterpret_cast<intptr_t>(asyncWorker));
 }
 
+/*
+  This is a workaround for an issue in some libc implementations (e.g. glibc)
+  where a multithreaded application with many heaps/arenas can hold on to large
+  amounts of unused memory, never returning it back to the kernel automatically.
+
+  Without this, memory usage can balloon over time to multiple gigabytes when idle -
+  despite none of it being used for anything at all, not even caching.
+
+  While this helps tremendously in bringing down memory usage, it is recommended
+  to lower the amount of malloc arenas (e.g. using the MALLOC_ARENA_MAX env var
+  with glibc) for even more memory savings.
+
+  See this related discussion in the glibc mailing list:
+  https://sourceware.org/pipermail/libc-help/2020-September/005457.html
+*/
+Napi::Value Trim(const Napi::CallbackInfo &info) {
+  int res = malloc_trim(0);
+  return Napi::Number::From(info.Env(), res);
+}
+
 void *checkTypes(GType type, Napi::Object *formats) {
   VipsObjectClass *c = VIPS_OBJECT_CLASS(g_type_class_ref(type));
 
@@ -109,6 +130,7 @@ Napi::Value ImgInit(const Napi::CallbackInfo &info) {
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set(Napi::String::New(env, "image"), Napi::Function::New(env, ProcessImage));
   exports.Set(Napi::String::New(env, "imageInit"), Napi::Function::New(env, ImgInit));
+  exports.Set(Napi::String::New(env, "trim"), Napi::Function::New(env, Trim));
 
   Napi::Array arr = Napi::Array::New(env);
   size_t i = 0;

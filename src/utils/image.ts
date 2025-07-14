@@ -11,6 +11,7 @@ import { random } from "./misc.js";
 import type { ImageParams, ImageTypeData } from "./types.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
+let img: import("./imageLib.js").ImageLib | undefined;
 
 interface ServerConfig {
   name: string;
@@ -34,10 +35,11 @@ export let servers: ServerConfig[] = process.env.API_TYPE === "ws" ? serversConf
 
 export function initImageLib() {
   const nodeRequire = createRequire(import.meta.url);
-  const img = nodeRequire(
+  const imgLib = nodeRequire(
     `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`,
   );
-  img.imageInit();
+  imgLib.imageInit();
+  img = imgLib;
 }
 
 export async function getType(image: URL, extraReturnTypes: boolean): Promise<ImageTypeData | undefined> {
@@ -157,6 +159,8 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
   return random(idealServers.filter((v) => !!v));
 }
 
+let running = 0;
+
 export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string }> {
   if (process.env.API_TYPE === "ws") {
     const currentServer = await getIdeal(params);
@@ -188,7 +192,14 @@ export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer
   }
   if (run) {
     // Called from command (not using image API)
-    const data = await run(params);
+    running++;
+    const data = await run(params).finally(() => {
+      running--;
+      if (running < 0) running = 0;
+      if (img && running === 0) {
+        img.trim();
+      }
+    });
     return {
       buffer: Buffer.from([...data.buffer]),
       type: data.fileExtension,

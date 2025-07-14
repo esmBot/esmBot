@@ -127,6 +127,13 @@ async function acceptJob(id: bigint, sock: WebSocket): Promise<void> {
     sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
   }
   jobAmount--;
+
+  // Because malloc_trim can sometimes take longer than expected,
+  // we wait until all jobs are finished before trimming to avoid potential issues.
+  // See the comment in natives/node/image.cc for more info
+  if (jobAmount === 0) {
+    img.trim();
+  }
 }
 
 function waitForVerify(event: EventEmitter<VerifyEvents>): Promise<Buffer> {
