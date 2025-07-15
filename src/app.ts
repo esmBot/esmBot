@@ -144,7 +144,10 @@ logger.log("info", "Finished loading locale data.");
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
 const resolvedCommandPath = resolve(basePath, "..", "commands");
-for await (const commandFile of getFiles(resolvedCommandPath, process.versions.bun ? [".js", ".ts"] : [".js"])) {
+for await (const commandFile of getFiles(
+  resolvedCommandPath,
+  process.versions.bun || process.versions.deno ? [".js", ".ts"] : [".js"],
+)) {
   logger.log("main", `Loading command from ${commandFile}...`);
   try {
     await load(null, commandFile);
@@ -203,7 +206,10 @@ const client = new Client({
 // register events
 logger.log("info", "Attempting to load events...");
 const resolvedEventPath = resolve(basePath, "events");
-for await (const file of getFiles(resolvedEventPath, process.versions.bun ? [".js", ".ts"] : [".js"])) {
+for await (const file of getFiles(
+  resolvedEventPath,
+  process.versions.bun || process.versions.deno ? [".js", ".ts"] : [".js"],
+)) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
