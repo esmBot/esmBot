@@ -32,7 +32,7 @@ void ImageAsyncWorker::OnOK() {
   vips_error_clear();
   vips_thread_shutdown();
   Buffer nodeBuf = Buffer<char>::New(Env(), 0);
-  size_t outSize = GetArgument<size_t>(outArgs, "size");
+  size_t outSize = GetArgumentWithFallback<size_t>(outArgs, "size", 0);
   if (outSize > 0) {
     char *buf = GetArgument<char *>(outArgs, "buf");
     nodeBuf = Buffer<char>::Copy(Env(), buf, outSize);
