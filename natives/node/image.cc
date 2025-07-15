@@ -86,10 +86,6 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   Without this, memory usage can balloon over time to multiple gigabytes when idle -
   despite none of it being used for anything at all, not even caching.
 
-  While this helps tremendously in bringing down memory usage, it is recommended
-  to lower the amount of malloc arenas (e.g. using the MALLOC_ARENA_MAX env var
-  with glibc) for even more memory savings.
-
   See this related discussion in the glibc mailing list:
   https://sourceware.org/pipermail/libc-help/2020-September/005457.html
 */
@@ -115,6 +111,17 @@ void *checkTypes(GType type, Napi::Object *formats) {
 }
 
 Napi::Value ImgInit(const Napi::CallbackInfo &info) {
+#if __GLIBC__
+  /*
+    Set mmap threshold to 128kb to work around a similar glibc bug to the one above.
+    (Or maybe the same one?)
+
+    The following "fix" (along with malloc_trim) has been used in projects such as KWin, GIMP,
+    and Nautilus for years, with COSMIC also finding and implementing this somewhat more recently.
+    More info here from a COSMIC dev: https://fosstodon.org/@mmstick/113952008189644564
+  */
+  mallopt(M_MMAP_THRESHOLD, 131072);
+#endif
 #if defined(WIN32) && defined(MAGICK_ENABLED)
   Magick::InitializeMagick("");
 #endif
