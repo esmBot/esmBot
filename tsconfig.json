@@ -1,11 +1,17 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "lib": ["es2023"],
+    "target": "es2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "outDir": "./dist",
     "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "allowJs": true,
+    "sourceMap": true,
+    "rewriteRelativeImportExtensions": true,
     "resolveJsonModule": true,
     "paths": {
       "#cmd-classes/*": ["./src/classes/*"],

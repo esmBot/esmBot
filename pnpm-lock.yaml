@@ -62,9 +62,6 @@ importers:
       '@eslint/js':
         specifier: ^9.27.0
         version: 9.27.0
-      '@tsconfig/node20':
-        specifier: ^20.1.5
-        version: 20.1.5
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
@@ -436,9 +433,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@tsconfig/node20@20.1.5':
-    resolution: {integrity: sha512-Vm8e3WxDTqMGPU4GATF9keQAIy1Drd7bPwlgzKJnZtoOsTm1tduUTbDjg0W5qERvGuxPI2h9RbMufH0YdfBylA==}
 
   '@types/better-sqlite3@7.6.13':
     resolution: {integrity: sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==}
@@ -2362,8 +2356,6 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     optional: true
-
-  '@tsconfig/node20@20.1.5': {}
 
   '@types/better-sqlite3@7.6.13':
     dependencies:

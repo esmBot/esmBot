@@ -59,7 +59,6 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
     "@eslint/js": "^9.27.0",
-    "@tsconfig/node20": "^20.1.5",
     "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "^1.2.14",
     "@types/node": "^20.17.50",
