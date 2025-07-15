@@ -31,7 +31,7 @@ export async function init(): Promise<DatabasePlugin | undefined> {
   if (process.env.DB && process.env.DB.length !== 0) {
     const dbtype = process.env.DB.split("://")[0];
     try {
-      const construct = (await import(`./database/${dbtype}.js`)).default;
+      const construct = (await import(`./database/${dbtype}.${process.versions.deno ? "ts" : "js"}`)).default;
       return new construct(process.env.DB);
     } catch (error) {
       if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {
