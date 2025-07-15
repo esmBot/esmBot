@@ -1,8 +1,11 @@
-#include <malloc.h>
 #include <napi.h>
 
 #include <map>
 #include <string>
+
+#ifdef __GLIBC__
+#include <malloc.h>
+#endif
 
 #include "../common.h"
 #include "worker.h"
