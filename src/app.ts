@@ -21,7 +21,7 @@ import "dotenv/config";
 
 import process from "node:process";
 
-if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.js");
+if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.ts");
 
 if (!process.env.TOKEN) {
   console.error(`No token was provided!
@@ -43,7 +43,7 @@ import { promisify } from "node:util";
 
 import { Client, type ClientEvents, Constants } from "oceanic.js";
 
-import { init as dbInit } from "./database.js";
+import { init as dbInit } from "./database.ts";
 import { locales, paths } from "#utils/collections.js";
 import { load } from "#utils/handler.js";
 import { disconnect, initImageLib, reloadImageConnections } from "#utils/image.js";

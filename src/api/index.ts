@@ -9,7 +9,7 @@ import { WebSocketServer, type ErrorEvent } from "ws";
 import run from "#utils/image-runner.js";
 import { img } from "#utils/imageLib.js";
 import logger from "#utils/logger.js";
-import type { ImageParams } from "#utils/types.ts";
+import type { ImageParams } from "#utils/types.js";
 
 const formats = Object.keys(img.imageInit());
 
