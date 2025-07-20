@@ -5,6 +5,7 @@ on:
       - master
     paths:
       - "docs/**"
+      - "mkdocs.yml"
 
 permissions:
   contents: write
