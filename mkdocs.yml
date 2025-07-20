@@ -8,7 +8,7 @@ nav:
   - setup.md
   - config.md
   - custom-commands.md
-  - bun.md
+  - runtimes.md
   - containers.md
   - postgresql.md
 markdown_extensions:
