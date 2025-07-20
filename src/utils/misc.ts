@@ -21,24 +21,26 @@ const optionalReplace = (token: string) => {
 };
 
 // clean(text) to clean message of any private info or mentions
-export function clean(input: string | Error) {
+export function clean(input: string | Error, skipEnv = false) {
   let text = input;
   if (typeof text !== "string") text = util.inspect(text, { depth: 1 });
 
   text = text.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`);
 
-  let { parsed } = config();
-  if (!parsed) parsed = process.env as DotenvParseOutput;
+  if (!skipEnv) {
+    let { parsed } = config();
+    if (!parsed) parsed = process.env as DotenvParseOutput;
 
-  if (servers?.length !== 0) {
-    for (const { server, auth } of servers) {
-      text = text.replaceAll(server, optionalReplace(server));
-      if (auth) text = text.replaceAll(auth, optionalReplace(auth));
+    if (servers?.length !== 0) {
+      for (const { server, auth } of servers) {
+        text = text.replaceAll(server, optionalReplace(server));
+        if (auth) text = text.replaceAll(auth, optionalReplace(auth));
+      }
     }
-  }
 
-  for (const env of Object.keys(parsed)) {
-    text = text.replaceAll(parsed[env], optionalReplace(parsed[env]));
+    for (const env of Object.keys(parsed)) {
+      text = text.replaceAll(parsed[env], optionalReplace(parsed[env]));
+    }
   }
 
   return text;

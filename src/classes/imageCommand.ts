@@ -188,7 +188,7 @@ class ImageCommand extends Command {
       this.success = true;
       if (type === "text")
         return {
-          content: `\`\`\`\n${clean(buffer.toString("utf8"))}\n\`\`\``,
+          content: `\`\`\`\n${clean(buffer.toString("utf8"), true)}\n\`\`\``,
           flags: ephemeral ? 64 : undefined,
         };
       return {
