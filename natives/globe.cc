@@ -11,7 +11,7 @@ ArgumentMap Globe(const string &type, string &outType, const char *bufferdata, s
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
                 .colourspace(VIPS_INTERPRETATION_sRGB);
-  if (!in.has_alpha()) in = in.bandjoin(255);
+  if (in.has_alpha()) in = in.flatten();
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -34,30 +34,27 @@ ArgumentMap Globe(const string &type, string &outType, const char *bufferdata, s
     nPages = 30;
   }
 
-  double size = min(width, pageHeight);
+  int size = min(width, pageHeight);
 
-  string diffPath = basePath + "assets/images/globediffuse.png";
-  VImage diffuse =
-    VImage::new_from_file(diffPath.c_str()).resize(size / 500.0, VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
-    255;
-
-  string specPath = basePath + "assets/images/globespec.png";
-  VImage specular =
-    VImage::new_from_file(specPath.c_str()).resize(size / 500.0, VImage::option()->set("kernel", VIPS_KERNEL_CUBIC));
+  string specdiffPath = basePath + "assets/images/globespecdiff.png";
+  VImage loaded = VImage::new_from_file(specdiffPath.c_str())
+                    .resize(size / 500.0, VImage::option()->set("kernel", VIPS_KERNEL_LINEAR));
+  VImage diffuse = loaded[1] / 255;
+  VImage specular = loaded[0];
 
   string distortPath = basePath + "assets/images/spheremap.png";
-  VImage distort = (VImage::new_from_file(distortPath.c_str())
-                      .resize(size / 500.0, VImage::option()->set("kernel", VIPS_KERNEL_CUBIC)) /
-                    65535) *
-                   size;
+  VImage distort = ((VImage::new_from_file(distortPath.c_str())
+                       .resize(size / 500.0, VImage::option()->set("kernel", VIPS_KERNEL_LINEAR)) /
+                     65535) *
+                    size)
+                     .cast(VIPS_FORMAT_USHORT)
+                     .copy_memory();
 
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage mapped = img_frame.wrap(VImage::option()->set("x", width * i / nPages)->set("y", 0))
-                      .extract_band(0, VImage::option()->set("n", 3))
-                      .mapim(distort);
-    VImage frame = (mapped * diffuse + specular).bandjoin(diffuse > 0.0);
+    VImage mapped = img_frame.wrap(VImage::option()->set("x", width * i / nPages)->set("y", 0)).mapim(distort);
+    VImage frame = (mapped * diffuse + specular).cast(VIPS_FORMAT_UCHAR).bandjoin(diffuse > 0.0);
     img.push_back(frame);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
