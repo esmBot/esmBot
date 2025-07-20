@@ -9,10 +9,6 @@
       
       
       
-        <link rel="prev" href="../custom-commands/">
-      
-      
-        <link rel="next" href="../containers/">
       
       
       <link rel="icon" href="../assets/esmbot.png">
@@ -20,7 +16,7 @@
     
     
       
-        <title>Bun Support - esmBot</title>
+        <title>Runtime Compatibility - esmBot</title>
       
     
     
@@ -81,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bun-support" class="md-skip">
+        <a href="#runtime-compatibility" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Bun Support
+              Runtime Compatibility
             
           </span>
         </div>
@@ -308,98 +304,20 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Bun Support
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../bun.md" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Bun Support
+    None
     
   </span>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Setup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#differences" class="md-nav__link">
-    <span class="md-ellipsis">
-      Differences
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Known Issues
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#image-natives" class="md-nav__link">
-    <span class="md-ellipsis">
-      Image Natives
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -467,27 +385,40 @@
   
 
 
-<h1 id="bun-support">Bun Support</h1>
-<p><a href="https://bun.sh">Bun</a> is a JavaScript and TypeScript runtime that aims to be performant while retaining compatibility with Node.js applications and modules. This page exists to document details about esmBot when running on Bun.</p>
+<h1 id="runtime-compatibility">Runtime Compatibility</h1>
+<p>esmBot is primarily developed to run on the <a href="https://nodejs.org">Node.js</a> runtime, using Node.js modules and APIs. However, since esmBot was originally released, two other major runtimes have appeared: <a href="https://deno.com">Deno</a> and <a href="https://bun.sh">Bun</a>. Despite primarily targeting Node.js, esmBot is capable of running on both of these runtimes as well; this page exists to document specific details regarding running it on Deno and Bun.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Bun support is still very experimental and prone to bugs. If you find any issues while running the bot on Bun, please test if the same issue occurs on Node; if it doesn't, then specify that it's a Bun-specific issue and provide the version you used (you can find this by running <code>bun --version</code>).</p>
+<p>esmBot on other runtimes can be prone to bugs. If you find any issues while running the bot on Bun or Deno, please test if the same issue occurs on Node; if it doesn't, then specify that it's an issue specific to the runtime being used and provide the version you experienced the bug on (you can find this by running <code>bun --version</code> on Bun or <code>deno --version</code> on Deno).</p>
 </div>
 <h2 id="setup">Setup</h2>
-<p>To set up the bot for usage with Bun, follow the <a href="https://docs.esmbot.net/setup">setup guide</a> as usual, but use the <code>pnpm start:bun</code> command to start the bot instead. Additionally, you can replace <code>pnpm build</code> with <code>pnpm build:natives</code>; since Bun is capable of executing TypeScript directly, transpiling it to JavaScript is not needed.</p>
-<h2 id="differences">Differences</h2>
-<p>esmBot uses some of Bun's exclusive features when detected to add extra capabilities or improve performance in certain cases. Here's the current list of Bun-specific behavior:</p>
+<p>esmBot requires Node.js 20.12.0, Bun 1.1, or Deno 2.3 minimum to run.</p>
+<p>To set up the bot for usage with Deno or Bun, follow the <a href="https://docs.esmbot.net/setup">setup guide</a> as usual. However, depending on which runtime you choose, the launch command will be different:</p>
 <ul>
-<li>The stats command shows Bun's version number instead of Node's</li>
-<li>The SQLite database driver uses <code>bun:sqlite</code> instead of <code>better-sqlite3</code></li>
+<li>Node.js: <code>pnpm start</code></li>
+<li>Bun: <code>pnpm start:bun</code></li>
+<li>Deno: <code>pnpm start:deno</code></li>
+</ul>
+<p>Additionally, you can replace <code>pnpm build</code> with <code>pnpm build:natives</code> when running with Bun or Deno, since they are capable of executing TypeScript directly without transpiling to JavaScript first.</p>
+<h2 id="differences">Differences</h2>
+<p>esmBot uses some features present in Deno and Bun (but missing in Node.js) when detected to add extra capabilities or improve performance in certain cases.</p>
+<p>Here's the current list of behavior changes when Deno or Bun are detected:</p>
+<ul>
+<li>The stats command shows the version number of the currently used runtime instead of Node's</li>
 <li>Commands and event handlers written in TypeScript (using the .ts extension) can be loaded natively</li>
+</ul>
+<p>Here's the current list of behavior changes exclusive to Bun:</p>
+<ul>
+<li>The SQLite database driver uses <code>bun:sqlite</code> instead of <code>better-sqlite3</code></li>
+</ul>
+<p>Here's the current list of behavior changes exclusive to Deno:</p>
+<ul>
+<li>Database plugins are loaded with the <code>.ts</code> extension instead of <code>.js</code></li>
 </ul>
 <h2 id="known-issues">Known Issues</h2>
 <ul>
-<li><s>Discord and image server connections do not handle disconnects properly (see <a href="https://github.com/oven-sh/bun/issues/7896">oven-sh/bun#7896</a>)</s> <strong>Fixed in Bun 1.1!</strong></li>
+<li>You may experience crashes on startup involving native modules (e.g. better-sqlite3 on Deno, the image natives) when running with Deno or Bun. For Deno, try switching your Node.js version to 22 and running <code>pnpm rebuild</code>. For Bun, you should switch to Node.js 24 and then run the same command.</li>
 </ul>
-<h2 id="image-natives">Image Natives</h2>
-<p>Previously, the image natives used with Node did not work when using Bun; however, as of Bun 1.1.4, they appear to work with no issue. It should be possible to build and use them with Bun as if you were working with Node.</p>
 
 
 
@@ -508,7 +439,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 13, 2025 20:59:26 UTC">May 13, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 20, 2025 22:30:32 UTC">July 20, 2025</span>
   </span>
 
     
