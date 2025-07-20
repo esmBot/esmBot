@@ -28,7 +28,7 @@ export function clean(input: string | Error, skipEnv = false) {
   text = text.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   if (!skipEnv) {
-    let { parsed } = config();
+    let { parsed } = config({ quiet: true });
     if (!parsed) parsed = process.env as DotenvParseOutput;
 
     if (servers?.length !== 0) {
