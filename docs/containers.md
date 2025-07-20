@@ -18,7 +18,7 @@ You should then modify the `config/servers.json` file to change the IP addresses
 
 ```json
 {
-  "lava": [{ "name": "localhost", "url": "lavalink:2333", "auth": "youshallnotpass" }],
+  "lava": [{ "name": "localhost", "url": "lavalink:2333", "auth": "youshallnotpass" }]
   // ...
 }
 ```
