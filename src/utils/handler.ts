@@ -1,6 +1,6 @@
 import process from "node:process";
-import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.js";
-import { log } from "./logger.js";
+import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.ts";
+import { log } from "./logger.ts";
 
 import {
   type Client,
@@ -10,8 +10,8 @@ import {
 } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
-import { getAllLocalizations } from "./i18n.js";
-import type { CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.js";
+import { getAllLocalizations } from "./i18n.ts";
+import type { CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.ts";
 
 let queryValue = 0;
 

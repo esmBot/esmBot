@@ -5,7 +5,7 @@ import process from "node:process";
 import { Client, type ShardStatus } from "oceanic.js";
 import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";
-import { init as dbInit } from "../database.js";
+import { init as dbInit } from "../database.ts";
 
 const logger = winston.createLogger({
   levels: {

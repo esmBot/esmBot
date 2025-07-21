@@ -9,10 +9,10 @@ import {
   type Message,
   MessageFlags,
 } from "oceanic.js";
-import { getString } from "./i18n.js";
-import logger from "./logger.js";
-import { selectedImages } from "./collections.js";
-import { getType } from "./image.js";
+import { getString } from "./i18n.ts";
+import logger from "./logger.ts";
+import { selectedImages } from "./collections.ts";
+import { getType } from "./image.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {

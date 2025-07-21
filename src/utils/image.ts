@@ -5,13 +5,13 @@ import { createRequire } from "node:module";
 import process from "node:process";
 import { fileTypeFromBuffer } from "file-type";
 import ipaddr from "ipaddr.js";
-import ImageConnection from "./imageConnection.js";
-import logger from "./logger.js";
-import { random } from "./misc.js";
-import type { ImageParams, ImageTypeData } from "./types.js";
+import ImageConnection from "./imageConnection.ts";
+import logger from "./logger.ts";
+import { random } from "./misc.ts";
+import type { ImageParams, ImageTypeData } from "./types.ts";
 import serversConfig from "#config/servers.json" with { type: "json" };
-const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.js")).default;
-let img: import("./imageLib.js").ImageLib | undefined;
+const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.ts")).default;
+let img: import("./imageLib.ts").ImageLib | undefined;
 
 interface ServerConfig {
   name: string;

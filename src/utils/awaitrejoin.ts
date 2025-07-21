@@ -7,7 +7,7 @@ import {
   type Uncached,
   type VoiceChannel,
 } from "oceanic.js";
-import { random } from "./misc.js";
+import { random } from "./misc.ts";
 
 interface AwaitRejoinEvents {
   end: [member?: Member | Uncached];

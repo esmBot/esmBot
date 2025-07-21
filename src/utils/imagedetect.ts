@@ -11,9 +11,9 @@ import {
   TextableChannel,
   ThreadChannel,
 } from "oceanic.js";
-import { getType } from "./image.js";
-import logger from "./logger.js";
-import type { ImageTypeData } from "./types.js";
+import { getType } from "./image.ts";
+import logger from "./logger.ts";
+import type { ImageTypeData } from "./types.ts";
 
 const tenorURLs = ["tenor.com", "www.tenor.com"];
 const giphyURLs = ["giphy.com", "www.giphy.com", "i.giphy.com"];

@@ -1,5 +1,5 @@
 import type { ApplicationCommandOptions, Client, Constants } from "oceanic.js";
-import type { DatabasePlugin } from "../database.js";
+import type { DatabasePlugin } from "../database.ts";
 
 export interface DBGuild {
   guild_id: string;

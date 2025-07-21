@@ -1,5 +1,5 @@
 import process from "node:process";
-import { locales } from "./collections.js";
+import { locales } from "./collections.ts";
 
 const templateRegex = /{{(\w+?)}}/g;
 

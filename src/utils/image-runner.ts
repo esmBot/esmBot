@@ -1,8 +1,8 @@
 import { Buffer } from "node:buffer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { img } from "./imageLib.js";
-import type { ImageParams } from "./types.js";
+import { img } from "./imageLib.ts";
+import type { ImageParams } from "./types.ts";
 
 export default function run(object: ImageParams): Promise<{ buffer: Buffer; fileExtension: string }> {
   return new Promise((resolve, reject) => {

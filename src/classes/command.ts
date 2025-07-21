@@ -22,7 +22,7 @@ import {
 import { getString } from "#utils/i18n.js";
 import { cleanInteraction, cleanMessage } from "#utils/misc.js";
 import type { CommandType } from "#utils/types.js";
-import type { DatabasePlugin } from "../database.js";
+import type { DatabasePlugin } from "../database.ts";
 
 type CommandOptionsClassic = {
   type: "classic";

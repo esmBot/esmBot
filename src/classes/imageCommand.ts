@@ -14,7 +14,7 @@ import { runImageJob } from "#utils/image.js";
 import imageDetect, { type ImageMeta } from "#utils/imagedetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
 import type { ImageParams } from "#utils/types.js";
-import Command from "./command.js";
+import Command from "./command.ts";
 
 class ImageCommand extends Command {
   params?: object;

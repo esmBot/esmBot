@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import { setTimeout } from "node:timers/promises";
 import WebSocket, { type Data, type ErrorEvent } from "ws";
-import logger from "./logger.js";
+import logger from "./logger.ts";
 
 const Rerror = 0x01;
 const Tqueue = 0x02;

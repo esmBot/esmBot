@@ -10,10 +10,10 @@ import {
   type StringSelectMenu,
   type User,
 } from "oceanic.js";
-import { collectors } from "../utils/collections.js";
-import { getString } from "../utils/i18n.js";
-import logger from "../utils/logger.js";
-import InteractionCollector from "./awaitinteractions.js";
+import { collectors } from "../utils/collections.ts";
+import { getString } from "../utils/i18n.ts";
+import logger from "../utils/logger.ts";
+import InteractionCollector from "./awaitinteractions.ts";
 
 type Info = {
   author: User | Member;

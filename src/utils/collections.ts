@@ -1,7 +1,7 @@
 import type Command from "#cmd-classes/command.js";
-import type InteractionCollector from "../pagination/awaitinteractions.js";
-import type { ImageMeta } from "./imagedetect.js";
-import type { CommandInfo } from "./types.js";
+import type InteractionCollector from "../pagination/awaitinteractions.ts";
+import type { ImageMeta } from "./imagedetect.ts";
+import type { CommandInfo } from "./types.ts";
 
 export const commands = new Map<string, typeof Command>();
 export const messageCommands = new Map<string, typeof Command>();

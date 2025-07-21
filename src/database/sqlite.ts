@@ -6,7 +6,7 @@ import type {
   Statement as BSQLite3Statement,
 } from "better-sqlite3";
 import type { Guild, GuildChannel } from "oceanic.js";
-import type { DatabasePlugin } from "../database.js";
+import type { DatabasePlugin } from "../database.ts";
 import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";

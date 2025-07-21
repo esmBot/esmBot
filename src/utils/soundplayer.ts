@@ -23,8 +23,8 @@ import {
   type Track,
   type TrackExceptionEvent,
 } from "shoukaku";
-import { getString } from "./i18n.js";
-import logger from "./logger.js";
+import { getString } from "./i18n.ts";
+import logger from "./logger.ts";
 
 export type SoundPlayer = {
   player: Player;
