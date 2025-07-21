@@ -19,6 +19,7 @@ let queryValue = 0;
  * Load a command into memory.
  */
 export async function load(client: Client | null, command: string, skipSend = false) {
+  log("main", `Loading command from ${command}...`);
   const { default: props } = (await import(`${command}?v=${queryValue}`)) as { default: typeof Command };
   queryValue++;
   const commandArray = command.split("/");

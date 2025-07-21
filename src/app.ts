@@ -148,7 +148,6 @@ for await (const commandFile of getFiles(
   resolvedCommandPath,
   process.versions.bun || process.versions.deno ? [".js", ".ts"] : [".js"],
 )) {
-  logger.log("main", `Loading command from ${commandFile}...`);
   try {
     await load(null, commandFile);
   } catch (e) {
