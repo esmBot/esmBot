@@ -12,6 +12,9 @@
     "allowJs": true,
     "sourceMap": true,
     "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "paths": {
       "#cmd-classes/*": ["./src/classes/*"],
