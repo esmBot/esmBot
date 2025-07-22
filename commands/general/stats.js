@@ -5,6 +5,7 @@ import Command from "#cmd-classes/command.js";
 import packageJson from "../../package.json" with { type: "json" };
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 import { getServers } from "#utils/misc.js";
+import detectRuntime from "#utils/detectRuntime.js";
 
 class StatsCommand extends Command {
   async run() {
@@ -21,6 +22,7 @@ class StatsCommand extends Command {
     }
     const servers = await getServers(this.client);
     const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
+    const runtime = detectRuntime();
     return {
       embeds: [
         {
@@ -80,10 +82,8 @@ class StatsCommand extends Command {
               inline: true,
             },
             {
-              name: this.getString(
-                `commands.responses.stats.${process.versions.bun ? "bunVersion" : process.versions.deno ? "denoVersion" : "nodeJsVersion"}`,
-              ),
-              value: process.versions.bun ?? process.versions.deno ?? process.versions.node,
+              name: this.getString(`commands.responses.stats.${runtime.type}Version`),
+              value: runtime.version ?? "N/A",
               inline: true,
             },
             {

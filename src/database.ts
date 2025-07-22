@@ -2,6 +2,7 @@
 import "dotenv/config";
 import process from "node:process";
 import type { Guild, GuildChannel } from "oceanic.js";
+import detectRuntime from "#utils/detectRuntime.js";
 import logger from "#utils/logger.js";
 import { type DBGuild, isError, type Tag } from "#utils/types.js";
 
@@ -31,7 +32,7 @@ export async function init(): Promise<DatabasePlugin | undefined> {
   if (process.env.DB && process.env.DB.length !== 0) {
     const dbtype = process.env.DB.split("://")[0];
     try {
-      const construct = (await import(`./database/${dbtype}.${process.versions.deno ? "ts" : "js"}`)).default;
+      const construct = (await import(`./database/${dbtype}.${detectRuntime().tsLoad ? "ts" : "js"}`)).default;
       return new construct(process.env.DB);
     } catch (error) {
       if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {

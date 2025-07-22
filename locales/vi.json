@@ -630,7 +630,7 @@
                 "version": "Phiên bản",
                 "botUptime": "Phiên chạy của bot",
                 "library": "Thư viện",
-                "nodeJsVersion": "Phiên bản Node.js",
+                "nodeVersion": "Phiên bản Node.js",
                 "processOnly": "{{count}} (chỉ dành cho quá trình này)",
                 "processUsage": "Bộ nhớ đang được sử dụng của quá trình",
                 "host": "Điều hành",

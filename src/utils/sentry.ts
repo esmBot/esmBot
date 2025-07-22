@@ -1,5 +1,7 @@
 import process from "node:process";
-import * as Sentry from "@sentry/node";
+import detectRuntime from "./detectRuntime.ts";
+
+const Sentry = await import(`@sentry/${detectRuntime().type}`);
 
 Sentry.init({
   environment: process.env.NODE_ENV,

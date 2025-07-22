@@ -3,6 +3,7 @@ import process from "node:process";
 import { type AnyInteractionGateway, InteractionTypes } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
+import detectRuntime from "#utils/detectRuntime.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
 import { clean } from "#utils/misc.js";
@@ -11,7 +12,7 @@ import type { EventParams } from "#utils/types.js";
 
 let Sentry: typeof import("@sentry/node");
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
-  Sentry = await import("@sentry/node");
+  Sentry = await import(`@sentry/${detectRuntime().type}`);
 }
 
 /**

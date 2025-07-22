@@ -870,12 +870,13 @@
         "header": "esmBot Statistics",
         "host": "Host",
         "library": "Library",
-        "nodeJsVersion": "Node.js Version",
+        "nodeVersion": "Node.js Version",
         "processOnly": "{{count}} (for this process only)",
         "processUsage": "Process Memory Usage",
         "servers": "Servers",
         "shard": "Shard",
         "totalUsage": "Total Memory Usage",
+        "unknownVersion": "Runtime Version",
         "version": "Version"
       },
       "sticker": {

@@ -821,7 +821,7 @@
                 "connectionUptime": "Uptime della Connessione",
                 "header": "Statistiche esmBot",
                 "host": "Host",
-                "nodeJsVersion": "Versione Node.js",
+                "nodeVersion": "Versione Node.js",
                 "library": "Libreria",
                 "shard": "Shard",
                 "totalUsage": "Utilizzo Memoria Totale",

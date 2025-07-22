@@ -45,6 +45,7 @@ import { Client, type ClientEvents, Constants } from "oceanic.js";
 
 import { init as dbInit } from "./database.ts";
 import { locales, paths } from "#utils/collections.js";
+import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
 import { disconnect, initImageLib, reloadImageConnections } from "#utils/image.js";
 import logger from "#utils/logger.js";
@@ -73,6 +74,8 @@ async function* getFiles(dir: string, exts = [".js"]): AsyncGenerator<string> {
     }
   }
 }
+
+const runtime = detectRuntime();
 
 const execFile = promisify(baseExecFile);
 
@@ -144,10 +147,7 @@ logger.log("info", "Finished loading locale data.");
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
 const resolvedCommandPath = resolve(basePath, "..", "commands");
-for await (const commandFile of getFiles(
-  resolvedCommandPath,
-  process.versions.bun || process.versions.deno ? [".js", ".ts"] : [".js"],
-)) {
+for await (const commandFile of getFiles(resolvedCommandPath, runtime.tsLoad ? [".js", ".ts"] : [".js"])) {
   try {
     await load(null, commandFile);
   } catch (e) {
@@ -205,10 +205,7 @@ const client = new Client({
 // register events
 logger.log("info", "Attempting to load events...");
 const resolvedEventPath = resolve(basePath, "events");
-for await (const file of getFiles(
-  resolvedEventPath,
-  process.versions.bun || process.versions.deno ? [".js", ".ts"] : [".js"],
-)) {
+for await (const file of getFiles(resolvedEventPath, runtime.tsLoad ? [".js", ".ts"] : [".js"])) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
