@@ -35,7 +35,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
   process.exit(1);
 }
 
-import { exec as baseExec } from "node:child_process";
+import { execFile as baseExecFile } from "node:child_process";
 import { promises } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,9 +74,9 @@ async function* getFiles(dir: string, exts = [".js"]): AsyncGenerator<string> {
   }
 }
 
-const exec = promisify(baseExec);
+const execFile = promisify(baseExecFile);
 
-process.env.GIT_REV = await exec("git rev-parse HEAD").then(
+process.env.GIT_REV = await execFile("git", ["rev-parse", "HEAD"]).then(
   (output) => output.stdout.substring(0, 7),
   () => "unknown commit",
 );
