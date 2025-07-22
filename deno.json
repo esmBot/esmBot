@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "#cmd-classes/": "./src/classes/",
+    "#utils/": "./src/utils/",
+    "#pagination": "./src/pagination/pagination.ts",
+    "#config/": "./config/"
+  }
+}
