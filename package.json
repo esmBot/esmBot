@@ -98,7 +98,7 @@
     },
     "#pagination": {
       "node": "./dist/pagination/pagination.js",
-      "default": "./src/pagination/pagination.js"
+      "default": "./src/pagination/pagination.ts"
     },
     "#config/*": "./config/*"
   },
