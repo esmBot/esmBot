@@ -8,7 +8,7 @@ class BirdCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://files.esmbot.net/bird/", {
+      const data = await fetch("https://files.esmbot.net/bird", {
         method: "HEAD",
         signal: controller.signal,
         redirect: "manual",

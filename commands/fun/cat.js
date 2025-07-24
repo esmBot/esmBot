@@ -8,7 +8,7 @@ class CatCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const data = await fetch("https://files.esmbot.net/cta/", {
+      const data = await fetch("https://files.esmbot.net/cta", {
         method: "HEAD",
         signal: controller.signal,
         redirect: "manual",
