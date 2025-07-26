@@ -45,7 +45,7 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
-    "@db/sqlite": "npm:@jsr/db__sqlite@^0.12.0",
+    "@db/sqlite": "jsr:^0.12.0",
     "better-sqlite3": "^12.2.0",
     "bufferutil": "^4.0.9",
     "dotenv": "^17.2.0",
@@ -103,7 +103,7 @@
     },
     "#config/*": "./config/*"
   },
-  "packageManager": "pnpm@10.2.0+sha1.5d36c5a1aae9a628a924ee9982f013ad202e1051",
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
   "pnpm": {
     "ignoredOptionalDependencies": [
       "@discordjs/voice"
