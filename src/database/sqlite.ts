@@ -100,22 +100,12 @@ export default class SQLitePlugin implements DatabasePlugin {
   }
 
   async upgrade() {
-    if (process.versions.bun) {
-      (this.connection as BunDatabase).exec("PRAGMA journal_mode = WAL;");
-    } else {
-      (this.connection as BSQLite3Database).pragma("journal_mode = WAL");
-    }
+    this.connection.exec("PRAGMA journal_mode = WAL;");
     try {
       this.connection.transaction(() => {
         let version: number;
-        if (process.versions.bun) {
-          const result = (this.connection as BunDatabase)
-            .prepare<{ user_version: number }, []>("PRAGMA user_version")
-            .get();
-          version = result?.user_version ?? 0;
-        } else {
-          version = (this.connection as BSQLite3Database).pragma("user_version", { simple: true }) as number;
-        }
+        const result = this.connection.prepare("PRAGMA user_version").get() as { user_version: number };
+        version = result?.user_version ?? 0;
         const latestVersion = updates.length - 1;
         if (version === 0) {
           logger.info("Initializing SQLite database...");
@@ -130,12 +120,7 @@ export default class SQLitePlugin implements DatabasePlugin {
         } else {
           return;
         }
-        // prepared statements don't seem to work here
-        if (process.versions.bun) {
-          this.connection.exec(`PRAGMA user_version = ${latestVersion}`);
-        } else {
-          (this.connection as BSQLite3Database).pragma(`user_version = ${latestVersion}`);
-        }
+        this.connection.exec(`PRAGMA user_version = ${latestVersion}`);
       })();
     } catch (e) {
       logger.error(`SQLite migration failed: ${e}`);
