@@ -25,7 +25,6 @@ esmBot uses some features present in Deno and Bun (but missing in Node.js) when 
 Here's the current list of behavior changes when Deno or Bun are detected:
 
 - The stats command shows the version number of the currently used runtime instead of Node's
-- Commands and event handlers written in TypeScript (using the .ts extension) can be loaded natively
 
 Here's the current list of behavior changes exclusive to Bun:
 
@@ -37,4 +36,4 @@ Here's the current list of behavior changes exclusive to Deno:
 
 ## Known Issues
 
-- You may experience crashes on startup involving native modules (e.g. better-sqlite3 on Deno, the image natives) when running with Deno or Bun. For Deno, try switching your Node.js version to 22 and running `pnpm rebuild`. For Bun, you should switch to Node.js 24 and then run the same command.
+- You may experience crashes on startup involving native modules (e.g. better-sqlite3, the image natives) when running with Deno or Bun. For Deno, try switching your Node.js version to 22 and running `pnpm rebuild`. For Bun, you should switch to Node.js 24 and then run the same command.

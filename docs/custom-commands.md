@@ -27,6 +27,10 @@ As you can see, each command is grouped into categories, which are represented b
 
     The `message` and `user` categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the `message` category show when selecting messages, while commands in the `user` category show when selecting users.
 
+!!! tip
+
+    When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the `--experimental-strip-types` flag enabled, Deno, or Bun, it is possible to create commands using TypeScript instead of JavaScript. To do so, simply create a file with a `.ts` extension instead of `.js`; the command will be loaded and handled at runtime as if it were a regular JavaScript command.
+
 ## Command Structure
 
 It's recommended to use the `Command` class located at `#cmd-classes/command.js` to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:
