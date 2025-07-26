@@ -32,6 +32,7 @@ Here's the current list of behavior changes exclusive to Bun:
 
 Here's the current list of behavior changes exclusive to Deno:
 
+- The SQLite database driver uses `@db/sqlite` from [JSR](https://jsr.io/@db/sqlite) instead of `better-sqlite3`
 - Database plugins are loaded with the `.ts` extension instead of `.js`
 
 ## Known Issues
