@@ -45,6 +45,7 @@
     "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
+    "@db/sqlite": "npm:@jsr/db__sqlite@^0.12.0",
     "better-sqlite3": "^12.2.0",
     "bufferutil": "^4.0.9",
     "dotenv": "^17.2.0",
