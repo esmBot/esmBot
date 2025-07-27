@@ -1,0 +1,27 @@
+import discord
+from discord.ext import commands
+import random
+import asyncio
+
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}')
+
+@bot.command(name='jumpscare')
+async def jumpscare(ctx):
+    jumpscare_images = [
+        "https://i.imgur.com/xkG3z7f.gif",  # scary gif
+        "https://i.imgur.com/GYX13YO.jpg",  # creepy face
+        "https://i.imgur.com/ZwYOjCJ.gif",  # loud gif (if used with sound)
+    ]
+
+    # Simulate suspense
+    await ctx.send("Shh... Something's coming...")
+    await asyncio.sleep(random.randint(2, 4))  # suspense pause
+    await ctx.send(file=discord.File("screamer.mp3"))  # optional: sound file
+    await ctx.send(random.choice(jumpscare_images))
+
+bot.run("YOUR_BOT_TOKEN")
