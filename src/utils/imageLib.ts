@@ -10,8 +10,7 @@ export interface ImageLib {
     cmd: string,
     params: ImageParams["params"],
     input: ImageParams["input"],
-    cb: (error: Error, buffer: Buffer, type: string) => void,
-  ): bigint;
+  ): Promise<{ data: Buffer; type: string }>;
   imageInit(): Record<string, boolean>;
   trim(): number;
 }

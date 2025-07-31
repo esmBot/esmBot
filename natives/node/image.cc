@@ -36,7 +36,7 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   Napi::Object obj = info[1].As<Napi::Object>();
   Napi::Object input = info[2].As<Napi::Object>();
   string type = input.Has("type") ? input.Get("type").As<Napi::String>().Utf8Value() : "png";
-  Napi::Function callback = info[3].As<Napi::Function>();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
   Napi::Array properties = obj.GetPropertyNames();
 
@@ -59,9 +59,8 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
         Arguments[property] = num.FloatValue();
       }
     } else {
-      callback.Call({Napi::Error::New(env, "Type of property \"" + property + "\" is unknown").Value()});
-      return Napi::BigInt::New(env, (int64_t)0);
-      // Arguments[property] = val;
+      deferred.Reject(Napi::Error::New(env, "Type of property \"" + property + "\" is unknown").Value());
+      return deferred.Promise();
     }
   }
 
@@ -73,9 +72,9 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
     bufSize = data.ByteLength();
   }
 
-  ImageAsyncWorker *asyncWorker = new ImageAsyncWorker(callback, command, Arguments, type, bufData, bufSize);
+  ImageAsyncWorker *asyncWorker = new ImageAsyncWorker(env, deferred, command, Arguments, type, bufData, bufSize);
   asyncWorker->Queue();
-  return Napi::BigInt::From<intptr_t>(env, reinterpret_cast<intptr_t>(asyncWorker));
+  return deferred.Promise();
 }
 
 /*

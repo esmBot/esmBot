@@ -3,9 +3,10 @@
 
 using namespace std;
 
-ImageAsyncWorker::ImageAsyncWorker(Function &callback, string command, ArgumentMap inArgs, string type,
-                                   const char *bufData, size_t bufSize)
-    : AsyncWorker(callback), command(command), inArgs(inArgs), type(type), bufData(bufData), bufSize(bufSize) {}
+ImageAsyncWorker::ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, ArgumentMap inArgs,
+                                   string type, const char *bufData, size_t bufSize)
+    : AsyncWorker(env), deferred(deferred), command(command), inArgs(inArgs), type(type), bufData(bufData),
+      bufSize(bufSize) {}
 
 void ImageAsyncWorker::Execute() {
   outType = GetArgumentWithFallback<bool>(inArgs, "togif", false) ? "gif" : type;
@@ -22,9 +23,9 @@ void ImageAsyncWorker::OnError(const Error &e) {
   vips_error_clear();
   vips_thread_shutdown();
   if (shouldKill) {
-    Callback().Call({Napi::Error::New(Env(), "image_job_killed").Value()});
+    deferred.Reject(Napi::Error::New(Env(), "image_job_killed").Value());
   } else {
-    Callback().Call({e.Value()});
+    deferred.Reject(e.Value());
   }
 }
 
@@ -38,5 +39,9 @@ void ImageAsyncWorker::OnOK() {
     nodeBuf = Buffer<char>::Copy(Env(), buf, outSize);
     g_free(buf);
   }
-  Callback().Call({Env().Null(), nodeBuf, String::New(Env(), outType)});
+
+  Napi::Object returned = Napi::Object::New(Env());
+  returned.Set("data", nodeBuf);
+  returned.Set("type", Napi::String::New(Env(), outType));
+  deferred.Resolve(returned);
 }

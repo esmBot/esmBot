@@ -6,8 +6,8 @@ using namespace Napi;
 
 class ImageAsyncWorker : public AsyncWorker {
 public:
-  ImageAsyncWorker(Function &callback, string command, ArgumentMap inArgs, string type, const char *bufData,
-                   size_t bufSize);
+  ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, ArgumentMap inArgs, string type,
+                   const char *bufData, size_t bufSize);
   virtual ~ImageAsyncWorker() {};
 
   void Execute();
@@ -17,6 +17,8 @@ public:
   void SetKill() { shouldKill = true; }
 
 private:
+  Promise::Deferred deferred;
+
   string command;
   ArgumentMap inArgs;
   string type;
