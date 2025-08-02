@@ -214,6 +214,81 @@
             },
             "snowflake": {
                 "id": "id"
+            },
+            "tags get": {
+                "name": "name"
+            },
+            "tags": {
+                "edit": "bearbeiten",
+                "owner": "besitzer",
+                "random": "zufällig",
+                "add": "hinzufügen",
+                "delete": "löschen"
+            },
+            "tags add": {
+                "name": "name"
+            },
+            "slow": {
+                "multiplier": "multiplikator"
+            },
+            "snapchat": {
+                "position": "position"
+            },
+            "uncanny": {
+                "font": "schriftart"
+            },
+            "speechbubble": {
+                "alpha": "alpha",
+                "flip": "umdrehen",
+                "bottom": "unten",
+                "scale": "skalierung"
+            },
+            "speed": {
+                "multiplier": "multiplikator"
+            },
+            "host": {
+                "user": "benutzer"
+            },
+            "play": {
+                "query": "abfrage"
+            },
+            "remove": {
+                "position": "position"
+            },
+            "seek": {
+                "position": "position"
+            },
+            "volume": {
+                "level": "pegel"
+            },
+            "tags delete": {
+                "name": "name"
+            },
+            "tags edit": {
+                "name": "name"
+            },
+            "meme": {
+                "font": "schriftart"
+            },
+            "motivate": {
+                "font": "schriftart"
+            }
+        },
+        "flags": {
+            "meme": {
+                "font": "Gib die Schriftart and, die du verwenden willst (standard: impact)"
+            },
+            "motivate": {
+                "font": "Gib die Schriftart and, die du verwenden willst (standard: times)"
+            },
+            "caption": {
+                "font": "Gib die Schriftart and, die du verwenden willst (standard: futura)"
+            },
+            "uncanny": {
+                "font": "Gib die Schriftart and, die du verwenden willst (standard: helvetica)"
+            },
+            "caption2": {
+                "font": "Gib die Schriftart and, die du verwenden willst (standard: helvetica)"
             }
         }
     }
