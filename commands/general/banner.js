@@ -1,7 +1,6 @@
 import { Constants, Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import { safeBigInt } from "#utils/misc.js";
-const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
+import { getUser, mentionToObject } from "#utils/mentions.js";
 const imageSize = 4096;
 
 class BannerCommand extends Command {
@@ -37,23 +36,11 @@ class BannerCommand extends Command {
       );
     }
     if (member) {
-      let user;
-      if (safeBigInt(member) > 21154535154122752n) {
-        if (server && this.guild) {
-          user = await this.client.rest.guilds.getMember(this.guild.id, member);
-        } else {
-          user = await this.client.rest.users.get(member);
-        }
-      } else if (mentionRegex.test(member)) {
-        const id = member.match(mentionRegex)?.[1];
-        if (id && safeBigInt(id) > 21154535154122752n) {
-          if (server && this.guild) {
-            user = await this.client.rest.guilds.getMember(this.guild.id, id);
-          } else {
-            user = await this.client.rest.users.get(id);
-          }
-        }
-      }
+      const user = await mentionToObject(this.client, member, "user", {
+        guild: this.guild,
+        server,
+        rest: true,
+      });
       if (user?.banner)
         return (
           user.bannerURL(undefined, imageSize) ??
@@ -67,10 +54,7 @@ class BannerCommand extends Command {
         limit: 1,
       });
       if (searched.length > 0) {
-        const user =
-          server && this.guild
-            ? await this.client.rest.guilds.getMember(this.guild.id, searched[0].user.id)
-            : await this.client.rest.users.get(searched[0].user.id);
+        const user = await getUser(this.client, this.guild, searched[0].user.id, server, true);
         return (
           user.bannerURL(undefined, imageSize) ??
           self.bannerURL(undefined, imageSize) ??

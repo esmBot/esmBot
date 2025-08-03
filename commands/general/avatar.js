@@ -1,7 +1,6 @@
 import { Constants, Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import { safeBigInt } from "#utils/misc.js";
-const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
+import { getUser, mentionToObject } from "#utils/mentions.js";
 const imageSize = 512;
 
 class AvatarCommand extends Command {
@@ -20,23 +19,10 @@ class AvatarCommand extends Command {
       return (member instanceof Member && !server ? member.user : member).avatarURL(undefined, imageSize);
     }
     if (member) {
-      let user;
-      if (safeBigInt(member) > 21154535154122752n) {
-        if (server && this.guild) {
-          user = this.guild.members.get(member) ?? (await this.client.rest.guilds.getMember(this.guild.id, member));
-        } else {
-          user = this.client.users.get(member) ?? (await this.client.rest.users.get(member));
-        }
-      } else if (mentionRegex.test(member)) {
-        const id = member.match(mentionRegex)?.[1];
-        if (id && safeBigInt(id) > 21154535154122752n) {
-          if (server && this.guild) {
-            user = this.guild.members.get(id) ?? (await this.client.rest.guilds.getMember(this.guild.id, id));
-          } else {
-            user = this.client.users.get(id) ?? (await this.client.rest.users.get(id));
-          }
-        }
-      }
+      const user = await mentionToObject(this.client, member, "user", {
+        guild: this.guild,
+        server,
+      });
       if (user) return user.avatarURL(undefined, imageSize);
     }
     if (this.args.join(" ") !== "" && this.guild) {
@@ -45,14 +31,7 @@ class AvatarCommand extends Command {
         limit: 1,
       });
       if (searched.length > 0) {
-        let user;
-        if (server && this.guild) {
-          user =
-            this.guild.members.get(searched[0].user.id) ??
-            (await this.client.rest.guilds.getMember(this.guild.id, searched[0].user.id));
-        } else {
-          user = this.client.users.get(searched[0].user.id) ?? (await this.client.rest.users.get(searched[0].user.id));
-        }
+        const user = await getUser(this.client, this.guild, searched[0].user.id, server);
         if (user) return user.avatarURL(undefined, imageSize);
       }
     }
