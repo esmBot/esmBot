@@ -4,7 +4,7 @@ function canLoadTS(): boolean {
   if (!process.versions.amaro) return false;
 
   const [major, minor] = process.versions.node.split(".").map(Number);
-  if (major > 23 || (major === 23 && minor >= 6)) return true;
+  if (major > 23 || (major === 23 && minor >= 6) || (major === 22 && minor >= 18)) return true;
 
   if (process.argv.includes("--experimental-strip-types")) return true;
 
