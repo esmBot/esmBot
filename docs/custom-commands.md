@@ -118,6 +118,7 @@ The below helper functions can be used for getting command options. The `key` pa
 - `this.getOptionInteger(key, defaultArg)`: Gets a command flag/option by name as an integer (in Discord terminology, this is a whole, non-decimal number).
 - `this.getOptionUser(key, defaultArg)`: Gets a command flag/option by name as a user.
 - `this.getOptionMember(key, defaultArg)`: Gets a command flag/option by name as a member.
+- `this.getOptionRole(key, defaultArg)`: Gets a command flag/option by name as a role.
 - `this.getOptionAttachment(key)`: Gets a command flag/option by name as an attachment. When used with classic commands, `key` is ignored.
 
 ## The `run` Function
