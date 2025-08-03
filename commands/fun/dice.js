@@ -3,7 +3,7 @@ import Command from "#cmd-classes/command.js";
 
 class DiceCommand extends Command {
   async run() {
-    const max = this.interaction?.data.options.getInteger("max") ?? Number.parseInt(this.args[0]);
+    const max = this.getOptionInteger("max", true);
     return `🎲 ${this.getString("commands.responses.dice.landed", {
       params: {
         number: (Math.floor(Math.random() * (max || 6)) + 1).toString(),
