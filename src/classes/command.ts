@@ -15,6 +15,7 @@ import {
   type Message,
   type MessageReference,
   Permission,
+  type Role,
   TextableChannel,
   type Uncached,
   type User,
@@ -226,6 +227,17 @@ class Command {
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getMember(key);
+    }
+    throw Error("Unknown command type");
+  }
+
+  getOptionRole(key: string, defaultArg?: boolean): Role | undefined {
+    if (this.type === "classic") {
+      const id = defaultArg ? this.args.join(" ").trim() : this.options?.[key];
+      return this.guild?.roles.get(id as string);
+    }
+    if (this.type === "application") {
+      return this.interaction?.data.options.getRole(key);
     }
     throw Error("Unknown command type");
   }

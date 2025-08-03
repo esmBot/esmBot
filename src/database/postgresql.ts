@@ -26,7 +26,8 @@ CREATE TABLE guilds (
   guild_id VARCHAR(30) NOT NULL PRIMARY KEY,
   prefix VARCHAR(15) NOT NULL,
   disabled text ARRAY NOT NULL,
-  disabled_commands text ARRAY NOT NULL
+  disabled_commands text ARRAY NOT NULL,
+  tag_roles VARCHAR(30) ARRAY DEFAULT [] NOT NULL
 );
 CREATE TABLE counts (
   command VARCHAR NOT NULL PRIMARY KEY,
@@ -46,6 +47,7 @@ const updates = [
   "CREATE TABLE IF NOT EXISTS settings ( id smallint PRIMARY KEY, version integer NOT NULL, CHECK(id = 1) );\nALTER TABLE guilds ADD COLUMN accessed timestamp;",
   "ALTER TABLE guilds DROP COLUMN accessed",
   "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text",
+  "ALTER TABLE guilds ADD COLUMN IF NOT EXISTS tag_roles VARCHAR(30) ARRAY DEFAULT array[]::varchar[] NOT NULL",
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {
@@ -106,7 +108,13 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
       this.sql.begin(async (sql) => {
         let [guild]: [DBGuild?] = await sql`SELECT * FROM guilds WHERE guild_id = ${query}`;
         if (!guild) {
-          guild = { guild_id: query, prefix: process.env.PREFIX ?? "&", disabled: [], disabled_commands: [] };
+          guild = {
+            guild_id: query,
+            prefix: process.env.PREFIX ?? "&",
+            disabled: [],
+            disabled_commands: [],
+            tag_roles: [],
+          };
           await sql`INSERT INTO guilds ${sql(guild)}`;
         }
         resolve(guild);
@@ -145,6 +153,17 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async removeTag(name: string, guild: Guild) {
     await this.sql`DELETE FROM tags WHERE guild_id = ${guild.id} AND name = ${name}`;
+  }
+
+  async addTagRole(guild: string, role: string) {
+    const guildDB = await this.getGuild(guild);
+    await this.sql`UPDATE guilds SET tag_roles = ${[...guildDB.tag_roles, role]} WHERE guild_id = ${guild}`;
+  }
+
+  async removeTagRole(guild: string, role: string) {
+    const guildDB = await this.getGuild(guild);
+    await this
+      .sql`UPDATE guilds SET tag_roles = ${guildDB.tag_roles.filter((v) => v !== role)} WHERE guild_id = ${guild}`;
   }
 
   async setBroadcast(msg?: string) {

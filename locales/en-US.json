@@ -903,12 +903,20 @@
         "invalid": "That tag doesn't exist!",
         "invalidName": "You can't make a tag with that name!",
         "list": "Tag List",
+        "missingRole": "You can't remove a role that hasn't already been added!",
         "noInput": "You need to provide the name of the tag you want to view!",
+        "noRole": "You need to provide a role to add/remove!",
+        "noRolePerms": "You don't have permission to create tags!",
+        "noRoles": "No roles are currently allowed to manage tags!",
         "noTags": "I couldn't find any tags!",
         "notOwner": "You don't own this tag!",
+        "notOwnerRole": "You need to have the \"Manage Messages\" permission to add/remove tag roles!",
         "ownedBy": "This tag is owned by **{{user}}** (`{{id}}`).",
         "ownedById": "I couldn't find exactly who owns this tag, but I was able to get their ID: `{{id}}`",
-        "ownerName": "You need to provide the name of the tag you want to check the owner of!"
+        "ownerName": "You need to provide the name of the tag you want to check the owner of!",
+        "roleAdded": "The role `{{name}}` has been added to the list of allowed roles.",
+        "roleList": "Allowed Roles",
+        "roleRemoved": "The role `{{name}}` has been removed from the list of allowed roles."
       },
       "toggle": {
         "notHost": "Only the current voice session host can pause/resume the music!",

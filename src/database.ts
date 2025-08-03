@@ -22,6 +22,8 @@ export declare class DatabasePlugin {
   setTag: (tag: Tag, guild: Guild) => Promise<void>;
   removeTag: (name: string, guild: Guild) => Promise<void>;
   editTag: (tag: Tag, guild: Guild) => Promise<void>;
+  addTagRole: (guild: string, role: string) => Promise<void>;
+  removeTagRole: (guild: string, role: string) => Promise<void>;
   setBroadcast: (msg?: string) => Promise<void>;
   getBroadcast: () => Promise<string | undefined>;
   setPrefix: (prefix: string, guild: Guild) => Promise<void>;

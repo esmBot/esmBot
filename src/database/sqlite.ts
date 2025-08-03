@@ -42,7 +42,8 @@ CREATE TABLE guilds (
   guild_id VARCHAR(30) NOT NULL PRIMARY KEY,
   prefix VARCHAR(15) NOT NULL,
   disabled text NOT NULL,
-  disabled_commands text NOT NULL
+  disabled_commands text NOT NULL,
+  tag_roles VARCHAR DEFAULT '[]'
 );
 CREATE TABLE counts (
   command VARCHAR NOT NULL PRIMARY KEY,
@@ -73,6 +74,7 @@ const updates = [
     CHECK(id = 1)
   );
   INSERT INTO settings (id) VALUES (1);`,
+  "ALTER TABLE guilds ADD COLUMN tag_roles VARCHAR DEFAULT '[]'",
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
@@ -218,7 +220,7 @@ export default class SQLitePlugin implements DatabasePlugin {
       author: tag.author,
     };
     this.connection
-      .prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (@guild_id, @name, @content, @author)")
+      .prepare("INSERT INTO tags (guild_id, name, content, author) VALUES (:guild_id, :name, :content, :author)")
       .run(tagData);
   }
 
@@ -230,6 +232,20 @@ export default class SQLitePlugin implements DatabasePlugin {
     this.connection
       .prepare("UPDATE tags SET content = ?, author = ? WHERE guild_id = ? AND name = ?")
       .run(tag.content, tag.author, guild.id, tag.name);
+  }
+
+  async addTagRole(guild: string, role: string) {
+    const guildDB = await this.getGuild(guild);
+    this.connection
+      .prepare("UPDATE guilds SET tag_roles = ? WHERE guild_id = ?")
+      .run(JSON.stringify([...guildDB.tag_roles, role]), guild);
+  }
+
+  async removeTagRole(guild: string, role: string) {
+    const guildDB = await this.getGuild(guild);
+    this.connection
+      .prepare("UPDATE guilds SET tag_roles = ? WHERE guild_id = ?")
+      .run(JSON.stringify(guildDB.tag_roles.filter((v) => v !== role)), guild);
   }
 
   async setBroadcast(msg?: string) {
@@ -249,36 +265,49 @@ export default class SQLitePlugin implements DatabasePlugin {
   }
 
   async getGuild(query: string): Promise<DBGuild> {
-    let guild: DBGuild | undefined;
+    // SQLite does not support arrays, so instead we convert them from strings
+    let guild:
+      | ({
+          disabled: string;
+          disabled_commands: string;
+          tag_roles: string;
+        } & Omit<DBGuild, "disabled" | "disabled_commands" | "tag_roles">)
+      | undefined;
     this.connection.transaction(() => {
-      guild = this.connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as DBGuild;
+      guild = this.connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as {
+        disabled: string;
+        disabled_commands: string;
+        tag_roles: string;
+      } & Omit<DBGuild, "disabled" | "disabled_commands" | "tag_roles">;
       if (!guild) {
         const guild_id = query;
         const prefix = process.env.PREFIX ?? "&";
-        this.connection
-          .prepare(
-            "INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands) VALUES (@guild_id, @prefix, @disabled, @disabled_commands)",
-          )
-          .run({
-            guild_id,
-            prefix,
-            disabled: "[]",
-            disabled_commands: "[]",
-          });
         guild = {
           guild_id,
           prefix,
-          disabled: [],
-          disabled_commands: [],
+          disabled: "[]",
+          disabled_commands: "[]",
+          tag_roles: "[]",
         };
+        this.connection
+          .prepare(
+            "INSERT INTO guilds (guild_id, prefix, disabled, disabled_commands, tag_roles) VALUES (:guild_id, :prefix, :disabled, :disabled_commands, :tag_roles)",
+          )
+          .run(guild);
       }
     })();
+    if (guild) {
+      guild.disabled = JSON.parse(guild.disabled);
+      guild.disabled_commands = JSON.parse(guild.disabled_commands);
+      guild.tag_roles = JSON.parse(guild.tag_roles);
+    }
     return (
-      guild ?? {
+      (guild as DBGuild | undefined) ?? {
         guild_id: query,
         prefix: process.env.PREFIX ?? "&",
         disabled: [],
         disabled_commands: [],
+        tag_roles: [],
       }
     );
   }

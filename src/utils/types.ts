@@ -6,6 +6,7 @@ export interface DBGuild {
   prefix: string;
   disabled: string[];
   disabled_commands: string[];
+  tag_roles: string[];
 }
 
 export interface Tag {
