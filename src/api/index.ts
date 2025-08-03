@@ -344,94 +344,82 @@ process.on("SIGINT", () => {
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
-function finishJob(
+async function finishJob(
   data: { buffer: Buffer; fileExtension: string },
   job: MiniJob,
   object: ImageParams,
   ws: WebSocket,
-  resolve: (value: void | PromiseLike<void>) => void,
 ) {
   log(`Sending result of job ${job.id}`, job.num);
   const jobObject = jobs.get(job.id);
   jobObject.data = data.buffer;
   jobObject.ext = data.fileExtension;
-  let verifyPromise: Promise<Buffer>;
-  if (!jobObject.tag) {
-    verifyPromise = waitForVerify(jobObject.verifyEvent);
-  } else {
-    verifyPromise = Promise.resolve(jobObject.tag);
-  }
   let tag: Buffer;
-  verifyPromise
-    .then((t) => {
-      tag = t;
-      if (!jobObject.ext || !jobObject.data) {
-        throw Error("Job result not found despite finish signal");
+  if (!jobObject.tag) {
+    tag = await waitForVerify(jobObject.verifyEvent);
+  } else {
+    tag = jobObject.tag;
+  }
+
+  if (!jobObject.ext || !jobObject.data) {
+    throw Error("Job result not found despite finish signal");
+  }
+
+  jobs.set(job.id, jobObject);
+  let r: RawMessage | undefined;
+  if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
+    const form = new FormData();
+    form.set(
+      "files[0]",
+      new Blob([jobObject.data]),
+      `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+    );
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+    try {
+      const res = await fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
+        method: "POST",
+        signal: controller.signal,
+        body: form,
+      });
+      clearTimeout(timeout);
+      if (!res.ok) {
+        if (res.headers.get("Content-Type") === "application/json")
+          throw new DiscordRESTError(res, (await res.json()) as Record<string, unknown>, "POST");
+        throw new Error(`Request failed with response ${res.status}: ${await res.text()}`);
       }
-      jobs.set(job.id, jobObject);
-      if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
-        const form = new FormData();
-        form.set(
-          "files[0]",
-          new Blob([jobObject.data]),
-          `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
-        );
-        const controller = new AbortController();
-        const timeout = setTimeout(() => {
-          controller.abort();
-        }, 15000);
-        return fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
-          method: "POST",
-          signal: controller.signal,
-          body: form,
-        })
-          .then(async (res) => {
-            clearTimeout(timeout);
-            if (!res.ok) {
-              if (res.headers.get("Content-Type") === "application/json")
-                throw new DiscordRESTError(res, (await res.json()) as Record<string, unknown>, "POST");
-              throw new Error(`Request failed with response ${res.status}: ${await res.text()}`);
-            }
-            return res.json() as unknown as RawMessage;
-          })
-          .catch((e) => {
-            error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
-            return;
-          });
-      }
-      return;
-    })
-    .then((r) => {
-      let response: Buffer;
-      if (r) {
-        jobs.delete(job.id);
-        const attachment = r.attachments[0];
-        response = Buffer.concat([Buffer.from([Rsent]), tag, Buffer.from(JSON.stringify(attachment ?? {}))]);
-      } else {
-        response = Buffer.concat([Buffer.from([Rwait]), tag]);
-      }
-      ws.send(response);
-      resolve();
-    });
+      r = (await res.json()) as RawMessage;
+    } catch (e) {
+      error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
+    }
+  }
+
+  let response: Buffer;
+  if (r) {
+    jobs.delete(job.id);
+    const attachment = r.attachments[0];
+    response = Buffer.concat([Buffer.from([Rsent]), tag, Buffer.from(JSON.stringify(attachment ?? {}))]);
+  } else {
+    response = Buffer.concat([Buffer.from([Rwait]), tag]);
+  }
+  ws.send(response);
 }
 
 /**
  * Run an image job.
  */
-function runJob(job: MiniJob, ws: WebSocket): Promise<void> {
-  return new Promise((resolve, reject) => {
-    log(`Job ${job.id} starting...`, job.num);
+async function runJob(job: MiniJob, ws: WebSocket): Promise<void> {
+  log(`Job ${job.id} starting...`, job.num);
 
-    const object = job.msg;
-    // If the image has a path, it must also have a type
-    if (object.path && !object.input?.type) {
-      reject(new TypeError("Unknown image type"));
-    }
+  const object = job.msg;
+  // If the image has a path, it must also have a type
+  if (object.path && !object.input?.type) {
+    throw new TypeError("Unknown image type");
+  }
 
-    run(object).then(
-      (data) => finishJob(data, job, object, ws, resolve),
-      (e) => reject(e),
-    );
-    log(`Job ${job.id} started`, job.num);
-  });
+  log(`Job ${job.id} started`, job.num);
+  const data = await run(object);
+  await finishJob(data, job, object, ws);
 }
