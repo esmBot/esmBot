@@ -82,7 +82,6 @@ const jobs = new JobCache<bigint, Job>();
 // Should look like ID : { msg: "request", num: <job number> }
 
 const PASS = process.env.PASS ? process.env.PASS : undefined;
-let jobAmount = 0;
 
 // Used for direct image uploads
 const discord = new Client({
@@ -98,7 +97,6 @@ discord.on("error", error);
  * Accept an image job.
  */
 async function acceptJob(id: bigint, sock: WebSocket): Promise<void> {
-  jobAmount++;
   const job = jobs.get(id);
   try {
     await runJob(
@@ -111,27 +109,22 @@ async function acceptJob(id: bigint, sock: WebSocket): Promise<void> {
     );
     log(`Job ${id} has finished`);
   } catch (err) {
-    if (!(err instanceof Error)) {
-      jobAmount--;
-      return;
-    }
+    if (!(err instanceof Error)) return;
     error(`Error on job ${id}: ${err}`, job.num);
     const newJob = jobs.get(id);
     if (!newJob.tag) {
       newJob.error = err.message;
       jobs.set(id, newJob);
-      jobAmount--;
       return;
     }
     jobs.delete(id);
     sock.send(Buffer.concat([Buffer.from([Rerror]), newJob.tag, Buffer.from(err.message)]));
   }
-  jobAmount--;
 
   // Because malloc_trim can sometimes take longer than expected,
-  // we wait until all jobs are finished before trimming to avoid potential issues.
+  // we wait until all* jobs are finished before trimming to avoid potential issues.
   // See the comment in natives/node/image.cc for more info
-  if (jobAmount === 0) {
+  if (jobs.size <= 1) {
     img.trim();
   }
 }
@@ -149,7 +142,7 @@ wss.on("connection", (ws, request) => {
   logger.log("info", `WS client ${request.socket.remoteAddress}:${request.socket.remotePort} has connected`);
   ws.binaryType = "nodebuffer";
   const cur = Buffer.alloc(2);
-  cur.writeUInt16LE(jobAmount);
+  cur.writeUInt16LE(jobs.size);
   const cmdFormats: { [cmd: string]: string[] } = {};
   for (const cmd of img.funcs) {
     cmdFormats[cmd] = formats;
@@ -174,7 +167,7 @@ wss.on("connection", (ws, request) => {
     if (opcode === Tqueue) {
       const id = msg.readBigInt64LE(3);
       const obj = msg.subarray(11).toString();
-      const job = { msg: JSON.parse(obj), num: jobAmount, verifyEvent: new EventEmitter<VerifyEvents>() };
+      const job = { msg: JSON.parse(obj), num: jobs.size, verifyEvent: new EventEmitter<VerifyEvents>() };
       jobs.set(id, job);
 
       const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
@@ -274,7 +267,7 @@ httpServer.on("request", (req, res) => {
   }
   if (reqUrl.pathname === "/count" && req.method === "GET") {
     log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    return res.end(jobAmount.toString());
+    return res.end(jobs.size.toString());
   }
   res.statusCode = 404;
   return res.end("404 Not Found");
