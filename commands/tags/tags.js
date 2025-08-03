@@ -74,9 +74,15 @@ class TagsCommand extends Command {
    */
   async create(tagName) {
     if (!this.database || !this.guild) return;
+    const owners = process.env.OWNER?.split(",") ?? [];
+    const privileged = this.memberPermissions.has("ADMINISTRATOR") || owners.includes(this.author.id);
     const guild = await this.database.getGuild(this.guild.id);
     const setConv = new Set(guild.tag_roles);
-    if (!setConv.has(this.guild.id) && (!this.member || this.member.roles.filter((r) => setConv.has(r)).length == 0))
+    if (
+      !privileged &&
+      !setConv.has(this.guild.id) &&
+      (!this.member || this.member.roles.filter((r) => setConv.has(r)).length == 0)
+    )
       return this.getString("commands.responses.tags.noRolePerms");
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.addName");
     if (blacklist.includes(tagName)) return this.getString("commands.responses.tags.invalidName");
