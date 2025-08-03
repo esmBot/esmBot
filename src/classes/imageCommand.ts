@@ -5,6 +5,7 @@ import {
   Constants,
   type JSONAttachment,
   type Message,
+  type RawAttachment,
   type User,
 } from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
@@ -165,14 +166,14 @@ class ImageCommand extends Command {
       const type = result.type;
       if (type === "sent") {
         if (buffer.length > 2 && this.interaction && this.interaction.authorizingIntegrationOwners[0] === undefined) {
-          const attachment = JSON.parse(buffer.toString()) as JSONAttachment;
-          const path = new URL(attachment.proxyURL);
+          const attachment = JSON.parse(buffer.toString()) as RawAttachment & JSONAttachment;
+          const path = new URL(attachment.proxy_url ?? attachment.proxyURL);
           path.searchParams.set("animated", "true");
           selectedImages.set(this.interaction.user.id, {
             url: attachment.url,
             path: path.toString(),
             name: attachment.filename,
-            type: attachment.contentType,
+            type: attachment.content_type ?? attachment.contentType,
             spoiler: attachment.filename.startsWith("SPOILER_"),
           });
         }

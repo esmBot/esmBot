@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";
 import process from "node:process";
-import { Client } from "oceanic.js";
+import { DiscordRESTError, type RawMessage } from "oceanic.js";
 import type WebSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";
 import run from "#utils/image-runner.js";
@@ -84,14 +84,9 @@ const jobs = new JobCache<bigint, Job>();
 const PASS = process.env.PASS ? process.env.PASS : undefined;
 
 // Used for direct image uploads
-const discord = new Client({
-  rest: {
-    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
-  },
-});
 const clientID = process.env.CLIENT_ID;
-
-discord.on("error", error);
+const discordBaseURL =
+  process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : "https://discord.com/api/v10";
 
 /**
  * Accept an image job.
@@ -323,7 +318,6 @@ process.on("SIGINT", () => {
   }
   stopping = true;
   logger.info("SIGINT detected, finishing jobs and shutting down...");
-  discord.disconnect();
   httpServer.removeAllListeners("upgrade");
   const closeResponse = Buffer.concat([Buffer.from([Rclose])]);
   for (const client of wss.clients) {
@@ -376,15 +370,29 @@ function finishJob(
       }
       jobs.set(job.id, jobObject);
       if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
-        return discord.rest.interactions
-          .createFollowupMessage(clientID, object.token, {
-            flags: object.ephemeral ? 64 : undefined,
-            files: [
-              {
-                name: `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
-                contents: jobObject.data,
-              },
-            ],
+        const form = new FormData();
+        form.set(
+          "files[0]",
+          new Blob([jobObject.data]),
+          `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+        );
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+          controller.abort();
+        }, 15000);
+        return fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
+          method: "POST",
+          signal: controller.signal,
+          body: form,
+        })
+          .then(async (res) => {
+            clearTimeout(timeout);
+            if (!res.ok) {
+              if (res.headers.get("Content-Type") === "application/json")
+                throw new DiscordRESTError(res, (await res.json()) as Record<string, unknown>, "POST");
+              throw new Error(`Request failed with response ${res.status}: ${await res.text()}`);
+            }
+            return res.json() as unknown as RawMessage;
           })
           .catch((e) => {
             error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
@@ -397,7 +405,7 @@ function finishJob(
       let response: Buffer;
       if (r) {
         jobs.delete(job.id);
-        const attachment = r.attachments.first();
+        const attachment = r.attachments[0];
         response = Buffer.concat([Buffer.from([Rsent]), tag, Buffer.from(JSON.stringify(attachment ?? {}))]);
       } else {
         response = Buffer.concat([Buffer.from([Rwait]), tag]);
