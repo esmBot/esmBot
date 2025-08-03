@@ -4,7 +4,16 @@ function canLoadTS(): boolean {
   if (!process.versions.amaro) return false;
 
   const [major, minor] = process.versions.node.split(".").map(Number);
-  if (major > 23 || (major === 23 && minor >= 6) || (major === 22 && minor >= 18)) return true;
+  if (major > 23 || (major === 23 && minor >= 6) || (major === 22 && minor >= 18)) {
+    if (process.argv.includes("--no-experimental-strip-types")) return false;
+
+    if (process.env.NODE_ARGS && process.env.NODE_ARGS !== "") {
+      const splitArgs = process.env.NODE_ARGS.split(" ");
+      if (splitArgs.includes("--no-experimental-strip-types")) return false;
+    }
+
+    return true;
+  }
 
   if (process.argv.includes("--experimental-strip-types")) return true;
 
