@@ -47,9 +47,9 @@ import { init as dbInit } from "./database.ts";
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
-import { disconnect, initImageLib, reloadImageConnections } from "#utils/image.js";
+import { initImageLib, reloadImageConnections } from "#utils/image.js";
 import logger from "#utils/logger.js";
-import { endBroadcast, startBroadcast } from "#utils/misc.js";
+import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
 import { connect, connected, reload } from "#utils/soundplayer.js";
 import { parseThreshold } from "#utils/tempimages.js";
 
@@ -289,10 +289,12 @@ if (!connected) connect(client);
 
 process.on("SIGINT", async () => {
   logger.info("SIGINT detected, shutting down...");
-  client.disconnect(false);
-  if (database) await database.stop();
-  disconnect();
-  process.exit();
+  await exit(client, database);
+});
+
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM detected, shutting down...");
+  await exit(client, database);
 });
 
 try {
