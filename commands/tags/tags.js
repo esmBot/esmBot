@@ -37,22 +37,21 @@ class TagsCommand extends Command {
       case "role":
         return this.role();
       default:
-        return await this.get(tagName, cmd);
+        return await this.get(this.type === "classic" ? cmd : tagName);
     }
   }
 
   /**
    * @param {string | undefined} tagName
-   * @param {string} cmd
    */
-  async get(tagName, cmd) {
+  async get(tagName) {
     if (!this.database || !this.guild || !tagName) return;
     let getResult;
-    if (cmd === "random") {
+    if (tagName === "random") {
       const tagList = await this.database.getTags(this.guild.id);
       getResult = tagList[random(Object.keys(tagList))];
     } else {
-      getResult = await this.database.getTag(this.guild.id, this.type === "classic" ? cmd : tagName);
+      getResult = await this.database.getTag(this.guild.id, tagName);
     }
     if (!getResult) return this.getString("commands.responses.tags.invalid");
     this.success = true;
@@ -259,7 +258,7 @@ class TagsCommand extends Command {
       case "list":
         return this.roleList();
       default:
-        return this.get("role", "role");
+        return this.get("role");
     }
   }
 
