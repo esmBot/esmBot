@@ -57,9 +57,7 @@ type Options = {
 };
 
 export let manager: Shoukaku;
-export let nodes = JSON.parse(
-  fs.readFileSync(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" }),
-).lava as NodeOption[];
+export let nodes = (await import("#config/servers.json", { with: { type: "json" } })).default.lava as NodeOption[];
 export let connected = false;
 
 export function connect(client: Client) {
