@@ -113,7 +113,8 @@
             "broadcast": "Diffondi messaggio \"Sta giocando a\" finchè il comando non viene inviato di nuovo o il bot si riavvia",
             "wall": "Crea un muro da un'immagine",
             "fade": "Applica una dissolvenza in entrata a un'immagine",
-            "hue": "Cambia la tonalità di un'immagine"
+            "hue": "Cambia la tonalità di un'immagine",
+            "powerdirector": "Aggiunge il watermark di PowerDirector a un'immagine"
         },
         "flagNames": {
             "8ball": {
@@ -572,7 +573,8 @@
             "grayscale": "scaladigrigi",
             "sepia": "seppia",
             "fade": "dissolvenza",
-            "hue": "tonalita"
+            "hue": "tonalita",
+            "powerdirector": "powerdirector"
         },
         "noImage": {
             "9gag": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di 9GAG!",
@@ -636,7 +638,8 @@
             "bandicam": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di Bandicam!",
             "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!",
             "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!",
-            "hue": "Devi fornire un'immagine/GIF a cui cambiare la tonalità!"
+            "hue": "Devi fornire un'immagine/GIF a cui cambiare la tonalità!",
+            "powerdirector": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di PowerDirector!"
         },
         "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
@@ -829,7 +832,8 @@
                 "processOnly": "{{count}} (solo per questo processo)",
                 "processUsage": "Utilizzo Memoria Processo",
                 "servers": "Server",
-                "denoVersion": "Versione di Deno"
+                "denoVersion": "Versione di Deno",
+                "unknownVersion": "Versione runtime"
             },
             "tags": {
                 "addName": "Devi fornire il nome del tag che vuoi aggiungere!",
@@ -847,7 +851,12 @@
                 "notOwner": "Non possiedi questo tag!",
                 "ownedBy": "Questo tag è posseduto da **{{user}}** (`{{id}}`).",
                 "ownedById": "Non ho potuto trovare esattamente chi possiede questo tag, ma ho potuto trovarne l'ID: `{{id}}`",
-                "ownerName": "Devi fornire il nome del tag di cui vuoi controllare il proprietario!"
+                "ownerName": "Devi fornire il nome del tag di cui vuoi controllare il proprietario!",
+                "noRolePerms": "Non hai il permesso di creare tag!",
+                "noRoles": "Nessun ruolo ha attualmente il permesso di gestire i tag!",
+                "notOwnerRole": "Devi avere il permesso \"Gestire messaggi\" per aggiungere/rimuovere ruoli tag!",
+                "noRole": "Devi fornire un ruolo da aggiungere/rimuovere!",
+                "missingRole": "Non puoi rimuovere un ruolo che non è ancora stato aggiunto!"
             },
             "stop": {
                 "ended": "La sessione vocale attuale è terminata.",
