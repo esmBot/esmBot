@@ -1,7 +1,14 @@
 import process from "node:process";
 import type { Guild, GuildChannel } from "oceanic.js";
 import type { DatabasePlugin } from "../database.ts";
-import { commands, disabledCache, disabledCmdCache, messageCommands, prefixCache } from "#utils/collections.js";
+import {
+  commands,
+  disabledCache,
+  disabledCmdCache,
+  messageCommands,
+  prefixCache,
+  userCommands,
+} from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 
@@ -61,7 +68,7 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async setup() {
     const existingCommands = (await this.sql<{ command: string }[]>`SELECT command FROM counts`).map((x) => x.command);
-    const commandNames = [...commands.keys(), ...messageCommands.keys()];
+    const commandNames = [...commands.keys(), ...messageCommands.keys(), ...userCommands.keys()];
     for (const command of commandNames) {
       if (!existingCommands.includes(command)) {
         await this.sql`INSERT INTO counts ${this.sql({ command, count: 0 }, "command", "count")}`;
@@ -208,7 +215,7 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async getCounts(all?: boolean) {
     const counts = await this.sql<Count[]>`SELECT * FROM counts`;
-    const commandNames = [...commands.keys(), ...messageCommands.keys()];
+    const commandNames = [...commands.keys(), ...messageCommands.keys(), ...userCommands.keys()];
     const countMap = new Map(
       (all ? counts : counts.filter((val) => commandNames.includes(val.command))).map((val) => [
         val.command,
