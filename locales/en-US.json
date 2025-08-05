@@ -268,7 +268,8 @@
         "get": "get",
         "list": "list",
         "owner": "owner",
-        "random": "random"
+        "random": "random",
+        "role": "role"
       },
       "tags add": {
         "name": "name",
@@ -286,6 +287,17 @@
       },
       "tags owner": {
         "name": "name"
+      },
+      "tags role": {
+        "add": "add",
+        "list": "list",
+        "remove": "remove"
+      },
+      "tags role add": {
+        "role": "role"
+      },
+      "tags role remove": {
+        "role": "role"
       }
     },
     "flags": {
@@ -440,7 +452,8 @@
         "get": "Gets a tag",
         "list": "Lists every tag in this server",
         "owner": "Gets the owner of a tag",
-        "random": "Gets a random tag"
+        "random": "Gets a random tag",
+        "role": "Manage role permissions for tags"
       },
       "tags add": {
         "name": "The name of the tag",
@@ -458,6 +471,17 @@
       },
       "tags owner": {
         "name": "The name of the tag"
+      },
+      "tags role": {
+        "add": "Allow a role to manage tags",
+        "list": "List the roles that are capable of managing tags",
+        "remove": "Remove a role from the allowlist"
+      },
+      "tags role add": {
+        "role":  "The role to add"
+      },
+      "tags role remove": {
+        "role": "The role to remove"
       }
     },
     "names": {
