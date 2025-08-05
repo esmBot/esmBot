@@ -115,7 +115,11 @@ function extendFlags(flags: ExtendedCommandOptions[], name: string) {
       flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
     if (!flag.descriptionLocalizations)
       flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
-    if (flag.type === 1 && flag.options) {
+    if (
+      (flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND ||
+        flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) &&
+      flag.options
+    ) {
       const nameWithFlag = `${name} ${flag.name}`;
       extendFlags(flag.options, nameWithFlag);
     }
