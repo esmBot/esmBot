@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
-import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, ThreadChannel } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
@@ -81,13 +81,39 @@ export default async ({ client, database }: EventParams, message: Message) => {
   const preArgs = text.split(/\s+/g);
   const shifted = preArgs.shift();
   if (!shifted) return;
-  const command = shifted.toLowerCase();
-  const aliased = aliases.get(command);
+  const cmdBaseName = shifted.toLowerCase();
+  let aliased = aliases.get(cmdBaseName);
+  if (aliased?.includes(" ")) {
+    const subSplit = aliased.split(" ");
+    aliased = subSplit[0];
+    preArgs.unshift(...subSplit.slice(1));
+  }
 
-  const cmdName = aliased ?? command;
+  const cmdName = aliased ?? cmdBaseName;
 
   // check if command exists and if it's enabled
-  const cmd = commands.get(cmdName);
+  const cmdBase = commands.get(cmdName);
+  if (!cmdBase) return;
+
+  let command = cmdBaseName;
+  let cmd = cmdBase.default as typeof Command;
+  if (!(cmd.prototype instanceof Command)) return;
+
+  // parse args
+  const parsed = parseCommand(preArgs);
+  let canon = cmdName;
+  for (const sub of parsed.args) {
+    const lowerSub = sub.toLowerCase();
+    if (cmdBase[lowerSub]?.prototype instanceof Command) {
+      cmd = cmdBase[lowerSub] as typeof Command;
+      canon = `${canon} ${lowerSub}`;
+      if (!aliased) command = `${command} ${lowerSub}`;
+      parsed.args = parsed.args.slice(1);
+    } else {
+      break;
+    }
+  }
+
   if (!cmd) return;
 
   // block certain commands from running in DMs
@@ -116,7 +142,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
       disabledCmdCache.set(message.guildID, guildDB.disabled_commands);
       disabledCmds = guildDB.disabled_commands;
     }
-    if (disabledCmds.includes(cmdName)) return;
+    if (disabledCmds.includes(command) || disabledCmds.includes(cmdName) || disabledCmds.includes(canon)) return;
   }
 
   // actually run the command
@@ -133,8 +159,6 @@ export default async ({ client, database }: EventParams, message: Message) => {
     },
   };
   try {
-    // parse args
-    const parsed = parseCommand(preArgs);
     const startTime = new Date();
     const commandClass = new cmd(client, database, {
       type: "classic",
@@ -261,7 +285,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
     }
   } finally {
     if (database) {
-      await database.addCount(aliases.get(command) ?? command);
+      await database.addCount(cmdName);
     }
   }
 };

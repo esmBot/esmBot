@@ -14,12 +14,13 @@ class CommandCommand extends Command {
     if (this.args.length === 0) return this.getString("commands.responses.command.noCmd");
     if (this.args[0] !== "disable" && this.args[0] !== "enable")
       return this.getString("commands.responses.command.invalid");
-    if (!this.args[1]) return this.getString("commands.responses.command.noInput");
-    if (!collections.commands.has(this.args[1].toLowerCase()) && !collections.aliases.has(this.args[1].toLowerCase()))
+    const commandName = this.args.slice(1).join(" ").toLowerCase();
+    if (commandName.length === 0) return this.getString("commands.responses.command.noInput");
+    if (!collections.commands.has(this.args[1]) && !collections.aliases.has(commandName))
       return this.getString("commands.responses.command.invalidCmd");
 
     const guildDB = await this.database.getGuild(this.guild.id);
-    const command = collections.aliases.get(this.args[1].toLowerCase()) ?? this.args[1].toLowerCase();
+    const command = collections.aliases.get(commandName) ?? commandName;
 
     if (this.args[0].toLowerCase() === "disable") {
       if (command === "command") return this.getString("commands.responses.command.cannotDisable");
@@ -53,9 +54,9 @@ class CommandCommand extends Command {
       description: "Enables a classic command",
       options: [
         {
-          name: "text",
+          name: "cmd",
           type: Constants.ApplicationCommandOptionTypes.STRING,
-          description: "The text to decode",
+          description: "The command to enable",
           classic: true,
           required: true,
         },
@@ -67,9 +68,9 @@ class CommandCommand extends Command {
       description: "Disables a classic command",
       options: [
         {
-          name: "text",
+          name: "cmd",
           type: Constants.ApplicationCommandOptionTypes.STRING,
-          description: "The text to encode",
+          description: "The command to disable",
           classic: true,
           required: true,
         },

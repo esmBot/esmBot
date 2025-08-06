@@ -1,8 +1,9 @@
 import { promises } from "node:fs";
 import process from "node:process";
 import commandConfig from "#config/commands.json" with { type: "json" };
-import { commands, info } from "./collections.ts";
+import { info } from "./collections.ts";
 import type { Param } from "./types.ts";
+import { Constants } from "oceanic.js";
 
 export const categoryTemplate = {
   general: [],
@@ -34,10 +35,11 @@ function generateEntries(baseName: string, params: Param[], desc: string, catego
 
 export function generateList() {
   categories = categoryTemplate;
-  for (const [command] of commands) {
-    const cmd = info.get(command);
+  for (const [command, cmd] of info) {
     if (!cmd) throw Error(`Command info missing for ${command}`);
+    if (cmd.type !== Constants.ApplicationCommandTypes.CHAT_INPUT) continue;
     if (!cmd.slashAllowed && !commandConfig.types.classic) continue;
+    if (cmd.baseCommand) continue;
     if (!categories[cmd.category]) categories[cmd.category] = [];
     if (command !== "music") generateEntries(command, cmd.params, cmd.description, cmd.category);
   }

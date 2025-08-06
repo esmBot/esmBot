@@ -1,16 +1,15 @@
-import type Command from "#cmd-classes/command.js";
 import type InteractionCollector from "../pagination/awaitinteractions.ts";
 import type { ImageMeta } from "./imagedetect.ts";
-import type { CommandInfo } from "./types.ts";
+import type { CommandEntry, CommandInfo } from "./types.ts";
 
-export const commands = new Map<string, typeof Command>();
-export const messageCommands = new Map<string, typeof Command>();
-export const userCommands = new Map<string, typeof Command>();
+export const commands = new Map<string, CommandEntry>();
+export const messageCommands = new Map<string, CommandEntry>();
+export const userCommands = new Map<string, CommandEntry>();
 
 export const paths = new Map<string, string>();
 export const aliases = new Map<string, string>();
 export const info = new Map<string, CommandInfo>();
-export const categories = new Map<string, string[]>();
+export const categories = new Map<string, Set<string>>();
 
 export const collectors = new Map<string, InteractionCollector>();
 

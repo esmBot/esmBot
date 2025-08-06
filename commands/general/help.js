@@ -21,7 +21,8 @@ class HelpCommand extends Command {
       this.args.length !== 0 &&
       (collections.commands.has(this.args[0].toLowerCase()) || collections.aliases.has(this.args[0].toLowerCase()))
     ) {
-      const command = collections.aliases.get(this.args[0].toLowerCase()) ?? this.args[0].toLowerCase();
+      const joined = this.args.join(" ").toLowerCase();
+      const command = collections.aliases.get(joined) ?? joined;
       const info = collections.info.get(command);
       if (!info) return this.getString("commands.responses.help.noInfo");
       const params = info.params.filter((v) => typeof v === "string");

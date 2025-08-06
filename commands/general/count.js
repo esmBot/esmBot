@@ -7,8 +7,12 @@ class CountCommand extends Command {
   async run() {
     if (!this.database) return this.getString("noDatabase");
     const cmd = (this.getOptionString("command") ?? this.args.join(" ")).trim();
-    const merged = new Map([...collections.commands, ...collections.messageCommands, ...collections.userCommands]);
-    if (cmd && (merged.has(cmd) || collections.aliases.has(cmd))) {
+    const merged = [
+      ...collections.commands.keys(),
+      ...collections.messageCommands.keys(),
+      ...collections.userCommands.keys(),
+    ];
+    if (cmd && (merged.includes(cmd) || collections.aliases.has(cmd))) {
       const command = collections.aliases.get(cmd) ?? cmd;
       const counts = await this.database.getCounts();
       return this.getString("commands.responses.count.single", {

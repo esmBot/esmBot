@@ -1,5 +1,6 @@
 import type { ApplicationCommandOptions, Client, Constants } from "oceanic.js";
 import type { DatabasePlugin } from "../database.ts";
+import type Command from "#cmd-classes/command.js";
 
 export interface DBGuild {
   guild_id: string;
@@ -28,6 +29,10 @@ export interface CommandsConfig {
   blacklist: string[];
 }
 
+type ValueOrNested<T> = T | { [x: string]: ValueOrNested<T> };
+
+export type CommandEntry = Record<string, ValueOrNested<typeof Command>>;
+
 export type CommandType = "classic" | "application";
 
 export type ExtendedCommandOptions = {
@@ -51,6 +56,7 @@ export interface CommandInfo {
   slashAllowed: boolean;
   directAllowed: boolean;
   userAllowed: boolean;
+  baseCommand: boolean;
   adminOnly: boolean;
   type: Constants.ApplicationCommandTypes;
 }

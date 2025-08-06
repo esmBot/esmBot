@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
 import { type AnyInteractionGateway, InteractionTypes } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
@@ -34,9 +35,20 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   if (interaction.type !== InteractionTypes.APPLICATION_COMMAND) return;
 
   // check if command exists and if it's enabled
-  const command = interaction.data.name;
-  const cmd = commands.get(command) ?? messageCommands.get(command) ?? userCommands.get(command);
-  if (!cmd) return;
+  const cmdBaseName = interaction.data.name;
+  const cmdBase = commands.get(cmdBaseName) ?? messageCommands.get(cmdBaseName) ?? userCommands.get(cmdBaseName);
+  if (!cmdBase) return;
+
+  let command = cmdBaseName;
+  let cmd = cmdBase.default as typeof Command;
+  if (!(cmd.prototype instanceof Command)) return;
+
+  const sub = interaction.data.options.getSubCommand();
+  const joined = sub?.join("");
+  if (joined && cmdBase[joined]?.prototype instanceof Command) {
+    cmd = cmdBase[joined] as typeof Command;
+    command = `${command} ${joined}`;
+  }
 
   try {
     await interaction.defer(cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false) ? 64 : undefined);
@@ -165,7 +177,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
     }
   } finally {
     if (database) {
-      await database.addCount(command);
+      await database.addCount(cmdBaseName);
     }
   }
 };
