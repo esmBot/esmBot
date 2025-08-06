@@ -80,9 +80,9 @@ class ChannelCommand extends Command {
       description: "Enables classic commands in a channel",
       options: [
         {
-          name: "text",
+          name: "channel",
           type: Constants.ApplicationCommandOptionTypes.STRING,
-          description: "The text to decode",
+          description: "The channel to enable",
           classic: true,
         },
       ],
@@ -93,9 +93,9 @@ class ChannelCommand extends Command {
       description: "Disables classic commands in a channel",
       options: [
         {
-          name: "text",
+          name: "channel",
           type: Constants.ApplicationCommandOptionTypes.STRING,
-          description: "The text to encode",
+          description: "The channel to disable",
           classic: true,
         },
       ],
