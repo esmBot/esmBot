@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
-class SeekCommand extends MusicCommand {
+class MusicSeekCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -37,7 +37,7 @@ class SeekCommand extends MusicCommand {
     },
   ];
   static description = "Seeks to a different position in the music";
-  static aliases = ["pos"];
+  static aliases = ["seek", "pos"];
 }
 
-export default SeekCommand;
+export default MusicSeekCommand;

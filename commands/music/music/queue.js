@@ -2,7 +2,7 @@ import format from "format-duration";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import paginator from "#pagination";
 
-class QueueCommand extends MusicCommand {
+class MusicQueueCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -78,7 +78,7 @@ class QueueCommand extends MusicCommand {
   }
 
   static description = "Shows the current queue";
-  static aliases = ["q"];
+  static aliases = ["queue", "q"];
 }
 
-export default QueueCommand;
+export default MusicQueueCommand;

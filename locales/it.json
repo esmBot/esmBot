@@ -76,17 +76,7 @@
             "unfreeze": "Scongela di una sequenza di immagini",
             "whisper": "Aggiunge una didascalia stile Whisper a un'immagine",
             "wide": "Allarga un'immagine a 19 volte la sua larghezza",
-            "host": "Invia o cambia l'host della sessione vocale attuale",
-            "nowplaying": "Mostra la canzone attualmente in riproduzione",
-            "queue": "Mostra la coda attuale",
-            "remove": "Rimuove una canzone dalla coda",
-            "seek": "Salta a una posizione diversa nella canzone",
-            "skip": "Salta la canzone attuale",
-            "volume": "Imposta il volume della musica",
             "music": "Gestisce la riproduzione della musica",
-            "loop": "Ripete la musica",
-            "stop": "Interrompe la musica",
-            "shuffle": "Mescola le musica",
             "dog": "Invia una foto casuale di un cane",
             "base64": "Codifica/decodifica una stringa Base64",
             "channel": "Attiva/disattiva comandi classici in un canale (segue impostazioni server dei comandi applicazioni)",
@@ -103,12 +93,10 @@
             "haah": "Specchia il lato sinistro di un'immagine sul destro",
             "waaw": "Specchia il lato destro di un'immagine sul sinistro",
             "Select Image": "Nessuna descrizione trovata",
-            "play": "Riproduce una canzone o la aggiunge alla coda",
             "raw": "Invia l'URL diretto a un'immagine (utile per salvare GIF da siti come Tenor)",
             "jpeg": "Aggiunge compressione JPEG a un'immagine",
             "tile": "Crea un pattern \"a mattonella\" da un'immagine",
             "woow": "Specchia il sopra di un'immagine sul sotto",
-            "toggle": "Mette in pausa/riprende la canzone attuale",
             "tags": "Il comando principale dei tag. Apri la pagina di aiuto per più info: https://esmbot.net/help.html",
             "broadcast": "Diffondi messaggio \"Sta giocando a\" finchè il comando non viene inviato di nuovo o il bot si riavvia",
             "wall": "Crea un muro da un'immagine",
@@ -234,19 +222,33 @@
             "uncaption": {
                 "tolerance": "tolleranza"
             },
-            "host": {
+            "music": {
+                "host": "host",
+                "loop": "ripeti",
+                "nowplaying": "inriproduzione",
+                "play": "riproduci",
+                "queue": "coda",
+                "remove": "rimuovi",
+                "seek": "sposta",
+                "shuffle": "shuffle",
+                "skip": "salta",
+                "stop": "interrompi",
+                "toggle": "altera",
+                "volume": "volume"
+            },
+            "music host": {
                 "user": "utente"
             },
-            "play": {
+            "music play": {
                 "query": "query"
             },
-            "remove": {
+            "music remove": {
                 "position": "posizione"
             },
-            "seek": {
+            "music seek": {
                 "position": "posizione"
             },
-            "volume": {
+            "music volume": {
                 "level": "livello"
             },
             "tags": {
@@ -399,19 +401,33 @@
                 "font": "Specifica il carattere che vuoi usare (predefinito: helvetica)",
                 "phase": "Specifica l'immagine uncanny che vuoi usare"
             },
-            "host": {
+            "music": {
+                "host": "Invia o cambia l'host della sessione vocale attuale",
+                "loop": "Ripete la musica",
+                "nowplaying": "Mostra la canzone attualmente in riproduzione",
+                "play": "Riproduce una canzone o la aggiunge alla coda",
+                "queue": "Mostra la coda attuale",
+                "remove": "Rimuove una canzone dalla coda",
+                "seek": "Salta a una posizione diversa nella canzone",
+                "shuffle": "Mescola le musica",
+                "skip": "Salta la canzone attuale",
+                "stop": "Interrompe la musica",
+                "toggle": "Mette in pausa/riprende la canzone attuale",
+                "volume": "Imposta il volume della musica"
+            },
+            "music host": {
                 "user": "L'utente che vuoi che sia il nuovo host"
             },
-            "play": {
+            "music play": {
                 "query": "Query di ricerca audio o URL"
             },
-            "remove": {
+            "music remove": {
                 "position": "La posizione nella coda che vuoi rimuovere"
             },
-            "seek": {
+            "music seek": {
                 "position": "Salta a questa posizione"
             },
-            "volume": {
+            "music volume": {
                 "level": "Livello del volume"
             },
             "tags": {
@@ -554,20 +570,8 @@
             "wide": "largo",
             "woow": "woow",
             "Select Image": "Seleziona Immagine",
-            "host": "host",
-            "loop": "ripeti",
             "music": "musica",
-            "nowplaying": "inriproduzione",
-            "play": "riproduci",
-            "queue": "coda",
-            "remove": "rimuovi",
-            "shuffle": "shuffle",
-            "skip": "salta",
-            "seek": "sposta",
-            "stop": "interrompi",
-            "volume": "volume",
             "tags": "tag",
-            "toggle": "altera",
             "reload": "ricarica",
             "caption2": "didascalia2",
             "grayscale": "scaladigrigi",

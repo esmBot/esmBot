@@ -3,7 +3,7 @@ import MusicCommand from "#cmd-classes/musicCommand.js";
 import { play } from "#utils/soundplayer.js";
 const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:", "ytsearch:", "ytmsearch:"];
 
-class PlayCommand extends MusicCommand {
+class MusicPlayCommand extends MusicCommand {
   async run() {
     if (!this.guild || !this.member || !(this.channel instanceof GuildChannel)) {
       this.success = false;
@@ -63,7 +63,7 @@ class PlayCommand extends MusicCommand {
     },
   ];
   static description = "Plays a song or adds it to the queue";
-  static aliases = ["p"];
+  static aliases = ["play", "p"];
 }
 
-export default PlayCommand;
+export default MusicPlayCommand;

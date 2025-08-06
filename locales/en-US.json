@@ -101,19 +101,7 @@
       "wide": "Stretches an image to 19x its width",
       "woow": "Mirrors the top of an image onto the bottom",
       "Select Image": "No description found",
-      "host": "Gets or changes the host of the current voice session",
-      "loop": "Loops the music",
       "music": "Handles music playback",
-      "nowplaying": "Shows the currently playing song",
-      "play": "Plays a song or adds it to the queue",
-      "queue": "Shows the current queue",
-      "remove": "Removes a song from the queue",
-      "seek": "Seeks to a different position in the music",
-      "shuffle": "Shuffles the music",
-      "skip": "Skips the current song",
-      "stop": "Stops the music",
-      "toggle": "Pauses/resumes the current song",
-      "volume": "Sets the volume of the music",
       "tags": "The main tags command. Check the help page for more info: https://esmbot.net/help.html"
     },
     "flagNames": {
@@ -246,19 +234,33 @@
       "uncaption": {
         "tolerance": "tolerance"
       },
-      "host": {
+      "music": {
+        "host": "host",
+        "loop": "loop",
+        "nowplaying": "nowplaying",
+        "play": "play",
+        "queue": "queue",
+        "remove": "remove",
+        "seek": "seek",
+        "shuffle": "shuffle",
+        "skip": "skip",
+        "stop": "stop",
+        "toggle": "toggle",
+        "volume": "volume"
+      },
+      "music host": {
         "user": "user"
       },
-      "play": {
+      "music play": {
         "query": "query"
       },
-      "remove": {
+      "music remove": {
         "position": "position"
       },
-      "seek": {
+      "music seek": {
         "position": "position"
       },
-      "volume": {
+      "music volume": {
         "level": "level"
       },
       "tags": {
@@ -430,19 +432,33 @@
       "uncaption": {
         "tolerance": "Set the shade tolerance for the caption detection (0.0 is highest, 1.0 is lowest, default is 0.95)"
       },
-      "host": {
+      "music": {
+        "host": "Gets or changes the host of the current voice session",
+        "loop": "Loops the music",
+        "nowplaying": "Shows the currently playing song",
+        "play": "Plays a song or adds it to the queue",
+        "queue": "Shows the current queue",
+        "remove": "Removes a song from the queue",
+        "seek": "Seeks to a different position in the music",
+        "shuffle": "Shuffles the music",
+        "skip": "Skips the current song",
+        "stop": "Stops the music",
+        "toggle": "Pauses/resumes the current song",
+        "volume": "Sets the volume of the music"
+      },
+      "music host": {
         "user": "The user you want the new host to be"
       },
-      "play": {
+      "music play": {
         "query": "An audio search query or URL"
       },
-      "remove": {
+      "music remove": {
         "position": "The queue position you want to remove"
       },
-      "seek": {
+      "music seek": {
         "position": "Seek to this position"
       },
-      "volume": {
+      "music volume": {
         "level": "The volume level"
       },
       "tags": {
@@ -585,19 +601,7 @@
       "wide": "wide",
       "woow": "woow",
       "Select Image": "Select Image",
-      "host": "host",
-      "loop": "loop",
       "music": "music",
-      "nowplaying": "nowplaying",
-      "play": "play",
-      "queue": "queue",
-      "remove": "remove",
-      "seek": "seek",
-      "shuffle": "shuffle",
-      "skip": "skip",
-      "stop": "stop",
-      "toggle": "toggle",
-      "volume": "volume",
       "tags": "tags"
     },
     "noImage": {

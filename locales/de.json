@@ -94,19 +94,7 @@
             "wide": "Streckt ein Bild auf 19x seine Breite",
             "woow": "Spiegelt die obere Bildhälfte nach unten",
             "Select Image": "Keine Beschreibung gefunden",
-            "host": "Holt oder ändert den Host der aktuellen Sprachsitzung",
-            "loop": "Wiederholt die Musik",
             "music": "Handhabt die Musikwiedergabe",
-            "nowplaying": "Zeigt den aktuellen gespielten Song",
-            "play": "Spielt einen Song oder fügt ihn in die Reihe ein",
-            "queue": "Zeigt die aktuelle Reihe",
-            "remove": "Entfernt einen Song aus der Reihe",
-            "seek": "Springt zu einer anderen Stelle in der Musik",
-            "shuffle": "Durchmischt die Musik",
-            "skip": "Überspringt den aktuellen Song",
-            "stop": "Hält die Musik an",
-            "toggle": "Pausiert den aktuellen Song, oder setzt ihn fort",
-            "volume": "Stellt die Musiklautstärke ein",
             "uncanny": "Macht ein Bild mit „Mr. Incredible Becomes Uncanny“ (links/rechts mit Komma trennen)",
             "spotify": "Für einen Spotify-„Das-ist“-Header zu einem Bild hinzu",
             "tags": "Der Hauptbefehl für Tags. Konsultiere die Hilfeseite: https://esmbot.net/help.html",
@@ -246,19 +234,19 @@
             "speed": {
                 "multiplier": "multiplikator"
             },
-            "host": {
+            "music host": {
                 "user": "benutzer"
             },
-            "play": {
+            "music play": {
                 "query": "abfrage"
             },
-            "remove": {
+            "music remove": {
                 "position": "position"
             },
-            "seek": {
+            "music seek": {
                 "position": "position"
             },
-            "volume": {
+            "music volume": {
                 "level": "pegel"
             },
             "tags delete": {
@@ -289,6 +277,20 @@
             },
             "caption2": {
                 "font": "Gib die Schriftart and, die du verwenden willst (standard: helvetica)"
+            },
+            "music": {
+                "host": "Holt oder ändert den Host der aktuellen Sprachsitzung",
+                "loop": "Wiederholt die Musik",
+                "nowplaying": "Zeigt den aktuellen gespielten Song",
+                "play": "Spielt einen Song oder fügt ihn in die Reihe ein",
+                "queue": "Zeigt die aktuelle Reihe",
+                "remove": "Entfernt einen Song aus der Reihe",
+                "seek": "Springt zu einer anderen Stelle in der Musik",
+                "shuffle": "Durchmischt die Musik",
+                "skip": "Überspringt den aktuellen Song",
+                "stop": "Hält die Musik an",
+                "toggle": "Pausiert den aktuellen Song, oder setzt ihn fort",
+                "volume": "Stellt die Musiklautstärke ein"
             }
         }
     }

@@ -3,7 +3,7 @@ import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { queues } from "#utils/soundplayer.js";
 
-class RemoveCommand extends MusicCommand {
+class MusicRemoveCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -34,7 +34,7 @@ class RemoveCommand extends MusicCommand {
     },
   ];
   static description = "Removes a song from the queue";
-  static aliases = ["rm"];
+  static aliases = ["remove", "rm"];
 }
 
-export default RemoveCommand;
+export default MusicRemoveCommand;

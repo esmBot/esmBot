@@ -8,19 +8,16 @@
             "youtube": "Tìm kiếm trên YouTube",
             "ifunny": "Chèn hình mờ iFunny vô ảnh",
             "spotify": "Chèn tiêu đề \"This is\" của Spotify vô ảnh",
-            "seek": "Tìm tới vị trí khác trong bài hát",
             "broadcast": "Phát thông báo đang chơi cho đến khi lệnh được chạy lại hoặc bot bị khởi động lại",
             "donate": "Khám phá các cách mà bạn có thể đóng góp vô sự phát triển của esmBot",
             "lengthen": "Mở rộng URL bị rút gọn",
             "bounce": "Tạo hiệu ứng nhún lên nhún xuống cho ảnh",
             "unfreeze": "Ngừng đóng băng chuỗi ảnh",
             "wide": "Dãn ảnh gấp 19 lần chiều rộng của nó",
-            "play": "Phát một bài hát hoặc thêm vào danh sách chờ",
             "channel": "Bật/tắt lệnh truyền thống cho kênh (vô cài đặt máy chủ cho lệnh gạch chéo)",
             "raw": "Lấy URL gốc của hình ảnh (hữu ích để lưu GIF từ các trang như Tenor)",
             "deviantart": "Chèn hình mờ DeviantArt vô ảnh",
             "magik": "Chèn hiệu ứng kéo giãn ảnh theo nội dung (bóp méo ảnh)",
-            "toggle": "Tạm dừng/tiếp tục bài hát hiện tại",
             "tags": "Các lệnh thẻ chính. Xem trang trợ giúp để biết thêm thông tin: https://esmbot.net/help.html",
             "8ball": "Hỏi quả cầu tiên tri",
             "bird": "Lấy ảnh chim ngẫu nhiên",
@@ -31,7 +28,6 @@
             "slow": "Làm chuỗi ảnh chậm hơn",
             "snapchat": "Chèn chú thích theo phong cách Snapchat vô ảnh",
             "soos": "\"Lặp lại\" chuỗi ảnh bằng cách đảo ngược nó khi hoàn thành",
-            "host": "Lấy hoặc thay đổi người điều hành của phiên thoại hiện tại",
             "emote": "Lấy ảnh gốc của emoji",
             "dog": "Lấy ảnh chó ngẫu nhiên",
             "homebrew": "Tạo bản edit Homebrew Channel",
@@ -103,15 +99,7 @@
             "whisper": "Chèn chú thích theo phong cách Whisper vô ảnh",
             "woow": "Phản chiếu phần trên của ảnh xuống phần dưới",
             "Select Image": "Không tìm thấy mô tả",
-            "loop": "Lặp nhạc",
             "music": "Xử lý việc phát nhạc",
-            "nowplaying": "Hiển thị bài hát đang phát",
-            "queue": "Hiển thị danh sách chờ hiện tại",
-            "remove": "Xóa nhạc trong danh sách chờ",
-            "shuffle": "Xáo trộn nhạc",
-            "skip": "Bỏ qua bài hát hiện tại",
-            "stop": "Dừng nhạc",
-            "volume": "Điều chỉnh âm lượng của bài hát",
             "fade": "Làm ảnh mờ dần"
         },
         "flags": {
@@ -139,7 +127,21 @@
                 "content": "Nội dung của thẻ",
                 "name": "Tên của thẻ"
             },
-            "host": {
+            "music": {
+                "host": "Lấy hoặc thay đổi người điều hành của phiên thoại hiện tại",
+                "loop": "Lặp nhạc",
+                "nowplaying": "Hiển thị bài hát đang phát",
+                "play": "Phát một bài hát hoặc thêm vào danh sách chờ",
+                "queue": "Hiển thị danh sách chờ hiện tại",
+                "remove": "Xóa nhạc trong danh sách chờ",
+                "seek": "Tìm tới vị trí khác trong bài hát",
+                "shuffle": "Xáo trộn nhạc",
+                "skip": "Bỏ qua bài hát hiện tại",
+                "stop": "Dừng nhạc",
+                "toggle": "Tạm dừng/tiếp tục bài hát hiện tại",
+                "volume": "Điều chỉnh âm lượng của bài hát"
+            },
+            "music host": {
                 "user": "Người dùng mà bạn muốn làm người điều hành mới"
             },
             "tags": {
@@ -151,7 +153,7 @@
                 "owner": "Lấy chủ sở hữu của thẻ",
                 "random": "Lấy một thẻ ngẫu nhiên"
             },
-            "play": {
+            "music play": {
                 "query": "Truy vấn tìm kiếm của âm thanh hoặc URL"
             },
             "dice": {
@@ -256,13 +258,13 @@
             "uncaption": {
                 "tolerance": "Đặt biên độ chấp nhận để phát hiện chú thích (0.0 là cao nhất, 1.0 là thấp nhất, mặc định là 0.95)"
             },
-            "remove": {
+            "music remove": {
                 "position": "Vị trí trong danh sách chờ mà bạn muốn xóa"
             },
-            "seek": {
+            "music seek": {
                 "position": "Tìm đến vị trí này"
             },
-            "volume": {
+            "music volume": {
                 "level": "Mức độ âm lượng"
             },
             "tags add": {
@@ -297,13 +299,27 @@
                 "case": "hoa",
                 "font": "phong"
             },
-            "remove": {
+            "music": {
+                "host": "nguoidieuhanh",
+                "loop": "laplai",
+                "nowplaying": "dangphat",
+                "play": "phat",
+                "queue": "danhsachcho",
+                "remove": "xoa",
+                "seek": "timden",
+                "shuffle": "xaotron",
+                "skip": "boqua",
+                "stop": "dung",
+                "toggle": "battat",
+                "volume": "amluong"
+            },
+            "music remove": {
                 "position": "vitri"
             },
-            "seek": {
+            "music seek": {
                 "position": "vitri"
             },
-            "volume": {
+            "music volume": {
                 "level": "muc"
             },
             "tags": {
@@ -426,7 +442,7 @@
             "snapchat": {
                 "position": "vitri"
             },
-            "play": {
+            "music play": {
                 "query": "truy"
             },
             "uncanny": {
@@ -436,7 +452,7 @@
             "uncaption": {
                 "tolerance": "bien"
             },
-            "host": {
+            "music host": {
                 "user": "thanhvien"
             },
             "tags delete": {
@@ -488,17 +504,7 @@
             "wide": "dananh",
             "woow": "trenduoi",
             "Select Image": "Chọn ảnh",
-            "host": "nguoidieuhanh",
-            "loop": "laplai",
             "music": "nhac",
-            "nowplaying": "dangphat",
-            "play": "phat",
-            "queue": "danhsachcho",
-            "remove": "xoa",
-            "seek": "timden",
-            "shuffle": "xaotron",
-            "skip": "boqua",
-            "stop": "dung",
             "8ball": "quacautientri",
             "bird": "chim",
             "cat": "meo",
@@ -559,8 +565,6 @@
             "uncaption": "xoachuthich",
             "unfreeze": "ngungdongbang",
             "vignette": "vientoi",
-            "toggle": "battat",
-            "volume": "amluong",
             "tags": "the",
             "fade": "modan"
         },

@@ -1,7 +1,7 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { players } from "#utils/soundplayer.js";
 
-class ShuffleCommand extends MusicCommand {
+class MusicShuffleCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -17,7 +17,7 @@ class ShuffleCommand extends MusicCommand {
   }
 
   static description = "Shuffles the music";
-  static aliases = ["toggleshuffle"];
+  static aliases = ["shuffle", "toggleshuffle"];
 }
 
-export default ShuffleCommand;
+export default MusicShuffleCommand;

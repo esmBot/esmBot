@@ -73,17 +73,7 @@
             "whisper": "Ajoute une caption au style \"Whisper\" sur une image",
             "woow": "Miroir le haut d'une image vers le bas",
             "Select Image": "Aucune description trouvée",
-            "host": "Récupère ou modifie l'hôte du vocal en cours",
-            "loop": "Boucle la musique",
             "music": "Contrôle la lecture de la musique",
-            "play": "Joue un musique ou l'ajoute à la file d'attente",
-            "queue": "Affiche la file d'attente actuelle",
-            "remove": "Supprime une musique de la file d'attente",
-            "seek": "Change de position dans la musique",
-            "shuffle": "Joue la playlist de manière aléatoire",
-            "stop": "Stop la musique",
-            "toggle": "Met en pause/reprend la musique en cours",
-            "volume": "Règle le volume de la musique",
             "snowflake": "Convertit un identifiant snowflake de Discord en timestamp",
             "eval": "Execute un script en JavaScript",
             "caption": "Ajoute une caption à une image",
@@ -106,8 +96,6 @@
             "spin": "Fait tourner une image",
             "spotify": "Ajoute un Spotify \"This is\" au dessus",
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
-            "nowplaying": "Affiche la chanson en cours de lecture",
-            "skip": "Saute la musique en cours",
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
             "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)"
         },
@@ -225,16 +213,30 @@
             "uncaption": {
                 "tolerance": "tolerance"
             },
-            "host": {
+            "music": {
+                "host": "hôte",
+                "loop": "boucle",
+                "nowplaying": "encours",
+                "play": "jouer",
+                "queue": "queue",
+                "remove": "retirer",
+                "seek": "avancer",
+                "shuffle": "mélanger",
+                "skip": "passer",
+                "stop": "arrêter",
+                "toggle": "activer",
+                "volume": "volume"
+            },
+            "music host": {
                 "user": "utilisateur"
             },
-            "play": {
+            "music play": {
                 "query": "requête"
             },
-            "seek": {
+            "music seek": {
                 "position": "position"
             },
-            "volume": {
+            "music volume": {
                 "level": "niveau"
             },
             "tags": {
@@ -266,7 +268,7 @@
             "prefix": {
                 "prefix": "préfix"
             },
-            "remove": {
+            "music remove": {
                 "position": "position"
             },
             "help": {
@@ -379,19 +381,34 @@
                 "font": "Spécifie la police que tu souhaites utiliser (par défaut : helvetica)",
                 "phase": "Spécifie l'image que tu souhaites utiliser"
             },
-            "host": {
+            "music": {
+                "host": "Récupère ou modifie l'hôte du vocal en cours",
+                "loop": "Boucle la musique",
+                "nowplaying": "Affiche la chanson en cours de lecture",
+                "play": "Joue un musique ou l'ajoute à la file d'attente",
+                "queue": "Affiche la file d'attente actuelle",
+                "remove": "Supprime une musique de la file d'attente",
+                "seek": "Change de position dans la musique",
+                "shuffle": "Joue la playlist de manière aléatoire",
+                "skip": "Saute la musique en cours",
+                "stop": "Stop la musique",
+                "toggle": "Met en pause/reprend la musique en cours",
+                "volume": "Règle le volume de la musique"
+                
+            },
+            "music host": {
                 "user": "L'utilisateur que tu souhaites être le nouvel hôte"
             },
-            "play": {
+            "music play": {
                 "query": "Requête de recherche audio ou une URL"
             },
-            "remove": {
+            "music remove": {
                 "position": "Position de la file d'attente que vous souhaitez supprimer"
             },
-            "seek": {
+            "music seek": {
                 "position": "Aller à cette position"
             },
-            "volume": {
+            "music volume": {
                 "level": "Niveau de volume"
             },
             "tags": {
@@ -519,18 +536,7 @@
             "whisper": "whisper",
             "wide": "large",
             "woow": "woow",
-            "host": "hôte",
-            "loop": "boucle",
             "music": "musique",
-            "play": "jouer",
-            "queue": "queue",
-            "remove": "retirer",
-            "seek": "avancer",
-            "shuffle": "mélanger",
-            "skip": "passer",
-            "stop": "arrêter",
-            "toggle": "activer",
-            "volume": "volume",
             "tags": "tags",
             "broadcast": "diffuser",
             "restart": "redémarrer",
@@ -546,8 +552,7 @@
             "grayscale": "grisclair",
             "imagereload": "rechargimage",
             "qrcreate": "qrcréer",
-            "qrread": "lireqr",
-            "nowplaying": "encours"
+            "qrread": "lireqr"
         },
         "noImage": {
             "9gag": "Vous devez fournir une image/GIF pour ajouter un filigrane 9GAG !",

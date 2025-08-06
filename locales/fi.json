@@ -75,7 +75,6 @@
             "slow": "Tekee liikkuvasta mediasta hitaamman",
             "snapchat": "Lisää Snapchat tyylisen kuvatekstin kuvaan",
             "tags": "Päätunnisteiden komento. Tarkista apua sivu lisätietoja varten: https://esmbot.net/help.html",
-            "host": "Löytää tai vaihtaa tämänhetkisen ääni-istunnon isännän",
             "broadcast": "Lähettää viestin kunnes toiminto suoritetaan uudelleen tai botti käynnistetään uudelleen",
             "freeze": "Tekee kuvasarjan toistamaan vain kerran",
             "magik": "Lisää kuvaan sisältötietoisen skaalaustehosteen",
@@ -91,13 +90,7 @@
             "waaw": "Peilaa oikean puolen kuvasta vasemmalle",
             "wall": "Tekee kuvasta seinän",
             "whisper": "Lisää Whisper tyylisen otsikon kuvaan",
-            "loop": "Kiertää musiikin",
             "music": "Hoitaa musiikin soiton",
-            "nowplaying": "Näyttää tämän hetkisen kappaleen",
-            "shuffle": "Sekoittaa musiikin",
-            "remove": "Poistaa kappaleen jonosta",
-            "seek": "Vaihtaa musiikin soiton sijaintia",
-            "skip": "Ohittaa kappaleen",
             "raw": "Löytää kuvan URL osoitteen (hyödyllinen GIF:in tallentamiseen sivuilta kuin Tenor)",
             "reverse": "Kääntää kuvasarjan",
             "swirl": "Pyöräyttää kuvan",
@@ -106,12 +99,7 @@
             "tile": "Tekee kuvasta laatta kuvion",
             "wide": "Venyttää kuvan 19 kertaa leveämmäksi",
             "woow": "Peilaa kuvan yläosan alhaalle",
-            "Select Image": "Kuvausta ei löydy",
-            "play": "Soittaa kappaleen tai lisää sen jonoon",
-            "queue": "Näyttää jonon",
-            "stop": "Lopettaa musiikinsoiton",
-            "toggle": "Pysäyttää/jatkaa kappaleen",
-            "volume": "Vaihtaa musiikin äänenvoimakkuutta"
+            "Select Image": "Kuvausta ei löydy"
         },
         "flags": {
             "command": {
@@ -233,16 +221,30 @@
                 "font": "Mitä fonttia haluat käyttää (oletus: helvetica)",
                 "phase": "Mitä outoa kuvaa haluat käyttää"
             },
-            "play": {
+            "music": {
+                "host": "Löytää tai vaihtaa tämänhetkisen ääni-istunnon isännän",
+                "loop": "Kiertää musiikin",
+                "nowplaying": "Näyttää tämän hetkisen kappaleen",
+                "play": "Soittaa kappaleen tai lisää sen jonoon",
+                "queue": "Näyttää jonon",
+                "remove": "Poistaa kappaleen jonosta",
+                "seek": "Vaihtaa musiikin soiton sijaintia",
+                "shuffle": "Sekoittaa musiikin",
+                "skip": "Ohittaa kappaleen",
+                "stop": "Lopettaa musiikinsoiton",
+                "toggle": "Pysäyttää/jatkaa kappaleen",
+                "volume": "Vaihtaa musiikin äänenvoimakkuutta"
+            },
+            "music play": {
                 "query": "Äänen hakusana tai URL-osoite"
             },
-            "remove": {
+            "music remove": {
                 "position": "Jonon paikka, jonka haluat poistaa"
             },
-            "seek": {
+            "music seek": {
                 "position": "Hakeudu tähän paikkaan"
             },
-            "volume": {
+            "music volume": {
                 "level": "Volyymi"
             },
             "tags": {
@@ -260,7 +262,7 @@
             "uncaption": {
                 "tolerance": "Aseta varjotoleranssi otsikon tunnistamista varten (0.0 on korkein, 1.0 alhaisin, oletus 0.95)"
             },
-            "host": {
+            "music host": {
                 "user": "Käyttäjä, jonka haluat uudeksi isännäksi"
             },
             "tags add": {
@@ -424,22 +426,33 @@
             "uncaption": {
                 "tolerance": "toleranssi"
             },
-            "host": {
+            "music": {
+                "host": "isäntä",
+                "loop": "silmukka",
+                "nowplaying": "soinyt",
+                "play": "soita",
+                "queue": "jono",
+                "shuffle": "sekoita",
+                "skip": "ohita",
+                "stop": "pysäytä",
+                "toggle": "vaihda"
+            },
+            "music host": {
                 "user": "käyttäjä"
             },
-            "remove": {
+            "music remove": {
                 "position": "asema"
             },
-            "seek": {
+            "music seek": {
                 "position": "asema"
             },
-            "volume": {
+            "music volume": {
                 "level": "taso"
             },
             "tags delete": {
                 "name": "nimi"
             },
-            "play": {
+            "music play": {
                 "query": "haku"
             }
         },
@@ -496,16 +509,7 @@
             "whisper": "kuiskaa",
             "wide": "leveä",
             "Select Image": "Valitse Kuva",
-            "host": "isäntä",
-            "loop": "silmukka",
             "music": "musiikki",
-            "nowplaying": "soinyt",
-            "play": "soita",
-            "queue": "jono",
-            "shuffle": "sekoita",
-            "skip": "ohita",
-            "stop": "pysäytä",
-            "toggle": "vaihda",
             "tags": "merkinnät",
             "reload": "lataauudelleen",
             "invert": "vääristävärit",

@@ -1,7 +1,6 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
-import { players } from "#utils/soundplayer.js";
 
-class LoopCommand extends MusicCommand {
+class MusicToggleCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -9,16 +8,15 @@ class LoopCommand extends MusicCommand {
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
     if (this.connection.host !== this.author.id && !this.memberPermissions.has("MANAGE_CHANNELS"))
-      return this.getString("commands.responses.loop.notHost");
-    const object = this.connection;
-    object.loop = !object.loop;
-    players.set(this.guild.id, object);
+      return this.getString("commands.responses.toggle.notHost");
+    const player = this.connection.player;
+    player.setPaused(!player.paused);
     this.success = true;
-    return `🔊 ${this.getString(object.loop ? "commands.responses.loop.nowLooping" : "commands.responses.loop.notLooping")}`;
+    return `🔊 ${this.getString(player.paused ? "commands.responses.toggle.paused" : "commands.responses.toggle.resumed")}`;
   }
 
-  static description = "Loops the music";
-  static aliases = ["toggleloop", "repeat"];
+  static description = "Pauses/resumes the current song";
+  static aliases = ["toggle", "pause", "resume"];
 }
 
-export default LoopCommand;
+export default MusicToggleCommand;

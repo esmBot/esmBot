@@ -1,7 +1,7 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { leaveChannel, players, queues, skipVotes } from "#utils/soundplayer.js";
 
-class StopCommand extends MusicCommand {
+class MusicStopCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -33,7 +33,7 @@ class StopCommand extends MusicCommand {
   }
 
   static description = "Stops the music";
-  static aliases = ["disconnect"];
+  static aliases = ["stop", "disconnect"];
 }
 
-export default StopCommand;
+export default MusicStopCommand;

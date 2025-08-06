@@ -1,7 +1,7 @@
 import format from "format-duration";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
-class NowPlayingCommand extends MusicCommand {
+class MusicNowPlayingCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -53,7 +53,7 @@ class NowPlayingCommand extends MusicCommand {
   }
 
   static description = "Shows the currently playing song";
-  static aliases = ["playing", "np", "current"];
+  static aliases = ["nowplaying", "playing", "np", "current"];
 }
 
-export default NowPlayingCommand;
+export default MusicNowPlayingCommand;

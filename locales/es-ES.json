@@ -119,16 +119,16 @@
             "uncaption": {
                 "tolerance": "tolerancia"
             },
-            "host": {
+            "music host": {
                 "user": "usuario"
             },
-            "remove": {
+            "music remove": {
                 "position": "posición"
             },
-            "seek": {
+            "music seek": {
                 "position": "posición"
             },
-            "volume": {
+            "music volume": {
                 "level": "nivel"
             },
             "tags": {

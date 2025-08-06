@@ -94,21 +94,9 @@
             "uncanny": "Creează o imagine Mr. Incredible Devine Ciudat (separă textul stânga/dreapta cu o virgulă)",
             "woow": "Oglindește partea de sus a unei imagini în partea de jos",
             "Select Image": "Nu a fost găsită nicio descriere",
-            "loop": "Redă muzica în buclă",
             "music": "Gestionează redarea muzicii",
-            "nowplaying": "Afișează melodia redată la moment",
-            "play": "Redă o melodie sau o adaugă la coadă",
-            "queue": "Afișează coada curentă",
-            "remove": "Elimină o melodie din coadă",
-            "seek": "Schimbă poziția de redare în melodie",
-            "shuffle": "Amestecă melodiile",
-            "skip": "Sare peste melodia curentă",
-            "stop": "Oprește melodia",
-            "toggle": "Întrerupe/reia melodia curentă",
-            "volume": "Setează volumul muzicii",
             "tags": "Comanda principală pentru etichete. Vezi mai multe detalii aici: https://esmbot.net/help.html",
             "raw": "Obține o adresă URL pentru o imagine (util pentru salvarea GIF-urilor de pe site-uri ca Tenor)",
-            "host": "Obține sau schimbă gazda sesiunii vocale curente",
             "snapchat": "Adaugă un titlu în stil Snapchat la o imagine",
             "wide": "Întinde o imagine la 19x lățimea ei",
             "reverse": "Redă o secvență de imagini în ordine inversă"
@@ -200,7 +188,21 @@
             "tags get": {
                 "name": "nume"
             },
-            "volume": {
+            "music": {
+                "host": "gazdă",
+                "loop": "buclă",
+                "nowplaying": "acumjoacă",
+                "play": "joacă",
+                "queue": "coadă",
+                "remove": "elimină",
+                "seek": "schimbă",
+                "shuffle": "amestecă",
+                "skip": "sari",
+                "stop": "oprește",
+                "toggle": "comută",
+                "volume": "volum"
+            },
+            "music volume": {
                 "level": "nivel"
             },
             "tags": {
@@ -256,7 +258,7 @@
             "uncaption": {
                 "tolerance": "toleranță"
             },
-            "host": {
+            "music host": {
                 "user": "utilizator"
             },
             "freeze": {
@@ -268,13 +270,13 @@
             "slow": {
                 "multiplier": "multiplicator"
             },
-            "play": {
+            "music play": {
                 "query": "interogare"
             },
-            "remove": {
+            "music remove": {
                 "position": "poziție"
             },
-            "seek": {
+            "music seek": {
                 "position": "poziție"
             }
         },
@@ -447,16 +449,30 @@
                 "font": "Specifică fontul pe care vrei să-l folosești (implicit: helvetica)",
                 "phase": "Specifică imaginea ciudată pe care vrei să o folosești"
             },
-            "host": {
+            "music": {
+                "host": "Obține sau schimbă gazda sesiunii vocale curente",
+                "loop": "Redă muzica în buclă",
+                "nowplaying": "Afișează melodia redată la moment",
+                "play": "Redă o melodie sau o adaugă la coadă",
+                "queue": "Afișează coada curentă",
+                "remove": "Elimină o melodie din coadă",
+                "seek": "Schimbă poziția de redare în melodie",
+                "shuffle": "Amestecă melodiile",
+                "skip": "Sare peste melodia curentă",
+                "stop": "Oprește melodia",
+                "toggle": "Întrerupe/reia melodia curentă",
+                "volume": "Setează volumul muzicii"
+            },
+            "music host": {
                 "user": "Utilizatorul pe care vrei să fie noua gază"
             },
-            "play": {
+            "music play": {
                 "query": "O interogare de căutare audio sau o adresă URL"
             },
-            "seek": {
+            "music seek": {
                 "position": "Schimbă la această poziție"
             },
-            "volume": {
+            "music volume": {
                 "level": "Nivelul volumului"
             },
             "tags": {
@@ -494,7 +510,7 @@
             "youtube": {
                 "query": "Interogarea pe care vrei să o cauți"
             },
-            "remove": {
+            "music remove": {
                 "position": "Poziția în coadă pe care vrei să o elimini"
             },
             "uncaption": {
@@ -588,21 +604,9 @@
             "whisper": "șoptește",
             "wide": "lat",
             "Select Image": "Selectează o imagine",
-            "host": "gazdă",
-            "loop": "buclă",
             "music": "muzică",
-            "play": "joacă",
-            "nowplaying": "acumjoacă",
             "waaw": "waaw",
             "woow": "woow",
-            "queue": "coadă",
-            "remove": "elimină",
-            "seek": "schimbă",
-            "shuffle": "amestecă",
-            "skip": "sari",
-            "stop": "oprește",
-            "toggle": "comută",
-            "volume": "volum",
             "tags": "etichete",
             "qrcreate": "creeazăqr",
             "cat": "pisică",

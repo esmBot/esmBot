@@ -5,7 +5,7 @@ import logger from "#utils/logger.js";
 import { players } from "#utils/soundplayer.js";
 import { safeBigInt } from "#utils/misc.js";
 
-class HostCommand extends MusicCommand {
+class MusicHostCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -71,7 +71,7 @@ class HostCommand extends MusicCommand {
     },
   ];
   static description = "Gets or changes the host of the current voice session";
-  static aliases = ["sethost"];
+  static aliases = ["host", "sethost"];
 }
 
-export default HostCommand;
+export default MusicHostCommand;

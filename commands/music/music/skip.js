@@ -1,7 +1,7 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { skipVotes } from "#utils/soundplayer.js";
 
-class SkipCommand extends MusicCommand {
+class MusicSkipCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -51,7 +51,7 @@ class SkipCommand extends MusicCommand {
   }
 
   static description = "Skips the current song";
-  static aliases = ["forceskip", "s"];
+  static aliases = ["skip", "forceskip", "s"];
 }
 
-export default SkipCommand;
+export default MusicSkipCommand;

@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
-class VolumeCommand extends MusicCommand {
+class MusicVolumeCommand extends MusicCommand {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -29,7 +29,7 @@ class VolumeCommand extends MusicCommand {
     },
   ];
   static description = "Sets the volume of the music";
-  static aliases = ["vol", "level"];
+  static aliases = ["volume", "vol", "level"];
 }
 
-export default VolumeCommand;
+export default MusicVolumeCommand;
