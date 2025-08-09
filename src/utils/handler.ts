@@ -168,16 +168,23 @@ export function update() {
 
       let subCmdInfo = info.get(subcommandName);
       const cmd = command[subcommand] as typeof Command;
+      const baseCommand = subcommand === "default" && subcommands.length > 1;
       subCmdInfo = {
         category: subCmdInfo?.category ?? "unsorted",
         description: cmd.description,
         aliases: cmd.aliases,
         params: parseFlags(cmd.flags),
-        flags: cmd.flags,
+        flags: baseCommand
+          ? cmd.flags.filter(
+              (v) =>
+                v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND ||
+                v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP,
+            )
+          : cmd.flags,
         slashAllowed: cmd.slashAllowed,
         directAllowed: cmd.directAllowed,
         userAllowed: cmd.userAllowed,
-        baseCommand: subcommand === "default" && subcommands.length > 1,
+        baseCommand,
         adminOnly: cmd.adminOnly,
         type: subCmdInfo?.type ?? Constants.ApplicationCommandTypes.CHAT_INPUT,
       };
