@@ -197,10 +197,13 @@ export function update() {
       if (cmdInfo?.flags.length === 0) cmdInfo.flags = [];
       for (const [subName, sub] of Object.entries(subcommandInfo)) {
         if (!sub.slashAllowed) continue;
+        const hasSubCommands = sub.flags.some((v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND);
         cmdInfo!.flags.push({
           name: subName,
           nameLocalizations: getAllLocalizations(`commands.flagNames.${name}.${subName}`),
-          type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+          type: hasSubCommands
+            ? Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
+            : Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
           description: sub.description,
           descriptionLocalizations: getAllLocalizations(`commands.flags.${name}.${subName}`),
           // @ts-expect-error It thinks we're using the wrong flag type
