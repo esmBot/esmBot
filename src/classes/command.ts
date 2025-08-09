@@ -267,10 +267,6 @@ class Command {
     return this;
   }
 
-  static postInit<T extends typeof Command>(this: T): T {
-    return this;
-  }
-
   static description = "No description found";
   static aliases: string[] = [];
   static flags: ({ classic?: boolean } & ApplicationCommandOptions)[] = [];

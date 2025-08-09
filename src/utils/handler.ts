@@ -167,7 +167,7 @@ export function update() {
       const subcommandName = subcommand === "default" ? name : `${name} ${subcommand}`;
 
       let subCmdInfo = info.get(subcommandName);
-      const cmd = (command[subcommand] as typeof Command).postInit();
+      const cmd = command[subcommand] as typeof Command;
       subCmdInfo = {
         category: subCmdInfo?.category ?? "unsorted",
         description: cmd.description,
