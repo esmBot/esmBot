@@ -1,13 +1,16 @@
-import util from "node:util";
 import process from "node:process";
-const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
+import util from "node:util";
+
 import { type DotenvParseOutput, config } from "dotenv";
 import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
-import type { DatabasePlugin } from "../database.ts";
-import { disconnect, servers } from "./image.ts";
 
 import commandsConfig from "#config/commands.json" with { type: "json" };
 import messagesConfig from "#config/messages.json" with { type: "json" };
+
+import type { DatabasePlugin } from "../database.ts";
+import { disconnect, servers } from "./image.ts";
+
+const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 
 let broadcast = false;
 

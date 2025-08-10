@@ -2,10 +2,11 @@ import os from "node:os";
 import process from "node:process";
 import { VERSION } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import packageJson from "../../package.json" with { type: "json" };
-const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
-import { getServers } from "#utils/misc.js";
 import detectRuntime from "#utils/detectRuntime.js";
+import { getServers } from "#utils/misc.js";
+import packageJson from "../../package.json" with { type: "json" };
+
+const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 
 class StatsCommand extends Command {
   async run() {

@@ -2,10 +2,10 @@ import { Buffer } from "node:buffer";
 import { exec as baseExec } from "node:child_process";
 import process from "node:process";
 import { promisify } from "node:util";
-import { clean } from "#utils/misc.js";
-const exec = promisify(baseExec);
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
+import { clean } from "#utils/misc.js";
+const exec = promisify(baseExec);
 
 class ExecCommand extends Command {
   async run() {

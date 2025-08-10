@@ -1,9 +1,9 @@
 import { promises } from "node:fs";
 import process from "node:process";
+import { Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { info } from "./collections.ts";
 import type { Param } from "./types.ts";
-import { Constants } from "oceanic.js";
 
 export const categoryTemplate = {
   general: [],

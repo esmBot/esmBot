@@ -1,5 +1,5 @@
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
 
 class TagsEditCommand extends Command {
   async run() {

@@ -1,7 +1,7 @@
 import type { Client } from "oceanic.js";
 import { type QueueEntry, type SoundPlayer, players, queues } from "#utils/soundplayer.js";
-import Command, { type CommandOptions } from "./command.ts";
 import type { DatabasePlugin } from "../database.ts";
+import Command, { type CommandOptions } from "./command.ts";
 
 class MusicCommand extends Command {
   connection?: SoundPlayer;

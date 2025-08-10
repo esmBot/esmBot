@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { setTimeout } from "node:timers/promises";
-import WebSocket, { type Data, type ErrorEvent } from "ws";
+import WSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.ts";
 
 const Rerror = 0x01;
@@ -34,7 +34,7 @@ class ImageConnection {
   funcs: string[];
   wsproto: string;
   sockurl: string;
-  conn: WebSocket;
+  conn: WSocket;
   httpurl: string;
   reconnect?: boolean;
   constructor(host: string, auth?: string, name?: string, tls = false) {
@@ -56,7 +56,7 @@ class ImageConnection {
     if (auth) {
       headers.Authentication = auth;
     }
-    this.conn = new WebSocket(this.sockurl, { headers });
+    this.conn = new WSocket(this.sockurl, { headers });
     this.conn.binaryType = "nodebuffer";
     let httpproto: string;
     if (tls) {
@@ -120,7 +120,7 @@ class ImageConnection {
         `${this.reconnect ? `${this.host} requested a reconnect` : `Lost connection to ${this.host}`}, attempting to reconnect in 5 seconds...`,
       );
       await setTimeout(5000);
-      this.conn = new WebSocket(this.sockurl, {
+      this.conn = new WSocket(this.sockurl, {
         headers: {
           Authentication: this.auth,
         },

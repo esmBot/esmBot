@@ -1,3 +1,6 @@
+// eslint-disable-next-line import-x/order
+import process from "node:process";
+
 const [major] = process.versions.node.split(".").map(Number);
 if (major < 22) {
   console.error(`You are currently running Node.js version ${process.versions.node}.
@@ -19,8 +22,6 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
 // load config from .env file
 import "dotenv/config";
 
-import process from "node:process";
-
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.ts");
 
 if (!process.env.TOKEN) {
@@ -40,10 +41,8 @@ import { glob, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-
 import { Client, type ClientEvents, Constants } from "oceanic.js";
-
-import { init as dbInit } from "./database.ts";
+import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
@@ -52,9 +51,9 @@ import logger from "#utils/logger.js";
 import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
 import { connect, connected, reload } from "#utils/soundplayer.js";
 import { parseThreshold } from "#utils/tempimages.js";
-
-import commandConfig from "#config/commands.json" with { type: "json" };
 import packageJson from "../package.json" with { type: "json" };
+import { init as dbInit } from "./database.ts";
+
 process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [Constants.Intents.GUILD_VOICE_STATES, Constants.Intents.DIRECT_MESSAGES, Constants.Intents.GUILDS];

@@ -1,5 +1,5 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
 import { Constants } from "oceanic.js";
+import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FadeCommand extends ImageCommand {
   paramsFunc() {

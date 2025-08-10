@@ -1,6 +1,6 @@
 import type { Member, StageChannel, Uncached, VoiceChannel } from "oceanic.js";
-import leaveHandler from "./voiceChannelLeave.ts";
 import type { EventParams } from "#utils/types.js";
+import leaveHandler from "./voiceChannelLeave.ts";
 
 export default async (
   params: EventParams,

@@ -4,7 +4,7 @@ import EventEmitter from "node:events";
 import { createServer } from "node:http";
 import process from "node:process";
 import { DiscordRESTError, type RawMessage } from "oceanic.js";
-import type WebSocket from "ws";
+import type WSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";
 import run from "#utils/image-runner.js";
 import { img } from "#utils/imageLib.js";
@@ -91,7 +91,7 @@ const discordBaseURL =
 /**
  * Accept an image job.
  */
-async function acceptJob(id: bigint, sock: WebSocket): Promise<void> {
+async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
   const job = jobs.get(id);
   try {
     await runJob(
@@ -348,7 +348,7 @@ async function finishJob(
   data: { buffer: Buffer; fileExtension: string },
   job: MiniJob,
   object: ImageParams,
-  ws: WebSocket,
+  ws: WSocket,
 ) {
   log(`Sending result of job ${job.id}`, job.num);
   const jobObject = jobs.get(job.id);
@@ -410,7 +410,7 @@ async function finishJob(
 /**
  * Run an image job.
  */
-async function runJob(job: MiniJob, ws: WebSocket): Promise<void> {
+async function runJob(job: MiniJob, ws: WSocket): Promise<void> {
   log(`Job ${job.id} starting...`, job.num);
 
   const object = job.msg;

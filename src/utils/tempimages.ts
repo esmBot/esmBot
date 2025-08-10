@@ -1,5 +1,6 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
 import process from "node:process";
+
 import {
   type Client,
   CommandInteraction,
@@ -9,10 +10,11 @@ import {
   type Message,
   MessageFlags,
 } from "oceanic.js";
-import { getString } from "./i18n.ts";
-import logger from "./logger.ts";
+
 import { selectedImages } from "./collections.ts";
+import { getString } from "./i18n.ts";
 import { getType } from "./image.ts";
+import logger from "./logger.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {

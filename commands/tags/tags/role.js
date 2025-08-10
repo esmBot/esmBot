@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import TagsGetCommand from "./get.js";
 import paginator from "#pagination";
 import { mentionToObject } from "#utils/mentions.js";
+import TagsGetCommand from "./get.js";
 
 class TagsRoleCommand extends TagsGetCommand {
   async run() {

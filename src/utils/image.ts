@@ -5,11 +5,12 @@ import { createRequire } from "node:module";
 import process from "node:process";
 import { fileTypeFromBuffer } from "file-type";
 import ipaddr from "ipaddr.js";
+import serversConfig from "#config/servers.json" with { type: "json" };
 import ImageConnection from "./imageConnection.ts";
 import logger from "./logger.ts";
 import { random } from "./misc.ts";
 import type { ImageParams, ImageTypeData } from "./types.ts";
-import serversConfig from "#config/servers.json" with { type: "json" };
+
 const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.ts")).default;
 let img: import("./imageLib.ts").ImageLib | undefined;
 

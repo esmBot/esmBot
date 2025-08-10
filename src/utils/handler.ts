@@ -1,7 +1,6 @@
+import { dirname, relative, resolve } from "node:path";
 import process from "node:process";
-import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.ts";
-import { log } from "./logger.ts";
-
+import { fileURLToPath } from "node:url";
 import { deepmergeInto } from "deepmerge-ts";
 import {
   type Client,
@@ -11,10 +10,10 @@ import {
 } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
+import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.ts";
 import { getAllLocalizations } from "./i18n.ts";
+import { log } from "./logger.ts";
 import type { CommandEntry, CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.ts";
-import { dirname, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 
 let queryValue = 0;
 

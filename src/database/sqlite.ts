@@ -1,13 +1,12 @@
-import type { Database as DenoDatabase, Statement as DenoStatement } from "@db/sqlite";
-import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
 import process from "node:process";
+import type { Database as DenoDatabase, Statement as DenoStatement } from "@db/sqlite";
 import type {
   Database as BSQLite3Database,
   Options as BSQLite3Options,
   Statement as BSQLite3Statement,
 } from "better-sqlite3";
+import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
 import type { Guild, GuildChannel } from "oceanic.js";
-import type { DatabasePlugin } from "../database.ts";
 import {
   commands,
   disabledCache,
@@ -18,6 +17,7 @@ import {
 } from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
+import type { DatabasePlugin } from "../database.ts";
 
 type BunDenoDatabase = typeof BunDatabase | typeof DenoDatabase;
 

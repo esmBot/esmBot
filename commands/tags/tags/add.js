@@ -1,5 +1,5 @@
-import Command from "#cmd-classes/command.js";
 import { Constants } from "oceanic.js";
+import Command from "#cmd-classes/command.js";
 
 const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
 
