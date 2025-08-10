@@ -157,7 +157,8 @@ esmbot_shards ${shardData.length}
 `);
 
       for (const shard of shardData) {
-        if (shard.latency) res.write(`esmbot_shard_ping{shard="${shard.id}"} ${shard.latency}\n`);
+        if (shard.latency)
+          res.write(`esmbot_shard_ping{shard="${shard.id}", status="${shard.status}"} ${shard.latency}\n`);
       }
 
       res.end();
