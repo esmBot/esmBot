@@ -36,7 +36,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
 }
 
 import { execFile as baseExecFile } from "node:child_process";
-import { promises } from "node:fs";
+import { glob, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -61,18 +61,6 @@ const intents = [Constants.Intents.GUILD_VOICE_STATES, Constants.Intents.DIRECT_
 if (commandConfig.types.classic) {
   intents.push(Constants.Intents.GUILD_MESSAGES);
   intents.push(Constants.Intents.MESSAGE_CONTENT);
-}
-
-async function* getFiles(dir: string, exts = [".js"]): AsyncGenerator<string> {
-  const dirents = await promises.readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const name = dir + (dir.charAt(dir.length - 1) !== "/" ? "/" : "") + dirent.name;
-    if (dirent.isDirectory()) {
-      yield* getFiles(name, exts);
-    } else if (exts.some((ext) => dirent.name.endsWith(ext))) {
-      yield name;
-    }
-  }
 }
 
 const runtime = detectRuntime();
@@ -130,13 +118,12 @@ const basePath = dirname(fileURLToPath(import.meta.url));
 
 // register locales
 logger.log("info", "Attempting to load locale data...");
-const resolvedLocalePath = resolve(basePath, "..", "locales");
-for await (const localeFile of getFiles(resolvedLocalePath, [".json"])) {
+for await (const localeFile of glob(resolve(basePath, "..", "locales", "*.json"))) {
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
     const localeName = commandArray[commandArray.length - 1].split(".")[0];
-    const data = await promises.readFile(localeFile, { encoding: "utf8" });
+    const data = await readFile(localeFile, { encoding: "utf8" });
     locales.set(localeName, JSON.parse(data));
   } catch (e) {
     logger.error(`Failed to register locales from ${localeFile}: ${e}`);
@@ -146,8 +133,9 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-const resolvedCommandPath = resolve(basePath, "..", "commands");
-for await (const commandFile of getFiles(resolvedCommandPath, runtime.tsLoad ? [".js", ".ts"] : [".js"])) {
+for await (const commandFile of glob(
+  resolve(basePath, "..", "commands", "**", runtime.tsLoad ? "*.{js,ts}" : "*.js"),
+)) {
   try {
     await load(null, commandFile);
   } catch (e) {
@@ -204,8 +192,7 @@ const client = new Client({
 
 // register events
 logger.log("info", "Attempting to load events...");
-const resolvedEventPath = resolve(basePath, "events");
-for await (const file of getFiles(resolvedEventPath, runtime.tsLoad ? [".js", ".ts"] : [".js"])) {
+for await (const file of glob(resolve(basePath, "events", runtime.tsLoad ? "*.{js,ts}" : "*.js"))) {
   logger.log("main", `Loading event from ${file}...`);
   const eventArray = file.split("/");
   const eventName = eventArray[eventArray.length - 1].split(".")[0];
