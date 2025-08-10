@@ -8,7 +8,7 @@ esmBot is primarily developed to run on the [Node.js](https://nodejs.org) runtim
 
 ## Setup
 
-esmBot requires Node.js 20.12.0, Bun 1.1, or Deno 2.3 minimum to run.
+esmBot requires Node.js 22.0.0, Bun 1.1, or Deno 2.3 minimum to run.
 
 To set up the bot for usage with Deno or Bun, follow the [setup guide](https://docs.esmbot.net/setup) as usual. However, depending on which runtime you choose, the launch command will be different:
 

@@ -1,7 +1,7 @@
-const [major, minor] = process.versions.node.split(".").map(Number);
-if (major < 20 || (major === 20 && minor < 12)) {
+const [major] = process.versions.node.split(".").map(Number);
+if (major < 22) {
   console.error(`You are currently running Node.js version ${process.versions.node}.
-esmBot requires Node.js version 20.12.0 or above.
+esmBot requires Node.js version 22.0.0 or above.
 Please refer to step 2 of the setup guide: https://docs.esmbot.net/setup/#2-install-nodejs`);
   process.exit(1);
 }
