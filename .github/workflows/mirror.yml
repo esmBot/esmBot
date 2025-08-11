@@ -1,0 +1,24 @@
+# Sync repo to the Codeberg mirror
+name: Repo sync (GitHub -> Codeberg)
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch: # Manual dispatch
+  schedule:
+    - cron: "0 */8 * * *"
+
+jobs:
+  sync-repo-to-codeberg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Sync repo"
+        uses: spyoungtech/mirror-action@master
+        with:
+          REMOTE: "https://codeberg.org/esm/esmBot.git"
+          GIT_USERNAME: ${{ vars.CB_USERNAME }}
+          GIT_PASSWORD: ${{ secrets._CB_TOKEN }}
