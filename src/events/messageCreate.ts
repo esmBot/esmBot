@@ -109,7 +109,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
   // parse args
   const parsed = parseCommand(preArgs);
   let canon = cmdName;
-  const lowerSub = parsed.args[0].toLowerCase();
+  const lowerSub = parsed.args[0]?.toLowerCase();
   if (cmdBase[lowerSub]?.prototype instanceof Command) {
     cmd = cmdBase[lowerSub] as typeof Command;
     canon = `${canon} ${lowerSub}`;
