@@ -258,7 +258,8 @@
                 "get": "invia",
                 "list": "elenco",
                 "owner": "proprietario",
-                "random": "casuale"
+                "random": "casuale",
+                "role": "ruolo"
             },
             "tags add": {
                 "name": "nome",
@@ -288,6 +289,17 @@
             },
             "hue": {
                 "shift": "cambiamento"
+            },
+            "tags role": {
+                "add": "aggiungi",
+                "list": "elenca",
+                "remove": "rimuovi"
+            },
+            "tags role add": {
+                "role": "ruolo"
+            },
+            "tags role remove": {
+                "role": "ruolo"
             }
         },
         "flags": {
@@ -450,7 +462,8 @@
                 "get": "Recupera un tag",
                 "list": "Elenca ogni tag in questo server",
                 "owner": "Invia il proprietario di un tag",
-                "random": "Invia un tag casuale"
+                "random": "Invia un tag casuale",
+                "role": "Gestisci i permessi dei ruoli per i tag"
             },
             "tags add": {
                 "name": "Il nome del tag",
@@ -487,6 +500,17 @@
             },
             "hue": {
                 "shift": "Imposta la quantità di cui effettuare il cambiamento"
+            },
+            "tags role": {
+                "remove": "Rimuovi l'accesso a un ruolo",
+                "list": "Elenca i ruoli che possono gestire i tag",
+                "add": "Permetti a un ruolo di gestire i tag"
+            },
+            "tags role add": {
+                "role": "Il ruolo da aggiungere"
+            },
+            "tags role remove": {
+                "role": "Il ruolo da rimuovere"
             },
             "qr": {
                 "create": "Genera un QR code",
@@ -864,7 +888,10 @@
                 "noRoles": "Nessun ruolo ha attualmente il permesso di gestire i tag!",
                 "notOwnerRole": "Devi avere il permesso \"Gestire messaggi\" per aggiungere/rimuovere ruoli tag!",
                 "noRole": "Devi fornire un ruolo da aggiungere/rimuovere!",
-                "missingRole": "Non puoi rimuovere un ruolo che non è ancora stato aggiunto!"
+                "missingRole": "Non puoi rimuovere un ruolo che non è ancora stato aggiunto!",
+                "roleAdded": "È stato dato accesso al ruolo `{{name}}`.",
+                "roleList": "Ruoli con accesso",
+                "roleRemoved": "È stato rimosso l'accesso dal ruolo `{{name}}`."
             },
             "stop": {
                 "ended": "La sessione vocale attuale è terminata.",
