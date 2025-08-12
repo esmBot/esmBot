@@ -1,6 +1,6 @@
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
-class BandicamCommand extends ImageCommand {
+class WatermarkBandicamCommand extends ImageCommand {
   params = {
     water: "assets/images/bandicam.png",
     gravity: 2,
@@ -8,10 +8,10 @@ class BandicamCommand extends ImageCommand {
   };
 
   static description = "Adds the Bandicam watermark to an image";
-  static aliases = ["bandi"];
+  static aliases = ["bandicam", "bandi"];
 
   static noImage = "You need to provide an image/GIF to add a Bandicam watermark!";
   static command = "watermark";
 }
 
-export default BandicamCommand;
+export default WatermarkBandicamCommand;

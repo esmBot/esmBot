@@ -106,7 +106,9 @@ class Command {
     } else {
       this.interaction = options.interaction;
       this.locale = options.interaction.locale as Locale;
-      this.cmdName = options.interaction.data.name;
+      this.cmdName = options.interaction.data.options.raw.some((v) => v.type === 1 || v.type === 2)
+        ? `${options.interaction.data.name} ${options.interaction.data.options.getSubCommand(true).join(" ")}`
+        : options.interaction.data.name;
       this.args = [];
       this.channel = options.interaction.channel ?? {
         id: options.interaction.channelID,

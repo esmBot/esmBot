@@ -67,7 +67,7 @@ The parameters available to your command consist of the following:
 - `this.permissions`: An Oceanic [`Permission`](https://docs.oceanic.ws/latest/classes/Permission.Permission.html) object of the bot's current permissions for a channel.
 - `this.memberPermissions`: An Oceanic [`Permission`](https://docs.oceanic.ws/latest/classes/Permission.Permission.html) object of the user who ran the commands's current permissions for a channel.
 - `this.locale`: The language/locale being used. For classic commands, this is always the value of the `LOCALE` environment variable (or "en-US" if it hasn't been set), and for application commands this is the language set by the user that ran the command.
-- `this.cmdName`: The name of the running command. This should always be the same as the running command's filename without the .js extension.
+- `this.cmdName`: The name of the running command. If this is a subcommand, it should have the full name of the subcommand (e.g. `base64 decode`). Otherwise, it should always be the same as the running command's filename without the .js extension.
 - `this.options`: When run as a "classic" command, this is an object of special arguments (e.g. `--argument=true`) passed to the command. These arguments are stored in a key/value format, so following the previous example, `this.options.argument` would return true. When run as a slash command, this is an object of every argument passed to the command. **This parameter is deprecated. It's recommended to use the `this.getOption*` helper functions instead.**
 
 Some options are only available depending on the context/original message type, which can be checked with `this.type`. The options only available with "classic" messages are listed below:

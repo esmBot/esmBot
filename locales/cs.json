@@ -37,27 +37,20 @@
             "soundreload": "Pokusí se znovu připojit na všechny dostupné Lavalink uzly",
             "sticker": "Vrátí nálepku jako obrázek",
             "youtube": "Vyhledá klíčová slova na YouTube",
-            "avs4you": "Přidá avs4you vodoznak na obrázek",
-            "bandicam": "Přidá Bandicam vodoznak na obrázek",
             "blur": "Rozmaže obrázek",
             "deepfry": "Usmaží obrázek",
             "explode": "Nechá obrázek explodovat",
             "flag": "Překryje obrázek vlajkou",
-            "funky": "Přidá \"New Funky Mode\" banner na obrázek",
             "gamexplain": "Udělá z obrázku náhledový obrázek od GameXplain",
             "gif": "Převede obrázek na GIF",
             "globe": "Roztočí obrázek",
             "grayscale": "Přidá černobílý efekt na obrázek",
             "haah": "Zrcadlí levou stranu obrázku na pravou",
             "hooh": "Zrcadlí spodek obrázku na vrch",
-            "hypercam": "Přidá Hypercam vodoznak na obrázek",
-            "ifunny": "Přidá iFunny vodoznak na obrázek",
             "implode": "Nechá obrázek implodovat",
             "invert": "Převrátí barvy obrázku",
             "jpeg": "Provede JPEG kompresi obrázku",
-            "kinemaster": "Přidá KineMaster vodoznak na obrázek",
             "meme": "Udělá z obrázku mem (vrchní a spodní text odděl čárkou)",
-            "memecenter": "Přidá MemeCenter vodoznak na obrázek",
             "motivate": "Vytvoří motivační plakát",
             "pixelate": "Rozpixelizuje obrázek",
             "reddit": "Přidá Reddit vodoznak na obrázek",
@@ -68,9 +61,20 @@
             "raw": "Vrátí přímý odkaz na obrázek (užitečné, pokud chcete ukládat GIFy např. z Tenoru)",
             "flop": "Obrátí obrázek",
             "command": "Povolí/zakáže klasické příkazy na serveru (pro slash příkazy mrkni do nastavení serveru)",
-            "stats": "Vrátí nějaké statistiky o mně",
-            "9gag": "Přidá 9GAG vodoznak na obrázek",
-            "deviantart": "Přidá DeviantArt vodoznak na obrázek"
+            "stats": "Vrátí nějaké statistiky o mně"
+        },
+        "flags": {
+            "watermark": {
+                "9gag": "Přidá 9GAG vodoznak na obrázek",
+                "avs4you": "Přidá avs4you vodoznak na obrázek",
+                "bandicam": "Přidá Bandicam vodoznak na obrázek",
+                "deviantart": "Přidá DeviantArt vodoznak na obrázek",
+                "funky": "Přidá \"New Funky Mode\" banner na obrázek",
+                "hypercam": "Přidá Hypercam vodoznak na obrázek",
+                "ifunny": "Přidá iFunny vodoznak na obrázek",
+                "kinemaster": "Přidá KineMaster vodoznak na obrázek",
+                "memecenter": "Přidá MemeCenter vodoznak na obrázek"
+            }
         }
     }
 }

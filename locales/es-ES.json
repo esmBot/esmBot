@@ -24,11 +24,7 @@
             "restart": "Reiníciame",
             "stats": "Obtener estadísticas acerca de mi",
             "youtube": "Buscar en YouTube",
-            "9gag": "Agregar marca de agua 9GAG a una imagen",
-            "avs4you": "Agregar marca de agua avs4you a una imagen",
-            "bandicam": "Agregar marca de agua Bandicam a una imagen",
             "blur": "Difuminar una imagen",
-            "deviantart": "Agregar marca de agua DevianArt a una imagenn",
             "flip": "Voltear una imagen",
             "circle": "Aplicar un efecto de difuminado radial en una imagen",
             "crop": "Recortar una imagen a 1:1",
@@ -178,6 +174,12 @@
             },
             "base64 encode": {
                 "text": "El texto para codificar"
+            },
+            "watermark": {
+                "9gag": "Agregar marca de agua 9GAG a una imagen",
+                "avs4you": "Agregar marca de agua avs4you a una imagen",
+                "bandicam": "Agregar marca de agua Bandicam a una imagen",
+                "deviantart": "Agregar marca de agua DevianArt a una imagenn"
             }
         },
         "names": {

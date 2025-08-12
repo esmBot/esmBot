@@ -1,6 +1,6 @@
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
-class PowerDirectorCommand extends ImageCommand {
+class WatermarkPowerDirectorCommand extends ImageCommand {
   params = {
     water: "assets/images/powerdirector.png",
     gravity: 9,
@@ -8,10 +8,10 @@ class PowerDirectorCommand extends ImageCommand {
   };
 
   static description = "Adds the PowerDirector watermark to an image";
-  static aliases = ["cyberlink"];
+  static aliases = ["powerdirector", "cyberlink"];
 
   static noImage = "You need to provide an image/GIF to add a PowerDirector watermark!";
   static command = "watermark";
 }
 
-export default PowerDirectorCommand;
+export default WatermarkPowerDirectorCommand;

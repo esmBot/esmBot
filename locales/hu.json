@@ -25,10 +25,14 @@
             "image": "Képkeresés a világhálón",
             "info": "Tudj meg többet rólam",
             "raw": "A kép közvetlen internetcímét kéri le (pl.: Tenorhoz hasonló oldalak gifjei)",
-            "deviantart": "„DeviantArt”-vízjelet ad a képhez",
             "explode": "Képet robbant szét",
             "fade": "Kivilágosítja a képet",
             "flag": "Képre illeszt egy zászlót"
+        },
+        "flags": {
+            "watermark": {
+                "deviantart": "„DeviantArt”-vízjelet ad a képhez"
+            }
         }
     }
 }

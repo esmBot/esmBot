@@ -34,33 +34,27 @@
             "stats": "Obtiene algunas estadísticas acerca de mí",
             "sticker": "Obtiene la imagen cruda (completa) de un sticker",
             "youtube": "Busca en YouTube",
-            "9gag": "Añade la marca de agua de 9GAG a una imagen",
-            "bandicam": "Añade la marca de agua de Bandicam a una imagen",
             "blur": "Difumina una imagen",
             "caption2": "Añade un epígrafe/lista de etiquetas a una imagen",
             "circle": "Aplica un efecto de difuminado radial a una imagen",
             "crop": "Recorta una imagen a 1:1",
             "deepfry": "Fríe profundamente (deep-fries) una imagen",
-            "deviantart": "Añade una marca de agua de DeviantArt a una imagen",
             "explode": "Explota una imagen",
             "flag": "Sobrepone una bandera a una imagen",
             "flip": "Da vuelta una imagen",
             "flop": "Da vuelta una imagen",
-            "funky": "Añade el banner New Funky Mode (de Donkey Kong) a una imagen",
             "gamexplain": "Fabrica una miniatura de GameXplain con una imagen",
             "gif": "Convierte una imagen en un GIF",
             "globe": "Hace girar a una imagen",
             "grayscale": "Añade un filtro de escala de grises",
             "haah": "Espeja el lado izquierdo de una imagen hacia el derecho",
             "hooh": "Espeja la mitad baja de una imagen hacia la mitad alta",
-            "hypercam": "Añade la marca de agua de Hypercam a una imagen",
             "imagestats": "Obtiene algunas estadísticas acerca de los servidores de imágenes",
             "imagereload": "Intenta reconectar a todos los servidores de procesamiento de imágenes disponibles",
             "snowflake": "Convierte una id de Snowflake de Discord a una marca horaria",
             "freeze": "Hace que una secuencia de imágenes (GIF) se reproduzca solo una vez",
             "sonic": "Crea una imagen de Sonic con una burbuja de texto",
-            "broadcast": "Transmite un mensaje en reproducción hasta que el comando se vuelva a ejecutar o el bot se reinicie",
-            "avs4you": "Añade la marca de agua de avs4you a una imagen"
+            "broadcast": "Transmite un mensaje en reproducción hasta que el comando se vuelva a ejecutar o el bot se reinicie"
         },
         "flagNames": {
             "caption": {
@@ -72,6 +66,14 @@
             "caption": {
                 "font": "Elige qué fuente usar (por defecto: futura)",
                 "noegg": "Desactiva... algo. Pero no te diré qué."
+            },
+            "watermark": {
+                "9gag": "Añade la marca de agua de 9GAG a una imagen",
+                "avs4you": "Añade la marca de agua de avs4you a una imagen",
+                "bandicam": "Añade la marca de agua de Bandicam a una imagen",
+                "deviantart": "Añade una marca de agua de DeviantArt a una imagen",
+                "funky": "Añade el banner New Funky Mode (de Donkey Kong) a una imagen",
+                "hypercam": "Añade la marca de agua de Hypercam a una imagen"
             }
         },
         "names": {

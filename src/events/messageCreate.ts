@@ -165,7 +165,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
     const startTime = new Date();
     const commandClass = new cmd(client, database, {
       type: "classic",
-      cmdName,
+      cmdName: canon,
       message,
       args: parsed.args,
       content: text.replace(command, "").trim(), // we also provide the message content as a parameter for cases where we need more accuracy

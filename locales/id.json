@@ -32,8 +32,6 @@
             "stats": "Mendapatkan beberapa statistik tentang saya",
             "sticker": "Mendapatkan gambar stiker mentah",
             "youtube": "Mencari YouTube",
-            "avs4you": "Menambahkan tanda air avs4you ke sebuah gambar",
-            "bandicam": "Menambahkan tanda air Bandicam ke gambar",
             "blur": "Memburamkan gambar",
             "caption": "Menambahkan keterangan ke gambar",
             "caption2": "Menambahkan daftar keterangan/tanda bawah ke gambar",
@@ -45,7 +43,6 @@
             "flip": "Membalik gambar",
             "flop": "Membalik gambar",
             "freeze": "Membuat urutan gambar hanya diputar satu kali",
-            "funky": "Menambahkan spanduk New Funky Mode ke gambar",
             "gif": "Mengonversi gambar menjadi GIF",
             "globe": "Memutar gambar",
             "grayscale": "Menambahkan filter skala abu-abu",
@@ -54,10 +51,17 @@
             "lengthen": "Memanjangkan URL pendek",
             "raw": "Mendapatkan URL gambar langsung (berguna untuk menyimpan GIF dari situs seperti Tenor)",
             "snowflake": "Mengonversi id kepingan salju Discord menjadi stempel waktu",
-            "9gag": "Menambahkan tanda air 9GAG ke gambar",
             "bounce": "Membuat gambar memantul ke atas dan ke bawah",
-            "deviantart": "Menambahkan tanda air DeviantArt ke gambar",
             "gamexplain": "Membuat gambar mini GameXplain dari sebuah gambar"
+        },
+        "flags": {
+            "watermark": {
+                "9gag": "Menambahkan tanda air 9GAG ke gambar",
+                "avs4you": "Menambahkan tanda air avs4you ke sebuah gambar",
+                "bandicam": "Menambahkan tanda air Bandicam ke gambar",
+                "deviantart": "Menambahkan tanda air DeviantArt ke gambar",
+                "funky": "Menambahkan spanduk New Funky Mode ke gambar"
+            }
         }
     }
 }
