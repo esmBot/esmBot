@@ -722,7 +722,7 @@
       "base64": {
         "decodeNoInput": "You need to provide a string to decode!",
         "encodeNoInput": "You need to provide a string to encode!",
-        "noCmd": "You need to provide whether you want to encode or decode the text!"
+        "invalid": "You need to provide whether you want to encode or decode the text!"
       },
       "bird": {
         "error": "I couldn't get a bird image in time. Maybe try again?"

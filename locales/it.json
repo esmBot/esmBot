@@ -714,7 +714,7 @@
             "base64": {
                 "decodeNoInput": "Devi fornire una stringa da decodificare!",
                 "encodeNoInput": "Devi fornire una stringa da codificare!",
-                "noCmd": "Devi specificare se vuoi codificare o decodificare il testo!"
+                "invalid": "Devi specificare se vuoi codificare o decodificare il testo!"
             },
             "count": {
                 "header": "Conteggi Utilizzo Comandi",

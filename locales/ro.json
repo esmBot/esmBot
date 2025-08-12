@@ -326,7 +326,7 @@
                 "error": "Nu am putut obține o imagine cu o pasăre la timp. Poate mai încearcă o dată?"
             },
             "base64": {
-                "noCmd": "Trebuie să precizezi dacă vrei să codezi sau să decodezi textul!"
+                "invalid": "Trebuie să precizezi dacă vrei să codezi sau să decodezi textul!"
             },
             "music": {
                 "invalid": "Comanda muzicală nu este una validă!"

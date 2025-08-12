@@ -703,7 +703,7 @@
             "base64": {
                 "decodeNoInput": "Bạn phải cho tôi chuỗi để giải nó!",
                 "encodeNoInput": "Bạn cần phải cho tôi chuỗi để mã hóa nó!",
-                "noCmd": "Bạn phải cung cấp xem bạn muốn mã hóa hay giải mã nội dung!"
+                "invalid": "Bạn phải cung cấp xem bạn muốn mã hóa hay giải mã nội dung!"
             },
             "count": {
                 "header": "Số lần lệnh được sử dụng",

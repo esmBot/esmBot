@@ -659,7 +659,7 @@
                 "sourcesNo": "Mes sources disent que non"
             },
             "base64": {
-                "noCmd": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !",
+                "invalid": "Vous devez indiquer si vous souhaitez encoder ou décoder le texte !",
                 "decodeNoInput": "Vous devez fournir une chaîne de caractère pour décoder !",
                 "encodeNoInput": "Vous devez fournir une chaîne de caractères pour encoder !"
             },

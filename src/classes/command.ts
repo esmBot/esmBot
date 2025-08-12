@@ -133,7 +133,8 @@ class Command {
    * The main command function.
    */
   async run(): Promise<string | InteractionContent | CreateMessageOptions | undefined> {
-    return "It works!";
+    this.success = false;
+    return this.getString(`commands.responses.${this.cmdName}.invalid`);
   }
 
   async acknowledge() {
