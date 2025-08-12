@@ -25,8 +25,6 @@
             "lengthen": "Pidentää lyhyttä URL-osoitetta",
             "ping": "Pingaa Discordin palvelimia",
             "prefix": "Löytää/vaihtaa palvelimen etuliitettä",
-            "qrcreate": "Tekee QR koodin",
-            "qrread": "Lukee QR koodin",
             "reload": "Lataa komennon uudelleen",
             "restart": "Käynnistää minut uudelleen",
             "snowflake": "Muuntaa Discord snowflake id:n aikaleimaksi",
@@ -280,6 +278,10 @@
             },
             "tags owner": {
                 "name": "Merkinnän nimi"
+            },
+            "qr": {
+                "create": "Tekee QR koodin",
+                "read": "Lukee QR koodin"
             }
         },
         "flagNames": {
@@ -472,10 +474,8 @@
             "broadcast": "lähetys",
             "count": "laske",
             "image": "kuva",
-            "qrcreate": "luoqr",
             "imagereload": "lataakuva",
             "imagestats": "kuvantiedot",
-            "qrread": "lueqr",
             "info": "tietoja",
             "lengthen": "pidennä",
             "prefix": "alkuliite",
@@ -537,7 +537,7 @@
             "watermark 9gag": "Tarvitset kuvan tai GIF:in lisätäksesi siihen 9GAG-vesileiman!",
             "caption2": "Tarvitset kuvan tai GIF:in lisätäksesi siihen avs4you otsikon2!",
             "snapchat": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Snapchat-otsikon!",
-            "qrread": "Sinun täytyy antaa kuva tai GIF, joka sisältää QR-koodin!",
+            "qr read": "Sinun täytyy antaa kuva tai GIF, joka sisältää QR-koodin!",
             "gif": "Tarvitset kuvan muuttaksesi sen GIF:iksi!",
             "watermark bandicam": "Tarvitset kuvan tai GIF:in lisätäksesi siihen Bandicam-vesileiman!",
             "watermark avs4you": "Tarvitset kuvan tai GIF:in lisätäksesi siihen avs4you vesileiman!",

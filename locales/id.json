@@ -24,8 +24,6 @@
             "info": "Mendapat beberapa info dan kredit tentang saya",
             "ping": "Ping server Discord",
             "prefix": "Memeriksa/mengubah awalan server",
-            "qrcreate": "Menghasilkan kode QR",
-            "qrread": "Membaca kode QR",
             "reload": "Memuat ulang perintah",
             "restart": "Restart saya",
             "soundreload": "Mencoba menyambung kembali ke semua node Lavalink yang tersedia",
@@ -61,6 +59,10 @@
                 "bandicam": "Menambahkan tanda air Bandicam ke gambar",
                 "deviantart": "Menambahkan tanda air DeviantArt ke gambar",
                 "funky": "Menambahkan spanduk New Funky Mode ke gambar"
+            },
+            "qr": {
+                "create": "Menghasilkan kode QR",
+                "read": "Membaca kode QR"
             }
         }
     }

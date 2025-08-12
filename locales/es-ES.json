@@ -18,8 +18,6 @@
             "image": "Buscar imágenes en la web",
             "info": "Obtener información y créditos acerca de mi",
             "ping": "Hacer ping a los servidores de Discord",
-            "qrcreate": "Genera un código QR",
-            "qrread": "Leer un código QR",
             "reload": "Recargar un comando",
             "restart": "Reiníciame",
             "stats": "Obtener estadísticas acerca de mi",
@@ -180,6 +178,10 @@
                 "avs4you": "Agregar marca de agua avs4you a una imagen",
                 "bandicam": "Agregar marca de agua Bandicam a una imagen",
                 "deviantart": "Agregar marca de agua DevianArt a una imagenn"
+            },
+            "qr": {
+                "create": "Genera un código QR",
+                "read": "Leer un código QR"
             }
         },
         "names": {

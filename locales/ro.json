@@ -12,7 +12,6 @@
             "help": "Obține toate comenzile disponibile",
             "image": "Caută imagini pe web",
             "imagestats": "Obține niște statistici despre serverele de imagini",
-            "qrread": "Citește un cod QR",
             "reload": "Reîncarcă o comandă",
             "restart": "Repornește esmBot",
             "stats": "Obține niște statistici despre esmBot",
@@ -20,7 +19,6 @@
             "youtube": "Caută pe YouTube",
             "reddit": "Adaugă filigranul Reddit la o imagine",
             "bird": "Obține o imagine aleatorie a unei păsări",
-            "qrcreate": "Generează un cod QR",
             "8ball": "Pune o întrebare mingii magice 8-ball",
             "homebrew": "Creează o editare Homebrew Channel",
             "sonic": "Creează o imagine cu o bulă de dialog Sonic",
@@ -285,7 +283,7 @@
         "noParam": {
             "caption": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
             "caption2": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
-            "qrcreate": "Trebuie să furnizezi un text pentru a genera un cod QR!",
+            "qr create": "Trebuie să furnizezi un text pentru a genera un cod QR!",
             "sonic": "Trebuie să furnizezi un text pentru a crea un meme Sonic!",
             "homebrew": "Trebuie să furnizezi un text pentru a crea o editare Homebrew Channel!",
             "snapchat": "Trebuie să furnizezi un text pentru a adăuga un titlu!",
@@ -529,6 +527,10 @@
             },
             "uncaption": {
                 "tolerance": "Toleranța pentru detecție (0.0 este cea mai mare, 1.0 este cea mai mică, implicit este 0.95)"
+            },
+            "qr": {
+                "create": "Generează un cod QR",
+                "read": "Citește un cod QR"
             }
         },
         "names": {
@@ -555,7 +557,6 @@
             "info": "informații",
             "lengthen": "lungește",
             "ping": "verifică",
-            "qrread": "citeșteqr",
             "reload": "reîncarcă",
             "restart": "repornește",
             "snowflake": "snowflake",
@@ -613,7 +614,6 @@
             "waaw": "waaw",
             "woow": "woow",
             "tags": "etichete",
-            "qrcreate": "creeazăqr",
             "cat": "pisică",
             "imagestats": "statisticiimagini",
             "raw": "direct",
@@ -623,7 +623,7 @@
             "haah": "haah"
         },
         "noImage": {
-            "qrread": "Trebuie să furnizezi o imagine sau un GIF cu un cod QR pentru citire!",
+            "qr read": "Trebuie să furnizezi o imagine sau un GIF cu un cod QR pentru citire!",
             "watermark 9gag": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul 9GAG!",
             "watermark bandicam": "Trebuie să furnizezi o imagine sau un GIF pentru a adăuga filigranul Bandicam!",
             "blur": "Trebuie să furnizezi o imagine sau un GIF pentru blurare!",

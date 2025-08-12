@@ -54,7 +54,7 @@ else()
 endif()
 
 option(WITH_MAGICK "Build with ImageMagick, enables the magik and wall commands" OFF)
-option(WITH_ZXING "Build with zxing-cpp, enables the qrcreate and qrread commands" ${WITH_ZXING_DEFAULT})
+option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ${WITH_ZXING_DEFAULT})
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 if (WITH_MAGICK)

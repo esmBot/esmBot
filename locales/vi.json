@@ -43,8 +43,6 @@
             "info": "Lấy thông tin và công nhận của tôi",
             "ping": "Kiểm tra kết nối với các máy chủ của Discord",
             "prefix": "Kiểm tra/thay đổi tiền tố của máy chủ",
-            "qrcreate": "Tạo mã QR",
-            "qrread": "Đọc mã QR",
             "reload": "Chạy lại lệnh",
             "restart": "Khởi động tôi lại",
             "snowflake": "Chuyển đổi ID snowflake của Discord thành dấu thời gian",
@@ -284,6 +282,10 @@
             },
             "fade": {
                 "alpha": "Làm mờ dần từ trong suốt đến rõ"
+            },
+            "qr": {
+                "create": "Tạo mã QR",
+                "read": "Đọc mã QR"
             }
         },
         "flagNames": {
@@ -494,8 +496,6 @@
             "lengthen": "morong",
             "ping": "ping",
             "prefix": "tiento",
-            "qrcreate": "qrtao",
-            "qrread": "qrdoc",
             "raw": "goc",
             "reload": "chaylai",
             "restart": "khoidonglai",
@@ -840,7 +840,7 @@
             "flag": "Bạn phải cung cấp emoji của một lá cờ để chèn lên!",
             "caption2": "Bạn phải cung cấp nội dung để chèn chú thích!",
             "sonic": "Bạn phải cung cấp nội dung để tạo meme Sonic!",
-            "qrcreate": "Bạn phải cung cấp nội dung để tạo mã QR!",
+            "qr create": "Bạn phải cung cấp nội dung để tạo mã QR!",
             "caption": "Bạn phải cung cấp nội dung để chèn chú thích!",
             "meme": "Bạn phải cung cấp nội dung để tạo meme!",
             "motivate": "Bạn phải cung cấp nội dung để tạo poster truyền cảm hứng!",
@@ -884,7 +884,7 @@
             "waaw": "Bạn phải cung cấp ảnh/GIF để đảo ảnh!",
             "wall": "Bạn phải cung cấp ảnh/GIF để làm thành tường!",
             "whisper": "Bạn phải cung cấp ảnh/GIF để thêm chú thích!",
-            "qrread": "Bạn phải cung cấp ảnh/GIF có mã QR để quét!",
+            "qr read": "Bạn phải cung cấp ảnh/GIF có mã QR để quét!",
             "watermark 9gag": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ 9GAG!",
             "watermark avs4you": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ avs4you!",
             "watermark bandicam": "Bạn phải cung cấp ảnh/GIF để thêm hình mờ Bandicam!",

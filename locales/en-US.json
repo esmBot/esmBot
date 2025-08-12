@@ -27,8 +27,6 @@
       "lengthen": "Lengthens a short URL",
       "ping": "Pings Discord's servers",
       "prefix": "Checks/changes the server prefix",
-      "qrcreate": "Generates a QR code",
-      "qrread": "Reads a QR code",
       "raw": "Gets a direct image URL (useful for saving GIFs from sites like Tenor)",
       "reload": "Reloads a command",
       "restart": "Restarts me",
@@ -302,6 +300,10 @@
       },
       "tags role remove": {
         "role": "role"
+      },
+      "qr": {
+        "create": "create",
+        "read": "read"
       }
     },
     "flags": {
@@ -513,6 +515,10 @@
       },
       "tags role remove": {
         "role": "The role to remove"
+      },
+      "qr": {
+        "create": "Generates a QR code",
+        "read": "Reads a QR code"
       }
     },
     "names": {
@@ -542,8 +548,6 @@
       "lengthen": "lengthen",
       "ping": "ping",
       "prefix": "prefix",
-      "qrcreate": "qrcreate",
-      "qrread": "qrread",
       "raw": "raw",
       "reload": "reload",
       "restart": "restart",
@@ -609,7 +613,7 @@
       "tags": "tags"
     },
     "noImage": {
-      "qrread": "You need to provide an image/GIF with a QR code to read!",
+      "qr read": "You need to provide an image/GIF with a QR code to read!",
       "watermark 9gag": "You need to provide an image/GIF to add a 9GAG watermark!",
       "watermark avs4you": "You need to provide an image/GIF to add an avs4you watermark!",
       "watermark bandicam": "You need to provide an image/GIF to add a Bandicam watermark!",
@@ -676,7 +680,7 @@
     "noParam": {
       "homebrew": "You need to provide some text to make a Homebrew Channel edit!",
       "sonic": "You need to provide some text to make a Sonic meme!",
-      "qrcreate": "You need to provide some text to generate a QR code!",
+      "qr create": "You need to provide some text to generate a QR code!",
       "caption": "You need to provide some text to add a caption!",
       "caption2": "You need to provide some text to add a caption!",
       "flag": "You need to provide an emoji of a flag to overlay!",

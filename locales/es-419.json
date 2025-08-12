@@ -25,8 +25,6 @@
             "lengthen": "Alarga una dirección URL corta",
             "ping": "Pingea a los servidores de Discord",
             "prefix": "Verifica/cambia el prefijo del servidor",
-            "qrcreate": "Genera un código QR",
-            "qrread": "Lee un código QR",
             "raw": "Obtiene una dirección URL directa de una imagen (útil para guardar GIFs de sitios como Tenor)",
             "reload": "Recarga un comando",
             "restart": "Me reinicia",
@@ -74,6 +72,10 @@
                 "deviantart": "Añade una marca de agua de DeviantArt a una imagen",
                 "funky": "Añade el banner New Funky Mode (de Donkey Kong) a una imagen",
                 "hypercam": "Añade la marca de agua de Hypercam a una imagen"
+            },
+            "qr": {
+                "create": "Genera un código QR",
+                "read": "Lee un código QR"
             }
         },
         "names": {

@@ -19,8 +19,6 @@
             "lengthen": "Allonge une URL courte",
             "ping": "Ping les serveurs de Discord",
             "prefix": "Vérifie/modifie le préfixe du serveur",
-            "qrcreate": "Génère un QR code",
-            "qrread": "Lit un QR code",
             "reload": "Recharge une commande",
             "restart": "Redémarre-moi",
             "soundreload": "Tente de se reconnecter à tous les nœuds Lavalink disponibles",
@@ -466,6 +464,10 @@
             },
             "snapchat": {
                 "position": "Définit la position du sous-titre sous forme décimale (0,0 en haut, 1,0 en bas, par défaut : 0,565)"
+            },
+            "qr": {
+                "create": "Génère un QR code",
+                "read": "Lit un QR code"
             }
         },
         "names": {
@@ -554,9 +556,7 @@
             "soundreload": "rechargementson",
             "sharpen": "affiner",
             "grayscale": "grisclair",
-            "imagereload": "rechargimage",
-            "qrcreate": "qrcréer",
-            "qrread": "lireqr"
+            "imagereload": "rechargimage"
         },
         "noImage": {
             "watermark 9gag": "Vous devez fournir une image/GIF pour ajouter un filigrane 9GAG !",
@@ -601,7 +601,7 @@
             "whisper": "Vous devez fournir une image/GIF pour ajouter une caption !",
             "woow": "Vous devez fournir une image/GIF à miroir !",
             "circle": "Vous devez fournir une image/GIF pour ajouter un flou radial !",
-            "qrread": "Vous devez fournir une image/GIF avec un code QR à lire !",
+            "qr read": "Vous devez fournir une image/GIF avec un code QR à lire !",
             "implode": "Vous devez fournir une image/GIF à contracter !",
             "watermark bandicam": "Vous devez fournir une image/GIF pour ajouter un filigrane Bandicam !",
             "explode": "Vous devez fournir une image/GIF à dilater !",
@@ -632,7 +632,7 @@
             "whisper": "Vous devez fournir du texte pour ajouter une caption !",
             "caption": "Vous devez fournir du texte pour ajouter une caption !",
             "caption2": "Vous devez fournir du texte pour ajouter une caption !",
-            "qrcreate": "Vous devez fournir du texte pour générer un QR code  !",
+            "qr create": "Vous devez fournir du texte pour générer un QR code  !",
             "motivate": "Vous devez fournir du texte pour générer un motivational !"
         },
         "responses": {

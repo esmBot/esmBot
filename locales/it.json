@@ -21,8 +21,6 @@
             "lengthen": "Allunga un URL abbreviato",
             "ping": "Pinga i server di Discord",
             "prefix": "Controlla/cambia il prefisso per il server",
-            "qrcreate": "Genera un QR code",
-            "qrread": "Legge un QR code",
             "reload": "Ricarica un comando",
             "restart": "Mi riavvia",
             "snowflake": "Converte uno snowflake id di Discord in un timestamp",
@@ -489,6 +487,10 @@
             },
             "hue": {
                 "shift": "Imposta la quantità di cui effettuare il cambiamento"
+            },
+            "qr": {
+                "create": "Genera un QR code",
+                "read": "Legge un QR code"
             }
         },
         "names": {
@@ -518,7 +520,6 @@
             "lengthen": "allunga",
             "ping": "ping",
             "prefix": "prefisso",
-            "qrread": "qrleggi",
             "raw": "diretto",
             "restart": "riavvia",
             "snowflake": "snowflake",
@@ -555,7 +556,6 @@
             "sharpen": "nitidifica",
             "slow": "rallenta",
             "snapchat": "snapchat",
-            "qrcreate": "qrcrea",
             "soos": "soos",
             "speechbubble": "fumetto",
             "speed": "velocità",
@@ -642,7 +642,7 @@
             "wide": "Devi fornire un'immagine/GIF da allargare!",
             "woow": "Devi fornire un'immagine/GIF da specchiare!",
             "watermark deviantart": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di DeviantArt!",
-            "qrread": "Devi fornire un'immagine/GIF con un QR code da leggere!",
+            "qr read": "Devi fornire un'immagine/GIF con un QR code da leggere!",
             "watermark bandicam": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di Bandicam!",
             "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!",
             "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!",
@@ -652,7 +652,7 @@
         "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
             "sonic": "Devi fornire del testo da cui fare un meme di Sonic!",
-            "qrcreate": "Devi fornire del testo da cui generare un QR code!",
+            "qr create": "Devi fornire del testo da cui generare un QR code!",
             "caption": "Devi fornire del testo per la didascalia!",
             "caption2": "Devi fornire del testo per la didascalia!",
             "flag": "Devi fornire un'emoji della bandera da sovrapporre!",

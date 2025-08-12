@@ -13,8 +13,6 @@
             "sonic": "Sonic szövegbuborékában a te szöveged lesz benne",
             "emote": "Elnyeri az emotikon képét, és ide küldi be",
             "ping": "A Discord-szerverek pingjét vizsgálja meg",
-            "qrcreate": "QR-kódot generál",
-            "qrread": "QR-kódot olvas be",
             "flip": "Képet fordít meg",
             "flop": "Képet fordít meg",
             "freeze": "Meggátolja a GIF-et az ismétléstől",
@@ -32,6 +30,10 @@
         "flags": {
             "watermark": {
                 "deviantart": "„DeviantArt”-vízjelet ad a képhez"
+            },
+            "qr": {
+                "create": "QR-kódot generál",
+                "read": "QR-kódot olvas be"
             }
         }
     }

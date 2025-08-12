@@ -19,8 +19,6 @@
             "lengthen": "Expandiert eine short URL",
             "ping": "Pingt Discords server",
             "prefix": "Checkt/verändert den server prefix",
-            "qrcreate": "Generiert einen QR code",
-            "qrread": "Liest einen QR code",
             "reload": "Lädt einen Befehl neu",
             "restart": "Restartet mich",
             "snowflake": "Konvertiert eine Discord snowflake id zu einen timestamp",
@@ -293,6 +291,10 @@
                 "kinemaster": "Fügt ein KineMaster Watermark in ein Bild ein",
                 "memecenter": "Fügt ein MemeCenter Watermark in ein Bild ein",
                 "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein"
+            },
+            "qr": {
+                "create": "Generiert einen QR code",
+                "read": "Liest einen QR code"
             }
         }
     }
