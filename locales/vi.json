@@ -88,7 +88,8 @@
             "woow": "Phản chiếu phần trên của ảnh xuống phần dưới",
             "Select Image": "Không tìm thấy mô tả",
             "music": "Xử lý việc phát nhạc",
-            "fade": "Làm ảnh mờ dần"
+            "fade": "Làm ảnh mờ dần",
+            "hue": "Sắc thái thay đổi của hình ảnh"
         },
         "flags": {
             "channel disable": {
@@ -106,7 +107,8 @@
                 "encode": "Mã hóa chuỗi Base64"
             },
             "eval": {
-                "code": "Mã để chạy"
+                "code": "Mã để chạy",
+                "broadcast": "Thực thi trên tất cả các tiến trình của bot (chỉ sử dụng nếu bạn biết rõ mình đang làm gì!)"
             },
             "snapchat": {
                 "position": "Đặt vị trí của chú thích ở dạng số thập phân (0.0 là trên cùng, 1.0 là dưới cùng, mặc định là 0.565)"
@@ -139,7 +141,8 @@
                 "delete": "Xóa thẻ",
                 "edit": "Chỉnh sửa một thẻ đã có",
                 "owner": "Lấy chủ sở hữu của thẻ",
-                "random": "Lấy một thẻ ngẫu nhiên"
+                "random": "Lấy một thẻ ngẫu nhiên",
+                "role": "Quản lý quyền của vai trò đối với thẻ"
             },
             "music play": {
                 "query": "Truy vấn tìm kiếm của âm thanh hoặc URL"
@@ -202,7 +205,8 @@
                 "ifunny": "Chèn hình mờ iFunny vô ảnh",
                 "kinemaster": "Chèn hình mờ KineMaster vô ảnh",
                 "memecenter": "Chèn hình mờ MemeCenter vô ảnh",
-                "shutterstock": "Chèn hình mờ Shutterstock vô ảnh"
+                "shutterstock": "Chèn hình mờ Shutterstock vô ảnh",
+                "powerdirector": "Thêm hình mờ PowerDirector vào ảnh"
             },
             "banner": {
                 "member": "Thành viên để lấy ảnh banner"
@@ -286,6 +290,20 @@
             "qr": {
                 "create": "Tạo mã QR",
                 "read": "Đọc mã QR"
+            },
+            "tags role": {
+                "list": "Liệt kê các vai trò có khả năng quản lý thẻ",
+                "add": "Cho phép một vai trò quản lý thẻ",
+                "remove": "Xóa vai trò khỏi danh sách cho phép"
+            },
+            "hue": {
+                "shift": "Thiết lập mức độ dịch chuyển"
+            },
+            "tags role add": {
+                "role": "Vai trò cần thêm vào"
+            },
+            "tags role remove": {
+                "role": "Vai trò cần gỡ bỏ"
             }
         },
         "flagNames": {
@@ -333,7 +351,8 @@
                 "get": "lay",
                 "list": "danhsach",
                 "owner": "chu",
-                "random": "ngau"
+                "random": "ngau",
+                "role": "Vai trò"
             },
             "tags get": {
                 "name": "ten"
@@ -376,7 +395,8 @@
                 "ifunny": "ifunny",
                 "kinemaster": "kinemaster",
                 "memecenter": "memecenter",
-                "shutterstock": "shutterstock"
+                "shutterstock": "shutterstock",
+                "powerdirector": "Giám đốc quyền lực"
             },
             "image": {
                 "query": "truy"
@@ -430,7 +450,8 @@
                 "command": "lenh"
             },
             "eval": {
-                "code": "ma"
+                "code": "ma",
+                "broadcast": "phát tin"
             },
             "help": {
                 "command": "lenh"
@@ -480,6 +501,24 @@
             },
             "fade": {
                 "alpha": "alpha"
+            },
+            "tags role": {
+                "add": "Thêm vào",
+                "list": "danh sách",
+                "remove": "Gỡ bỏ"
+            },
+            "hue": {
+                "shift": "sự thay đổi"
+            },
+            "tags role add": {
+                "role": "Vai trò"
+            },
+            "tags role remove": {
+                "role": "Vai trò"
+            },
+            "qr": {
+                "create": "Tạo",
+                "read": "Đọc"
             }
         },
         "names": {
@@ -570,7 +609,8 @@
             "unfreeze": "ngungdongbang",
             "vignette": "vientoi",
             "tags": "the",
-            "fade": "modan"
+            "fade": "modan",
+            "hue": "màu sắc"
         },
         "responses": {
             "info": {
@@ -645,7 +685,9 @@
                 "connectionUptime": "Phiên kết nối",
                 "header": "Thống kê esmBot",
                 "shard": "Shard",
-                "bunVersion": "Phiên bản của Bun"
+                "bunVersion": "Phiên bản của Bun",
+                "denoVersion": "Phiên bản Deno",
+                "unknownVersion": "Phiên bản Runtime"
             },
             "tags": {
                 "addName": "Bạn phải cung cấp tên thẻ mà bạn muốn thêm vô!",
@@ -663,7 +705,15 @@
                 "deleteName": "Bạn phải cung cấp tên thẻ mà bạn muốn xóa!",
                 "ownerName": "Bạn phải cung cấp tên của thẻ mà bạn muốn kiểm tra chủ sở hữu!",
                 "ownedBy": "Thẻ này thuộc sở hữu của **{{user}}** (`{{id}}`).",
-                "ownedById": "Tôi không thể tìm ra ai là chủ sở hữu của thẻ này, nhưng tôi đã lấy được ID của người dùng đó: `{{id}}`"
+                "ownedById": "Tôi không thể tìm ra ai là chủ sở hữu của thẻ này, nhưng tôi đã lấy được ID của người dùng đó: `{{id}}`",
+                "missingRole": "Không thể gỡ vai trò vì nó chưa từng được thêm!",
+                "noRole": "Hãy chọn vai trò bạn muốn thêm hoặc xóa!",
+                "noRolePerms": "Bạn không có quyền để tạo thẻ!",
+                "noRoles": "Chưa có vai trò nào được cấp quyền quản lý thẻ!",
+                "roleAdded": "Đã thêm vai trò `{{name}}` vào danh sách vai trò được phép.",
+                "roleList": "Vai trò được phép",
+                "roleRemoved": "Đã gỡ vai trò `{{name}}` khỏi danh sách vai trò được phép.",
+                "notOwnerRole": "Bạn phải có quyền “Quản lý Tin nhắn” mới có thể thêm hoặc xóa vai trò thẻ!"
             },
             "8ball": {
                 "concentrate": "Hãy tâm tư rồi hỏi tôi lại",
@@ -832,6 +882,9 @@
                 "notHost": "Chỉ người chủ phiên âm thanh hiện tại mới có thể tạm dừng/phát nhạc!",
                 "paused": "Nhạc đã được tạm dừng.",
                 "resumed": "Nhạc đã được phát lại."
+            },
+            "watermark": {
+                "invalid": "Bạn cần chọn loại watermark để thêm!"
             }
         },
         "noParam": {
@@ -846,7 +899,8 @@
             "motivate": "Bạn phải cung cấp nội dung để tạo poster truyền cảm hứng!",
             "reddit": "Bạn phải cung cấp nội dung để tạo hình mờ Reddit!",
             "snapchat": "Bạn phải cung cấp nội dung để chèn chú thích!",
-            "whisper": "Bạn phải cung cấp nội dung để chèn chú thích!"
+            "whisper": "Bạn phải cung cấp nội dung để chèn chú thích!",
+            "hue": "Bạn cần nhập mức độ muốn đổi màu!"
         },
         "noImage": {
             "gif": "Bạn phải cung cấp ảnh để chuyển thành GIF!",
@@ -909,7 +963,9 @@
             "unfreeze": "Bạn phải cung cấp ảnh/GIF để ngưng đóng băng!",
             "wide": "Bạn phải cung cấp ảnh/GIF để dãn!",
             "woow": "Bạn phải cung cấp ảnh/GIF để đảo ngược!",
-            "fade": "Bạn phải cung cấp ảnh/GIF để làm mờ!"
+            "fade": "Bạn phải cung cấp ảnh/GIF để làm mờ!",
+            "watermark powerdirector": "Bạn cần cung cấp hình ảnh/GIF để thêm hình mờ PowerDirector!",
+            "hue": "Bạn cần cung cấp hình ảnh/GIF để thay đổi màu sắc!"
         }
     },
     "image": {
