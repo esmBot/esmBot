@@ -54,6 +54,18 @@ const updates = [
   "ALTER TABLE guilds DROP COLUMN accessed",
   "ALTER TABLE settings ADD COLUMN IF NOT EXISTS broadcast text",
   "ALTER TABLE guilds ADD COLUMN IF NOT EXISTS tag_roles VARCHAR(30) ARRAY DEFAULT array[]::varchar[] NOT NULL",
+  `WITH cmds AS (
+     SELECT sum("count") AS amount FROM counts WHERE command IN ('qrcreate', 'qrread', 'qr')
+  ) INSERT INTO counts ("command", "count") VALUES ('qr', (SELECT amount FROM cmds))
+  ON CONFLICT ("command") DO UPDATE SET "count" = (SELECT amount FROM cmds);
+  WITH cmds AS (
+    SELECT sum("count") AS amount FROM counts WHERE command IN (
+      '9gag', 'avs4you', 'bandicam', 'deviantart', 'funky',
+		  'hypercam', 'ifunny', 'kinemaster', 'memecenter',
+		  'powerdirector', 'shutterstock', 'watermark'
+    )
+  ) INSERT INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds))
+  ON CONFLICT ("command") DO UPDATE SET "count" = (SELECT amount FROM cmds);`,
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {

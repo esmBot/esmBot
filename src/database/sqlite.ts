@@ -82,6 +82,16 @@ const updates = [
   );
   INSERT INTO settings (id) VALUES (1);`,
   "ALTER TABLE guilds ADD COLUMN tag_roles VARCHAR DEFAULT '[]'",
+  `WITH cmds AS (
+     SELECT sum("count") AS amount FROM counts WHERE command IN ('qrcreate', 'qrread', 'qr')
+  ) INSERT OR REPLACE INTO counts ("command", "count") VALUES ('qr', (SELECT amount FROM cmds));
+  WITH cmds AS (
+    SELECT sum("count") AS amount FROM counts WHERE command IN (
+      '9gag', 'avs4you', 'bandicam', 'deviantart', 'funky',
+		  'hypercam', 'ifunny', 'kinemaster', 'memecenter',
+		  'powerdirector', 'shutterstock', 'watermark'
+    )
+  ) INSERT OR REPLACE INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds));`,
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
