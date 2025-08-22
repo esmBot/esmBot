@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";
 import process from "node:process";
-import { DiscordRESTError, type RawMessage } from "oceanic.js";
+import { DiscordHTTPError, DiscordRESTError, type RawMessage } from "oceanic.js";
 import type WSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";
 import run from "#utils/image-runner.js";
@@ -386,9 +386,17 @@ async function finishJob(
       });
       clearTimeout(timeout);
       if (!res.ok) {
-        if (res.headers.get("Content-Type") === "application/json")
-          throw new DiscordRESTError(res, (await res.json()) as Record<string, unknown>, "POST");
-        throw new Error(`Request failed with response ${res.status}: ${await res.text()}`);
+        let resObj: string | object;
+        try {
+          resObj = (await res.json()) as Record<string, unknown>;
+        } catch {
+          try {
+            resObj = await res.text();
+          } catch {
+            throw new Error(`Request failed with response ${res.status}`);
+          }
+        }
+        throw new (typeof resObj === "string" ? DiscordHTTPError : DiscordRESTError)(res, resObj, "POST");
       }
       r = (await res.json()) as RawMessage;
     } catch (e) {
