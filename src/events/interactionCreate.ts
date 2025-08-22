@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
-import { type AnyInteractionGateway, InteractionTypes } from "oceanic.js";
+import type { AnyInteractionGateway } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
@@ -24,7 +24,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   if (!client.ready) return;
 
   // handle incoming non-command interactions
-  if (interaction.type === InteractionTypes.MESSAGE_COMPONENT) {
+  if (interaction.isComponentInteraction()) {
     //await interaction.deferUpdate();
     const collector = collectors.get(interaction.message.id);
     if (collector) collector.emit("interaction", interaction);
@@ -32,7 +32,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   }
 
   // block other non-command events
-  if (interaction.type !== InteractionTypes.APPLICATION_COMMAND) return;
+  if (!interaction.isCommandInteraction()) return;
 
   // check if command exists and if it's enabled
   const cmdBaseName = interaction.data.name;
