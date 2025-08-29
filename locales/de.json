@@ -163,7 +163,8 @@
                 "prefix": "prefix"
             },
             "reload": {
-                "cmd": "cmd"
+                "cmd": "cmd",
+                "skipsend": "sendenüberspringen"
             },
             "youtube": {
                 "query": "abfrage"
