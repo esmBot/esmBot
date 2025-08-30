@@ -85,7 +85,11 @@
             "spotify": "Ajoute un Spotify \"This is\" au dessus",
             "wide": "Étire une image jusqu'à 19 fois sa largeur",
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
-            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)"
+            "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
+            "fade": "Image enchargée",
+            "command": "Désactive/active une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
+            "hue": "L’image est chargée",
+            "tags": "La commande de tags principale. Consultez la page d'aide pour plus d'informations : https://esmbot.net/help.html"
         },
         "flagNames": {
             "8ball": {
@@ -140,7 +144,8 @@
                 "emoji": "emoji"
             },
             "eval": {
-                "code": "code"
+                "code": "code",
+                "broadcast": "diffuser"
             },
             "exec": {
                 "cmd": "cmd"
@@ -211,7 +216,8 @@
                 "ifunny": "ifunny",
                 "kinemaster": "kinemaster",
                 "memecenter": "memecenter",
-                "shutterstock": "shutterstock"
+                "shutterstock": "shutterstock",
+                "powerdirector": "powerdirector"
             },
             "music": {
                 "host": "hôte",
@@ -246,7 +252,8 @@
                 "list": "liste",
                 "owner": "propriétaire",
                 "random": "aléatoire",
-                "edit": "modifie"
+                "edit": "modifie",
+                "role": "rôle"
             },
             "tags add": {
                 "name": "nom",
@@ -276,6 +283,27 @@
             },
             "freeze": {
                 "endframe": "fintrame"
+            },
+            "fade": {
+                "alpha": "alpha"
+            },
+            "hue": {
+                "shift": "décalage"
+            },
+            "tags role": {
+                "add": "ajouter",
+                "list": "liste",
+                "remove": "supprimer"
+            },
+            "tags role add": {
+                "role": "rôle"
+            },
+            "tags role remove": {
+                "role": "rôle"
+            },
+            "qr": {
+                "create": "créer",
+                "read": "lire"
             }
         },
         "flags": {
@@ -372,7 +400,8 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente"
+                "alpha": "Rend le haut de la bulle de dialogue transparente",
+                "scale": "Un multiplicateur pour redimensionner la bulle de dialogue (0.01 est le plus petit, 1.0 est le plus grand, la valeur par défaut est 0.2)"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -391,7 +420,8 @@
                 "ifunny": "Ajoute un filigrane iFunny sur une image",
                 "kinemaster": "Ajoute un filigrane KineMaster sur une image",
                 "memecenter": "Ajoute un filigrane MemeCenter sur une image",
-                "shutterstock": "Ajoute un filigrane Shutterstock sur une image"
+                "shutterstock": "Ajoute un filigrane Shutterstock sur une image",
+                "powerdirector": "Ajoute le filigrane PowerDirector à une image"
             },
             "music": {
                 "host": "Récupère ou modifie l'hôte du vocal en cours",
@@ -406,7 +436,6 @@
                 "stop": "Stop la musique",
                 "toggle": "Met en pause/reprend la musique en cours",
                 "volume": "Règle le volume de la musique"
-                
             },
             "music host": {
                 "user": "L'utilisateur que tu souhaites être le nouvel hôte"
@@ -430,7 +459,8 @@
                 "get": "Récupère un tag",
                 "list": "Liste tout les tags de ce serveur",
                 "owner": "Récupère le propriétaire du tag",
-                "random": "Tag aléatoire"
+                "random": "Tag aléatoire",
+                "role": "Gérer les permissions des rôles pour les tags"
             },
             "tags add": {
                 "name": "Nom du tag",
@@ -456,7 +486,8 @@
                 "text": "Le texte à décoder"
             },
             "eval": {
-                "code": "Le code à executer"
+                "code": "Le code à executer",
+                "broadcast": "Exécuter sur tous les processus du bot (à n'utiliser que si vous savez ce que vous faites !)"
             },
             "reload": {
                 "cmd": "La commande à recharger",
@@ -468,6 +499,26 @@
             "qr": {
                 "create": "Génère un QR code",
                 "read": "Lit un QR code"
+            },
+            "fade": {
+                "alpha": "Apparition progressive à partir de la transparence"
+            },
+            "hue": {
+                "shift": "Définir la valeur de décalage"
+            },
+            "uncaption": {
+                "tolerance": "Définir la tolérance de teinte pour la détection des légendes (0.0 est la plus élevée, 1.0 est la plus basse, la valeur par défaut est 0.95)"
+            },
+            "tags role": {
+                "add": "Autoriser un rôle à gérer les tags",
+                "list": "Lister les rôles capables de gérer les tags",
+                "remove": "Supprimer un rôle de la liste d'autorisation"
+            },
+            "tags role add": {
+                "role": "Le rôle à ajouter"
+            },
+            "tags role remove": {
+                "role": "Le rôle à supprimer"
             }
         },
         "names": {
@@ -556,7 +607,10 @@
             "soundreload": "rechargementson",
             "sharpen": "affiner",
             "grayscale": "grisclair",
-            "imagereload": "rechargimage"
+            "imagereload": "rechargimage",
+            "hue": "teinte",
+            "fade": "fondre",
+            "8ball": "8ball"
         },
         "noImage": {
             "watermark 9gag": "Vous devez fournir une image/GIF pour ajouter un filigrane 9GAG !",
@@ -619,7 +673,9 @@
             "spotify": "Vous devez fournir une image/GIF pour ajouter un en-tête Spotify \"This is\" !",
             "uncanny": "Vous devez fournir une image/GIF pour créer une image étrange !",
             "wide": "Vous devez fournir une image/GIF à étirer !",
-            "fade": "Vous devez fournir une image/GIF pour faire apparaître progressivement !"
+            "fade": "Vous devez fournir une image/GIF pour faire apparaître progressivement !",
+            "hue": "Vous devez fournir une image/GIF à teinter !",
+            "watermark powerdirector": "Vous devez fournir une image/GIF pour ajouter un filigrane PowerDirector !"
         },
         "noParam": {
             "homebrew": "Vous devez fournir du texte pour créer un montage Homebrew Channel !",
@@ -633,7 +689,8 @@
             "caption": "Vous devez fournir du texte pour ajouter une caption !",
             "caption2": "Vous devez fournir du texte pour ajouter une caption !",
             "qr create": "Vous devez fournir du texte pour générer un QR code  !",
-            "motivate": "Vous devez fournir du texte pour générer un motivational !"
+            "motivate": "Vous devez fournir du texte pour générer un motivational !",
+            "hue": "Vous devez spécifier la valeur de décalage de teinte souhaitée !"
         },
         "responses": {
             "8ball": {
@@ -722,7 +779,11 @@
                 "noInfo": "Je n'ai pas pu obtenir d'informations sur cette commande !"
             },
             "host": {
-                "currentHost": "L'hôte actuel du canal vocal est **{{member}}**"
+                "currentHost": "L'hôte actuel du canal vocal est **{{member}}**",
+                "notMember": "Cet utilisateur n'est pas sur ce serveur !",
+                "noUser": "Je ne trouve pas cet utilisateur !",
+                "currentHostId": "L'hôte actuel du canal vocal est un utilisateur avec l'ID `{{id}}`.",
+                "notHost": "Seul l'hôte actuel de la session vocale peut choisir un autre hôte !"
             },
             "dice": {
                 "landed": "Le dé est tombé sur {{number}}."
@@ -740,6 +801,13 @@
             },
             "exec": {
                 "botOwnerOnly": "Seul le propriétaire du bot peut utiliser exec !"
+            },
+            "info": {
+                "clickHere": "Cliquez ici !",
+                "creditsHeader": "Crédits :",
+                "officialServer": "Serveur officiel :",
+                "privacyPolicy": "Politique de confidentialité :",
+                "credits": "Bot par **[Essem](https://essem.space)** et **[divers contributeurs](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo par **[MintBurrow](https://twitter.com/MintBurrow)**"
             }
         }
     },
