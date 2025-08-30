@@ -300,6 +300,10 @@
             },
             "tags role remove": {
                 "role": "ruolo"
+            },
+            "qr": {
+                "read": "leggi",
+                "create": "Creare"
             }
         },
         "flags": {
@@ -502,7 +506,7 @@
                 "shift": "Imposta la quantità di cui effettuare il cambiamento"
             },
             "tags role": {
-                "remove": "Rimuovi l'accesso a un ruolo",
+                "remove": "Rimuovi l'accesso a un ruoloRimuovi un ruolo dalla lista bianca",
                 "list": "Elenca i ruoli che possono gestire i tag",
                 "add": "Permetti a un ruolo di gestire i tag"
             },
@@ -889,8 +893,8 @@
                 "notOwnerRole": "Devi avere il permesso \"Gestire messaggi\" per aggiungere/rimuovere ruoli tag!",
                 "noRole": "Devi fornire un ruolo da aggiungere/rimuovere!",
                 "missingRole": "Non puoi rimuovere un ruolo che non è ancora stato aggiunto!",
-                "roleAdded": "È stato dato accesso al ruolo `{{name}}`.",
-                "roleList": "Ruoli con accesso",
+                "roleAdded": "Il ruolo `{{name}}` è stato aggiunto all'elenco dei ruoli consentiti.",
+                "roleList": "Ruoli consentiti",
                 "roleRemoved": "È stato rimosso l'accesso dal ruolo `{{name}}`."
             },
             "stop": {
@@ -958,6 +962,9 @@
             },
             "nowplaying": {
                 "noTrack": "Si è verificato un problema nel recupero della traccia attuale."
+            },
+            "watermark": {
+                "invalid": "Devi fornire il tipo di watermark da aggiungere!"
             }
         }
     },
