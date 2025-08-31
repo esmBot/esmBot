@@ -212,8 +212,7 @@
                 "position": "position"
             },
             "uncanny": {
-                "font": "schriftart",
-                "phase": ""
+                "font": "schriftart"
             },
             "speechbubble": {
                 "alpha": "alpha",
@@ -250,9 +249,6 @@
             },
             "motivate": {
                 "font": "schriftart"
-            },
-            "uncaption": {
-                "tolerance": ""
             }
         },
         "flags": {
