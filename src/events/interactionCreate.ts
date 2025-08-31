@@ -44,10 +44,9 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   if (!(cmd.prototype instanceof Command)) return;
 
   const sub = interaction.data.options.getSubCommand();
-  const joined = sub?.join("");
-  if (joined && cmdBase[joined]?.prototype instanceof Command) {
-    cmd = cmdBase[joined] as typeof Command;
-    command = `${command} ${joined}`;
+  if (sub && cmdBase[sub[0]]?.prototype instanceof Command) {
+    cmd = cmdBase[sub[0]] as typeof Command;
+    command = `${command} ${sub[0]}`;
   }
 
   try {
