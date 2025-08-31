@@ -213,7 +213,7 @@
             },
             "uncanny": {
                 "font": "schriftart",
-                "phase": "Phase"
+                "phase": ""
             },
             "speechbubble": {
                 "alpha": "alpha",
@@ -252,7 +252,7 @@
                 "font": "schriftart"
             },
             "uncaption": {
-                "tolerance": "Toleranz"
+                "tolerance": ""
             }
         },
         "flags": {
