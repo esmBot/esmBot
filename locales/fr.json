@@ -401,7 +401,7 @@
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
                 "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": "Un multiplicateur pour redimensionner la bulle de dialogue (0.01 est le plus petit, 1.0 est le plus grand, la valeur par défaut est 0.2)"
+                "scale": ""
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -507,7 +507,7 @@
                 "shift": "Définir la valeur de décalage"
             },
             "uncaption": {
-                "tolerance": "Définir la tolérance de teinte pour la détection des légendes (0.0 est la plus élevée, 1.0 est la plus basse, la valeur par défaut est 0.95)"
+                "tolerance": ""
             },
             "tags role": {
                 "add": "Autoriser un rôle à gérer les tags",
