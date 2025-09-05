@@ -303,7 +303,7 @@
             },
             "qr": {
                 "read": "leggi",
-                "create": "Creare"
+                "create": "creare"
             }
         },
         "flags": {
@@ -506,7 +506,7 @@
                 "shift": "Imposta la quantità di cui effettuare il cambiamento"
             },
             "tags role": {
-                "remove": "Rimuovi l'accesso a un ruoloRimuovi un ruolo dalla lista bianca",
+                "remove": "Rimuovi un ruolo dalla lista bianca",
                 "list": "Elenca i ruoli che possono gestire i tag",
                 "add": "Permetti a un ruolo di gestire i tag"
             },
