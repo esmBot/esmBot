@@ -400,8 +400,7 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": ""
+                "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -505,9 +504,6 @@
             },
             "hue": {
                 "shift": "Définir la valeur de décalage"
-            },
-            "uncaption": {
-                "tolerance": ""
             },
             "tags role": {
                 "add": "Autoriser un rôle à gérer les tags",
