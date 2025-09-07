@@ -351,8 +351,7 @@
                 "get": "lay",
                 "list": "danhsach",
                 "owner": "chu",
-                "random": "ngau",
-                "role": ""
+                "random": "ngau"
             },
             "tags get": {
                 "name": "ten"
@@ -395,8 +394,7 @@
                 "ifunny": "ifunny",
                 "kinemaster": "kinemaster",
                 "memecenter": "memecenter",
-                "shutterstock": "shutterstock",
-                "powerdirector": ""
+                "shutterstock": "shutterstock"
             },
             "image": {
                 "query": "truy"
@@ -450,8 +448,7 @@
                 "command": "lenh"
             },
             "eval": {
-                "code": "ma",
-                "broadcast": ""
+                "code": "ma"
             },
             "help": {
                 "command": "lenh"
@@ -501,24 +498,6 @@
             },
             "fade": {
                 "alpha": "alpha"
-            },
-            "tags role": {
-                "add": "",
-                "remove": "",
-                "list": ""
-            },
-            "hue": {
-                "shift": ""
-            },
-            "tags role add": {
-                "role": ""
-            },
-            "qr": {
-                "create": "",
-                "read": ""
-            },
-            "tags role remove": {
-                "role": ""
             }
         },
         "names": {
@@ -609,8 +588,7 @@
             "unfreeze": "ngungdongbang",
             "vignette": "vientoi",
             "tags": "the",
-            "fade": "modan",
-            "hue": ""
+            "fade": "modan"
         },
         "responses": {
             "info": {
