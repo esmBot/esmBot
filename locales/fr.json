@@ -88,8 +88,7 @@
             "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
             "fade": "Image enchargée",
             "command": "Désactive/active une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
-            "hue": "L’image est chargée",
-            "tags": ""
+            "hue": "L’image est chargée"
         },
         "flagNames": {
             "8ball": {
