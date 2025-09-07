@@ -352,7 +352,7 @@
                 "list": "danhsach",
                 "owner": "chu",
                 "random": "ngau",
-                "role": "vai trò"
+                "role": ""
             },
             "tags get": {
                 "name": "ten"
@@ -396,7 +396,7 @@
                 "kinemaster": "kinemaster",
                 "memecenter": "memecenter",
                 "shutterstock": "shutterstock",
-                "powerdirector": "PowerDirector"
+                "powerdirector": ""
             },
             "image": {
                 "query": "truy"
@@ -451,7 +451,7 @@
             },
             "eval": {
                 "code": "ma",
-                "broadcast": "phát sóng"
+                "broadcast": ""
             },
             "help": {
                 "command": "lenh"
@@ -503,22 +503,22 @@
                 "alpha": "alpha"
             },
             "tags role": {
-                "add": "thêm",
-                "remove": "xóa bỏ",
-                "list": "danh sách"
+                "add": "",
+                "remove": "",
+                "list": ""
             },
             "hue": {
-                "shift": "ca làm việc"
+                "shift": ""
             },
             "tags role add": {
-                "role": "vai trò"
+                "role": ""
             },
             "qr": {
-                "create": "tạo",
-                "read": "đọc"
+                "create": "",
+                "read": ""
             },
             "tags role remove": {
-                "role": "vai trò"
+                "role": ""
             }
         },
         "names": {
@@ -610,7 +610,7 @@
             "vignette": "vientoi",
             "tags": "the",
             "fade": "modan",
-            "hue": "huế"
+            "hue": ""
         },
         "responses": {
             "info": {
