@@ -89,7 +89,7 @@
             "fade": "Image enchargée",
             "command": "Désactive/active une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
             "hue": "L’image est chargée",
-            "tags": "La commande de tags principale. Consultez la page d'aide pour plus d'informations : https://esmbot.net/help.html"
+            "tags": ""
         },
         "flagNames": {
             "8ball": {
