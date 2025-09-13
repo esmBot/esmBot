@@ -4,5 +4,19 @@
     "#utils/": "./src/utils/",
     "#pagination": "./src/pagination/pagination.ts",
     "#config/": "./config/"
-  }
+  },
+  "permissions": {
+    "default": {
+      "env": true,
+      "ffi": true,
+      "net": true,
+      "read": true,
+      "run": {
+        "allow": ["git"]
+      },
+      "sys": ["osRelease", "systemMemoryInfo"],
+      "write": true
+    }
+  },
+  "unstable": ["sloppy-imports"]
 }
