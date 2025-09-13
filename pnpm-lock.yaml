@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  bun-types:
+    hash: b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455
+    path: patches/bun-types.patch
   pm2:
     hash: 58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4
     path: patches/pm2.patch
@@ -2794,7 +2797,7 @@ snapshots:
 
   '@types/bun@1.2.21(@types/react@19.1.8)':
     dependencies:
-      bun-types: 1.2.21(@types/react@19.1.8)
+      bun-types: 1.2.21(patch_hash=b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455)(@types/react@19.1.8)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -3132,7 +3135,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bun-types@1.2.21(@types/react@19.1.8):
+  bun-types@1.2.21(patch_hash=b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455)(@types/react@19.1.8):
     dependencies:
       '@types/node': 22.18.2
       '@types/react': 19.1.8
