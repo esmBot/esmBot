@@ -24,7 +24,7 @@
             "sonic": "Creează o imagine cu o bulă de dialog Sonic",
             "info": "Obține niște informații și atribuții despre mine",
             "imagereload": "Încearcă reconectarea la toate serverele disponibile de procesare a imaginilor",
-            "emote": "Obține o imagine a unui emoticon",
+            "emote": "Obține o imagine al unei emoji",
             "donate": "Află mai multe despre cum poți sprijini dezvoltarea esmBot",
             "count": "Obține numărul de utilizări a fiecărei comenzi",
             "command": "Activează/dezactivează o comandă clasică într-un server (comenzile slash le modifici în setări)",
@@ -212,7 +212,8 @@
                 "get": "preia",
                 "list": "listează",
                 "owner": "proprietar",
-                "random": "aleatoriu"
+                "random": "aleatoriu",
+                "role": "rol"
             },
             "tags owner": {
                 "name": "nume"
