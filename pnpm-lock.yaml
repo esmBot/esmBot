@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  bun-types:
-    hash: b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455
-    path: patches/bun-types.patch
   pm2:
     hash: 58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4
     path: patches/pm2.patch
@@ -75,8 +72,8 @@ importers:
         specifier: ^7.6.13
         version: 7.6.13
       '@types/bun':
-        specifier: ^1.2.21
-        version: 1.2.21(@types/react@19.1.8)
+        specifier: ^1.2.22
+        version: 1.2.22(@types/react@19.1.8)
       '@types/node':
         specifier: ^22.18.2
         version: 22.18.2
@@ -550,8 +547,8 @@ packages:
   '@types/better-sqlite3@7.6.13':
     resolution: {integrity: sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==}
 
-  '@types/bun@1.2.21':
-    resolution: {integrity: sha512-NiDnvEqmbfQ6dmZ3EeUO577s4P5bf4HCTXtI6trMc6f6RzirY5IrF3aIookuSpyslFzrnvv2lmEWv5HyC1X79A==}
+  '@types/bun@1.2.22':
+    resolution: {integrity: sha512-5A/KrKos2ZcN0c6ljRSOa1fYIyCKhZfIVYeuyb4snnvomnpFqC0tTsEkdqNxbAgExV384OETQ//WAjl3XbYqQA==}
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
@@ -870,8 +867,8 @@ packages:
     resolution: {integrity: sha512-WDtdLmJvAuNNPzByAYpRo2rF1Mmradw6gvWsQKf63476DDXmomT9zUiGypLcG4ibIM67vhAj8jJRdbmEws2Aqw==}
     engines: {node: '>=6.14.2'}
 
-  bun-types@1.2.21:
-    resolution: {integrity: sha512-sa2Tj77Ijc/NTLS0/Odjq/qngmEPZfbfnOERi0KRUYhT9R8M4VBioWVmMWE5GrYbKMc+5lVybXygLdibHaqVqw==}
+  bun-types@1.2.22:
+    resolution: {integrity: sha512-hwaAu8tct/Zn6Zft4U9BsZcXkYomzpHJX28ofvx7k0Zz2HNz54n1n+tDgxoWFGB4PcFvJXJQloPhaV2eP3Q6EA==}
     peerDependencies:
       '@types/react': ^19
 
@@ -2795,9 +2792,9 @@ snapshots:
     dependencies:
       '@types/node': 22.18.2
 
-  '@types/bun@1.2.21(@types/react@19.1.8)':
+  '@types/bun@1.2.22(@types/react@19.1.8)':
     dependencies:
-      bun-types: 1.2.21(patch_hash=b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455)(@types/react@19.1.8)
+      bun-types: 1.2.22(@types/react@19.1.8)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -3135,7 +3132,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bun-types@1.2.21(patch_hash=b47ad0a9421c97a984445c4c34a9f914da5f68150474e4165b8b9fce4de0c455)(@types/react@19.1.8):
+  bun-types@1.2.22(@types/react@19.1.8):
     dependencies:
       '@types/node': 22.18.2
       '@types/react': 19.1.8
