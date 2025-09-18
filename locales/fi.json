@@ -680,7 +680,7 @@
         "responses": {
             "8ball": {
                 "signs": "Kyltit osoittaa suuntaan kyllä",
-                "sourcesNo": "Minun lähteet sanovat ei",
+                "sourcesNo": "Minun lähteeni sanovat että ei",
                 "dontCount": "Älä luota siihen",
                 "doubtful": "Erittäin epävarma",
                 "hazy": "Vastaus on utuinen, yritä uudelleen",
@@ -823,6 +823,23 @@
             "banner": {
                 "noUserBanner": "Tällä käyttäjällä ei ole banneria!",
                 "noSelfBanner": "Sinulla ei ole banneria!"
+            },
+            "nowplaying": {
+                "noTrack": "Löytyi ongelma tämänhetkisen kappaleen löytämisessä."
+            },
+            "ping": {
+                "latency": "Viive: {{latency}}ms",
+                "ping": "Ping?",
+                "pong": "Pong!",
+                "shardLatency": "Osioviive: {{latency}}ms"
+            },
+            "play": {
+                "noInput": "Sinun pitää kertoa mitä haluat soittaa!"
+            },
+            "prefix": {
+                "adminOnly": "Sinun pitää olla ylläpitäjä vaihtaaksesi botin etuliitettä!",
+                "changed": "Etuliite on vaihdettu `{{prefix}}` :seen.",
+                "current": "Nykyinen etuliite on `{{prefix}}`."
             }
         },
         "noParam": {
