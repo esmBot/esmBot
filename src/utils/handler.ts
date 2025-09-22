@@ -1,7 +1,7 @@
+import { readdir } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { deepmergeInto } from "deepmerge-ts";
 import {
   type Client,
   Constants,
@@ -25,7 +25,41 @@ const blacklist = (commandConfig as CommandsConfig).blacklist;
 /**
  * Load a command into memory.
  */
-export async function load(client: Client | null, command: string, skipSend = false) {
+export async function load(
+  client: Client | null,
+  command: string,
+  skipSend?: boolean,
+  subcommand?: false,
+): Promise<string | undefined>;
+export async function load(
+  client: Client | null,
+  command: string,
+  skipSend?: boolean,
+  subcommand?: true,
+): Promise<
+  | {
+      props: typeof Command;
+      info: CommandInfo;
+      entry: CommandEntry;
+      name: string;
+    }
+  | undefined
+>;
+export async function load(
+  client: Client | null,
+  command: string,
+  skipSend = false,
+  subcommand = false,
+): Promise<
+  | string
+  | {
+      props: typeof Command;
+      info: CommandInfo;
+      entry: CommandEntry;
+      name: string;
+    }
+  | undefined
+> {
   log("main", `Loading command from ${command}...`);
   const { default: props } = (await import(`${command}?v=${queryValue}`)) as { default: typeof Command };
   queryValue++;
@@ -58,7 +92,6 @@ export async function load(client: Client | null, command: string, skipSend = fa
   }
 
   props.init();
-  paths.set(fullCommandName, command);
 
   const extendedFlags = extendFlags(props.flags, fullCommandName);
 
@@ -76,28 +109,62 @@ export async function load(client: Client | null, command: string, skipSend = fa
     type: Constants.ApplicationCommandTypes.CHAT_INPUT,
   };
 
-  if (category === "message") {
-    messageCommands.set(commandName, {
-      default: props,
-    });
-    commandInfo.type = Constants.ApplicationCommandTypes.MESSAGE;
-  } else if (category === "user") {
-    userCommands.set(commandName, {
-      default: props,
-    });
-    commandInfo.type = Constants.ApplicationCommandTypes.USER;
-  } else {
-    const existingCmd = commands.get(subPath[0] ?? commandName);
-    const cmdMap = subPath.slice(1).reduceRight((acc: CommandEntry, p) => ({ [p]: acc }), {
-      [subPath.length > 0 ? commandName : "default"]: props,
-    });
-    if (existingCmd) deepmergeInto(cmdMap, existingCmd);
-    commands.set(subPath[0] ?? commandName, cmdMap);
+  paths.set(fullCommandName, command);
+
+  const cmdMap: CommandEntry = {
+    default: props,
+  };
+
+  if (!subcommand) {
+    if (commandInfo.category === "message") {
+      messageCommands.set(commandName, cmdMap);
+      commandInfo.type = Constants.ApplicationCommandTypes.MESSAGE;
+    } else if (commandInfo.category === "user") {
+      userCommands.set(commandName, cmdMap);
+      commandInfo.type = Constants.ApplicationCommandTypes.USER;
+    } else {
+      try {
+        const subdir = relPath.split(".")[0];
+        const resolved = resolve(cmdPath, subdir);
+        const files = await readdir(resolved, {
+          withFileTypes: true,
+        });
+        commandInfo.baseCommand = true;
+        commandInfo.flags = [];
+        for (const file of files) {
+          if (!file.isFile()) continue;
+          const sub = await load(null, resolve(resolved, file.name), skipSend, true);
+          if (!sub) continue;
+
+          const split = sub.name.split(" ");
+          const subName = split[split.length - 1];
+          cmdMap[subName] = sub.props;
+
+          const hasSubCommands = sub.info.flags.some(
+            (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+          );
+          commandInfo.flags.push({
+            name: subName,
+            nameLocalizations: getAllLocalizations(`commands.flagNames.${fullCommandName}.${subName}`),
+            type: hasSubCommands
+              ? Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
+              : Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            description: sub.info.description,
+            descriptionLocalizations: getAllLocalizations(`commands.flags.${fullCommandName}.${subName}`),
+            // @ts-expect-error It thinks we're using the wrong flag type
+            options: sub.info.flags,
+          });
+        }
+      } catch {
+        // come back to this
+      }
+      commands.set(commandName, cmdMap);
+    }
   }
 
   info.set(fullCommandName, commandInfo);
 
-  if (client && props.slashAllowed && !skipSend) {
+  if (client && props.slashAllowed && !skipSend && !subcommand) {
     await send(client);
   }
 
@@ -111,7 +178,15 @@ export async function load(client: Client | null, command: string, skipSend = fa
       paths.set(alias, command);
     }
   }
-  return fullCommandName;
+
+  return subcommand
+    ? {
+        props,
+        info: commandInfo,
+        entry: cmdMap,
+        name: fullCommandName,
+      }
+    : fullCommandName;
 }
 
 /**
@@ -159,57 +234,8 @@ export function update() {
   const commandArray: CreateApplicationCommandOptions[] = [];
   const privateCommandArray: CreateApplicationCommandOptions[] = [];
   const merged = new Map([...commands, ...messageCommands, ...userCommands]);
-  for (const [name, command] of merged.entries()) {
-    const subcommands = Object.keys(command);
-    const subcommandInfo: Record<string, CommandInfo> = {};
-    for (const subcommand of subcommands) {
-      const subcommandName = subcommand === "default" ? name : `${name} ${subcommand}`;
-
-      let subCmdInfo = info.get(subcommandName);
-      const cmd = command[subcommand] as typeof Command;
-      const baseCommand = subcommand === "default" && subcommands.length > 1;
-      subCmdInfo = {
-        category: subCmdInfo?.category ?? "unsorted",
-        description: cmd.description,
-        aliases: cmd.aliases,
-        params: parseFlags(cmd.flags),
-        flags: baseCommand
-          ? cmd.flags.filter(
-              (v) =>
-                v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND ||
-                v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP,
-            )
-          : cmd.flags,
-        slashAllowed: cmd.slashAllowed,
-        directAllowed: cmd.directAllowed,
-        userAllowed: cmd.userAllowed,
-        baseCommand,
-        adminOnly: cmd.adminOnly,
-        type: subCmdInfo?.type ?? Constants.ApplicationCommandTypes.CHAT_INPUT,
-      };
-      info.set(subcommandName, subCmdInfo);
-      if (subcommand !== "default") subcommandInfo[subcommand] = subCmdInfo;
-    }
+  for (const name of merged.keys()) {
     const cmdInfo = info.get(name);
-    if (subcommands.length > 1) {
-      // what the hell??
-      if (cmdInfo?.flags.length === 0) cmdInfo.flags = [];
-      for (const [subName, sub] of Object.entries(subcommandInfo)) {
-        if (!sub.slashAllowed) continue;
-        const hasSubCommands = sub.flags.some((v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND);
-        cmdInfo!.flags.push({
-          name: subName,
-          nameLocalizations: getAllLocalizations(`commands.flagNames.${name}.${subName}`),
-          type: hasSubCommands
-            ? Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
-            : Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-          description: sub.description,
-          descriptionLocalizations: getAllLocalizations(`commands.flags.${name}.${subName}`),
-          // @ts-expect-error It thinks we're using the wrong flag type
-          options: sub.flags,
-        });
-      }
-    }
     if (
       cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE ||
       cmdInfo?.type === Constants.ApplicationCommandTypes.USER

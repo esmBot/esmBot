@@ -132,9 +132,7 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-for await (const commandFile of glob(
-  resolve(basePath, "..", "commands", "**", runtime.tsLoad ? "*.{js,ts}" : "*.js"),
-)) {
+for await (const commandFile of glob(resolve(basePath, "..", "commands", "*", runtime.tsLoad ? "*.{js,ts}" : "*.js"))) {
   try {
     await load(null, commandFile);
   } catch (e) {
