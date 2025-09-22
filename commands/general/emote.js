@@ -1,4 +1,3 @@
-import emojiRegex from "emoji-regex-xs";
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
@@ -21,7 +20,7 @@ class EmoteCommand extends Command {
     for (const match of matches) {
       urls.push(`https://cdn.discordapp.com/emojis/${match[2]}.${match[1] === "a" ? "gif" : "png"}`);
     }
-    const emojiMatches = emoji.match(emojiRegex());
+    const emojiMatches = emoji.match(/\p{RGI_Emoji}/gv);
     if (emojiMatches) {
       for (const emoji of emojiMatches) {
         const codePoints = [...emoji].map((v) => v.codePointAt(0)?.toString(16)).join("-");

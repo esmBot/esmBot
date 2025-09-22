@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import emojiRegex from "emoji-regex-xs";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class FlagCommand extends ImageCommand {
@@ -7,7 +6,7 @@ class FlagCommand extends ImageCommand {
 
   async criteria() {
     const text = this.getOptionString("text") ?? this.args[0];
-    const matched = text.match(emojiRegex());
+    const matched = text.match(/\p{RGI_Emoji_Flag_Sequence}|\p{RGI_Emoji_Tag_Sequence}|🏴‍☠️|🏳️‍🌈|🏁|🏳️‍⚧️/gv);
     if (!matched) return false;
     let path;
     if (matched[0] === "🏴󠁧󠁢󠁳󠁣󠁴󠁿") path = "assets/images/region-flags/png/GB-SCT.png";
