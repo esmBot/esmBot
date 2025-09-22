@@ -249,6 +249,9 @@
             },
             "motivate": {
                 "font": "schriftart"
+            },
+            "uncaption": {
+                "tolerance": "toleranz"
             }
         },
         "flags": {
