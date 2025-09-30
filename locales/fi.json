@@ -840,6 +840,30 @@
                 "adminOnly": "Sinun pitää olla ylläpitäjä vaihtaaksesi botin etuliitettä!",
                 "changed": "Etuliite on vaihdettu `{{prefix}}` :seen.",
                 "current": "Nykyinen etuliite on `{{prefix}}`."
+            },
+            "raw": {
+                "noInput": "Sinun on annettava kuva/GIF saadaksesi raaka-URL-osoitteen!"
+            },
+            "reload": {
+                "botOwnerOnly": "Vain botin omistaja voi ladata komennot uudestaan!",
+                "noCommand": "En löytänyt tuota komentoa!",
+                "noInput": "Sinun täytyy antaa komento uudelleenlataamista varten!",
+                "reloaded": "Komento `{{command}}` on ladattu uudelleen.",
+                "reloadFailed": "En voinut ladata komentoa uudelleen!"
+            },
+            "remove": {
+                "invalidPosition": "Tuo ei ole kelvollinen sijainti!",
+                "notHost": "Vain nykyinen puheistunnon isäntä voi poistaa kappaleita jonosta!",
+                "removed": "Kappale `{{song}}` on poistettu jonosta."
+            },
+            "restart": {
+                "owner": "Vain botin omistaja voi käynnistää minut uudelleen!",
+                "restarting": "esmBot käynnistyy uudelleen."
+            },
+            "seek": {
+                "invalidPosition": "Tuo ei ole kelvollinen sijainti!",
+                "notHost": "Vain nykyinen puheistunnon isäntä voi etsiä musiikkia!",
+                "notSeekable": "Tämä raita ei ole haettavissa!"
             }
         },
         "noParam": {
