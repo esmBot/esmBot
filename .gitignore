@@ -137,3 +137,6 @@ bot-help/
 
 # Typescript outputs
 dist/
+
+# macOS temp dirs
+**/.DS_Store
