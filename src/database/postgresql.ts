@@ -33,7 +33,7 @@ CREATE TABLE guilds (
   prefix VARCHAR(15) NOT NULL,
   disabled text ARRAY NOT NULL,
   disabled_commands text ARRAY NOT NULL,
-  tag_roles VARCHAR(30) ARRAY DEFAULT [] NOT NULL
+  tag_roles VARCHAR(30) ARRAY DEFAULT array[]::varchar[] NOT NULL
 );
 CREATE TABLE counts (
   command VARCHAR NOT NULL PRIMARY KEY,
