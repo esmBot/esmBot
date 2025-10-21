@@ -3,7 +3,7 @@ import { lookup } from "node:dns/promises";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import process from "node:process";
-import { fileTypeFromBuffer } from "file-type";
+import { fileTypeFromStream } from "file-type";
 import ipaddr from "ipaddr.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
 import ImageConnection from "./imageConnection.ts";
@@ -99,10 +99,11 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Im
         },
       });
       clearTimeout(timeout);
-      const imageBuffer = await bufRequest.arrayBuffer();
-      const imageType = await fileTypeFromBuffer(imageBuffer);
-      if (imageType && formats.includes(imageType.mime)) {
-        type = imageType.mime;
+      if (bufRequest.body) {
+        const imageType = await fileTypeFromStream(bufRequest.body);
+        if (imageType && formats.includes(imageType.mime)) {
+          type = imageType.mime;
+        }
       }
     }
   } finally {
