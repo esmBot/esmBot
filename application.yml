@@ -21,9 +21,9 @@ lavalink:
   plugins:
     - dependency: "net.esmbot:lava-xm-plugin:0.2.8"
       repository: "https://repo.projectlounge.pw/maven/releases"
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.0"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.1"
       snapshot: false
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.13.4"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.15.0"
       snapshot: false
 
 plugins:
