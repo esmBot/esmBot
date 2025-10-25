@@ -89,7 +89,7 @@ class StatsCommand extends Command {
             },
             {
               name: this.getString("commands.responses.stats.shard"),
-              value: this.guild ? this.client.guildShardMap[this.guild.id].toString() : "N/A",
+              value: this.guild ? (this.client.guildShardMap.get(this.guild.id)?.toString() ?? "N/A") : "N/A",
               inline: true,
             },
             {

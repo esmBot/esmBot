@@ -15,9 +15,11 @@ class PingCommand extends Command {
           this.reference,
         ),
       );
-      const shard = this.message.guildID
-        ? this.client.shards.get(this.client.guildShardMap[this.message.guildID])
-        : undefined;
+      let shard;
+      if (this.message.guildID) {
+        const guildShard = this.client.guildShardMap.get(this.message.guildID);
+        if (guildShard !== undefined) shard = this.client.shards.get(guildShard);
+      }
       await pingMessage.edit({
         content: `🏓 ${this.getString("commands.responses.ping.pong")}
 \`\`\`
@@ -39,9 +41,11 @@ ${
     } else {
       if (!this.interaction) throw Error("No interaction found");
       const pingMessage = await this.interaction.getOriginal();
-      const shard = this.interaction.guildID
-        ? this.client.shards.get(this.client.guildShardMap[this.interaction.guildID])
-        : undefined;
+      let shard;
+      if (this.interaction.guildID) {
+        const guildShard = this.client.guildShardMap.get(this.interaction.guildID);
+        if (guildShard !== undefined) shard = this.client.shards.get(guildShard);
+      }
       return `🏓 ${this.getString("commands.responses.ping.pong")}
 \`\`\`
 ${this.getString("commands.responses.ping.latency", {
