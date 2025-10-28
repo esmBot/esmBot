@@ -47,7 +47,7 @@ ArgumentMap Bounce(const string &type, string &outType, const char *bufferdata, 
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + halfHeight);
   if (!multiPage) {
-    vector<int> delay(30, 50);
+    vector<int> delay(15, 50);
     final.set("delay", delay);
   }
 
