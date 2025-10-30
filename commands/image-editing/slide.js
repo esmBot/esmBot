@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import ImageCommand from "#cmd-classes/imageCommand.js";
 
 class SlideCommand extends ImageCommand {
@@ -8,6 +9,25 @@ class SlideCommand extends ImageCommand {
       vertical: !!vertical,
       reverse: !!reverse,
     };
+  }
+
+  static init() {
+    super.init();
+    this.flags.push(
+      {
+        name: "vertical",
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        description: "Slides the image vertically",
+        classic: true,
+      },
+      {
+        name: "reverse",
+        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        description: "Changes the direction the image slides in",
+        classic: true,
+      },
+    );
+    return this;
   }
 
   static description = "Slides an image in a direction";
