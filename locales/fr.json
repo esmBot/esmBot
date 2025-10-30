@@ -88,7 +88,9 @@
             "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
             "fade": "Image enchargée",
             "command": "Désactive/active une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
-            "hue": "L’image est chargée"
+            "hue": "L’image est chargée",
+            "slide": "Fait déplacer une image dans une direction",
+            "tags": "La commande de tags principale. Pour plus d'informations : https://esmbot.net/help.html"
         },
         "flagNames": {
             "8ball": {
@@ -303,6 +305,10 @@
             "qr": {
                 "create": "créer",
                 "read": "lire"
+            },
+            "slide": {
+                "reverse": "inverse",
+                "vertical": "vertical"
             }
         },
         "flags": {
@@ -399,7 +405,8 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente"
+                "alpha": "Rend le haut de la bulle de dialogue transparente",
+                "scale": "Un multiplicateur pour redimensionner la bulle de dialogue (0.01 est le plus petit, 1.0 est le plus grand, la valeur par défaut est 0.2)"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -514,6 +521,13 @@
             },
             "tags role remove": {
                 "role": "Le rôle à supprimer"
+            },
+            "slide": {
+                "reverse": "Change la direction du glissement de l'image",
+                "vertical": "Fait glisser l'image verticalement"
+            },
+            "uncaption": {
+                "tolerance": "Définir la tolérance de teinte pour la détection des légendes (0.0 est la plus élevée, 1.0 est la plus basse, la valeur par défaut est 0.95)"
             }
         },
         "names": {
@@ -605,7 +619,8 @@
             "imagereload": "rechargimage",
             "hue": "teinte",
             "fade": "fondre",
-            "8ball": "8ball"
+            "8ball": "8ball",
+            "slide": "glisser"
         },
         "noImage": {
             "watermark 9gag": "Vous devez fournir une image/GIF pour ajouter un filigrane 9GAG !",
@@ -670,7 +685,8 @@
             "wide": "Vous devez fournir une image/GIF à étirer !",
             "fade": "Vous devez fournir une image/GIF pour faire apparaître progressivement !",
             "hue": "Vous devez fournir une image/GIF à teinter !",
-            "watermark powerdirector": "Vous devez fournir une image/GIF pour ajouter un filigrane PowerDirector !"
+            "watermark powerdirector": "Vous devez fournir une image/GIF pour ajouter un filigrane PowerDirector !",
+            "slide": "Vous devez fournir une image/GIF à glisser !"
         },
         "noParam": {
             "homebrew": "Vous devez fournir du texte pour créer un montage Homebrew Channel !",
@@ -802,7 +818,12 @@
                 "creditsHeader": "Crédits :",
                 "officialServer": "Serveur officiel :",
                 "privacyPolicy": "Politique de confidentialité :",
-                "credits": "Bot par **[Essem](https://essem.space)** et **[divers contributeurs](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo par **[MintBurrow](https://twitter.com/MintBurrow)**"
+                "credits": "Bot par **[Essem](https://essem.space)** et **[divers contributeurs](https://github.com/esmBot/esmBot/graphs/contributors)**\nLogo par **[MintBurrow](https://twitter.com/MintBurrow)**",
+                "processOnly": "{{count}} (pour ce processus seulement)",
+                "sourceCode": "Code source :",
+                "totalServers": "Serveurs totaux :",
+                "translate": "Traduire :",
+                "version": "Version :"
             }
         }
     },
