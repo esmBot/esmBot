@@ -67,6 +67,7 @@
       "scott": "Makes Scott the Woz show off an image",
       "sepia": "Adds a sepia filter",
       "sharpen": "Sharpens an image",
+      "slide": "Slides an image in a direction",
       "slow": "Makes an image sequence slower",
       "snapchat": "Adds a Snapchat style caption to an image",
       "soos": "\"Loops\" an image sequence by reversing it when it's finished",
@@ -198,6 +199,10 @@
       },
       "motivate": {
         "font": "font"
+      },
+      "slide": {
+        "reverse": "reverse",
+        "vertical": "vertical"
       },
       "slow": {
         "multiplier": "multiplier"
@@ -414,6 +419,10 @@
       "motivate": {
         "font": "Specify the font you want to use (default: times)"
       },
+      "slide": {
+        "reverse": "Changes the direction the image slides in",
+        "vertical": "Slides the image vertically"
+      },
       "slow": {
         "multiplier": "Set the speed multiplier (default: 2)"
       },
@@ -588,6 +597,7 @@
       "scott": "scott",
       "sepia": "sepia",
       "sharpen": "sharpen",
+      "slide": "slide",
       "slow": "slow",
       "snapchat": "snapchat",
       "soos": "soos",
@@ -656,6 +666,7 @@
       "sepia": "You need to provide an image/GIF to add a sepia filter!",
       "sharpen": "You need to provide an image/GIF to sharpen!",
       "watermark shutterstock": "You need to provide an image/GIF to add a Shutterstock watermark!",
+      "slide": "You need to provide an image/GIF to slide!",
       "slow": "You need to provide an image/GIF to slow down!",
       "snapchat": "You need to provide an image/GIF to add a caption!",
       "soos": "You need to provide an image/GIF to loop!",
