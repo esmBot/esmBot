@@ -39,6 +39,7 @@ declare_input_func(Reddit);
 declare_input_func(Resize);
 declare_input_func(Reverse);
 declare_input_func(Scott);
+declare_input_func(Slide);
 declare_input_func(Snapchat);
 declare_input_func(Speed);
 declare_input_func(Spin);

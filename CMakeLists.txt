@@ -33,6 +33,7 @@ set(SOURCE_FILES natives/blur.cc
   natives/resize.cc
   natives/reverse.cc
   natives/scott.cc
+  natives/slide.cc
   natives/snapchat.cc
   natives/sonic.cc
   natives/speed.cc
