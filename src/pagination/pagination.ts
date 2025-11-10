@@ -7,6 +7,8 @@ import {
   type Member,
   type Message,
   type MessageActionRow,
+  type ModalData,
+  type ModalLabel,
   type StringSelectMenu,
   type User,
 } from "oceanic.js";
@@ -103,127 +105,106 @@ export default async (client: Client, info: Info, pages: Pages): Promise<undefin
   }
 
   if (pages.length > 1) {
-    const interactionCollector = new InteractionCollector(client, currentPage);
+    const interactionCollector = new InteractionCollector(client);
     interactionCollector.on("interaction", async (interaction) => {
       try {
-        await interaction.deferUpdate();
+        if (interaction.data.customID !== "jump") await interaction.deferUpdate();
       } catch (e) {
         logger.warn(`Could not defer update, cannot continue further with pagination: ${e}`);
         return;
       }
       if ((interaction.member ?? interaction.user).id === info.author.id) {
-        switch (interaction.data.customID) {
-          case "back":
-            page = page > 0 ? --page : pages.length - 1;
-            if (info.interaction) {
-              currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
-            } else {
-              currentPage = await currentPage.edit(Object.assign(pages[page], options));
-            }
-            interactionCollector.extend();
-            break;
-          case "forward":
-            page = page + 1 < pages.length ? ++page : 0;
-            if (info.interaction) {
-              currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
-            } else {
-              currentPage = await currentPage.edit(Object.assign(pages[page], options));
-            }
-            interactionCollector.extend();
-            break;
-          case "jump": {
-            const newComponents = JSON.parse(JSON.stringify(components));
-            for (const index of newComponents.components[0].components.keys()) {
-              newComponents.components[0].components[index].disabled = true;
-            }
-            if (info.interaction) {
-              currentPage = await info.interaction.editOriginal(newComponents);
-            } else {
-              currentPage = await currentPage.edit(newComponents);
-            }
-            interactionCollector.extend();
-            const jumpComponents: { components: Array<MessageActionRow> } & InteractionContent = {
-              components: [
-                {
-                  type: 1,
-                  components: [
-                    {
+        if (interaction.isComponentInteraction()) {
+          switch (interaction.data.customID) {
+            case "back":
+              page = page > 0 ? --page : pages.length - 1;
+              try {
+                if (info.interaction) {
+                  currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
+                } else {
+                  currentPage = await currentPage.edit(Object.assign(pages[page], options));
+                }
+              } catch (e) {
+                logger.warn(`Failed to navigate to previous page: ${e}`);
+              }
+              interactionCollector.extend();
+              break;
+            case "forward":
+              page = page + 1 < pages.length ? ++page : 0;
+              try {
+                if (info.interaction) {
+                  currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options));
+                } else {
+                  currentPage = await currentPage.edit(Object.assign(pages[page], options));
+                }
+              } catch (e) {
+                logger.warn(`Failed to navigate to next page: ${e}`);
+              }
+              interactionCollector.extend();
+              break;
+            case "jump": {
+              interactionCollector.extend();
+              const jumpModal: ModalData = {
+                customID: "jumpModal",
+                title: getString("pagination.jumpTo", { locale: interaction.locale }),
+                components: [
+                  {
+                    type: ComponentTypes.LABEL,
+                    label: getString("pagination.pageNumber", { locale: interaction.locale }),
+                    component: {
                       type: ComponentTypes.STRING_SELECT,
                       customID: "seekDropdown",
                       placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
                       options: [],
                     },
-                  ],
-                },
-              ],
-            };
-            for (let i = 0; i < pages.length && i < 25; i++) {
-              const payload = {
-                label: (i + 1).toString(),
-                value: i.toString(),
+                  },
+                ],
               };
-              (jumpComponents.components[0].components[0] as StringSelectMenu).options[i] = payload;
+              const start =
+                pages.length > 25 && page > 11
+                  ? pages.length - page > 12
+                    ? Math.max(page - 12, 0)
+                    : pages.length - 25
+                  : 0;
+              let j = 0;
+              for (let i = start; i < pages.length && i < start + 25; i++) {
+                const payload = {
+                  label: (i + 1).toString(),
+                  value: i.toString(),
+                };
+                ((jumpModal.components[0] as ModalLabel).component as StringSelectMenu).options[j] = payload;
+                j++;
+              }
+              try {
+                await interaction.createModal(jumpModal);
+              } catch (e) {
+                logger.warn(`Failed to create pagination jump modal: ${e}`);
+              }
+              break;
             }
-            const followup = await interaction.createFollowup(
-              Object.assign(
-                { content: getString("pagination.jumpTo", { locale: interaction.locale }), flags: 64 },
-                jumpComponents,
-              ),
-            );
-            const askMessage = await followup.getMessage();
-            const dropdownCollector = new InteractionCollector(client, askMessage);
-            let ended = false;
-            dropdownCollector.on("interaction", async (response) => {
-              if (
-                response.data.customID !== "seekDropdown" ||
-                response.data.componentType !== ComponentTypes.STRING_SELECT
-              )
-                return;
+            case "delete":
+              interactionCollector.emit("end", true);
               try {
-                await interaction.deleteFollowup(askMessage.id);
-              } catch {
-                // no-op
+                if (info.interaction) {
+                  await info.interaction.deleteOriginal();
+                } else {
+                  await currentPage.delete();
+                }
+              } catch (e) {
+                logger.warn(`Failed to delete pagination message: ${e}`);
               }
-              page = Number(response.data.values.raw[0]);
-              if (info.interaction) {
-                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
-              } else {
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
-              }
-              ended = true;
-              dropdownCollector.stop();
-            });
-            dropdownCollector.once("end", async () => {
-              collectors.delete(askMessage.id);
-              if (ended) return;
-              try {
-                await interaction.deleteFollowup(askMessage.id);
-              } catch {
-                // no-op
-              }
-              if (info.interaction) {
-                currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
-              } else {
-                currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
-              }
-            });
-            collectors.set(askMessage.id, dropdownCollector);
-            break;
+              return;
+            default:
+              break;
           }
-          case "delete":
-            interactionCollector.emit("end", true);
-            try {
-              if (info.interaction) {
-                await info.interaction.deleteOriginal();
-              } else {
-                await currentPage.delete();
-              }
-            } catch {
-              // no-op
-            }
-            return;
-          default:
-            break;
+        } else if (interaction.isModalSubmitInteraction()) {
+          if (interaction.data.customID !== "jumpModal") return;
+          page = Number(interaction.data.components.getStringSelectValues("seekDropdown", true)[0]);
+          if (info.interaction) {
+            currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
+          } else {
+            currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+          }
         }
       } else {
         await interaction.createFollowup({
@@ -245,8 +226,8 @@ export default async (client: Client, info: Info, pages: Pages): Promise<undefin
           } else {
             await currentPage.edit(components);
           }
-        } catch {
-          // no-op
+        } catch (e) {
+          logger.warn(`Failed to disable pagination buttons: ${e}`);
         }
       }
     });

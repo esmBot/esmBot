@@ -1,20 +1,18 @@
 // oceanic doesn't come with a method to wait for interactions by default, so we make our own
-import { TypedEmitter, type Client, type ComponentInteraction, type Message } from "oceanic.js";
+import { TypedEmitter, type Client, type ComponentInteraction, type ModalSubmitInteraction } from "oceanic.js";
 
 interface InteractionCollectorEvents {
-  interaction: [interaction: ComponentInteraction];
+  interaction: [interaction: ComponentInteraction | ModalSubmitInteraction];
   end: [deleted?: boolean];
 }
 
 class InteractionCollector extends TypedEmitter<InteractionCollectorEvents> {
-  message: Message;
   ended: boolean;
   bot: Client;
   timeout: number;
   end: ReturnType<typeof setTimeout>;
-  constructor(client: Client, message: Message) {
+  constructor(client: Client) {
     super();
-    this.message = message;
     this.ended = false;
     this.bot = client;
     this.timeout = 120000;

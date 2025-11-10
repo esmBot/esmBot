@@ -24,9 +24,8 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   if (!client.ready) return;
 
   // handle incoming non-command interactions
-  if (interaction.isComponentInteraction()) {
-    //await interaction.deferUpdate();
-    const collector = collectors.get(interaction.message.id);
+  if (interaction.isComponentInteraction() || interaction.isModalSubmitInteraction()) {
+    const collector = collectors.get(interaction.message!.id);
     if (collector) collector.emit("interaction", interaction);
     return;
   }
