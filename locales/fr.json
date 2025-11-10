@@ -405,8 +405,7 @@
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
                 "bottom": "Place la bulle de dialogue en bas de l'image",
-                "alpha": "Rend le haut de la bulle de dialogue transparente",
-                "scale": ""
+                "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
                 "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
@@ -525,9 +524,6 @@
             "slide": {
                 "reverse": "Change la direction du glissement de l'image",
                 "vertical": "Fait glisser l'image verticalement"
-            },
-            "uncaption": {
-                "tolerance": ""
             }
         },
         "names": {
