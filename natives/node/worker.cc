@@ -36,8 +36,7 @@ void ImageAsyncWorker::OnOK() {
   size_t outSize = GetArgumentWithFallback<size_t>(outArgs, "size", 0);
   if (outSize > 0) {
     char *buf = GetArgument<char *>(outArgs, "buf");
-    nodeBuf = Buffer<char>::Copy(Env(), buf, outSize);
-    g_free(buf);
+    nodeBuf = Buffer<char>::New(Env(), buf, outSize, []([[maybe_unused]] Napi::Env env, char *data) { g_free(data); });
   }
 
   Napi::Object returned = Napi::Object::New(Env());
