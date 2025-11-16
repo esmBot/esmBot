@@ -234,9 +234,9 @@ httpServer.on("request", (req, res) => {
       return res.end("404 Not Found");
     }
     log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    const ext = jobs.get(id).ext;
+    const job = jobs.get(id);
     let contentType: string | undefined;
-    switch (ext) {
+    switch (job.ext) {
       case "gif":
         contentType = "image/gif";
         break;
@@ -255,10 +255,9 @@ httpServer.on("request", (req, res) => {
         break;
     }
     if (contentType) res.setHeader("Content-Type", contentType);
-    else res.setHeader("Content-Type", ext ?? "application/octet-stream");
-    const data = jobs.get(id).data;
+    else res.setHeader("Content-Type", job.ext ?? "application/octet-stream");
     jobs.delete(id);
-    return res.end(data);
+    return res.end(job.data);
   }
   if (reqUrl.pathname === "/count" && req.method === "GET") {
     log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
