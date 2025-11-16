@@ -53,14 +53,6 @@ interface MiniJob {
 }
 
 class JobCache<K, V extends Job> extends Map {
-  set(key: K, value: V) {
-    super.set(key, value);
-    setTimeout(() => {
-      if (super.has(key) && this.get(key) === value && value.data) super.delete(key);
-    }, 900000); // delete jobs if not requested after 15 minutes
-    return this;
-  }
-
   _delListener(_size: number) {}
 
   delete(key: K) {
