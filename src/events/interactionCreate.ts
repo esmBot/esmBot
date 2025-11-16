@@ -162,7 +162,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
           content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
           files: [
             {
-              contents: Buffer.from(clean(error)),
+              contents: Buffer.from(clean(error, [interaction.token])),
               name: "error.txt",
             },
           ],
