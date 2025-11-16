@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  pm2:
-    hash: 58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4
-    path: patches/pm2.patch
-
 importers:
 
   .:
@@ -116,7 +111,7 @@ importers:
         version: 10.24.0
       pm2:
         specifier: ^6.0.13
-        version: 6.0.13(patch_hash=58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4)(bufferutil@4.0.9)
+        version: 6.0.13(bufferutil@4.0.9)
 
 packages:
 
@@ -4054,7 +4049,7 @@ snapshots:
       - supports-color
     optional: true
 
-  pm2@6.0.13(patch_hash=58934bbe5227989bc6553945db05a54b38678aed1fbd2436fcc339710be7a3c4)(bufferutil@4.0.9):
+  pm2@6.0.13(bufferutil@4.0.9):
     dependencies:
       '@pm2/agent': 2.1.1(bufferutil@4.0.9)
       '@pm2/blessed': 0.1.81
