@@ -5,7 +5,13 @@
             "bird": "Podaje losowe zdjęcie ptaka",
             "cat": "Podaje losowe zdjęcie kota",
             "dice": "Rzuca kością",
-            "dog": "Podaje losowe zdjęcie psa"
+            "dog": "Podaje losowe zdjęcie psa",
+            "avatar": "Zwraca awatar użytkownika",
+            "banner": "Zwraca baner użytkownika",
+            "count": "Zwraca jak często komenda została użyta",
+            "eval": "Wykonuje kod Javascript",
+            "help": "Zwraca listę komend",
+            "image": "Przeszukuje zdjęć w Internecie"
         }
     }
 }
