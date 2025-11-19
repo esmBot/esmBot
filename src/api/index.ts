@@ -13,6 +13,8 @@ import type { ImageParams } from "#utils/types.js";
 
 const formats = Object.keys(img.imageInit());
 
+const cacheTimeout = 15 * 60 * 1000 // jobs are deleted 15 minutes after completion if not fetched
+
 const Rerror = 0x01;
 const Tqueue = 0x02;
 const Rqueue = 0x03;
@@ -52,21 +54,30 @@ interface MiniJob {
   num: number;
 }
 
-class JobCache<K, V extends Job> extends Map {
-  _delListener(_size: number) {}
+class JobCache<K, V> extends Map<K, V> {
+  private delListener: ((size: number)=>void) | undefined;
+  private timeouts: Map<K, ReturnType<typeof setTimeout>> = new Map();
+
+  markFinished(key: K) {
+    const handle = setTimeout(()=>{
+      this.delete(key);
+    }, cacheTimeout);
+    this.timeouts.set(key, handle);
+  }
 
   delete(key: K) {
     const out = super.delete(key);
-    this._delListener(this.size);
+    this.delListener?.(this.size);
+    const handle = this.timeouts.get(key);
+    if (handle) {
+      clearTimeout(handle);
+      this.timeouts.delete(key);
+    }
     return out;
   }
 
   delListen(func: (size: number) => void) {
-    this._delListener = func;
-  }
-
-  get(key: K): V {
-    return super.get(key);
+    this.delListener = func;
   }
 }
 
@@ -84,7 +95,7 @@ const discordBaseURL =
  * Accept an image job.
  */
 async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
-  const job = jobs.get(id);
+  const job = jobs.get(id)!;
   try {
     await runJob(
       {
@@ -98,7 +109,7 @@ async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
   } catch (err) {
     if (!(err instanceof Error)) return;
     error(`Error on job ${id}: ${err}`, job.num);
-    const newJob = jobs.get(id);
+    const newJob = jobs.get(id)!;
     if (!newJob.tag) {
       newJob.error = err.message;
       jobs.set(id, newJob);
@@ -226,7 +237,7 @@ httpServer.on("request", (req, res) => {
       return res.end("404 Not Found");
     }
     log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
-    const job = jobs.get(id);
+    const job = jobs.get(id)!;
     let contentType: string | undefined;
     switch (job.ext) {
       case "gif":
@@ -342,7 +353,7 @@ async function finishJob(
   ws: WSocket,
 ) {
   log(`Sending result of job ${job.id}`, job.num);
-  const jobObject = jobs.get(job.id);
+  const jobObject = jobs.get(job.id)!;
   jobObject.data = data.buffer;
   jobObject.ext = data.fileExtension;
   let tag: Buffer;
@@ -357,6 +368,7 @@ async function finishJob(
   }
 
   jobs.set(job.id, jobObject);
+  jobs.markFinished(job.id);
   let r: RawMessage | undefined;
   if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length < fileSize) {
     const form = new FormData();
