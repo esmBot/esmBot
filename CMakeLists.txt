@@ -45,9 +45,9 @@ set(SOURCE_FILES natives/blur.cc
   natives/togif.cc
   natives/uncanny.cc
   natives/uncaption.cc
+  natives/wall.cc
   natives/watermark.cc
-  natives/whisper.cc
-  natives/wall.cc)
+  natives/whisper.cc)
 
 if (APPLE)
   set(WITH_ZXING_DEFAULT OFF)
