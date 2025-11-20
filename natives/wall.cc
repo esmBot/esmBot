@@ -30,7 +30,7 @@ ArgumentMap Wall(const string &type, string &outType, const char *bufferdata, si
   double maxSize = std::max(width, pageHeight);
   VImage tile = in.resize(128.0 / maxSize);
   tile = tile.resize(512.0 / 128.0).copy_memory();
-  int newHeight = vips_image_get_page_height(tile.get_image());
+  int newHeight = tile.height();
   width = tile.width();
   pageHeight = nPages > 1 ? newHeight / nPages : newHeight;
 
