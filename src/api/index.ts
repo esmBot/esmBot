@@ -13,7 +13,7 @@ import type { ImageParams } from "#utils/types.js";
 
 const formats = Object.keys(img.imageInit());
 
-const cacheTimeout = 15 * 60 * 1000 // jobs are deleted 15 minutes after completion if not fetched
+const cacheTimeout = 15 * 60 * 1000; // jobs are deleted 15 minutes after completion if not fetched
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
@@ -55,11 +55,11 @@ interface MiniJob {
 }
 
 class JobCache<K, V> extends Map<K, V> {
-  private delListener: ((size: number)=>void) | undefined;
+  private delListener: ((size: number) => void) | undefined;
   private timeouts: Map<K, ReturnType<typeof setTimeout>> = new Map();
 
   markFinished(key: K) {
-    const handle = setTimeout(()=>{
+    const handle = setTimeout(() => {
       this.delete(key);
     }, cacheTimeout);
     this.timeouts.set(key, handle);
