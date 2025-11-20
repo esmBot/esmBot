@@ -50,9 +50,7 @@ declare_input_func(Tile);
 declare_input_func(ToGif);
 declare_input_func(Uncanny);
 declare_input_func(Uncaption);
-#if MAGICK_ENABLED
 declare_input_func(Wall);
-#endif
 declare_input_func(Watermark);
 declare_input_func(Whisper);
 

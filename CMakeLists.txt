@@ -46,7 +46,8 @@ set(SOURCE_FILES natives/blur.cc
   natives/uncanny.cc
   natives/uncaption.cc
   natives/watermark.cc
-  natives/whisper.cc)
+  natives/whisper.cc
+  natives/wall.cc)
 
 if (APPLE)
   set(WITH_ZXING_DEFAULT OFF)
@@ -54,13 +55,12 @@ else()
   set(WITH_ZXING_DEFAULT ON)
 endif()
 
-option(WITH_MAGICK "Build with ImageMagick, enables the magik and wall commands" OFF)
+option(WITH_MAGICK "Build with ImageMagick, enables the magik command" OFF)
 option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ${WITH_ZXING_DEFAULT})
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 if (WITH_MAGICK)
-  list(APPEND SOURCE_FILES natives/magik.cc
-    natives/wall.cc)
+  list(APPEND SOURCE_FILES natives/magik.cc)
 endif()
 
 if (WITH_ZXING)
