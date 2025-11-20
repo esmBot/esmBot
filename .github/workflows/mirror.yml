@@ -10,6 +10,7 @@ on:
 
 jobs:
   sync-repo-to-codeberg:
+    if: github.repository == 'esmBot/esmBot'
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
