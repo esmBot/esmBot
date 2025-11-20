@@ -98,9 +98,7 @@ const std::map<std::string, ArgumentMap (*)(const string &type, string &outType,
     {"togif",      &ToGif     },
     {"uncanny",    &Uncanny   },
     {"uncaption",  &Uncaption },
-#if MAGICK_ENABLED
     {"wall",       &Wall      },
-#endif
     {"watermark",  &Watermark },
     {"whisper",    &Whisper   }
 };
