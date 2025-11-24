@@ -81,7 +81,7 @@
   "optionalDependencies": {
     "@sentry/bun": "^10.24.0",
     "@sentry/deno": "^10.24.0",
-    "@sentry/node": "^10.24.0",
+    "@sentry/node": "^10.27.0",
     "pm2": "^6.0.13"
   },
   "binary": {
