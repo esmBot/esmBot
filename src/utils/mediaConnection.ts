@@ -23,7 +23,7 @@ interface RequestState {
 
 type WaitResponse = { sent: true; data: Buffer } | { sent: false };
 
-class ImageConnection {
+class MediaConnection {
   requests: Map<number, RequestState>;
   host: string;
   auth?: string;
@@ -73,7 +73,7 @@ class ImageConnection {
   onMessage(msg: Data) {
     if (!(msg instanceof Buffer)) return;
     const op = msg.readUint8(0);
-    logger.debug(`Received message from image server ${this.host} with opcode ${op}`);
+    logger.debug(`Received message from media server ${this.host} with opcode ${op}`);
     if (op === Rinit) {
       this.formats = JSON.parse(msg.toString("utf8", 7));
       this.funcs = Object.keys(this.formats);
@@ -139,7 +139,7 @@ class ImageConnection {
   }
 
   queue(jobid: bigint, jobobj: object): Promise<void> {
-    logger.debug(`Queuing ${jobid} on image server ${this.host}`);
+    logger.debug(`Queuing ${jobid} on media server ${this.host}`);
     const str = JSON.stringify(jobobj);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
@@ -147,21 +147,21 @@ class ImageConnection {
   }
 
   wait(jobid: bigint): Promise<WaitResponse> {
-    logger.debug(`Waiting for ${jobid} on image server ${this.host}`);
+    logger.debug(`Waiting for ${jobid} on media server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
     return this.do(Twait, jobid, buf);
   }
 
   cancel(jobid: bigint): Promise<void> {
-    logger.debug(`Cancelling ${jobid} on image server ${this.host}`);
+    logger.debug(`Cancelling ${jobid} on media server ${this.host}`);
     const buf = Buffer.alloc(8);
     buf.writeBigUint64LE(jobid);
     return this.do(Tcancel, jobid, buf);
   }
 
   async getOutput(jobid: string) {
-    logger.debug(`Getting output of ${jobid} on image server ${this.host}`);
+    logger.debug(`Getting output of ${jobid} on media server ${this.host}`);
     const req = await fetch(
       `${this.httpurl}/image?id=${jobid}`,
       this.auth
@@ -227,4 +227,4 @@ class ImageConnection {
   }
 }
 
-export default ImageConnection;
+export default MediaConnection;

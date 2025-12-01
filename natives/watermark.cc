@@ -1,4 +1,3 @@
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
@@ -6,8 +5,21 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Watermark(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                      ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs WatermarkArgs = {
+  {"water",    {typeid(string), true}},
+  {"gravity",  {typeid(int), true}   },
+  {"resize",   {typeid(bool), false} },
+  {"yscale",   {typeid(float), false}},
+  {"append",   {typeid(bool), false} },
+  {"alpha",    {typeid(bool), false} },
+  {"flipX",    {typeid(bool), false} },
+  {"flipY",    {typeid(bool), false} },
+  {"mc",       {typeid(bool), false} },
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Watermark(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                    esmb::ArgumentMap arguments, bool *shouldKill) {
   string water = GetArgument<string>(arguments, "water");
   int gravity = GetArgument<int>(arguments, "gravity");
 
@@ -20,7 +32,7 @@ ArgumentMap Watermark(const string &type, string &outType, const char *bufferdat
   bool flipX = GetArgumentWithFallback<bool>(arguments, "flipX", false);
   bool flipY = GetArgumentWithFallback<bool>(arguments, "flipY", false);
 
-  bool mc = MapContainsKey(arguments, "mc");
+  bool mc = GetArgumentWithFallback<bool>(arguments, "mc", false);
 
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -143,9 +155,5 @@ ArgumentMap Watermark(const string &type, string &outType, const char *bufferdat
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

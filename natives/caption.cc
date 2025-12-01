@@ -1,4 +1,3 @@
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
@@ -6,10 +5,16 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Caption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs CaptionArgs = {
+  {"caption",  {typeid(string), true} },
+  {"font",     {typeid(string), false}},
+  {"basePath", {typeid(string), true} }
+};
+
+CmdOutput Caption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
-  string font = GetArgument<string>(arguments, "font");
+  string font = GetArgumentWithFallback<string>(arguments, "font", "futura");
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
@@ -60,9 +65,5 @@ ArgumentMap Caption(const string &type, string &outType, const char *bufferdata,
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

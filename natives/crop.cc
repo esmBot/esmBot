@@ -1,4 +1,3 @@
-#include <map>
 #include <string>
 #include <vips/vips8>
 
@@ -7,8 +6,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Crop(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Crop(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));
 
   int width = in.width();
@@ -39,9 +38,5 @@ ArgumentMap Crop(const string &type, string &outType, const char *bufferdata, si
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

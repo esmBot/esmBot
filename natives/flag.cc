@@ -5,8 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Flag(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs FlagArgs = {
+  {"overlay",  {typeid(string), true}},
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Flag(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               esmb::ArgumentMap arguments, bool *shouldKill) {
   string overlay = GetArgument<string>(arguments, "overlay");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -40,9 +45,5 @@ ArgumentMap Flag(const string &type, string &outType, const char *bufferdata, si
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

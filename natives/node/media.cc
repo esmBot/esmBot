@@ -1,6 +1,4 @@
 #include <napi.h>
-
-#include <map>
 #include <string>
 
 #ifdef __GLIBC__
@@ -25,11 +23,7 @@ namespace backward {
 
 using namespace std;
 
-bool isNapiValueInt(Napi::Env &env, Napi::Value &num) {
-  return env.Global().Get("Number").ToObject().Get("isInteger").As<Napi::Function>().Call({num}).ToBoolean().Value();
-}
-
-Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
+Napi::Value ProcessMedia(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   string command = info[0].As<Napi::String>().Utf8Value();
@@ -38,29 +32,33 @@ Napi::Value ProcessImage(const Napi::CallbackInfo &info) {
   string type = input.Has("type") ? input.Get("type").As<Napi::String>().Utf8Value() : "png";
   Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  Napi::Array properties = obj.GetPropertyNames();
+  esmb::ArgumentMap Arguments;
 
-  ArgumentMap Arguments;
+  // We only have a single possible global arg at the moment,
+  // let's define it here
+  auto val = obj.Get("togif");
+  if (!val.IsEmpty() && !val.IsUndefined() && !val.IsNull()) {
+    Arguments["togif"] = val.ToBoolean().Value();
+  }
 
-  for (unsigned int i = 0; i < properties.Length(); i++) {
-    string property = properties.Get(uint32_t(i)).As<Napi::String>().Utf8Value();
+  if (MapContainsKey(esmb::FunctionArgsMap, command)) {
+    FunctionArgs *argTypes = esmb::FunctionArgsMap.at(command);
+    for (auto arg : *argTypes) {
+      val = obj.Get(arg.first);
+      if (val.IsEmpty() || val.IsUndefined() || val.IsNull()) continue;
 
-    auto val = obj.Get(property);
-    if (val.IsBoolean()) {
-      Arguments[property] = val.ToBoolean().Value();
-    } else if (val.IsString()) {
-      Arguments[property] = val.ToString().As<Napi::String>().Utf8Value();
-    } else if (val.IsNumber()) {
-      auto num = val.ToNumber();
-      if (isNapiValueInt(env, num) && property != "yscale" && property != "tolerance" &&
-          property != "pos") { // dumb hack
-        Arguments[property] = num.Int32Value();
+      if (arg.second.type == typeid(bool)) {
+        Arguments[arg.first] = val.ToBoolean().Value();
+      } else if (arg.second.type == typeid(string)) {
+        Arguments[arg.first] = val.ToString().As<Napi::String>().Utf8Value();
+      } else if (arg.second.type == typeid(int)) {
+        Arguments[arg.first] = val.ToNumber().Int32Value();
+      } else if (arg.second.type == typeid(float)) {
+        Arguments[arg.first] = val.ToNumber().FloatValue();
       } else {
-        Arguments[property] = num.FloatValue();
+        deferred.Reject(Napi::Error::New(env, "Type of property \"" + arg.first + "\" is unknown").Value());
+        return deferred.Promise();
       }
-    } else {
-      deferred.Reject(Napi::Error::New(env, "Type of property \"" + property + "\" is unknown").Value());
-      return deferred.Promise();
     }
   }
 
@@ -109,7 +107,7 @@ void *checkTypes(GType type, Napi::Object *formats) {
   return NULL;
 }
 
-Napi::Value ImgInit(const Napi::CallbackInfo &info) {
+Napi::Value MediaInit(const Napi::CallbackInfo &info) {
 #if __GLIBC__
   /*
     Set mmap threshold to 128kb to work around a similar glibc bug to the one above.
@@ -141,18 +139,18 @@ Napi::Value ImgInit(const Napi::CallbackInfo &info) {
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "image"), Napi::Function::New(env, ProcessImage));
-  exports.Set(Napi::String::New(env, "imageInit"), Napi::Function::New(env, ImgInit));
+  exports.Set(Napi::String::New(env, "media"), Napi::Function::New(env, ProcessMedia));
+  exports.Set(Napi::String::New(env, "init"), Napi::Function::New(env, MediaInit));
   exports.Set(Napi::String::New(env, "trim"), Napi::Function::New(env, Trim));
 
   Napi::Array arr = Napi::Array::New(env);
   size_t i = 0;
-  for (auto const &imap : FunctionMap) {
+  for (auto const &imap : esmb::FunctionMap) {
     Napi::HandleScope scope(env);
     arr[i] = Napi::String::New(env, imap.first);
     i++;
   }
-  for (auto const &imap : NoInputFunctionMap) {
+  for (auto const &imap : esmb::NoInputFunctionMap) {
     Napi::HandleScope scope(env);
     arr[i] = Napi::String::New(env, imap.first);
     i++;

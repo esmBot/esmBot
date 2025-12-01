@@ -1,5 +1,4 @@
 #include <math.h>
-
 #include <vips/vips8>
 
 #include "common.h"
@@ -7,8 +6,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Bounce(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Bounce(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
                 .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);
@@ -22,10 +21,8 @@ ArgumentMap Bounce(const string &type, string &outType, const char *bufferdata, 
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -59,9 +56,5 @@ ArgumentMap Bounce(const string &type, string &outType, const char *bufferdata, 
 
   if (outType != "webp") outType = "gif";
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

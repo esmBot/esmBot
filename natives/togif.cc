@@ -5,18 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap ToGif(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput ToGif(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   if (type == "gif") {
     char *data = reinterpret_cast<char *>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
 
-    ArgumentMap output;
-    output["buf"] = data;
-    output["size"] = bufferLength;
-
-    return output;
-
+    return {data, bufferLength};
   } else {
     VOption *options = VImage::option()->set("access", "sequential");
 
@@ -29,10 +24,6 @@ ArgumentMap ToGif(const string &type, string &outType, const char *bufferdata, s
     in.write_to_buffer(".gif", reinterpret_cast<void **>(&buf), &dataSize);
     outType = "gif";
 
-    ArgumentMap output;
-    output["buf"] = buf;
-    output["size"] = dataSize;
-
-    return output;
+    return {buf, dataSize};
   }
 }

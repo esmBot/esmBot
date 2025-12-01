@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Spin(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Spin(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
 
   int width = in.width();
@@ -18,10 +18,8 @@ ArgumentMap Spin(const string &type, string &outType, const char *bufferdata, si
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -54,9 +52,5 @@ ArgumentMap Spin(const string &type, string &outType, const char *bufferdata, si
 
   if (outType != "webp") outType = "gif";
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

@@ -1,5 +1,5 @@
 import type InteractionCollector from "../pagination/awaitinteractions.ts";
-import type { ImageMeta } from "./imagedetect.ts";
+import type { ImageMeta } from "./mediadetect.ts";
 import type { CommandEntry, CommandInfo } from "./types.ts";
 
 export const commands = new Map<string, CommandEntry>();

@@ -1,12 +1,27 @@
 #pragma once
 
+#include "common/argmap.h"
+#include <typeindex>
+
+struct CmdOutput {
+  char *buf;
+  size_t length;
+};
+
+struct FunctionArg {
+  std::type_index type;
+  bool required;
+};
+
+typedef const std::map<std::string, FunctionArg> FunctionArgs;
+
 // Vultu: These are both bad, but I wanted to clean up code at least a little
-using std::string;
 #define declare_input_func(NAME)                                                                                       \
-  ArgumentMap NAME(const string &type, string &outType, const char *bufferData, size_t bufferLength,                   \
-                   ArgumentMap arguments, bool *shouldKill)
+  CmdOutput NAME(const std::string &type, std::string &outType, const char *bufferData, size_t bufferLength,           \
+                 esmb::ArgumentMap arguments, bool *shouldKill)
 #define declare_noinput_func(NAME)                                                                                     \
-  ArgumentMap NAME(const string &type, string &outType, ArgumentMap arguments, bool *shouldKill)
+  CmdOutput NAME(const std::string &type, std::string &outType, esmb::ArgumentMap arguments, bool *shouldKill)
+#define declare_input_args(NAME) extern FunctionArgs NAME;
 
 // Declare our Input Functions
 declare_input_func(Blur);
@@ -61,3 +76,37 @@ declare_noinput_func(Homebrew);
 declare_noinput_func(QrCreate);
 #endif
 declare_noinput_func(Sonic);
+
+// Declare our Input Args
+declare_input_args(BlurArgs);
+declare_input_args(CaptionArgs);
+declare_input_args(CaptionTwoArgs);
+declare_input_args(ColorsArgs);
+declare_input_args(DistortArgs);
+declare_input_args(FadeArgs);
+declare_input_args(FlagArgs);
+declare_input_args(FlipArgs);
+declare_input_args(FreezeArgs);
+declare_input_args(GamexplainArgs);
+declare_input_args(GlobeArgs);
+declare_input_args(HomebrewArgs);
+declare_input_args(JpegArgs);
+declare_input_args(MemeArgs);
+declare_input_args(MirrorArgs);
+declare_input_args(MotivateArgs);
+#if ZXING_ENABLED
+declare_input_args(QrCreateArgs);
+#endif
+declare_input_args(RedditArgs);
+declare_input_args(ResizeArgs);
+declare_input_args(ReverseArgs);
+declare_input_args(ScottArgs);
+declare_input_args(SlideArgs);
+declare_input_args(SnapchatArgs);
+declare_input_args(SonicArgs);
+declare_input_args(SpeedArgs);
+declare_input_args(SpotifyArgs);
+declare_input_args(UncannyArgs);
+declare_input_args(UncaptionArgs);
+declare_input_args(WatermarkArgs);
+declare_input_args(WhisperArgs);

@@ -5,8 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Distort(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs DistortArgs = {
+  {"mapName",  {typeid(string), true}},
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Distort(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  esmb::ArgumentMap arguments, bool *shouldKill) {
   string mapName = GetArgument<string>(arguments, "mapName");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -39,9 +44,5 @@ ArgumentMap Distort(const string &type, string &outType, const char *bufferdata,
   size_t dataSize = 0;
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

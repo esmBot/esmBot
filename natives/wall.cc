@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Wall(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Wall(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
   if (!in.has_alpha()) in = in.bandjoin(255);
 
@@ -18,10 +18,8 @@ ArgumentMap Wall(const string &type, string &outType, const char *bufferdata, si
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -64,9 +62,5 @@ ArgumentMap Wall(const string &type, string &outType, const char *bufferdata, si
   size_t dataSize = 0;
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

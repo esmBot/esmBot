@@ -1,15 +1,19 @@
-#include <map>
 #include <string>
 #include <vips/vips8>
 
 #include "common.h"
+#include "common/argmap.h"
 
 using namespace std;
 using namespace vips;
 
-ArgumentMap Blur(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 ArgumentMap arguments, bool *shouldKill) {
-  bool sharp = GetArgument<bool>(arguments, "sharp");
+FunctionArgs BlurArgs = {
+  {"sharp", {typeid(bool), false}}
+};
+
+CmdOutput Blur(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               esmb::ArgumentMap arguments, bool *shouldKill) {
+  bool sharp = GetArgumentWithFallback<bool>(arguments, "sharp", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));
 
@@ -20,8 +24,5 @@ ArgumentMap Blur(const string &type, string &outType, const char *bufferdata, si
   char *buf;
   size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-  return output;
+  return {buf, dataSize};
 }

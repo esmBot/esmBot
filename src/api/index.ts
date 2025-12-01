@@ -6,12 +6,12 @@ import process from "node:process";
 import { DiscordHTTPError, DiscordRESTError, type RawMessage } from "oceanic.js";
 import type WSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";
-import run from "#utils/image-runner.js";
-import { img } from "#utils/imageLib.js";
 import logger from "#utils/logger.js";
-import type { ImageParams } from "#utils/types.js";
+import { media } from "#utils/mediaLib.js";
+import run from "#utils/mediaRunner.js";
+import type { MediaParams } from "#utils/types.js";
 
-const formats = Object.keys(img.imageInit());
+const formats = Object.keys(media.init());
 
 const cacheTimeout = 15 * 60 * 1000; // jobs are deleted 15 minutes after completion if not fetched
 
@@ -40,7 +40,7 @@ interface VerifyEvents {
 
 interface Job {
   num: number;
-  msg: ImageParams;
+  msg: MediaParams;
   verifyEvent: EventEmitter<VerifyEvents>;
   tag?: Buffer;
   error?: string;
@@ -50,7 +50,7 @@ interface Job {
 
 interface MiniJob {
   id: bigint;
-  msg: ImageParams;
+  msg: MediaParams;
   num: number;
 }
 
@@ -123,7 +123,7 @@ async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
   // we wait until all* jobs are finished before trimming to avoid potential issues.
   // See the comment in natives/node/image.cc for more info
   if (jobs.size <= 1) {
-    img.trim();
+    media.trim();
   }
 }
 
@@ -142,7 +142,7 @@ wss.on("connection", (ws, request) => {
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobs.size);
   const cmdFormats: { [cmd: string]: string[] } = {};
-  for (const cmd of img.funcs) {
+  for (const cmd of media.funcs) {
     cmdFormats[cmd] = formats;
   }
   const init = Buffer.concat([
@@ -349,7 +349,7 @@ const fileSize = 10485760;
 async function finishJob(
   data: { buffer: Buffer; fileExtension: string },
   job: MiniJob,
-  object: ImageParams,
+  object: MediaParams,
   ws: WSocket,
 ) {
   log(`Sending result of job ${job.id}`, job.num);

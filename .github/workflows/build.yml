@@ -49,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.platform.key}}
-          path: build/Release/image.node
+          path: build/Release/esmbmedia.node

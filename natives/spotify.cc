@@ -5,8 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Spotify(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs SpotifyArgs = {
+  {"caption",  {typeid(string), true}},
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Spotify(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  esmb::ArgumentMap arguments, bool *shouldKill) {
   string text = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -52,9 +57,5 @@ ArgumentMap Spotify(const string &type, string &outType, const char *bufferdata,
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

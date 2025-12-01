@@ -253,9 +253,9 @@ pm2 start ecosystem.config.cjs
 
 ## Troubleshooting
 
-??? faq "Error: Cannot find module './build/Release/image.node'"
+??? faq "Error: Cannot find module './build/Release/esmbmedia.node'"
 
-    The native image functions haven't been built. Run `pnpm build` to build them.
+    The native media functions haven't been built. Run `pnpm build` to build them.
 
 ??? faq "`pnpm install` or `pnpm build` fails with error 'ELIFECYCLE  Command failed.'"
 

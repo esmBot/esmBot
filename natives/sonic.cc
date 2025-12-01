@@ -5,7 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Sonic([[maybe_unused]] const string &type, string &outType, ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs SonicArgs = {
+  {"text",     {typeid(string), true}},
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Sonic([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments, bool *shouldKill) {
   string text = GetArgument<string>(arguments, "text");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -30,9 +35,5 @@ ArgumentMap Sonic([[maybe_unused]] const string &type, string &outType, Argument
   size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

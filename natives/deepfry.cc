@@ -1,4 +1,3 @@
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
@@ -6,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Deepfry(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Deepfry(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));
 
   int width = in.width();
@@ -48,9 +47,5 @@ ArgumentMap Deepfry(const string &type, string &outType, const char *bufferdata,
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

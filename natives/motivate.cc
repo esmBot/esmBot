@@ -5,11 +5,18 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Motivate(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                     ArgumentMap arguments, bool *shouldKill) {
-  string top_text = GetArgument<string>(arguments, "topText");
-  string bottom_text = GetArgument<string>(arguments, "bottomText");
-  string font = GetArgument<string>(arguments, "font");
+FunctionArgs MotivateArgs = {
+  {"topText",    {typeid(string), false}},
+  {"bottomText", {typeid(string), false}},
+  {"font",       {typeid(string), false}},
+  {"basePath",   {typeid(string), true} }
+};
+
+CmdOutput Motivate(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   esmb::ArgumentMap arguments, bool *shouldKill) {
+  string top_text = GetArgumentWithFallback<string>(arguments, "topText", "");
+  string bottom_text = GetArgumentWithFallback<string>(arguments, "bottomText", "");
+  string font = GetArgumentWithFallback<string>(arguments, "font", "times");
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
@@ -102,9 +109,5 @@ ArgumentMap Motivate(const string &type, string &outType, const char *bufferdata
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

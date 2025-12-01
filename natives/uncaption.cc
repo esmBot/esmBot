@@ -1,4 +1,3 @@
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
@@ -6,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Uncaption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                      ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs UncaptionArgs = {
+  {"tolerance", {typeid(float), false}},
+};
+
+CmdOutput Uncaption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                    esmb::ArgumentMap arguments, bool *shouldKill) {
   float tolerance = GetArgumentWithFallback<float>(arguments, "tolerance", 0.5);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
@@ -40,9 +43,5 @@ ArgumentMap Uncaption(const string &type, string &outType, const char *bufferdat
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

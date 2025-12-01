@@ -61,7 +61,7 @@ export interface CommandInfo {
   type: Constants.ApplicationCommandTypes;
 }
 
-export interface ImageParams {
+export interface MediaParams {
   cmd: string;
   params: {
     [key: string]: string | number | boolean;
@@ -80,7 +80,7 @@ export interface ImageParams {
   token?: string;
 }
 
-export interface ImageTypeData {
+export interface MediaTypeData {
   url?: string;
   type?: string;
 }

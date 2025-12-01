@@ -1,11 +1,15 @@
 #include <algorithm>
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
 
 using namespace std;
 using namespace vips;
+
+FunctionArgs FreezeArgs = {
+  {"loop",  {typeid(bool), false}},
+  {"frame", {typeid(int), false} }
+};
 
 char *vipsTrim(const char *data, size_t length, size_t &dataSize, int frame, string suffix, string outType,
                bool *shouldKill) {
@@ -26,12 +30,12 @@ char *vipsTrim(const char *data, size_t length, size_t &dataSize, int frame, str
   return buf;
 }
 
-ArgumentMap Freeze(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Freeze(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 esmb::ArgumentMap arguments, bool *shouldKill) {
   bool loop = GetArgumentWithFallback<bool>(arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(arguments, "frame", -1);
 
-  ArgumentMap output;
+  CmdOutput output;
   size_t dataSize = 0;
 
   if (type == "gif") {
@@ -64,10 +68,10 @@ ArgumentMap Freeze(const string &type, string &outType, const char *bufferdata, 
       }
       if (none) dataSize = bufferLength;
 
-      output["buf"] = newData;
+      output.buf = newData;
     } else if (frame >= 0 && !loop) {
       char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
-      output["buf"] = buf;
+      output.buf = buf;
     } else {
       lastPos = reinterpret_cast<char *>(memchr(fileData, '\x21', bufferLength));
       while (lastPos != NULL) {
@@ -82,14 +86,14 @@ ArgumentMap Freeze(const string &type, string &outType, const char *bufferdata, 
       }
       if (none) dataSize = bufferLength;
 
-      output["buf"] = fileData;
+      output.buf = fileData;
     }
-    output["size"] = dataSize;
+    output.length = dataSize;
   } else if (type == "webp") {
     if (frame >= 0 && !loop) {
       char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
-      output["buf"] = buf;
-      output["size"] = dataSize;
+      output.buf = buf;
+      output.length = dataSize;
     } else {
       char *fileData = reinterpret_cast<char *>(malloc(bufferLength));
       memcpy(fileData, bufferdata, bufferLength);
@@ -110,14 +114,14 @@ ArgumentMap Freeze(const string &type, string &outType, const char *bufferdata, 
         position += 8 + chunkSize + (chunkSize % 2);
       }
 
-      output["buf"] = fileData;
-      output["size"] = bufferLength;
+      output.buf = fileData;
+      output.length = bufferLength;
     }
   } else {
     char *data = reinterpret_cast<char *>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
-    output["buf"] = data;
-    output["size"] = bufferLength;
+    output.buf = data;
+    output.length = bufferLength;
   }
 
   return output;

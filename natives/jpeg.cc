@@ -5,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Jpeg(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs JpegArgs = {
+  {"quality", {typeid(int), false}}
+};
+
+CmdOutput Jpeg(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               esmb::ArgumentMap arguments, bool *shouldKill) {
   int quality = GetArgumentWithFallback<int>(arguments, "quality", 1);
 
   char *buf;
@@ -60,9 +64,5 @@ ArgumentMap Jpeg(const string &type, string &outType, const char *bufferdata, si
     }
   }
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

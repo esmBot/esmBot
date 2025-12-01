@@ -13,7 +13,7 @@ import {
 } from "oceanic.js";
 import { getType } from "./image.ts";
 import logger from "./logger.ts";
-import type { ImageTypeData } from "./types.ts";
+import type { MediaTypeData } from "./types.ts";
 
 const tenorURLs = ["tenor.com", "www.tenor.com"];
 const giphyURLs = ["giphy.com", "www.giphy.com", "i.giphy.com"];
@@ -137,7 +137,7 @@ async function getImage(
       payload.type = "image/webp";
     }
   } else {
-    let result: ImageTypeData | undefined;
+    let result: MediaTypeData | undefined;
     if (
       (imageURL.host === "cdn.discordapp.com" || imageURL.host === "media.discordapp.net") &&
       imageURL.pathname.match(/^\/(?:ephemeral-)?attachments\/\d+\/\d+\//)

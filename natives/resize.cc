@@ -5,8 +5,14 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Resize(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs ResizeArgs = {
+  {"stretch", {typeid(bool), false}},
+  {"wide",    {typeid(bool), false}},
+  {"amount",  {typeid(int), false} }
+};
+
+CmdOutput Resize(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 esmb::ArgumentMap arguments, bool *shouldKill) {
   bool stretch = GetArgumentWithFallback<bool>(arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(arguments, "wide", false);
   int wideAmount = GetArgumentWithFallback<int>(arguments, "amount", 19);
@@ -23,10 +29,8 @@ ArgumentMap Resize(const string &type, string &outType, const char *bufferdata, 
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -56,9 +60,5 @@ ArgumentMap Resize(const string &type, string &outType, const char *bufferdata, 
   size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

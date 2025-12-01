@@ -7,8 +7,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Fade(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs FadeArgs = {
+  {"alpha", {typeid(bool), false}}
+};
+
+CmdOutput Fade(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               esmb::ArgumentMap arguments, bool *shouldKill) {
   bool alpha = GetArgumentWithFallback<bool>(arguments, "alpha", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
@@ -24,10 +28,8 @@ ArgumentMap Fade(const string &type, string &outType, const char *bufferdata, si
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -65,9 +67,5 @@ ArgumentMap Fade(const string &type, string &outType, const char *bufferdata, si
   size_t dataSize = 0;
   final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

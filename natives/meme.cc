@@ -5,6 +5,13 @@
 using namespace std;
 using namespace vips;
 
+FunctionArgs MemeArgs = {
+  {"topText",    {typeid(string), false}},
+  {"bottomText", {typeid(string), false}},
+  {"font",       {typeid(string), false}},
+  {"basePath",   {typeid(string), true} }
+};
+
 VImage genText(string text, string font, const char *fontfile, int width, VImage mask, int radius) {
   VOption *options = VImage::option()
                        ->set("rgba", true)
@@ -21,11 +28,11 @@ VImage genText(string text, string font, const char *fontfile, int width, VImage
   return outline.composite2(in, VIPS_BLEND_MODE_OVER);
 }
 
-ArgumentMap Meme(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 ArgumentMap arguments, bool *shouldKill) {
-  string top = GetArgument<string>(arguments, "topText");
-  string bottom = GetArgument<string>(arguments, "bottomText");
-  string font = GetArgument<string>(arguments, "font");
+CmdOutput Meme(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               esmb::ArgumentMap arguments, bool *shouldKill) {
+  string top = GetArgumentWithFallback<string>(arguments, "topText", "");
+  string bottom = GetArgumentWithFallback<string>(arguments, "bottomText", "");
+  string font = GetArgumentWithFallback<string>(arguments, "font", "impact");
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
@@ -74,9 +81,5 @@ ArgumentMap Meme(const string &type, string &outType, const char *bufferdata, si
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

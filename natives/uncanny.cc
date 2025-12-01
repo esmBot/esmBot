@@ -5,11 +5,19 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Uncanny(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs UncannyArgs = {
+  {"caption",  {typeid(string), true} },
+  {"caption2", {typeid(string), true} },
+  {"font",     {typeid(string), false}},
+  {"path",     {typeid(string), true} },
+  {"basePath", {typeid(string), true} }
+};
+
+CmdOutput Uncanny(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string caption2 = GetArgument<string>(arguments, "caption2");
-  string font = GetArgument<string>(arguments, "font");
+  string font = GetArgumentWithFallback<string>(arguments, "font", "helvetica");
   string path = GetArgument<string>(arguments, "path");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -88,9 +96,5 @@ ArgumentMap Uncanny(const string &type, string &outType, const char *bufferdata,
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

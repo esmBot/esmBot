@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Tile(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Tile(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int width = in.width();
@@ -17,10 +17,8 @@ ArgumentMap Tile(const string &type, string &outType, const char *bufferdata, si
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -45,9 +43,5 @@ ArgumentMap Tile(const string &type, string &outType, const char *bufferdata, si
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

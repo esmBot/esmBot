@@ -1,6 +1,6 @@
 import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import imageDetect from "#utils/imagedetect.js";
+import imageDetect from "#utils/mediadetect.js";
 
 class RawCommand extends Command {
   async run() {

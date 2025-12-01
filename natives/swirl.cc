@@ -5,8 +5,8 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Swirl(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  [[maybe_unused]] ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Swirl(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int pageHeight = vips_image_get_page_height(in.get_image());
@@ -56,9 +56,5 @@ ArgumentMap Swirl(const string &type, string &outType, const char *bufferdata, s
   size_t dataSize = 0;
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

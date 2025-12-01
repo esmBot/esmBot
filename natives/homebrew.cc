@@ -5,7 +5,13 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Homebrew([[maybe_unused]] const string &type, string &outType, ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs HomebrewArgs = {
+  {"caption",  {typeid(string), true}},
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Homebrew([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments,
+                   bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 
@@ -30,9 +36,5 @@ ArgumentMap Homebrew([[maybe_unused]] const string &type, string &outType, Argum
   size_t dataSize = 0;
   out.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

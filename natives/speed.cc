@@ -1,11 +1,15 @@
 #include <cstdint>
-#include <map>
 #include <vips/vips8>
 
 #include "common.h"
 
 using namespace std;
 using namespace vips;
+
+FunctionArgs SpeedArgs = {
+  {"slow",  {typeid(bool), false}},
+  {"speed", {typeid(int), false} }
+};
 
 void *memset16(void *m, uint16_t val, size_t count) {
   uint16_t *buf = (uint16_t *)m;
@@ -39,12 +43,11 @@ char *vipsRemove(const char *data, size_t length, size_t &dataSize, int speed, s
   return buf;
 }
 
-ArgumentMap Speed([[maybe_unused]] const string &type, [[maybe_unused]] string &outType, const char *bufferdata,
-                  size_t bufferLength, ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Speed([[maybe_unused]] const string &type, [[maybe_unused]] string &outType, const char *bufferdata,
+                size_t bufferLength, esmb::ArgumentMap arguments, bool *shouldKill) {
   bool slow = GetArgumentWithFallback<bool>(arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(arguments, "speed", 2);
 
-  ArgumentMap output;
   size_t dataSize = 0;
 
   char *fileData = reinterpret_cast<char *>(malloc(bufferLength));
@@ -127,8 +130,5 @@ ArgumentMap Speed([[maybe_unused]] const string &type, [[maybe_unused]] string &
     dataSize = bufferLength;
   }
 
-  output["buf"] = fileData;
-  output["size"] = dataSize;
-
-  return output;
+  return {fileData, dataSize};
 }

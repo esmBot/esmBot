@@ -5,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Scott(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs ScottArgs = {
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Scott(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                esmb::ArgumentMap arguments, bool *shouldKill) {
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
@@ -21,10 +25,8 @@ ArgumentMap Scott(const string &type, string &outType, const char *bufferdata, s
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -55,9 +57,5 @@ ArgumentMap Scott(const string &type, string &outType, const char *bufferdata, s
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

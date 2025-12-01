@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.15...3.31)
-project(image)
+cmake_minimum_required(VERSION 3.19...3.31)
+project(esmbmedia)
 
 include(FindPkgConfig)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(SOURCE_FILES natives/blur.cc
+set(IMAGE_SOURCE_FILES natives/blur.cc
   natives/bounce.cc
   natives/caption.cc
   natives/caption2.cc
@@ -60,20 +60,22 @@ option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ${WITH_ZXING_DE
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 if (WITH_MAGICK)
-  list(APPEND SOURCE_FILES natives/magik.cc)
+  list(APPEND IMAGE_SOURCE_FILES natives/magik.cc)
 endif()
 
 if (WITH_ZXING)
-  list(APPEND SOURCE_FILES natives/qr.cc)
+  list(APPEND IMAGE_SOURCE_FILES natives/qr.cc)
 endif()
 
+set(SOURCE_FILES "${IMAGE_SOURCE_FILES}")
+
 if (CMAKE_JS_VERSION)
-  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node/image.cc natives/node/worker.cc)
+  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node/media.cc natives/node/worker.cc)
   set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
   target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
   target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_JS_LIB})
 else()
-  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} natives/generic/image.cc)
+  add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} natives/generic/media.cc)
 endif()
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
@@ -125,15 +127,12 @@ include_directories(${VIPS_INCLUDE_DIRS})
 link_directories(${VIPS_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${VIPS_LDFLAGS})
 
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/package.json" PACKAGE_JSON)
+string(JSON ESMB_VERSION GET "${PACKAGE_JSON}" "version")
+add_definitions("-DESMB_VERSION=\"${ESMB_VERSION}\"")
+
 if (NOT CMAKE_JS_VERSION)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  FetchContent_Declare(
-    simdjson
-    GIT_REPOSITORY https://github.com/simdjson/simdjson.git
-    GIT_TAG  tags/v3.13.0
-    GIT_SHALLOW TRUE)
-  FetchContent_MakeAvailable(simdjson)
-  target_link_libraries(${PROJECT_NAME} simdjson)
 endif()
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET AND CMAKE_JS_VERSION)

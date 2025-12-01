@@ -5,10 +5,15 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Slide(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  ArgumentMap arguments, bool *shouldKill) {
-  bool vertical = GetArgument<bool>(arguments, "vertical");
-  bool reverse = GetArgument<bool>(arguments, "reverse");
+FunctionArgs SlideArgs = {
+  {"vertical", {typeid(bool), false}},
+  {"reverse",  {typeid(bool), false}},
+};
+
+CmdOutput Slide(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                esmb::ArgumentMap arguments, bool *shouldKill) {
+  bool vertical = GetArgumentWithFallback<bool>(arguments, "vertical", false);
+  bool reverse = GetArgumentWithFallback<bool>(arguments, "reverse", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
                 .colourspace(VIPS_INTERPRETATION_sRGB);
@@ -22,10 +27,8 @@ ArgumentMap Slide(const string &type, string &outType, const char *bufferdata, s
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -59,9 +62,5 @@ ArgumentMap Slide(const string &type, string &outType, const char *bufferdata, s
 
   if (outType != "webp") outType = "gif";
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

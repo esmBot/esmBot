@@ -6,13 +6,13 @@ import process from "node:process";
 import { fileTypeFromStream } from "file-type";
 import ipaddr from "ipaddr.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
-import ImageConnection from "./imageConnection.ts";
 import logger from "./logger.ts";
+import ImageConnection from "./mediaConnection.ts";
 import { random } from "./misc.ts";
-import type { ImageParams, ImageTypeData } from "./types.ts";
+import type { MediaParams, MediaTypeData } from "./types.ts";
 
-const run = process.env.API_TYPE === "ws" ? null : (await import("../utils/image-runner.ts")).default;
-let img: import("./imageLib.ts").ImageLib | undefined;
+const run = process.env.API_TYPE === "ws" ? null : (await import("./mediaRunner.ts")).default;
+let img: import("./mediaLib.ts").MediaLib | undefined;
 
 interface ServerConfig {
   name: string;
@@ -37,13 +37,13 @@ export let servers: ServerConfig[] = process.env.API_TYPE === "ws" ? serversConf
 export function initImageLib() {
   const nodeRequire = createRequire(import.meta.url);
   const imgLib = nodeRequire(
-    `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`,
+    `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/esmbmedia.node`,
   );
-  imgLib.imageInit();
+  imgLib.init();
   img = imgLib;
 }
 
-export async function getType(image: URL, extraReturnTypes: boolean): Promise<ImageTypeData | undefined> {
+export async function getType(image: URL, extraReturnTypes: boolean): Promise<MediaTypeData | undefined> {
   try {
     const remoteIP = await lookup(image.host);
     const parsedIP = ipaddr.parse(remoteIP.address);
@@ -144,7 +144,7 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-async function getIdeal(object: ImageParams): Promise<ImageConnection | undefined> {
+async function getIdeal(object: MediaParams): Promise<ImageConnection | undefined> {
   const idealServers = [];
   for (const connection of connections.values()) {
     if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
@@ -163,7 +163,7 @@ async function getIdeal(object: ImageParams): Promise<ImageConnection | undefine
 
 let running = 0;
 
-export async function runImageJob(params: ImageParams): Promise<{ buffer: Buffer; type: string }> {
+export async function runImageJob(params: MediaParams): Promise<{ buffer: Buffer; type: string }> {
   if (process.env.API_TYPE === "ws") {
     const currentServer = await getIdeal(params);
     if (!currentServer)

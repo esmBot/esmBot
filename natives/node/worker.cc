@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ImageAsyncWorker::ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, ArgumentMap inArgs,
+ImageAsyncWorker::ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, esmb::ArgumentMap inArgs,
                                    string type, const char *bufData, size_t bufSize)
     : AsyncWorker(env), deferred(deferred), command(command), inArgs(inArgs), type(type), bufData(bufData),
       bufSize(bufSize) {}
@@ -13,9 +13,9 @@ void ImageAsyncWorker::Execute() {
   shouldKill = false;
 
   if (bufSize != 0) {
-    outArgs = FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
+    outData = esmb::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
   } else {
-    outArgs = NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
+    outData = esmb::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
   }
 }
 
@@ -32,12 +32,8 @@ void ImageAsyncWorker::OnError(const Error &e) {
 void ImageAsyncWorker::OnOK() {
   vips_error_clear();
   vips_thread_shutdown();
-  Buffer nodeBuf = Buffer<char>::New(Env(), 0);
-  size_t outSize = GetArgumentWithFallback<size_t>(outArgs, "size", 0);
-  if (outSize > 0) {
-    char *buf = GetArgument<char *>(outArgs, "buf");
-    nodeBuf = Buffer<char>::New(Env(), buf, outSize, []([[maybe_unused]] Napi::Env env, char *data) { g_free(data); });
-  }
+  Buffer nodeBuf = Buffer<char>::New(Env(), outData.buf, outData.length,
+                                     []([[maybe_unused]] Napi::Env env, char *data) { free(data); });
 
   Napi::Object returned = Napi::Object::New(Env());
   returned.Set("data", nodeBuf);

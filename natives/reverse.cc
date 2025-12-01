@@ -5,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Reverse([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs ReverseArgs = {
+  {"soos", {typeid(bool), false}}
+};
+
+CmdOutput Reverse([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                  esmb::ArgumentMap arguments, bool *shouldKill) {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
@@ -19,10 +23,8 @@ ArgumentMap Reverse([[maybe_unused]] const string &type, string &outType, const 
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -32,11 +34,7 @@ ArgumentMap Reverse([[maybe_unused]] const string &type, string &outType, const 
     char *data = reinterpret_cast<char *>(malloc(bufferLength));
     memcpy(data, bufferdata, bufferLength);
 
-    ArgumentMap output;
-    output["buf"] = data;
-    output["size"] = dataSize;
-
-    return output;
+    return {data, dataSize};
   }
 
   vector<VImage> out;
@@ -76,9 +74,5 @@ ArgumentMap Reverse([[maybe_unused]] const string &type, string &outType, const 
   final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

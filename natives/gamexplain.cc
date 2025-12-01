@@ -5,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Gamexplain(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                       ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs GamexplainArgs = {
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Gamexplain(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                     esmb::ArgumentMap arguments, bool *shouldKill) {
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
@@ -39,9 +43,5 @@ ArgumentMap Gamexplain(const string &type, string &outType, const char *bufferda
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

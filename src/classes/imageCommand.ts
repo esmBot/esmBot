@@ -12,9 +12,9 @@ import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 import { runImageJob } from "#utils/image.js";
-import imageDetect, { type ImageMeta } from "#utils/imagedetect.js";
+import imageDetect, { type ImageMeta } from "#utils/mediadetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
-import type { ImageParams } from "#utils/types.js";
+import type { MediaParams } from "#utils/types.js";
 import Command from "./command.ts";
 
 class ImageCommand extends Command {
@@ -50,7 +50,7 @@ class ImageCommand extends Command {
 
     const staticProps = this.constructor as typeof ImageCommand;
 
-    let imageParams: ImageParams;
+    let imageParams: MediaParams;
 
     let needsSpoiler = false;
     if (staticProps.requiresImage) {

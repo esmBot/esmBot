@@ -1,7 +1,7 @@
 import { Message } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { selectedImages } from "#utils/collections.js";
-import imageDetect from "#utils/imagedetect.js";
+import imageDetect from "#utils/mediadetect.js";
 
 class SelectImageCommand extends Command {
   async run() {

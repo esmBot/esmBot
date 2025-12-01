@@ -5,10 +5,16 @@
 using namespace std;
 using namespace vips;
 
+FunctionArgs SnapchatArgs = {
+  {"caption",  {typeid(string), true}},
+  {"pos",      {typeid(float), false}},
+  {"basePath", {typeid(string), true}}
+};
+
 const vector<double> zeroVec178 = {0, 0, 0, 178};
 
-ArgumentMap Snapchat(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                     ArgumentMap arguments, bool *shouldKill) {
+CmdOutput Snapchat(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                   esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.565);
   string basePath = GetArgument<string>(arguments, "basePath");
@@ -52,9 +58,5 @@ ArgumentMap Snapchat(const string &type, string &outType, const char *bufferdata
   final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0)->set("reoptimise", 1) : 0);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }

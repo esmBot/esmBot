@@ -10,8 +10,12 @@
 
 #include "common.h"
 
-ArgumentMap QrCreate([[maybe_unused]] const string &type, string &outType, ArgumentMap arguments,
-                     [[maybe_unused]] bool *shouldKill) {
+FunctionArgs QrCreateArgs = {
+  {"text", {typeid(string), true}}
+};
+
+CmdOutput QrCreate([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments,
+                   [[maybe_unused]] bool *shouldKill) {
   string text = GetArgument<string>(arguments, "text");
 
   auto writer =
@@ -32,15 +36,11 @@ ArgumentMap QrCreate([[maybe_unused]] const string &type, string &outType, Argum
   size_t dataSize = 0;
   img.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }
 
-ArgumentMap QrRead([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   [[maybe_unused]] ArgumentMap arguments, [[maybe_unused]] bool *shouldKill) {
+CmdOutput QrRead([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                 [[maybe_unused]] esmb::ArgumentMap arguments, [[maybe_unused]] bool *shouldKill) {
   vips::VOption *options = vips::VImage::option()->set("access", "sequential");
 
   vips::VImage in = vips::VImage::new_from_buffer(bufferdata, bufferLength, "", options)
@@ -64,12 +64,9 @@ ArgumentMap QrRead([[maybe_unused]] const string &type, string &outType, const c
   ZXing::ImageView img(VIPS_IMAGE_ADDR(in.get_image(), 0, 0), in.width(), in.height(), ZXing::ImageFormat::Lum);
   ZXing::Result result = ZXing::ReadBarcode(img, opts);
 
-  ArgumentMap output;
-
   if (!result.isValid()) {
-    output["buf"] = "";
     outType = "empty";
-    return output;
+    return {nullptr, 0};
   }
 
 #if ZXING_VERSION_MAJOR >= 2
@@ -82,9 +79,7 @@ ArgumentMap QrRead([[maybe_unused]] const string &type, string &outType, const c
   char *data = reinterpret_cast<char *>(malloc(dataSize));
   memcpy(data, resultText.c_str(), dataSize);
 
-  output["buf"] = data;
-  output["size"] = dataSize;
   outType = "text";
-  return output;
+  return {data, dataSize};
 }
 #endif

@@ -5,8 +5,12 @@
 using namespace std;
 using namespace vips;
 
-ArgumentMap Globe(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  ArgumentMap arguments, bool *shouldKill) {
+FunctionArgs GlobeArgs = {
+  {"basePath", {typeid(string), true}}
+};
+
+CmdOutput Globe(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                esmb::ArgumentMap arguments, bool *shouldKill) {
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
@@ -22,10 +26,8 @@ ArgumentMap Globe(const string &type, string &outType, const char *bufferdata, s
     in = NormalizeVips(in, &width, &pageHeight, nPages);
   } catch (int e) {
     if (e == -1) {
-      ArgumentMap output;
-      output["buf"] = "";
       outType = "frames";
-      return output;
+      return {nullptr, 0};
     }
   }
 
@@ -72,9 +74,5 @@ ArgumentMap Globe(const string &type, string &outType, const char *bufferdata, s
 
   if (outType != "webp") outType = "gif";
 
-  ArgumentMap output;
-  output["buf"] = buf;
-  output["size"] = dataSize;
-
-  return output;
+  return {buf, dataSize};
 }
