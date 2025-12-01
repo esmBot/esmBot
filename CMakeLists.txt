@@ -59,6 +59,8 @@ option(WITH_MAGICK "Build with ImageMagick, enables the magik command" OFF)
 option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ${WITH_ZXING_DEFAULT})
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
+option(WITH_CLI "Build the CLI interface" OFF)
+
 if (WITH_MAGICK)
   list(APPEND IMAGE_SOURCE_FILES natives/magik.cc)
 endif()
@@ -133,6 +135,13 @@ add_definitions("-DESMB_VERSION=\"${ESMB_VERSION}\"")
 
 if (NOT CMAKE_JS_VERSION)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+  if (WITH_CLI)
+    add_executable(esmb-cli natives/cli/cli.cc)
+    target_compile_features(esmb-cli PRIVATE cxx_std_17)
+    add_dependencies(esmb-cli ${PROJECT_NAME})
+    target_link_libraries(esmb-cli PRIVATE ${PROJECT_NAME})
+  endif()
 endif()
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET AND CMAKE_JS_VERSION)
