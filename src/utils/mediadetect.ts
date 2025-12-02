@@ -11,8 +11,8 @@ import {
   TextableChannel,
   ThreadChannel,
 } from "oceanic.js";
-import { getType } from "./image.ts";
 import logger from "./logger.ts";
+import { getType } from "./media.ts";
 import type { MediaTypeData } from "./types.ts";
 
 const tenorURLs = ["tenor.com", "www.tenor.com"];

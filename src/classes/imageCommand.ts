@@ -11,7 +11,7 @@ import {
 import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
-import { runImageJob } from "#utils/image.js";
+import { runMediaJob } from "#utils/media.js";
 import imageDetect, { type ImageMeta } from "#utils/mediadetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
 import type { MediaParams } from "#utils/types.js";
@@ -161,7 +161,7 @@ class ImageCommand extends Command {
     }
 
     try {
-      const result = await runImageJob(imageParams);
+      const result = await runMediaJob(imageParams);
       const buffer = result.buffer;
       const type = result.type;
       if (type === "sent") {
@@ -203,10 +203,10 @@ class ImageCommand extends Command {
       };
     } catch (e) {
       const err = e as Error;
-      if (err.toString().includes("image_not_working")) return this.getString("image.notWorking");
+      if (err.toString().includes("media_not_working")) return this.getString("image.notWorking");
       if (err.toString().includes("Request ended prematurely due to a closed connection"))
         return this.getString("image.tryAgain");
-      if (err.toString().includes("image_job_killed") || err.toString().includes("Timeout"))
+      if (err.toString().includes("media_job_killed") || err.toString().includes("Timeout"))
         return this.getString("image.tooLong");
       if (err.toString().includes("No available servers")) return this.getString("image.noServers");
       throw err;

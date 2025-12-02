@@ -13,8 +13,8 @@ import {
 
 import { selectedImages } from "./collections.ts";
 import { getString } from "./i18n.ts";
-import { getType } from "./image.ts";
 import logger from "./logger.ts";
+import { getType } from "./media.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {

@@ -23,7 +23,7 @@ void ImageAsyncWorker::OnError(const Error &e) {
   vips_error_clear();
   vips_thread_shutdown();
   if (shouldKill) {
-    deferred.Reject(Napi::Error::New(Env(), "image_job_killed").Value());
+    deferred.Reject(Napi::Error::New(Env(), "media_job_killed").Value());
   } else {
     deferred.Reject(e.Value());
   }

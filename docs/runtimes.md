@@ -37,4 +37,4 @@ Here's the current list of behavior changes exclusive to Deno:
 
 ## Known Issues
 
-- You may experience crashes on startup involving native modules (e.g. better-sqlite3, the image natives) when running with Deno or Bun. For Deno, try switching your Node.js version to 22 and running `pnpm rebuild`. For Bun, you should switch to Node.js 24 and then run the same command.
+- You may experience crashes on startup involving native modules (e.g. better-sqlite3, the media natives) when running with Deno or Bun. For Deno, try switching your Node.js version to 22 and running `pnpm rebuild`. For Bun, you should switch to Node.js 24 and then run the same command.

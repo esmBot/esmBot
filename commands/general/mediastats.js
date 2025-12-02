@@ -1,7 +1,7 @@
 import Command from "#cmd-classes/command.js";
-import { connections } from "#utils/image.js";
+import { connections } from "#utils/media.js";
 
-class ImageStatsCommand extends Command {
+class MediaStatsCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
@@ -12,11 +12,11 @@ class ImageStatsCommand extends Command {
       embeds: [
         {
           author: {
-            name: this.getString("commands.responses.imagestats.header"),
+            name: this.getString("commands.responses.mediastats.header"),
             iconURL: this.client.user.avatarURL(),
           },
           color: 0xff0000,
-          description: this.getString("commands.responses.imagestats.connected", {
+          description: this.getString("commands.responses.mediastats.connected", {
             params: { length: connections.size.toString() },
           }),
           fields: [{ name: "", value: "" }],
@@ -28,17 +28,17 @@ class ImageStatsCommand extends Command {
     for (const connection of connections.values()) {
       const count = await connection.getCount();
       embed.embeds[0].fields.push({
-        name: this.getString("commands.responses.imagestats.server", {
+        name: this.getString("commands.responses.mediastats.server", {
           params: { num: (connection.name ? `${i++} (${connection.name})` : i++).toString() },
         }),
-        value: this.getString("commands.responses.imagestats.runningJobs", { params: { count: count.toString() } }),
+        value: this.getString("commands.responses.mediastats.runningJobs", { params: { count: count.toString() } }),
       });
     }
     return embed;
   }
 
-  static description = "Gets some statistics about the image servers";
-  static aliases = ["imgstat", "imstats", "imgstats", "imstat"];
+  static description = "Gets some statistics about the media servers";
+  static aliases = ["imgstat", "imstats", "imgstats", "imstat", "imagestats", "mstat", "mstats"];
 }
 
-export default ImageStatsCommand;
+export default MediaStatsCommand;

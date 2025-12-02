@@ -46,8 +46,8 @@ import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
-import { initImageLib, reloadImageConnections } from "#utils/image.js";
 import logger from "#utils/logger.js";
+import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
 import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
 import { connect, connected, reload } from "#utils/soundplayer.js";
 import { parseThreshold } from "#utils/tempimages.js";
@@ -144,8 +144,8 @@ logger.log("info", "Finished loading commands.");
 if (database) {
   await database.setup();
 }
-if (process.env.API_TYPE === "ws") await reloadImageConnections();
-else initImageLib();
+if (process.env.API_TYPE === "ws") await reloadMediaConnections();
+else initMediaLib();
 
 const shardArray =
   process.env.SHARDS && process.env.pm_id
@@ -224,8 +224,8 @@ if (process.env.PM2_USAGE) {
           case "soundreload":
             await reload(client);
             break;
-          case "imagereload":
-            await reloadImageConnections();
+          case "mediareload":
+            await reloadMediaConnections();
             break;
           case "broadcastStart":
             startBroadcast(client, packet.data.message);

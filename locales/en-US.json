@@ -21,8 +21,8 @@
       "exec": "Executes a shell command",
       "help": "Gets a list of commands",
       "image": "Searches for images across the web",
-      "imagereload": "Attempts to reconnect to all available image processing servers",
-      "imagestats": "Gets some statistics about the image servers",
+      "mediareload": "Attempts to reconnect to all available media processing servers",
+      "mediastats": "Gets some statistics about the media servers",
       "info": "Gets some info and credits about me",
       "lengthen": "Lengthens a short URL",
       "ping": "Pings Discord's servers",
@@ -551,8 +551,8 @@
       "exec": "exec",
       "help": "help",
       "image": "image",
-      "imagereload": "imagereload",
-      "imagestats": "imagestats",
+      "mediareload": "mediareload",
+      "mediastats": "mediastats",
       "info": "info",
       "lengthen": "lengthen",
       "ping": "ping",
@@ -827,14 +827,14 @@
         "noResults": "I couldn't find any results!",
         "results": "Search Results"
       },
-      "imagereload": {
-        "connected": "Successfully connected to {{length}} image server(s).",
-        "couldNotConnect": "I couldn't connect to any image servers!",
-        "owner": "Only the bot owner can reload the image servers!"
+      "mediareload": {
+        "connected": "Successfully connected to {{length}} media server(s).",
+        "couldNotConnect": "I couldn't connect to any media servers!",
+        "owner": "Only the bot owner can reload the media servers!"
       },
-      "imagestats": {
-        "connected": "The bot is currently connected to {{length}} image server(s).",
-        "header": "esmBot Image Statistics",
+      "mediastats": {
+        "connected": "The bot is currently connected to {{length}} media server(s).",
+        "header": "esmBot Media Statistics",
         "runningJobs": "Running Jobs: {{count}}",
         "server": "Server {{num}}"
       },

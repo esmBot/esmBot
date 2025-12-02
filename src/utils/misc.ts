@@ -8,7 +8,7 @@ import commandsConfig from "#config/commands.json" with { type: "json" };
 import messagesConfig from "#config/messages.json" with { type: "json" };
 
 import type { DatabasePlugin } from "../database.ts";
-import { disconnect, servers } from "./image.ts";
+import { disconnect, servers } from "./media.ts";
 
 const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
 

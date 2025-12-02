@@ -7,7 +7,7 @@ import { fileTypeFromStream } from "file-type";
 import ipaddr from "ipaddr.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
 import logger from "./logger.ts";
-import ImageConnection from "./mediaConnection.ts";
+import MediaConnection from "./mediaConnection.ts";
 import { random } from "./misc.ts";
 import type { MediaParams, MediaTypeData } from "./types.ts";
 
@@ -31,10 +31,10 @@ const formats = [
   "video/quicktime",
   "image/avif",
 ];
-export const connections = new Map<string, ImageConnection>();
+export const connections = new Map<string, MediaConnection>();
 export let servers: ServerConfig[] = process.env.API_TYPE === "ws" ? serversConfig.image : [];
 
-export function initImageLib() {
+export function initMediaLib() {
   const nodeRequire = createRequire(import.meta.url);
   const imgLib = nodeRequire(
     `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/esmbmedia.node`,
@@ -113,7 +113,7 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Me
 }
 
 function connect(server: string, auth: string | undefined, name: string | undefined, tls?: boolean) {
-  const connection = new ImageConnection(server, auth, name, tls);
+  const connection = new MediaConnection(server, auth, name, tls);
   connections.set(server, connection);
 }
 
@@ -129,7 +129,7 @@ async function repopulate() {
   servers = JSON.parse(data).image;
 }
 
-export async function reloadImageConnections() {
+export async function reloadMediaConnections() {
   disconnect();
   await repopulate();
   let amount = 0;
@@ -144,7 +144,7 @@ export async function reloadImageConnections() {
   return amount;
 }
 
-async function getIdeal(object: MediaParams): Promise<ImageConnection | undefined> {
+async function getIdeal(object: MediaParams): Promise<MediaConnection | undefined> {
   const idealServers = [];
   for (const connection of connections.values()) {
     if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
@@ -163,7 +163,7 @@ async function getIdeal(object: MediaParams): Promise<ImageConnection | undefine
 
 let running = 0;
 
-export async function runImageJob(params: MediaParams): Promise<{ buffer: Buffer; type: string }> {
+export async function runMediaJob(params: MediaParams): Promise<{ buffer: Buffer; type: string }> {
   if (process.env.API_TYPE === "ws") {
     const currentServer = await getIdeal(params);
     if (!currentServer)
@@ -193,7 +193,7 @@ export async function runImageJob(params: MediaParams): Promise<{ buffer: Buffer
     };
   }
   if (run) {
-    // Called from command (not using image API)
+    // Called from command (not using media API)
     running++;
     const data = await run(params).finally(() => {
       running--;
@@ -207,5 +207,5 @@ export async function runImageJob(params: MediaParams): Promise<{ buffer: Buffer
       type: data.fileExtension,
     };
   }
-  throw "image_not_working";
+  throw "media_not_working";
 }

@@ -86,13 +86,13 @@ const jobs = new JobCache<bigint, Job>();
 
 const PASS = process.env.PASS ? process.env.PASS : undefined;
 
-// Used for direct image uploads
+// Used for direct media uploads
 const clientID = process.env.CLIENT_ID;
 const discordBaseURL =
   process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : "https://discord.com/api/v10";
 
 /**
- * Accept an image job.
+ * Accept a media job.
  */
 async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
   const job = jobs.get(id)!;
@@ -121,7 +121,7 @@ async function acceptJob(id: bigint, sock: WSocket): Promise<void> {
 
   // Because malloc_trim can sometimes take longer than expected,
   // we wait until all* jobs are finished before trimming to avoid potential issues.
-  // See the comment in natives/node/image.cc for more info
+  // See the comment in natives/node/media.cc for more info
   if (jobs.size <= 1) {
     media.trim();
   }
@@ -236,7 +236,7 @@ httpServer.on("request", (req, res) => {
       res.statusCode = 404;
       return res.end("404 Not Found");
     }
-    log(`Sending image data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
+    log(`Sending media data for job ${id} to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     const job = jobs.get(id)!;
     let contentType: string | undefined;
     switch (job.ext) {
@@ -419,15 +419,15 @@ async function finishJob(
 }
 
 /**
- * Run an image job.
+ * Run a media job.
  */
 async function runJob(job: MiniJob, ws: WSocket): Promise<void> {
   log(`Job ${job.id} starting...`, job.num);
 
   const object = job.msg;
-  // If the image has a path, it must also have a type
+  // If the input has a path, it must also have a type
   if (object.path && !object.input?.type) {
-    throw new TypeError("Unknown image type");
+    throw new TypeError("Unknown media type");
   }
 
   log(`Job ${job.id} started`, job.num);

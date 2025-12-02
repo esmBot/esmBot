@@ -24,11 +24,11 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `REST_PROXY`: A Discord REST URL to use besides the default (`https://discord.com/api/v{version_number}`). Can be useful for proxying requests to Discord through an external server.
 - `SENTRY_DSN`: A DSN endpoint URL from [Sentry](https://sentry.io). This is a fully optional integration for error monitoring and statistics.
 - `OUTPUT`: A directory to output the help documentation in Markdown format to. It's recommended to set this to a directory being served by a web server.
-- `TEMPDIR`: A directory that will store generated images larger than Discord's filesize limit. It's recommended to set this to a directory being served by a web server.
-- `TMP_DOMAIN`: The root domain/directory that the images larger than Discord's filesize limit are stored at. Example: `https://projectlounge.pw/tmp`
+- `TEMPDIR`: A directory that will store generated media files larger than Discord's filesize limit. It's recommended to set this to a directory being served by a web server.
+- `TMP_DOMAIN`: The root domain/directory that the media files larger than Discord's filesize limit are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
 - `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
-- `API_TYPE`: Set this to "none" if you want to process all images locally. Alternatively, set it to "ws" to use an image API server specified in the `image` block of `config/servers.json`.
+- `API_TYPE`: Set this to "none" if you want to process all media locally. Alternatively, set it to "ws" to use a media API server specified in the `image` block of `config/servers.json`.
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
 
 ## JSON
@@ -73,7 +73,7 @@ The JSON-based configuration files are located in `config/`.
       "auth": "youshallnotpass" // Password/authorization code for the server
     }
   ],
-  "image": [ // Objects containing info for connecting to WS image server(s)
+  "image": [ // Objects containing info for connecting to WS media server(s)
     {
       "name": "test", // A human-friendly name for the server
       "server": "localhost", // IP address or domain name for the server
