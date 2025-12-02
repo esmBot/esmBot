@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class HomebrewCommand extends ImageCommand {
+class HomebrewCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

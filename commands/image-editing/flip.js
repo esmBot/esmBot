@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class FlipCommand extends ImageCommand {
+class FlipCommand extends MediaCommand {
   static description = "Flips an image";
 
   static noImage = "You need to provide an image/GIF to flip!";

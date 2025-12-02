@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SpinCommand extends ImageCommand {
+class SpinCommand extends MediaCommand {
   static description = "Spins an image";
   static aliases = ["rotate"];
 

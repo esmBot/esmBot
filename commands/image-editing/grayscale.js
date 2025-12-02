@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class GrayscaleCommand extends ImageCommand {
+class GrayscaleCommand extends MediaCommand {
   params = {
     color: "grayscale",
   };

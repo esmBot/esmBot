@@ -1,5 +1,5 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 const words = [
   "me irl",
   "dank",
@@ -25,7 +25,7 @@ const words = [
   "pewdiepie",
 ];
 
-class CaptionTwoCommand extends ImageCommand {
+class CaptionTwoCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WhisperCommand extends ImageCommand {
+class WhisperCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

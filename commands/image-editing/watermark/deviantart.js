@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WatermarkDeviantArtCommand extends ImageCommand {
+class WatermarkDeviantArtCommand extends MediaCommand {
   params = {
     water: "assets/images/deviantart.png",
     gravity: 5,

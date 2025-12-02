@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import process from "node:process";
 import type { AnyInteractionGateway } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { collectors, commands, messageCommands, selectedImages, userCommands } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { getString } from "#utils/i18n.js";
@@ -73,7 +73,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
         flags: commandClass.success ? 0 : 64,
       });
     } else if (typeof result === "object") {
-      if (commandClass instanceof ImageCommand && result.files) {
+      if (commandClass instanceof MediaCommand && result.files) {
         const fileSize = interaction.attachmentSizeLimit;
         const file = result.files[0];
         if (file.contents.length > fileSize) {

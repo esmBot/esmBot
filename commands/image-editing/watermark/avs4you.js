@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WatermarkAVSCommand extends ImageCommand {
+class WatermarkAVSCommand extends MediaCommand {
   params = {
     water: "assets/images/avs4you.png",
     gravity: 5,

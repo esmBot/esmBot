@@ -52,7 +52,7 @@ type TenorResponse = {
   }[];
 };
 
-export type ImageMeta = {
+export type MediaMeta = {
   path: string;
   type?: string;
   url: string;
@@ -71,7 +71,7 @@ async function getImage(
   extraReturnTypes = false,
   type: string | null = null,
   client: Client | undefined = undefined,
-): Promise<ImageMeta | undefined> {
+): Promise<MediaMeta | undefined> {
   let imageURL: URL;
   try {
     imageURL = new URL(image);
@@ -89,7 +89,7 @@ async function getImage(
   const fileNameSplit = imageURL.pathname.split("/");
   const fileName = fileNameSplit[fileNameSplit.length - 1];
   const fileNameNoExtension = fileName.slice(0, fileName.lastIndexOf("."));
-  const payload: ImageMeta = {
+  const payload: MediaMeta = {
     url: image2,
     path: image,
     name: fileNameNoExtension,
@@ -179,8 +179,8 @@ async function checkImages(
   message: Message,
   extraReturnTypes: boolean,
   video: boolean,
-): Promise<ImageMeta | undefined> {
-  let type: ImageMeta | undefined;
+): Promise<MediaMeta | undefined> {
+  let type: MediaMeta | undefined;
 
   // first check the embeds
   if (message.embeds.length !== 0) {
@@ -319,7 +319,7 @@ export default async (
   extraReturnTypes = false,
   video = false,
   singleMessage = false,
-): Promise<ImageMeta | undefined> => {
+): Promise<MediaMeta | undefined> => {
   // we start by determining whether or not we're dealing with an interaction or a message
   if (interaction) {
     // we can get a raw attachment or a URL in the interaction itself

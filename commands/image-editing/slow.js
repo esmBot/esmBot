@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SlowCommand extends ImageCommand {
+class SlowCommand extends MediaCommand {
   paramsFunc() {
     const speed = this.getOptionInteger("multiplier", true) ?? Number.parseInt(this.args[0]);
     return {

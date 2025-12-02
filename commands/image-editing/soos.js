@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SooSCommand extends ImageCommand {
+class SooSCommand extends MediaCommand {
   params = {
     soos: true,
   };

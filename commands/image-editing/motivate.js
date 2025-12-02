@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class MotivateCommand extends ImageCommand {
+class MotivateCommand extends MediaCommand {
   /**
    * @param {string | number | boolean | import("oceanic.js").User | import("oceanic.js").Attachment} text
    * @param {string | undefined} url

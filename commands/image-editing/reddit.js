@@ -1,8 +1,8 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { random } from "#utils/misc.js";
 const names = ["esmBot", "me_irl", "dankmemes", "hmmm", "gaming", "wholesome", "chonkers", "memes", "funny", "lies"];
 
-class RedditCommand extends ImageCommand {
+class RedditCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

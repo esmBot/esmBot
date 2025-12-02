@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WatermarkShutterstockCommand extends ImageCommand {
+class WatermarkShutterstockCommand extends MediaCommand {
   params = {
     water: "assets/images/shutterstock.png",
     gravity: 5,

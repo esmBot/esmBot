@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class HueCommand extends ImageCommand {
+class HueCommand extends MediaCommand {
   paramsFunc() {
     const shift = this.getOptionInteger("shift", true) ?? Number.parseInt(this.args[0]);
     return {

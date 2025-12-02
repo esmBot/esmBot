@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class StretchCommand extends ImageCommand {
+class StretchCommand extends MediaCommand {
   params = {
     stretch: true,
   };

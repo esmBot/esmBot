@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WatermarkFunkyCommand extends ImageCommand {
+class WatermarkFunkyCommand extends MediaCommand {
   params = {
     water: "assets/images/funky.png",
     gravity: 3,

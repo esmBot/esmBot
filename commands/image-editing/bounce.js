@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class BounceCommand extends ImageCommand {
+class BounceCommand extends MediaCommand {
   static description = "Makes an image bounce up and down";
   static aliases = ["bouncy"];
 

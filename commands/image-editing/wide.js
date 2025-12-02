@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WideCommand extends ImageCommand {
+class WideCommand extends MediaCommand {
   paramsFunc() {
     const amount = this.getOptionInteger("scale");
     return {

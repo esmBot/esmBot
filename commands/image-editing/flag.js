@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class FlagCommand extends ImageCommand {
+class FlagCommand extends MediaCommand {
   flagPath = "";
 
   async criteria() {

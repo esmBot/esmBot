@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class FadeCommand extends ImageCommand {
+class FadeCommand extends MediaCommand {
   paramsFunc() {
     const alpha = this.getOptionBoolean("alpha");
     return {

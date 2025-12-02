@@ -1,5 +1,5 @@
 import type InteractionCollector from "../pagination/awaitinteractions.ts";
-import type { ImageMeta } from "./mediadetect.ts";
+import type { MediaMeta } from "./mediadetect.ts";
 import type { CommandEntry, CommandInfo } from "./types.ts";
 
 export const commands = new Map<string, CommandEntry>();
@@ -31,7 +31,7 @@ class TimedMap<K, V> extends Map {
 }
 
 export const runningCommands = new TimedMap<string, Date>(5000);
-export const selectedImages = new TimedMap<string, ImageMeta>(180000);
+export const selectedImages = new TimedMap<string, MediaMeta>(180000);
 
 class Cache<K, V> extends Map {
   maxValues: number;

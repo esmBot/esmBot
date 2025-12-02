@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SpotifyCommand extends ImageCommand {
+class SpotifyCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

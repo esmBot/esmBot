@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class JPEGCommand extends ImageCommand {
+class JPEGCommand extends MediaCommand {
   paramsFunc() {
     const quality = this.getOptionInteger("quality", true) ?? Number.parseInt(this.args[0]);
     return {

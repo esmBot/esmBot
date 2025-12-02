@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SepiaCommand extends ImageCommand {
+class SepiaCommand extends MediaCommand {
   params = {
     color: "sepia",
   };

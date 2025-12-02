@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SnapchatCommand extends ImageCommand {
+class SnapchatCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class InvertCommand extends ImageCommand {
+class InvertCommand extends MediaCommand {
   static description = "Inverts an image";
   static aliases = ["inverse", "negate", "negative"];
 

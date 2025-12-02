@@ -62,6 +62,7 @@ export interface CommandInfo {
 }
 
 export interface MediaParams {
+  type: "image";
   cmd: string;
   params: {
     [key: string]: string | number | boolean;

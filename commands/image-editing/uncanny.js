@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { random } from "#utils/misc.js";
 const prompts = [
   "you found:",
@@ -26,7 +26,7 @@ const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../.
     return val.split(".")[0];
   });
 
-class UncannyCommand extends ImageCommand {
+class UncannyCommand extends MediaCommand {
   /**
    * @param {string | undefined} url
    */

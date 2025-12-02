@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class QrReadCommand extends ImageCommand {
+class QrReadCommand extends MediaCommand {
   static description = "Reads a QR code";
   static aliases = ["qrread"];
 

@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WaaWCommand extends ImageCommand {
+class WaaWCommand extends MediaCommand {
   static description = "Mirrors the right side of an image onto the left";
   static aliases = ["magik3", "mirror"];
 

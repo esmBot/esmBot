@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class WatermarkPowerDirectorCommand extends ImageCommand {
+class WatermarkPowerDirectorCommand extends MediaCommand {
   params = {
     water: "assets/images/powerdirector.png",
     gravity: 9,

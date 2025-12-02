@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class CircleCommand extends ImageCommand {
+class CircleCommand extends MediaCommand {
   static description = "Applies a radial blur effect on an image";
   static aliases = ["cblur", "radial", "radialblur"];
 

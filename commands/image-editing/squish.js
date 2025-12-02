@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SquishCommand extends ImageCommand {
+class SquishCommand extends MediaCommand {
   static description = "Squishes/stretches an image";
   static aliases = ["squishy", "squash"];
 

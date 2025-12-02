@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SwirlCommand extends ImageCommand {
+class SwirlCommand extends MediaCommand {
   static description = "Swirls an image";
   static aliases = ["whirlpool", "distort"];
 

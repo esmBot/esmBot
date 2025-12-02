@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class TileCommand extends ImageCommand {
+class TileCommand extends MediaCommand {
   static description = "Creates a tile pattern from an image";
   static aliases = ["wall2"];
 

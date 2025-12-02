@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class FreezeCommand extends ImageCommand {
+class FreezeCommand extends MediaCommand {
   paramsFunc() {
     const frameCount = this.getOptionInteger("endframe", true) ?? Number.parseInt(this.args[0]);
     return {

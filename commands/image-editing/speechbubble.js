@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SpeechBubbleCommand extends ImageCommand {
+class SpeechBubbleCommand extends MediaCommand {
   paramsFunc() {
     const parsedScale = this.getOptionNumber("scale");
     const alpha = this.getOptionBoolean("alpha");

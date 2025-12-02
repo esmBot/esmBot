@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class ImplodeCommand extends ImageCommand {
+class ImplodeCommand extends MediaCommand {
   params = {
     mapName: "linearimplode.png",
   };

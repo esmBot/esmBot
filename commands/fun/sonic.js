@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SonicCommand extends ImageCommand {
+class SonicCommand extends MediaCommand {
   paramsFunc() {
     const inputText = this.getOptionString("text") ?? this.args.join(" ");
     return {

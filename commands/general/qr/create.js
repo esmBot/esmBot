@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class QrCreateCommand extends ImageCommand {
+class QrCreateCommand extends MediaCommand {
   paramsFunc() {
     const inputText = this.getOptionString("text") ?? this.args.join(" ");
     return {

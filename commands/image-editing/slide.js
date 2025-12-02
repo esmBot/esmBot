@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SlideCommand extends ImageCommand {
+class SlideCommand extends MediaCommand {
   paramsFunc() {
     const vertical = this.getOptionBoolean("vertical");
     const reverse = this.getOptionBoolean("reverse");

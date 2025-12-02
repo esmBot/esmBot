@@ -1,7 +1,7 @@
 import { Constants } from "oceanic.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class UncaptionCommand extends ImageCommand {
+class UncaptionCommand extends MediaCommand {
   paramsFunc() {
     const tolerance = this.getOptionNumber("tolerance");
     return {

@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class VignetteCommand extends ImageCommand {
+class VignetteCommand extends MediaCommand {
   params = {
     water: "assets/images/vignette.png",
     yscale: 1.0,

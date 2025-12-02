@@ -8,7 +8,7 @@ import {
   ThreadChannel,
 } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { getString } from "#utils/i18n.js";
@@ -186,7 +186,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
         ),
       );
     } else if (typeof result === "object") {
-      if (commandClass instanceof ImageCommand && result.files) {
+      if (commandClass instanceof MediaCommand && result.files) {
         let fileSize = 10485760;
         if (message.guild) {
           switch (message.guild.premiumTier) {

@@ -1,6 +1,6 @@
-import ImageCommand from "#cmd-classes/imageCommand.js";
+import MediaCommand from "#cmd-classes/mediaCommand.js";
 
-class SharpenCommand extends ImageCommand {
+class SharpenCommand extends MediaCommand {
   params = {
     sharp: true,
   };

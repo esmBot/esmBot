@@ -12,12 +12,12 @@ import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 import { runMediaJob } from "#utils/media.js";
-import imageDetect, { type ImageMeta } from "#utils/mediadetect.js";
+import mediaDetect, { type MediaMeta } from "#utils/mediadetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
 import type { MediaParams } from "#utils/types.js";
 import Command from "./command.ts";
 
-class ImageCommand extends Command {
+class MediaCommand extends Command {
   params?: object;
 
   paramsFunc(_url?: string, _name?: string): object {
@@ -48,20 +48,20 @@ class ImageCommand extends Command {
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
 
-    const staticProps = this.constructor as typeof ImageCommand;
+    const staticProps = this.constructor as typeof MediaCommand;
 
-    let imageParams: MediaParams;
+    let mediaParams: MediaParams;
 
     let needsSpoiler = false;
     if (staticProps.requiresImage) {
       try {
-        let selection: ImageMeta | undefined;
+        let selection: MediaMeta | undefined;
         if (!this.getOptionAttachment("image") && !this.getOptionString("link")) {
           selection = selectedImages.get(this.author.id);
         }
         const image =
           selection ??
-          (await imageDetect(this.client, this.permissions, this.message, this.interaction, true).catch((e) => {
+          (await mediaDetect(this.client, this.permissions, this.message, this.interaction, true).catch((e) => {
             if (e.name === "AbortError") {
               runningCommands.delete(this.author.id);
               return this.getString("image.timeout");
@@ -87,8 +87,9 @@ class ImageCommand extends Command {
           runningCommands.delete(this.author.id);
           return this.getString("image.badurl");
         }
-        imageParams = {
+        mediaParams = {
           cmd: staticProps.command,
+          type: "image",
           params: {
             togif: !!this.getOptionBoolean("togif"),
           },
@@ -106,8 +107,9 @@ class ImageCommand extends Command {
         throw e;
       }
     } else {
-      imageParams = {
+      mediaParams = {
         cmd: staticProps.command,
+        type: "image",
         params: {
           togif: !!this.getOptionBoolean("togif"),
         },
@@ -125,7 +127,7 @@ class ImageCommand extends Command {
           staticProps.requiredParamType,
           staticProps.requiredParamType !== Constants.ApplicationCommandOptionTypes.STRING,
         ) ?? this.args.join(" ").trim();
-      if (!text || (typeof text === "string" && isEmpty(text)) || !(await this.criteria(text, imageParams.url))) {
+      if (!text || (typeof text === "string" && isEmpty(text)) || !(await this.criteria(text, mediaParams.url))) {
         runningCommands.delete(this.author?.id);
         return (
           this.getString(`commands.noParam.${this.cmdName}`, { returnNull: true }) ||
@@ -136,15 +138,15 @@ class ImageCommand extends Command {
     }
 
     if (this.params) {
-      Object.assign(imageParams.params, this.params);
+      Object.assign(mediaParams.params, this.params);
     } else {
-      Object.assign(imageParams.params, this.paramsFunc(imageParams.url, imageParams.name));
+      Object.assign(mediaParams.params, this.paramsFunc(mediaParams.url, mediaParams.name));
     }
 
     let status: Message | undefined;
     if (
-      imageParams.input &&
-      (imageParams.input.type === "image/gif" || imageParams.input.type === "image/webp") &&
+      mediaParams.input &&
+      (mediaParams.input.type === "image/gif" || mediaParams.input.type === "image/webp") &&
       this.message
     ) {
       status = await this.processMessage(
@@ -155,13 +157,13 @@ class ImageCommand extends Command {
     const ephemeral = this.getOptionBoolean("ephemeral");
 
     if (this.interaction) {
-      imageParams.ephemeral = ephemeral;
-      imageParams.spoiler = needsSpoiler;
-      imageParams.token = this.interaction.token;
+      mediaParams.ephemeral = ephemeral;
+      mediaParams.spoiler = needsSpoiler;
+      mediaParams.token = this.interaction.token;
     }
 
     try {
-      const result = await runMediaJob(imageParams);
+      const result = await runMediaJob(mediaParams);
       const buffer = result.buffer;
       const type = result.type;
       if (type === "sent") {
@@ -300,6 +302,8 @@ class ImageCommand extends Command {
     "ubuntu",
   ];
 
+  static supportedTypes: MediaParams["type"][] = ["image"];
+
   static requiresImage = true;
   static requiresParam = false;
   static requiredParam = "text";
@@ -313,4 +317,4 @@ class ImageCommand extends Command {
   static command = "";
 }
 
-export default ImageCommand;
+export default MediaCommand;
