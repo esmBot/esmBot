@@ -30,7 +30,7 @@ void esmb_media_add_float_arg(esmb_media_args *args, char *key, float value);
 void esmb_media_add_int_arg(esmb_media_args *args, char *key, int value);
 void esmb_media_add_bool_arg(esmb_media_args *args, char *key, bool value);
 
-esmb_media_result *esmb_media_process(const char *command, void *args, const char *type, const char *out_ype,
+esmb_media_result *esmb_media_process(const char *command, void *args, const char *type, const char *out_type,
                                       const char *data, size_t length);
 void esmb_media_free_result(esmb_media_result *obj);
 
