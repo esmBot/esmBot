@@ -102,34 +102,46 @@ Args parseArguments(int argc, char *argv[]) {
   return args;
 }
 
-void printHelp() {
-  std::cerr << "Usage: esmb-cli function [input] output" << std::endl << std::endl;
-  std::cerr << "Available functions:" << std::endl;
+std::string printHelp() {
+  std::stringstream out;
+  out << "Usage: esmb-cli function [input] output" << std::endl << std::endl;
+  out << "Available functions:" << std::endl;
 
   bool started = false;
   for (auto cmd : esmb::Image::FunctionMap) {
-    if (started) std::cerr << ", ";
-    std::cerr << cmd.first;
+    if (started) out << ", ";
+    out << cmd.first;
     started = true;
   }
   for (auto cmd : esmb::Image::NoInputFunctionMap) {
-    if (started) std::cerr << ", ";
-    std::cerr << cmd.first;
+    if (started) out << ", ";
+    out << cmd.first;
     started = true;
   }
-  std::cerr << std::endl;
+  out << std::endl;
+
+  return out.str();
 }
 
 int main(int argc, char *argv[]) {
   Args args = parseArguments(argc, argv);
 
   if (MapContainsKey(args.flags, "version")) {
+#ifdef ESMB_VERSION
     std::cout << ESMB_VERSION << std::endl;
+#else
+    std::cout << esmb_media_version() << std::endl;
+#endif
+    return 0;
+  }
+
+  if (MapContainsKey(args.flags, "help")) {
+    std::cout << printHelp();
     return 0;
   }
 
   if (args.args.size() < 3) {
-    printHelp();
+    std::cerr << printHelp();
     return 1;
   }
 
@@ -137,7 +149,7 @@ int main(int argc, char *argv[]) {
   bool isInputFunc = MapContainsKey(esmb::Image::FunctionMap, function);
   bool isNoInputFunc = MapContainsKey(esmb::Image::NoInputFunctionMap, function);
   if ((!isInputFunc && !isNoInputFunc) || (isInputFunc && args.args.size() < 4)) {
-    printHelp();
+    std::cerr << printHelp();
     return 1;
   }
 
