@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::FlagArgs = {
 };
 
 CmdOutput esmb::Image::Flag(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   string overlay = GetArgument<string>(arguments, "overlay");
   string basePath = GetArgument<string>(arguments, "basePath");
 

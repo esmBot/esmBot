@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::SpotifyArgs = {
 };
 
 CmdOutput esmb::Image::Spotify(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+                               esmb::ArgumentMap arguments, bool *shouldKill) {
   string text = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 

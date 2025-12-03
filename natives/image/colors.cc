@@ -14,7 +14,7 @@ FunctionArgs esmb::Image::ColorsArgs = {
 VImage sepia = VImage::new_matrixv(3, 3, 0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);
 
 CmdOutput esmb::Image::Colors(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 esmb::ArgumentMap arguments, bool *shouldKill) {
+                              esmb::ArgumentMap arguments, bool *shouldKill) {
   string color = GetArgument<string>(arguments, "color");
   int shift = GetArgumentWithFallback<int>(arguments, "shift", 0);
 

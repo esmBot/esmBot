@@ -10,7 +10,7 @@ FunctionArgs esmb::Image::JpegArgs = {
 };
 
 CmdOutput esmb::Image::Jpeg(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   int quality = GetArgumentWithFallback<int>(arguments, "quality", 1);
 
   char *buf;

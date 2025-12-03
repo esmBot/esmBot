@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::BlurArgs = {
 };
 
 CmdOutput esmb::Image::Blur(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   bool sharp = GetArgumentWithFallback<bool>(arguments, "sharp", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false));

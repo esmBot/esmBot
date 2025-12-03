@@ -6,7 +6,7 @@ using namespace std;
 using namespace vips;
 
 CmdOutput esmb::Image::Wall(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
+                            [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
   if (!in.has_alpha()) in = in.bandjoin(255);
 

@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::WhisperArgs = {
 };
 
 CmdOutput esmb::Image::Whisper(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+                               esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 

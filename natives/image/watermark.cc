@@ -19,7 +19,7 @@ FunctionArgs esmb::Image::WatermarkArgs = {
 };
 
 CmdOutput esmb::Image::Watermark(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    esmb::ArgumentMap arguments, bool *shouldKill) {
+                                 esmb::ArgumentMap arguments, bool *shouldKill) {
   string water = GetArgument<string>(arguments, "water");
   int gravity = GetArgument<int>(arguments, "gravity");
 

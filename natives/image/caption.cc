@@ -12,7 +12,7 @@ FunctionArgs esmb::Image::CaptionArgs = {
 };
 
 CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+                               esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string font = GetArgumentWithFallback<string>(arguments, "font", "futura");
   string basePath = GetArgument<string>(arguments, "basePath");

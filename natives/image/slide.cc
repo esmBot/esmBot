@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::SlideArgs = {
 };
 
 CmdOutput esmb::Image::Slide(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                esmb::ArgumentMap arguments, bool *shouldKill) {
+                             esmb::ArgumentMap arguments, bool *shouldKill) {
   bool vertical = GetArgumentWithFallback<bool>(arguments, "vertical", false);
   bool reverse = GetArgumentWithFallback<bool>(arguments, "reverse", false);
 

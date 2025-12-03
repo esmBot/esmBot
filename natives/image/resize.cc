@@ -12,7 +12,7 @@ FunctionArgs esmb::Image::ResizeArgs = {
 };
 
 CmdOutput esmb::Image::Resize(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 esmb::ArgumentMap arguments, bool *shouldKill) {
+                              esmb::ArgumentMap arguments, bool *shouldKill) {
   bool stretch = GetArgumentWithFallback<bool>(arguments, "stretch", false);
   bool wide = GetArgumentWithFallback<bool>(arguments, "wide", false);
   int wideAmount = GetArgumentWithFallback<int>(arguments, "amount", 19);

@@ -10,7 +10,7 @@ FunctionArgs esmb::Image::FlipArgs = {
 };
 
 CmdOutput esmb::Image::Flip(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   bool flop = GetArgumentWithFallback<bool>(arguments, "flop", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));

@@ -12,7 +12,7 @@ FunctionArgs esmb::Image::FadeArgs = {
 };
 
 CmdOutput esmb::Image::Fade(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   bool alpha = GetArgumentWithFallback<bool>(arguments, "alpha", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))

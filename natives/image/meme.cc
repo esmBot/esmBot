@@ -29,7 +29,7 @@ VImage genText(string text, string font, const char *fontfile, int width, VImage
 }
 
 CmdOutput esmb::Image::Meme(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               esmb::ArgumentMap arguments, bool *shouldKill) {
+                            esmb::ArgumentMap arguments, bool *shouldKill) {
   string top = GetArgumentWithFallback<string>(arguments, "topText", "");
   string bottom = GetArgumentWithFallback<string>(arguments, "bottomText", "");
   string font = GetArgumentWithFallback<string>(arguments, "font", "impact");

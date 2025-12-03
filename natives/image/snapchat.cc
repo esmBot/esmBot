@@ -14,7 +14,7 @@ FunctionArgs esmb::Image::SnapchatArgs = {
 const vector<double> zeroVec178 = {0, 0, 0, 178};
 
 CmdOutput esmb::Image::Snapchat(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   esmb::ArgumentMap arguments, bool *shouldKill) {
+                                esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   float pos = GetArgumentWithFallback<float>(arguments, "pos", 0.565);
   string basePath = GetArgument<string>(arguments, "basePath");

@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::HomebrewArgs = {
 };
 
 CmdOutput esmb::Image::Homebrew([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments,
-                   bool *shouldKill) {
+                                bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string basePath = GetArgument<string>(arguments, "basePath");
 

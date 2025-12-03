@@ -13,7 +13,7 @@ FunctionArgs esmb::Image::MotivateArgs = {
 };
 
 CmdOutput esmb::Image::Motivate(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                   esmb::ArgumentMap arguments, bool *shouldKill) {
+                                esmb::ArgumentMap arguments, bool *shouldKill) {
   string top_text = GetArgumentWithFallback<string>(arguments, "topText", "");
   string bottom_text = GetArgumentWithFallback<string>(arguments, "bottomText", "");
   string font = GetArgumentWithFallback<string>(arguments, "font", "times");

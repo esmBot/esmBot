@@ -15,7 +15,7 @@ FunctionArgs esmb::Image::QrCreateArgs = {
 };
 
 CmdOutput esmb::Image::QrCreate([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments,
-                   [[maybe_unused]] bool *shouldKill) {
+                                [[maybe_unused]] bool *shouldKill) {
   string text = GetArgument<string>(arguments, "text");
 
   auto writer =
@@ -39,8 +39,9 @@ CmdOutput esmb::Image::QrCreate([[maybe_unused]] const string &type, string &out
   return {buf, dataSize};
 }
 
-CmdOutput esmb::Image::QrRead([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] esmb::ArgumentMap arguments, [[maybe_unused]] bool *shouldKill) {
+CmdOutput esmb::Image::QrRead([[maybe_unused]] const string &type, string &outType, const char *bufferdata,
+                              size_t bufferLength, [[maybe_unused]] esmb::ArgumentMap arguments,
+                              [[maybe_unused]] bool *shouldKill) {
   vips::VOption *options = vips::VImage::option()->set("access", "sequential");
 
   vips::VImage in = vips::VImage::new_from_buffer(bufferdata, bufferLength, "", options)

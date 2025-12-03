@@ -7,7 +7,7 @@ using namespace std;
 using namespace vips;
 
 CmdOutput esmb::Image::Bounce(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
+                              [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
                 .colourspace(VIPS_INTERPRETATION_sRGB);
   if (!in.has_alpha()) in = in.bandjoin(255);

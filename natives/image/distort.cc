@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::DistortArgs = {
 };
 
 CmdOutput esmb::Image::Distort(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+                               esmb::ArgumentMap arguments, bool *shouldKill) {
   string mapName = GetArgument<string>(arguments, "mapName");
   string basePath = GetArgument<string>(arguments, "basePath");
 

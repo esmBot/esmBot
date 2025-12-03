@@ -14,7 +14,7 @@ FunctionArgs esmb::Image::UncannyArgs = {
 };
 
 CmdOutput esmb::Image::Uncanny(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+                               esmb::ArgumentMap arguments, bool *shouldKill) {
   string caption = GetArgument<string>(arguments, "caption");
   string caption2 = GetArgument<string>(arguments, "caption2");
   string font = GetArgumentWithFallback<string>(arguments, "font", "helvetica");

@@ -11,7 +11,7 @@ FunctionArgs esmb::Image::MirrorArgs = {
 };
 
 CmdOutput esmb::Image::Mirror(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 esmb::ArgumentMap arguments, bool *shouldKill) {
+                              esmb::ArgumentMap arguments, bool *shouldKill) {
   bool vertical = GetArgumentWithFallback<bool>(arguments, "vertical", false);
   bool first = GetArgumentWithFallback<bool>(arguments, "first", false);
 

@@ -10,7 +10,8 @@ FunctionArgs esmb::Image::SonicArgs = {
   {"basePath", {typeid(string), true}}
 };
 
-CmdOutput esmb::Image::Sonic([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments, bool *shouldKill) {
+CmdOutput esmb::Image::Sonic([[maybe_unused]] const string &type, string &outType, esmb::ArgumentMap arguments,
+                             bool *shouldKill) {
   string text = GetArgument<string>(arguments, "text");
   string basePath = GetArgument<string>(arguments, "basePath");
 

@@ -10,7 +10,7 @@ FunctionArgs esmb::Image::UncaptionArgs = {
 };
 
 CmdOutput esmb::Image::Uncaption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                    esmb::ArgumentMap arguments, bool *shouldKill) {
+                                 esmb::ArgumentMap arguments, bool *shouldKill) {
   float tolerance = GetArgumentWithFallback<float>(arguments, "tolerance", 0.5);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));

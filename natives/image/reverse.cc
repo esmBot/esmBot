@@ -9,8 +9,8 @@ FunctionArgs esmb::Image::ReverseArgs = {
   {"soos", {typeid(bool), false}}
 };
 
-CmdOutput esmb::Image::Reverse([[maybe_unused]] const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                  esmb::ArgumentMap arguments, bool *shouldKill) {
+CmdOutput esmb::Image::Reverse([[maybe_unused]] const string &type, string &outType, const char *bufferdata,
+                               size_t bufferLength, esmb::ArgumentMap arguments, bool *shouldKill) {
   bool soos = GetArgumentWithFallback<bool>(arguments, "soos", false);
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));

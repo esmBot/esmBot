@@ -6,7 +6,7 @@ using namespace std;
 using namespace vips;
 
 CmdOutput esmb::Image::Tile(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-               [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
+                            [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, false, false));
 
   int width = in.width();
