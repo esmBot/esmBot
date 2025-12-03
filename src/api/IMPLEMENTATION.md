@@ -53,6 +53,7 @@ The job object is formatted like this:
 
 ```js
 {
+  "type": "image",     // type of job to execute
   "cmd": string,       // name of internal media command, e.g. caption
   "path": string,      // canonical media URL, used for getting the actual input
   "url": string,       // original media URL, used for message filtering
