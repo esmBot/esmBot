@@ -145,7 +145,7 @@ if (database) {
   await database.setup();
 }
 if (process.env.API_TYPE === "ws") await reloadMediaConnections();
-else initMediaLib();
+else await initMediaLib();
 
 const shardArray =
   process.env.SHARDS && process.env.pm_id

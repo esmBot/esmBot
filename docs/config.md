@@ -28,7 +28,7 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `TMP_DOMAIN`: The root domain/directory that the media files larger than Discord's filesize limit are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
 - `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
-- `API_TYPE`: Set this to "none" if you want to process all media locally. Alternatively, set it to "ws" to use a media API server specified in the `image` block of `config/servers.json`.
+- `API_TYPE`: Set this to "none" if you want to process all media locally. Alternatively, set it to "ws" to use a media API server specified in the `media` block of `config/servers.json`.
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
 
 ## JSON
@@ -73,7 +73,7 @@ The JSON-based configuration files are located in `config/`.
       "auth": "youshallnotpass" // Password/authorization code for the server
     }
   ],
-  "image": [ // Objects containing info for connecting to WS media server(s)
+  "media": [ // Objects containing info for connecting to WS media server(s)
     {
       "name": "test", // A human-friendly name for the server
       "server": "localhost", // IP address or domain name for the server

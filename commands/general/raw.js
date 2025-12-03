@@ -5,7 +5,7 @@ import imageDetect from "#utils/mediadetect.js";
 class RawCommand extends Command {
   async run() {
     await this.acknowledge();
-    const image = await imageDetect(this.client, this.permissions, this.message, this.interaction);
+    const image = await imageDetect(this.client, this.permissions, ["image"], this.message, this.interaction);
     if (image === undefined) {
       this.success = false;
       return this.getString("commands.responses.raw.noInput");

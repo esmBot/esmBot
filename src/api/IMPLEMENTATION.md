@@ -4,7 +4,7 @@ The esmBot Media API is a combined HTTP and WebSocket API. The default port to a
 
 ## HTTP
 
-### GET `/image/?id=<job id>`
+### GET `/media/?id=<job id>`
 
 Get output data after job is finished running. The Content-Type header is properly set.
 

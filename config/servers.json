@@ -1,5 +1,5 @@
 {
   "lava": [{ "name": "localhost", "url": "localhost:2333", "auth": "youshallnotpass" }],
-  "image": [{ "name": "localhost", "server": "localhost", "auth": "verycoolpass100", "tls": false }],
+  "media": [{ "name": "localhost", "server": "localhost", "auth": "verycoolpass100", "tls": false }],
   "searx": ["https://searx.projectlounge.pw"]
 }

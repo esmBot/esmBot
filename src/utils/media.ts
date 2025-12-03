@@ -1,18 +1,16 @@
 import { Buffer } from "node:buffer";
 import { lookup } from "node:dns/promises";
 import fs from "node:fs";
-import { createRequire } from "node:module";
 import process from "node:process";
 import { fileTypeFromStream } from "file-type";
 import ipaddr from "ipaddr.js";
-import serversConfig from "#config/servers.json" with { type: "json" };
 import logger from "./logger.ts";
 import MediaConnection from "./mediaConnection.ts";
 import { random } from "./misc.ts";
 import type { MediaParams, MediaTypeData } from "./types.ts";
 
 const run = process.env.API_TYPE === "ws" ? null : (await import("./mediaRunner.ts")).default;
-let img: import("./mediaLib.ts").MediaLib | undefined;
+let mediaLib: import("./mediaLib.ts").MediaLib | undefined;
 
 interface ServerConfig {
   name: string;
@@ -21,31 +19,25 @@ interface ServerConfig {
   tls?: boolean;
 }
 
-const formats = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-  "video/mp4",
-  "video/webm",
-  "video/quicktime",
-  "image/avif",
-];
+export const formats = {
+  image: ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"],
+};
 export const connections = new Map<string, MediaConnection>();
-export let servers: ServerConfig[] = process.env.API_TYPE === "ws" ? serversConfig.image : [];
+export let servers: ServerConfig[];
 
-export function initMediaLib() {
-  const nodeRequire = createRequire(import.meta.url);
-  const imgLib = nodeRequire(
-    `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/esmbmedia.node`,
-  );
-  imgLib.init();
-  img = imgLib;
+export async function initMediaLib() {
+  const { media } = await import("./mediaLib.ts");
+  media.init();
+  mediaLib = media;
 }
 
-export async function getType(image: URL, extraReturnTypes: boolean): Promise<MediaTypeData | undefined> {
+export async function getType(
+  media: URL,
+  extraReturnTypes: boolean,
+  typeMedia: MediaParams["type"][],
+): Promise<MediaTypeData | undefined> {
   try {
-    const remoteIP = await lookup(image.host);
+    const remoteIP = await lookup(media.host);
     const parsedIP = ipaddr.parse(remoteIP.address);
     if (parsedIP.range() !== "unicast") return;
   } catch (e) {
@@ -54,30 +46,31 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Me
     throw e;
   }
   let type: string | undefined;
+  let mediaType: MediaParams["type"] | undefined;
   let url: string;
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
   }, 3000);
   try {
-    const imageRequest = await fetch(image, {
+    const mediaRequest = await fetch(media, {
       signal: controller.signal,
       method: "HEAD",
     });
     clearTimeout(timeout);
-    if (imageRequest.redirected) {
-      const redirectHost = new URL(imageRequest.url).host;
+    if (mediaRequest.redirected) {
+      const redirectHost = new URL(mediaRequest.url).host;
       const remoteIP = await lookup(redirectHost);
       const parsedIP = ipaddr.parse(remoteIP.address);
       if (parsedIP.range() !== "unicast") return;
     }
-    url = imageRequest.url;
+    url = mediaRequest.url;
     let size = 0;
-    if (imageRequest.headers.has("content-range")) {
-      const contentRange = imageRequest.headers.get("content-range");
+    if (mediaRequest.headers.has("content-range")) {
+      const contentRange = mediaRequest.headers.get("content-range");
       if (contentRange) size = Number.parseInt(contentRange.split("/")[1]);
-    } else if (imageRequest.headers.has("content-length")) {
-      const contentLength = imageRequest.headers.get("content-length");
+    } else if (mediaRequest.headers.has("content-length")) {
+      const contentLength = mediaRequest.headers.get("content-length");
       if (contentLength) size = Number.parseInt(contentLength);
     }
     if (size > 41943040 && extraReturnTypes) {
@@ -85,9 +78,12 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Me
       type = "large";
       return { type };
     }
-    const typeHeader = imageRequest.headers.get("content-type");
+    const typeHeader = mediaRequest.headers.get("content-type");
     if (typeHeader) {
       type = typeHeader;
+      const typePrefix = typeHeader.split("/")[0];
+      if (typePrefix !== "image") return;
+      mediaType = typePrefix;
     } else {
       const timeout = setTimeout(() => {
         controller.abort();
@@ -100,16 +96,27 @@ export async function getType(image: URL, extraReturnTypes: boolean): Promise<Me
       });
       clearTimeout(timeout);
       if (bufRequest.body) {
-        const imageType = await fileTypeFromStream(bufRequest.body);
-        if (imageType && formats.includes(imageType.mime)) {
-          type = imageType.mime;
+        const fileType = await fileTypeFromStream(bufRequest.body);
+        if (fileType) {
+          if (
+            ![...(typeMedia.length === 0 ? formats.image : typeMedia.flatMap((v) => formats[v]))].includes(
+              fileType.mime,
+            )
+          )
+            return;
+
+          const typePrefix = fileType.mime.split("/")[0] as MediaParams["type"];
+          if (!typeMedia.includes(typePrefix)) return;
+          mediaType = typePrefix;
+
+          if (mediaType) type = fileType.mime;
         }
       }
     }
   } finally {
     clearTimeout(timeout);
   }
-  return { type, url };
+  return { type, url, mediaType };
 }
 
 function connect(server: string, auth: string | undefined, name: string | undefined, tls?: boolean) {
@@ -126,7 +133,16 @@ export function disconnect() {
 
 async function repopulate() {
   const data = await fs.promises.readFile(new URL("../../config/servers.json", import.meta.url), { encoding: "utf8" });
-  servers = JSON.parse(data).image;
+  const parsed = JSON.parse(data);
+  if (parsed.image) {
+    logger.warn('!!! THE "image" FIELD IN config/servers.json IS DEPRECATED !!!');
+    logger.warn(
+      'The "image" field has been renamed to "media". Please rename it in your config; esmBot will no longer read this field in a future version.',
+    );
+    servers = parsed.image;
+  } else {
+    servers = parsed.media;
+  }
 }
 
 export async function reloadMediaConnections() {
@@ -150,11 +166,11 @@ async function getIdeal(object: MediaParams): Promise<MediaConnection | undefine
     if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
       continue;
     }
-    if (!connection.funcs.includes(object.cmd)) {
+    if (!connection.funcs[object.type]?.includes(object.cmd)) {
       idealServers.push(null);
       continue;
     }
-    if (object.input?.type && !connection.formats[object.cmd]?.includes(object.input.type)) continue;
+    if (object.input?.type && !connection.formats[object.type]?.[object.cmd]?.includes(object.input.type)) continue;
     idealServers.push(connection);
   }
   if (idealServers.length === 0) throw "No available servers";
@@ -198,8 +214,8 @@ export async function runMediaJob(params: MediaParams): Promise<{ buffer: Buffer
     const data = await run(params).finally(() => {
       running--;
       if (running < 0) running = 0;
-      if (img && running === 0) {
-        img.trim();
+      if (mediaLib && running === 0) {
+        mediaLib.trim();
       }
     });
     return {

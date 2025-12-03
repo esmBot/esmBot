@@ -2,6 +2,8 @@ import { Buffer } from "node:buffer";
 import { setTimeout } from "node:timers/promises";
 import WSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.ts";
+import { mimeToExt } from "./mime.ts";
+import type { MediaFormats, MediaFuncs } from "./types.ts";
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
@@ -30,8 +32,8 @@ class MediaConnection {
   name?: string;
   tag: number;
   disconnected: boolean;
-  formats: { [key: string]: string[] };
-  funcs: string[];
+  formats: MediaFormats;
+  funcs: MediaFuncs;
   wsproto: string;
   sockurl: string;
   conn: WSocket;
@@ -45,7 +47,7 @@ class MediaConnection {
     this.tag = 0;
     this.disconnected = false;
     this.formats = {};
-    this.funcs = [];
+    this.funcs = {};
     if (tls) {
       this.wsproto = "wss";
     } else {
@@ -76,7 +78,9 @@ class MediaConnection {
     logger.debug(`Received message from media server ${this.host} with opcode ${op}`);
     if (op === Rinit) {
       this.formats = JSON.parse(msg.toString("utf8", 7));
-      this.funcs = Object.keys(this.formats);
+      this.funcs = {
+        image: this.formats.image ? Object.keys(this.formats.image) : [],
+      };
       return;
     }
     if (op === Rclose) {
@@ -163,7 +167,7 @@ class MediaConnection {
   async getOutput(jobid: string) {
     logger.debug(`Getting output of ${jobid} on media server ${this.host}`);
     const req = await fetch(
-      `${this.httpurl}/image?id=${jobid}`,
+      `${this.httpurl}/media?id=${jobid}`,
       this.auth
         ? {
             headers: {
@@ -173,27 +177,7 @@ class MediaConnection {
         : undefined,
     );
     const contentType = req.headers.get("content-type");
-    let type: string;
-    switch (contentType) {
-      case "image/gif":
-        type = "gif";
-        break;
-      case "image/png":
-        type = "png";
-        break;
-      case "image/jpeg":
-        type = "jpg";
-        break;
-      case "image/webp":
-        type = "webp";
-        break;
-      case "image/avif":
-        type = "avif";
-        break;
-      default:
-        type = contentType ?? "unknown";
-        break;
-    }
+    const type = contentType ? mimeToExt(contentType) : "unknown";
     return { buffer: Buffer.from(await req.arrayBuffer()), type };
   }
 

@@ -61,7 +61,14 @@ class MediaCommand extends Command {
         }
         const image =
           selection ??
-          (await mediaDetect(this.client, this.permissions, this.message, this.interaction, true).catch((e) => {
+          (await mediaDetect(
+            this.client,
+            this.permissions,
+            staticProps.supportedTypes,
+            this.message,
+            this.interaction,
+            true,
+          ).catch((e) => {
             if (e.name === "AbortError") {
               runningCommands.delete(this.author.id);
               return this.getString("image.timeout");
@@ -89,7 +96,7 @@ class MediaCommand extends Command {
         }
         mediaParams = {
           cmd: staticProps.command,
-          type: "image",
+          type: image.mediaType ?? "image",
           params: {
             togif: !!this.getOptionBoolean("togif"),
           },

@@ -4,14 +4,19 @@ import process from "node:process";
 import type { MediaParams } from "./types.ts";
 
 export interface MediaLib {
-  funcs: string[];
+  funcs: {
+    image: string[];
+  };
 
-  media(
+  process(
+    type: MediaParams["type"],
     cmd: string,
     params: MediaParams["params"],
     input: MediaParams["input"],
   ): Promise<{ data: Buffer; type: string }>;
-  init(): Record<string, boolean>;
+  init(): {
+    image?: string[];
+  };
   trim(): number;
 }
 

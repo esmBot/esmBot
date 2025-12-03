@@ -78,7 +78,7 @@ export async function upload(
     );
   }
   if (save) {
-    const type = await getType(new URL(imageURL), true);
+    const type = await getType(new URL(imageURL), true, []);
     selectedImages.set(authorId, {
       url: imageURL,
       path: type?.url ?? imageURL,

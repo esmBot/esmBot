@@ -9,9 +9,9 @@ import { WebSocketServer, type ErrorEvent } from "ws";
 import logger from "#utils/logger.js";
 import { media } from "#utils/mediaLib.js";
 import run from "#utils/mediaRunner.js";
-import type { MediaParams } from "#utils/types.js";
+import type { MediaFormats, MediaParams } from "#utils/types.js";
 
-const formats = Object.keys(media.init());
+const formats = media.init();
 
 const cacheTimeout = 15 * 60 * 1000; // jobs are deleted 15 minutes after completion if not fetched
 
@@ -141,9 +141,12 @@ wss.on("connection", (ws, request) => {
   ws.binaryType = "nodebuffer";
   const cur = Buffer.alloc(2);
   cur.writeUInt16LE(jobs.size);
-  const cmdFormats: { [cmd: string]: string[] } = {};
-  for (const cmd of media.funcs) {
-    cmdFormats[cmd] = formats;
+  const cmdFormats: MediaFormats = {};
+  if (media.funcs.image && formats.image) {
+    cmdFormats.image = {};
+    for (const cmd of media.funcs.image) {
+      cmdFormats.image[cmd] = formats.image;
+    }
   }
   const init = Buffer.concat([
     Buffer.from([Rinit]),
@@ -225,7 +228,7 @@ httpServer.on("request", (req, res) => {
     return res.end("400 Bad Request");
   }
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
-  if (reqUrl.pathname === "/image" && req.method === "GET") {
+  if (reqUrl.pathname === "/media" && req.method === "GET") {
     const param = reqUrl.searchParams.get("id");
     if (!param) {
       res.statusCode = 400;
@@ -425,6 +428,12 @@ async function runJob(job: MiniJob, ws: WSocket): Promise<void> {
   log(`Job ${job.id} starting...`, job.num);
 
   const object = job.msg;
+
+  // Any other job type is invalid
+  if (object.type !== "image") {
+    throw new TypeError("Unknown job type");
+  }
+
   // If the input has a path, it must also have a type
   if (object.path && !object.input?.type) {
     throw new TypeError("Unknown media type");

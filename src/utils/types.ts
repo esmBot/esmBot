@@ -62,8 +62,8 @@ export interface CommandInfo {
 }
 
 export interface MediaParams {
-  type: "image";
   cmd: string;
+  type: "image";
   params: {
     [key: string]: string | number | boolean;
   };
@@ -84,6 +84,17 @@ export interface MediaParams {
 export interface MediaTypeData {
   url?: string;
   type?: string;
+  mediaType?: MediaParams["type"];
+}
+
+export interface MediaFormats {
+  image?: {
+    [cmd: string]: string[];
+  };
+}
+
+export interface MediaFuncs {
+  image?: string[];
 }
 
 export interface SearXNGResults {
