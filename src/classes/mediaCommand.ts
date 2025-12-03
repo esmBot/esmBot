@@ -77,7 +77,7 @@ class MediaCommand extends Command {
           }));
         if (image === undefined) {
           runningCommands.delete(this.author.id);
-          return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip")}`;
+          return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip", { params: { name: this.client.user.globalName ?? this.client.user.username } })}`;
         }
         if (typeof image === "string") return image;
         selectedImages.delete(this.author.id);
