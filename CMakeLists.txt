@@ -7,15 +7,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCE_FILES natives/common/riff.cc)
 
-set(IMAGE_SOURCE_FILES natives/image/blur.cc
+set(IMAGE_SOURCE_FILES natives/image/common.cc
+  natives/image/blur.cc
   natives/image/bounce.cc
   natives/image/caption.cc
   natives/image/caption2.cc
   natives/image/circle.cc
   natives/image/colors.cc
-  natives/image/commands.h
-  natives/image/common.cc
-  natives/image/common.h
   natives/image/crop.cc
   natives/image/deepfry.cc
   natives/image/distort.cc
@@ -143,6 +141,10 @@ if (NOT CMAKE_JS_VERSION)
     target_compile_features(esmb-cli PRIVATE cxx_std_17)
     add_dependencies(esmb-cli ${PROJECT_NAME})
     target_link_libraries(esmb-cli PRIVATE ${PROJECT_NAME})
+
+    if (WITH_BACKWARD)
+      target_link_libraries(esmb-cli PRIVATE Backward::Interface)
+    endif()
   endif()
 endif()
 
