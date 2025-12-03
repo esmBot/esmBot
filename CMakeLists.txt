@@ -5,49 +5,49 @@ include(FindPkgConfig)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(IMAGE_SOURCE_FILES natives/blur.cc
-  natives/bounce.cc
-  natives/caption.cc
-  natives/caption2.cc
-  natives/circle.cc
-  natives/colors.cc
-  natives/commands.h
-  natives/common.cc
-  natives/common.h
-  natives/crop.cc
-  natives/deepfry.cc
-  natives/distort.cc
-  natives/fade.cc
-  natives/flag.cc
-  natives/flip.cc
-  natives/freeze.cc
-  natives/gamexplain.cc
-  natives/globe.cc
-  natives/homebrew.cc
-  natives/invert.cc
-  natives/jpeg.cc
-  natives/meme.cc
-  natives/mirror.cc
-  natives/motivate.cc
-  natives/reddit.cc
-  natives/resize.cc
-  natives/reverse.cc
-  natives/scott.cc
-  natives/slide.cc
-  natives/snapchat.cc
-  natives/sonic.cc
-  natives/speed.cc
-  natives/spin.cc
-  natives/spotify.cc
-  natives/squish.cc
-  natives/swirl.cc
-  natives/tile.cc
-  natives/togif.cc
-  natives/uncanny.cc
-  natives/uncaption.cc
-  natives/wall.cc
-  natives/watermark.cc
-  natives/whisper.cc)
+set(IMAGE_SOURCE_FILES natives/image/blur.cc
+  natives/image/bounce.cc
+  natives/image/caption.cc
+  natives/image/caption2.cc
+  natives/image/circle.cc
+  natives/image/colors.cc
+  natives/image/commands.h
+  natives/image/common.cc
+  natives/image/common.h
+  natives/image/crop.cc
+  natives/image/deepfry.cc
+  natives/image/distort.cc
+  natives/image/fade.cc
+  natives/image/flag.cc
+  natives/image/flip.cc
+  natives/image/freeze.cc
+  natives/image/gamexplain.cc
+  natives/image/globe.cc
+  natives/image/homebrew.cc
+  natives/image/invert.cc
+  natives/image/jpeg.cc
+  natives/image/meme.cc
+  natives/image/mirror.cc
+  natives/image/motivate.cc
+  natives/image/reddit.cc
+  natives/image/resize.cc
+  natives/image/reverse.cc
+  natives/image/scott.cc
+  natives/image/slide.cc
+  natives/image/snapchat.cc
+  natives/image/sonic.cc
+  natives/image/speed.cc
+  natives/image/spin.cc
+  natives/image/spotify.cc
+  natives/image/squish.cc
+  natives/image/swirl.cc
+  natives/image/tile.cc
+  natives/image/togif.cc
+  natives/image/uncanny.cc
+  natives/image/uncaption.cc
+  natives/image/wall.cc
+  natives/image/watermark.cc
+  natives/image/whisper.cc)
 
 if (APPLE)
   set(WITH_ZXING_DEFAULT OFF)
@@ -62,11 +62,11 @@ option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort
 option(WITH_CLI "Build the CLI interface" OFF)
 
 if (WITH_MAGICK)
-  list(APPEND IMAGE_SOURCE_FILES natives/magik.cc)
+  list(APPEND IMAGE_SOURCE_FILES natives/image/magik.cc)
 endif()
 
 if (WITH_ZXING)
-  list(APPEND IMAGE_SOURCE_FILES natives/qr.cc)
+  list(APPEND IMAGE_SOURCE_FILES natives/image/qr.cc)
 endif()
 
 set(SOURCE_FILES "${IMAGE_SOURCE_FILES}")

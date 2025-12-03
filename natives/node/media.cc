@@ -5,7 +5,7 @@
 #include <malloc.h>
 #endif
 
-#include "../common.h"
+#include "../shared.h"
 #include "worker.h"
 
 #if defined(WIN32) && defined(MAGICK_ENABLED)
@@ -41,8 +41,8 @@ Napi::Value ProcessMedia(const Napi::CallbackInfo &info) {
     Arguments["togif"] = val.ToBoolean().Value();
   }
 
-  if (MapContainsKey(esmb::FunctionArgsMap, command)) {
-    FunctionArgs *argTypes = esmb::FunctionArgsMap.at(command);
+  if (MapContainsKey(esmb::Image::FunctionArgsMap, command)) {
+    FunctionArgs *argTypes = esmb::Image::FunctionArgsMap.at(command);
     for (auto arg : *argTypes) {
       val = obj.Get(arg.first);
       if (val.IsEmpty() || val.IsUndefined() || val.IsNull()) continue;
@@ -145,12 +145,12 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Array arr = Napi::Array::New(env);
   size_t i = 0;
-  for (auto const &imap : esmb::FunctionMap) {
+  for (auto const &imap : esmb::Image::FunctionMap) {
     Napi::HandleScope scope(env);
     arr[i] = Napi::String::New(env, imap.first);
     i++;
   }
-  for (auto const &imap : esmb::NoInputFunctionMap) {
+  for (auto const &imap : esmb::Image::NoInputFunctionMap) {
     Napi::HandleScope scope(env);
     arr[i] = Napi::String::New(env, imap.first);
     i++;

@@ -1,5 +1,5 @@
 #include "worker.h"
-#include "../common.h"
+#include "../image/common.h"
 
 using namespace std;
 
@@ -13,9 +13,9 @@ void ImageAsyncWorker::Execute() {
   shouldKill = false;
 
   if (bufSize != 0) {
-    outData = esmb::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
+    outData = esmb::Image::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
   } else {
-    outData = esmb::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
+    outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
   }
 }
 

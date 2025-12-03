@@ -21,16 +21,16 @@ esmb_media_result *esmb_media_process(const char *command, esmb::ArgumentMap arg
 
   CmdOutput outData;
   if (length != 0) {
-    if (MapContainsKey(esmb::FunctionMap, command)) {
-      outData = esmb::FunctionMap.at(command)(type, outType, data, length, args, NULL);
+    if (MapContainsKey(esmb::Image::FunctionMap, command)) {
+      outData = esmb::Image::FunctionMap.at(command)(type, outType, data, length, args, NULL);
     } else { // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
       std::string cmd(command);
       throw "Error: \"FunctionMap\" does not contain \"" + cmd +
         "\", which was requested because \"length\" parameter was not 0.";
     }
   } else {
-    if (MapContainsKey(esmb::NoInputFunctionMap, command)) {
-      outData = esmb::NoInputFunctionMap.at(command)(type, outType, args, NULL);
+    if (MapContainsKey(esmb::Image::NoInputFunctionMap, command)) {
+      outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, args, NULL);
     } else {
       std::string cmd(command);
       throw "Error: \"NoInputFunctionMap\" does not contain \"" + cmd +

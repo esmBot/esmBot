@@ -107,12 +107,12 @@ void printHelp() {
   std::cerr << "Available functions:" << std::endl;
 
   bool started = false;
-  for (auto cmd : esmb::FunctionMap) {
+  for (auto cmd : esmb::Image::FunctionMap) {
     if (started) std::cerr << ", ";
     std::cerr << cmd.first;
     started = true;
   }
-  for (auto cmd : esmb::NoInputFunctionMap) {
+  for (auto cmd : esmb::Image::NoInputFunctionMap) {
     if (started) std::cerr << ", ";
     std::cerr << cmd.first;
     started = true;
@@ -134,8 +134,8 @@ int main(int argc, char *argv[]) {
   }
 
   std::string function = args.args[1];
-  bool isInputFunc = MapContainsKey(esmb::FunctionMap, function);
-  bool isNoInputFunc = MapContainsKey(esmb::NoInputFunctionMap, function);
+  bool isInputFunc = MapContainsKey(esmb::Image::FunctionMap, function);
+  bool isNoInputFunc = MapContainsKey(esmb::Image::NoInputFunctionMap, function);
   if ((!isInputFunc && !isNoInputFunc) || (isInputFunc && args.args.size() < 4)) {
     printHelp();
     return 1;
@@ -145,8 +145,8 @@ int main(int argc, char *argv[]) {
     args.flags["basePath"] = std::filesystem::current_path().string() + "/";
   }
 
-  if (MapContainsKey(esmb::FunctionArgsMap, function)) {
-    FunctionArgs *funcArgs = esmb::FunctionArgsMap.at(function);
+  if (MapContainsKey(esmb::Image::FunctionArgsMap, function)) {
+    FunctionArgs *funcArgs = esmb::Image::FunctionArgsMap.at(function);
     for (auto arg : *funcArgs) {
       if (!MapContainsKey(args.flags, arg.first)) {
         if (arg.second.required) {
