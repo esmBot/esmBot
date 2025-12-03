@@ -5,11 +5,11 @@
 
 using namespace Napi;
 
-class ImageAsyncWorker : public AsyncWorker {
+class MediaAsyncWorker : public AsyncWorker {
 public:
-  ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, std::string command, esmb::ArgumentMap inArgs,
+  MediaAsyncWorker(Napi::Env &env, Promise::Deferred deferred, std::string command, esmb::ArgumentMap inArgs,
                    std::string type, const char *bufData, size_t bufSize);
-  virtual ~ImageAsyncWorker() {};
+  virtual ~MediaAsyncWorker() {};
 
   void Execute();
   void OnError(const Error &e);

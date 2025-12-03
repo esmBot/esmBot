@@ -3,12 +3,12 @@
 
 using namespace std;
 
-ImageAsyncWorker::ImageAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, esmb::ArgumentMap inArgs,
+MediaAsyncWorker::MediaAsyncWorker(Napi::Env &env, Promise::Deferred deferred, string command, esmb::ArgumentMap inArgs,
                                    string type, const char *bufData, size_t bufSize)
     : AsyncWorker(env), deferred(deferred), command(command), inArgs(inArgs), type(type), bufData(bufData),
       bufSize(bufSize) {}
 
-void ImageAsyncWorker::Execute() {
+void MediaAsyncWorker::Execute() {
   outType = GetArgumentWithFallback<bool>(inArgs, "togif", false) ? "gif" : type;
   shouldKill = false;
 
@@ -19,7 +19,7 @@ void ImageAsyncWorker::Execute() {
   }
 }
 
-void ImageAsyncWorker::OnError(const Error &e) {
+void MediaAsyncWorker::OnError(const Error &e) {
   vips_error_clear();
   vips_thread_shutdown();
   if (shouldKill) {
@@ -29,7 +29,7 @@ void ImageAsyncWorker::OnError(const Error &e) {
   }
 }
 
-void ImageAsyncWorker::OnOK() {
+void MediaAsyncWorker::OnOK() {
   vips_error_clear();
   vips_thread_shutdown();
   Buffer nodeBuf = Buffer<char>::New(Env(), outData.buf, outData.length,

@@ -83,14 +83,8 @@ Napi::Value ProcessMedia(const Napi::CallbackInfo &info) {
     bufSize = data.ByteLength();
   }
 
-  AsyncWorker *asyncWorker;
-  if (cmdType == "image") {
-    asyncWorker = new ImageAsyncWorker(env, deferred, command, Arguments, type, bufData, bufSize);
-    asyncWorker->Queue();
-    return deferred.Promise();
-  }
-
-  deferred.Reject(Napi::Error::New(env, "Job type \"" + cmdType + "\" is unknown").Value());
+  MediaAsyncWorker *asyncWorker = new MediaAsyncWorker(env, deferred, command, Arguments, type, bufData, bufSize);
+  asyncWorker->Queue();
   return deferred.Promise();
 }
 
