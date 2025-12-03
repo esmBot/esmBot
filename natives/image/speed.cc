@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <vips/vips8>
 
+#include "../common/riff.h"
 #include "common.h"
 
 using namespace std;
@@ -43,8 +44,9 @@ char *vipsRemove(const char *data, size_t length, size_t &dataSize, int speed, s
   return buf;
 }
 
-CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused]] string &outType, const char *bufferdata,
-                size_t bufferLength, esmb::ArgumentMap arguments, bool *shouldKill) {
+CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused]] string &outType,
+                             const char *bufferdata, size_t bufferLength, esmb::ArgumentMap arguments,
+                             bool *shouldKill) {
   bool slow = GetArgumentWithFallback<bool>(arguments, "slow", false);
   int speed = GetArgumentWithFallback<int>(arguments, "speed", 2);
 
@@ -100,25 +102,18 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
     size_t position = 12;
     bool removeFrames = false;
 
-    while (position + 8 <= bufferLength) {
-      const char *fourCC = &fileData[position];
-      uint32_t chunkSize = readUint32LE(reinterpret_cast<unsigned char *>(fileData) + position + 4);
-
-      if (memcmp(fourCC, "ANMF", 4) == 0) {
-        size_t dataStart = position + 8;
-        uint32_t duration = readUint32LE(reinterpret_cast<unsigned char *>(fileData) + dataStart + 12) & 0x00FFFFFF;
-        uint32_t newDuration = slow ? duration * speed : duration / speed;
-        if (!slow && newDuration <= 10) {
-          removeFrames = true;
-          break;
-        }
-
-        fileData[dataStart + 12] = static_cast<uint8_t>(newDuration & 0xFF);
-        fileData[dataStart + 13] = static_cast<uint8_t>((newDuration >> 8) & 0xFF);
-        fileData[dataStart + 14] = static_cast<uint8_t>((newDuration >> 16) & 0xFF);
+    int dataStart = 0;
+    while ((dataStart = RIFF::findChunk(fileData, bufferLength, "ANMF", position, NULL)) != -1) {
+      uint32_t duration = readUint32LE(reinterpret_cast<unsigned char *>(fileData) + dataStart + 12) & 0x00FFFFFF;
+      uint32_t newDuration = slow ? duration * speed : duration / speed;
+      if (!slow && newDuration <= 10) {
+        removeFrames = true;
+        break;
       }
 
-      position += 8 + chunkSize + (chunkSize % 2);
+      fileData[dataStart + 12] = static_cast<uint8_t>(newDuration & 0xFF);
+      fileData[dataStart + 13] = static_cast<uint8_t>((newDuration >> 8) & 0xFF);
+      fileData[dataStart + 14] = static_cast<uint8_t>((newDuration >> 16) & 0xFF);
     }
 
     if (removeFrames) {

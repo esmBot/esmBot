@@ -5,6 +5,8 @@ include(FindPkgConfig)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(SOURCE_FILES natives/common/riff.cc)
+
 set(IMAGE_SOURCE_FILES natives/image/blur.cc
   natives/image/bounce.cc
   natives/image/caption.cc
@@ -69,7 +71,7 @@ if (WITH_ZXING)
   list(APPEND IMAGE_SOURCE_FILES natives/image/qr.cc)
 endif()
 
-set(SOURCE_FILES "${IMAGE_SOURCE_FILES}")
+list(APPEND SOURCE_FILES "${IMAGE_SOURCE_FILES}")
 
 if (CMAKE_JS_VERSION)
   add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC} natives/node/media.cc natives/node/worker.cc)

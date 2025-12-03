@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <vips/vips8>
 
+#include "../common/riff.h"
 #include "common.h"
 
 using namespace std;
@@ -31,7 +32,7 @@ char *vipsTrim(const char *data, size_t length, size_t &dataSize, int frame, str
 }
 
 CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
-                 esmb::ArgumentMap arguments, bool *shouldKill) {
+                              esmb::ArgumentMap arguments, bool *shouldKill) {
   bool loop = GetArgumentWithFallback<bool>(arguments, "loop", false);
   int frame = GetArgumentWithFallback<int>(arguments, "frame", -1);
 
@@ -100,18 +101,10 @@ CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *b
 
       size_t position = 12;
 
-      while (position + 8 <= bufferLength) {
-        const char *fourCC = &fileData[position];
-        uint32_t chunkSize = readUint32LE(reinterpret_cast<unsigned char *>(fileData) + position + 4);
-
-        if (memcmp(fourCC, "ANIM", 4) == 0) {
-          size_t dataStart = position + 8;
-
-          fileData[dataStart + 4] = loop ? 0 : 1;
-          fileData[dataStart + 5] = 0;
-        }
-
-        position += 8 + chunkSize + (chunkSize % 2);
+      int dataStart = 0;
+      while ((dataStart = RIFF::findChunk(fileData, bufferLength, "ANIM", position, NULL)) != -1) {
+        fileData[dataStart + 4] = loop ? 0 : 1;
+        fileData[dataStart + 5] = 0;
       }
 
       output.buf = fileData;

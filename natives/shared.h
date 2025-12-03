@@ -27,7 +27,7 @@ typedef const std::map<std::string, FunctionArg> FunctionArgs;
   CmdOutput NAME(const std::string &type, std::string &outType, esmb::ArgumentMap arguments, bool *shouldKill)
 #define declare_input_args(NAME) extern FunctionArgs NAME;
 
-inline uint32_t readUint32LE(unsigned char *buffer) {
+inline uint32_t readUint32LE(const unsigned char *buffer) {
   return static_cast<uint32_t>(buffer[0]) | (static_cast<uint32_t>(buffer[1]) << 8) |
          (static_cast<uint32_t>(buffer[2]) << 16) | (static_cast<uint32_t>(buffer[3]) << 24);
 }
