@@ -163,7 +163,7 @@ export async function reloadMediaConnections() {
 async function getIdeal(object: MediaParams): Promise<MediaConnection | undefined> {
   const idealServers = [];
   for (const connection of connections.values()) {
-    if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
+    if (connection.conn.readyState !== 1) {
       continue;
     }
     if (!connection.funcs[object.type]?.includes(object.cmd)) {
