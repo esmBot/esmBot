@@ -1,5 +1,6 @@
 #include "worker.h"
 #include "../image/common.h"
+#include <exception>
 
 using namespace std;
 
@@ -12,16 +13,21 @@ void MediaAsyncWorker::Execute() {
   outType = GetArgumentWithFallback<bool>(inArgs, "togif", false) ? "gif" : type;
   shouldKill = false;
 
-  if (bufSize != 0) {
-    outData = esmb::Image::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
-  } else {
-    outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
+  try {
+    if (bufSize != 0) {
+      outData = esmb::Image::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
+    } else {
+      outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);
+    }
+  } catch (std::exception &e) {
+    SetError(e.what());
   }
+
+  vips_error_clear();
+  vips_thread_shutdown();
 }
 
 void MediaAsyncWorker::OnError(const Error &e) {
-  vips_error_clear();
-  vips_thread_shutdown();
   if (shouldKill) {
     deferred.Reject(Napi::Error::New(Env(), "media_job_killed").Value());
   } else {
@@ -30,8 +36,6 @@ void MediaAsyncWorker::OnError(const Error &e) {
 }
 
 void MediaAsyncWorker::OnOK() {
-  vips_error_clear();
-  vips_thread_shutdown();
   Buffer nodeBuf = Buffer<char>::New(Env(), outData.buf, outData.length,
                                      []([[maybe_unused]] Napi::Env env, char *data) { free(data); });
 
