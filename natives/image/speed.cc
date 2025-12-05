@@ -8,8 +8,8 @@ using namespace std;
 using namespace vips;
 
 FunctionArgs esmb::Image::SpeedArgs = {
-  {"slow",  {typeid(bool), false}},
-  {"speed", {typeid(int), false} }
+  {"slow",  {typeid(bool), false} },
+  {"speed", {typeid(float), false}}
 };
 
 void *memset16(void *m, uint16_t val, size_t count) {
@@ -19,7 +19,7 @@ void *memset16(void *m, uint16_t val, size_t count) {
   return m;
 }
 
-char *vipsRemove(const char *data, size_t length, size_t &dataSize, int speed, string suffix, bool *shouldKill) {
+char *vipsRemove(const char *data, size_t length, size_t &dataSize, float speed, string suffix, bool *shouldKill) {
   VOption *options = VImage::option()->set("access", "sequential");
 
   VImage in = VImage::new_from_buffer(data, length, "", options->set("n", -1));
@@ -29,8 +29,8 @@ char *vipsRemove(const char *data, size_t length, size_t &dataSize, int speed, s
   int nPages = vips_image_get_n_pages(in.get_image());
 
   vector<VImage> img;
-  for (int i = 0; i < nPages; i += speed) {
-    VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+  for (float i = 0; i < nPages; i += speed) {
+    VImage img_frame = in.crop(0, std::floor(i) * pageHeight, width, pageHeight);
     img.push_back(img_frame);
   }
   VImage out = VImage::arrayjoin(img, VImage::option()->set("across", 1));
@@ -48,7 +48,7 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
                              const char *bufferdata, size_t bufferLength, esmb::ArgumentMap arguments,
                              bool *shouldKill) {
   bool slow = GetArgumentWithFallback<bool>(arguments, "slow", false);
-  int speed = GetArgumentWithFallback<int>(arguments, "speed", 2);
+  float speed = GetArgumentWithFallback<float>(arguments, "speed", 2);
 
   size_t dataSize = 0;
 
@@ -94,6 +94,7 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
     }
 
     if (removeFrames) {
+      free(fileData);
       fileData = vipsRemove(bufferdata, bufferLength, dataSize, speed, ".gif", shouldKill);
     } else {
       dataSize = bufferLength;
@@ -117,6 +118,7 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
     }
 
     if (removeFrames) {
+      free(fileData);
       fileData = vipsRemove(bufferdata, bufferLength, dataSize, speed, ".webp", shouldKill);
     } else {
       dataSize = bufferLength;

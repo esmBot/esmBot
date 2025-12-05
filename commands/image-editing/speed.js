@@ -3,7 +3,7 @@ import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class SpeedCommand extends MediaCommand {
   paramsFunc() {
-    const speed = this.getOptionInteger("multiplier", true) ?? Number.parseInt(this.args[0]);
+    const speed = this.getOptionNumber("multiplier", true) ?? Number.parseFloat(this.args[0]);
     return {
       speed: Number.isNaN(speed) || speed < 1 ? 2 : speed,
     };
@@ -13,8 +13,8 @@ class SpeedCommand extends MediaCommand {
     super.init();
     this.flags.push({
       name: "multiplier",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
-      description: "Set the speed multiplier (default: 2)",
+      type: Constants.ApplicationCommandOptionTypes.NUMBER,
+      description: "Set the speed multiplier (default: 2.0)",
       minValue: 1,
       maxValue: 1000,
       classic: true,

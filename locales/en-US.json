@@ -424,7 +424,7 @@
         "vertical": "Slides the image vertically"
       },
       "slow": {
-        "multiplier": "Set the speed multiplier (default: 2)"
+        "multiplier": "Set the speed multiplier (default: 2.0)"
       },
       "snapchat": {
         "position": "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.565)"
@@ -436,7 +436,7 @@
         "scale": "A multiplier to resize the speech bubble (0.01 is smallest, 1.0 is largest, default is 0.2)"
       },
       "speed": {
-        "multiplier": "Set the speed multiplier (default: 2)"
+        "multiplier": "Set the speed multiplier (default: 2.0)"
       },
       "uncanny": {
         "font": "Specify the font you want to use (default: helvetica)",
