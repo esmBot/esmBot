@@ -71,7 +71,7 @@ CmdOutput esmb::Image::Reverse([[maybe_unused]] const string &type, string &outT
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize,
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                         outType == "gif" ? VImage::option()->set("dither", 0) : 0);
 
   return {buf, dataSize};

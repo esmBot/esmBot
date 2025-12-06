@@ -20,24 +20,25 @@ CmdOutput esmb::Image::Deepfry(const string &type, string &outType, const char *
   if (totalHeight > 65500 && nPages > 1) {
     vector<VImage> img;
     for (int i = 0; i < nPages; i++) {
-      VImage img_frame = in.crop(0, i * pageHeight, width, pageHeight);
+      VImage img_frame = fried.crop(0, i * pageHeight, width, pageHeight);
       void *jpgBuf;
       size_t jpgLength;
       img_frame.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", 1)->set("strip", true));
-      VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "");
-      jpeged.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-      jpeged.set("delay", in.get_array_int("delay"));
-      img.push_back(jpeged);
+      VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential"));
+      img.push_back(jpeged.copy_memory());
+      free(jpgBuf);
     }
     final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+    final.set("delay", fried.get_array_int("delay"));
   } else {
     void *jpgBuf;
     size_t jpgLength;
     fried.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", 1)->set("strip", true));
-    final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
+    final = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential")).copy_memory();
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     if (nPages > 1) final.set("delay", fried.get_array_int("delay"));
+    free(jpgBuf);
   }
 
   SetupTimeoutCallback(final, shouldKill);

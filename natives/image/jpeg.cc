@@ -34,30 +34,33 @@ CmdOutput esmb::Image::Jpeg(const string &type, string &outType, const char *buf
         void *jpgBuf;
         size_t jpgLength;
         img_frame.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", quality)->set("strip", true));
-        VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "");
-        jpeged.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-        jpeged.set("delay", in.get_array_int("delay"));
-        img.push_back(jpeged);
+        VImage jpeged = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential"));
+        img.push_back(jpeged.copy_memory());
+        free(jpgBuf);
       }
       final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
       final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
+      final.set("delay", in.get_array_int("delay"));
+      final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                            outType == "gif" ? VImage::option()->set("dither", 0) : 0);
     } else {
       void *jpgBuf;
       size_t jpgLength;
       in.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", quality)->set("strip", true));
-      final = VImage::new_from_buffer(jpgBuf, jpgLength, "");
+      final = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential"));
       final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       final.set("delay", in.get_array_int("delay"));
+      final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
+                            outType == "gif" ? VImage::option()->set("dither", 0) : 0);
+      free(jpgBuf);
     }
-
-    final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
-                          outType == "gif" ? VImage::option()->set("dither", 0) : 0);
   } else {
     void *jpgBuf;
     in.write_to_buffer(".jpg", &jpgBuf, &dataSize, VImage::option()->set("Q", quality)->set("strip", true));
     if (outType == "gif") {
-      VImage gifIn = VImage::new_from_buffer(reinterpret_cast<char *>(jpgBuf), dataSize, "");
+      VImage gifIn = VImage::new_from_buffer(jpgBuf, dataSize, "", VImage::option()->set("access", "sequential"));
       gifIn.write_to_buffer(".gif", reinterpret_cast<void **>(&buf), &dataSize, VImage::option()->set("strip", true));
+      free(jpgBuf);
     } else {
       outType = "jpg";
       buf = reinterpret_cast<char *>(jpgBuf);

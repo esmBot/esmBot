@@ -56,7 +56,7 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
   memcpy(fileData, bufferdata, bufferLength);
 
   if (type == "gif") {
-    char *match = const_cast<char *>("\x00\x21\xF9\x04");
+    const char *match = "\x00\x21\xF9\x04";
 
     vector<uint16_t> old_delays;
     bool removeFrames = false;

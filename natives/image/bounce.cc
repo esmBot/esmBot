@@ -48,13 +48,13 @@ CmdOutput esmb::Image::Bounce(const string &type, string &outType, const char *b
     final.set("delay", delay);
   }
 
+  if (outType != "webp") outType = "gif";
+
   SetupTimeoutCallback(final, shouldKill);
 
   char *buf;
   size_t dataSize = 0;
-  final.write_to_buffer(outType == "webp" ? ".webp" : ".gif", reinterpret_cast<void **>(&buf), &dataSize);
-
-  if (outType != "webp") outType = "gif";
+  final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize);
 
   return {buf, dataSize};
 }
