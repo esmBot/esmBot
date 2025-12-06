@@ -40,26 +40,23 @@ CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *b
   size_t dataSize = 0;
 
   if (type == "gif") {
-    char *fileData = reinterpret_cast<char *>(malloc(bufferLength));
-    memcpy(fileData, bufferdata, bufferLength);
-
-    char *match = const_cast<char *>("\x21\xFF\x0BNETSCAPE2.0\x03\x01");
-    char *descriptor = const_cast<char *>("\x2C\x00\x00\x00\x00");
+    const char *match = "\x21\xFF\x0BNETSCAPE2.0\x03\x01";
+    const char *descriptor = "\x2C\x00\x00\x00\x00";
     char *lastPos;
 
     bool none = true;
 
     if (loop) {
-      char *newData = reinterpret_cast<char *>(malloc(bufferLength + 19));
-      memcpy(newData, fileData, bufferLength);
-      lastPos = reinterpret_cast<char *>(memchr(newData, '\x2C', bufferLength));
+      char *fileData = reinterpret_cast<char *>(malloc(bufferLength + 19));
+      memcpy(fileData, bufferdata, bufferLength);
+      lastPos = reinterpret_cast<char *>(memchr(fileData, '\x2C', bufferLength));
       while (lastPos != NULL) {
         if (memcmp(lastPos, descriptor, 5) != 0) {
-          lastPos = reinterpret_cast<char *>(memchr(lastPos + 1, '\x2C', (bufferLength - (lastPos - newData)) - 1));
+          lastPos = reinterpret_cast<char *>(memchr(lastPos + 1, '\x2C', (bufferLength - (lastPos - fileData)) - 1));
           continue;
         }
 
-        memcpy(lastPos + 19, lastPos, (bufferLength - (lastPos - newData)));
+        memcpy(lastPos + 19, lastPos, (bufferLength - (lastPos - fileData)));
         memcpy(lastPos, match, 16);
         memcpy(lastPos + 16, "\x00\x00\x00", 3);
 
@@ -69,11 +66,13 @@ CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *b
       }
       if (none) dataSize = bufferLength;
 
-      output.buf = newData;
+      output.buf = fileData;
     } else if (frame >= 0 && !loop) {
       char *buf = vipsTrim(bufferdata, bufferLength, dataSize, frame, type, outType, shouldKill);
       output.buf = buf;
     } else {
+      char *fileData = reinterpret_cast<char *>(malloc(bufferLength));
+      memcpy(fileData, bufferdata, bufferLength);
       lastPos = reinterpret_cast<char *>(memchr(fileData, '\x21', bufferLength));
       while (lastPos != NULL) {
         if (memcmp(lastPos, match, 16) != 0) {
