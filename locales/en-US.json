@@ -1024,7 +1024,7 @@
     "tenor": "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.",
     "timeout": "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.",
     "timeoutDownload": "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.",
-    "tip": "(Tip: try right-clicking/holding on a message and press Apps -> {{name}} -> Select Image, then try again.)",
+    "tip": "(Tip: try right-clicking/holding on a message and press Apps -> Select Image, then try again.)",
     "tooLarge": "The resulting file was too large to upload. Try again with a smaller image if possible.",
     "tooLong": "The image is taking too long to process (>=10 minutes), so the job was cancelled. Try using a smaller image.",
     "tryAgain": "This job couldn't be completed because the server it was running on went down. Try running your command again.",
