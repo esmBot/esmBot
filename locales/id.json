@@ -19,8 +19,6 @@
             "eval": "Mengeksekusi kode JavaScript",
             "exec": "Menjalankan perintah shell",
             "help": "Mendapatkan daftar perintah",
-            "imagereload": "Mencoba menghubungkan kembali ke semua server pemrosesan gambar yang tersedia",
-            "imagestats": "Mendapatkan beberapa statistik tentang server gambar",
             "info": "Mendapat beberapa info dan kredit tentang saya",
             "ping": "Ping server Discord",
             "prefix": "Memeriksa/mengubah awalan server",

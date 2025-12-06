@@ -38,8 +38,6 @@
             "exec": "Chạy lệnh shell",
             "help": "Lấy danh sách các lệnh",
             "image": "Tìm kiếm ảnh trên mạng",
-            "imagereload": "Thử kết nối lại với tất cả máy chủ xử lý hình ảnh có sẵn",
-            "imagestats": "Lấy thống kê về các máy chủ hình ảnh",
             "info": "Lấy thông tin và công nhận của tôi",
             "ping": "Kiểm tra kết nối với các máy chủ của Discord",
             "prefix": "Kiểm tra/thay đổi tiền tố của máy chủ",
@@ -508,8 +506,6 @@
             "gamexplain": "gamexplain",
             "dice": "xucxac",
             "image": "anh",
-            "imagereload": "anhchaylai",
-            "imagestats": "anhthongke",
             "info": "thongtin",
             "lengthen": "morong",
             "ping": "ping",
@@ -602,12 +598,6 @@
                 "version": "Phiên bản:",
                 "totalServers": "Tổng cộng máy chủ:",
                 "translate": "Dịch:"
-            },
-            "imagestats": {
-                "connected": "Bot hiện đang được kết nối tới {{length}} máy chủ ảnh.",
-                "header": "Thống kê hình ảnh của esmBot",
-                "runningJobs": "Các công việc đang chạy: {{count}}",
-                "server": "Máy chủ {{num}}"
             },
             "nowplaying": {
                 "noTrack": "Đã có sự cố khi lấy bài hát hiện tại."
@@ -762,11 +752,6 @@
             "donate": {
                 "support": "Thích esmBot hả? Hãy ủng hộ nhà phát triển trên Patreon để giúp nó phát triển và tồn tại nhé!",
                 "thanks": "Cảm ơn các nhà tài trợ sau đây vì sự ủng hộ của họ:"
-            },
-            "imagereload": {
-                "connected": "Đã kết nối thành công tới {{length}} máy chủ ảnh.",
-                "couldNotConnect": "Tôi không thể kết nối tới máy chủ ảnh nào hết!",
-                "owner": "Chỉ có chủ sở hữu bot mới có thể tải lại máy chủ ảnh!"
             },
             "help": {
                 "noInfo": "Tôi không hề tìm thấy thông tin gì hết về lệnh đó!",

@@ -23,8 +23,6 @@
             "channel": "Liga/desliga comandos clássicos em um canal (use as config. do servidor para comandos de barra)",
             "image": "Pesquisar por imagens na web",
             "broadcast": "Transmite uma mensagem em reprodução até que o comando se repita ou o bot reinicie",
-            "imagereload": "Tenta reconectar todos os servidores de processamento de imagens disponíveis",
-            "imagestats": "Mostra algumas estatísicas sobre os servidores de imagem",
             "lengthen": "Alonga um URL curto",
             "ping": "Dá um Ping nos servidores do Discord",
             "hooh": "Espelha a superfície da imagem no topo",

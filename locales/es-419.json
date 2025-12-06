@@ -47,8 +47,6 @@
             "grayscale": "Añade un filtro de escala de grises",
             "haah": "Espeja el lado izquierdo de una imagen hacia el derecho",
             "hooh": "Espeja la mitad baja de una imagen hacia la mitad alta",
-            "imagestats": "Obtiene algunas estadísticas acerca de los servidores de imágenes",
-            "imagereload": "Intenta reconectar a todos los servidores de procesamiento de imágenes disponibles",
             "snowflake": "Convierte una id de Snowflake de Discord a una marca horaria",
             "freeze": "Hace que una secuencia de imágenes (GIF) se reproduzca solo una vez",
             "sonic": "Crea una imagen de Sonic con una burbuja de texto",

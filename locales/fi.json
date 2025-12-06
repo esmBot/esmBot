@@ -20,7 +20,6 @@
             "exec": "Suorittaa shell-komennon",
             "help": "Löytää komentolistan",
             "image": "Hakee kuvia netistä",
-            "imagereload": "Yrittää yhdistää kaikkiin saatavilla oleviin kuvankäsittelypalvelimiin",
             "info": "Löytää infoa ja kredittejä minusta",
             "lengthen": "Pidentää lyhyttä URL-osoitetta",
             "ping": "Pingaa Discordin palvelimia",
@@ -56,7 +55,6 @@
             "reddit": "Lisää Reddit vesileiman kuvaan",
             "scott": "Tekee Scott the Woz esityksen kuvasta",
             "caption": "Lisää kuvatekstin",
-            "imagestats": "Löytää tilastoja kuvapalvelimista",
             "bounce": "Tekee kuvan pomppimaan",
             "sepia": "Lisää seepia filtterin",
             "sharpen": "Terävöittää kuvaa",
@@ -532,8 +530,6 @@
             "broadcast": "lähetys",
             "count": "laske",
             "image": "kuva",
-            "imagereload": "lataakuva",
-            "imagestats": "kuvantiedot",
             "info": "tietoja",
             "lengthen": "pidennä",
             "prefix": "alkuliite",
@@ -796,17 +792,6 @@
                 "noInput": "Sinun pitää antaa jotakin jota etsiä!",
                 "noResults": "En löytänyt tuloksia!",
                 "results": "Hae Tuloksia"
-            },
-            "imagereload": {
-                "connected": "Onnistuneesti yhdistetty {{length}} kuvapalvelimiin.",
-                "couldNotConnect": "En voinut yhdistää yhteenkään kuva palvelimeen!",
-                "owner": "Vain botin omistaja voi ladata kuvapalvelimet uudelleen!"
-            },
-            "imagestats": {
-                "header": "esmBotin Kuva Tilastot",
-                "server": "Palvelin {{num}}",
-                "connected": "Botti on tällä hetkellä yhdistetty {{length}} kuvapalvelimiin.",
-                "runningJobs": "Suoritetaan Töitä: {{count}}"
             },
             "lengthen": {
                 "noInput": "Sinun pitää antaa lyhyt URL-osoite jota pidentää!",

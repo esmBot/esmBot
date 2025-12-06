@@ -16,8 +16,6 @@
             "eval": "Esegue codice JavaScript",
             "exec": "Esegue un comando shell",
             "help": "Invia una lista di comandi",
-            "imagereload": "Prova a riconnettersi a tutti i server di elaborazione immagini",
-            "imagestats": "Invia statistiche sui server di elaborazione immagini",
             "lengthen": "Allunga un URL abbreviato",
             "ping": "Pinga i server di Discord",
             "prefix": "Controlla/cambia il prefisso per il server",
@@ -542,8 +540,6 @@
             "exec": "exec",
             "help": "aiuto",
             "image": "immagine",
-            "imagereload": "immaginericarica",
-            "imagestats": "immaginestatistiche",
             "info": "info",
             "lengthen": "allunga",
             "ping": "ping",
@@ -753,17 +749,6 @@
                 "notMember": "Quell'utente non è in questo server!",
                 "noUser": "Non ho potuto trovare quell'utente!",
                 "currentHostId": "L'host del canale vocale attuale è un utente con l'ID `{{id}}`."
-            },
-            "imagereload": {
-                "connected": "Connesso con successo a {{length}} server di elaborazione immagini.",
-                "couldNotConnect": "Non è stato possibile connettersi ad alcun server di elaborazione immagini!",
-                "owner": "Solo il proprietario del bot può ricaricare i server di elaborazione immagini!"
-            },
-            "imagestats": {
-                "connected": "Il bot è attualmente connesso a {{length}} server di elaborazione immagini.",
-                "header": "Statistiche Immagini esmBot",
-                "runningJobs": "Lavori in esecuzione: {{count}}",
-                "server": "Server {{num}}"
             },
             "ping": {
                 "latency": "Latenza: {{latency}}ms",
