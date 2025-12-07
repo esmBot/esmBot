@@ -653,7 +653,6 @@
                 "connectionUptime": "Phiên kết nối",
                 "header": "Thống kê esmBot",
                 "shard": "Shard",
-                "bunVersion": "Phiên bản của Bun",
                 "denoVersion": "Phiên bản Deno",
                 "unknownVersion": "Phiên bản Runtime"
             },
