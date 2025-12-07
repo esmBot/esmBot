@@ -29,7 +29,7 @@ As you can see, each command is grouped into categories, which are represented b
 
 !!! tip
 
-    When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the `--experimental-strip-types` flag enabled, Deno, or Bun, it is possible to create commands using TypeScript instead of JavaScript. To do so, simply create a file with a `.ts` extension instead of `.js`; the command will be loaded and handled at runtime as if it were a regular JavaScript command.
+    When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the `--experimental-strip-types` flag enabled, or Deno, it is possible to create commands using TypeScript instead of JavaScript. To do so, simply create a file with a `.ts` extension instead of `.js`; the command will be loaded and handled at runtime as if it were a regular JavaScript command.
 
 ## Command Structure
 

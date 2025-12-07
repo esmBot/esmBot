@@ -5,7 +5,6 @@ import type {
   Options as BSQLite3Options,
   Statement as BSQLite3Statement,
 } from "better-sqlite3";
-import type { Database as BunDatabase, Statement as BunStatement } from "bun:sqlite";
 import type { Guild, GuildChannel } from "oceanic.js";
 import {
   commands,
@@ -19,24 +18,19 @@ import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 
-type BunDenoDatabase = typeof BunDatabase | typeof DenoDatabase;
-
-// bun:sqlite and @db/sqlite are mostly compatible with better-sqlite3,
-// but have a few minor type differences that don't really matter in our case
+// @db/sqlite is mostly compatible with better-sqlite3,
+// but has a few minor type differences that don't really matter in our case
 // here we attempt to bring them closer together
 type CombinedConnection = {
-  prepare: (query: string) => BSQLite3Statement | BunStatement | DenoStatement;
+  prepare: (query: string) => BSQLite3Statement | DenoStatement;
   transaction: (func: () => void) => CallableFunction;
-} & (BSQLite3Database | BunDatabase | DenoDatabase);
+} & (BSQLite3Database | DenoDatabase);
 
 type BSQLite3Init = (filename?: string, options?: BSQLite3Options) => BSQLite3Database;
-type CombinedConstructor = BunDenoDatabase | BSQLite3Init;
+type CombinedConstructor = typeof DenoDatabase | BSQLite3Init;
 let dbInit: CombinedConstructor;
 
-if (process.versions.bun) {
-  const { Database } = await import("bun:sqlite");
-  dbInit = Database;
-} else if (process.versions.deno) {
+if (process.versions.deno) {
   const { Database } = await import("@db/sqlite");
   dbInit = Database;
 } else {
@@ -98,11 +92,9 @@ export default class SQLitePlugin implements DatabasePlugin {
   connection: CombinedConnection;
 
   constructor(connectString: string) {
-    if (process.versions.bun || process.versions.deno) {
-      this.connection = new (dbInit as BunDenoDatabase)(connectString.replace("sqlite://", ""), {
+    if (process.versions.deno) {
+      this.connection = new (dbInit as typeof DenoDatabase)(connectString.replace("sqlite://", ""), {
         create: true,
-        readwrite: true,
-        strict: true,
       });
     } else {
       this.connection = (dbInit as BSQLite3Init)(connectString.replace("sqlite://", ""));

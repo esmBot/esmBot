@@ -26,9 +26,6 @@ export default tseslint.config(
     settings: {
       "import-x/resolver": {
         name: "tsResolver",
-        options: {
-          bun: true,
-        },
         resolver: tsResolver,
       },
     },

@@ -26,16 +26,12 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "start": "node dist/app.js",
-    "start:bun": "bun src/app.ts",
     "start:deno": "deno -P src/app.ts",
     "start:debug": "DEBUG=true node dist/app.js",
-    "start:bun:debug": "DEBUG=true bun src/app.ts",
     "start:deno:debug": "DEBUG=true deno -P src/app.ts",
     "start-api": "node dist/api/index.js",
-    "start-api:bun": "bun src/api/index.ts",
     "start-api:deno": "deno -P src/api/index.ts",
     "start-api:debug": "DEBUG=true node dist/api/index.js",
-    "start-api:bun:debug": "DEBUG=true bun src/api/index.ts",
     "start-api:deno:debug": "DEBUG=true deno -P src/api/index.ts"
   },
   "author": "Essem <essem@essem.space>",
@@ -64,7 +60,6 @@
     "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.1",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/bun": "^1.3.3",
     "@types/node": "^22.19.1",
     "@types/ws": "^8.18.1",
     "cmake-js": "^7.4.0",
@@ -79,7 +74,6 @@
     "typescript-eslint": "^8.48.1"
   },
   "optionalDependencies": {
-    "@sentry/bun": "^10.29.0",
     "@sentry/deno": "^10.29.0",
     "@sentry/node": "^10.29.0",
     "pm2": "^6.0.14"

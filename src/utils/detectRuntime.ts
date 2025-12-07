@@ -26,13 +26,6 @@ function canLoadTS(): boolean {
 }
 
 export default function detectRuntime() {
-  if (process.versions.bun) {
-    return {
-      type: "bun",
-      version: process.versions.bun,
-      tsLoad: true,
-    };
-  }
   if (process.versions.deno) {
     return {
       type: "deno",
