@@ -1,12 +1,6 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
-import {
-  type AnyTextableChannel,
-  GroupChannel,
-  type Message,
-  PrivateChannel,
-  ThreadChannel,
-} from "oceanic.js";
+import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, ThreadChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
@@ -274,6 +268,19 @@ export default async ({ client, database }: EventParams, message: Message) => {
                 {
                   contents: Buffer.from(clean(error)),
                   name: "error.txt",
+                },
+              ],
+              components: [
+                {
+                  type: 1,
+                  components: [
+                    {
+                      type: 2,
+                      label: getString("support"),
+                      style: 5,
+                      url: "https://discord.gg/esmbot-support-592399417676529688",
+                    },
+                  ],
                 },
               ],
             },

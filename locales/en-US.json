@@ -1077,6 +1077,7 @@
     "waitingForSomeone": "Waiting 10 seconds for someone to return...",
     "yes": "Yes"
   },
+  "support": "esmBot Support server",
   "timeFormat": "{{days}} days, {{hours}} hrs, {{minutes}} mins, {{seconds}} secs",
   "tooLarge": "The result was too large, so here it is as a file:"
 }

@@ -166,6 +166,19 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
               name: "error.txt",
             },
           ],
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  label: getString("support", { locale: interaction.locale }),
+                  style: 5,
+                  url: "https://discord.gg/esmbot-support-592399417676529688",
+                },
+              ],
+            },
+          ],
         });
       } catch (err) {
         logger.error(
