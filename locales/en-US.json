@@ -187,6 +187,9 @@
       "freeze": {
         "endframe": "endframe"
       },
+      "globe": {
+        "snow": "snow"
+      },
       "hue": {
         "shift": "shift"
       },
@@ -405,6 +408,9 @@
       },
       "freeze": {
         "endframe": "Set the end frame (default: last frame)"
+      },
+      "globe": {
+        "snow": "Turns the globe into a snow globe"
       },
       "hue": {
         "shift": "Set the amount to shift by"
