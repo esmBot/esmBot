@@ -250,6 +250,9 @@
             },
             "uncaption": {
                 "tolerance": "toleranz"
+            },
+            "globe": {
+                "snow": "Schnee"
             }
         },
         "flags": {
