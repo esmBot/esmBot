@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
-      - plugins:/opt/Lavalink/plugins/
+      - ./lavaplugins:/opt/Lavalink/plugins/
     healthcheck:
       test: 'curl -H "Authorization: $$(cat /opt/Lavalink/application.yml | grep password: | sed ''s/^ *password: //g'' | tr -d ''"'')" -f http://localhost:2333/version'
       interval: 15s
@@ -39,9 +39,6 @@ services:
     networks:
       esmbot:
         ipv4_address: 172.20.0.3
-
-volumes:
-  plugins:
 
 networks:
   esmbot:
