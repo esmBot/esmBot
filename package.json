@@ -20,7 +20,7 @@
     "build:ts": "tsc",
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t esmbot .",
     "docker:run-bot": "docker run --rm --network=host esmbot",
-    "docker:run-api": "docker run --rm --network=host --entrypoint='[\"node\", \"dist/api/index.js\"]' esmbot",
+    "docker:run-api": "docker run --rm --network=host esmbot dist/api/index.js",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml ghcr.io/lavalink-devs/lavalink:4",
     "format": "prettier .",
     "format:check": "prettier --check .",
