@@ -27,6 +27,7 @@ namespace esmb::Image {
   declare_input_func(Meme);
   declare_input_func(Mirror);
   declare_input_func(Motivate);
+  declare_input_func(Petpet);
 #if ZXING_ENABLED
   declare_input_func(QrRead);
 #endif
@@ -74,6 +75,7 @@ namespace esmb::Image {
   declare_input_args(MemeArgs);
   declare_input_args(MirrorArgs);
   declare_input_args(MotivateArgs);
+  declare_input_args(PetpetArgs);
 #if ZXING_ENABLED
   declare_input_args(QrCreateArgs);
 #endif

@@ -29,6 +29,7 @@ namespace esmb {
         {"meme",       &Meme      },
         {"mirror",     &Mirror    },
         {"motivate",   &Motivate  },
+        {"petpet",     &Petpet    },
 #ifdef ZXING_ENABLED
         {"qrread",     &QrRead    },
 #endif
@@ -79,6 +80,7 @@ namespace esmb {
       {"meme",       &MemeArgs      },
       {"mirror",     &MirrorArgs    },
       {"motivate",   &MotivateArgs  },
+      {"petpet",     &PetpetArgs    },
 #if ZXING_ENABLED
       {"qrcreate",   &QrCreateArgs  },
 #endif
