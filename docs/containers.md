@@ -23,6 +23,13 @@ You should then modify the `config/servers.json` file to change the IP addresses
 }
 ```
 
+!!! warning
+
+    If using Docker, you will need to run the following command to correct directory permissions:
+    ```sh
+    # mkdir -p lavaplugins && chown -R 322:322 lavaplugins
+    ```
+
 Finally, start the bot by running the following command (click to select your container runtime):
 
 === "Podman"
