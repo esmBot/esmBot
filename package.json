@@ -49,7 +49,7 @@
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.3.0",
     "node-addon-api": "^8.5.0",
-    "oceanic.js": "1.13.0",
+    "oceanic.js": "^1.13.0",
     "postgres": "^3.4.7",
     "shoukaku": "^4.2.0",
     "winston": "^3.19.0",
@@ -98,7 +98,7 @@
     },
     "#config/*": "./config/*"
   },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
+  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
   "pnpm": {
     "ignoredOptionalDependencies": [
       "@discordjs/voice"

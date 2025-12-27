@@ -33,7 +33,7 @@ importers:
         specifier: ^8.5.0
         version: 8.5.0
       oceanic.js:
-        specifier: 1.13.0
+        specifier: ^1.13.0
         version: 1.13.0(bufferutil@4.1.0)
       postgres:
         specifier: ^3.4.7
