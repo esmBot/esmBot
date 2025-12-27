@@ -31,17 +31,16 @@ CmdOutput esmb::Image::Petpet(const string &type, string &outType, const char *b
     }
   }
 
-  // The output needs to have atleast 10 pages
+  // The output needs to have atleast 5 pages
   // so we can go through the whole hand animation.
-  int nOutPages = std::max(nPages, 10);
-
-  string assetPath = basePath + "assets/images/petpet.gif";
-  VImage hand = VImage::new_from_file(assetPath.c_str(), GetInputOptions("gif", true, true));
+  int nOutPages = std::max(nPages, 5);
 
   double minSize = std::min(width, pageHeight);
-  VImage hand_frames[10];
-  for (int i = 0; i < 10; i++) {
-    hand_frames[i] = hand.crop(0, i * 112, 112, 112).resize(minSize * sizeOffset / 112.0);
+  VImage hand_frames[5];
+  for (int i = 0; i < 5; i++) {
+    string assetPath = basePath + "assets/images/petpet/sprite" + to_string(i + 1) + ".png";
+    hand_frames[i] = VImage::new_from_file(assetPath.c_str(), GetInputOptions("png", false, false))
+                       .resize(minSize * sizeOffset / 900.0);
   }
 
   // These offsets to make the bouncing effect
@@ -60,21 +59,21 @@ CmdOutput esmb::Image::Petpet(const string &type, string &outType, const char *b
   int newPageHeight = pageHeight * sizeOffset;
   for (int i = 0; i < nOutPages; i++) {
     VImage img_frame = nPages > 1 ? in.crop(0, (i % nPages) * pageHeight, width, pageHeight) : in;
-    VImage hand_frame = hand_frames[i % 10];
-    double scale = 1.0 + (frameOffsets[i / 2 % 5][2] * squish / 112.0);
-    double vscale = 1.0 + (frameOffsets[i / 2 % 5][3] * squish / 112.0);
-    int dx = width * (frameOffsets[i / 2 % 5][0] * squish / 112.0);
-    int dy = pageHeight * (frameOffsets[i / 2 % 5][1] * squish / 112.0);
+    VImage hand_frame = hand_frames[i % 5];
+    double scale = 1.0 + (frameOffsets[i % 5][2] * squish / 112.0);
+    double vscale = 1.0 + (frameOffsets[i % 5][3] * squish / 112.0);
+    int dx = width * (frameOffsets[i % 5][0] * squish / 112.0);
+    int dy = pageHeight * (frameOffsets[i % 5][1] * squish / 112.0);
 
     VImage frame = img_frame.resize(scale, VImage::option()->set("vscale", vscale))
-                     .embed((newWidth)-width + dx, (newPageHeight)-pageHeight + dy, newWidth, newPageHeight)
+                     .embed(newWidth - width + dx, newPageHeight - pageHeight + dy, newWidth, newPageHeight)
                      .composite2(hand_frame, VIPS_BLEND_MODE_OVER);
     img.push_back(frame);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, newPageHeight);
 
-  vector<int> delay(nOutPages, 30);
+  vector<int> delay(nOutPages, 60);
   final.set("delay", delay);
 
   SetupTimeoutCallback(final, shouldKill);
