@@ -26,7 +26,12 @@ CmdOutput esmb::Image::Wall(const string &type, string &outType, const char *buf
   // We fit one tile inside a 128x128 box in order to
   // reduce resolution, then blow it up to 512x512
   double maxSize = std::max(width, pageHeight);
-  VImage tile = in.resize(128.0 / maxSize);
+  // We find a vertical scaling factor that ensures
+  // all pages have the same height. This prevents
+  // a weird scrolling effect that happens when we
+  // later crop out each page.
+  double vscale = (int)(pageHeight * (128.0 / maxSize)) / (double)pageHeight;
+  VImage tile = in.resize(128.0 / maxSize, VImage::option()->set("vscale", vscale));
   tile = tile.resize(512.0 / 128.0).copy_memory();
   int newHeight = tile.height();
   width = tile.width();
