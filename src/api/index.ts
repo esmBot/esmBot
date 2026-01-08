@@ -316,13 +316,14 @@ function stopHTTPServer() {
 }
 
 let stopping = false;
-process.on("SIGINT", () => {
+
+function sigHandler(signal: NodeJS.Signals) {
   if (stopping) {
-    logger.info("Another SIGINT detected, forcing shutdown...");
+    logger.info(`Another ${signal} detected, forcing shutdown...`);
     process.exit();
   }
   stopping = true;
-  logger.info("SIGINT detected, finishing jobs and shutting down...");
+  logger.info(`${signal} detected, finishing jobs and shutting down...`);
   httpServer.removeAllListeners("upgrade");
   const closeResponse = Buffer.concat([Buffer.from([Rclose])]);
   for (const client of wss.clients) {
@@ -344,7 +345,10 @@ process.on("SIGINT", () => {
       stopHTTPServer();
     }
   });
-});
+}
+
+process.on("SIGINT", (s) => sigHandler(s));
+process.on("SIGTERM", (s) => sigHandler(s));
 
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
