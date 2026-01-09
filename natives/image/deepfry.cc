@@ -31,13 +31,17 @@ CmdOutput esmb::Image::Deepfry(const string &type, string &outType, const char *
     final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
     final.set("delay", fried.get_array_int("delay"));
+    final.set("loop", fried.get_int("loop"));
   } else {
     void *jpgBuf;
     size_t jpgLength;
     fried.write_to_buffer(".jpg", &jpgBuf, &jpgLength, VImage::option()->set("Q", 1)->set("strip", true));
     final = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential")).copy_memory();
     final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-    if (nPages > 1) final.set("delay", fried.get_array_int("delay"));
+    if (nPages > 1) {
+      final.set("delay", fried.get_array_int("delay"));
+      final.set("loop", fried.get_int("loop"));
+    }
     free(jpgBuf);
   }
 

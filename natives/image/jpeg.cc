@@ -41,6 +41,7 @@ CmdOutput esmb::Image::Jpeg(const string &type, string &outType, const char *buf
       final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
       final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       final.set("delay", in.get_array_int("delay"));
+      final.set("loop", in.get_int("loop"));
       final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                             outType == "gif" ? VImage::option()->set("dither", 0) : 0);
     } else {
@@ -50,6 +51,7 @@ CmdOutput esmb::Image::Jpeg(const string &type, string &outType, const char *buf
       final = VImage::new_from_buffer(jpgBuf, jpgLength, "", VImage::option()->set("access", "sequential"));
       final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
       final.set("delay", in.get_array_int("delay"));
+      final.set("loop", in.get_int("loop"));
       final.write_to_buffer(("." + outType).c_str(), reinterpret_cast<void **>(&buf), &dataSize,
                             outType == "gif" ? VImage::option()->set("dither", 0) : 0);
       free(jpgBuf);
