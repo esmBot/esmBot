@@ -65,6 +65,7 @@ async function getMedia(
   media: string,
   media2: string,
   mediaType: MediaParams["type"][],
+  single = false,
   spoiler = false,
   extraReturnTypes = false,
   type: string | null = null,
@@ -166,6 +167,7 @@ async function getMedia(
     if (result.url) payload.path = result.url;
     payload.type = type ?? result.type;
     if (result.mediaType) payload.mediaType = result.mediaType;
+    if (payload.type === "large" && single) return payload;
     if (
       !payload.type ||
       !payload.mediaType ||
@@ -183,12 +185,13 @@ async function checkMedia(
   message: Message,
   extraReturnTypes: boolean,
   mediaType: MediaParams["type"][],
+  singleMessage = false,
 ): Promise<MediaMeta | undefined> {
   let type: MediaMeta | undefined;
 
   // first check the embeds
   if (message.embeds.length !== 0) {
-    type = await checkEmbeds(message, extraReturnTypes, mediaType);
+    type = await checkEmbeds(message, extraReturnTypes, mediaType, singleMessage);
   }
 
   // then check the attachments
@@ -199,6 +202,7 @@ async function checkMedia(
         firstAttachment.proxyURL,
         firstAttachment.url,
         mediaType,
+        singleMessage,
         !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER),
       );
   }
@@ -206,13 +210,14 @@ async function checkMedia(
   // then check embeds and attachments inside forwards
   if (!type && message.messageSnapshots?.[0]) {
     const forward = message.messageSnapshots?.[0].message;
-    if (forward.embeds.length !== 0) type = await checkEmbeds(forward, extraReturnTypes, mediaType);
+    if (forward.embeds.length !== 0) type = await checkEmbeds(forward, extraReturnTypes, mediaType, singleMessage);
 
     if (!type && forward.attachments.length !== 0) {
       type = await getMedia(
         forward.attachments[0].proxyURL,
         forward.attachments[0].url,
         mediaType,
+        singleMessage,
         !!(forward.attachments[0].flags & AttachmentFlags.IS_SPOILER),
       );
     }
@@ -226,6 +231,7 @@ function checkEmbeds(
   message: Message | MessageSnapshotMessage,
   extraReturnTypes: boolean,
   mediaType: MediaParams["type"][],
+  singleMessage = false,
 ) {
   let hasSpoiler = false;
   if (message.embeds[0].url && message.content) {
@@ -239,13 +245,21 @@ function checkEmbeds(
     message.embeds[0].video?.url &&
     message.embeds[0].url
   ) {
-    return getMedia(message.embeds[0].video.url, message.embeds[0].url, mediaType, hasSpoiler, extraReturnTypes);
+    return getMedia(
+      message.embeds[0].video.url,
+      message.embeds[0].url,
+      mediaType,
+      singleMessage,
+      hasSpoiler,
+      extraReturnTypes,
+    );
     // then thumbnails
   } else if (message.embeds[0].thumbnail) {
     return getMedia(
       message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url,
       message.embeds[0].thumbnail.url,
       mediaType,
+      singleMessage,
       hasSpoiler,
       extraReturnTypes,
     );
@@ -255,6 +269,7 @@ function checkEmbeds(
       message.embeds[0].image.proxyURL ?? message.embeds[0].image.url,
       message.embeds[0].image.url,
       mediaType,
+      singleMessage,
       hasSpoiler,
       extraReturnTypes,
     );
@@ -336,13 +351,14 @@ export default async (
         attachment.proxyURL,
         attachment.url,
         mediaType,
+        true,
         !!(attachment.flags & AttachmentFlags.IS_SPOILER),
         !!attachment.contentType,
       );
     }
     const link = interaction.data.options.getString("link");
     if (link) {
-      return getMedia(link, link, mediaType, false, extraReturnTypes, null, interaction.client);
+      return getMedia(link, link, mediaType, true, false, extraReturnTypes, null, interaction.client);
     }
   }
   if (cmdMessage) {
@@ -357,7 +373,7 @@ export default async (
       }
     }
     // then we check the current message
-    const result = await checkMedia(cmdMessage, extraReturnTypes, mediaType);
+    const result = await checkMedia(cmdMessage, extraReturnTypes, mediaType, singleMessage);
     if (result) return result;
   }
   if (!singleMessage && (cmdMessage || interaction?.authorizingIntegrationOwners?.[0] !== undefined)) {
