@@ -6,7 +6,7 @@
             "bird": "Mostra uma imagem de pássaro aleatória",
             "dice": "Joga o dado",
             "dog": "Mostra uma imagem de cachorro aleatória",
-            "homebrew": "Cria uma edit do Homebrew Channel",
+            "homebrew": "Cria uma edição do Homebrew Channel",
             "sonic": "Cria uma imagem de balão de fala do Sonic",
             "banner": "Mostra o banner de um usuário",
             "base64": "Codifica/Decodifica uma chave de Base64",
@@ -59,24 +59,501 @@
             "spotify": "Adiciona o cabeçalho \"This is\" do Spotify na imagem",
             "stretch": "Estica a imagem para uma proporção de tela 1:1",
             "uncaption": "Remove a legenda da imagem",
-            "wall": "Cria uma parede de uma imagem"
+            "wall": "Cria uma parede de uma imagem",
+            "mediareload": "Tenta reconectar a todos os servidores de processamento de mídia",
+            "mediastats": "Obtém algumas estatísticas sobre os servidores de mídia",
+            "sticker": "Obtém a foto original de uma figurinha",
+            "deepfry": "Frita uma imagem",
+            "fade": "Dá um fade-in numa imagem",
+            "flip": "Vira uma imagem",
+            "flop": "Vira uma imagem",
+            "globe": "Gira uma imagem",
+            "haah": "Espelha o lado esquerdo de uma imagem no lado direito",
+            "implode": "Implode uma imagem",
+            "meme": "Gera um meme com uma imagem (separe texto de cima/baixo com uma vírgula)",
+            "pixelate": "Pixeliza uma imagem",
+            "reverse": "Reverte uma sequência de imagens",
+            "sharpen": "Aplica nitidez numa imagem",
+            "slide": "Desliza uma imagem em uma direção",
+            "slow": "Deixa uma sequência de imagens mais lenta",
+            "soos": "\"Loopa\" uma sequência de imagens revertendo-a quando ela termina",
+            "speed": "Agiliza uma sequência de imagens",
+            "squish": "Estica/encolhe uma imagem",
+            "tile": "Cria um padrão lado-a-lado de uma imagem",
+            "waaw": "Espelha o lado direito de uma imagem para a esquerda",
+            "whisper": "Adiciona uma legenda estilo Whisper em uma imagem",
+            "woow": "Espelha o topo de uma imagem até a parte de baixo",
+            "Select Image": "Descrição não encontrada",
+            "tags": "O comando de tags principal. Veja a página de ajuda para informações: https://esmbot.net/help.html"
         },
         "flagNames": {
             "caption": {
                 "font": "fonte",
                 "noegg": "semovo"
+            },
+            "8ball": {
+                "question": "pergunta"
+            },
+            "dice": {
+                "max": "máximo"
+            },
+            "avatar": {
+                "member": "membro"
+            },
+            "banner": {
+                "member": "membro"
+            },
+            "base64": {
+                "decode": "decodificar",
+                "encode": "codificar"
+            },
+            "base64 decode": {
+                "text": "texto"
+            },
+            "base64 encode": {
+                "text": "texto"
+            },
+            "broadcast": {
+                "message": "mensagem"
+            },
+            "channel": {
+                "enable": "ativar",
+                "disable": "desativar"
+            },
+            "channel enable": {
+                "text": "texto"
+            },
+            "channel disable": {
+                "text": "texto"
+            },
+            "command": {
+                "enable": "ativar",
+                "disable": "desativar"
+            },
+            "command enable": {
+                "text": "texto"
+            },
+            "command disable": {
+                "text": "texto"
+            },
+            "count": {
+                "command": "comando"
+            },
+            "emote": {
+                "emoji": "emoji"
+            },
+            "eval": {
+                "broadcast": "transmissão",
+                "code": "código"
+            },
+            "exec": {
+                "cmd": "cmd"
+            },
+            "help": {
+                "command": "comando"
+            },
+            "image": {
+                "query": "pesquisa"
+            },
+            "lengthen": {
+                "url": "url"
+            },
+            "prefix": {
+                "prefix": "prefixo"
+            },
+            "reload": {
+                "cmd": "cmd",
+                "skipsend": "pularenvio"
+            },
+            "snowflake": {
+                "id": "id"
+            },
+            "youtube": {
+                "query": "pesquisa"
+            },
+            "caption2": {
+                "top": "topo",
+                "font": "fonte"
+            },
+            "fade": {
+                "alpha": "alfa"
+            },
+            "globe": {
+                "snow": "neve"
+            },
+            "jpeg": {
+                "quality": "qualidade"
+            },
+            "meme": {
+                "font": "fonte"
+            },
+            "motivate": {
+                "font": "fonte"
+            },
+            "slide": {
+                "reverse": "reverter",
+                "vertical": "vertical"
+            },
+            "snapchat": {
+                "position": "posição"
+            },
+            "uncanny": {
+                "font": "fonte"
+            },
+            "uncaption": {
+                "tolerance": "tolerância"
+            },
+            "watermark": {
+                "9gag": "9gag",
+                "avs4you": "avs4you",
+                "bandicam": "bandicam",
+                "deviantart": "deviantart",
+                "hypercam": "hypercam",
+                "ifunny": "ifunny",
+                "kinemaster": "kinemaster",
+                "memecenter": "memecenter",
+                "powerdirector": "powerdirector",
+                "shutterstock": "shutterstock"
+            },
+            "music": {
+                "loop": "repetir",
+                "nowplaying": "agoratocando",
+                "play": "tocar",
+                "queue": "fila",
+                "remove": "remover",
+                "shuffle": "aleatório",
+                "skip": "pular",
+                "stop": "parar",
+                "toggle": "alternar",
+                "volume": "volume"
+            },
+            "music host": {
+                "user": "usuário"
+            },
+            "music remove": {
+                "position": "posição"
+            },
+            "music seek": {
+                "position": "posição"
+            },
+            "music volume": {
+                "level": "nível"
+            },
+            "tags": {
+                "add": "adicionar",
+                "delete": "apagar",
+                "edit": "editar",
+                "list": "lista",
+                "owner": "dono",
+                "random": "aleatório",
+                "role": "cargo"
+            },
+            "tags add": {
+                "name": "nome",
+                "content": "conteúdo"
+            },
+            "tags delete": {
+                "name": "nome"
+            },
+            "tags edit": {
+                "name": "nome",
+                "content": "conteúdo"
+            },
+            "tags get": {
+                "name": "nome"
+            },
+            "tags owner": {
+                "name": "nome"
+            },
+            "tags role": {
+                "add": "adicionar",
+                "list": "lista",
+                "remove": "remover"
+            },
+            "tags role add": {
+                "role": "cargo"
+            },
+            "tags role remove": {
+                "role": "cargo"
+            },
+            "qr": {
+                "create": "criar",
+                "read": "ler"
             }
         },
         "flags": {
             "caption": {
                 "font": "Especifica a fonte que deseja usar (padrão: futura)",
                 "noegg": "Desativa... algo. Não vou dizer o que é."
+            },
+            "8ball": {
+                "question": "Uma pergunta que você quer perguntar à bola"
+            },
+            "dice": {
+                "max": "O valor máximo do dado"
+            },
+            "avatar": {
+                "member": "O membro para obter o avatar"
+            },
+            "banner": {
+                "member": "O membro para obter o banner"
+            },
+            "base64": {
+                "decode": "Decodificar uma chave Base64",
+                "encode": "Codificar uma chave Base64"
+            },
+            "base64 decode": {
+                "text": "O texto para decodificar"
+            },
+            "base64 encode": {
+                "text": "O texto para codificar"
+            },
+            "broadcast": {
+                "message": "A mensagem para transmitir"
+            },
+            "channel": {
+                "enable": "Ativa comandos clássicos num canal",
+                "disable": "Desativa comandos clássicos num canal"
+            },
+            "channel enable": {
+                "text": "O texto para decodificar"
+            },
+            "channel disable": {
+                "text": "O texto para codificar"
+            },
+            "command": {
+                "enable": "Ativa um comando clássico",
+                "disable": "Desativa um comando clássico"
+            },
+            "command enable": {
+                "text": "O texto para decodificar"
+            },
+            "command disable": {
+                "text": "O texto para codificar"
+            },
+            "emote": {
+                "emoji": "O emoji que quer obter"
+            },
+            "eval": {
+                "code": "O código para executar"
+            },
+            "exec": {
+                "cmd": "O comando para executar"
+            },
+            "help": {
+                "command": "O comando para ver informações sobre"
+            },
+            "image": {
+                "query": "O que você quer pesquisar"
+            },
+            "lengthen": {
+                "url": "O URL que você quer deixar mais longo"
+            },
+            "prefix": {
+                "prefix": "O prefixo de servidor que você quer usar"
+            },
+            "reload": {
+                "cmd": "O comando para recarregar",
+                "skipsend": "Pula o envio de novos dados de comando de aplicativo para o Discord"
+            },
+            "snowflake": {
+                "id": "Um ID snowflake"
+            },
+            "youtube": {
+                "query": "O que você quer pesquisar"
+            },
+            "caption2": {
+                "top": "Coloca a legenda no topo da imagem ao invés do fundo",
+                "font": "Especifique a fonte que você quer usar (padrão: helvetica)"
+            },
+            "fade": {
+                "alpha": "Fade in transparente"
+            },
+            "freeze": {
+                "endframe": "Define o frame final (padrão: último frame)"
+            },
+            "globe": {
+                "snow": "Transforma o globo em um globo de neve"
+            },
+            "jpeg": {
+                "quality": "Define a qualidade do JPEG (padrão: 1)"
+            },
+            "meme": {
+                "case": "Deixa o meme case-sensitive (permite texto em minúsculo)",
+                "font": "Especifique a fonte que você quer usar (padrão: impact)"
+            },
+            "motivate": {
+                "font": "Especifique a fonte que você quer usar (padrão: times)"
+            },
+            "slide": {
+                "reverse": "Muda a direção a qual a imagem desliza",
+                "vertical": "Desliza a imagem verticalmente"
+            },
+            "slow": {
+                "multiplier": "Define o fator de velocidade (padrão: 2.0)"
+            },
+            "speechbubble": {
+                "alpha": "Deixa o topo da bolha de fala transparente",
+                "flip": "Vira a bolha de fala",
+                "bottom": "Coloca a bolha de fala no fundo da imagem"
+            },
+            "speed": {
+                "multiplier": "Define o fator de velocidade (padrão: 2.0)"
+            },
+            "uncanny": {
+                "font": "Especifique a fonte que você quer usar (padrão: helvetica)",
+                "phase": "Especifique a imagem uncanny que você quer usar"
+            },
+            "watermark": {
+                "9gag": "Adiciona a marca d'água do 9GAG em uma imagem",
+                "avs4you": "Adiciona a marca d'água do avs4you em uma imagem",
+                "bandicam": "Adiciona a marca d'água do Bandicam em uma imagem",
+                "deviantart": "Adiciona a marca d'água do DeviantArt em uma imagem",
+                "hypercam": "Adiciona a marca d'água do Hypercam em uma imagem",
+                "ifunny": "Adiciona a marca d'água do iFunny em uma imagem",
+                "kinemaster": "Adiciona a marca d'água do KineMaster em uma imagem",
+                "memecenter": "Adiciona a marca d'água do MemeCenter em uma imagem",
+                "powerdirector": "Adiciona a marca d'água do PowerDirector em uma imagem",
+                "shutterstock": "Adiciona a marca d'água do Shutterstock em uma imagem"
+            },
+            "music": {
+                "host": "Obtém ou muda o anfitrião da atual sessão de voz",
+                "loop": "Repete a música",
+                "nowplaying": "Mostra a música atual",
+                "play": "Toca uma música ou adiciona à fila",
+                "queue": "Mostra a fila atual",
+                "remove": "Remove uma música da fila",
+                "shuffle": "Embaralha a fila de músicas",
+                "skip": "Pula a música atual",
+                "stop": "Para a música",
+                "toggle": "Pausa ou resume a música atual",
+                "volume": "Define o volume da música"
+            },
+            "music remove": {
+                "position": "A posição na fila que você quer remover"
+            },
+            "music volume": {
+                "level": "O nível de volume"
+            },
+            "tags": {
+                "add": "Adiciona uma nova etiqueta",
+                "delete": "Apaga uma etiqueta",
+                "edit": "Edita uma etiqueta existente",
+                "get": "Obtém uma etiqueta",
+                "list": "Lista todas as etiquetas neste servidor",
+                "owner": "Obtém o dono de uma etiqueta",
+                "random": "Obtém uma etiqueta aleatória"
+            },
+            "tags add": {
+                "name": "O nome de uma etiqueta",
+                "content": "O conteúdo de uma etiqueta"
+            },
+            "tags delete": {
+                "name": "O nome da etiqueta"
+            },
+            "tags edit": {
+                "name": "O nome da etiqueta",
+                "content": "O conteúdo da etiqueta"
+            },
+            "tags get": {
+                "name": "O nome da etiqueta"
+            },
+            "tags owner": {
+                "name": "O nome da etiqueta"
+            },
+            "tags role": {
+                "add": "Permite um cargo a gerenciar etiquetas",
+                "list": "Lista os cargos que são capazes de gerenciar etiquetas",
+                "remove": "Remove um cargo da permissão"
+            },
+            "tags role add": {
+                "role": "O cargo a adicionar"
+            },
+            "tags role remove": {
+                "role": "O cargo a remover"
+            },
+            "qr": {
+                "create": "Gera um QR code",
+                "read": "Lê um QR code"
             }
         },
         "names": {
             "bounce": "saltar",
             "caption": "legendar",
-            "Select Image": "Selecionar Imagem"
+            "Select Image": "Selecionar Imagem",
+            "8ball": "bola8",
+            "bird": "pássaro",
+            "cat": "gato",
+            "dice": "dado",
+            "dog": "cachorro",
+            "homebrew": "homebrew",
+            "sonic": "sonic",
+            "avatar": "avatar",
+            "banner": "banner",
+            "base64": "base64",
+            "broadcast": "transmissão",
+            "channel": "canal",
+            "command": "comando",
+            "count": "contagem",
+            "donate": "doar",
+            "emote": "emote",
+            "eval": "eval",
+            "exec": "exec",
+            "help": "ajuda",
+            "image": "imagem",
+            "mediareload": "recarregarmídia",
+            "mediastats": "estatísticasdemídia",
+            "info": "informações",
+            "ping": "ping",
+            "prefix": "prefixo",
+            "raw": "bruto",
+            "reload": "recarregar",
+            "restart": "reiniciar",
+            "snowflake": "snowflake",
+            "soundreload": "recarregarsom",
+            "stats": "estatísticas",
+            "sticker": "adesivo",
+            "youtube": "youtube",
+            "blur": "desfoque",
+            "caption2": "legenda2",
+            "circle": "círculo",
+            "crop": "recortar",
+            "deepfry": "fritar",
+            "explode": "explodir",
+            "fade": "fade",
+            "flag": "bandeira",
+            "flip": "virar",
+            "freeze": "congelar",
+            "gif": "gif",
+            "globe": "globo",
+            "grayscale": "pretoebranco",
+            "haah": "haah",
+            "hooh": "hooh",
+            "implode": "implodir",
+            "invert": "inverter",
+            "jpeg": "jpeg",
+            "magik": "magik",
+            "meme": "meme",
+            "motivate": "motivacional",
+            "pixelate": "pixelizar",
+            "reddit": "reddit",
+            "reverse": "reverter",
+            "scott": "scott",
+            "sepia": "sepia",
+            "sharpen": "nitidez",
+            "slide": "deslizar",
+            "slow": "diminuirvelocidade",
+            "snapchat": "snapchat",
+            "soos": "soos",
+            "speechbubble": "bolhadefala",
+            "speed": "aumentarvelocidade",
+            "spin": "girar",
+            "spotify": "spotify",
+            "tile": "ladoalado",
+            "uncanny": "uncanny",
+            "uncaption": "removerlegenda",
+            "unfreeze": "descongelar",
+            "waaw": "waaw"
         },
         "noImage": {
             "bounce": "Você precisa enviar uma imagem/GIF para saltar!",
