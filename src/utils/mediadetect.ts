@@ -94,16 +94,17 @@ async function getMedia(
     name: fileNameNoExtension,
     spoiler,
   };
-  const host = new URL(media2).host;
+  const url2 = new URL(media2);
+  const host = url2.host;
   if (mediaType.includes("image") && combined.includes(host)) {
     if (tenorURLs.includes(host)) {
-      // Tenor doesn't let us access a raw GIF without going through their API,
+      // Tenor's API tends to be the most reliable way to get a raw GIF,
       // so we use that if there's a key in the config
-      if (process.env.TENOR !== "") {
+      if (process.env.TENOR && process.env.TENOR !== "") {
         let id: string | undefined;
-        if (media2.includes("tenor.com/view/")) {
+        if (url2.pathname.startsWith("/view/")) {
           id = media2.split("-").pop();
-        } else if (media2.endsWith(".gif")) {
+        } else if (url2.pathname.endsWith(".gif")) {
           const redirect = (await fetch(media2, { method: "HEAD", redirect: "manual" })).headers.get("location");
           id = redirect?.split("-").pop();
         } else {
@@ -123,6 +124,16 @@ async function getMedia(
         if (json.error) throw Error(json.error.message);
         if (json.results.length === 0) return;
         payload.path = json.results[0].media_formats.gif.url;
+      } else if (url2.pathname.startsWith("/view/")) {
+        const tenorURL = url2;
+        if (!tenorURL.pathname.endsWith(".gif")) tenorURL.pathname += ".gif";
+
+        const redirectReq = await fetch(tenorURL, { method: "HEAD", redirect: "manual" });
+        if (redirectReq.status !== 301 && redirectReq.status !== 302) return;
+
+        const redirect = redirectReq.headers.get("location");
+        if (!redirect) return;
+        payload.path = redirect;
       } else {
         return;
       }
