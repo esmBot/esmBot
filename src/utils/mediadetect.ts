@@ -26,10 +26,11 @@ const giphyMediaURLs = [
   "media3.giphy.com",
   "media4.giphy.com",
 ];
+const klipyURLs = ["klipy.com"];
 
-const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs];
+const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...klipyURLs];
 
-const providerUrls = ["https://tenor.co", "https://giphy.com"];
+const providerUrls = ["https://tenor.co", "https://giphy.com"]; // klipy isn't here because it gives us what we want in the thumbnail
 
 type TenorMediaObject = {
   url: string;
@@ -47,6 +48,46 @@ type TenorResponse = {
   results: {
     media_formats: { [key: string]: TenorMediaObject };
   }[];
+};
+
+type KlipyMediaObject = {
+  url: string;
+  width: number;
+  height: number;
+  size: number;
+};
+
+type KlipyMediaTypes = {
+  gif: KlipyMediaObject;
+  webp: KlipyMediaObject;
+  jpg: KlipyMediaObject;
+  mp4: KlipyMediaObject;
+  webm: KlipyMediaObject;
+};
+
+type KlipyMediaResult = {
+  id: number;
+  slug: string;
+  title: string;
+  file: {
+    hd: KlipyMediaTypes;
+    md: KlipyMediaTypes;
+    sm: KlipyMediaTypes;
+    xs: KlipyMediaTypes;
+  };
+  tags: string[];
+  type: string;
+  blur_preview: string;
+};
+
+type KlipyResponse = {
+  result: boolean;
+  errors?: {
+    message: string[];
+  };
+  data: {
+    data: KlipyMediaResult[];
+  };
 };
 
 export type MediaMeta = {
@@ -138,6 +179,25 @@ async function getMedia(
         return;
       }
       payload.type = "image/gif";
+      payload.mediaType = "image";
+    } else if (klipyURLs.includes(host)) {
+      // Discord exposes usable WEBP files through the thumbnails,
+      // we should only be here if someone directly used a share link
+      if (!process.env.KLIPY || process.env.KLIPY === "") return;
+      if (!media2.includes("klipy.com/gifs/")) return;
+      const id = url2.pathname.replace("/gifs/", "");
+      const data = await fetch(`https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/items?slugs=${id}`);
+      if (data.status === 429) {
+        if (extraReturnTypes) {
+          payload.type = "klipylimit";
+          return payload;
+        }
+      }
+      const json = (await data.json()) as KlipyResponse;
+      if (json.errors) throw AggregateError(json.errors.message);
+      if (json.data.data.length === 0) return;
+      payload.path = json.data.data[0].file.hd.webp.url;
+      payload.type = "image/webp";
       payload.mediaType = "image";
     } else if (giphyURLs.includes(host)) {
       // Can result in an HTML page instead of a WEBP

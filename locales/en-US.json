@@ -1011,6 +1011,7 @@
     },
     "frames": "That GIF has way too many frames (over 1000)!",
     "jobEnded": "Something happened to the media servers before I could receive the output. Try running your command again.",
+    "klipy": "I've been rate-limited by KLIPY. Please try uploading your GIF elsewhere.",
     "large": "That file is too large (>= 40MB)! Try using a smaller file.",
     "nocmd": "That command isn't supported on this instance of esmBot.",
     "noanim": "That image isn't in an animated format (GIF or WEBP)!",

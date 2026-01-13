@@ -90,6 +90,10 @@ class MediaCommand extends Command {
           runningCommands.delete(this.author.id);
           return this.getString("image.tenor");
         }
+        if (image.type === "klipylimit") {
+          runningCommands.delete(this.author.id);
+          return this.getString("image.klipy");
+        }
         if (image.type === "badurl") {
           runningCommands.delete(this.author.id);
           return this.getString("image.badurl");

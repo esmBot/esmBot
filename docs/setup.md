@@ -270,9 +270,9 @@ pm2 start ecosystem.config.cjs
 
     PostgreSQL isn't running, you should be able to start it on most Linux systems with `sudo systemctl start postgresql`. If you don't intend to use PostgreSQL, you should take another look at your `DB` variable in the .env file.
 
-??? faq "Gifs from Tenor result in a "no decode delegate for this image format" or "improper image header" error"
+??? faq "Gifs from Tenor and KLIPY result in a "no decode delegate for this image format" or "improper image header" error"
 
-    Tenor GIFs are actually stored as MP4s, which libvips can't decode most of the time. You'll need to get a Tenor API key from [here](https://developers.google.com/tenor/guides/quickstart) and put it in the `TENOR` variable in .env.
+    Tenor and KLIPY GIFs are typically delivered as videos, which libvips can't decode most of the time. This should be handled for Tenor GIFs; if this happens, it is most likely a bug and should be reported [here](https://github.com/esmBot/esmBot/issues) or in the [esmBot Support server](https://esmbot.net/support). For KLIPY, you'll need to get a KLIPY API key from [here](https://partner.klipy.com) and put it in the `KLIPY` variable in .env.
 
 ---
 

@@ -21,6 +21,7 @@ These variables that are not necessarily required for the bot to run, but can gr
 
 - `STAYVC`: Set this to true if you want the bot to stay in voice chat after playing music/a sound effect. You can make it leave by using the stop command.
 - `TENOR`: An API token from [Tenor](https://tenor.com/gifapi). This is required for using GIFs from Tenor.
+- `KLIPY`: An API token from [KLIPY](https://klipy.com/docs). This is required for parsing share links from KLIPY.
 - `REST_PROXY`: A Discord REST URL to use besides the default (`https://discord.com/api/v{version_number}`). Can be useful for proxying requests to Discord through an external server.
 - `SENTRY_DSN`: A DSN endpoint URL from [Sentry](https://sentry.io). This is a fully optional integration for error monitoring and statistics.
 - `OUTPUT`: A directory to output the help documentation in Markdown format to. It's recommended to set this to a directory being served by a web server.
