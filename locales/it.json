@@ -31,7 +31,7 @@
             "circle": "Applica una sfocatura radiale a un'immagine",
             "deepfry": "Frigge un'immagine",
             "explode": "Fa esplodere un'immagine",
-            "flag": "Sovrappone una bandiera a un'immagine",
+            "flag": "Sovrappone una bandiera ad un'immagine",
             "flip": "Specchia un'immagine",
             "flop": "Specchia un'immagine",
             "gamexplain": "Crea una miniatura GameXplain da un'immagine",
@@ -87,7 +87,10 @@
             "broadcast": "Diffondi messaggio \"Sta giocando a\" finchè il comando non viene inviato di nuovo o il bot si riavvia",
             "wall": "Crea un muro da un'immagine",
             "fade": "Applica una dissolvenza in entrata a un'immagine",
-            "hue": "Cambia la tonalità di un'immagine"
+            "hue": "Cambia la tonalità di un'immagine",
+            "mediareload": "Prova a riconnettere il bot a tutti i server di elaborazione media",
+            "mediastats": "Invia alcune statistiche sui server di elaborazione media",
+            "slide": "Applica una transizione a scorrimento ad un'immagine"
         },
         "flagNames": {
             "8ball": {
@@ -302,6 +305,13 @@
             "qr": {
                 "read": "leggi",
                 "create": "creare"
+            },
+            "globe": {
+                "snow": "neve"
+            },
+            "slide": {
+                "reverse": "contrario",
+                "vertical": "verticale"
             }
         },
         "flags": {
@@ -400,7 +410,7 @@
                 "font": "Specifica il carattere che vuoi usare (predefinito: times)"
             },
             "slow": {
-                "multiplier": "Imposta il moltiplicatore di velocità (predefinito: 2)"
+                "multiplier": "Imposta il moltiplicatore di velocità (predefinito: 2.0)"
             },
             "speechbubble": {
                 "alpha": "Rende il sopra del fumetto trasparente",
@@ -409,7 +419,7 @@
                 "scale": "Un moltiplicatore per ridimensionare il fumetto (0.01 il più piccolo, 1.0 il più grande, pred: 0.2)"
             },
             "speed": {
-                "multiplier": "Imposta il moltiplicatore di velocità (predefinito: 2)"
+                "multiplier": "Imposta il moltiplicatore di velocità (predefinito: 2.0)"
             },
             "uncanny": {
                 "font": "Specifica il carattere che vuoi usare (predefinito: helvetica)",
@@ -517,6 +527,13 @@
             "qr": {
                 "create": "Genera un QR code",
                 "read": "Legge un QR code"
+            },
+            "globe": {
+                "snow": "Rende la sfera un globo di neve"
+            },
+            "slide": {
+                "reverse": "Cambia la direzione in cui scorre l'immagine",
+                "vertical": "Fa scorrere l'immagine verticalmente"
             }
         },
         "names": {
@@ -606,7 +623,10 @@
             "grayscale": "scaladigrigi",
             "sepia": "seppia",
             "fade": "dissolvenza",
-            "hue": "tonalità"
+            "hue": "tonalità",
+            "mediareload": "mediaricarica",
+            "mediastats": "mediastatistiche",
+            "slide": "scorri"
         },
         "noImage": {
             "watermark 9gag": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di 9GAG!",
@@ -671,7 +691,8 @@
             "caption2": "Devi fornire un'immagine/GIF a cui aggiungere una didascalia!",
             "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!",
             "hue": "Devi fornire un'immagine/GIF a cui cambiare la tonalità!",
-            "watermark powerdirector": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di PowerDirector!"
+            "watermark powerdirector": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di PowerDirector!",
+            "slide": "Devi fornire un'immagine/GIF a cui applicare una transizione a scorrimento!"
         },
         "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
@@ -949,17 +970,28 @@
             },
             "watermark": {
                 "invalid": "Devi fornire il tipo di watermark da aggiungere!"
+            },
+            "mediareload": {
+                "connected": "Connesso con successo a {{length}} server di elaborazione media.",
+                "couldNotConnect": "Non sono riuscito a connettermi ad alcun server di elaborazione media!",
+                "owner": "Solo il proprietario del bot può ricaricare i server di elaborazione media!"
+            },
+            "mediastats": {
+                "connected": "Il bot è attualmente connesso a {{length}} server di elaborazione media.",
+                "header": "Statistiche media di esmBot",
+                "runningJobs": "Elaborazioni in corso: {{count}}",
+                "server": "Server {{num}}"
             }
         }
     },
     "image": {
         "notWorking": "Non ho trovato un modo di elaborare questa immagine; questo probabilmente significa che non sono stato configurato correttamente. Per piacere, contatta il proprietario del bot.",
-        "noResult": "Non ho ricevuto una risposta dal server di elaborazione immagini. Per piacere, riprova.",
-        "tryAgain": "Questo lavoro immagine non può essere completato perchè il server su cui stava venendo eseguito si è spento. Prova ad eseguire il tuo comando di nuovo.",
+        "noResult": "Non ho ricevuto una risposta dal server di elaborazione media. Per piacere, riprova.",
+        "tryAgain": "Non è stato possibile completare questa elaborazione perchè il server su cui stava venendo eseguita si è spento. Prova ad eseguire il tuo comando di nuovo.",
         "nocmd": "Quel comando non è supportato da questa istanza di esmBot.",
         "noanim": "Quell'immagine non è in un formato animato (GIF o WEBP)!",
         "noImage": "Devi fornire un'immagine/GIF!",
-        "noServers": "Non sto riuscendo a contattare i server di elaborazione immagini, potrebbero essere spenti o in fase di avvio. Per piacere, attendi un attimo.",
+        "noServers": "Non sto riuscendo a contattare i server di elaborazione media, potrebbero essere spenti o in fase di avvio. Per piacere, attendi un attimo.",
         "noParam": "Devi fornire del testo!",
         "badurl": "Quell'URL non è valido!",
         "couldNotFind": "Non ho potuto trovare un'immagine in quel messaggio!",
@@ -970,7 +1002,8 @@
             "link": "link",
             "spoiler": "spoiler",
             "text": "testo",
-            "togif": "agif"
+            "togif": "agif",
+            "media": "media"
         },
         "flags": {
             "ephemeral": "Prova a mandare il risultato come una risposta effimera/temporanea",
@@ -978,12 +1011,13 @@
             "link": "Un URL immagine/GIF",
             "spoiler": "Prova a mandare il risultato come uno spoiler",
             "text": "Il testo da mettere sull'immagine",
-            "togif": "Forza risultato GIF"
+            "togif": "Forza risultato GIF",
+            "media": "Un media in allegato"
         },
         "frames": "Quella GIF ha ben troppi fotogrammi (più di 1000)!",
-        "jobEnded": "È successo qualcosa ai server di elaborazione immagini prima che potessi ricevere l'immagine. Prova ad eseguire il tuo comando di nuovo.",
-        "large": "Quell'immagine è troppo grande (>= 40MB)! Prova ad usare un'immagine più piccola.",
-        "noTempServer": "L'immagine risultante era più larga del limite di upload di Discord, quindi non ho potuto inviarla.",
+        "jobEnded": "È successo qualcosa ai server di elaborazione media prima che potessi ricevere il risultato. Prova ad eseguire il tuo comando di nuovo.",
+        "large": "Quel file è troppo grande (>= 40MB)! Prova ad usare un'immagine più piccola.",
+        "noTempServer": "Il file risultante era più grande del limite di upload di Discord, quindi non ho potuto inviarlo.",
         "timeoutDownload": "La richiesta è scaduta prima che potessi scaricare quell'immagine. Prova ad uploadare la tua immagine altrove o ridurne le dimensioni.",
         "tip": "(Consiglio: prova a fare tasto-destro/tenere premuto un messaggio e premere App -> Seleziona Immagine, poi prova di nuovo.)",
         "tooLarge": "Il file risultante era troppo grande per essere uploadato. Prova di nuovo con un'immagine più piccola se possibile.",
@@ -991,12 +1025,13 @@
         "selected": "L'immagine è stata selezionata per il tuo prossimo comando.",
         "slowDown": "Per piacere, rallenta un po'.",
         "tempImageSent": "Ecco la tua immagine!",
-        "tempSite": "L'immagine risultante era più grande del limite di upload di Discord, quindi è stata invece inviata a un sito esterno.",
+        "tempSite": "Il file risultante era più grande del limite di upload di Discord, quindi è stato invece inviato a un sito esterno.",
         "tenor": "Sono stato limitato da Tenor. Prova ad uploadare la tua GIF altrove.",
         "timeout": "La richiesta di recuperare quell'immagine è scaduta. Per piacere, prova di nuovo, carica la tua immagine altrove, o usa un'immagine diversa.",
         "processing": "Elaborazione... Questo potrebbe richiedere un po'",
         "ratelimit": "Sono stato limitato dal server che ospita quell'immagine. Prova ad uploadare la tua immagine altrove.",
-        "unknown": "L'immagine risultante non era in un formato riconoscibile. Per piacere, riprova."
+        "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova.",
+        "klipy": "Sono stato limitato in velocità da KLIPY. Prova a caricare la tua GIF da qualche altra parte."
     },
     "permissions": {
         "noAttachFiles": "Non ho il permesso `Allegare i file`!",
@@ -1050,5 +1085,6 @@
     "error": "Uh oh! Ho riscontrato un errore eseguendo questo comando. Per piacere, segnala il contenuto del file allegato al seguente link o al server Supporto esmBot:",
     "errorCaps": "ERRORE",
     "noDatabase": "Questo comando non è disponibile nelle istanze senza stato di esmBot.",
-    "tooLarge": "Il risultato era troppo grande, quindi eccolo qui come file:"
+    "tooLarge": "Il risultato era troppo grande, quindi eccolo qui come file:",
+    "support": "Unisciti a esmBot Support"
 }
