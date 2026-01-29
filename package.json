@@ -50,7 +50,7 @@
     "ipaddr.js": "^2.3.0",
     "node-addon-api": "^8.5.0",
     "oceanic.js": "^1.13.0",
-    "postgres": "^3.4.8",
+    "postgres": "^3.4.7",
     "shoukaku": "^4.2.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",
