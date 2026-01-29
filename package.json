@@ -42,40 +42,40 @@
   },
   "dependencies": {
     "@db/sqlite": "jsr:^0.12.0",
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^12.6.2",
     "bufferutil": "^4.1.0",
     "dotenv": "^17.2.3",
-    "file-type": "^21.1.1",
+    "file-type": "^21.3.0",
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.3.0",
     "node-addon-api": "^8.5.0",
     "oceanic.js": "^1.13.0",
-    "postgres": "^3.4.7",
+    "postgres": "^3.4.8",
     "shoukaku": "^4.2.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "ws": "^8.18.3"
+    "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.0",
+    "@eslint/compat": "^2.0.1",
     "@eslint/js": "^9.39.2",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^22.19.3",
+    "@types/node": "^22.19.7",
     "@types/ws": "^8.18.1",
-    "cmake-js": "^7.4.0",
+    "cmake-js": "^8.0.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^16.5.0",
-    "prettier": "^3.7.4",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.2.0",
+    "prettier": "^3.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0"
+    "typescript-eslint": "^8.54.0"
   },
   "optionalDependencies": {
-    "@sentry/deno": "^10.32.1",
-    "@sentry/node": "^10.32.1",
+    "@sentry/deno": "^10.38.0",
+    "@sentry/node": "^10.38.0",
     "pm2": "^6.0.14"
   },
   "binary": {
