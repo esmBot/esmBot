@@ -4,11 +4,10 @@ import process from "node:process";
 import {
   type Client,
   CommandInteraction,
-  ComponentTypes,
+  Constants,
   type File,
   type InteractionContent,
   type Message,
-  MessageFlags,
 } from "oceanic.js";
 
 import { selectedImages } from "./collections.ts";
@@ -39,7 +38,7 @@ export async function upload(
   const payload: InteractionContent = {
     components: [
       {
-        type: ComponentTypes.MEDIA_GALLERY,
+        type: Constants.ComponentTypes.MEDIA_GALLERY,
         items: [
           {
             media: { url: imageURL },
@@ -48,13 +47,13 @@ export async function upload(
         ],
       },
       {
-        type: ComponentTypes.TEXT_DISPLAY,
+        type: Constants.ComponentTypes.TEXT_DISPLAY,
         content: `-# ${getString("image.tempSite", {
           locale: context instanceof CommandInteraction ? context.locale : undefined,
         })}`,
       },
     ],
-    flags: (result.flags ?? (success ? 0 : 64)) | MessageFlags.IS_COMPONENTS_V2,
+    flags: (result.flags ?? (success ? 0 : 64)) | Constants.MessageFlags.IS_COMPONENTS_V2,
   };
   let authorId: string;
   if (context instanceof CommandInteraction) {

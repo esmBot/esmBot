@@ -1,7 +1,7 @@
 import {
   type Client,
   type CommandInteraction,
-  ComponentTypes,
+  Constants,
   type CreateMessageOptions,
   type InteractionContent,
   type Member,
@@ -149,10 +149,10 @@ export default async (client: Client, info: Info, pages: Pages): Promise<undefin
                 title: getString("pagination.jumpTo", { locale: interaction.locale }),
                 components: [
                   {
-                    type: ComponentTypes.LABEL,
+                    type: Constants.ComponentTypes.LABEL,
                     label: getString("pagination.pageNumber", { locale: interaction.locale }),
                     component: {
-                      type: ComponentTypes.STRING_SELECT,
+                      type: Constants.ComponentTypes.STRING_SELECT,
                       customID: "seekDropdown",
                       placeholder: getString("pagination.pageNumber", { locale: interaction.locale }),
                       options: [],
