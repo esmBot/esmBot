@@ -25,6 +25,8 @@ interface RequestState {
 
 type WaitResponse = { sent: true; data: Buffer } | { sent: false };
 
+const etcTypes = ["noanim", "nocmd", "text", "empty", "frames", "ratelimit"];
+
 class MediaConnection {
   requests: Map<number, RequestState>;
   host: string;
@@ -177,7 +179,8 @@ class MediaConnection {
         : undefined,
     );
     const contentType = req.headers.get("content-type");
-    const type = contentType ? mimeToExt(contentType) : "unknown";
+    let type = contentType ? mimeToExt(contentType) : "unknown";
+    if (type === "unknown" && contentType && etcTypes.includes(contentType)) type = contentType;
     return { buffer: Buffer.from(await req.arrayBuffer()), type };
   }
 
