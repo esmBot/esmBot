@@ -1,9 +1,10 @@
 import process from "node:process";
 import {
-  AttachmentFlags,
   type Client,
   type CommandInteraction,
+  Constants,
   type Message,
+  type MessageComponent,
   type MessageSnapshotMessage,
   type Permission,
   PrivateChannel,
@@ -263,6 +264,11 @@ async function checkMedia(
     type = await checkEmbeds(message, extraReturnTypes, mediaType, singleMessage);
   }
 
+  // then check the components
+  if (message.components.length !== 0) {
+    type = await checkComponents(message.components, extraReturnTypes, mediaType, singleMessage);
+  }
+
   // then check the attachments
   if (!type && message.attachments.size !== 0) {
     const firstAttachment = message.attachments.first();
@@ -272,14 +278,16 @@ async function checkMedia(
         firstAttachment.url,
         mediaType,
         singleMessage,
-        !!(firstAttachment.flags & AttachmentFlags.IS_SPOILER),
+        !!(firstAttachment.flags & Constants.AttachmentFlags.IS_SPOILER),
       );
   }
 
-  // then check embeds and attachments inside forwards
+  // then check embeds, components, and attachments inside forwards
   if (!type && message.messageSnapshots?.[0]) {
     const forward = message.messageSnapshots?.[0].message;
     if (forward.embeds.length !== 0) type = await checkEmbeds(forward, extraReturnTypes, mediaType, singleMessage);
+    if (forward.components.length !== 0)
+      type = await checkComponents(forward.components, extraReturnTypes, mediaType, singleMessage);
 
     if (!type && forward.attachments.length !== 0) {
       type = await getMedia(
@@ -287,13 +295,59 @@ async function checkMedia(
         forward.attachments[0].url,
         mediaType,
         singleMessage,
-        !!(forward.attachments[0].flags & AttachmentFlags.IS_SPOILER),
+        !!(forward.attachments[0].flags & Constants.AttachmentFlags.IS_SPOILER),
       );
     }
   }
 
   // if the return value exists then return it
   return type;
+}
+
+function checkComponents(
+  components: MessageComponent[],
+  extraReturnTypes: boolean,
+  mediaType: MediaParams["type"][],
+  singleMessage = false,
+) {
+  for (const component of components) {
+    // full-size image/video
+    if (component.type === Constants.ComponentTypes.MEDIA_GALLERY) {
+      return getMedia(
+        component.items[0].media.proxyURL ?? component.items[0].media.url,
+        component.items[0].media.url,
+        mediaType,
+        singleMessage,
+        component.items[0].spoiler,
+        extraReturnTypes,
+      );
+    }
+    // section thumbnail
+    if (
+      component.type === Constants.ComponentTypes.SECTION &&
+      component.accessory.type === Constants.ComponentTypes.THUMBNAIL
+    ) {
+      return getMedia(
+        component.accessory.media.proxyURL ?? component.accessory.media.url,
+        component.accessory.media.url,
+        mediaType,
+        singleMessage,
+        component.accessory.spoiler,
+        extraReturnTypes,
+      );
+    }
+    // raw file
+    if (component.type === Constants.ComponentTypes.FILE) {
+      return getMedia(
+        component.file.proxyURL ?? component.file.url,
+        component.file.url,
+        mediaType,
+        singleMessage,
+        component.spoiler,
+        extraReturnTypes,
+      );
+    }
+  }
 }
 
 function checkEmbeds(
@@ -421,7 +475,7 @@ export default async (
         attachment.url,
         mediaType,
         true,
-        !!(attachment.flags & AttachmentFlags.IS_SPOILER),
+        !!(attachment.flags & Constants.AttachmentFlags.IS_SPOILER),
         !!attachment.contentType,
       );
     }
