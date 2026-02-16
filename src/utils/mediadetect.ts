@@ -30,7 +30,7 @@ const klipyURLs = ["klipy.com"];
 
 const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...klipyURLs];
 
-const providerUrls = ["https://tenor.co", "https://giphy.com", "https://klipy.com"];
+const providerUrls = ["https://tenor.co", "https://tenor.com", "https://giphy.com", "https://klipy.com"];
 
 type TenorMediaObject = {
   url: string;
