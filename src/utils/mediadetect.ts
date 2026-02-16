@@ -30,7 +30,7 @@ const klipyURLs = ["klipy.com"];
 
 const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...klipyURLs];
 
-const providerUrls = ["https://tenor.co", "https://giphy.com"]; // klipy isn't here because it gives us what we want in the thumbnail
+const providerUrls = ["https://tenor.co", "https://giphy.com", "https://klipy.com"];
 
 type TenorMediaObject = {
   url: string;
@@ -181,8 +181,6 @@ async function getMedia(
       payload.type = "image/gif";
       payload.mediaType = "image";
     } else if (klipyURLs.includes(host)) {
-      // Discord exposes usable WEBP files through the thumbnails,
-      // we should only be here if someone directly used a share link
       if (!process.env.KLIPY || process.env.KLIPY === "") return;
       if (!media2.includes("klipy.com/gifs/")) return;
       const id = url2.pathname.replace("/gifs/", "");
@@ -196,8 +194,8 @@ async function getMedia(
       const json = (await data.json()) as KlipyResponse;
       if (json.errors) throw AggregateError(json.errors.message);
       if (json.data.data.length === 0) return;
-      payload.path = json.data.data[0].file.hd.webp.url;
-      payload.type = "image/webp";
+      payload.path = json.data.data[0].file.hd.gif.url;
+      payload.type = "image/gif";
       payload.mediaType = "image";
     } else if (giphyURLs.includes(host)) {
       // Can result in an HTML page instead of a WEBP
