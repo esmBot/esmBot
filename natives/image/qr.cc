@@ -50,12 +50,8 @@ CmdOutput esmb::Image::QrRead([[maybe_unused]] const string &type, string &outTy
 
   vips_image_wio_input(in.get_image());
 
-#if ZXING_VERSION_MAJOR >= 2
-#if ZXING_VERSION_MINOR >= 2
+#if ZXING_VERSION_MAJOR >= 3 || ZXING_VERSION_MAJOR == 2 && ZXING_VERSION_MINOR >= 2
   ZXing::ReaderOptions opts;
-#else
-  ZXing::DecodeHints opts;
-#endif
 #else
   ZXing::DecodeHints opts;
 #endif
@@ -63,7 +59,11 @@ CmdOutput esmb::Image::QrRead([[maybe_unused]] const string &type, string &outTy
   opts.setFormats(ZXing::BarcodeFormat::QRCode);
 
   ZXing::ImageView img(VIPS_IMAGE_ADDR(in.get_image(), 0, 0), in.width(), in.height(), ZXing::ImageFormat::Lum);
+#if ZXING_VERSION_MAJOR >= 3
+  ZXing::Barcode result = ZXing::ReadBarcode(img, opts);
+#else
   ZXing::Result result = ZXing::ReadBarcode(img, opts);
+#endif
 
   if (!result.isValid()) {
     outType = "empty";
