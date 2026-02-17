@@ -756,9 +756,8 @@
         "adminOnly": "You need to be an administrator to enable/disable me in this channel!",
         "alreadyDisabled": "I'm already disabled in this channel!",
         "disabled": "I have been disabled in this channel. To re-enable me, just run `{{prefix}}channel enable`.",
-        "invalid": "That's not a valid option!",
+        "invalid": "You need to provide whether you want to enable/disable me in this channel!",
         "notDisabled": "I'm not disabled in this channel!",
-        "noCmd": "You need to provide whether you want to enable/disable me in this channel!",
         "notInServer": "That channel isn't in this server!",
         "reEnabled": "I have been re-enabled in this channel."
       },
