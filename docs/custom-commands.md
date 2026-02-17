@@ -91,7 +91,7 @@ Some static fields are also available and can be set depending on your command. 
 ```js
 static flags = [{
   name: "argument",
-  type: Constants.ApplicationCommandOptionTypes.STRING, // translates to 3, see https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type
+  type: "string",
   description: "Does a thing",
   ...
 }];
