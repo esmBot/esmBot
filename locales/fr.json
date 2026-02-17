@@ -747,8 +747,7 @@
                 "notDisabled": "Je ne suis pas désactivé dans ce salon !",
                 "notInServer": "Ce salon n'est pas dans ce serveur !",
                 "reEnabled": "J'ai été réactivé dans ce salon.",
-                "disabled": "J'ai été désactivé dans ce salon. Pour me réactiver, exécutez juste `{{prefix}}channel enable`.",
-                "noCmd": "Vous devez indiquer si vous souhaitez m'activer/désactiver dans ce salon !"
+                "disabled": "J'ai été désactivé dans ce salon. Pour me réactiver, exécutez juste `{{prefix}}channel enable`."
             },
             "command": {
                 "adminOnly": "Vous devez être administrateur pour activer/désactiver des commandes !",
@@ -758,7 +757,6 @@
                 "invalid": "Ce n'est pas une option valide !",
                 "invalidCmd": "Ce n'est pas une commande !",
                 "notDisabled": "Cette commande n'est pas désactivée !",
-                "noCmd": "Vous devez indiquer si vous souhaitez activer/désactiver une commande !",
                 "noInput": "Vous devez indiquer quelle commande activer/désactiver !",
                 "reEnabled": "La commande `{{command}}` a été réactivée."
             },

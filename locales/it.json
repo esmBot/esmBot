@@ -800,7 +800,6 @@
             "channel": {
                 "adminOnly": "Devi essere un amministratore per attivarmi/disattivarmi in questo canale!",
                 "invalid": "Quella non è un'opzione valida!",
-                "noCmd": "Devi specificare se vuoi abilitarmi/disabilitarmi in questo canale!",
                 "notInServer": "Quel canale non è in questo server!",
                 "alreadyDisabled": "Sono già disattivato in questo canale!",
                 "disabled": "Sono stato disattivato in questo canale. Per riabilitarmi, invia `{{prefix}}canale abilita`.",
@@ -815,7 +814,6 @@
                 "invalid": "Quella non è un'opzione valida!",
                 "invalidCmd": "Quello non è un comando!",
                 "notDisabled": "Quel comando non è disattivato!",
-                "noCmd": "Devi specificare se vuoi attivare/disattivare un comando!",
                 "noInput": "Devi specificare quale comando abilitare/disabilitare!",
                 "reEnabled": "Il comando `{{command}}` è stato riabilitato."
             },

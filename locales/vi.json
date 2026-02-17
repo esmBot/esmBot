@@ -732,7 +732,6 @@
                 "disabled": "Tỗi đã bị tắt trong kênh này. Để bật lại, chỉ cần chạy lênh `{{prefix}}channel enable`.",
                 "invalid": "Đó không phải là một lựa chọn hợp lệ!",
                 "notDisabled": "Tôi không bị tắt trong kênh này!",
-                "noCmd": "Bạn cần phải chọn xem bạn muốn bật hay tắt tôi trong kênh này!",
                 "notInServer": "Cái kênh đó làm gì có trong máy chủ này!",
                 "reEnabled": "Tôi đã được bật lại trong kênh này."
             },
@@ -744,7 +743,6 @@
                 "disabled": "Lệnh `{{command}}` đã được tắt. Để bật lại, chỉ cần chạy lệnh `{{prefix}}command enable {{command}}`.",
                 "invalidCmd": "Làm gì có lệnh đó!",
                 "notDisabled": "Lệnh đó chưa được tắt!",
-                "noCmd": "Bạn cần chọn xem bạn muốn bật hay tắt lệnh!",
                 "noInput": "Bạn phải cung cấp lệnh mà bạn muốn bặt/tắt!",
                 "reEnabled": "Lệnh `{{command}}` đã được bật lại."
             },
