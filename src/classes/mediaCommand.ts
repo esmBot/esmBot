@@ -10,11 +10,12 @@ import {
 } from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
 import { runningCommands, selectedImages } from "#utils/collections.js";
+import { convFlagType } from "#utils/handler.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 import { runMediaJob } from "#utils/media.js";
 import mediaDetect, { type MediaMeta } from "#utils/mediadetect.js";
 import { clean, isEmpty, random } from "#utils/misc.js";
-import type { MediaParams } from "#utils/types.js";
+import type { ExtendedConstructedCommandOptions, MediaParams } from "#utils/types.js";
 import Command from "./command.ts";
 
 class MediaCommand extends Command {
@@ -135,8 +136,9 @@ class MediaCommand extends Command {
       const text =
         this.getOption(
           staticProps.requiredParam,
-          staticProps.requiredParamType,
-          staticProps.requiredParamType !== Constants.ApplicationCommandOptionTypes.STRING,
+          convFlagType(staticProps.requiredParamType),
+          staticProps.requiredParamType !== Constants.ApplicationCommandOptionTypes.STRING &&
+            staticProps.requiredParamType !== "string",
         ) ?? this.args.join(" ").trim();
       if (!text || (typeof text === "string" && isEmpty(text)) || !(await this.criteria(text, mediaParams.url))) {
         runningCommands.delete(this.author?.id);
@@ -318,7 +320,7 @@ class MediaCommand extends Command {
   static requiresImage = true;
   static requiresParam = false;
   static requiredParam = "text";
-  static requiredParamType = Constants.ApplicationCommandOptionTypes.STRING;
+  static requiredParamType: ExtendedConstructedCommandOptions["type"] = "string";
   static textOptional = false;
   static requiresAnim = false;
   static alwaysGIF = false;

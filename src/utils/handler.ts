@@ -198,7 +198,7 @@ export async function load(
     : fullCommandName;
 }
 
-const flagMap: Array<CommandFlagType | null> = [
+export const flagMap: Array<CommandFlagType | null> = [
   null,
   "subcommand",
   null,
