@@ -13,7 +13,16 @@ import commandConfig from "#config/commands.json" with { type: "json" };
 import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.ts";
 import { getAllLocalizations } from "./i18n.ts";
 import { log } from "./logger.ts";
-import type { CommandEntry, CommandInfo, CommandsConfig, ExtendedCommandOptions, Param } from "./types.ts";
+import type {
+  CommandEntry,
+  CommandFlagType,
+  CommandInfo,
+  CommandsConfig,
+  ConstructedCommandInfo,
+  ExtendedCommandOptions,
+  ExtendedConstructedCommandOptions,
+  Param,
+} from "./types.ts";
 
 let queryValue = 0;
 
@@ -39,7 +48,7 @@ export async function load(
 ): Promise<
   | {
       props: typeof Command;
-      info: CommandInfo;
+      info: ConstructedCommandInfo;
       entry: CommandEntry;
       name: string;
     }
@@ -54,7 +63,7 @@ export async function load(
   | string
   | {
       props: typeof Command;
-      info: CommandInfo;
+      info: ConstructedCommandInfo;
       entry: CommandEntry;
       name: string;
     }
@@ -141,7 +150,7 @@ export async function load(
           cmdMap[subName] = sub.props;
 
           const hasSubCommands = sub.info.flags.some(
-            (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+            (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND || v.type === "subcommand",
           );
           commandInfo.flags.push({
             name: subName,
@@ -189,12 +198,35 @@ export async function load(
     : fullCommandName;
 }
 
+const flagMap: Array<CommandFlagType | null> = [
+  null,
+  "subcommand",
+  null,
+  "string",
+  "integer",
+  "boolean",
+  "user",
+  "channel",
+  "role",
+  "mentionable",
+  "number",
+  "attachment",
+];
+
+export function convFlagType(type: ExtendedConstructedCommandOptions["type"]): Constants.ApplicationCommandOptionTypes {
+  if (typeof type === "number") return type;
+  return flagMap.indexOf(type);
+}
+
 /**
  * Convert command flags to params
  */
-function parseFlags(flags: ExtendedCommandOptions[]) {
+function parseFlags(flags: ExtendedConstructedCommandOptions[]) {
   const params: Param[] = [];
   for (const flag of flags) {
+    const convedType = convFlagType(flag.type);
+    if (convedType < 0) throw new Error(`Invalid flag type on ${flag.name}`);
+    flag.type = convedType;
     if (
       flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND ||
       flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
@@ -210,13 +242,16 @@ function parseFlags(flags: ExtendedCommandOptions[]) {
   return params;
 }
 
-function extendFlags(flags: ExtendedCommandOptions[], name: string) {
+function extendFlags(flags: ExtendedConstructedCommandOptions[], name: string) {
   const outFlags: ExtendedCommandOptions[] = [];
   for (const flag of flags) {
     if (!flag.nameLocalizations)
       flag.nameLocalizations = getAllLocalizations(`commands.flagNames.${name}.${flag.name}`);
     if (!flag.descriptionLocalizations)
       flag.descriptionLocalizations = getAllLocalizations(`commands.flags.${name}.${flag.name}`);
+    const convedType = convFlagType(flag.type);
+    if (convedType < 0) throw new Error(`Invalid flag type on ${flag.name}`);
+    flag.type = convedType;
     if (
       (flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND ||
         flag.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) &&
@@ -225,7 +260,7 @@ function extendFlags(flags: ExtendedCommandOptions[], name: string) {
       const nameWithFlag = `${name} ${flag.name}`;
       extendFlags(flag.options, nameWithFlag);
     }
-    outFlags.push(flag);
+    outFlags.push(flag as ExtendedCommandOptions);
   }
   return outFlags;
 }

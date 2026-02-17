@@ -3,6 +3,7 @@ import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
+import { convFlagType } from "#utils/handler.js";
 import * as help from "#utils/help.js";
 
 class HelpCommand extends Command {
@@ -73,9 +74,11 @@ class HelpCommand extends Command {
       if (info.flags.length !== 0) {
         const flagInfo = [];
         for (const flag of info.flags) {
-          if (flag.type === 1) continue;
+          let type = flag.type;
+          if (typeof type === "string") type = convFlagType(type);
+          if (type === 1) continue;
           flagInfo.push(
-            `\`--${flag.name}${flag.type ? `=[${Constants.ApplicationCommandOptionTypes[flag.type]}]` : ""}\` - ${flag.description}`,
+            `\`--${flag.name}${type ? `=[${Constants.ApplicationCommandOptionTypes[type]}]` : ""}\` - ${flag.description}`,
           );
         }
         if (flagInfo.length !== 0) {

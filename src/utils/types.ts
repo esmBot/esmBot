@@ -1,4 +1,4 @@
-import type { ApplicationCommandOptions, Client, Constants } from "oceanic.js";
+import type { ApplicationCommandOptions, Client, CombinedApplicationCommandOption, Constants } from "oceanic.js";
 import type Command from "#cmd-classes/command.js";
 import type { DatabasePlugin } from "../database.ts";
 
@@ -34,10 +34,30 @@ type ValueOrNested<T> = T | { [x: string]: ValueOrNested<T> };
 export type CommandEntry = Record<string, ValueOrNested<typeof Command>>;
 
 export type CommandType = "classic" | "application";
+export type CommandFlagType =
+  | "subcommand"
+  | "string"
+  | "integer"
+  | "boolean"
+  | "user"
+  | "channel"
+  | "role"
+  | "mentionable"
+  | "number"
+  | "attachment";
 
 export type ExtendedCommandOptions = {
   classic?: boolean;
 } & ApplicationCommandOptions;
+
+export type ExtendedConstructedCommandOptions = {
+  type: Constants.ApplicationCommandOptionTypes | CommandFlagType;
+  classic?: boolean;
+} & Omit<CombinedApplicationCommandOption, "type">;
+
+export type ConstructedCommandInfo = {
+  flags: ExtendedConstructedCommandOptions[];
+} & Omit<CommandInfo, "flags">;
 
 export type Param =
   | {

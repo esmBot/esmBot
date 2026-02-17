@@ -2,7 +2,6 @@ import process from "node:process";
 import {
   type AllowedMentions,
   type AnyTextableChannel,
-  type ApplicationCommandOptions,
   type Attachment,
   type Client,
   type CommandInteraction,
@@ -22,7 +21,7 @@ import {
 } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
 import { cleanInteraction, cleanMessage } from "#utils/misc.js";
-import type { CommandType } from "#utils/types.js";
+import type { CommandType, ExtendedConstructedCommandOptions } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 
 type CommandOptionsClassic = {
@@ -272,7 +271,7 @@ class Command {
 
   static description = "No description found";
   static aliases: string[] = [];
-  static flags: ({ classic?: boolean } & ApplicationCommandOptions)[] = [];
+  static flags: ExtendedConstructedCommandOptions[] = [];
   static ephemeral = false;
   static dbRequired = false;
   static slashAllowed = true;
