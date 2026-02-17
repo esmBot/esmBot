@@ -766,10 +766,9 @@
         "alreadyDisabled": "That command is already disabled!",
         "cannotDisable": "You can't disable that command!",
         "disabled": "The command `{{command}}` has been disabled. To re-enable it, just run `{{prefix}}command enable {{command}}`.",
-        "invalid": "That's not a valid option!",
+        "invalid": "You need to provide whether you want to enable/disable a command!",
         "invalidCmd": "That isn't a command!",
         "notDisabled": "That command isn't disabled!",
-        "noCmd": "You need to provide whether you want to enable/disable a command!",
         "noInput": "You need to provide what command to enable/disable!",
         "reEnabled": "The command `{{command}}` has been re-enabled."
       },
