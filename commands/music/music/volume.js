@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class MusicVolumeCommand extends MusicCommand {
@@ -20,7 +19,7 @@ class MusicVolumeCommand extends MusicCommand {
   static flags = [
     {
       name: "level",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       description: "The volume level",
       minValue: 0,
       maxValue: 100,

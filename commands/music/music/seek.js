@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 
 class MusicSeekCommand extends MusicCommand {
@@ -30,7 +29,7 @@ class MusicSeekCommand extends MusicCommand {
   static flags = [
     {
       name: "position",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "Seek to this position",
       required: true,
       classic: true,

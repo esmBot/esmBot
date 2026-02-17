@@ -2,7 +2,6 @@ import { Buffer } from "node:buffer";
 import { exec as baseExec } from "node:child_process";
 import process from "node:process";
 import { promisify } from "node:util";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { clean } from "#utils/misc.js";
 const exec = promisify(baseExec);
@@ -41,7 +40,7 @@ class ExecCommand extends Command {
   static flags = [
     {
       name: "cmd",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The command to execute",
       classic: true,
       required: true,

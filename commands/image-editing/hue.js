@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class HueCommand extends MediaCommand {
@@ -16,7 +15,7 @@ class HueCommand extends MediaCommand {
     // so we use unshift instead of push here
     this.flags.unshift({
       name: "shift",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       description: "Set the amount to shift by",
       minValue: -180,
       maxValue: 180,
@@ -30,7 +29,7 @@ class HueCommand extends MediaCommand {
 
   static requiresParam = true;
   static requiredParam = "shift";
-  static requiredParamType = Constants.ApplicationCommandOptionTypes.INTEGER;
+  static requiredParamType = "integer";
   static noParam = "You need to provide the amount you want to hue shift by!";
 
   static noImage = "You need to provide an image/GIF to hue shift!";

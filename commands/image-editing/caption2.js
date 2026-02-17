@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 const words = [
   "me irl",
@@ -52,11 +51,11 @@ class CaptionTwoCommand extends MediaCommand {
       {
         name: "top",
         description: "Put the caption on the top of an image instead of the bottom",
-        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        type: "boolean",
       },
       {
         name: "font",
-        type: Constants.ApplicationCommandOptionTypes.STRING,
+        type: "string",
         choices: (() => {
           const array = [];
           for (const font of this.allowedFonts) {

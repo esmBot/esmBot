@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import paginator from "#pagination";
 import { mentionToObject } from "#utils/mentions.js";
 import TagsGetCommand from "./get.js";
@@ -130,12 +129,12 @@ class TagsRoleCommand extends TagsGetCommand {
   static flags = [
     {
       name: "add",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Allow a role to manage tags",
       options: [
         {
           name: "role",
-          type: Constants.ApplicationCommandOptionTypes.ROLE,
+          type: "role",
           description: "The role to add",
           required: true,
           classic: true,
@@ -144,12 +143,12 @@ class TagsRoleCommand extends TagsGetCommand {
     },
     {
       name: "remove",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Remove a role from the allowlist",
       options: [
         {
           name: "role",
-          type: Constants.ApplicationCommandOptionTypes.ROLE,
+          type: "role",
           description: "The role to remove",
           required: true,
           classic: true,
@@ -158,7 +157,7 @@ class TagsRoleCommand extends TagsGetCommand {
     },
     {
       name: "list",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "List the roles that are capable of managing tags",
     },
   ];

@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class GlobeCommand extends MediaCommand {
@@ -14,7 +13,7 @@ class GlobeCommand extends MediaCommand {
     this.flags.push({
       name: "snow",
       description: "Turns the globe into a snow globe",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      type: "boolean",
     });
     return this;
   }

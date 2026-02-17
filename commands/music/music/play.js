@@ -1,4 +1,4 @@
-import { Constants, GuildChannel } from "oceanic.js";
+import { GuildChannel } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { play } from "#utils/soundplayer.js";
 const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:", "ytsearch:", "ytmsearch:"];
@@ -56,7 +56,7 @@ class MusicPlayCommand extends MusicCommand {
   static flags = [
     {
       name: "query",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "An audio search query or URL",
       classic: true,
       required: true,

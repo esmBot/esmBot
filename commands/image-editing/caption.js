@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class CaptionCommand extends MediaCommand {
@@ -27,11 +26,11 @@ class CaptionCommand extends MediaCommand {
       {
         name: "noegg",
         description: "Disable... something. Not saying what it is though.",
-        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        type: "boolean",
       },
       {
         name: "font",
-        type: Constants.ApplicationCommandOptionTypes.STRING,
+        type: "string",
         choices: (() => {
           const array = [];
           for (const font of this.allowedFonts) {

@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class MemeCommand extends MediaCommand {
@@ -41,11 +40,11 @@ class MemeCommand extends MediaCommand {
       {
         name: "case",
         description: "Make the meme text case-sensitive (allows for lowercase text)",
-        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        type: "boolean",
       },
       {
         name: "font",
-        type: Constants.ApplicationCommandOptionTypes.STRING,
+        type: "string",
         choices: (() => {
           const array = [];
           for (const font of this.allowedFonts) {

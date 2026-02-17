@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class SnapchatCommand extends MediaCommand {
@@ -19,7 +18,7 @@ class SnapchatCommand extends MediaCommand {
     this.addTextParam();
     this.flags.push({
       name: "position",
-      type: Constants.ApplicationCommandOptionTypes.NUMBER,
+      type: "number",
       description: "Set the position of the caption as a decimal (0.0 is top, 1.0 is bottom, default is 0.565)",
       minValue: 0,
       maxValue: 1,

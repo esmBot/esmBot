@@ -1,5 +1,4 @@
 import process from "node:process";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import * as collections from "#utils/collections.js";
 
@@ -50,12 +49,12 @@ class CommandCommand extends Command {
   static flags = [
     {
       name: "enable",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Enables a classic command",
       options: [
         {
           name: "cmd",
-          type: Constants.ApplicationCommandOptionTypes.STRING,
+          type: "string",
           description: "The command to enable",
           classic: true,
           required: true,
@@ -64,12 +63,12 @@ class CommandCommand extends Command {
     },
     {
       name: "disable",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Disables a classic command",
       options: [
         {
           name: "cmd",
-          type: Constants.ApplicationCommandOptionTypes.STRING,
+          type: "string",
           description: "The command to disable",
           classic: true,
           required: true,

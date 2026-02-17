@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import imageDetect from "#utils/mediadetect.js";
 
@@ -18,12 +17,12 @@ class RawCommand extends Command {
   static flags = [
     {
       name: "image",
-      type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
+      type: "attachment",
       description: "An image/GIF attachment",
     },
     {
       name: "link",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "An image/GIF URL",
     },
   ];

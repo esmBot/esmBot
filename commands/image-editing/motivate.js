@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class MotivateCommand extends MediaCommand {
@@ -39,7 +38,7 @@ class MotivateCommand extends MediaCommand {
     this.addTextParam();
     this.flags.push({
       name: "font",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       choices: (() => {
         const array = [];
         for (const font of this.allowedFonts) {

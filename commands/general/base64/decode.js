@@ -1,5 +1,4 @@
 import { Buffer } from "node:buffer";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class Base64DecodeCommand extends Command {
@@ -15,7 +14,7 @@ class Base64DecodeCommand extends Command {
   static flags = [
     {
       name: "text",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The text to decode",
       classic: true,
       required: true,

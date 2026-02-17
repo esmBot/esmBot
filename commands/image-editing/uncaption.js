@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class UncaptionCommand extends MediaCommand {
@@ -13,7 +12,7 @@ class UncaptionCommand extends MediaCommand {
     super.init();
     this.flags.push({
       name: "tolerance",
-      type: Constants.ApplicationCommandOptionTypes.NUMBER,
+      type: "number",
       description: "Set the shade tolerance for the caption detection (0.0 is highest, 1.0 is lowest, default is 0.95)",
       minValue: 0,
       maxValue: 1,

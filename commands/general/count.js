@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
@@ -77,7 +76,7 @@ class CountCommand extends Command {
   static flags = [
     {
       name: "command",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "A specific command to view counts for",
       classic: true,
     },

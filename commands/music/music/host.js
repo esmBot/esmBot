@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Constants, User } from "oceanic.js";
+import { User } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";
 import { safeBigInt } from "#utils/misc.js";
@@ -65,7 +65,7 @@ class MusicHostCommand extends MusicCommand {
   static flags = [
     {
       name: "user",
-      type: Constants.ApplicationCommandOptionTypes.USER,
+      type: "user",
       description: "The user you want the new host to be",
       classic: true,
     },

@@ -1,9 +1,8 @@
 import process from "node:process";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
-import { convFlagType } from "#utils/handler.js";
+import { convFlagType, flagMap } from "#utils/handler.js";
 import * as help from "#utils/help.js";
 
 class HelpCommand extends Command {
@@ -77,9 +76,7 @@ class HelpCommand extends Command {
           let type = flag.type;
           if (typeof type === "string") type = convFlagType(type);
           if (type === 1) continue;
-          flagInfo.push(
-            `\`--${flag.name}${type ? `=[${Constants.ApplicationCommandOptionTypes[type]}]` : ""}\` - ${flag.description}`,
-          );
+          flagInfo.push(`\`--${flag.name}${type ? `=[${flagMap[type]}]` : ""}\` - ${flag.description}`);
         }
         if (flagInfo.length !== 0) {
           embed.embeds[0].fields.push({
@@ -155,7 +152,7 @@ class HelpCommand extends Command {
   static flags = [
     {
       name: "command",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "A command to view info about",
       classic: true,
     },

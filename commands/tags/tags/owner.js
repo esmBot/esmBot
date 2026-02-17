@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class TagsOwnerCommand extends Command {
@@ -41,7 +40,7 @@ class TagsOwnerCommand extends Command {
   static flags = [
     {
       name: "name",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The name of the tag",
       required: true,
       classic: true,

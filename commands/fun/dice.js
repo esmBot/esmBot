@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class DiceCommand extends Command {
@@ -14,7 +13,7 @@ class DiceCommand extends Command {
   static flags = [
     {
       name: "max",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       description: "The maximum dice value",
       minValue: 1,
       classic: true,

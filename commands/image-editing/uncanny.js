@@ -1,7 +1,6 @@
 import { readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { random } from "#utils/misc.js";
 const prompts = [
@@ -54,7 +53,7 @@ class UncannyCommand extends MediaCommand {
     this.flags.push(
       {
         name: "font",
-        type: Constants.ApplicationCommandOptionTypes.STRING,
+        type: "string",
         choices: (() => {
           const array = [];
           for (const font of this.allowedFonts) {
@@ -66,7 +65,7 @@ class UncannyCommand extends MediaCommand {
       },
       {
         name: "phase",
-        type: Constants.ApplicationCommandOptionTypes.STRING,
+        type: "string",
         choices: (() => {
           const array = [];
           for (const name of names) {

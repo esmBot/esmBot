@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Constants, GuildChannel } from "oceanic.js";
+import { GuildChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { safeBigInt } from "#utils/misc.js";
 
@@ -76,12 +76,12 @@ class ChannelCommand extends Command {
   static flags = [
     {
       name: "enable",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Enables classic commands in a channel",
       options: [
         {
           name: "channel",
-          type: Constants.ApplicationCommandOptionTypes.STRING,
+          type: "string",
           description: "The channel to enable",
           classic: true,
         },
@@ -89,12 +89,12 @@ class ChannelCommand extends Command {
     },
     {
       name: "disable",
-      type: Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+      type: "subcommand",
       description: "Disables classic commands in a channel",
       options: [
         {
           name: "channel",
-          type: Constants.ApplicationCommandOptionTypes.STRING,
+          type: "string",
           description: "The channel to disable",
           classic: true,
         },

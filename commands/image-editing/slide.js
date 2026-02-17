@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class SlideCommand extends MediaCommand {
@@ -16,13 +15,13 @@ class SlideCommand extends MediaCommand {
     this.flags.push(
       {
         name: "vertical",
-        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        type: "boolean",
         description: "Slides the image vertically",
         classic: true,
       },
       {
         name: "reverse",
-        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        type: "boolean",
         description: "Changes the direction the image slides in",
         classic: true,
       },

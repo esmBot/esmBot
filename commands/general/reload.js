@@ -1,5 +1,4 @@
 import process from "node:process";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { paths } from "#utils/collections.js";
 import { load } from "#utils/handler.js";
@@ -35,14 +34,14 @@ class ReloadCommand extends Command {
   static flags = [
     {
       name: "cmd",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The command to reload",
       classic: true,
       required: true,
     },
     {
       name: "skipsend",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      type: "boolean",
       description: "Skips sending new application command data to Discord",
       classic: true,
     },

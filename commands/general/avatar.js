@@ -1,4 +1,4 @@
-import { Constants, Member } from "oceanic.js";
+import { Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { getUser, mentionToObject } from "#utils/mentions.js";
 const imageSize = 512;
@@ -43,13 +43,13 @@ class AvatarCommand extends Command {
   static flags = [
     {
       name: "member",
-      type: Constants.ApplicationCommandOptionTypes.USER,
+      type: "user",
       description: "The member to get the avatar from",
       classic: true,
     },
     {
       name: "server",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      type: "boolean",
       description: "Gets a user's server avatar",
       classic: true,
       default: false,

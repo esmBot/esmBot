@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class SnowflakeCommand extends Command {
@@ -31,7 +30,7 @@ class SnowflakeCommand extends Command {
   static flags = [
     {
       name: "id",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "A snowflake ID",
       classic: true,
     },

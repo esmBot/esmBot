@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class FadeCommand extends MediaCommand {
@@ -14,7 +13,7 @@ class FadeCommand extends MediaCommand {
     this.flags.push({
       name: "alpha",
       description: "Fade in from transparency",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      type: "boolean",
     });
     return this;
   }

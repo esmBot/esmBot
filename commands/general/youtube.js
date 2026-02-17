@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import serversConfig from "#config/servers.json" with { type: "json" };
 import paginator from "#pagination";
@@ -39,7 +38,7 @@ class YouTubeCommand extends Command {
   static flags = [
     {
       name: "query",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The query you want to search for",
       classic: true,
       required: true,

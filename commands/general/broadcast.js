@@ -1,5 +1,4 @@
 import process from "node:process";
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";
 
@@ -43,7 +42,7 @@ class BroadcastCommand extends Command {
   static flags = [
     {
       name: "message",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The message to broadcast",
     },
   ];

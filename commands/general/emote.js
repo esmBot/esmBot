@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class EmoteCommand extends Command {
@@ -35,7 +34,7 @@ class EmoteCommand extends Command {
   static flags = [
     {
       name: "emoji",
-      type: Constants.ApplicationCommandOptionTypes.STRING,
+      type: "string",
       description: "The emoji you want to get",
       classic: true,
       required: true,

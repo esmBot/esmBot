@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class JPEGCommand extends MediaCommand {
@@ -13,7 +12,7 @@ class JPEGCommand extends MediaCommand {
     super.init();
     this.flags.push({
       name: "quality",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       description: "Set the JPEG quality (default: 1)",
       minValue: 1,
       maxValue: 100,

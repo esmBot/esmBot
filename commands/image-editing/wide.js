@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class WideCommand extends MediaCommand {
@@ -15,7 +14,7 @@ class WideCommand extends MediaCommand {
     this.flags.push({
       name: "scale",
       description: "The amount to widen the image by (1 is smallest, 19 is largest, default is 19)",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       minValue: 1,
       maxValue: 19,
     });

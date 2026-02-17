@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class SlowCommand extends MediaCommand {
@@ -14,7 +13,7 @@ class SlowCommand extends MediaCommand {
     super.init();
     this.flags.push({
       name: "multiplier",
-      type: Constants.ApplicationCommandOptionTypes.NUMBER,
+      type: "number",
       description: "Set the speed multiplier (default: 2.0)",
       minValue: 1,
       maxValue: 1000,

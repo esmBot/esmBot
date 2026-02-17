@@ -1,4 +1,3 @@
-import { Constants } from "oceanic.js";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class FreezeCommand extends MediaCommand {
@@ -14,7 +13,7 @@ class FreezeCommand extends MediaCommand {
     super.init();
     this.flags.push({
       name: "endframe",
-      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      type: "integer",
       description: "Set the end frame (default: last frame)",
       minValue: 0,
       classic: true,

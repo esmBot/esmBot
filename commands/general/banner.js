@@ -1,4 +1,4 @@
-import { Constants, Member } from "oceanic.js";
+import { Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { getUser, mentionToObject } from "#utils/mentions.js";
 const imageSize = 4096;
@@ -70,13 +70,13 @@ class BannerCommand extends Command {
   static flags = [
     {
       name: "member",
-      type: Constants.ApplicationCommandOptionTypes.USER,
+      type: "user",
       description: "The member to get the banner from",
       classic: true,
     },
     {
       name: "server",
-      type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+      type: "boolean",
       description: "Gets a user's server banner",
       classic: true,
       default: false,
