@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createServer } from "node:http";
 import { availableParallelism } from "node:os";
 import process from "node:process";
-import { Client, type ShardStatus } from "oceanic.js";
+import type { ShardStatus } from "oceanic.js";
 import pm2, { type ProcessDescription } from "pm2";
 import winston from "winston";
 import { init as dbInit } from "../database.ts";
@@ -240,44 +240,38 @@ function calcShards(shards: number[], procs: number) {
 
 async function getGatewayData() {
   logger.log("main", "Getting gateway connection data...");
-  const client = new Client({
-    auth: `Bot ${process.env.TOKEN}`,
-    disableCache: "no-warning",
-    gateway: {
-      concurrency: "auto",
-      maxShards: "auto",
-      presence: {
-        status: "idle",
-        activities: [
-          {
-            type: 0,
-            name: "Starting esmBot...",
-          },
-        ],
-      },
-      intents: [],
-    },
-    rest: {
-      baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
+
+  const base =
+    process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : "https://discord.com/api/v10";
+
+  const request = await fetch(`${base}/gateway/bot`, {
+    headers: {
+      Authorization: `Bot ${process.env.TOKEN}`,
     },
   });
+  if (!request.ok) {
+    throw new Error(`Failed to get gateway connection data: ${request.statusText}`);
+  }
 
-  const connectionData = await client.rest.getBotGateway();
+  const connectionData = (await request.json()) as {
+    shards?: number;
+    message: string;
+  };
+  if (!connectionData.shards) {
+    throw new Error(`Failed to get gateway connection data: ${connectionData.message}`);
+  }
+
   const cpuAmount = availableParallelism();
   const procAmount = Math.min(connectionData.shards, cpuAmount);
-  client.disconnect();
   return {
     procAmount,
-    connectionData,
+    shards: connectionData.shards,
   };
 }
 
 (async function init() {
-  const { procAmount, connectionData } = await getGatewayData();
-  logger.log(
-    "main",
-    `Obtained data, connecting with ${connectionData.shards} shard(s) across ${procAmount} process(es)...`,
-  );
+  const { procAmount, shards } = await getGatewayData();
+  logger.log("main", `Obtained data, connecting with ${shards} shard(s) across ${procAmount} process(es)...`);
 
   const runningProc = await getProcesses();
   if (runningProc.length === procAmount) {
@@ -286,7 +280,7 @@ async function getGatewayData() {
   }
 
   const shardArray = [];
-  for (let i = 0; i < connectionData.shards; i++) {
+  for (let i = 0; i < shards; i++) {
     shardArray.push(i);
   }
   const shardArrays = calcShards(shardArray, procAmount);

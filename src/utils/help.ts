@@ -1,6 +1,5 @@
 import { promises } from "node:fs";
 import process from "node:process";
-import { Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { info } from "./collections.ts";
 import type { Param } from "./types.ts";
@@ -37,7 +36,8 @@ export function generateList() {
   categories = categoryTemplate;
   for (const [command, cmd] of info) {
     if (!cmd) throw Error(`Command info missing for ${command}`);
-    if (cmd.type !== Constants.ApplicationCommandTypes.CHAT_INPUT) continue;
+    // reject non-chat commands
+    if (cmd.type !== 1) continue;
     if (!cmd.slashAllowed && !commandConfig.types.classic) continue;
     if (cmd.baseCommand) continue;
     if (!categories[cmd.category]) categories[cmd.category] = [];
