@@ -1,5 +1,4 @@
 import process from "node:process";
-import type { Guild, GuildChannel } from "oceanic.js";
 import Postgres from "postgres";
 import {
   commands,
@@ -140,9 +139,9 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     });
   }
 
-  async setPrefix(prefix: string, guild: Guild) {
-    await this.sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild.id}`;
-    prefixCache.set(guild.id, prefix);
+  async setPrefix(prefix: string, guild: string) {
+    await this.sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild}`;
+    prefixCache.set(guild, prefix);
   }
 
   async getTag(guild: string, tag: string) {
@@ -159,18 +158,18 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     return tags;
   }
 
-  async setTag(tag: Tag, guild: Guild) {
+  async setTag(tag: Tag, guild: string) {
     await this
-      .sql`INSERT INTO tags ${this.sql({ guild_id: guild.id, name: tag.name, content: tag.content, author: tag.author }, "guild_id", "name", "content", "author")}`;
+      .sql`INSERT INTO tags ${this.sql({ guild_id: guild, name: tag.name, content: tag.content, author: tag.author }, "guild_id", "name", "content", "author")}`;
   }
 
-  async editTag(tag: Tag, guild: Guild) {
+  async editTag(tag: Tag, guild: string) {
     await this
-      .sql`UPDATE tags SET content = ${tag.content}, author = ${tag.author} WHERE guild_id = ${guild.id} AND name = ${tag.name}`;
+      .sql`UPDATE tags SET content = ${tag.content}, author = ${tag.author} WHERE guild_id = ${guild} AND name = ${tag.name}`;
   }
 
-  async removeTag(name: string, guild: Guild) {
-    await this.sql`DELETE FROM tags WHERE guild_id = ${guild.id} AND name = ${name}`;
+  async removeTag(name: string, guild: string) {
+    await this.sql`DELETE FROM tags WHERE guild_id = ${guild} AND name = ${name}`;
   }
 
   async addTagRole(guild: string, role: string) {
@@ -210,18 +209,17 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     disabledCmdCache.set(guild, newDisabled);
   }
 
-  async disableChannel(channel: GuildChannel) {
-    const guildDB = await this.getGuild(channel.guildID);
-    await this
-      .sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel.id]} WHERE guild_id = ${channel.guildID}`;
-    disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
+  async disableChannel(channel: string, guild: string) {
+    const guildDB = await this.getGuild(guild);
+    await this.sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel]} WHERE guild_id = ${guild}`;
+    disabledCache.set(guild, [...guildDB.disabled, channel]);
   }
 
-  async enableChannel(channel: GuildChannel) {
-    const guildDB = await this.getGuild(channel.guildID);
-    const newDisabled = guildDB.disabled.filter((item) => item !== channel.id);
-    await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${channel.guildID}`;
-    disabledCache.set(channel.guildID, newDisabled);
+  async enableChannel(channel: string, guild: string) {
+    const guildDB = await this.getGuild(guild);
+    const newDisabled = guildDB.disabled.filter((item) => item !== channel);
+    await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
+    disabledCache.set(guild, newDisabled);
   }
 
   async getCounts(all?: boolean) {

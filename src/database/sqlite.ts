@@ -5,7 +5,6 @@ import type {
   Options as BSQLite3Options,
   Statement as BSQLite3Statement,
 } from "better-sqlite3";
-import type { Guild, GuildChannel } from "oceanic.js";
 import {
   commands,
   disabledCache,
@@ -188,21 +187,21 @@ export default class SQLitePlugin implements DatabasePlugin {
     disabledCmdCache.set(guild, newDisabled);
   }
 
-  async disableChannel(channel: GuildChannel) {
-    const guildDB = await this.getGuild(channel.guildID);
+  async disableChannel(channel: string, guild: string) {
+    const guildDB = await this.getGuild(guild);
     this.connection
       .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
-      .run(JSON.stringify([...guildDB.disabled, channel.id]), channel.guildID);
-    disabledCache.set(channel.guildID, [...guildDB.disabled, channel.id]);
+      .run(JSON.stringify([...guildDB.disabled, channel]), guild);
+    disabledCache.set(guild, [...guildDB.disabled, channel]);
   }
 
-  async enableChannel(channel: GuildChannel) {
-    const guildDB = await this.getGuild(channel.guildID);
-    const newDisabled = guildDB.disabled.filter((item: string) => item !== channel.id);
+  async enableChannel(channel: string, guild: string) {
+    const guildDB = await this.getGuild(guild);
+    const newDisabled = guildDB.disabled.filter((item: string) => item !== channel);
     this.connection
       .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
-      .run(JSON.stringify(newDisabled), channel.guildID);
-    disabledCache.set(channel.guildID, newDisabled);
+      .run(JSON.stringify(newDisabled), guild);
+    disabledCache.set(guild, newDisabled);
   }
 
   async getTag(guild: string, tag: string) {
@@ -221,9 +220,9 @@ export default class SQLitePlugin implements DatabasePlugin {
     return tags;
   }
 
-  async setTag(tag: Tag, guild: Guild) {
+  async setTag(tag: Tag, guild: string) {
     const tagData = {
-      guild_id: guild.id,
+      guild_id: guild,
       name: tag.name,
       content: tag.content,
       author: tag.author,
@@ -233,14 +232,14 @@ export default class SQLitePlugin implements DatabasePlugin {
       .run(tagData);
   }
 
-  async removeTag(name: string, guild: Guild) {
-    this.connection.prepare("DELETE FROM tags WHERE guild_id = ? AND name = ?").run(guild.id, name);
+  async removeTag(name: string, guild: string) {
+    this.connection.prepare("DELETE FROM tags WHERE guild_id = ? AND name = ?").run(guild, name);
   }
 
-  async editTag(tag: Tag, guild: Guild) {
+  async editTag(tag: Tag, guild: string) {
     this.connection
       .prepare("UPDATE tags SET content = ?, author = ? WHERE guild_id = ? AND name = ?")
-      .run(tag.content, tag.author, guild.id, tag.name);
+      .run(tag.content, tag.author, guild, tag.name);
   }
 
   async addTagRole(guild: string, role: string) {
@@ -268,9 +267,9 @@ export default class SQLitePlugin implements DatabasePlugin {
     return result.broadcast;
   }
 
-  async setPrefix(prefix: string, guild: Guild) {
-    this.connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild.id);
-    prefixCache.set(guild.id, prefix);
+  async setPrefix(prefix: string, guild: string) {
+    this.connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild);
+    prefixCache.set(guild, prefix);
   }
 
   async getGuild(query: string): Promise<DBGuild> {

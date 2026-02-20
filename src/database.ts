@@ -1,7 +1,6 @@
 // wrapper for the database drivers in ./database/
 import "dotenv/config";
 import process from "node:process";
-import type { Guild, GuildChannel } from "oceanic.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import logger from "#utils/logger.js";
 import { type DBGuild, isError, type Tag } from "#utils/types.js";
@@ -15,18 +14,18 @@ export declare class DatabasePlugin {
   getCounts: (all?: boolean) => Promise<Map<string, number>>;
   disableCommand: (guild: string, command: string) => Promise<void>;
   enableCommand: (guild: string, command: string) => Promise<void>;
-  disableChannel: (channel: GuildChannel) => Promise<void>;
-  enableChannel: (channel: GuildChannel) => Promise<void>;
+  disableChannel: (channel: string, guild: string) => Promise<void>;
+  enableChannel: (channel: string, guild: string) => Promise<void>;
   getTag: (guild: string, tag: string) => Promise<Tag | undefined>;
   getTags: (guild: string) => Promise<Record<string, Tag>>;
-  setTag: (tag: Tag, guild: Guild) => Promise<void>;
-  removeTag: (name: string, guild: Guild) => Promise<void>;
-  editTag: (tag: Tag, guild: Guild) => Promise<void>;
+  setTag: (tag: Tag, guild: string) => Promise<void>;
+  removeTag: (name: string, guild: string) => Promise<void>;
+  editTag: (tag: Tag, guild: string) => Promise<void>;
   addTagRole: (guild: string, role: string) => Promise<void>;
   removeTagRole: (guild: string, role: string) => Promise<void>;
   setBroadcast: (msg?: string) => Promise<void>;
   getBroadcast: () => Promise<string | undefined>;
-  setPrefix: (prefix: string, guild: Guild) => Promise<void>;
+  setPrefix: (prefix: string, guild: string) => Promise<void>;
   getGuild: (query: string) => Promise<DBGuild>;
 }
 
