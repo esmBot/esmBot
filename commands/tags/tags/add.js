@@ -29,7 +29,7 @@ class TagsAddCommand extends Command {
           : this.args.slice(1).join(" "),
         author: this.author.id,
       },
-      this.guild,
+      this.guild.id,
     );
     this.success = true;
     return this.getString("commands.responses.tags.added", {

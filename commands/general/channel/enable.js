@@ -33,7 +33,7 @@ class ChannelEnableCommand extends Command {
     if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id)
       return this.getString("commands.responses.channel.notInServer");
 
-    await this.database.enableChannel(channel);
+    await this.database.enableChannel(channel.id, channel.guildID);
     this.success = true;
     return this.getString("commands.responses.channel.reEnabled");
   }

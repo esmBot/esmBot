@@ -16,7 +16,7 @@ class TagsDeleteCommand extends Command {
       !owners?.includes(this.author.id)
     )
       return this.getString("commands.responses.tags.notOwner");
-    await this.database.removeTag(tagName, this.guild);
+    await this.database.removeTag(tagName, this.guild.id);
     this.success = true;
     return this.getString("commands.responses.tags.deleted", {
       params: {

@@ -19,7 +19,7 @@ class PrefixCommand extends Command {
         this.success = false;
         return this.getString("commands.responses.prefix.adminOnly");
       }
-      await this.database.setPrefix(this.args[0], this.guild);
+      await this.database.setPrefix(this.args[0], this.guild.id);
       return this.getString("commands.responses.prefix.changed", {
         params: {
           prefix: this.args[0],

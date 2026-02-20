@@ -23,7 +23,7 @@ class TagsEditCommand extends Command {
           : this.args.slice(2).join(" "),
         author: this.author.id,
       },
-      this.guild,
+      this.guild.id,
     );
     this.success = true;
     return this.getString("commands.responses.tags.edited", {

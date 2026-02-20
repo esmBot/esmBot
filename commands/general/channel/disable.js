@@ -34,7 +34,7 @@ class ChannelDisableCommand extends Command {
     if (!(channel instanceof GuildChannel) || channel.guildID !== this.guild.id)
       return this.getString("commands.responses.channel.notInServer");
 
-    await this.database.disableChannel(channel);
+    await this.database.disableChannel(channel.id, channel.guildID);
     this.success = true;
     return this.getString("commands.responses.channel.disabled", {
       params: {
