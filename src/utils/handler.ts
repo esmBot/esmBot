@@ -34,16 +34,9 @@ const blacklist = (commandConfig as CommandsConfig).blacklist;
 /**
  * Load a command into memory.
  */
+export async function load(command: string, subcommand?: false): Promise<string | undefined>;
 export async function load(
-  client: Client | null,
   command: string,
-  skipSend?: boolean,
-  subcommand?: false,
-): Promise<string | undefined>;
-export async function load(
-  client: Client | null,
-  command: string,
-  skipSend?: boolean,
   subcommand?: true,
 ): Promise<
   | {
@@ -55,9 +48,7 @@ export async function load(
   | undefined
 >;
 export async function load(
-  client: Client | null,
   command: string,
-  skipSend = false,
   subcommand = false,
 ): Promise<
   | string
@@ -142,7 +133,7 @@ export async function load(
         commandInfo.flags = [];
         for (const file of files) {
           if (!file.isFile()) continue;
-          const sub = await load(null, resolve(resolved, file.name), skipSend, true);
+          const sub = await load(resolve(resolved, file.name), true);
           if (!sub) continue;
 
           const split = sub.name.split(" ");
@@ -172,10 +163,6 @@ export async function load(
   }
 
   info.set(fullCommandName, commandInfo);
-
-  if (client && props.slashAllowed && !skipSend && !subcommand) {
-    await send(client);
-  }
 
   const categoryCommands = categories.get(category) ?? new Set<string>();
   categoryCommands.add(fullCommandName);

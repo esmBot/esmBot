@@ -1,7 +1,7 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { paths } from "#utils/collections.js";
-import { load } from "#utils/handler.js";
+import { load, send } from "#utils/handler.js";
 
 class ReloadCommand extends Command {
   async run() {
@@ -12,7 +12,11 @@ class ReloadCommand extends Command {
     await this.acknowledge();
     const path = paths.get(commandName);
     if (!path) return this.getString("commands.responses.reload.noCommand");
-    const result = await load(this.client, path, this.getOptionBoolean("skipsend"));
+    const result = await load(path);
+    const skipSend = this.getOptionBoolean("skipsend");
+    if (!skipSend) {
+      await send(this.client);
+    }
     if (result !== commandName) return this.getString("commands.responses.reload.reloadFailed");
     if (process.env.PM2_USAGE) {
       process.send?.({

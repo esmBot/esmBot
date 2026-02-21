@@ -45,7 +45,7 @@ import { Client, type ClientEvents, Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
-import { load } from "#utils/handler.js";
+import { load, send } from "#utils/handler.js";
 import logger from "#utils/logger.js";
 import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
 import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
@@ -134,7 +134,7 @@ logger.log("info", "Finished loading locale data.");
 logger.log("info", "Attempting to load commands...");
 for await (const commandFile of glob(resolve(basePath, "..", "commands", "*", runtime.tsLoad ? "*.{js,ts}" : "*.js"))) {
   try {
-    await load(null, commandFile);
+    await load(commandFile);
   } catch (e) {
     logger.error(`Failed to register command from ${commandFile}: ${e}`);
   }
@@ -218,7 +218,7 @@ if (process.env.PM2_USAGE) {
         switch (packet.data?.type) {
           case "reload": {
             const cmdPath = paths.get(packet.data.message);
-            if (cmdPath) await load(client, cmdPath, true);
+            if (cmdPath) await load(cmdPath);
             break;
           }
           case "soundreload":
