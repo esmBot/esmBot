@@ -45,7 +45,7 @@ import { Client, type ClientEvents, Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
-import { load, send } from "#utils/handler.js";
+import { load } from "#utils/handler.js";
 import logger from "#utils/logger.js";
 import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
 import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
