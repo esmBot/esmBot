@@ -1,1 +1,11 @@
-{}
+{
+    "commands": {
+        "descriptions": {
+            "8ball": "Paklausk stebuklingo 8 rutulio klausimo",
+            "bird": "Gauk atsitiktinio paukščio nuotrauką",
+            "cat": "Gauk atsitiktinį katės paveikslėlį",
+            "dice": "Išmeskite kauliuką",
+            "dog": "Gauk atsitiktinį šuns paveikslėlį"
+        }
+    }
+}
