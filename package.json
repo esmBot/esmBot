@@ -2,12 +2,35 @@
   "name": "esmbot",
   "version": "2025.12.1",
   "description": "A Discord bot with miscellaneous features",
-  "exports": "./dist/app.js",
-  "bin": "./dist/app.js",
-  "type": "module",
-  "engines": {
-    "node": ">=22"
+  "license": "MIT",
+  "author": "Essem <essem@essem.space>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esmBot/esmBot.git"
   },
+  "bin": "./dist/app.js",
+  "binary": {
+    "napi_versions": [
+      7
+    ]
+  },
+  "type": "module",
+  "imports": {
+    "#cmd-classes/*": {
+      "node": "./dist/classes/*",
+      "default": "./src/classes/*"
+    },
+    "#utils/*": {
+      "node": "./dist/utils/*",
+      "default": "./src/utils/*"
+    },
+    "#pagination": {
+      "node": "./dist/pagination/pagination.js",
+      "default": "./src/pagination/pagination.ts"
+    },
+    "#config/*": "./config/*"
+  },
+  "exports": "./dist/app.js",
   "scripts": {
     "build": "tsc && pnpm build:natives",
     "build:no-magick": "tsc && pnpm build:natives:no-magick",
@@ -33,12 +56,6 @@
     "start-api:deno": "deno -P src/api/index.ts",
     "start-api:debug": "DEBUG=true node dist/api/index.js",
     "start-api:deno:debug": "DEBUG=true deno -P src/api/index.ts"
-  },
-  "author": "Essem <essem@essem.space>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/esmBot/esmBot.git"
   },
   "dependencies": {
     "@db/sqlite": "jsr:^0.12.0",
@@ -70,25 +87,8 @@
     "@sentry/node": "^10.38.0",
     "pm2": "^6.0.14"
   },
-  "binary": {
-    "napi_versions": [
-      7
-    ]
-  },
-  "imports": {
-    "#cmd-classes/*": {
-      "node": "./dist/classes/*",
-      "default": "./src/classes/*"
-    },
-    "#utils/*": {
-      "node": "./dist/utils/*",
-      "default": "./src/utils/*"
-    },
-    "#pagination": {
-      "node": "./dist/pagination/pagination.js",
-      "default": "./src/pagination/pagination.ts"
-    },
-    "#config/*": "./config/*"
+  "engines": {
+    "node": ">=22"
   },
   "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
   "pnpm": {

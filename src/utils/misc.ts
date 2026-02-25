@@ -1,12 +1,9 @@
 import process from "node:process";
 import util from "node:util";
-
 import { type DotenvParseOutput, config } from "dotenv";
 import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
-
 import commandsConfig from "#config/commands.json" with { type: "json" };
 import messagesConfig from "#config/messages.json" with { type: "json" };
-
 import type { DatabasePlugin } from "../database.ts";
 import { disconnect, servers } from "./media.ts";
 

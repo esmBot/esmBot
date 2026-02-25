@@ -3,7 +3,7 @@ name: Repo sync (GitHub -> Codeberg)
 on:
   push:
     branches:
-      - '**'
+      - "**"
   workflow_dispatch: # Manual dispatch
   schedule:
     - cron: "0 */8 * * *"

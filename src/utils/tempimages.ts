@@ -1,6 +1,5 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
 import process from "node:process";
-
 import {
   type Client,
   CommandInteraction,
@@ -9,7 +8,6 @@ import {
   type InteractionContent,
   type Message,
 } from "oceanic.js";
-
 import { selectedImages } from "./collections.ts";
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";

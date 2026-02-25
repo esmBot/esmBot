@@ -1,4 +1,3 @@
-// eslint-disable-next-line import-x/order
 import process from "node:process";
 
 const [major] = process.versions.node.split(".").map(Number);
@@ -234,6 +233,7 @@ if (process.env.PM2_USAGE) {
             endBroadcast(client);
             break;
           case "eval":
+            // oxlint-disable-next-line no-eval
             eval(packet.data.message);
             break;
           case "serverCounts":
