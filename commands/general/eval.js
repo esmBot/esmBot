@@ -13,6 +13,7 @@ class EvalCommand extends Command {
     await this.acknowledge();
     const code = this.getOptionString("code") ?? this.args.join(" ");
     try {
+      // oxlint-disable-next-line no-eval
       let evaled = eval(code);
       if (process.env.PM2_USAGE && this.getOptionBoolean("broadcast")) {
         process.send?.({
