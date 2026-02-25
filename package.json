@@ -22,9 +22,9 @@
     "docker:run-bot": "docker run --rm --network=host esmbot",
     "docker:run-api": "docker run --rm --network=host esmbot dist/api/index.js",
     "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml ghcr.io/lavalink-devs/lavalink:4",
-    "format": "prettier .",
-    "format:check": "prettier --check .",
-    "lint": "eslint .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
     "start": "node dist/app.js",
     "start:deno": "deno -P src/app.ts",
     "start:debug": "DEBUG=true node dist/app.js",
@@ -57,21 +57,13 @@
     "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.1",
-    "@eslint/js": "^9.39.2",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.19.7",
     "@types/ws": "^8.18.1",
     "cmake-js": "^8.0.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.2.0",
-    "prettier": "^3.8.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "oxfmt": "^0.35.0",
+    "oxlint": "^1.50.0",
+    "typescript": "^5.9.3"
   },
   "optionalDependencies": {
     "@sentry/deno": "^10.38.0",
