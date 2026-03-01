@@ -29,6 +29,7 @@ set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/meme.cc
   natives/image/mirror.cc
   natives/image/motivate.cc
+  natives/image/petpet.cc
   natives/image/reddit.cc
   natives/image/resize.cc
   natives/image/reverse.cc
