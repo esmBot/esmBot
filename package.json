@@ -66,7 +66,7 @@
     "format-duration": "^3.0.2",
     "ipaddr.js": "^2.3.0",
     "node-addon-api": "^8.6.0",
-    "oceanic.js": "1.13.1-dev.dc8fc61",
+    "oceanic.js": "1.14.0",
     "postgres": "^3.4.7",
     "shoukaku": "^4.3.0",
     "winston": "^3.19.0",
@@ -83,8 +83,8 @@
     "typescript": "^5.9.3"
   },
   "optionalDependencies": {
-    "@sentry/deno": "^10.41.0",
-    "@sentry/node": "^10.41.0",
+    "@sentry/deno": "^10.42.0",
+    "@sentry/node": "^10.42.0",
     "pm2": "^6.0.14"
   },
   "engines": {
