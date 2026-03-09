@@ -87,7 +87,10 @@
             "woow": "Peilaa kuvan yläosan alhaalle",
             "Select Image": "Kuvausta ei löydy",
             "hue": "Vaihtaa kuvan värisävyn",
-            "fade": "Haalistaa kuvan"
+            "fade": "Haalistaa kuvan",
+            "mediareload": "Yrittää yhdistää uudelleen jokaiselle käytössä olevalle median käsittelypalvelimelle",
+            "mediastats": "Löytää tilastoja mediapalvelimista",
+            "slide": "Liu'uttaa kuvaa tiettyyn suuntaan"
         },
         "flags": {
             "command": {
@@ -167,7 +170,7 @@
                 "font": "Mitä fonttia haluat käyttää (oletus: times)"
             },
             "slow": {
-                "multiplier": "Aseta nopeuden kerroin (oletus: 2)"
+                "multiplier": "Aseta nopeuden kerroin (oletus: 2.0)"
             },
             "snapchat": {
                 "position": "Aseta otsikon asema desimaali (0.0 on yläosa, 1.0 on alaosa, oletus on 0.565)"
@@ -204,7 +207,7 @@
                 "quality": "Aseta JPEG laatu (oletus: 1)"
             },
             "speed": {
-                "multiplier": "Aseta nopeuden kerroin (oletus: 2)"
+                "multiplier": "Aseta nopeuden kerroin (oletus: 2.0)"
             },
             "uncanny": {
                 "font": "Mitä fonttia haluat käyttää (oletus: helvetica)",
@@ -302,6 +305,13 @@
             },
             "tags role remove": {
                 "role": "Rooli mikä poistaa"
+            },
+            "globe": {
+                "snow": "Vaihtaa pallon lumisadepalloksi"
+            },
+            "slide": {
+                "reverse": "Vaihtaa suunnan johonka kuva liukuu",
+                "vertical": "Liu'uttaa kuvaa pystysuoraan"
             }
         },
         "flagNames": {
@@ -517,6 +527,13 @@
             },
             "tags role remove": {
                 "role": "rooli"
+            },
+            "globe": {
+                "snow": "lumi"
+            },
+            "slide": {
+                "reverse": "peruuta",
+                "vertical": "pystysuora"
             }
         },
         "names": {
@@ -606,7 +623,10 @@
             "hooh": "hooh",
             "reverse": "peruuta",
             "scott": "scott",
-            "sepia": "sepia"
+            "sepia": "sepia",
+            "mediareload": "lataamediauudelleen",
+            "mediastats": "mediantilastot",
+            "slide": "liu'uta"
         },
         "noImage": {
             "flip": "Tarvitset kuvan tai GIF:in kääntääksesi sen!",
@@ -671,7 +691,8 @@
             "watermark funky": "Tarvitset kuvan/GIFin lisätäksesi New Funky Mode bannerin!",
             "motivate": "Tarvitset kuvan/GIFin tehdäksesi motivoiva posteri!",
             "spotify": "Tarvitset kuvan/GIFin lisätäksesi Spotifyin \"This is\" otsikon!",
-            "reverse": "Tarvitset kuvan/GIFin jonka peruuttaa!"
+            "reverse": "Tarvitset kuvan/GIFin jonka peruuttaa!",
+            "slide": "Tarvitsen kuvan/GIFin jota liu'uttaa!"
         },
         "responses": {
             "8ball": {
@@ -705,7 +726,7 @@
             },
             "channel": {
                 "alreadyDisabled": "Olen jo otettu pois käytöstä tällä kanavalla!",
-                "invalid": "Tuo ei ole oikea vaihtoehto!",
+                "invalid": "Sinun täytyy kertoa haluatko laittaa minut päälle vai pois tällä kanavalla!",
                 "notDisabled": "En ole otettu pois käytöstä tällä kanavalla!",
                 "notInServer": "Tuo kanava ei ole tässä palvelimessa!",
                 "reEnabled": "Olen laitettu takaisin päälle tällä kanavalla.",
@@ -758,7 +779,7 @@
                 "notDisabled": "Tuo komento ei ole poissa päältä!",
                 "noInput": "Sinun pitää kertoa mikä komento laittaa päälle/pois päältä!",
                 "reEnabled": "Komento `{{command}}` on laitettu takaisin päälle.",
-                "invalid": "Tuo ei ole oikea vaihtoehto!",
+                "invalid": "Sinun täytyy kertoa haluatko laittaa komennon päälle vai pois!",
                 "adminOnly": "Sinun pitää olla ylläpitäjä laittaaksesi/poistaaksesi päältä komentoja!",
                 "disabled": "Komento `{{command}}` on otettu pois päältä. Asettaaksesi sen takaisin päälle, suorita vain `{{prefix}}command enable {{command}}`."
             },
@@ -847,6 +868,17 @@
                 "invalidPosition": "Tuo ei ole kelvollinen sijainti!",
                 "notHost": "Vain nykyinen puheistunnon isäntä voi etsiä musiikkia!",
                 "notSeekable": "Tämä raita ei ole haettavissa!"
+            },
+            "mediareload": {
+                "connected": "Yhdistetty onnistuneesti {{length}} mediapalvelimelle.",
+                "couldNotConnect": "En voinut muodostaa yhteyttä mihinkään mediapalvelimelle!",
+                "owner": "Vain apin omistaja voi ladata mediapalvelimet uudelleen!"
+            },
+            "mediastats": {
+                "connected": "Appi on tällä hetkellä yhdistetty {{length}} mediapalvelimelle.",
+                "header": "esmBot mediatilastot",
+                "runningJobs": "Käynnissä olevia tehtäviä: {{count}}",
+                "server": "Palvelin {{num}}"
             }
         },
         "noParam": {
