@@ -11,10 +11,7 @@ export default async ({ client, database }: EventParams) => {
   if (ready) return;
 
   // send slash command data
-  if (
-    commandsConfig.types.application &&
-    !(process.env.CLUSTER_TYPE && process.env.pm_id !== "1")
-  ) {
+  if (commandsConfig.types.application && !(process.env.CLUSTER_TYPE && process.env.pm_id !== "1")) {
     try {
       await send(client);
     } catch (e) {
