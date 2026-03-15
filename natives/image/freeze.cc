@@ -56,7 +56,7 @@ CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *b
           continue;
         }
 
-        memcpy(lastPos + 19, lastPos, (bufferLength - (lastPos - fileData)));
+        memmove(lastPos + 19, lastPos, (bufferLength - (lastPos - fileData)));
         memcpy(lastPos, match, 16);
         memcpy(lastPos + 16, "\x00\x00\x00", 3);
 
@@ -79,7 +79,7 @@ CmdOutput esmb::Image::Freeze(const string &type, string &outType, const char *b
           lastPos = reinterpret_cast<char *>(memchr(lastPos + 1, '\x21', (bufferLength - (lastPos - fileData)) - 1));
           continue;
         }
-        memcpy(lastPos, lastPos + 19, (bufferLength - (lastPos - fileData)) - 19);
+        memmove(lastPos, lastPos + 19, (bufferLength - (lastPos - fileData)) - 19);
         dataSize = bufferLength - 19;
         none = false;
         break;
