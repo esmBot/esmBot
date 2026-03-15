@@ -15,7 +15,7 @@ esmBot is a free and open-source Discord bot designed to entertain your server. 
 - Low RAM and CPU usage when idle
 - Support for slash/application commands and classic, prefix-based message commands
 - Support for multiple database backends (PostgreSQL and SQLite backends included)
-- [PM2](https://pm2.keymetrics.io)-based cluster/shard handling
+- Cluster/shard handling powered by `node:cluster` or [PM2](https://pm2.keymetrics.io)
 - Flexible command handler allowing you to create new commands by adding script files
 
 ## Usage

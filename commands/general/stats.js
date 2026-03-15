@@ -6,7 +6,7 @@ import detectRuntime from "#utils/detectRuntime.js";
 import { getServers } from "#utils/misc.js";
 import packageJson from "../../package.json" with { type: "json" };
 
-const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
+const pm2 = process.env.CLUSTER_TYPE === "pm2" ? (await import("pm2")).default : null;
 
 class StatsCommand extends Command {
   async run() {
@@ -45,9 +45,7 @@ class StatsCommand extends Command {
             },
             {
               name: this.getString("commands.responses.stats.totalUsage"),
-              value: process.env.PM2_USAGE
-                ? `${((await this.list()).reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1024 / 1024).toFixed(2)} MB`
-                : processMem,
+              value: (await this.getMem()) ?? processMem,
               inline: true,
             },
             {
@@ -108,18 +106,42 @@ class StatsCommand extends Command {
   }
 
   /**
-   * @returns {Promise<import("pm2").ProcessDescription[]>}
+   * @returns {Promise<string | null>}
    */
-  list() {
+  getMem() {
     if (pm2) {
       return new Promise((resolve, reject) => {
         pm2.list((err, list) => {
           if (err) return reject(err);
-          resolve(list.filter((v) => v.name?.includes("esmBot-proc")));
+          const procList = list.filter((v) => v.name?.includes("esmBot-proc"));
+          const value = procList.reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1024 / 1024;
+          resolve(`${value.toFixed(2)} MB`);
         });
       });
+    } else if (process.env.CLUSTER_TYPE === "node") {
+      return new Promise((resolve, reject) => {
+        const listener = (/** @type {{ data: { type: string; totalMem: number; }; }} */ message) => {
+          if (message.data?.type === "memResponse") {
+            clearTimeout(timeout);
+            const value = message.data.totalMem / 1024 / 1024;
+            resolve(`${value.toFixed(2)} MB`);
+            process.off("message", listener);
+          }
+        };
+        process.on("message", listener);
+        const timeout = setTimeout(() => {
+          process.off("message", listener);
+          reject("Timed out");
+        }, 3000);
+        process.send?.({
+          data: {
+            type: "getMem",
+          },
+        });
+      });
+    } else {
+      return Promise.resolve(null);
     }
-    return Promise.resolve([]);
   }
 
   static description = "Gets some statistics about me";

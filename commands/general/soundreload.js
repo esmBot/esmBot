@@ -11,7 +11,7 @@ class SoundReloadCommand extends Command {
     }
     await this.acknowledge();
     const length = await reload(this.client);
-    if (process.env.PM2_USAGE) {
+    if (process.env.CLUSTER_TYPE) {
       process.send?.({
         type: "process:msg",
         data: {

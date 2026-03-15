@@ -35,11 +35,9 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
   process.exit(1);
 }
 
-import { execFile as baseExecFile } from "node:child_process";
 import { glob, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import { Client, type ClientEvents, Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
@@ -47,13 +45,10 @@ import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
 import logger from "#utils/logger.js";
 import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
-import { endBroadcast, exit, startBroadcast } from "#utils/misc.js";
+import { endBroadcast, exit, getVers, initLog, startBroadcast } from "#utils/misc.js";
 import { connect, connected, reload } from "#utils/soundplayer.js";
 import { parseThreshold } from "#utils/tempimages.js";
-import packageJson from "../package.json" with { type: "json" };
 import { init as dbInit } from "./database.ts";
-
-process.env.ESMBOT_VER = packageJson.version;
 
 const intents = [Constants.Intents.GUILD_VOICE_STATES, Constants.Intents.DIRECT_MESSAGES, Constants.Intents.GUILDS];
 if (commandConfig.types.classic) {
@@ -63,35 +58,8 @@ if (commandConfig.types.classic) {
 
 const runtime = detectRuntime();
 
-const execFile = promisify(baseExecFile);
-
-process.env.GIT_REV = await execFile("git", ["rev-parse", "HEAD"]).then(
-  (output) => output.stdout.substring(0, 7),
-  () => "unknown commit",
-);
-console.log(`
-     ,*\`$                    z\`"v
-    F zBw\`%                 A ,W "W
-  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T
-  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1
- F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E
- F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k
- #  BFBBBBBBBBBBBBF"      "RBBBW    F
-  V ' 4BBBBBBBBBBM            TBBL  F
-   F  BBBBBBBBBBF              JBB  L
-   F  FBBBBBBBEB                BBL 4
-   E  [BB4BBBBEBL               BBL 4
-   I   #BBBBBBBEB              4BBH  *w
-   A   4BBBBBBBBBEW,         ,BBBB  W  [
-.A  ,k  4BBBBBBBBBBBEBW####BBBBBBM BF  F
-k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
- 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F
-   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"
-      *+,   " F'"'*^~~~^"^\`  V+*^
-          \`"""
-
-esmBot ${packageJson.version} (${process.env.GIT_REV})
-`);
+await getVers();
+if (process.env.CLUSTER_TYPE !== "node") initLog();
 
 if (!commandConfig.types.classic && !commandConfig.types.application) {
   logger.error(
@@ -146,10 +114,7 @@ if (database) {
 if (process.env.API_TYPE === "ws") await reloadMediaConnections();
 else await initMediaLib();
 
-const shardArray =
-  process.env.SHARDS && process.env.pm_id
-    ? JSON.parse(process.env.SHARDS)[Number.parseInt(process.env.pm_id) - 1]
-    : null;
+const shardArray = process.env.SHARDS ? JSON.parse(process.env.SHARDS) : null;
 
 // create the oceanic client
 const client = new Client({
@@ -198,7 +163,7 @@ for await (const file of glob(resolve(basePath, "events", runtime.tsLoad ? "*.{j
 logger.log("info", "Finished loading events.");
 
 // PM2-specific handling
-if (process.env.PM2_USAGE) {
+if (process.env.CLUSTER_TYPE === "pm2") {
   const { default: pm2 } = await import("pm2");
   // callback hell :)
   pm2.launchBus((err, pm2Bus) => {
@@ -265,6 +230,50 @@ if (process.env.PM2_USAGE) {
         }
       });
     });
+  });
+} else if (process.env.CLUSTER_TYPE === "node") {
+  process.on("message", async (packet: { data?: { type: string; from?: string; message: string } }) => {
+    if (packet.data?.from === process.env.pm_id) return;
+    switch (packet.data?.type) {
+      case "reload": {
+        const cmdPath = paths.get(packet.data.message);
+        if (cmdPath) await load(cmdPath);
+        break;
+      }
+      case "soundreload":
+        await reload(client);
+        break;
+      case "mediareload":
+        await reloadMediaConnections();
+        break;
+      case "broadcastStart":
+        startBroadcast(client, packet.data.message);
+        break;
+      case "broadcastEnd":
+        endBroadcast(client);
+        break;
+      case "eval":
+        // oxlint-disable-next-line no-eval
+        eval(packet.data.message);
+        break;
+      case "serverCounts":
+        process.send?.({
+          data: {
+            type: "serverCounts",
+            guilds: client.guilds.size,
+            shards: client.shards.map((v) => {
+              return {
+                id: v.id,
+                procId: Number.parseInt(process.env.pm_id as string),
+                latency: v.latency,
+                status: v.status,
+              };
+            }),
+            mem: process.memoryUsage().heapUsed,
+          },
+        });
+        break;
+    }
   });
 }
 

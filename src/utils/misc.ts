@@ -1,15 +1,53 @@
+import { execFile as baseExecFile } from "node:child_process";
 import process from "node:process";
-import util from "node:util";
+import util, { promisify } from "node:util";
 import { type DotenvParseOutput, config } from "dotenv";
 import type { AnyChannel, AnyPrivateChannel, Client, CommandInteraction, Message } from "oceanic.js";
 import commandsConfig from "#config/commands.json" with { type: "json" };
 import messagesConfig from "#config/messages.json" with { type: "json" };
+import packageJson from "../../package.json" with { type: "json" };
 import type { DatabasePlugin } from "../database.ts";
 import { disconnect, servers } from "./media.ts";
 
-const pm2 = process.env.PM2_USAGE ? (await import("pm2")).default : null;
+const pm2 = process.env.CLUSTER_TYPE === "pm2" ? (await import("pm2")).default : null;
 
 let broadcast = false;
+
+export async function getVers() {
+  process.env.ESMBOT_VER = packageJson.version;
+  const execFile = promisify(baseExecFile);
+
+  process.env.GIT_REV = await execFile("git", ["rev-parse", "HEAD"]).then(
+    (output) => output.stdout.substring(0, 7),
+    () => "unknown commit",
+  );
+}
+
+export function initLog() {
+  console.log(`
+     ,*\`$                    z\`"v
+    F zBw\`%                 A ,W "W
+  ,\` ,EBBBWp"%. ,-=~~==-,+*  4BBE  T
+  M  BBBBBBBB* ,w=####Wpw  4BBBBB#  1
+ F  BBBBBBBMwBBBBBBBBBBBBB#wXBBBBBH  E
+ F  BBBBBBkBBBBBBBBBBBBBBBBBBBBE4BL  k
+ #  BFBBBBBBBBBBBBF"      "RBBBW    F
+  V ' 4BBBBBBBBBBM            TBBL  F
+   F  BBBBBBBBBBF              JBB  L
+   F  FBBBBBBBEB                BBL 4
+   E  [BB4BBBBEBL               BBL 4
+   I   #BBBBBBBEB              4BBH  *w
+   A   4BBBBBBBBBEW,         ,BBBB  W  [
+.A  ,k  4BBBBBBBBBBBEBW####BBBBBBM BF  F
+k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
+ 5,  REBBB4BBBBB#BBBBBBBBBBBBP5BFF  ,F
+   *w  \`*4BBW\`"FF#F##FFFF"\` , *   +"
+      *+,   " F'"'*^~~~^"^\`  V+*^
+          \`"""
+
+esmBot ${process.env.ESMBOT_VER} (${process.env.GIT_REV})
+`);
+}
 
 // random(array) to select a random entry in array
 export function random<T>(array: T[]) {
@@ -150,6 +188,26 @@ export function getServers(bot: Client): Promise<number> {
             },
           );
         });
+      });
+    } else if (process.env.CLUSTER_TYPE === "node") {
+      const listener = (packet: { data: { type: string; serverCount: number } }) => {
+        if (packet.data?.type === "countResponse") {
+          clearTimeout(timeout);
+          resolve(packet.data.serverCount);
+          process.off("message", listener);
+        }
+      };
+      process.on("message", listener);
+
+      const timeout = setTimeout(() => {
+        process.off("message", listener);
+        reject(Error("Timed out while getting server count"));
+      }, 3000);
+
+      process.send?.({
+        data: {
+          type: "getCount",
+        },
       });
     } else {
       resolve(bot.guilds.size);

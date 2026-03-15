@@ -12,7 +12,7 @@ class MediaReloadCommand extends Command {
     await this.acknowledge();
     const length = await reloadMediaConnections();
     if (length) {
-      if (process.env.PM2_USAGE) {
+      if (process.env.CLUSTER_TYPE) {
         process.send?.({
           type: "process:msg",
           data: {

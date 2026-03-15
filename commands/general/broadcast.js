@@ -13,7 +13,7 @@ class BroadcastCommand extends Command {
     if (message?.trim()) {
       await this.database?.setBroadcast(message);
       startBroadcast(this.client, message);
-      if (process.env.PM2_USAGE) {
+      if (process.env.CLUSTER_TYPE) {
         process.send?.({
           type: "process:msg",
           data: {
@@ -27,7 +27,7 @@ class BroadcastCommand extends Command {
     }
     await this.database?.setBroadcast();
     endBroadcast(this.client);
-    if (process.env.PM2_USAGE) {
+    if (process.env.CLUSTER_TYPE) {
       process.send?.({
         type: "process:msg",
         data: {

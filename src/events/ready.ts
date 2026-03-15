@@ -11,7 +11,10 @@ export default async ({ client, database }: EventParams) => {
   if (ready) return;
 
   // send slash command data
-  if (commandsConfig.types.application && !(process.env.PM2_USAGE && process.env.pm_id !== "1")) {
+  if (
+    commandsConfig.types.application &&
+    !(process.env.CLUSTER_TYPE && process.env.pm_id !== "1")
+  ) {
     try {
       await send(client);
     } catch (e) {
@@ -32,7 +35,15 @@ export default async ({ client, database }: EventParams) => {
 
   ready = true;
 
-  if (process.env.PM2_USAGE) process.send?.("ready");
+  if (process.env.CLUSTER_TYPE === "pm2") {
+    process.send?.("ready");
+  } else if (process.env.CLUSTER_TYPE === "node") {
+    process.send?.({
+      data: {
+        type: "ready",
+      },
+    });
+  }
 
-  logger.log("info", "Started esmBot.");
+  if (process.env.CLUSTER_TYPE !== "node") logger.log("info", "Started esmBot.");
 };

@@ -15,7 +15,7 @@ class EvalCommand extends Command {
     try {
       // oxlint-disable-next-line no-eval
       let evaled = eval(code);
-      if (process.env.PM2_USAGE && this.getOptionBoolean("broadcast")) {
+      if (process.env.CLUSTER_TYPE && this.getOptionBoolean("broadcast")) {
         process.send?.({
           type: "process:msg",
           data: {

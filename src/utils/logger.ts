@@ -35,7 +35,7 @@ const logger = winston.createLogger({
     winston.format.printf((info) => {
       const { timestamp, level, message, ...args } = info;
 
-      return `[${timestamp}]: [${level.toUpperCase()}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+      return `[${timestamp}]: [${level.toUpperCase()}${process.env.pm_id ? `-${process.env.pm_id}` : ""}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
     }),
   ),
 });
