@@ -1,4 +1,5 @@
 import process from "node:process";
+import { setTimeout } from "node:timers/promises";
 import Command from "#cmd-classes/command.js";
 import { exit } from "#utils/misc.js";
 
@@ -12,7 +13,8 @@ class RestartCommand extends Command {
     try {
       return this.getString("commands.responses.restart.restarting");
     } finally {
-      await exit(this.client, this.database);
+      // we can't do it instantly because we need to send the message first
+      setTimeout(3000).then(() => exit(this.client, this.database));
     }
   }
 
