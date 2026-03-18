@@ -625,8 +625,7 @@
             "scott": "scott",
             "sepia": "sepia",
             "mediareload": "lataamediauudelleen",
-            "mediastats": "mediantilastot",
-            "slide": ""
+            "mediastats": "mediantilastot"
         },
         "noImage": {
             "flip": "Tarvitset kuvan tai GIF:in kääntääksesi sen!",
