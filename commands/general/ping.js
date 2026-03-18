@@ -1,4 +1,3 @@
-import { Base } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class PingCommand extends Command {
@@ -46,11 +45,12 @@ ${
         const guildShard = this.client.guildShardMap.get(this.interaction.guildID);
         if (guildShard !== undefined) shard = this.client.shards.get(guildShard);
       }
+      const created = new Date(Number(BigInt(this.interaction.id) / 4194304n + 1420070400000n));
       return `🏓 ${this.getString("commands.responses.ping.pong")}
 \`\`\`
 ${this.getString("commands.responses.ping.latency", {
   params: {
-    latency: Math.abs(pingMessage.timestamp.getTime() - Base.getCreatedAt(this.interaction.id).getTime()).toString(),
+    latency: Math.abs(pingMessage.timestamp.getTime() - created.getTime()).toString(),
   },
 })}
 ${
