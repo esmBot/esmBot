@@ -65,6 +65,10 @@ const updates = [
     )
   ) INSERT INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds))
   ON CONFLICT ("command") DO UPDATE SET "count" = (SELECT amount FROM cmds);`,
+  `WITH cmds AS (
+     SELECT sum("count") AS amount FROM counts WHERE command IN ('Select Image', 'Select Media')
+  ) INSERT INTO counts ("command", "count") VALUES ('Select Media', (SELECT amount FROM cmds))
+  ON CONFLICT ("command") DO UPDATE SET "count" = (SELECT amount FROM cmds);`,
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {
