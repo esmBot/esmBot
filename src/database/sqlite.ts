@@ -85,9 +85,6 @@ const updates = [
 		  'powerdirector', 'shutterstock', 'watermark'
     )
   ) INSERT OR REPLACE INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds));`,
-   `WITH cmds AS (
-      SELECT sum("count") AS amount FROM counts WHERE command IN ('Select Image', 'Select Media')
-   ) INSERT OR REPLACE INTO counts ("command", "count") VALUES ('Select Media', (SELECT amount FROM cmds));`
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
