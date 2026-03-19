@@ -50,11 +50,14 @@ function updateStats(memOnly: boolean = false): Promise<void> {
     totalMem = process.memoryUsage().heapUsed;
     clusterCount = processes.length;
     let timeout: ReturnType<typeof setTimeout> | undefined;
-    for (const worker of processes) {
+    const done: boolean[] = Array(clusterCount).fill(false);
+    for (const [i, worker] of processes.entries()) {
       const listener = (packet: IncomingProcMessage) => {
         if (packet.data?.type === "serverCounts") {
           const countData = packet as ServerCountMessage;
           clearTimeout(timeout);
+          if (done[i]) return;
+          done[i] = true;
           if (!memOnly) {
             serverCount += countData.data.guilds;
             shardData = [...shardData, ...countData.data.shards].sort((a, b) => a.id - b.id);
