@@ -112,7 +112,7 @@ export async function createManageServer(metrics: () => MetricsInfo) {
 
     const reqUrl = new URL(req.url, `http://${req.headers.host}`);
     if (reqUrl.pathname === "/" || reqUrl.pathname === "/metrics") {
-      res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      res.setHeader("Content-Type", "text/plain; version=0.0.4; charset=utf-8");
       res.write(`# HELP esmbot_command_count Number of times a command has been run
 # TYPE esmbot_command_count counter
 `);
@@ -141,7 +141,8 @@ esmbot_shards ${info.shards.length}
       }
 
       res.write(`# HELP esmbot_total_mem Total memory usage of the bot
-# TYPE esmbot_total_mem gauge ${info.totalMem}
+# TYPE esmbot_total_mem gauge
+esmbot_total_mem ${info.totalMem}
 `);
 
       res.end();

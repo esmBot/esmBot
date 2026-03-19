@@ -28,8 +28,6 @@ let clusterCount = 0;
 let responseCount = 0;
 let totalMem = 0;
 
-let timeout: ReturnType<typeof setTimeout> | undefined;
-
 cluster.on("exit", async (worker, code, signal) => {
   const id = processes.findIndex((v) => worker.id === v.id);
   if (id === -1) {
@@ -42,48 +40,54 @@ cluster.on("exit", async (worker, code, signal) => {
   logger.info(`Started esmBot process ${id + 1}.`);
 });
 
-async function updateStats() {
-  serverCount = 0;
-  shardData = [];
-  clusterCount = 0;
-  responseCount = 0;
-  totalMem = process.memoryUsage().heapUsed;
-  clusterCount = processes.length;
-  for (const worker of processes) {
-    const listener = (packet: IncomingProcMessage) => {
-      if (packet.data?.type === "serverCounts") {
-        const countData = packet as ServerCountMessage;
-        clearTimeout(timeout);
-        serverCount += countData.data.guilds;
-        shardData = [...shardData, ...countData.data.shards].sort((a, b) => a.id - b.id);
-        responseCount += 1;
-        totalMem += countData.data.mem;
-        if (responseCount >= clusterCount) {
-          worker.off("message", listener);
-          logger.debug(
-            `Stats collected (clusterCount: ${clusterCount}, responseCount: ${responseCount}, serverCount: ${serverCount}, totalMem: ${totalMem})`,
-          );
-          return;
+function updateStats(memOnly: boolean = false): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!memOnly) {
+      serverCount = 0;
+      shardData = [];
+    }
+    responseCount = 0;
+    totalMem = process.memoryUsage().heapUsed;
+    clusterCount = processes.length;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    for (const worker of processes) {
+      const listener = (packet: IncomingProcMessage) => {
+        if (packet.data?.type === "serverCounts") {
+          const countData = packet as ServerCountMessage;
+          clearTimeout(timeout);
+          if (!memOnly) {
+            serverCount += countData.data.guilds;
+            shardData = [...shardData, ...countData.data.shards].sort((a, b) => a.id - b.id);
+          }
+          responseCount += 1;
+          totalMem += countData.data.mem;
+          if (responseCount >= clusterCount) {
+            worker.off("message", listener);
+            logger.debug(
+              `Stats collected (clusterCount: ${clusterCount}, responseCount: ${responseCount}, serverCount: ${serverCount}, totalMem: ${totalMem})`,
+            );
+            resolve();
+          }
+          timeout = setTimeout(() => {
+            worker.off("message", listener);
+            reject("Timed out while waiting for stats");
+          }, 5000);
         }
-        timeout = setTimeout(() => {
-          worker.off("message", listener);
-          logger.error("Timed out while waiting for stats");
-        }, 5000);
-      }
-    };
+      };
 
-    timeout = setTimeout(() => {
-      worker.off("message", listener);
-      logger.error("Timed out while waiting for stats");
-    }, 5000);
+      timeout = setTimeout(() => {
+        worker.off("message", listener);
+        reject("Timed out while waiting for stats");
+      }, 5000);
 
-    worker.on("message", listener);
-    worker.send({
-      data: {
-        type: "serverCounts",
-      },
-    });
-  }
+      worker.on("message", listener);
+      worker.send({
+        data: {
+          type: "serverCounts",
+        },
+      });
+    }
+  });
 }
 
 function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
@@ -103,7 +107,11 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
       });
     }
     if (message.data?.type === "getMem") {
-      await updateStats();
+      try {
+        await updateStats(true);
+      } catch (e) {
+        logger.error(e);
+      }
       worker.send({
         data: {
           type: "memResponse",

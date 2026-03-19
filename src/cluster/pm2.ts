@@ -17,8 +17,6 @@ let clusterCount = 0;
 let responseCount = 0;
 let totalMem = 0;
 
-let timeout: ReturnType<typeof setTimeout> | undefined;
-
 process.on("message", async (packet: IncomingProcMessage) => {
   if (packet.data?.type === "getCount") {
     process.send?.({
@@ -53,11 +51,11 @@ function getProcesses(): Promise<ProcessDescription[]> {
 async function updateStats() {
   serverCount = 0;
   shardData = [];
-  clusterCount = 0;
   responseCount = 0;
   totalMem = process.memoryUsage().heapUsed;
   const processes = await getProcesses();
   clusterCount = processes.length;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
   const listener = (packet: IncomingProcMessage) => {
     if (packet.data?.type === "serverCounts") {
       const countData = packet as ServerCountMessage;
