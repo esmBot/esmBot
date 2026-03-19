@@ -366,7 +366,8 @@ function checkEmbeds(
     message.embeds[0].provider?.url &&
     providerUrls.includes(message.embeds[0].provider?.url) &&
     message.embeds[0].video?.url &&
-    message.embeds[0].url
+    message.embeds[0].url &&
+    (message.embeds[0].provider.url === "https://klipy.com" ? process.env.KLIPY && process.env.KLIPY !== "" : true)
   ) {
     return getMedia(
       message.embeds[0].video.url,
