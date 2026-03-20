@@ -20,6 +20,7 @@ if (runtime.type === "deno") {
 }
 
 const processes: Worker[] = [];
+const readyHandlers = new Map<number, (value?: unknown) => void>();
 
 let serverCount = 0;
 let shardData: ShardData[] = [];
@@ -37,6 +38,8 @@ cluster.on("exit", async (worker, code, signal) => {
   logger.error(`Process ${id + 1} exited with code ${signal || code}, attempting to restart...`);
   const newWorker = await awaitStart(id + 1, shardArrays[id]);
   processes[id] = newWorker;
+  readyHandlers.get(id)?.();
+  readyHandlers.delete(id);
   logger.info(`Started esmBot process ${id + 1}.`);
 });
 
@@ -52,6 +55,17 @@ function updateStats(memOnly: boolean = false): Promise<void> {
     let timeout: ReturnType<typeof setTimeout> | undefined;
     const done: boolean[] = Array(clusterCount).fill(false);
     for (const [i, worker] of processes.entries()) {
+      if (worker.process.killed) {
+        clusterCount -= 1;
+        if (responseCount >= clusterCount) {
+          logger.debug(
+            `Stats collected (clusterCount: ${clusterCount}, responseCount: ${responseCount}, serverCount: ${serverCount}, totalMem: ${totalMem})`,
+          );
+          resolve();
+        }
+        continue;
+      }
+
       const listener = (packet: IncomingProcMessage) => {
         if (packet.data?.type === "serverCounts") {
           const countData = packet as ServerCountMessage;
@@ -151,13 +165,29 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
 }
 
 if (process.env.METRICS && process.env.METRICS !== "") {
-  createManageServer(() => {
-    return {
-      shards: shardData,
-      servers: serverCount,
-      totalMem,
-    };
-  });
+  createManageServer(
+    () => {
+      return {
+        shards: shardData,
+        servers: serverCount,
+        totalMem,
+      };
+    },
+    (id) => {
+      const proc = processes[id - 1];
+      if (!proc) return false;
+      proc.kill("SIGTERM");
+      return true;
+    },
+    async () => {
+      for (const [i, proc] of processes.entries()) {
+        await new Promise((resolve) => {
+          readyHandlers.set(i, resolve);
+          proc.kill("SIGTERM");
+        });
+      }
+    },
+  );
 }
 
 await getVers();

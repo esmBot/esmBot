@@ -88,13 +88,29 @@ async function updateStats() {
 }
 
 if (process.env.METRICS && process.env.METRICS !== "") {
-  createManageServer(() => {
-    return {
-      shards: shardData,
-      servers: serverCount,
-      totalMem,
-    };
-  });
+  createManageServer(
+    () => {
+      return {
+        shards: shardData,
+        servers: serverCount,
+        totalMem,
+      };
+    },
+    (id) => {
+      pm2.restart(id, (e) => logger.error(e));
+      return true;
+    },
+    async () => {
+      for (let i = 1; i <= clusterCount; i++) {
+        await new Promise<void>((resolve, reject) => {
+          pm2.restart(i, (e) => {
+            if (e) return reject(e);
+            resolve();
+          });
+        });
+      }
+    },
+  );
 }
 
 setInterval(updateStats, 60000); // 1 minute

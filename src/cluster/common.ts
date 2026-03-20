@@ -101,7 +101,11 @@ interface MetricsInfo {
   totalMem: number;
 }
 
-export async function createManageServer(metrics: () => MetricsInfo) {
+export async function createManageServer(
+  metrics: () => MetricsInfo,
+  restart: (id: number) => boolean,
+  restartAll: () => void,
+) {
   const database = await dbInit();
   const httpServer = createServer(async (req, res) => {
     if (req.method !== "GET") {
@@ -145,8 +149,10 @@ esmbot_shards ${info.shards.length}
 esmbot_total_mem ${info.totalMem}
 `);
 
-      res.end();
-    } else if (reqUrl.pathname === "/shard") {
+      return res.end();
+    }
+
+    if (reqUrl.pathname === "/shard") {
       if (!reqUrl.searchParams.has("id")) {
         res.statusCode = 400;
         return res.end("400 Bad Request");
@@ -158,7 +164,9 @@ esmbot_total_mem ${info.totalMem}
         return res.end("400 Bad Request");
       }
       return res.end(JSON.stringify(info.shards[id]));
-    } else if (reqUrl.pathname === "/proc") {
+    }
+
+    if (reqUrl.pathname === "/proc") {
       if (!reqUrl.searchParams.has("id")) {
         res.statusCode = 400;
         return res.end("400 Bad Request");
@@ -171,10 +179,28 @@ esmbot_total_mem ${info.totalMem}
         return res.end("400 Bad Request");
       }
       return res.end(JSON.stringify(procData));
-    } else {
-      res.statusCode = 404;
-      return res.end("404 Not Found");
     }
+
+    if (reqUrl.pathname === "/restart") {
+      if (!reqUrl.searchParams.has("id")) {
+        res.statusCode = 400;
+        return res.end("400 Bad Request");
+      }
+      const id = reqUrl.searchParams.get("id");
+      if (id === "all") {
+        restartAll();
+      } else {
+        const numericId = Number(id);
+        if (!restart(numericId)) {
+          res.statusCode = 400;
+          return res.end("400 Bad Request");
+        }
+      }
+      return res.end(`Scheduled restart for ${id}`);
+    }
+
+    res.statusCode = 404;
+    return res.end("404 Not Found");
   });
   httpServer.listen(process.env.METRICS, () => {
     logger.log("info", `Serving metrics at ${process.env.METRICS}`);
