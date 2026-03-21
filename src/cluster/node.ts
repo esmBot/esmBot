@@ -55,7 +55,7 @@ function updateStats(memOnly: boolean = false): Promise<void> {
     let timeout: ReturnType<typeof setTimeout> | undefined;
     const done: boolean[] = Array(clusterCount).fill(false);
     for (const [i, worker] of processes.entries()) {
-      if (worker.process.killed) {
+      if (!worker.isConnected()) {
         clusterCount -= 1;
         if (responseCount >= clusterCount) {
           logger.debug(
