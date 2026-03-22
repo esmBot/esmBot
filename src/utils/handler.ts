@@ -112,7 +112,7 @@ export async function load(command: string): Promise<
         const subName = split[split.length - 1];
 
         const hasSubCommands = sub.props.flags.some(
-          (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND || v.type === "subcommand",
+          (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
         );
         props.flags.push({
           name: subName,
@@ -149,7 +149,7 @@ export async function load(command: string): Promise<
 
 export const flagMap: Array<CommandFlagType | null> = [
   null,
-  "subcommand",
+  null,
   null,
   "string",
   "integer",

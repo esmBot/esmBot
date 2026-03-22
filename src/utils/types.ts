@@ -38,7 +38,6 @@ export type ExtCommand = {
 
 export type CommandType = "classic" | "application";
 export type CommandFlagType =
-  | "subcommand"
   | "string"
   | "integer"
   | "boolean"
