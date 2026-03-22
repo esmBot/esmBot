@@ -83,32 +83,32 @@ export default async ({ client, database }: EventParams, message: Message) => {
   const shifted = preArgs.shift();
   if (!shifted) return;
   const cmdBaseName = shifted.toLowerCase();
-  let aliased = aliases.get(cmdBaseName);
-  if (aliased?.includes(" ")) {
-    const subSplit = aliased.split(" ");
-    aliased = subSplit[0];
-    preArgs.unshift(...subSplit.slice(1));
-  }
+  const aliased = aliases.get(cmdBaseName);
 
-  const cmdName = aliased ?? cmdBaseName;
+  let cmdName = aliased ?? cmdBaseName;
 
   // check if command exists and if it's enabled
   const cmdBase = commands.get(cmdName);
   if (!cmdBase) return;
 
   let command = cmdBaseName;
-  let cmd = cmdBase.default as typeof Command;
+  let cmd = cmdBase as typeof Command;
   if (!(cmd.prototype instanceof Command)) return;
 
   // parse args
   const parsed = parseCommand(preArgs);
   let canon = cmdName;
-  const lowerSub = parsed.args[0]?.toLowerCase();
-  if (cmdBase[lowerSub]?.prototype instanceof Command) {
-    cmd = cmdBase[lowerSub] as typeof Command;
-    canon = `${canon} ${lowerSub}`;
-    if (!aliased) command = `${command} ${lowerSub}`;
-    parsed.args = parsed.args.slice(1);
+  if (cmdBase.baseCommand) {
+    const lowerSub = parsed.args.map((v) => v.toLowerCase());
+    for (const sub of lowerSub) {
+      const newCanon = `${canon} ${sub}`;
+      const subAlias = aliases.get(newCanon);
+      const subCmd = commands.get(subAlias ?? newCanon);
+      if (!subCmd) break;
+      cmd = subCmd as typeof Command;
+      canon = newCanon;
+      parsed.args = parsed.args.slice(1);
+    }
   }
 
   if (!cmd) return;

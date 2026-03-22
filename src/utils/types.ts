@@ -29,9 +29,12 @@ export interface CommandsConfig {
   blacklist: string[];
 }
 
-type ValueOrNested<T> = T | { [x: string]: ValueOrNested<T> };
-
-export type CommandEntry = Record<string, ValueOrNested<typeof Command>>;
+export type ExtCommand = {
+  baseCommand: boolean;
+  category: string;
+  params: Param[];
+  type: Constants.ApplicationCommandTypes;
+} & typeof Command;
 
 export type CommandType = "classic" | "application";
 export type CommandFlagType =
@@ -55,10 +58,6 @@ export type ExtendedConstructedCommandOptions = {
   classic?: boolean;
 } & Omit<CombinedApplicationCommandOption, "type">;
 
-export type ConstructedCommandInfo = {
-  flags: ExtendedConstructedCommandOptions[];
-} & Omit<CommandInfo, "flags">;
-
 export type Param =
   | {
       name: string;
@@ -66,20 +65,6 @@ export type Param =
       params: Param[];
     }
   | string;
-
-export interface CommandInfo {
-  category: string;
-  description: string;
-  aliases: string[];
-  params: Param[];
-  flags: ExtendedCommandOptions[];
-  slashAllowed: boolean;
-  directAllowed: boolean;
-  userAllowed: boolean;
-  baseCommand: boolean;
-  adminOnly: boolean;
-  type: Constants.ApplicationCommandTypes;
-}
 
 export interface MediaParams {
   cmd: string;

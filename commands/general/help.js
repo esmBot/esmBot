@@ -23,7 +23,7 @@ class HelpCommand extends Command {
     ) {
       const joined = this.args.join(" ").toLowerCase();
       const command = collections.aliases.get(joined) ?? joined;
-      const info = collections.info.get(command);
+      const info = collections.commands.get(command);
       if (!info) return this.getString("commands.responses.help.noInfo");
       const params = info.params.filter((v) => typeof v === "string");
       const embed = {

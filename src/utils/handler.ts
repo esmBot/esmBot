@@ -3,22 +3,22 @@ import { dirname, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
+  type ApplicationCommandOptions,
   type Client,
+  type CombinedApplicationCommandOption,
   Constants,
   type CreateApplicationCommandOptions,
   type CreateGuildApplicationCommandOptions,
 } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
-import { aliases, categories, commands, info, messageCommands, paths, userCommands } from "./collections.ts";
+import { aliases, categories, commands, messageCommands, paths, userCommands } from "./collections.ts";
 import { getAllLocalizations } from "./i18n.ts";
-import { log } from "./logger.ts";
+import { debug, log } from "./logger.ts";
 import type {
-  CommandEntry,
   CommandFlagType,
-  CommandInfo,
   CommandsConfig,
-  ConstructedCommandInfo,
+  ExtCommand,
   ExtendedCommandOptions,
   ExtendedConstructedCommandOptions,
   Param,
@@ -34,34 +34,15 @@ const blacklist = (commandConfig as CommandsConfig).blacklist;
 /**
  * Load a command into memory.
  */
-export async function load(command: string, subcommand?: false): Promise<string | undefined>;
-export async function load(
-  command: string,
-  subcommand?: true,
-): Promise<
+export async function load(command: string): Promise<
   | {
-      props: typeof Command;
-      info: ConstructedCommandInfo;
-      entry: CommandEntry;
-      name: string;
-    }
-  | undefined
->;
-export async function load(
-  command: string,
-  subcommand = false,
-): Promise<
-  | string
-  | {
-      props: typeof Command;
-      info: ConstructedCommandInfo;
-      entry: CommandEntry;
+      props: ExtCommand;
       name: string;
     }
   | undefined
 > {
   log("main", `Loading command from ${command}...`);
-  const { default: props } = (await import(`${command}?v=${queryValue}`)) as { default: typeof Command };
+  const { default: props } = (await import(`${command}?v=${queryValue}`)) as { default: ExtCommand };
   queryValue++;
 
   const relPath = relative(cmdPath, command);
@@ -92,77 +73,62 @@ export async function load(
   }
 
   props.init();
-
-  const extendedFlags = extendFlags(props.flags, fullCommandName);
-
-  const commandInfo: CommandInfo = {
-    category: category,
-    description: props.description,
-    aliases: props.aliases,
-    params: parseFlags(props.flags),
-    flags: extendedFlags,
-    slashAllowed: props.slashAllowed,
-    directAllowed: props.directAllowed,
-    userAllowed: props.userAllowed,
-    baseCommand: false,
-    adminOnly: props.adminOnly,
-    type: Constants.ApplicationCommandTypes.CHAT_INPUT,
-  };
+  props.baseCommand = false;
+  props.category = category;
+  props.type = Constants.ApplicationCommandTypes.CHAT_INPUT;
+  props.params = parseFlags(props.flags);
+  props.flags = extendFlags(props.flags, fullCommandName);
 
   paths.set(fullCommandName, command);
 
-  const cmdMap: CommandEntry = {
-    default: props,
-  };
+  if (category === "message") {
+    messageCommands.set(fullCommandName, props);
+    props.type = Constants.ApplicationCommandTypes.MESSAGE;
+  } else if (category === "user") {
+    userCommands.set(fullCommandName, props);
+    props.type = Constants.ApplicationCommandTypes.USER;
+  } else {
+    const subdir = relPath.split(".")[0];
+    const resolved = resolve(cmdPath, subdir);
 
-  if (!subcommand) {
-    if (commandInfo.category === "message") {
-      messageCommands.set(commandName, cmdMap);
-      commandInfo.type = Constants.ApplicationCommandTypes.MESSAGE;
-    } else if (commandInfo.category === "user") {
-      userCommands.set(commandName, cmdMap);
-      commandInfo.type = Constants.ApplicationCommandTypes.USER;
-    } else {
-      try {
-        const subdir = relPath.split(".")[0];
-        const resolved = resolve(cmdPath, subdir);
-        const files = await readdir(resolved, {
-          withFileTypes: true,
-        });
-        commandInfo.baseCommand = true;
-        commandInfo.flags = [];
-        for (const file of files) {
-          if (!file.isFile()) continue;
-          const sub = await load(resolve(resolved, file.name), true);
-          if (!sub) continue;
-
-          const split = sub.name.split(" ");
-          const subName = split[split.length - 1];
-          cmdMap[subName] = sub.props;
-
-          const hasSubCommands = sub.info.flags.some(
-            (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND || v.type === "subcommand",
-          );
-          commandInfo.flags.push({
-            name: subName,
-            nameLocalizations: getAllLocalizations(`commands.flagNames.${fullCommandName}.${subName}`),
-            type: hasSubCommands
-              ? Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
-              : Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
-            description: sub.info.description,
-            descriptionLocalizations: getAllLocalizations(`commands.flags.${fullCommandName}.${subName}`),
-            // @ts-expect-error It thinks we're using the wrong flag type
-            options: sub.info.flags,
-          });
-        }
-      } catch {
-        // come back to this
-      }
-      commands.set(commandName, cmdMap);
+    let files;
+    try {
+      files = await readdir(resolved, {
+        withFileTypes: true,
+      });
+    } catch {
+      debug(`Could not find subcommand dir at ${resolved}`);
     }
-  }
 
-  info.set(fullCommandName, commandInfo);
+    if (files) {
+      props.baseCommand = true;
+      props.flags = [];
+      for (const file of files) {
+        if (!file.isFile()) continue;
+        const sub = await load(resolve(resolved, file.name));
+        if (!sub) continue;
+
+        const split = sub.name.split(" ");
+        const subName = split[split.length - 1];
+
+        const hasSubCommands = sub.props.flags.some(
+          (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND || v.type === "subcommand",
+        );
+        props.flags.push({
+          name: subName,
+          nameLocalizations: getAllLocalizations(`commands.flagNames.${fullCommandName}.${subName}`),
+          type: hasSubCommands
+            ? Constants.ApplicationCommandOptionTypes.SUB_COMMAND_GROUP
+            : Constants.ApplicationCommandOptionTypes.SUB_COMMAND,
+          description: sub.props.description,
+          descriptionLocalizations: getAllLocalizations(`commands.flags.${fullCommandName}.${subName}`),
+          options: sub.props.flags as CombinedApplicationCommandOption[],
+        });
+      }
+    }
+
+    commands.set(fullCommandName, props);
+  }
 
   const categoryCommands = categories.get(category) ?? new Set<string>();
   categoryCommands.add(fullCommandName);
@@ -175,14 +141,10 @@ export async function load(
     }
   }
 
-  return subcommand
-    ? {
-        props,
-        info: commandInfo,
-        entry: cmdMap,
-        name: fullCommandName,
-      }
-    : fullCommandName;
+  return {
+    props,
+    name: fullCommandName,
+  };
 }
 
 export const flagMap: Array<CommandFlagType | null> = [
@@ -256,29 +218,27 @@ export function update() {
   const commandArray: CreateApplicationCommandOptions[] = [];
   const privateCommandArray: CreateApplicationCommandOptions[] = [];
   const merged = new Map([...commands, ...messageCommands, ...userCommands]);
-  for (const name of merged.keys()) {
-    const cmdInfo = info.get(name);
-    if (
-      cmdInfo?.type === Constants.ApplicationCommandTypes.MESSAGE ||
-      cmdInfo?.type === Constants.ApplicationCommandTypes.USER
-    ) {
-      (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
+  for (const [name, cmd] of merged) {
+    // skip slash commands with spaces in the title
+    if (cmd.type === Constants.ApplicationCommandTypes.CHAT_INPUT && name.includes(" ")) continue;
+    if (cmd.type === Constants.ApplicationCommandTypes.MESSAGE || cmd.type === Constants.ApplicationCommandTypes.USER) {
+      (cmd.adminOnly ? privateCommandArray : commandArray).push({
         name: name,
         nameLocalizations: getAllLocalizations(`commands.names.${name}`),
-        type: cmdInfo.type,
-        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter((v) => v !== null),
-        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter((v) => v !== null),
+        type: cmd.type,
+        integrationTypes: [0, cmd.userAllowed ? 1 : null].filter((v) => v !== null),
+        contexts: [0, cmd.directAllowed ? 1 : null, 2].filter((v) => v !== null),
       });
-    } else if (cmdInfo?.slashAllowed) {
-      (cmdInfo.adminOnly ? privateCommandArray : commandArray).push({
+    } else if (cmd.slashAllowed) {
+      (cmd.adminOnly ? privateCommandArray : commandArray).push({
         name,
         nameLocalizations: getAllLocalizations(`commands.names.${name}`),
-        type: cmdInfo.type.valueOf(),
-        description: cmdInfo.description,
+        type: cmd.type.valueOf(),
+        description: cmd.description,
         descriptionLocalizations: getAllLocalizations(`commands.descriptions.${name}`),
-        options: cmdInfo.flags,
-        integrationTypes: [0, cmdInfo.userAllowed ? 1 : null].filter((v) => v !== null),
-        contexts: [0, cmdInfo.directAllowed ? 1 : null, 2].filter((v) => v !== null),
+        options: cmd.flags as ApplicationCommandOptions[],
+        integrationTypes: [0, cmd.userAllowed ? 1 : null].filter((v) => v !== null),
+        contexts: [0, cmd.directAllowed ? 1 : null, 2].filter((v) => v !== null),
       });
     }
   }

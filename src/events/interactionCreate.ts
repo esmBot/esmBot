@@ -35,18 +35,14 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
 
   // check if command exists and if it's enabled
   const cmdBaseName = interaction.data.name;
-  const cmdBase = commands.get(cmdBaseName) ?? messageCommands.get(cmdBaseName) ?? userCommands.get(cmdBaseName);
+  let cmdName = cmdBaseName;
+  const sub = interaction.data.options.getSubCommand();
+  if (sub) sub.map((v) => (cmdName += ` ${v}`));
+  const cmdBase = commands.get(cmdName) ?? messageCommands.get(cmdName) ?? userCommands.get(cmdName);
   if (!cmdBase) return;
 
-  let command = cmdBaseName;
-  let cmd = cmdBase.default as typeof Command;
+  let cmd = cmdBase as typeof Command;
   if (!(cmd.prototype instanceof Command)) return;
-
-  const sub = interaction.data.options.getSubCommand();
-  if (sub && cmdBase[sub[0]]?.prototype instanceof Command) {
-    cmd = cmdBase[sub[0]] as typeof Command;
-    command = `${command} ${sub[0]}`;
-  }
 
   try {
     await interaction.defer(cmd.ephemeral || interaction.data.options.getBoolean("ephemeral", false) ? 64 : undefined);
@@ -63,7 +59,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
-  logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${command}`);
+  logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${cmdName}`);
   try {
     const commandClass = new cmd(client, database, { type: "application", interaction });
     const result = await commandClass.run();
@@ -122,7 +118,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
         );
       }
     } else {
-      logger.debug(`Unknown return type for command ${command}: ${result} (${typeof result})`);
+      logger.debug(`Unknown return type for command ${cmdName}: ${result} (${typeof result})`);
       if (!result) return;
       await interaction.createFollowup(
         Object.assign(
@@ -139,7 +135,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
       Sentry.captureException(error, {
         tags: {
           process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
-          command,
+          cmdName,
           args: JSON.stringify(interaction.data.options.raw),
         },
       });
@@ -155,7 +151,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
       });
     } else {
       logger.error(
-        `Error occurred with application command ${command} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`,
+        `Error occurred with application command ${cmdName} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`,
       );
       try {
         await interaction.createFollowup({
