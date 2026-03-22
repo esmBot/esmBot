@@ -107,6 +107,8 @@ function updateStats(memOnly: boolean = false): Promise<void> {
   });
 }
 
+const broadcastTypes = ["broadcastEnd", "broadcastStart", "eval", "mediareload", "reload", "soundreload"];
+
 function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
   const worker = cluster.fork({
     SHARDS: JSON.stringify(shardArray),
@@ -135,6 +137,14 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
           totalMem,
         },
       });
+    }
+
+    // relay broadcast messages
+    if (message.data && broadcastTypes.includes(message.data.type)) {
+      for (const proc of processes) {
+        if (proc.id === worker.id || !proc.isConnected()) continue;
+        proc.send(message);
+      }
     }
   });
 
