@@ -85,10 +85,12 @@
             "uncanny": "Crée une image de M. Incroyable devient étrange (séparer les textes gauches/droite par une virgule)",
             "channel": "Active/désactive les commandes classiques dans un salon (utilisez les paramètres serveur)",
             "fade": "Image enchargée",
-            "command": "Désactive/active une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
+            "command": "Active/déactive une commande classique pour un serveur (utilisez les paramètres du serveur pour les commandes slash).",
             "hue": "L’image est chargée",
             "slide": "Fait déplacer une image dans une direction",
-            "tags": "La commande de tags principale. Pour plus d'informations : https://esmbot.net/help.html"
+            "tags": "La commande de tags principale. Pour plus d'informations : https://esmbot.net/help.html",
+            "mediareload": "Tente de se reconnecter à tous les serveurs de traitement de médias",
+            "mediastats": "Obtiens des statistiques sur les serveurs médias"
         },
         "flagNames": {
             "8ball": {
@@ -307,6 +309,9 @@
             "slide": {
                 "reverse": "inverse",
                 "vertical": "vertical"
+            },
+            "globe": {
+                "snow": "neige"
             }
         },
         "flags": {
@@ -398,7 +403,7 @@
                 "font": "Spécifie la police que tu souhaites utiliser (par défaut : times)"
             },
             "slow": {
-                "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
+                "multiplier": "Définit le multiplicateur de vitesse (par défaut : 2)"
             },
             "speechbubble": {
                 "flip": "Retourne la bulle de dialogue",
@@ -406,7 +411,7 @@
                 "alpha": "Rend le haut de la bulle de dialogue transparente"
             },
             "speed": {
-                "multiplier": "Défini le multiplicateur de vitesse (par défaut : 2)"
+                "multiplier": "Définit le multiplicateur de vitesse (par défaut : 2)"
             },
             "uncanny": {
                 "font": "Spécifie la police que tu souhaites utiliser (par défaut : helvetica)",
@@ -522,6 +527,9 @@
             "slide": {
                 "reverse": "Change la direction du glissement de l'image",
                 "vertical": "Fait glisser l'image verticalement"
+            },
+            "globe": {
+                "snow": "Change le globe en une boule de neige"
             }
         },
         "names": {
@@ -534,7 +542,7 @@
             "avatar": "avatar",
             "banner": "bannière",
             "base64": "base64",
-            "channel": "channel",
+            "channel": "canal",
             "command": "commande",
             "count": "compteur",
             "donate": "donner",
@@ -549,14 +557,14 @@
             "prefix": "préfix",
             "raw": "brute",
             "reload": "recharger",
-            "snowflake": "snowflake",
+            "snowflake": "flocon de neige",
             "stats": "statistique",
             "sticker": "sticker",
             "youtube": "youtube",
             "blur": "flou",
             "bounce": "rebondir",
-            "caption": "caption",
-            "caption2": "caption2",
+            "caption": "légende",
+            "caption2": "légende2",
             "circle": "cercle",
             "deepfry": "croustifier",
             "explode": "dilater",
@@ -593,7 +601,7 @@
             "unfreeze": "dégeler",
             "waaw": "waaw",
             "wall": "mur",
-            "whisper": "whisper",
+            "whisper": "chuchoter",
             "wide": "large",
             "woow": "woow",
             "music": "musique",
@@ -743,7 +751,7 @@
             "channel": {
                 "alreadyDisabled": "Je suis déjà désactivé dans ce salon !",
                 "adminOnly": "Vous devez être administrateur pour m'activer/désactiver dans ce salon !",
-                "invalid": "Ceci n'est pas une option valide !",
+                "invalid": "Vous devez renseigner si vous voulez m'activer/ me désactiver dans ce canal !",
                 "notDisabled": "Je ne suis pas désactivé dans ce salon !",
                 "notInServer": "Ce salon n'est pas dans ce serveur !",
                 "reEnabled": "J'ai été réactivé dans ce salon.",
@@ -814,6 +822,110 @@
                 "totalServers": "Serveurs totaux :",
                 "translate": "Traduire :",
                 "version": "Version :"
+            },
+            "image": {
+                "noInput": "Vous devez fournir quelque chose à rechercher !",
+                "noResults": "Je n'ai pas pu trouver de résultat !",
+                "results": "Résultats de recherche"
+            },
+            "mediareload": {
+                "connected": "Connecté au(x) serveur(s) média {{length}} avec succès.",
+                "owner": "Seul le propriétaire du robot peut recharger les serveurs média !"
+            },
+            "mediastats": {
+                "server": "Serveur {{num}}"
+            },
+            "lengthen": {
+                "noInput": "Vous devez fournir un court URL à raccourcir !",
+                "notURL": "Ce n'est pas un URL !"
+            },
+            "loop": {
+                "notHost": "Seul l'hôte de la session vocale actuelle peut mettre la musique en boucle !",
+                "notLooping": "Le lecteur ne tourne plus en boucle.",
+                "nowLooping": "Le lecteur tourne maintenant en boucle."
+            },
+            "nowplaying": {
+                "noTrack": "Un problème est survenu lors de la récupération du morceau en cours."
+            },
+            "ping": {
+                "latency": "Latence: {{latency}}ms",
+                "pong": "Pong !",
+                "ping": "Ping ?"
+            },
+            "prefix": {
+                "adminOnly": "Vous devez être administrateur pour changer le préfixe du robot !",
+                "changed": "Le préfixe a été changé pour `{{prefix}}`.",
+                "current": "Le préfixe actuel est `{{prefix}}`."
+            },
+            "stats": {
+                "host": "Hôte",
+                "library": "Bibliothèque",
+                "nodeVersion": "Version Node.js",
+                "processOnly": "{{count}} (uniquement pour ce processus)",
+                "processUsage": "Utilisation mémoire du processus",
+                "servers": "Serveurs",
+                "totalUsage": "Utilisation Mémoire Totale",
+                "version": "Version"
+            },
+            "sticker": {
+                "lottie": "Je ne peux pas afficher cet autocollant car il utilise le format d'animation Lottie; cependant, je peux vous donner son lien JSON:",
+                "noInput": "Vous devez fournir un autocollant !",
+                "unknown": "Je ne reconnais pas ce format d'autocollant !"
+            },
+            "stop": {
+                "notHost": "Seul l'hôte de la session vocale actuelle peut stopper la musique !"
+            },
+            "tags": {
+                "missingRole": "Vous ne pouvez pas supprimer un rôle qui n'a pas encore été ajouté !",
+                "noRole": "Vous devez indiquer un rôle à ajouter/supprimer !",
+                "roleList": "Rôles Autorisés",
+                "roleRemoved": "Le rôle `{{name}}` a été retiré de la liste des rôles autorisés."
+            },
+            "toggle": {
+                "notHost": "Seul l'hôte de la session vocale actuelle peut mettre en pause/reprendre la musique !",
+                "paused": "Le lecteur a été mis en pause."
+            },
+            "watermark": {
+                "invalid": "Vous devez indiquer le type de filigrane à ajouter !"
+            },
+            "youtube": {
+                "noInput": "Vous devez indiquez quelque chose à rechercher !",
+                "noResults": "Je n'ai pas pu trouver de résultats !"
+            },
+            "play": {
+                "noInput": "Vous devez indiquer ce que vous voulez jouer !"
+            },
+            "reload": {
+                "botOwnerOnly": "Seul le propriétaire du robot peut recharger les commandes !",
+                "noCommand": "Je n'ai pas pu trouver cette commande !",
+                "noInput": "Vous devez indiquer une commande à recharger !",
+                "reloaded": "La commande `{{command}}` a été rechargée.",
+                "reloadFailed": "Je n'ai pas pu recharger cette commande !"
+            },
+            "remove": {
+                "invalidPosition": "Ce n'est pas une position valide !",
+                "notHost": "Seul l'hôte de la session vocale actuelle peut supprimer des musiques de la queue !",
+                "removed": "La musique `{{song}}` a été supprimée de la queue."
+            },
+            "restart": {
+                "owner": "Seul le propriétaire du robot peut me redémarrer !",
+                "restarting": "esmBot redémarre."
+            },
+            "seek": {
+                "invalidPosition": "Ce n'est pas une position valide !",
+                "notHost": "Seul l'hôte de la session vocale actuelle peut rechercher la musique !",
+                "notSeekable": "Ce morceau n'est pas recherchable !",
+                "seeked": "Piste recherchés à {{seconds}} seconde(s)."
+            },
+            "shuffle": {
+                "notHost": "Seul l'hôte de la session vocale acuelle peut mélanger la musique !"
+            },
+            "skip": {
+                "alreadyVoted": "Vous aves déjà voté pour passer !",
+                "skipped": "La musique en cours a été passée."
+            },
+            "snowflake": {
+                "invalid": "Ce n'est pas un flocon de neige valide !"
             }
         }
     },
@@ -826,7 +938,8 @@
             "link": "lien",
             "spoiler": "spoiler",
             "text": "texte",
-            "togif": "versgif"
+            "togif": "versgif",
+            "media": "média"
         },
         "flags": {
             "image": "Une image/un GIF en pièce jointe",
@@ -837,11 +950,11 @@
             "ephemeral": "Tentative d'envoi sous forme de réponse éphémère/temporaire"
         },
         "frames": "Ce GIF a beaucoup trop d’images (plus de 1000) !",
-        "large": "Cette image est trop grande (>= 40 Mo) ! Essayez d'utiliser une image plus petite.",
+        "large": "Ce fichier est trop grand (>= 40 Mo) ! Essayez d'utiliser un fichier plus petit.",
         "nocmd": "Cette commande n'est pas prise en charge sur cette instance d'esmBot.",
         "noanim": "Cette image n'est pas dans un format animé (GIF ou WEBP) !",
         "noImage": "Vous devez fournir une image/GIF !",
-        "noTempServer": "L'image résultante était plus grande que la limite de téléchargement de Discord, je ne peux donc pas la télécharger.",
+        "noTempServer": "Le fichier résultant était plus grand que la limite de téléchargement de Discord, je ne peux donc pas le télécharger.",
         "noParam": "Vous devez fournir un texte !",
         "processing": "Traitement en cours... Cela peut prendre un certain temps",
         "ratelimit": "J'ai été limité par le serveur hébergeant cette image. Essayez de télécharger votre image ailleurs.",
@@ -849,17 +962,19 @@
         "slowDown": "S'il vous plaît, ralentissez un peu.",
         "tempImageSent": "Voici votre image !",
         "tenor": "J'ai été limité par Tenor. Veuillez essayer de télécharger votre GIF ailleurs.",
-        "tip": "(Astuce : essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> Sélectionner une image, puis réessayez.)",
+        "tip": "(Astuce : essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> {{name}} -> Sélectionner une image, puis réessayez.)",
         "tooLarge": "Le fichier résultant était trop volumineux pour être téléchargé. Réessayez avec une image plus petite si possible.",
-        "unknown": "L'image de sortie n'était pas dans un format valide. Veuillez réessayer.",
-        "noServers": "Je n'arrive pas à contacter les serveurs d'images, ils sont peut-être en panne ou tentent encore de démarrer. Veuillez patienter un peu.",
-        "tempSite": "L'image résultante était plus grande que la limite de téléchargement de Discord, elle a donc été téléchargée sur un site externe.",
-        "tryAgain": "Cette tâche de cette image n'a pas pu être terminée car le serveur sur lequel elle était exécutée est tombé en panne. Essayez d'exécuter à nouveau votre commande.",
+        "unknown": "Le résultat n'était pas dans un format valide. Veuillez réessayer.",
+        "noServers": "Je n'arrive pas à contacter les serveurs multimédias, ils sont peut-être en panne ou tentent encore de démarrer. Veuillez patienter un peu.",
+        "tempSite": "Le résultat était plus grand que la limite de téléchargement de Discord, il a donc été téléchargé sur un site externe.",
+        "tryAgain": "Cette tâche n'a pas pu être terminée car le serveur sur lequel elle était exécutée est tombé en panne. Essayez d'exécuter à nouveau votre commande.",
         "tooLong": "Le traitement de l'image prend trop de temps (>=10 minutes), la tâche a donc été annulée. Essayez d'utiliser une image plus petite.",
         "couldNotFind": "Je n'ai pas trouvé d'image dans ce message !",
-        "jobEnded": "Un problème est survenu sur les serveurs d'images avant que je puisse recevoir l'image. Essayez d'exécuter à nouveau votre commande.",
-        "noResult": "Je n'ai pas pu obtenir de réponse du serveur d'images. Veuillez réessayer.",
-        "timeout": "La demande d'obtention de cette image a expiré. Veuillez réessayer, télécharger votre image ailleurs ou utiliser une autre image."
+        "jobEnded": "Un problème est survenu sur les serveurs multimédias avant que je puisse recevoir l'image. Essayez d'exécuter à nouveau votre commande.",
+        "noResult": "Je n'ai pas pu obtenir de réponse du serveur multimédias. Veuillez réessayer.",
+        "timeout": "La demande d'obtention de cette image a expiré. Veuillez réessayer, télécharger votre image ailleurs ou utiliser une autre image.",
+        "notWorking": "Je n'ai pas pu traiter cette image ; cela signifie probablement que ma configuration est incorrecte. Veuillez contacter le propriétaire du robot.",
+        "timeoutDownload": "La requête a expiré avant que je puisse télécharger cette image. Essayez de télécharger votre image ailleurs ou de réduire sa taille."
     },
     "noDatabase": "Cette commande n'est pas disponible sur les instances sans état d'esmBot.",
     "pagination": {
@@ -869,7 +984,8 @@
         "forward": "Avant",
         "jump": "Saut",
         "pageNumber": "Numéro de page",
-        "jumpTo": "À quelle page souhaitez-vous accéder ?"
+        "jumpTo": "À quelle page souhaitez-vous accéder ?",
+        "page": "Page {{page}} sur {{amount}}"
     },
     "permissions": {
         "noAttachFiles": "Je n'ai pas l'autorisation « Joindre des fichiers » !",
@@ -901,8 +1017,15 @@
         "noSong": "Je n'ai pas pu trouver cette musique !",
         "waitingForSomeone": "Attendre 10 secondes que quelqu'un revienne...",
         "serversDown": "Hmmm, il semblerait que tous les serveurs audio soient en panne. Réessayez dans quelques instants.",
-        "noConnection": "Quelque chose d'étrange est arrivé à la connexion vocale ; essayez de jouer à nouveau votre musique."
+        "noConnection": "Quelque chose d'étrange est arrivé à la connexion vocale ; essayez de jouer à nouveau votre musique.",
+        "endedInChannel": "La session vocale dans `{{channel}}` est terminée.",
+        "newHost": "{{member}} est le nouvel hôte du canal vocal.",
+        "notPlaying": "Je ne joue rien !"
     },
     "guildOnly": "Cette commande ne fonctionne que sur les serveurs !",
-    "error": "Oh oh ! J'ai rencontré une erreur lors de l'exécution de cette commande. Veuillez signaler le contenu du fichier joint sur le lien suivant ou sur le serveur de support esmBot :"
+    "error": "Oh oh ! J'ai rencontré une erreur lors de l'exécution de cette commande. Veuillez signaler le contenu du fichier joint sur le lien suivant ou sur le serveur de support esmBot :",
+    "errorCaps": "ERREUR",
+    "managedBy": "L'instance est gérée par **{{owner}}**",
+    "support": "Rejoins le support esmBot",
+    "timeFormat": "{{days}} jours, {{hours}} hrs, {{minutes}} mins, {{seconds}} secs"
 }
