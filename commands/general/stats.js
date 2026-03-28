@@ -22,7 +22,7 @@ class StatsCommand extends Command {
       owner = this.client.users.get(owners[0]) ?? (await this.client.rest.users.get(owners[0]));
     }
     const servers = await getServers(this.client);
-    const processMem = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
+    const processMem = `${(process.memoryUsage().heapUsed / 1000 / 1000).toFixed(2)} MB`;
     const runtime = detectRuntime();
     return {
       embeds: [
@@ -114,7 +114,7 @@ class StatsCommand extends Command {
         pm2.list((err, list) => {
           if (err) return reject(err);
           const procList = list.filter((v) => v.name?.includes("esmBot-proc"));
-          const value = procList.reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1024 / 1024;
+          const value = procList.reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1000 / 1000;
           resolve(`${value.toFixed(2)} MB`);
         });
       });
@@ -123,7 +123,7 @@ class StatsCommand extends Command {
         const listener = (/** @type {{ data: { type: string; totalMem: number; }; }} */ message) => {
           if (message.data?.type === "memResponse") {
             clearTimeout(timeout);
-            const value = message.data.totalMem / 1024 / 1024;
+            const value = message.data.totalMem / 1000 / 1000;
             resolve(`${value.toFixed(2)} MB`);
             process.off("message", listener);
           }
