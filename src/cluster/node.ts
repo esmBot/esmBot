@@ -203,8 +203,8 @@ if (process.env.METRICS && process.env.METRICS !== "") {
 await getVers();
 initLog();
 
-setInterval(updateStats, 60000); // 1 minute
-setTimeout(updateStats, 10000);
+setInterval(() => updateStats().catch((e) => logger.error(e)), 60000); // 1 minute
+setTimeout(() => updateStats().catch((e) => logger.error(e)), 10000);
 
 logger.info("Started esmBot management process.");
 
