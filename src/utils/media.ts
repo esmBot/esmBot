@@ -161,20 +161,33 @@ export async function reloadMediaConnections() {
 }
 
 async function getIdeal(object: MediaParams): Promise<MediaConnection | undefined> {
-  const idealServers = [];
+  const idealServers: Array<
+    | {
+        connection: MediaConnection;
+        count: number;
+      }
+    | undefined
+  > = [];
   for (const connection of connections.values()) {
     if (connection.conn.readyState !== 1) {
       continue;
     }
     if (!connection.funcs[object.type]?.includes(object.cmd)) {
-      idealServers.push(null);
+      idealServers.push(undefined);
       continue;
     }
     if (object.input?.type && !connection.formats[object.type]?.[object.cmd]?.includes(object.input.type)) continue;
-    idealServers.push(connection);
+    try {
+      const count = await connection.getCount();
+      idealServers.push({ connection, count });
+    } catch {
+      continue;
+    }
   }
   if (idealServers.length === 0) throw "No available servers";
-  return random(idealServers.filter((v) => !!v));
+  const sorted = idealServers.filter((v) => !!v).sort((a, b) => a.count - b.count);
+  if (sorted.length === 0) return;
+  return (sorted.every((v) => v.count === 0) ? random(sorted) : sorted[0]).connection;
 }
 
 let running = 0;

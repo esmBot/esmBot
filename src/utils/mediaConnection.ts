@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { setTimeout } from "node:timers/promises";
+import { setTimeout as setTimeoutPromise } from "node:timers/promises";
 import WSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.ts";
 import { mimeToExt } from "./mime.ts";
@@ -125,7 +125,7 @@ class MediaConnection {
       logger.warn(
         `${this.reconnect ? `${this.host} requested a reconnect` : `Lost connection to ${this.host}`}, attempting to reconnect in 5 seconds...`,
       );
-      await setTimeout(5000);
+      await setTimeoutPromise(5000);
       this.conn = new WSocket(this.sockurl, {
         headers: {
           Authentication: this.auth,
@@ -185,16 +185,19 @@ class MediaConnection {
   }
 
   async getCount() {
-    const req = await fetch(
-      `${this.httpurl}/count`,
-      this.auth
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 1000);
+    const req = await fetch(`${this.httpurl}/count`, {
+      signal: controller.signal,
+      headers: this.auth
         ? {
-            headers: {
-              authentication: this.auth,
-            },
+            authentication: this.auth,
           }
         : undefined,
-    );
+    });
+    clearTimeout(timeout);
     if (req.status !== 200) return -1;
     const res = Number.parseInt(await req.text());
     return res;
