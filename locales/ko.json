@@ -1,1 +1,43 @@
-{}
+{
+    "sound": {
+        "yes": "네",
+        "no": "아니요"
+    },
+    "commands": {
+        "responses": {
+            "help": {
+                "name": "이름"
+            },
+            "8ball": {
+                "yes": "네"
+            }
+        },
+        "names": {
+            "music": "음악",
+            "youtube": "유튜브",
+            "dog": "개",
+            "cat": "고양이",
+            "bird": "새"
+        },
+        "flagNames": {
+            "tags owner": {
+                "name": "이름"
+            },
+            "tags add": {
+                "name": "이름"
+            },
+            "tags delete": {
+                "name": "이름"
+            },
+            "tags edit": {
+                "name": "이름"
+            },
+            "tags get": {
+                "name": "이름"
+            },
+            "8ball": {
+                "question": "질문"
+            }
+        }
+    }
+}
