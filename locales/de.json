@@ -253,6 +253,12 @@
             },
             "globe": {
                 "snow": "schnee"
+            },
+            "tags owner": {
+                "name": "name"
+            },
+            "tags role": {
+                "add": "hinzufügen"
             }
         },
         "flags": {
@@ -295,12 +301,39 @@
                 "ifunny": "Fügt ein iFunny Watermark in ein Bild ein",
                 "kinemaster": "Fügt ein KineMaster Watermark in ein Bild ein",
                 "memecenter": "Fügt ein MemeCenter Watermark in ein Bild ein",
-                "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein"
+                "shutterstock": "Fügt ein Shutterstock Watermark in ein Bild ein",
+                "powerdirector": "Fügt ein PowerDirector Watermark in ein Bild ein"
             },
             "qr": {
                 "create": "Generiert einen QR code",
                 "read": "Liest einen QR code"
             }
+        },
+        "responses": {
+            "stats": {
+                "library": "Bibliothek"
+            },
+            "ping": {
+                "ping": "Ping?",
+                "pong": "Pong!"
+            },
+            "help": {
+                "name": "Name"
+            },
+            "8ball": {
+                "yes": "Ja"
+            }
+        },
+        "names": {
+            "music": "Musik",
+            "image": "Bild",
+            "dog": "Hund",
+            "bird": "Vogel",
+            "cat": "Katze"
         }
+    },
+    "sound": {
+        "yes": "Ja",
+        "no": "Nein"
     }
 }
