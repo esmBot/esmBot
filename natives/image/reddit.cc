@@ -26,19 +26,29 @@ CmdOutput esmb::Image::Reddit(const string &type, string &outType, const char *b
   int pageHeight = vips_image_get_page_height(in.get_image());
   int nPages = type == "avif" ? 1 : vips_image_get_n_pages(in.get_image());
 
-  string captionText = "<span foreground=\"white\">" + text + "</span>";
+  string captionText = "<span foreground=\"white\">Posted in r/" + text + "</span>";
 
   LoadFonts(basePath);
+
+  // this is a bit of a hack.
+  // to properly align the text, we need to ensure that the baseline matches;
+  // however, depending on the content, this can vary wildly if we just use the
+  // standard method of rendering text.
+  // therefore, we need to know the offset - but this info is not provided to us directly either,
+  // so we need to calculate it by rendering some other text and getting the baseline from there.
+  VImage baselineCalc = VImage::text(
+    "A", VImage::option()->set("font", "Roboto 62")->set("fontfile", (basePath + "assets/fonts/reddit.ttf").c_str()));
+  size_t baseline = baselineCalc.height() + baselineCalc.yoffset();
+
   VImage textImage =
     VImage::text(captionText.c_str(), VImage::option()
                                         ->set("rgba", true)
                                         ->set("font", "Roboto 62")
-                                        ->set("fontfile", (basePath + "assets/fonts/reddit.ttf").c_str())
-                                        ->set("align", VIPS_ALIGN_LOW));
+                                        ->set("fontfile", (basePath + "assets/fonts/reddit.ttf").c_str()));
 
   VImage composited =
     tmpl.composite2(textImage, VIPS_BLEND_MODE_OVER,
-                    VImage::option()->set("x", 375)->set("y", (tmpl.height() - textImage.height()) - 64));
+                    VImage::option()->set("x", 64)->set("y", (tmpl.height() - baseline) - 64 + textImage.yoffset()));
   VImage watermark = composited.resize((double)width / (double)composited.width());
 
   vector<VImage> img;
