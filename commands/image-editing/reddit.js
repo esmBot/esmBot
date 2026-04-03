@@ -8,8 +8,9 @@ class RedditCommand extends MediaCommand {
    */
   paramsFunc(url) {
     const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
+    const cleaned = this.clean(newArgs);
     return {
-      caption: newArgs?.trim() ? newArgs.replaceAll("\n", "").replaceAll(" ", "") : random(names),
+      caption: cleaned.trim() ? cleaned.replaceAll("\n", "").replaceAll(" ", "") : random(names),
     };
   }
 
