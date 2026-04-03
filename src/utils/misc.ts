@@ -73,7 +73,7 @@ export function clean(input: string | Error, remove: string[] = [], skipEnv = fa
     let { parsed } = config({ quiet: true });
     if (!parsed) parsed = process.env as DotenvParseOutput;
 
-    if (servers?.length !== 0) {
+    if (servers.length !== 0) {
       for (const { server, auth } of servers) {
         text = text.replaceAll(server, optionalReplace(server));
         if (auth) text = text.replaceAll(auth, optionalReplace(auth));

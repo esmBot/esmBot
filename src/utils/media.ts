@@ -23,7 +23,7 @@ export const formats = {
   image: ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"],
 };
 export const connections = new Map<string, MediaConnection>();
-export let servers: ServerConfig[];
+export let servers: ServerConfig[] = [];
 
 export async function initMediaLib() {
   const { media } = await import("./mediaLib.ts");
