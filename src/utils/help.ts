@@ -45,7 +45,11 @@ export function generateList() {
 }
 
 export async function createPage(output: string) {
-  let template = `# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
+  let template = `---
+title: "esmBot Command List"
+---
+
+# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
 
 This page was last generated on \`${new Date().toString()}\`.
 
