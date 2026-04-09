@@ -325,11 +325,11 @@
             }
         },
         "names": {
-            "music": "Musik",
-            "image": "Bild",
-            "dog": "Hund",
-            "bird": "Vogel",
-            "cat": "Katze"
+            "music": "musik",
+            "image": "bild",
+            "dog": "hund",
+            "bird": "vogel",
+            "cat": "katze"
         }
     },
     "sound": {
