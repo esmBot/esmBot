@@ -82,7 +82,7 @@ CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *
     VImage mask = VImage::black(avatarSize, avatarSize).copy_memory();
     mask.draw_circle({255.0}, avatarSize / 2, avatarSize / 2, avatarSize / 2, VImage::option()->set("fill", true));
 
-    circularAvatar = avatar.bandjoin(mask);
+    circularAvatar = avatar.bandjoin(mask).copy_memory();
 
     int newPageHeight = pageHeight + captionImage.height();
     avatarX = width - avatarSize - padding;
