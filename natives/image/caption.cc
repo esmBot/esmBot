@@ -59,8 +59,7 @@ CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *
     int avatarSize = max(width / 8, 24);
     int padding = max(width / 50, 4);
 
-    VImage avatarRaw = VImage::new_from_file(avatarPath.c_str(),
-                                              VImage::option()->set("access", VIPS_ACCESS_SEQUENTIAL));
+    VImage avatarRaw = VImage::new_from_file(avatarPath.c_str());
     avatarRaw = avatarRaw.colourspace(VIPS_INTERPRETATION_sRGB);
 
     // Crop to square from center, then resize
