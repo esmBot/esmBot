@@ -1,4 +1,6 @@
 import { Buffer } from "node:buffer";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { media } from "./mediaLib.ts";
@@ -63,9 +65,34 @@ export default async function run(object: MediaParams): Promise<{ buffer: Buffer
     object.input.type = fileExtension;
   }
   object.params.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
-  const { data, type } = await media.process(object.type, object.cmd, object.params, object.input ?? {});
-  return {
-    buffer: data,
-    fileExtension: type,
-  };
+
+  // Pre-fetch avatar URL and write to temp file for native module access
+  let avatarTempPath: string | undefined;
+  if (typeof object.params.avatarUrl === "string") {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const avatarRes = await fetch(object.params.avatarUrl, { signal: controller.signal });
+      clearTimeout(timeout);
+      const avatarBuf = Buffer.from(await avatarRes.arrayBuffer());
+      avatarTempPath = path.join(os.tmpdir(), `esmbot-avatar-${object.id}.png`);
+      await fs.promises.writeFile(avatarTempPath, avatarBuf);
+      object.params.avatarPath = avatarTempPath;
+    } catch {
+      // If avatar fetch fails, just skip the watermark
+    }
+    delete object.params.avatarUrl;
+  }
+
+  try {
+    const { data, type } = await media.process(object.type, object.cmd, object.params, object.input ?? {});
+    return {
+      buffer: data,
+      fileExtension: type,
+    };
+  } finally {
+    if (avatarTempPath) {
+      fs.promises.unlink(avatarTempPath).catch(() => {});
+    }
+  }
 }

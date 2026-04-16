@@ -16,6 +16,7 @@ class CaptionCommand extends MediaCommand {
       caption: newCaption,
       // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
       font: font && this.constructor.allowedFonts.includes(font.toLowerCase()) ? font.toLowerCase() : "futura",
+      avatarUrl: this.author.avatarURL("png", 128),
     };
   }
 

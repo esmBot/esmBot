@@ -6,9 +6,10 @@ using namespace std;
 using namespace vips;
 
 FunctionArgs esmb::Image::CaptionArgs = {
-  {"caption",  {typeid(string), true} },
-  {"font",     {typeid(string), false}},
-  {"basePath", {typeid(string), true} }
+  {"caption",    {typeid(string), true} },
+  {"font",       {typeid(string), false}},
+  {"avatarPath", {typeid(string), false}},
+  {"basePath",   {typeid(string), true} }
 };
 
 CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
@@ -48,11 +49,56 @@ CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *
       .ifthenelse(255, text)
       .gravity(VIPS_COMPASS_DIRECTION_CENTRE, width, text.height() + size, VImage::option()->set("extend", "white"));
 
+  // Prepare avatar watermark if provided
+  string avatarPath = GetArgumentWithFallback<string>(arguments, "avatarPath", "");
+  bool hasAvatar = !avatarPath.empty();
+  VImage circularAvatar;
+  int avatarX = 0, avatarY = 0;
+
+  if (hasAvatar) {
+    int avatarSize = max(width / 8, 24);
+    int padding = max(width / 50, 4);
+
+    VImage avatarRaw = VImage::new_from_file(avatarPath.c_str(),
+                                              VImage::option()->set("access", VIPS_ACCESS_SEQUENTIAL));
+    avatarRaw = avatarRaw.colourspace(VIPS_INTERPRETATION_sRGB);
+
+    // Crop to square from center, then resize
+    int minDim = min(avatarRaw.width(), avatarRaw.height());
+    int cropX = (avatarRaw.width() - minDim) / 2;
+    int cropY = (avatarRaw.height() - minDim) / 2;
+    VImage avatarSquare = avatarRaw.crop(cropX, cropY, minDim, minDim);
+    VImage avatar = avatarSquare.resize((double)avatarSize / (double)minDim);
+
+    // Flatten alpha if present (onto white background)
+    if (avatar.has_alpha()) {
+      avatar = avatar.flatten(VImage::option()->set("background", vector<double>{255, 255, 255}));
+    }
+    // Ensure exactly 3 bands
+    if (avatar.bands() > 3) {
+      avatar = avatar.extract_band(0, VImage::option()->set("n", 3));
+    }
+
+    // Create circular mask
+    VImage mask = VImage::black(avatarSize, avatarSize).copy_memory();
+    mask.draw_circle({255.0}, avatarSize / 2, avatarSize / 2, avatarSize / 2, VImage::option()->set("fill", true));
+
+    circularAvatar = avatar.bandjoin(mask);
+
+    int newPageHeight = pageHeight + captionImage.height();
+    avatarX = width - avatarSize - padding;
+    avatarY = newPageHeight - avatarSize - padding;
+  }
+
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
     VImage frame = captionImage.join(img_frame, VIPS_DIRECTION_VERTICAL,
                                      VImage::option()->set("background", 0xffffff)->set("expand", true));
+    if (hasAvatar) {
+      frame = frame.composite2(circularAvatar, VIPS_BLEND_MODE_OVER,
+                               VImage::option()->set("x", avatarX)->set("y", avatarY));
+    }
     img.push_back(frame);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
