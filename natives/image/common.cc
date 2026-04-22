@@ -45,7 +45,7 @@ vips::VOption *GetInputOptions(string type, bool sequential, bool sequentialIfAn
     }
   }
 
-  if (sequential && !sequentialIfAnim) {
+  if (!anim && sequential && !sequentialIfAnim) {
     options->set("access", "sequential");
   }
 
