@@ -19,7 +19,8 @@ CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *
   string basePath = GetArgument<string>(arguments, "basePath");
 
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
-                .colourspace(VIPS_INTERPRETATION_sRGB);
+                .colourspace(VIPS_INTERPRETATION_sRGB)
+                .copy_memory();
 
   if (!in.has_alpha()) in = in.bandjoin(255);
 
