@@ -10,12 +10,20 @@ class YouTubeCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.youtube.noInput");
     await this.acknowledge();
     const messages = [];
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 5000);
     /**
      * @type {import("#utils/types.ts").SearXNGResults}
      */
     const videos = await fetch(
       `${random(serversConfig.searx)}/search?format=json&safesearch=1&categories=videos&q=!youtube%20${encodeURIComponent(query)}`,
+      {
+        signal: controller.signal,
+      },
     ).then((res) => res.json());
+    clearTimeout(timeout);
     if (videos.results.length === 0) return this.getString("commands.responses.youtube.noResults");
     for (const [i, value] of videos.results.entries()) {
       messages.push({

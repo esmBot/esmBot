@@ -11,12 +11,20 @@ class ImageSearchCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.image.noInput");
     await this.acknowledge();
     const embeds = [];
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 5000);
     /**
      * @type {import("#utils/types.ts").SearXNGResults}
      */
     const rawImages = await fetch(
       `${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`,
+      {
+        signal: controller.signal,
+      },
     ).then((res) => res.json());
+    clearTimeout(timeout);
     if (rawImages.results.length === 0) return this.getString("commands.responses.image.noResults");
     const images = rawImages.results.filter(
       (val) => val.img_src?.startsWith("https://") && val.url.startsWith("https://"),
