@@ -48,7 +48,7 @@ CmdOutput esmb::Image::Reddit(const string &type, string &outType, const char *b
 
   VImage composited = tmpl.composite2(
     textImage, VIPS_BLEND_MODE_OVER,
-    VImage::option()->set("x", (int)64)->set("y", (tmpl.height() - baseline) - 64 + textImage.yoffset()));
+    VImage::option()->set("x", 64)->set("y", static_cast<int>((tmpl.height() - baseline) - 64 + textImage.yoffset())));
   VImage watermark = composited.resize((double)width / (double)composited.width());
 
   vector<VImage> img;
