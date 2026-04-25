@@ -35,6 +35,9 @@ class TagsGetCommand extends Command {
   ];
 
   static description = "Gets a tag";
+  /**
+   * @type {string | null}
+   */
   static tag = null;
   static directAllowed = false;
   static userAllowed = false;
