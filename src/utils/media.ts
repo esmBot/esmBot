@@ -56,6 +56,9 @@ export async function getType(
     const mediaRequest = await fetch(media, {
       signal: controller.signal,
       method: "HEAD",
+      headers: {
+        "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER} (+https://esmbot.net)`,
+      },
     });
     clearTimeout(timeout);
     if (mediaRequest.redirected) {
@@ -92,6 +95,7 @@ export async function getType(
         signal: controller.signal,
         headers: {
           range: "bytes=0-1023",
+          "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER} (+https://esmbot.net)`,
         },
       });
       clearTimeout(timeout);

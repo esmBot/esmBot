@@ -40,6 +40,9 @@ export default async function run(object: MediaParams): Promise<{ buffer: Buffer
     try {
       const res = await fetch(object.path, {
         signal: controller.signal,
+        headers: {
+          "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER} (+https://esmbot.net)`,
+        },
       });
       clearTimeout(timeout);
       if (res.status === 429) throw "ratelimit";
