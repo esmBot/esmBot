@@ -64,6 +64,7 @@
       "pixelate": "Pixelates an image",
       "reddit": "Adds a Reddit watermark to an image",
       "reverse": "Reverses an image sequence",
+      "rotate": "Rotates an image",
       "scott": "Makes Scott the Woz show off an image",
       "sepia": "Adds a sepia filter",
       "sharpen": "Sharpens an image",
@@ -202,6 +203,9 @@
       },
       "motivate": {
         "font": "font"
+      },
+      "rotate": {
+        "angle": "angle"
       },
       "slide": {
         "reverse": "reverse",
@@ -425,6 +429,9 @@
       "motivate": {
         "font": "Specify the font you want to use (default: times)"
       },
+      "rotate": {
+        "angle": "Set the rotation angle"
+      },
       "slide": {
         "reverse": "Changes the direction the image slides in",
         "vertical": "Slides the image vertically"
@@ -600,6 +607,7 @@
       "pixelate": "pixelate",
       "reddit": "reddit",
       "reverse": "reverse",
+      "rotate": "rotate",
       "scott": "scott",
       "sepia": "sepia",
       "sharpen": "sharpen",
@@ -668,6 +676,7 @@
       "pixelate": "You need to provide an image/GIF to pixelate!",
       "watermark powerdirector": "You need to provide an image/GIF to add a PowerDirector watermark!",
       "reverse": "You need to provide an image/GIF to reverse!",
+      "rotate": "You need to provide an image/GIF to rotate!",
       "scott": "You need to provide an image/GIF for Scott to show off!",
       "sepia": "You need to provide an image/GIF to add a sepia filter!",
       "sharpen": "You need to provide an image/GIF to sharpen!",

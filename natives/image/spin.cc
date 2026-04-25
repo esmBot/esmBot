@@ -5,8 +5,14 @@
 using namespace std;
 using namespace vips;
 
+FunctionArgs esmb::Image::SpinArgs = {
+  {"angle", {typeid(int), false}}
+};
+
 CmdOutput esmb::Image::Spin(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
                             [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
+  int staticAngle = GetArgumentWithFallback<int>(arguments, "angle", 0);
+
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
 
   int width = in.width();
@@ -25,26 +31,31 @@ CmdOutput esmb::Image::Spin(const string &type, string &outType, const char *buf
 
   if (nPages == 1) {
     multiPage = false;
-    nPages = 30;
+    if (staticAngle == 0) {
+      nPages = 30;
+    }
   }
 
   vector<VImage> img;
+  int outPageHeight = pageHeight;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame = multiPage ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    double rotation = (double)360 * i / nPages;
-    VImage rotated = img_frame.similarity(VImage::option()->set("angle", rotation));
-    VImage embedded =
-      rotated.embed((width / 2) - (rotated.width() / 2), (pageHeight / 2) - (rotated.height() / 2), width, pageHeight);
+    double rotation = staticAngle > 0 ? staticAngle : (double)360 * i / nPages;
+    VImage rotated = img_frame.rotate(rotation);
+    VImage embedded = staticAngle > 0 ? rotated
+                                      : rotated.embed((width / 2) - (rotated.width() / 2),
+                                                      (pageHeight / 2) - (rotated.height() / 2), width, pageHeight);
+    outPageHeight = embedded.height();
     img.push_back(embedded);
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
-  final.set(VIPS_META_PAGE_HEIGHT, pageHeight);
-  if (!multiPage) {
+  final.set(VIPS_META_PAGE_HEIGHT, outPageHeight);
+  if (!multiPage && staticAngle == 0) {
     vector<int> delay(30, 50);
     final.set("delay", delay);
   }
 
-  if (outType != "webp") outType = "gif";
+  if (outType != "webp" && staticAngle == 0) outType = "gif";
 
   SetupTimeoutCallback(final, shouldKill);
 

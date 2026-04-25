@@ -90,6 +90,7 @@ namespace esmb {
       {"snapchat",   &SnapchatArgs  },
       {"sonic",      &SonicArgs     },
       {"speed",      &SpeedArgs     },
+      {"spin",       &SpinArgs      },
       {"spotify",    &SpotifyArgs   },
       {"uncanny",    &UncannyArgs   },
       {"uncaption",  &UncaptionArgs },

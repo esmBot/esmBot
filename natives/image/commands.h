@@ -85,6 +85,7 @@ namespace esmb::Image {
   declare_input_args(SnapchatArgs);
   declare_input_args(SonicArgs);
   declare_input_args(SpeedArgs);
+  declare_input_args(SpinArgs);
   declare_input_args(SpotifyArgs);
   declare_input_args(UncannyArgs);
   declare_input_args(UncaptionArgs);
