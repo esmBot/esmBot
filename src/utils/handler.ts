@@ -14,7 +14,7 @@ import Command from "#cmd-classes/command.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { aliases, categories, commands, messageCommands, paths, userCommands } from "./collections.ts";
 import { getAllLocalizations } from "./i18n.ts";
-import { debug, log } from "./logger.ts";
+import { log } from "./logger.ts";
 import type {
   CommandFlagType,
   CommandsConfig,
@@ -97,7 +97,7 @@ export async function load(command: string): Promise<
         withFileTypes: true,
       });
     } catch {
-      debug(`Could not find subcommand dir at ${resolved}`);
+      log("debug", `Could not find subcommand dir at ${resolved}`);
     }
 
     if (files) {
