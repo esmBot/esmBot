@@ -114,6 +114,22 @@ export async function activityChanger(bot: Client) {
   setTimeout(() => activityChanger(bot), 900000);
 }
 
+const STATS_CHANNEL = "1496977931858346046";
+
+export async function dailyStats(bot: Client, db: DatabasePlugin | undefined) {
+  if (db) {
+    const counts = await db.getCounts(true);
+    const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    const lines = sorted.map(([cmd, n], i) => `**${i + 1}.** \`${cmd}\` — ${n.toLocaleString()} uses`).join("\n");
+    await bot.rest.channels.createMessage(STATS_CHANNEL, {
+      content: `📊 **Daily Command Stats** (${new Date().toDateString()})\n${lines}`,
+    });
+  }
+  const now = new Date();
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  setTimeout(() => dailyStats(bot, db), midnight.getTime() - now.getTime());
+}
+
 export async function checkBroadcast(bot: Client, db: DatabasePlugin | undefined) {
   if (!db) {
     return;

@@ -3,7 +3,7 @@ import commandsConfig from "#config/commands.json" with { type: "json" };
 import { send } from "#utils/handler.js";
 import { createPage, generateList } from "#utils/help.js";
 import logger from "#utils/logger.js";
-import { activityChanger, checkBroadcast } from "#utils/misc.js";
+import { activityChanger, checkBroadcast, dailyStats } from "#utils/misc.js";
 import type { EventParams } from "#utils/types.js";
 let ready = false;
 
@@ -29,6 +29,7 @@ export default async ({ client, database }: EventParams) => {
 
   await checkBroadcast(client, database);
   activityChanger(client);
+  dailyStats(client, database);
 
   ready = true;
 
