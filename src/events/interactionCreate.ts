@@ -92,9 +92,15 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
             flags: result.flags ?? (commandClass.success ? 0 : 64),
             files: [file],
           });
-          if (interaction.authorizingIntegrationOwners[0] === undefined) {
-            const attachment = imgMessage.message.attachments.first();
-            if (attachment) {
+          const attachment = imgMessage.message.attachments.first();
+          if (attachment) {
+            if (database && (cmdBaseName === "caption" || cmdBaseName === "caption2")) {
+              const captionText = interaction.data.options.getString("text") ?? "";
+              if (captionText.toLowerCase().includes("skuub")) {
+                await database.addSkuubImage(attachment.url);
+              }
+            }
+            if (interaction.authorizingIntegrationOwners[0] === undefined) {
               const path = new URL(attachment.proxyURL);
               path.searchParams.set("animated", "true");
               selectedImages.set(interaction.user.id, {
@@ -104,12 +110,6 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
                 type: attachment.contentType,
                 spoiler: attachment.filename.startsWith("SPOILER_"),
               });
-              if (database && (cmdBaseName === "caption" || cmdBaseName === "caption2")) {
-                const captionText = interaction.data.options.getString("text") ?? "";
-                if (captionText.toLowerCase().includes("skuub")) {
-                  await database.addSkuubImage(attachment.url);
-                }
-              }
             }
           }
         }
