@@ -11,9 +11,8 @@ class FriendCommand extends Command {
     const username = target.username.toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const channelName = `friend-${username}`;
 
-    const channel = await this.client.rest.guilds.createChannel(this.guild.id, {
+    const channel = await this.client.rest.guilds.createChannel(this.guild.id, Constants.ChannelTypes.GUILD_TEXT, {
       name: channelName,
-      type: Constants.ChannelTypes.GUILD_TEXT,
     });
 
     for (let i = 0; i < 50; i++) {
