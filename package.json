@@ -68,6 +68,7 @@
     "node-addon-api": "^8.7.0",
     "oceanic.js": "1.14.0",
     "postgres": "^3.4.7",
+    "sharp": "^0.34.5",
     "shoukaku": "^4.3.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",
