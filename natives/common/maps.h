@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "../image/commands.h"
 #include "argmap.h"
 
@@ -60,6 +62,12 @@ namespace esmb {
         {"qrcreate", &QrCreate},
 #endif
         {"sonic",    &Sonic   }
+    };
+
+    const std::vector<std::string> AnimFunctions = {
+      "freeze",
+      "reverse",
+      "speed",
     };
 
     const std::map<std::string, FunctionArgs *> FunctionArgsMap = {

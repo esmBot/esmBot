@@ -3,20 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { random } from "#utils/misc.js";
-const prompts = [
-  "you found:",
-  "your dad is:",
-  "you ate:",
-  "your mom is:",
-  "your sister is:",
-  "you saw:",
-  "you get lost in:",
-  "you find:",
-  "you grab:",
-  "you pull out of your pocket:",
-  "you fight:",
-  "it's in your room:",
-];
+
 const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../../assets/images/uncanny/"))
   .filter((val) => {
     if (!val.startsWith(".") && val.endsWith(".png")) return true;
@@ -27,19 +14,22 @@ const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../.
 
 class UncannyCommand extends MediaCommand {
   /**
-   * @param {string | undefined} url
+   * @param {string} text
    */
-  paramsFunc(url, name = "unknown") {
+  async criteria(text) {
+    if (typeof text !== "string") return false;
+    const [text1, text2] = text.split(/(?<!\\),/).map((elem) => elem.trim());
+    if (text1 === "" && (!text2 || text2 === "")) return false;
+    return true;
+  }
+
+  paramsFunc() {
     const newArgs = this.getOptionString("text") ?? this.args.join(" ");
-    let [text1, text2] = newArgs
-      .replaceAll(url ?? "", "")
-      .split(/(?<!\\),/)
-      .map((elem) => elem.trim());
-    if (!text2?.trim()) text2 = name;
+    const [text1, text2] = newArgs.split(/(?<!\\),/).map((elem) => elem.trim());
     const font = this.getOptionString("font");
     const phase = this.getOptionString("phase");
     return {
-      caption: text1?.trim() ? this.clean(text1) : random(prompts),
+      caption: this.clean(text1),
       caption2: this.clean(text2),
       path: `assets/images/uncanny/${phase && names.includes(phase.toLowerCase()) ? phase.toLowerCase() : random(names.filter((val) => val !== "goated"))}.png`,
       // @ts-expect-error this.constructor allows us to get static properties, but TS interprets it as a pure function
@@ -78,8 +68,6 @@ class UncannyCommand extends MediaCommand {
     );
     return this;
   }
-
-  static textOptional = true;
 
   static description = "Makes a Mr. Incredible Becomes Uncanny image (separate left/right text with a comma)";
   static aliases = ["canny", "incredible", "pain"];

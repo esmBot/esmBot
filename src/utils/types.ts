@@ -65,30 +65,29 @@ export type Param =
     }
   | string;
 
+export type MediaTypes = "image";
+
 export interface MediaParams {
   cmd: string;
-  type: "image";
   params: {
     [key: string]: string | number | boolean;
   };
-  input?: {
-    data?: ArrayBuffer;
-    type?: string;
-  };
   id: string;
-  path?: string;
-  url?: string;
-  name?: string;
-  onlyAnim?: boolean;
+  inputs: MediaMeta[];
   ephemeral?: boolean;
   spoiler?: boolean;
   token?: string;
 }
 
-export interface MediaTypeData {
-  url?: string;
-  type?: string;
-  mediaType?: MediaParams["type"];
+export interface MediaMeta {
+  path: string;
+  spoiler: boolean;
+}
+
+export interface JobOutput {
+  buffer: Buffer;
+  type: string;
+  spoiler: boolean;
 }
 
 export interface MediaFormats {
@@ -99,6 +98,10 @@ export interface MediaFormats {
 
 export interface MediaFuncs {
   image?: string[];
+}
+
+export interface MediaFuncTypes {
+  [cmd: string]: MediaTypes[];
 }
 
 export interface SearXNGResults {

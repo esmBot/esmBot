@@ -1,6 +1,5 @@
 import type InteractionCollector from "../pagination/awaitinteractions.ts";
-import type { MediaMeta } from "./mediadetect.ts";
-import type { ExtCommand } from "./types.ts";
+import type { ExtCommand, MediaMeta } from "./types.ts";
 
 export const commands = new Map<string, ExtCommand>();
 export const messageCommands = new Map<string, ExtCommand>();

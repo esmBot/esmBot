@@ -1,18 +1,27 @@
 import { Buffer } from "node:buffer";
 import { createRequire } from "node:module";
 import process from "node:process";
-import type { MediaParams } from "./types.ts";
+import type { MediaParams, MediaTypes } from "./types.ts";
+
+interface FuncObject {
+  name: string;
+  input: boolean;
+  anim?: boolean;
+}
 
 export interface MediaLib {
   funcs: {
-    image: string[];
+    image: FuncObject[];
   };
 
   process(
-    type: MediaParams["type"],
+    type: MediaTypes,
     cmd: string,
     params: MediaParams["params"],
-    input: MediaParams["input"],
+    input: {
+      data?: ArrayBuffer;
+      type?: string;
+    },
   ): Promise<{ data: Buffer; type: string }>;
   init(): {
     image?: string[];

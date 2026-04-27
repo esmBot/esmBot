@@ -53,20 +53,19 @@ The job object is formatted like this:
 
 ```js
 {
-  "type": "image",     // type of job to execute
-  "cmd": string,       // name of internal media command, e.g. caption
-  "path": string,      // canonical media URL, used for getting the actual input
-  "url": string,       // original media URL, used for message filtering
-  "params": {          // content varies depending on the command, some common parameters are listed here
-    "togif": boolean,  // convert output to gif
+  "cmd": string,        // name of internal media command, e.g. caption
+  "inputs": [{          // array of objects describing the input media
+    "path": string,     // canonical media URL, used for getting the actual input
+    "spoiler": boolean, // whether the input media has a spoiler tag
+  }],
+  "params": {           // content varies depending on the command, some common parameters are listed here
+    "togif": boolean,   // convert output to gif
     ...
   },
-  "input": {
-    "type": string     // mime type of output, should usually be the same as input
-  },
-  "name": string,      // filename of the media file, without extension
-  "ephemeral": string, // whether to post the output as an ephemeral message (only when responding directly, see below section)
-  "spoiler": string    // whether to post the output as a spoiler (only when responding directly, see below section)
+  "id": string,         // identifier for the job object
+  "ephemeral": string,  // whether to post the output as an ephemeral message (only when responding directly, see below section)
+  "spoiler": string,    // whether to post the output as a spoiler (only when responding directly, see below section)
+  "token": string,      // the interaction token (only when responding directly, see below section)
 }
 ```
 

@@ -1,11 +1,8 @@
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class HomebrewCommand extends MediaCommand {
-  /**
-   * @param {string | undefined} url
-   */
-  paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
+  paramsFunc() {
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     return {
       caption: this.clean(newArgs),
     };

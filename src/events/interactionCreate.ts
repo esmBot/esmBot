@@ -98,10 +98,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
               const path = new URL(attachment.proxyURL);
               path.searchParams.set("animated", "true");
               selectedImages.set(interaction.user.id, {
-                url: attachment.url,
                 path: path.toString(),
-                name: attachment.filename,
-                type: attachment.contentType,
                 spoiler: attachment.filename.startsWith("SPOILER_"),
               });
             }

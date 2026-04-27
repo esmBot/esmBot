@@ -25,11 +25,8 @@ const words = [
 ];
 
 class CaptionTwoCommand extends MediaCommand {
-  /**
-   * @param {string | undefined} url
-   */
-  paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
+  paramsFunc() {
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     const font = this.getOptionString("font");
     return {
       caption: newArgs?.trim()

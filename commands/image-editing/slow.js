@@ -25,7 +25,6 @@ class SlowCommand extends MediaCommand {
   static description = "Makes an image sequence slower";
   static aliases = ["slowdown", "slower", "gifspeed2"];
 
-  static requiresAnim = true;
   static alwaysGIF = true;
   static noImage = "You need to provide an image/GIF to slow down!";
   static command = "speed";

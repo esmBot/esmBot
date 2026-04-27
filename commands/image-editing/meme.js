@@ -3,27 +3,17 @@ import MediaCommand from "#cmd-classes/mediaCommand.js";
 class MemeCommand extends MediaCommand {
   /**
    * @param {string} text
-   * @param {string | undefined} url
    */
-  async criteria(text, url) {
+  async criteria(text) {
     if (typeof text !== "string") return false;
-    const [topText, bottomText] = text
-      .replaceAll(url ?? "", "")
-      .split(/(?<!\\),/)
-      .map((elem) => elem.trim());
+    const [topText, bottomText] = text.split(/(?<!\\),/).map((elem) => elem.trim());
     if (topText === "" && (!bottomText || bottomText === "")) return false;
     return true;
   }
 
-  /**
-   * @param {string | undefined} url
-   */
-  paramsFunc(url) {
+  paramsFunc() {
     const newArgs = this.getOptionString("text") ?? this.args.join(" ");
-    const [topText, bottomText] = newArgs
-      .replaceAll(url ?? "", "")
-      .split(/(?<!\\),/)
-      .map((elem) => elem.trim());
+    const [topText, bottomText] = newArgs.split(/(?<!\\),/).map((elem) => elem.trim());
     const font = this.getOptionString("font");
     return {
       topText: this.clean(this.getOptionBoolean("case") ? topText : topText.toUpperCase()),

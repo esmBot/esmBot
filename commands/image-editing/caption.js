@@ -1,11 +1,8 @@
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class CaptionCommand extends MediaCommand {
-  /**
-   * @param {string | undefined} url
-   */
-  paramsFunc(url) {
-    const newArgs = this.getOptionString("text") ?? this.args.filter((item) => !item.includes(url ?? "")).join(" ");
+  paramsFunc() {
+    const newArgs = this.getOptionString("text") ?? this.args.join(" ");
     let newCaption = this.clean(newArgs);
     const currentDate = new Date();
     const isApril1 = currentDate.getDate() === 1 && currentDate.getMonth() === 3;

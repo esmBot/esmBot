@@ -3,7 +3,7 @@ import { setTimeout as setTimeoutPromise } from "node:timers/promises";
 import WSocket, { type Data, type ErrorEvent } from "ws";
 import logger from "./logger.ts";
 import { mimeToExt } from "./mime.ts";
-import type { MediaFormats, MediaFuncs } from "./types.ts";
+import type { JobOutput, MediaFormats, MediaFuncs, MediaFuncTypes, MediaTypes } from "./types.ts";
 
 const Rerror = 0x01;
 const Tqueue = 0x02;
@@ -25,7 +25,7 @@ interface RequestState {
 
 type WaitResponse = { sent: true; data: Buffer } | { sent: false };
 
-const etcTypes = ["noanim", "nocmd", "text", "empty", "frames", "ratelimit"];
+const etcTypes = ["noanim", "nocmd", "text", "empty", "frames", "ratelimit", "nomedia"];
 
 class MediaConnection {
   requests: Map<number, RequestState>;
@@ -36,6 +36,7 @@ class MediaConnection {
   disconnected: boolean;
   formats: MediaFormats;
   funcs: MediaFuncs;
+  types: MediaFuncTypes;
   wsproto: string;
   sockurl: string;
   conn: WSocket;
@@ -50,6 +51,7 @@ class MediaConnection {
     this.disconnected = false;
     this.formats = {};
     this.funcs = {};
+    this.types = {};
     if (tls) {
       this.wsproto = "wss";
     } else {
@@ -83,6 +85,14 @@ class MediaConnection {
       this.funcs = {
         image: this.formats.image ? Object.keys(this.formats.image) : [],
       };
+      this.types = {};
+      for (const [type, cmdList] of Object.entries(this.formats)) {
+        const cmds = Object.keys(cmdList);
+        for (const cmd of cmds) {
+          if (!this.types[cmd]) this.types[cmd] = [];
+          this.types[cmd].push(type as MediaTypes);
+        }
+      }
       return;
     }
     if (op === Rclose) {
@@ -166,7 +176,7 @@ class MediaConnection {
     return this.do(Tcancel, jobid, buf);
   }
 
-  async getOutput(jobid: string) {
+  async getOutput(jobid: string): Promise<JobOutput> {
     logger.debug(`Getting output of ${jobid} on media server ${this.host}`);
     const req = await fetch(
       `${this.httpurl}/media?id=${jobid}`,
@@ -181,7 +191,7 @@ class MediaConnection {
     const contentType = req.headers.get("content-type");
     let type = contentType ? mimeToExt(contentType) : "unknown";
     if (type === "unknown" && contentType && etcTypes.includes(contentType)) type = contentType;
-    return { buffer: Buffer.from(await req.arrayBuffer()), type };
+    return { buffer: Buffer.from(await req.arrayBuffer()), type, spoiler: req.headers.has("X-Spoiler") };
   }
 
   async getCount() {

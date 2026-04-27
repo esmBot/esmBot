@@ -995,7 +995,6 @@
   "errorCaps": "ERROR",
   "guildOnly": "This command only works in servers!",
   "image": {
-    "badurl": "That URL is invalid!",
     "couldNotFind": "I couldn't find an image in that message!",
     "empty": "The resulting output was empty!",
     "flagNames": {
@@ -1018,7 +1017,6 @@
     },
     "frames": "That GIF has way too many frames (over 1000)!",
     "jobEnded": "Something happened to the media servers before I could receive the output. Try running your command again.",
-    "klipy": "I've been rate-limited by KLIPY. Please try uploading your GIF elsewhere.",
     "large": "That file is too large (>= 40MB)! Try using a smaller file.",
     "nocmd": "That command isn't supported on this instance of esmBot.",
     "noanim": "That image isn't in an animated format (GIF or WEBP)!",
@@ -1034,7 +1032,6 @@
     "slowDown": "Please slow down a bit.",
     "tempImageSent": "Here's your image!",
     "tempSite": "The result was larger than Discord's upload limit, so it was uploaded to an external site instead.",
-    "tenor": "I've been rate-limited by Tenor. Please try uploading your GIF elsewhere.",
     "timeout": "The request to get that image timed out. Please try again, upload your image elsewhere, or use another image.",
     "timeoutDownload": "The request timed out before I could download that image. Try uploading your image somewhere else or reducing its size.",
     "tip": "(Tip: try right-clicking/holding on a message and press Apps -> {{name}} -> Select Image, then try again.)",

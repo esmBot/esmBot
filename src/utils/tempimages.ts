@@ -11,7 +11,7 @@ import {
 import { selectedImages } from "./collections.ts";
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";
-import { getType } from "./media.ts";
+import { request } from "./media.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {
@@ -75,12 +75,9 @@ export async function upload(
     );
   }
   if (save) {
-    const type = await getType(new URL(imageURL), true, []);
+    const type = await request(new URL(imageURL), [], true).catch(() => {});
     selectedImages.set(authorId, {
-      url: imageURL,
       path: type?.url ?? imageURL,
-      name: filename,
-      type: type?.type,
       spoiler: result.name.startsWith("SPOILER_"),
     });
   }

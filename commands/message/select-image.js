@@ -1,42 +1,32 @@
 import { Message } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { selectedImages } from "#utils/collections.js";
+import { request } from "#utils/media.js";
 import imageDetect from "#utils/mediadetect.js";
 
 class SelectImageCommand extends Command {
   async run() {
     const message = this.interaction?.data.target;
     if (!(message instanceof Message)) throw Error("Target is not a message");
-    const image = await imageDetect(
-      this.client,
-      this.permissions,
-      ["image"],
-      message,
-      this.interaction,
-      true,
-      true,
-    ).catch((e) => {
+    const mediaArr = await imageDetect(this.client, this.permissions, message, this.interaction, true).catch((e) => {
       if (e.name === "AbortError") return this.getString("image.timeout");
       throw e;
     });
-    if (typeof image === "string") return image;
     this.success = false;
-    if (image === undefined) {
-      return this.getString("image.couldNotFind");
+    if (typeof mediaArr === "string") return image;
+    if (mediaArr.length === 0) return this.getString("image.couldNotFind");
+
+    let final;
+    for (const media of mediaArr) {
+      const type = await request(new URL(media.path), ["image", "audio"], true).catch(() => {});
+      if (type) {
+        final = media;
+        break;
+      }
     }
-    if (image.type === "large") {
-      return this.getString("image.large");
-    }
-    if (image.type === "tenorlimit") {
-      return this.getString("image.tenor");
-    }
-    if (image.type === "klipylimit") {
-      return this.getString("image.klipy");
-    }
-    if (image.type === "badurl") {
-      return this.getString("image.badurl");
-    }
-    selectedImages.set(this.author.id, image);
+    if (!final) return this.getString("image.couldNotFind");
+
+    selectedImages.set(this.author.id, final);
     return this.getString("image.selected");
   }
 

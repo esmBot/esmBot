@@ -171,12 +171,20 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   Napi::Array imageFuncs = Napi::Array::New(env);
   for (auto const &imap : esmb::Image::FunctionMap) {
     Napi::HandleScope scope(env);
-    imageFuncs[i] = Napi::String::New(env, imap.first);
+    Napi::Object func = Napi::Object::New(env);
+    func.Set("name", Napi::String::New(env, imap.first));
+    func.Set("input", Napi::Boolean::From(env, true));
+    func.Set("anim", Napi::Boolean::From(env, std::count(esmb::Image::AnimFunctions.begin(),
+                                                         esmb::Image::AnimFunctions.end(), imap.first) > 0));
+    imageFuncs[i] = func;
     i++;
   }
   for (auto const &imap : esmb::Image::NoInputFunctionMap) {
     Napi::HandleScope scope(env);
-    imageFuncs[i] = Napi::String::New(env, imap.first);
+    Napi::Object func = Napi::Object::New(env);
+    func.Set("name", Napi::String::New(env, imap.first));
+    func.Set("input", Napi::Boolean::From(env, false));
+    imageFuncs[i] = func;
     i++;
   }
   funcs.Set("image", imageFuncs);

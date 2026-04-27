@@ -9,7 +9,7 @@ import { WebSocketServer, type ErrorEvent } from "ws";
 import logger from "#utils/logger.js";
 import { media } from "#utils/mediaLib.js";
 import run from "#utils/mediaRunner.js";
-import type { MediaFormats, MediaParams } from "#utils/types.js";
+import type { JobOutput, MediaFormats, MediaParams } from "#utils/types.js";
 
 const formats = media.init();
 
@@ -46,6 +46,7 @@ interface Job {
   error?: string;
   data?: Buffer;
   ext?: string;
+  spoiler?: boolean;
 }
 
 interface MiniJob {
@@ -145,7 +146,7 @@ wss.on("connection", (ws, request) => {
   if (media.funcs.image && formats.image) {
     cmdFormats.image = {};
     for (const cmd of media.funcs.image) {
-      cmdFormats.image[cmd] = formats.image;
+      cmdFormats.image[cmd.name] = formats.image;
     }
   }
   const init = Buffer.concat([
@@ -168,13 +169,21 @@ wss.on("connection", (ws, request) => {
     if (opcode === Tqueue) {
       const id = msg.readBigInt64LE(3);
       const obj = msg.subarray(11).toString();
-      const job = { msg: JSON.parse(obj), num: jobs.size, verifyEvent: new EventEmitter<VerifyEvents>() };
+      const parsed = JSON.parse(obj);
+      const job = { msg: parsed, num: jobs.size, verifyEvent: new EventEmitter<VerifyEvents>() };
       jobs.set(id, job);
 
       const newBuffer = Buffer.concat([Buffer.from([Rqueue]), tag]);
       ws.send(newBuffer);
 
-      log(`Got WS request for job ${obj} with id ${id}`, job.num);
+      log(
+        `Got WS request for job ${JSON.stringify(parsed, (k, v) => {
+          if (k === "inputs" && v && v.length > 1) return [v[0], "..."];
+          if (k === "token") return null;
+          return v;
+        })} with id ${id}`,
+        job.num,
+      );
       acceptJob(id, ws);
     } else if (opcode === Tcancel) {
       jobs.delete(BigInt(req));
@@ -262,6 +271,7 @@ httpServer.on("request", (req, res) => {
     }
     if (contentType) res.setHeader("Content-Type", contentType);
     else res.setHeader("Content-Type", job.ext ?? "application/octet-stream");
+    if (job.spoiler) res.setHeader("X-Spoiler", "true");
     jobs.delete(id);
     return res.end(job.data);
   }
@@ -353,16 +363,12 @@ process.on("SIGTERM", (s) => sigHandler(s));
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
 const fileSize = 10485760;
 
-async function finishJob(
-  data: { buffer: Buffer; fileExtension: string },
-  job: MiniJob,
-  object: MediaParams,
-  ws: WSocket,
-) {
+async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws: WSocket) {
   log(`Sending result of job ${job.id}`, job.num);
   const jobObject = jobs.get(job.id)!;
   jobObject.data = data.buffer;
-  jobObject.ext = data.fileExtension;
+  jobObject.ext = data.type;
+  jobObject.spoiler = data.spoiler;
   let tag: Buffer;
   if (!jobObject.tag) {
     tag = await waitForVerify(jobObject.verifyEvent);
@@ -382,7 +388,7 @@ async function finishJob(
     form.set(
       "files[0]",
       new Blob([jobObject.data]),
-      `${object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
+      `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`,
     );
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -429,21 +435,7 @@ async function finishJob(
  * Run a media job.
  */
 async function runJob(job: MiniJob, ws: WSocket): Promise<void> {
-  log(`Job ${job.id} starting...`, job.num);
-
-  const object = job.msg;
-
-  // Any other job type is invalid
-  if (object.type !== "image") {
-    throw new TypeError("Unknown job type");
-  }
-
-  // If the input has a path, it must also have a type
-  if (object.path && !object.input?.type) {
-    throw new TypeError("Unknown media type");
-  }
-
   log(`Job ${job.id} started`, job.num);
-  const data = await run(object);
-  await finishJob(data, job, object, ws);
+  const data = await run(job.msg);
+  await finishJob(data, job, job.msg, ws);
 }
