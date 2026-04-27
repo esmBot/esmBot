@@ -14,18 +14,27 @@ function toScript(text) {
 class QuranCommand extends Command {
   async run() {
     const verse = Math.floor(Math.random() * TOTAL_VERSES) + 1;
-    const res = await fetch(`https://api.alquran.cloud/v1/ayah/${verse}/en.asad`);
+    const res = await fetch(`https://api.alquran.cloud/v1/ayah/${verse}/editions/quran-uthmani,en.asad`);
     if (!res.ok) return "Failed to fetch verse.";
     const { data } = await res.json();
-    const title = toScript(`${data.surah.englishName} ${data.surah.number}:${data.numberInSurah}`);
-    return {
+    const arabic = data[0];
+    const english = data[1];
+    const title = toScript(`${english.surah.englishName} ${english.surah.number}:${english.numberInSurah}`);
+    const payload = {
       embeds: [{
-        title: `✨🌙 ${title} 🌙✨`,
-        description: `*${data.text}*`,
+        title: `☪️☪️✨ ${title} ✨☪️☪️`,
+        description: `*${english.text}*\n\n${arabic.text}`,
         color: 0x1a6b3a,
-        footer: { text: `${data.surah.englishNameTranslation} • Translated by Muhammad Asad` },
+        footer: { text: `${english.surah.englishNameTranslation} • Translated by Muhammad Asad` },
       }],
     };
+    if (this.type === "application" && this.interaction) {
+      const msg = await this.interaction.createFollowup(payload);
+      await msg.createReaction("⬆️");
+      await msg.createReaction("⬇️");
+      return;
+    }
+    return payload;
   }
 
   static description = "Gets a random verse from the Quran";
