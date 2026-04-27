@@ -3,17 +3,25 @@ import Command from "#cmd-classes/command.js";
 
 const RADAR_GIF = "https://media1.tenor.com/m/8Juj0k-1L4AAAAAd/radar-love-search.gif";
 const SCAN_TIME_MS = 3500;
+const SCANNING_MESSAGE = {
+  content: "Scanning server for skuubs...",
+  embeds: [
+    {
+      image: {
+        url: RADAR_GIF,
+      },
+    },
+  ],
+};
 
 class SkuubDetectorCommand extends Command {
   async run() {
     if (this.type === "application" && this.interaction) {
-      await this.interaction.createFollowup({
-        content: `Scanning server for skuubs...\n${RADAR_GIF}`,
-      });
+      await this.interaction.createFollowup(SCANNING_MESSAGE);
     } else {
       await this.acknowledge();
       if ("createMessage" in this.channel) {
-        await this.channel.createMessage(`Scanning server for skuubs...\n${RADAR_GIF}`);
+        await this.channel.createMessage(SCANNING_MESSAGE);
       }
     }
 
