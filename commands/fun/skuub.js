@@ -1,6 +1,7 @@
 import Command from "#cmd-classes/command.js";
 
-const images = [
+export const BASE_URL = "https://r2.fivemanage.com/LTm3ynKIgbqebX4GGCrxi/";
+export const images = [
   "caption_107.gif", "caption_110.gif", "caption_114.gif", "caption_126.gif",
   "caption_143.gif", "caption_148.gif", "caption_153.gif", "caption_160.gif",
   "caption_165.gif", "caption_167.gif", "caption_170.gif", "caption_174.gif",
@@ -28,8 +29,6 @@ const images = [
   "caption_7.gif", "caption_74.gif", "caption_78.gif", "caption_82.gif",
   "caption_86.gif", "caption_93.gif", "togif_22.gif",
 ];
-
-const BASE_URL = "https://r2.fivemanage.com/LTm3ynKIgbqebX4GGCrxi/";
 
 class SkuubCommand extends Command {
   async run() {
