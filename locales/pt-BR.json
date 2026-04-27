@@ -565,7 +565,6 @@
     },
     "error": "Opa! Encontrei um erro ao executar este comando. Informe o conteúdo do arquivo anexado no link a seguir ou no servidor de suporte do esmBot:",
     "image": {
-        "badurl": "Esse link é inválido!",
         "couldNotFind": "Não pude encontrar uma imagem nessa mensagem!",
         "empty": "O resultado estava vazio!",
         "flagNames": {
@@ -598,7 +597,6 @@
         "slowDown": "Por favor, diminua a velocidade um pouco.",
         "tempImageSent": "Aqui está sua imagem!",
         "tempSite": "A imagem resultante era maior do que o limite de upload do Discord, portanto, foi enviada para um site externo.",
-        "tenor": "Fui limitado pelo Tenor. Tente enviar seu GIF em outro lugar.",
         "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
         "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente.)",
         "tooLarge": "O arquivo resultante era muito grande para ser enviado. Tente novamente com uma imagem menor, se possível.",

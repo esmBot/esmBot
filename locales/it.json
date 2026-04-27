@@ -991,7 +991,6 @@
         "noImage": "Devi fornire un'immagine/GIF!",
         "noServers": "Non sto riuscendo a contattare i server di elaborazione media, potrebbero essere spenti o in fase di avvio. Per piacere, attendi un attimo.",
         "noParam": "Devi fornire del testo!",
-        "badurl": "Quell'URL non è valido!",
         "couldNotFind": "Non ho potuto trovare un'immagine in quel messaggio!",
         "empty": "L'output risultante era vuoto!",
         "flagNames": {
@@ -1024,12 +1023,10 @@
         "slowDown": "Per piacere, rallenta un po'.",
         "tempImageSent": "Ecco la tua immagine!",
         "tempSite": "Il file risultante era più grande del limite di upload di Discord, quindi è stato invece inviato a un sito esterno.",
-        "tenor": "Sono stato limitato da Tenor. Prova ad uploadare la tua GIF altrove.",
         "timeout": "La richiesta di recuperare quell'immagine è scaduta. Per piacere, prova di nuovo, carica la tua immagine altrove, o usa un'immagine diversa.",
         "processing": "Elaborazione... Questo potrebbe richiedere un po'",
         "ratelimit": "Sono stato limitato dal server che ospita quell'immagine. Prova ad uploadare la tua immagine altrove.",
-        "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova.",
-        "klipy": "Sono stato limitato in velocità da KLIPY. Prova a caricare la tua GIF da qualche altra parte."
+        "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova."
     },
     "permissions": {
         "noAttachFiles": "Non ho il permesso `Allegare i file`!",

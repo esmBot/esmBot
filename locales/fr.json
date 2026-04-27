@@ -930,7 +930,6 @@
         }
     },
     "image": {
-        "badurl": "Ce lien n'est pas valide !",
         "empty": "Le résultat obtenu était vide !",
         "flagNames": {
             "ephemeral": "éphémère",
@@ -961,7 +960,6 @@
         "selected": "L'image a été sélectionnée pour votre prochaine commande.",
         "slowDown": "S'il vous plaît, ralentissez un peu.",
         "tempImageSent": "Voici votre image !",
-        "tenor": "J'ai été limité par Tenor. Veuillez essayer de télécharger votre GIF ailleurs.",
         "tip": "(Astuce : essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> {{name}} -> Sélectionner une image, puis réessayez.)",
         "tooLarge": "Le fichier résultant était trop volumineux pour être téléchargé. Réessayez avec une image plus petite si possible.",
         "unknown": "Le résultat n'était pas dans un format valide. Veuillez réessayer.",
