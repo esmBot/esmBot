@@ -296,6 +296,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
   } finally {
     if (database) {
       await database.addCount(cmdName);
+      await database.addDailyCount(cmdName);
     }
   }
 };

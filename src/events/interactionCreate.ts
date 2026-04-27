@@ -185,6 +185,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   } finally {
     if (database) {
       await database.addCount(cmdBaseName);
+      await database.addDailyCount(cmdBaseName);
     }
   }
 };

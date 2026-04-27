@@ -12,6 +12,9 @@ export declare class DatabasePlugin {
   upgrade: () => Promise<number | undefined>;
   addCount: (command: string) => Promise<void>;
   getCounts: (all?: boolean) => Promise<Map<string, number>>;
+  addDailyCount: (command: string) => Promise<void>;
+  getDailyCounts: () => Promise<Map<string, number>>;
+  resetDailyCounts: () => Promise<void>;
   disableCommand: (guild: string, command: string) => Promise<void>;
   enableCommand: (guild: string, command: string) => Promise<void>;
   disableChannel: (channel: string, guild: string) => Promise<void>;

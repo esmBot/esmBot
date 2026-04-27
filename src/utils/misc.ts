@@ -118,12 +118,15 @@ const STATS_CHANNEL = "1496977931858346046";
 
 export async function dailyStats(bot: Client, db: DatabasePlugin | undefined) {
   if (db) {
-    const counts = await db.getCounts(true);
+    const counts = await db.getDailyCounts();
     const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const lines = sorted.map(([cmd, n], i) => `**${i + 1}.** \`${cmd}\` — ${n.toLocaleString()} uses`).join("\n");
-    await bot.rest.channels.createMessage(STATS_CHANNEL, {
-      content: `📊 **Daily Command Stats** (${new Date().toDateString()})\n${lines}`,
-    });
+    if (sorted.length > 0) {
+      const lines = sorted.map(([cmd, n], i) => `**${i + 1}.** \`${cmd}\` — ${n.toLocaleString()} uses`).join("\n");
+      await bot.rest.channels.createMessage(STATS_CHANNEL, {
+        content: `📊 **Daily Command Stats** (${new Date().toDateString()})\n${lines}`,
+      });
+    }
+    await db.resetDailyCounts();
   }
   const now = new Date();
   const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);

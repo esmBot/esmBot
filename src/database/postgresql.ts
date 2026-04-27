@@ -73,6 +73,10 @@ const updates = [
     user_id VARCHAR(30) NOT NULL PRIMARY KEY,
     url TEXT NOT NULL
   );`,
+  `CREATE TABLE IF NOT EXISTS daily_counts (
+    command VARCHAR NOT NULL PRIMARY KEY,
+    count integer NOT NULL DEFAULT 0
+  );`,
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {
@@ -259,6 +263,20 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   async addCount(command: string) {
     await this
       .sql`INSERT INTO counts ${this.sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
+  }
+
+  async addDailyCount(command: string) {
+    await this
+      .sql`INSERT INTO daily_counts ${this.sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = daily_counts.count + 1 WHERE daily_counts.command = ${command}`;
+  }
+
+  async getDailyCounts() {
+    const counts = await this.sql<{ command: string; count: number }[]>`SELECT * FROM daily_counts`;
+    return new Map(counts.map((val) => [val.command, val.count]));
+  }
+
+  async resetDailyCounts() {
+    await this.sql`DELETE FROM daily_counts`;
   }
 
   async stop() {

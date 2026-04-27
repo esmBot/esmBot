@@ -93,6 +93,10 @@ const updates = [
     user_id VARCHAR(30) NOT NULL PRIMARY KEY,
     url TEXT NOT NULL
   );`,
+  `CREATE TABLE IF NOT EXISTS daily_counts (
+    command VARCHAR NOT NULL PRIMARY KEY,
+    count integer NOT NULL DEFAULT 0
+  );`,
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
@@ -156,6 +160,19 @@ export default class SQLitePlugin implements DatabasePlugin {
 
   async addCount(command: string) {
     this.connection.prepare("UPDATE counts SET count = count + 1 WHERE command = ?").run(command);
+  }
+
+  async addDailyCount(command: string) {
+    this.connection.prepare("INSERT INTO daily_counts (command, count) VALUES (?, 1) ON CONFLICT(command) DO UPDATE SET count = count + 1").run(command);
+  }
+
+  async getDailyCounts() {
+    const counts = this.connection.prepare("SELECT * FROM daily_counts").all() as Count[];
+    return new Map(counts.map((val) => [val.command, val.count]));
+  }
+
+  async resetDailyCounts() {
+    this.connection.prepare("DELETE FROM daily_counts").run();
   }
 
   async getCounts(all?: boolean) {
