@@ -103,7 +103,7 @@ class MediaCommand extends Command {
           cmd: staticProps.command,
           type: image.mediaType ?? "image",
           params: {
-            togif: !!this.getOptionBoolean("togif"),
+            togif: this.getOptionBoolean("togif") ?? true,
           },
           input: {
             type: image.type,
@@ -123,7 +123,7 @@ class MediaCommand extends Command {
         cmd: staticProps.command,
         type: "image",
         params: {
-          togif: !!this.getOptionBoolean("togif"),
+          togif: this.getOptionBoolean("togif") ?? true,
         },
         id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
       };

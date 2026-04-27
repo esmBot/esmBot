@@ -27,6 +27,9 @@ export declare class DatabasePlugin {
   getBroadcast: () => Promise<string | undefined>;
   setPrefix: (prefix: string, guild: string) => Promise<void>;
   getGuild: (query: string) => Promise<DBGuild>;
+  getCaptionOverride: (userId: string) => Promise<string | undefined>;
+  setCaptionOverride: (userId: string, url: string) => Promise<void>;
+  clearCaptionOverride: (userId: string) => Promise<void>;
 }
 
 export async function init(): Promise<DatabasePlugin | undefined> {

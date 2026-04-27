@@ -45,6 +45,10 @@ CREATE TABLE tags (
   author VARCHAR(30) NOT NULL,
   UNIQUE(guild_id, name)
 );
+CREATE TABLE caption_overrides (
+  user_id VARCHAR(30) NOT NULL PRIMARY KEY,
+  url TEXT NOT NULL
+);
 `;
 
 const updates = [
@@ -65,6 +69,10 @@ const updates = [
     )
   ) INSERT INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds))
   ON CONFLICT ("command") DO UPDATE SET "count" = (SELECT amount FROM cmds);`,
+  `CREATE TABLE IF NOT EXISTS caption_overrides (
+    user_id VARCHAR(30) NOT NULL PRIMARY KEY,
+    url TEXT NOT NULL
+  );`,
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {
@@ -118,6 +126,20 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
       logger.error("Unable to start the bot, quitting now.");
       return 1;
     }
+  }
+
+  async getCaptionOverride(userId: string) {
+    const [result] = await this.sql<{ url: string }[]>`SELECT url FROM caption_overrides WHERE user_id = ${userId}`;
+    return result?.url;
+  }
+
+  async setCaptionOverride(userId: string, url: string) {
+    await this
+      .sql`INSERT INTO caption_overrides (user_id, url) VALUES (${userId}, ${url}) ON CONFLICT (user_id) DO UPDATE SET url = ${url}`;
+  }
+
+  async clearCaptionOverride(userId: string) {
+    await this.sql`DELETE FROM caption_overrides WHERE user_id = ${userId}`;
   }
 
   getGuild(query: string): Promise<DBGuild> {

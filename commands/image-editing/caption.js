@@ -1,6 +1,17 @@
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
 class CaptionCommand extends MediaCommand {
+  async run() {
+    if (this.database) {
+      const override = await this.database.getCaptionOverride(this.author.id);
+      if (override) {
+        this.success = true;
+        return override;
+      }
+    }
+    return super.run();
+  }
+
   /**
    * @param {string | undefined} url
    */

@@ -62,6 +62,10 @@ CREATE TABLE settings (
   CHECK(id = 1)
 );
 INSERT INTO settings (id) VALUES (1);
+CREATE TABLE caption_overrides (
+  user_id VARCHAR(30) NOT NULL PRIMARY KEY,
+  url TEXT NOT NULL
+);
 `;
 
 const updates = [
@@ -85,6 +89,10 @@ const updates = [
 		  'powerdirector', 'shutterstock', 'watermark'
     )
   ) INSERT OR REPLACE INTO counts ("command", "count") VALUES ('watermark', (SELECT amount FROM cmds));`,
+  `CREATE TABLE IF NOT EXISTS caption_overrides (
+    user_id VARCHAR(30) NOT NULL PRIMARY KEY,
+    url TEXT NOT NULL
+  );`,
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
@@ -270,6 +278,23 @@ export default class SQLitePlugin implements DatabasePlugin {
   async setPrefix(prefix: string, guild: string) {
     this.connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild);
     prefixCache.set(guild, prefix);
+  }
+
+  async getCaptionOverride(userId: string) {
+    const result = this.connection
+      .prepare("SELECT url FROM caption_overrides WHERE user_id = ?")
+      .get(userId) as { url: string } | undefined;
+    return result?.url;
+  }
+
+  async setCaptionOverride(userId: string, url: string) {
+    this.connection
+      .prepare("INSERT INTO caption_overrides (user_id, url) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET url = excluded.url")
+      .run(userId, url);
+  }
+
+  async clearCaptionOverride(userId: string) {
+    this.connection.prepare("DELETE FROM caption_overrides WHERE user_id = ?").run(userId);
   }
 
   async getGuild(query: string): Promise<DBGuild> {
