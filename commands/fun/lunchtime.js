@@ -66,7 +66,7 @@ class LunchCommand extends Command {
   ];
 
   static description = "Invites someone to lunch";
-  static aliases = ["lunchtime"];
+  static aliases = ["lunch"];
 }
 
 async function createLunchImage() {
