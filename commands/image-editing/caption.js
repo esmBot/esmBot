@@ -9,6 +9,10 @@ class CaptionCommand extends MediaCommand {
         return override;
       }
     }
+    if (Math.random() < (globalThis.captionEasterEggChance ?? 0.02)) {
+      this.success = true;
+      return "https://tenor.com/view/dear-waterboy-gif-10358399";
+    }
     return super.run();
   }
 
