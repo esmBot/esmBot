@@ -16,15 +16,6 @@ class AddToSkuubCommand extends Command {
 
   static description = "Adds your selected image to the skuub pool";
   static aliases = ["addskuub"];
-  static flags = [
-    {
-      name: "caption",
-      type: "string",
-      description: 'The image caption (must contain "skuub" or "skuubedait")',
-      classic: true,
-      required: true,
-    },
-  ];
 }
 
 export default AddToSkuubCommand;
