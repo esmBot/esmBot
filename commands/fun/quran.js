@@ -30,8 +30,8 @@ class QuranCommand extends Command {
     };
     if (this.type === "application" && this.interaction) {
       const msg = await this.interaction.createFollowup(payload);
-      await msg.createReaction("⬆️");
-      await msg.createReaction("⬇️");
+      await msg.message.createReaction("⬆️");
+      await msg.message.createReaction("⬇️");
       return;
     }
     return payload;
