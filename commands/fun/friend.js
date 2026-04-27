@@ -1,3 +1,4 @@
+import { Constants } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 
 class FriendCommand extends Command {
@@ -12,7 +13,7 @@ class FriendCommand extends Command {
 
     const channel = await this.client.rest.guilds.createChannel(this.guild.id, {
       name: channelName,
-      type: 0,
+      type: Constants.ChannelTypes.GUILD_TEXT,
     });
 
     for (let i = 0; i < 50; i++) {
