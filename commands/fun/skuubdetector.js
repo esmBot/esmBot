@@ -1,7 +1,7 @@
 import { setTimeout } from "node:timers/promises";
 import Command from "#cmd-classes/command.js";
 
-const RADAR_GIF = "https://media.tenor.com/97tbVj0gmiAAAAAC/radar-scan.gif";
+const RADAR_GIF = "https://media1.tenor.com/m/8Juj0k-1L4AAAAAd/radar-love-search.gif";
 const SCAN_TIME_MS = 3500;
 
 class SkuubDetectorCommand extends Command {
