@@ -72,15 +72,18 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
       if (commandClass instanceof MediaCommand && result.files) {
         const fileSize = interaction.attachmentSizeLimit;
         const file = result.files[0];
+        const isSkuubCaption = database && (cmdBaseName === "caption" || cmdBaseName === "caption2") &&
+          (interaction.data.options.getString("text") ?? "").toLowerCase().includes("skuub");
         if (file.contents.length > fileSize) {
           if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && interaction.appPermissions.has("EMBED_LINKS")) {
-            await upload(
+            const tempUrl = await upload(
               client,
               { ...file, flags: result.flags },
               interaction,
               commandClass.success,
               interaction.authorizingIntegrationOwners[0] === undefined,
             );
+            if (isSkuubCaption) await database!.addSkuubImage(tempUrl);
           } else {
             await interaction.createFollowup({
               content: getString("image.noTempServer", { locale: interaction.locale }),
@@ -94,12 +97,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
           });
           const attachment = imgMessage.message.attachments.first();
           if (attachment) {
-            if (database && (cmdBaseName === "caption" || cmdBaseName === "caption2")) {
-              const captionText = interaction.data.options.getString("text") ?? "";
-              if (captionText.toLowerCase().includes("skuub")) {
-                await database.addSkuubImage(attachment.url);
-              }
-            }
+            if (isSkuubCaption) await database!.addSkuubImage(attachment.url);
             if (interaction.authorizingIntegrationOwners[0] === undefined) {
               const path = new URL(attachment.proxyURL);
               path.searchParams.set("animated", "true");

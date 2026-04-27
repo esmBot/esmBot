@@ -29,7 +29,7 @@ export async function upload(
   context: CommandInteraction | Message,
   success = true,
   save = false,
-) {
+): Promise<string> {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
@@ -89,6 +89,7 @@ export async function upload(
     dirSizeCache = size;
     await removeOldImages(size);
   }
+  return imageURL;
 }
 
 async function removeOldImages(s: number) {
