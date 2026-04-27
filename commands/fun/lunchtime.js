@@ -1,5 +1,4 @@
 import { Buffer } from "node:buffer";
-import sharp from "sharp";
 import Command from "#cmd-classes/command.js";
 
 const FOOD_EMOJIS = [
@@ -31,27 +30,21 @@ class LunchCommand extends Command {
     const description =
       `${leftEmojis} Hi <@${invitee.id}>, you have been invited to lunch by ` +
       `<@${this.author.id}>, you must accept! ${rightEmojis}`;
+    const embed = {
+      description,
+      color: 0xf4a261,
+      image: {
+        url: image ? "attachment://lunch-invite.png" : "https://upload.wikimedia.org/wikipedia/commons/2/24/Bologna_sandwich.jpg",
+      },
+    };
 
     return {
       content: `<@${invitee.id}>`,
       allowedMentions: {
         users: [invitee.id],
       },
-      embeds: [
-        {
-          description,
-          color: 0xf4a261,
-          image: {
-            url: "attachment://lunch-invite.png",
-          },
-        },
-      ],
-      files: [
-        {
-          contents: image,
-          name: "lunch-invite.png",
-        },
-      ],
+      embeds: [embed],
+      files: image ? [{ contents: image, name: "lunch-invite.png" }] : [],
     };
   }
 
@@ -70,6 +63,13 @@ class LunchCommand extends Command {
 }
 
 async function createLunchImage() {
+  let sharp;
+  try {
+    ({ default: sharp } = await import("sharp"));
+  } catch {
+    return;
+  }
+
   const width = 1200;
   const height = 675;
   const svg = `
