@@ -77,6 +77,9 @@ const updates = [
     command VARCHAR NOT NULL PRIMARY KEY,
     count integer NOT NULL DEFAULT 0
   );`,
+  `CREATE TABLE IF NOT EXISTS skuub_images (
+    url TEXT NOT NULL PRIMARY KEY
+  );`,
 ];
 
 export default class PostgreSQLPlugin implements DatabasePlugin {
@@ -277,6 +280,15 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async resetDailyCounts() {
     await this.sql`DELETE FROM daily_counts`;
+  }
+
+  async addSkuubImage(url: string) {
+    await this.sql`INSERT INTO skuub_images (url) VALUES (${url}) ON CONFLICT DO NOTHING`;
+  }
+
+  async getSkuubImages() {
+    const rows = await this.sql<{ url: string }[]>`SELECT url FROM skuub_images`;
+    return rows.map((r) => r.url);
   }
 
   async stop() {

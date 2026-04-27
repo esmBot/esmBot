@@ -15,6 +15,8 @@ export declare class DatabasePlugin {
   addDailyCount: (command: string) => Promise<void>;
   getDailyCounts: () => Promise<Map<string, number>>;
   resetDailyCounts: () => Promise<void>;
+  addSkuubImage: (url: string) => Promise<void>;
+  getSkuubImages: () => Promise<string[]>;
   disableCommand: (guild: string, command: string) => Promise<void>;
   enableCommand: (guild: string, command: string) => Promise<void>;
   disableChannel: (channel: string, guild: string) => Promise<void>;

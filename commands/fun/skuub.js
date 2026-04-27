@@ -29,10 +29,14 @@ const images = [
   "caption_86.gif", "caption_93.gif", "togif_22.gif",
 ];
 
+const BASE_URL = "https://r2.fivemanage.com/LTm3ynKIgbqebX4GGCrxi/";
+
 class SkuubCommand extends Command {
   async run() {
-    const img = images[Math.floor(Math.random() * images.length)];
-    return `https://r2.fivemanage.com/LTm3ynKIgbqebX4GGCrxi/${img}`;
+    const hardcoded = images.map((f) => `${BASE_URL}${f}`);
+    const fromDb = this.database ? await this.database.getSkuubImages() : [];
+    const pool = [...hardcoded, ...fromDb];
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   static description = "Posts a random skuub gif";

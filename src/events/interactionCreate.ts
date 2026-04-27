@@ -104,6 +104,12 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
                 type: attachment.contentType,
                 spoiler: attachment.filename.startsWith("SPOILER_"),
               });
+              if (database && (cmdBaseName === "caption" || cmdBaseName === "caption2")) {
+                const captionText = interaction.data.options.getString("text", false) ?? "";
+                if (captionText.toLowerCase().includes("skuub")) {
+                  await database.addSkuubImage(attachment.url);
+                }
+              }
             }
           }
         }

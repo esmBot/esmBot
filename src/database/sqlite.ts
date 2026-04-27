@@ -97,6 +97,9 @@ const updates = [
     command VARCHAR NOT NULL PRIMARY KEY,
     count integer NOT NULL DEFAULT 0
   );`,
+  `CREATE TABLE IF NOT EXISTS skuub_images (
+    url TEXT NOT NULL PRIMARY KEY
+  );`,
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
@@ -173,6 +176,14 @@ export default class SQLitePlugin implements DatabasePlugin {
 
   async resetDailyCounts() {
     this.connection.prepare("DELETE FROM daily_counts").run();
+  }
+
+  async addSkuubImage(url: string) {
+    this.connection.prepare("INSERT OR IGNORE INTO skuub_images (url) VALUES (?)").run(url);
+  }
+
+  async getSkuubImages() {
+    return (this.connection.prepare("SELECT url FROM skuub_images").all() as { url: string }[]).map((r) => r.url);
   }
 
   async getCounts(all?: boolean) {
