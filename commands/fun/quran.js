@@ -17,9 +17,15 @@ class QuranCommand extends Command {
     const res = await fetch(`https://api.alquran.cloud/v1/ayah/${verse}/en.asad`);
     if (!res.ok) return "Failed to fetch verse.";
     const { data } = await res.json();
-    const header = toScript(`${data.surah.englishName} ${data.surah.number}:${data.numberInSurah}`);
-    const body = toScript(data.text);
-    return `✨🌙 **${header}** 🌙✨\n*${body}*`;
+    const title = toScript(`${data.surah.englishName} ${data.surah.number}:${data.numberInSurah}`);
+    return {
+      embeds: [{
+        title: `✨🌙 ${title} 🌙✨`,
+        description: `*${data.text}*`,
+        color: 0x1a6b3a,
+        footer: { text: `${data.surah.englishNameTranslation} • Translated by Muhammad Asad` },
+      }],
+    };
   }
 
   static description = "Gets a random verse from the Quran";
