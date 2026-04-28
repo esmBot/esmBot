@@ -17,6 +17,8 @@ jobs:
           script_stop: true
           script: |
             set -e
+            source ~/.bashrc || true
+            export PATH="$PATH:/root/.local/share/pnpm:/usr/local/bin"
             cd ${{ secrets.DEPLOY_PATH }}
             git pull origin master
             pnpm run build
