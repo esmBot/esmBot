@@ -35,6 +35,8 @@ export declare class DatabasePlugin {
   getCaptionOverride: (userId: string) => Promise<string | undefined>;
   setCaptionOverride: (userId: string, url: string) => Promise<void>;
   clearCaptionOverride: (userId: string) => Promise<void>;
+  getFaceitTracking: (nickname: string) => Promise<{ nickname: string; skill_level: number; faceit_elo: number } | undefined>;
+  setFaceitTracking: (nickname: string, skillLevel: number, faceitElo: number) => Promise<void>;
 }
 
 export async function init(): Promise<DatabasePlugin | undefined> {

@@ -49,6 +49,11 @@ CREATE TABLE caption_overrides (
   user_id VARCHAR(30) NOT NULL PRIMARY KEY,
   url TEXT NOT NULL
 );
+CREATE TABLE faceit_tracking (
+  nickname TEXT NOT NULL PRIMARY KEY,
+  skill_level integer NOT NULL,
+  faceit_elo integer NOT NULL
+);
 `;
 
 const updates = [
@@ -79,6 +84,11 @@ const updates = [
   );`,
   `CREATE TABLE IF NOT EXISTS skuub_images (
     url TEXT NOT NULL PRIMARY KEY
+  );`,
+  `CREATE TABLE IF NOT EXISTS faceit_tracking (
+    nickname TEXT NOT NULL PRIMARY KEY,
+    skill_level integer NOT NULL,
+    faceit_elo integer NOT NULL
   );`,
 ];
 
@@ -147,6 +157,17 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async clearCaptionOverride(userId: string) {
     await this.sql`DELETE FROM caption_overrides WHERE user_id = ${userId}`;
+  }
+
+  async getFaceitTracking(nickname: string) {
+    const [result] =
+      await this.sql<{ nickname: string; skill_level: number; faceit_elo: number }[]>`SELECT nickname, skill_level, faceit_elo FROM faceit_tracking WHERE nickname = ${nickname}`;
+    return result;
+  }
+
+  async setFaceitTracking(nickname: string, skillLevel: number, faceitElo: number) {
+    await this
+      .sql`INSERT INTO faceit_tracking (nickname, skill_level, faceit_elo) VALUES (${nickname}, ${skillLevel}, ${faceitElo}) ON CONFLICT (nickname) DO UPDATE SET skill_level = ${skillLevel}, faceit_elo = ${faceitElo}`;
   }
 
   getGuild(query: string): Promise<DBGuild> {

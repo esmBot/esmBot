@@ -66,6 +66,11 @@ CREATE TABLE caption_overrides (
   user_id VARCHAR(30) NOT NULL PRIMARY KEY,
   url TEXT NOT NULL
 );
+CREATE TABLE faceit_tracking (
+  nickname TEXT NOT NULL PRIMARY KEY,
+  skill_level integer NOT NULL,
+  faceit_elo integer NOT NULL
+);
 `;
 
 const updates = [
@@ -99,6 +104,11 @@ const updates = [
   );`,
   `CREATE TABLE IF NOT EXISTS skuub_images (
     url TEXT NOT NULL PRIMARY KEY
+  );`,
+  `CREATE TABLE IF NOT EXISTS faceit_tracking (
+    nickname TEXT NOT NULL PRIMARY KEY,
+    skill_level integer NOT NULL,
+    faceit_elo integer NOT NULL
   );`,
 ];
 
@@ -323,6 +333,20 @@ export default class SQLitePlugin implements DatabasePlugin {
 
   async clearCaptionOverride(userId: string) {
     this.connection.prepare("DELETE FROM caption_overrides WHERE user_id = ?").run(userId);
+  }
+
+  async getFaceitTracking(nickname: string) {
+    return this.connection
+      .prepare("SELECT nickname, skill_level, faceit_elo FROM faceit_tracking WHERE nickname = ?")
+      .get(nickname) as { nickname: string; skill_level: number; faceit_elo: number } | undefined;
+  }
+
+  async setFaceitTracking(nickname: string, skillLevel: number, faceitElo: number) {
+    this.connection
+      .prepare(
+        "INSERT INTO faceit_tracking (nickname, skill_level, faceit_elo) VALUES (?, ?, ?) ON CONFLICT(nickname) DO UPDATE SET skill_level = excluded.skill_level, faceit_elo = excluded.faceit_elo",
+      )
+      .run(nickname, skillLevel, faceitElo);
   }
 
   async getGuild(query: string): Promise<DBGuild> {
