@@ -1,8 +1,8 @@
 import { setTimeout } from "node:timers/promises";
 import Command from "#cmd-classes/command.js";
 
-const RADAR_GIF = "https://media1.tenor.com/m/8Juj0k-1L4AAAAAd/radar-love-search.gif";
-const SCAN_TIME_MS = 3500;
+const RADAR_GIF = "https://c.tenor.com/8Juj0k-1L4AAAAAd/tenor.gif";
+const SCAN_TIME_MS = 10_000;
 const SCANNING_MESSAGE = {
   content: "Scanning server for skuubs...",
   embeds: [
