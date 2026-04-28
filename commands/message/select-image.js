@@ -13,12 +13,12 @@ class SelectImageCommand extends Command {
       throw e;
     });
     this.success = false;
-    if (typeof mediaArr === "string") return image;
+    if (typeof mediaArr === "string") return mediaArr;
     if (mediaArr.length === 0) return this.getString("image.couldNotFind");
 
     let final;
     for (const media of mediaArr) {
-      const type = await request(new URL(media.path), ["image", "audio"], true).catch(() => {});
+      const type = await request(new URL(media.path), ["image"], true).catch(() => {});
       if (type) {
         final = media;
         break;
