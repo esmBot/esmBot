@@ -26,6 +26,10 @@ A command list can be found [here](https://esmbot.net/help.html).
 
 If you want to self-host the bot, a guide can be found [here](https://docs.esmbot.net/setup).
 
+### Local setup reminder
+
+The `/ask` command uses Gemini and requires the host machine to set `GEMINI_API_KEY` in its local `.env` file. Do not commit the real API key to Git.
+
 ## Contributing
 
 esmBot is licensed under the MIT License. Issues and pull requests are accepted to introduce features and fix bugs, and translations into different languages are accepted via [Weblate](https://translate.codeberg.org/projects/esmbot/esmbot/).
