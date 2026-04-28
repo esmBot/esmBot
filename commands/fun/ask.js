@@ -3,6 +3,7 @@ import Command from "#cmd-classes/command.js";
 
 const DEFAULT_MODEL = "gemini-2.5-flash-lite";
 const MAX_DISCORD_CONTENT = 1900;
+const GEMINI_TIMEOUT_MS = 20000;
 
 function cleanText(text, remove = []) {
   let output = text.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`);
@@ -30,26 +31,39 @@ class AskCommand extends Command {
 
     await this.acknowledge();
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: prompt }],
-            },
-          ],
-          generationConfig: {
-            maxOutputTokens: 700,
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+
+    let response;
+    try {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
           },
-        }),
-      },
-    );
+          signal: controller.signal,
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: prompt }],
+              },
+            ],
+            generationConfig: {
+              maxOutputTokens: 700,
+            },
+          }),
+        },
+      );
+    } catch (error) {
+      if (error?.name === "AbortError") return "Gemini request timed out.";
+      return "Gemini request failed before a response was received.";
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!response.ok) {
       const error = cleanText(await response.text(), [apiKey]);
