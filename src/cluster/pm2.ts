@@ -87,8 +87,11 @@ async function updateStats() {
   });
 }
 
-if (process.env.METRICS && process.env.METRICS !== "") {
+const port = process.env.CLUSTER_PORT ?? process.env.METRICS;
+
+if (port && port !== "") {
   createManageServer(
+    port,
     () => {
       return {
         shards: shardData,

@@ -28,7 +28,7 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `TEMPDIR`: A directory that will store generated media files larger than Discord's filesize limit. It's recommended to set this to a directory being served by a web server.
 - `TMP_DOMAIN`: The root domain/directory that the media files larger than Discord's filesize limit are stored at. Example: `https://projectlounge.pw/tmp`
 - `THRESHOLD`: A filesize threshold that the bot will start deleting old files in `TEMPDIR` at.
-- `METRICS`: The HTTP port to serve [Prometheus](https://prometheus.io/)-compatible metrics on.
+- `CLUSTER_PORT`: The HTTP port to serve cluster management endpoints and [Prometheus](https://prometheus.io/)-compatible metrics on.
 - `API_TYPE`: Set this to "none" if you want to process all media locally. Alternatively, set it to "ws" to use a media API server specified in the `media` block of `config/servers.json`.
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
 

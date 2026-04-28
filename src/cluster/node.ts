@@ -159,8 +159,11 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
   });
 }
 
-if (process.env.METRICS && process.env.METRICS !== "") {
+const port = process.env.CLUSTER_PORT ?? process.env.METRICS;
+
+if (port && port !== "") {
   createManageServer(
+    port,
     () => {
       return {
         shards: shardData,

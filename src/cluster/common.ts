@@ -102,6 +102,7 @@ interface MetricsInfo {
 }
 
 export async function createManageServer(
+  port: string,
   metrics: () => MetricsInfo,
   restart: (id: number) => boolean,
   restartAll: () => void,
@@ -202,8 +203,15 @@ esmbot_total_mem ${info.totalMem}
     res.statusCode = 404;
     return res.end("404 Not Found");
   });
-  httpServer.listen(process.env.METRICS, () => {
-    logger.log("info", `Serving metrics at ${process.env.METRICS}`);
+
+  if (process.env.METRICS && process.env.METRICS !== "") {
+    logger.warn('!!! THE "METRICS" ENVIRONMENT VARIABLE IS DEPRECATED !!!');
+    logger.warn(
+      'The "METRICS" variable has been renamed to "CLUSTER_PORT". Please rename it in your .env file or other environment configuration; esmBot will no longer read this variable in a future version.',
+    );
+  }
+  httpServer.listen(port, () => {
+    logger.log("info", `Serving management endpoints/metrics at ${port}`);
   });
   return httpServer;
 }
