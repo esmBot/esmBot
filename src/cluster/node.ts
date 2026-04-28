@@ -24,24 +24,9 @@ const readyHandlers = new Map<number, (value?: unknown) => void>();
 
 let serverCount = 0;
 let shardData: ShardData[] = [];
-let shardArrays: number[][];
 let clusterCount = 0;
 let responseCount = 0;
 let totalMem = 0;
-
-cluster.on("exit", async (worker, code, signal) => {
-  const id = processes.findIndex((v) => worker.id === v.id);
-  if (id === -1) {
-    logger.error(`Unknown process with ID ${worker.id} exited, will not restart`);
-    return;
-  }
-  logger.error(`Process ${id + 1} exited with code ${signal || code}, attempting to restart...`);
-  const newWorker = await awaitStart(id + 1, shardArrays[id]);
-  processes[id] = newWorker;
-  readyHandlers.get(id)?.();
-  readyHandlers.delete(id);
-  logger.info(`Started esmBot process ${id + 1}.`);
-});
 
 function updateStats(memOnly: boolean = false): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -216,7 +201,21 @@ const shardArray = [];
 for (let i = 0; i < shards; i++) {
   shardArray.push(i);
 }
-shardArrays = calcShards(shardArray, procAmount);
+const shardArrays = calcShards(shardArray, procAmount);
+
+cluster.on("exit", async (worker, code, signal) => {
+  const id = processes.findIndex((v) => worker.id === v.id);
+  if (id === -1) {
+    logger.error(`Unknown process with ID ${worker.id} exited, will not restart`);
+    return;
+  }
+  logger.error(`Process ${id + 1} exited with code ${signal || code}, attempting to restart...`);
+  const newWorker = await awaitStart(id + 1, shardArrays[id]);
+  processes[id] = newWorker;
+  readyHandlers.get(id)?.();
+  readyHandlers.delete(id);
+  logger.info(`Started esmBot process ${id + 1}.`);
+});
 
 cluster.setupPrimary({
   exec: "dist/app.js",

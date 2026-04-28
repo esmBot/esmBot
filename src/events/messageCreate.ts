@@ -82,16 +82,15 @@ export default async ({ client, database }: EventParams, message: Message) => {
   const preArgs = text.split(/\s+/g);
   const shifted = preArgs.shift();
   if (!shifted) return;
-  const cmdBaseName = shifted.toLowerCase();
-  const aliased = aliases.get(cmdBaseName);
+  const command = shifted.toLowerCase();
+  const aliased = aliases.get(command);
 
-  let cmdName = aliased ?? cmdBaseName;
+  const cmdName = aliased ?? command;
 
   // check if command exists and if it's enabled
   const cmdBase = commands.get(cmdName);
   if (!cmdBase) return;
 
-  let command = cmdBaseName;
   let cmd = cmdBase as typeof Command;
   if (!(cmd.prototype instanceof Command)) return;
 

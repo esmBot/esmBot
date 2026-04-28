@@ -41,7 +41,7 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   const cmdBase = commands.get(cmdName) ?? messageCommands.get(cmdName) ?? userCommands.get(cmdName);
   if (!cmdBase) return;
 
-  let cmd = cmdBase as typeof Command;
+  const cmd = cmdBase as typeof Command;
   if (!(cmd.prototype instanceof Command)) return;
 
   try {
