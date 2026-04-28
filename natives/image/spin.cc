@@ -13,7 +13,9 @@ CmdOutput esmb::Image::Spin(const string &type, string &outType, const char *buf
                             [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   int staticAngle = GetArgumentWithFallback<int>(arguments, "angle", 0);
 
-  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true));
+  VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, true))
+                .colourspace(VIPS_INTERPRETATION_sRGB);
+  if (!in.has_alpha()) in = in.bandjoin(255);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
