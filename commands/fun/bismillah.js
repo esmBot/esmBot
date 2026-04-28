@@ -3,6 +3,7 @@ import Command from "#cmd-classes/command.js";
 
 const QURAN_SURAH_COUNT = 114;
 const DISCORD_MESSAGE_LIMIT = 2000;
+const FALLBACK_IMAGE_URL = "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80";
 const BISMILLAH_ARABIC =
   "\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u064e\u0647\u0650 \u0671\u0644\u0631\u0651\u064e\u062d\u0652\u0645\u064e\u0670\u0646\u0650 \u0671\u0644\u0631\u0651\u064e\u062d\u0650\u064a\u0645\u0650";
 
@@ -13,9 +14,15 @@ class BismillahCommand extends Command {
     const surah = await fetchRandomSurahArabic();
     const image = await createBismillahImage(surah);
     const content = `${formatSurahArabic(surah)}\nSource: <https://quran.com/${surah.number}>`;
+    const embed = {
+      image: {
+        url: image ? "attachment://bismillah.png" : FALLBACK_IMAGE_URL,
+      },
+    };
 
     return {
       content,
+      embeds: [embed],
       files: image ? [{ contents: image, name: "bismillah.png" }] : [],
     };
   }
