@@ -7,7 +7,7 @@ class CaptionIdeaCommand extends Command {
   }
 
   static description = "Generates a skuub-style caption idea";
-  static aliases = ["captionideas", "skuubcaption"];
+  static aliases = ["captionideas"];
 }
 
 export default CaptionIdeaCommand;
