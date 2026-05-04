@@ -35,24 +35,6 @@ const providerUrls = ["https://tenor.co", "https://tenor.com", "https://giphy.co
 const discordCDNDomains = ["cdn.discordapp.com", "media.discordapp.net"];
 const discordProxyDomains = ["images-ext-1.discordapp.net", "images-ext-2.discordapp.net"];
 
-type TenorMediaObject = {
-  url: string;
-  dims: number[];
-  duration: number;
-  size: number;
-};
-
-type TenorResponse = {
-  error?: {
-    code: number;
-    message: string;
-    status: string;
-  };
-  results: {
-    media_formats: { [key: string]: TenorMediaObject };
-  }[];
-};
-
 type KlipyMediaObject = {
   url: string;
   width: number;
@@ -112,45 +94,17 @@ async function getMedia(
   const url2 = new URL(media2);
   const host = url2.host;
   if (combined.includes(host)) {
-    if (tenorURLs.includes(host)) {
-      // Tenor's API tends to be the most reliable way to get a raw GIF,
-      // so we use that if there's a key in the config
-      if (process.env.TENOR && process.env.TENOR !== "") {
-        let id: string | undefined;
-        if (url2.pathname.startsWith("/view/")) {
-          id = media2.split("-").pop();
-        } else if (url2.pathname.endsWith(".gif")) {
-          const redirect = (await fetch(media2, { method: "HEAD", redirect: "manual" })).headers.get("location");
-          id = redirect?.split("-").pop();
-        } else {
-          return;
-        }
-        if (Number.isNaN(Number(id))) return;
-        const data = await fetch(
-          `https://tenor.googleapis.com/v2/posts?media_filter=gif&limit=1&client_key=esmBot%20${process.env.ESMBOT_VER}&key=${process.env.TENOR}&ids=${id}`,
-        );
-        if (data.status === 429) return;
-        const json = (await data.json()) as TenorResponse;
-        if (json.error) throw Error(json.error.message);
-        if (json.results.length === 0) return;
-        payload.path = json.results[0].media_formats.gif.url;
-      } else if (url2.pathname.startsWith("/view/")) {
-        const tenorURL = url2;
-        if (!tenorURL.pathname.endsWith(".gif")) tenorURL.pathname += ".gif";
+    if (tenorURLs.includes(host) && url2.pathname.startsWith("/view/")) {
+      const tenorURL = url2;
+      if (!tenorURL.pathname.endsWith(".gif")) tenorURL.pathname += ".gif";
 
-        const redirectReq = await fetch(tenorURL, {
-          method: "HEAD",
-          redirect: "manual",
-        });
-        if (redirectReq.status !== 301 && redirectReq.status !== 302) return;
+      const redirectReq = await fetch(tenorURL, { method: "HEAD", redirect: "manual" });
+      if (redirectReq.status !== 301 && redirectReq.status !== 302) return;
 
-        const redirect = redirectReq.headers.get("location");
-        if (!redirect) return;
+      const redirect = redirectReq.headers.get("location");
+      if (!redirect) return;
 
-        payload.path = redirect;
-      } else {
-        return;
-      }
+      payload.path = redirect;
     } else if (klipyURLs.includes(host)) {
       if (!process.env.KLIPY || process.env.KLIPY === "") return;
       if (!media2.includes("klipy.com/gifs/")) return;
