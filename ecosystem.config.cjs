@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "esmBot-manager",
-      script: "dist/cluster/pm2.js",
+      script: "dist/cluster/node.js",
       autorestart: true,
       exp_backoff_restart_delay: 1000,
       watch: false,
