@@ -64,7 +64,7 @@
     "dotenv": "^17.4.2",
     "file-type": "^22.0.1",
     "format-duration": "^3.0.2",
-    "ipaddr.js": "^2.3.0",
+    "ipaddr.js": "^2.4.0",
     "node-addon-api": "^8.7.0",
     "oceanic.js": "1.14.0",
     "postgres": "^3.4.9",
@@ -78,14 +78,14 @@
     "@types/node": "22",
     "@types/ws": "^8.18.1",
     "cmake-js": "^8.0.0",
-    "oxfmt": "^0.45.0",
-    "oxlint": "^1.60.0",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
     "typescript": "^6.0.3"
   },
   "optionalDependencies": {
-    "@sentry/deno": "^10.49.0",
-    "@sentry/node": "^10.49.0",
-    "pm2": "^6.0.14"
+    "@sentry/deno": "^10.51.0",
+    "@sentry/node": "^10.51.0",
+    "pm2": "^7.0.1"
   },
   "engines": {
     "node": ">=22"
