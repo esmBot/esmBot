@@ -78,10 +78,7 @@ class MediaCommand extends Command {
         selectedImages.delete(this.author.id);
         mediaParams = {
           cmd: staticProps.command,
-          params: {
-            togif: !!this.getOptionBoolean("togif"),
-            ...(this.params ?? this.paramsFunc()),
-          },
+          params: {},
           id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
           inputs: media,
           ephemeral,
@@ -95,10 +92,7 @@ class MediaCommand extends Command {
     } else {
       mediaParams = {
         cmd: staticProps.command,
-        params: {
-          togif: !!this.getOptionBoolean("togif"),
-          ...(this.params ?? this.paramsFunc()),
-        },
+        params: {},
         inputs: [],
         id: (this.interaction ?? this.message)?.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(),
         ephemeral,
@@ -124,6 +118,11 @@ class MediaCommand extends Command {
         );
       }
     }
+
+    mediaParams.params = {
+      togif: !!this.getOptionBoolean("togif"),
+      ...(this.params ?? this.paramsFunc()),
+    };
 
     let status: Message | undefined;
     if (this.message) {
