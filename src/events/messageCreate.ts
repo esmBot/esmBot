@@ -29,6 +29,9 @@ export default async ({ client, database }: EventParams, message: Message) => {
   // ignore other bots
   if (message.author.bot) return;
 
+  // ignore when message content is missing
+  if (message.content === "") return;
+
   // don't run command if bot can't send messages
   let permChannel: AnyTextableChannel | undefined;
   if (message.channel instanceof ThreadChannel && !message.channel.parent) {
