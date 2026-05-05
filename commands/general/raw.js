@@ -1,15 +1,27 @@
 import Command from "#cmd-classes/command.js";
-import imageDetect from "#utils/mediadetect.js";
+import { request } from "#utils/media.js";
+import mediaDetect from "#utils/mediadetect.js";
 
 class RawCommand extends Command {
   async run() {
     await this.acknowledge();
-    const image = await imageDetect(this.client, this.permissions, ["image"], this.message, this.interaction);
-    if (image === undefined) {
+    const mediaArr = await mediaDetect(this.client, this.permissions, this.message, this.interaction);
+    if (mediaArr.length === 0) {
       this.success = false;
       return this.getString("commands.responses.raw.noInput");
     }
-    return image.path;
+
+    let final;
+    for (const media of mediaArr) {
+      const type = await request(new URL(media.path), ["image"], true).catch(() => {});
+      if (type) {
+        final = media;
+        break;
+      }
+    }
+    if (!final) return this.getString("image.couldNotFind");
+
+    return final.path;
   }
 
   static description = "Gets a direct image URL (useful for saving GIFs from sites like Tenor)";
