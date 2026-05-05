@@ -37,35 +37,42 @@ CmdOutput esmb::Image::Uncanny(const string &type, string &outType, const char *
   string fontResult = findResult != fontPaths.end() ? basePath + findResult->second : "";
 
   LoadFonts(basePath);
-  VOption *textOptions = VImage::option()
-                           ->set("rgba", true)
-                           ->set("align", VIPS_ALIGN_CENTRE)
-                           ->set("font", font_string.c_str())
-                           ->set("width", 588)
-                           ->set("height", 90);
-  if (fontResult != "") {
-    textOptions = textOptions->set("fontfile", fontResult.c_str());
-  }
-  VImage text = VImage::text(captionText.c_str(), textOptions);
-  VImage captionImage =
-    text.extract_band(0, VImage::option()->set("n", 3))
-      .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40, VImage::option()->set("extend", "black"));
 
-  VOption *textOptions2 = VImage::option()
-                            ->set("rgba", true)
-                            ->set("align", VIPS_ALIGN_CENTRE)
-                            ->set("font", font_string.c_str())
-                            ->set("width", 588)
-                            ->set("height", 90);
-  if (fontResult != "") {
-    textOptions2 = textOptions2->set("fontfile", fontResult.c_str());
-  }
-  VImage text2 = VImage::text(caption2Text.c_str(), textOptions2);
-  VImage caption2Image =
-    text2.extract_band(0, VImage::option()->set("n", 3))
-      .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40, VImage::option()->set("extend", "black"));
+  if (caption != "") {
+    VOption *textOptions = VImage::option()
+                             ->set("rgba", true)
+                             ->set("align", VIPS_ALIGN_CENTRE)
+                             ->set("font", font_string.c_str())
+                             ->set("width", 588)
+                             ->set("height", 90);
+    if (fontResult != "") {
+      textOptions = textOptions->set("fontfile", fontResult.c_str());
+    }
+    VImage text = VImage::text(captionText.c_str(), textOptions);
+    VImage captionImage =
+      text.extract_band(0, VImage::option()->set("n", 3))
+        .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text.height() + 40, VImage::option()->set("extend", "black"));
 
-  base = base.insert(captionImage, 0, 0).insert(caption2Image, 640, 0);
+    base = base.insert(captionImage, 0, 0);
+  }
+
+  if (caption2 != "") {
+    VOption *textOptions2 = VImage::option()
+                              ->set("rgba", true)
+                              ->set("align", VIPS_ALIGN_CENTRE)
+                              ->set("font", font_string.c_str())
+                              ->set("width", 588)
+                              ->set("height", 90);
+    if (fontResult != "") {
+      textOptions2 = textOptions2->set("fontfile", fontResult.c_str());
+    }
+    VImage text2 = VImage::text(caption2Text.c_str(), textOptions2);
+    VImage caption2Image =
+      text2.extract_band(0, VImage::option()->set("n", 3))
+        .gravity(VIPS_COMPASS_DIRECTION_CENTRE, 640, text2.height() + 40, VImage::option()->set("extend", "black"));
+
+    base = base.insert(caption2Image, 640, 0);
+  }
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
