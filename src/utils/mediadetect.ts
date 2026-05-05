@@ -86,7 +86,12 @@ async function getMedia(
   spoiler = false,
   client?: Client,
 ): Promise<MediaMeta | undefined> {
-  const mediaURL = new URL(media);
+  let mediaURL: URL;
+  try {
+    mediaURL = new URL(media);
+  } catch {
+    return;
+  }
   if (!mediaURL.host) return;
   if (mediaURL.protocol !== "http:" && mediaURL.protocol !== "https:") return;
   const payload: MediaMeta = {
