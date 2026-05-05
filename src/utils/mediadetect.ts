@@ -75,6 +75,8 @@ type KlipyResponse = {
   };
 };
 
+const tenorRegex = /^https:\/\/media\d\.tenor\.com\/m\/(\w+)\/[\w-%]+\.gif$/;
+
 /**
  * Gets proper media paths.
  */
@@ -104,7 +106,10 @@ async function getMedia(
       const redirect = redirectReq.headers.get("location");
       if (!redirect) return;
 
-      payload.path = redirect;
+      // format it into a "proper" raw link
+      const match = tenorRegex.exec(redirect);
+      if (!match) return;
+      payload.path = `https://c.tenor.com/${match[1]}/tenor.gif`;
     } else if (klipyURLs.includes(host)) {
       if (!process.env.KLIPY || process.env.KLIPY === "") return;
       if (!media2.includes("klipy.com/gifs/")) return;
