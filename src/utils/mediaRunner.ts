@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { request } from "./media.ts";
-import type { MediaLib } from "./mediaLib.ts";
+import type { FuncObject, MediaLib } from "./mediaLib.ts";
 import { mimeToExt } from "./mime.ts";
 import type { JobOutput, MediaParams, MediaTypes } from "./types.ts";
 
@@ -20,9 +20,12 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
   }
 
   // Check if command exists
+  const possibleFuncs: (FuncObject & { type: MediaTypes })[] = [];
   const supportedTypes: MediaTypes[] = [];
   for (const [type, cmds] of Object.entries(media.funcs)) {
-    if (cmds.some((v) => v.name === object.cmd)) {
+    const cmd = cmds.find((v) => v.name === object.cmd);
+    if (cmd) {
+      possibleFuncs.push({ ...cmd, type: type as MediaTypes });
       supportedTypes.push(type as MediaTypes);
     }
   }
@@ -50,7 +53,7 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
         break;
       }
     }
-    if (!inputBuffer || !mediaType) throw "nomedia";
+    if ((!inputBuffer || !mediaType) && possibleFuncs.some((v) => v.input)) throw "nomedia";
   } catch (e) {
     if (typeof e !== "string") throw e;
     return {
@@ -62,29 +65,21 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
 
   if (object.spoiler) spoiler = true;
 
-  let validInput = false;
-  for (const type of supportedTypes) {
-    const func = media.funcs[type].find((v) => v.name === object.cmd);
-    if (!func) continue;
-
-    if (func.input) {
-      if (type === mediaType) {
-        validInput = true;
-        break;
-      }
+  let chosenFunc = possibleFuncs.find((v) => v.type === mediaType);
+  if (!chosenFunc) {
+    if (!possibleFuncs.some((v) => !v.input)) {
+      return {
+        buffer: Buffer.alloc(0),
+        type: "nomedia",
+        spoiler: false,
+      };
     } else {
-      validInput = true;
-      break;
+      chosenFunc = possibleFuncs[0];
     }
   }
 
   // Reject non-animated formats for commands that only work on animations
-  if (
-    supportedTypes.includes("image") &&
-    fileType !== "image/gif" &&
-    fileType !== "image/webp" &&
-    media.funcs.image.find((v) => v.name === object.cmd)?.anim
-  ) {
+  if (chosenFunc.type === "image" && fileType !== "image/gif" && fileType !== "image/webp" && chosenFunc.anim) {
     return {
       buffer: Buffer.alloc(0),
       type: "noanim",
@@ -92,17 +87,9 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
     };
   }
 
-  if (!validInput) {
-    return {
-      buffer: Buffer.alloc(0),
-      type: "nomedia",
-      spoiler: false,
-    };
-  }
-
   if (!mediaType) {
     // A function without input will always return a single media type
-    mediaType = supportedTypes[0];
+    mediaType = possibleFuncs[0].type;
   }
 
   // Convert from a MIME type (e.g. "image/png") to something the media processor understands (e.g. "png").
@@ -111,7 +98,7 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
   const fileExtension = fileType ? mimeToExt(fileType) : defaultExts[mediaType];
 
   const inputObj = {
-    data: inputBuffer.buffer.slice(
+    data: inputBuffer?.buffer.slice(
       inputBuffer.byteOffset,
       inputBuffer.byteOffset + inputBuffer.byteLength,
     ) as ArrayBuffer,

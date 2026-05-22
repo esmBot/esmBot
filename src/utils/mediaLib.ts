@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import process from "node:process";
 import type { MediaParams, MediaTypes } from "./types.ts";
 
-interface FuncObject {
+export interface FuncObject {
   name: string;
   input: boolean;
   anim?: boolean;
