@@ -139,14 +139,11 @@ async function getMedia(
       discordCDNDomains.includes(mediaURL.host) &&
       mediaURL.pathname.match(/^\/(?:ephemeral-)?attachments\/\d+\/\d+\//)
     ) {
-      let url: URL;
       if (client && isAttachmentExpired(mediaURL)) {
         const refreshed = await client.rest.misc.refreshAttachmentURLs([media]);
-        url = new URL(refreshed.refreshedURLs[0].refreshed);
-      } else {
-        url = new URL(media);
+        mediaURL = new URL(refreshed.refreshedURLs[0].refreshed);
       }
-      url.searchParams.set("animated", "true");
+      mediaURL.searchParams.set("animated", "true");
     } else if (discordProxyDomains.includes(mediaURL.host) && mediaURL.pathname.match(/^\/external\/[\w-]+\//)) {
       mediaURL.searchParams.set("animated", "true");
     }
