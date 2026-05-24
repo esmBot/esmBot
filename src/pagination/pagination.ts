@@ -200,17 +200,25 @@ export default async (client: Client, info: Info, pages: Pages): Promise<undefin
         } else if (interaction.isModalSubmitInteraction()) {
           if (interaction.data.customID !== "jumpModal") return;
           page = Number(interaction.data.components.getStringSelectValues("seekDropdown", true)[0]);
-          if (info.interaction) {
-            currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
-          } else {
-            currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+          try {
+            if (info.interaction) {
+              currentPage = await info.interaction.editOriginal(Object.assign(pages[page], options, components));
+            } else {
+              currentPage = await currentPage.edit(Object.assign(pages[page], options, components));
+            }
+          } catch (e) {
+            logger.warn(`Failed to navigate to selected page: ${e}`);
           }
         }
       } else {
-        await interaction.createFollowup({
-          content: getString("pagination.cantChangePage", { locale: interaction.locale }),
-          flags: 64,
-        });
+        try {
+          await interaction.createFollowup({
+            content: getString("pagination.cantChangePage", { locale: interaction.locale }),
+            flags: 64,
+          });
+        } catch (e) {
+          logger.warn(`Failed to send wrong member message: ${e}`);
+        }
       }
     });
     interactionCollector.once("end", async (deleted = false) => {
