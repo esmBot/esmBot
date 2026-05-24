@@ -185,6 +185,9 @@ if (port && port !== "") {
         });
       }
     },
+    (arrays) => {
+      shardArrays = arrays;
+    },
   );
 }
 
@@ -204,7 +207,7 @@ const shardArray = [];
 for (let i = 0; i < shards; i++) {
   shardArray.push(i);
 }
-const shardArrays = calcShards(shardArray, procAmount);
+let shardArrays = calcShards(shardArray, procAmount);
 
 cluster.on("exit", async (worker, code, signal) => {
   const id = processes.findIndex((v) => worker.id === v.id);

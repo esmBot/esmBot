@@ -106,6 +106,7 @@ export async function createManageServer(
   metrics: () => MetricsInfo,
   restart: (id: number) => boolean,
   restartAll: () => void,
+  recalcShards?: (shards: number[][]) => void,
 ) {
   const database = await dbInit();
   const httpServer = createServer(async (req, res) => {
@@ -180,6 +181,17 @@ esmbot_total_mem ${info.totalMem}
         return res.end("400 Bad Request");
       }
       return res.end(JSON.stringify(procData));
+    }
+
+    if (reqUrl.pathname === "/recalc") {
+      const gatewayData = await getGatewayData();
+      const shardArray = [];
+      for (let i = 0; i < gatewayData.shards; i++) {
+        shardArray.push(i);
+      }
+      const shardArrays = calcShards(shardArray, gatewayData.procAmount);
+      recalcShards?.(shardArrays);
+      return res.end(`Recalculated shards, the new recommended amount is ${gatewayData.shards}`);
     }
 
     if (reqUrl.pathname === "/restart") {
