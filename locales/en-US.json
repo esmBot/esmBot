@@ -533,7 +533,7 @@
         "remove": "Remove a role from the allowlist"
       },
       "tags role add": {
-        "role":  "The role to add"
+        "role": "The role to add"
       },
       "tags role remove": {
         "role": "The role to remove"
@@ -792,7 +792,8 @@
         "error": "I couldn't get a dog image in time. Maybe try again?"
       },
       "donate": {
-        "support": "Like esmBot? Consider supporting the developer on Patreon to help keep it running!",
+        "like": "Like esmBot?",
+        "support": "Consider supporting the developer on [Patreon]({{patreon}}) or [Ko-fi]({{kofi}}) to help keep it running!",
         "thanks": "Thanks to the following patrons for their support:"
       },
       "emote": {
