@@ -29,18 +29,18 @@ RUN apk add --no-cache git cmake python3 alpine-sdk \
 # and because alpine doesn't have it in their repos
 RUN git clone https://github.com/carlobaldassi/liblqr ~/liblqr \
 		&& cd ~/liblqr \
-		&& ./configure --prefix=/built \
-		&& make \
-		&& make install
+		&& ./configure --prefix=/usr \
+		&& make -j$(nproc) \
+		&& make DESTDIR=/built install
 
-RUN cp -a /built/* /usr
+RUN cp -a /built/* /
 
 # install imagemagick from source rather than using the package
 # since the alpine package does not include liblqr support.
 RUN git clone https://github.com/ImageMagick/ImageMagick.git ~/ImageMagick \
     && cd ~/ImageMagick \
     && ./configure \
-		--prefix=/built \
+		--prefix=/usr \
 		--disable-static \
 		--disable-openmp \
 		--with-threads \
@@ -50,12 +50,13 @@ RUN git clone https://github.com/ImageMagick/ImageMagick.git ~/ImageMagick \
 		--with-pango \
 		--without-hdri \
 		--with-lqr \
-    && make \
-    && make install
+    && make -j$(nproc) \
+    && make DESTDIR=/built install
 
-RUN cp -a /built/* /usr
+RUN cp -a /built/* /
 
 FROM native-build-${MAGICK} AS build
+ARG MAGICK
 COPY . /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Detect ImageMagick usage and adjust build accordingly
@@ -71,7 +72,7 @@ COPY . /app
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build/Release /app/build/Release
 COPY --from=build /app/dist /app/dist
-COPY --from=build /built /usr
+COPY --from=build /built/ /
 RUN rm -f .env
 RUN rm -rf config src natives
 
