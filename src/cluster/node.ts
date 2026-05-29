@@ -14,11 +14,6 @@ import {
 } from "./common.ts";
 
 const runtime = detectRuntime();
-if (runtime.type === "deno") {
-  logger.error("This clustering implementation is incompatible with Deno. Exiting now.");
-  process.exit(1);
-}
-
 const processes: Worker[] = [];
 const readyHandlers = new Map<number, (value?: unknown) => void>();
 
@@ -224,7 +219,7 @@ cluster.on("exit", async (worker, code, signal) => {
 });
 
 cluster.setupPrimary({
-  exec: "dist/app.js",
+  exec: runtime.type === "deno" ? "src/app.ts" : "dist/app.js",
   serialization: "json",
 });
 
