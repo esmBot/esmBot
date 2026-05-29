@@ -36,8 +36,7 @@ You may have accidentally copied the OAuth2 client secret. Try generating a new 
 }
 
 import { glob, readFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { Client, type ClientEvents, Constants } from "oceanic.js";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
@@ -81,11 +80,9 @@ if (process.env.TEMPDIR && process.env.THRESHOLD) {
   await parseThreshold();
 }
 
-const basePath = dirname(fileURLToPath(import.meta.url));
-
 // register locales
 logger.log("info", "Attempting to load locale data...");
-for await (const localeFile of glob(resolve(basePath, "..", "locales", "*.json"))) {
+for await (const localeFile of glob(resolve(import.meta.dirname, "..", "locales", "*.json"))) {
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
@@ -100,7 +97,9 @@ logger.log("info", "Finished loading locale data.");
 
 // register commands and their info
 logger.log("info", "Attempting to load commands...");
-for await (const commandFile of glob(resolve(basePath, "..", "commands", "*", runtime.tsLoad ? "*.{js,ts}" : "*.js"))) {
+for await (const commandFile of glob(
+  resolve(import.meta.dirname, "..", "commands", "*", runtime.tsLoad ? "*.{js,ts}" : "*.js"),
+)) {
   try {
     await load(commandFile);
   } catch (e) {

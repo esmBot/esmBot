@@ -1,7 +1,6 @@
 import { readdir } from "node:fs/promises";
-import { dirname, relative, resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 import {
   type ApplicationCommandOptions,
   type Client,
@@ -26,8 +25,7 @@ import type {
 
 let queryValue = 0;
 
-const basePath = dirname(fileURLToPath(import.meta.url));
-const cmdPath = resolve(basePath, "..", "..", "commands");
+const cmdPath = resolve(import.meta.dirname, "..", "..", "commands");
 
 const blacklist = (commandConfig as CommandsConfig).blacklist;
 

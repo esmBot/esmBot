@@ -1,6 +1,5 @@
 import { Buffer } from "node:buffer";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { request } from "./media.ts";
 import type { FuncObject, MediaLib } from "./mediaLib.ts";
 import { mimeToExt } from "./mime.ts";
@@ -105,7 +104,7 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
     type: fileExtension,
   };
 
-  object.params.basePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
+  object.params.basePath = path.join(import.meta.dirname, "../../");
   const { data, type } = await media.process(mediaType, object.cmd, object.params, inputBuffer ? inputObj : {});
   return {
     buffer: data,

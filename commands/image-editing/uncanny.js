@@ -1,10 +1,9 @@
 import { readdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 import { random } from "#utils/misc.js";
 
-const names = readdirSync(resolve(dirname(fileURLToPath(import.meta.url)), "../../assets/images/uncanny/"))
+const names = readdirSync(resolve(import.meta.dirname, "../../assets/images/uncanny/"))
   .filter((val) => {
     if (!val.startsWith(".") && val.endsWith(".png")) return true;
   })
