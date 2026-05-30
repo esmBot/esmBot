@@ -7,6 +7,8 @@ import { activityChanger, checkBroadcast } from "#utils/misc.js";
 import type { EventParams } from "#utils/types.js";
 let ready = false;
 
+let activityInterval: NodeJS.Timeout;
+
 export default async ({ client, database }: EventParams) => {
   if (ready) return;
 
@@ -29,6 +31,9 @@ export default async ({ client, database }: EventParams) => {
 
   await checkBroadcast(client, database);
   activityChanger(client);
+  if (!activityInterval) {
+    activityInterval = setInterval(() => activityChanger(client), 900000);
+  }
 
   ready = true;
 
