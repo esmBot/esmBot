@@ -71,19 +71,19 @@ Choose the OS you're using below for insallation instructions.
 
 ### 2. Install Node.js.
 
-Node.js is the runtime that esmBot is built on top of. The bot requires version 22.0.0 or above to run.
+Node.js is the runtime that esmBot is built on top of. The bot requires version 22.13.0 (or 23.4.0) or above to run.
 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
 
 ```sh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 ```
 
 Then run the following to install Node.js:
 
 ```sh
-nvm install 22
-nvm use 22
+nvm install 26
+nvm use 26
 ```
 
 esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:

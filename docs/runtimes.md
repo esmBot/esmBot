@@ -8,7 +8,7 @@ esmBot is developed using Node.js modules and APIs, and officially supports both
 
 ## Setup
 
-esmBot requires Node.js 22.0.0 or Deno 2.3 minimum to run.
+esmBot requires Node.js 22.13.0/23.4.0 or Deno 2.3 minimum to run.
 
 To set up the bot for usage with Deno, follow the [setup guide](https://docs.esmbot.net/setup) as usual. However, depending on which runtime you choose, the launch command will be different:
 
@@ -29,4 +29,4 @@ Here's the current list of behavior changes exclusive to Deno:
 
 ## Known Issues
 
-- You may experience crashes on startup involving native modules (e.g. better-sqlite3, the media natives) when running with Deno. If this happens on your end, try switching your Node.js version to 22 and running `pnpm rebuild`.
+- You may experience crashes on startup involving native modules (e.g. the media natives) when running with Deno. If this happens on your end, try switching your Node.js version to 24 and running `pnpm rebuild`.
