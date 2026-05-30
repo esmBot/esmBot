@@ -291,3 +291,9 @@ export function maxFileSize(guild: Guild | null) {
   }
   return fileSize;
 }
+
+export function formatDuration(ms: number) {
+  const days = Math.floor(ms / 86400000);
+  const initDuration = new Date(ms).toISOString().slice(11, 19);
+  return (days ? days + ":" : "") + initDuration;
+}

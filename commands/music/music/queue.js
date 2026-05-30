@@ -1,6 +1,6 @@
-import format from "format-duration";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import paginator from "#pagination";
+import { formatDuration } from "#utils/misc.js";
 
 class MusicQueueCommand extends MusicCommand {
   async run() {
@@ -17,7 +17,7 @@ class MusicQueueCommand extends MusicCommand {
     if (!firstTrack) return this.getString("sound.notPlaying");
     for (const [i, track] of tracks.entries()) {
       trackList.push(
-        `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : format(track.info.length)})`,
+        `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : formatDuration(track.info.length)})`,
       );
     }
     const pageSize = 5;
@@ -49,7 +49,7 @@ class MusicQueueCommand extends MusicCommand {
             fields: [
               {
                 name: `🎶 ${this.getString("sound.nowPlaying")}`,
-                value: `${firstTrack.info.author !== "" ? firstTrack.info.author : this.getString("sound.blank")} - **${firstTrack.info.title !== "" ? firstTrack.info.title : this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : format(firstTrack.info.length)})`,
+                value: `${firstTrack.info.author !== "" ? firstTrack.info.author : this.getString("sound.blank")} - **${firstTrack.info.title !== "" ? firstTrack.info.title : this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : formatDuration(firstTrack.info.length)})`,
               },
               {
                 name: `🔁 ${this.getString("sound.looping")}`,

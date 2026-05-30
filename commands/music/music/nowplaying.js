@@ -1,5 +1,5 @@
-import format from "format-duration";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { formatDuration } from "#utils/misc.js";
 
 class MusicNowPlayingCommand extends MusicCommand {
   async run() {
@@ -44,7 +44,7 @@ class MusicNowPlayingCommand extends MusicCommand {
             },
             {
               name: `${"▬".repeat(parts)}🔘${"▬".repeat(10 - parts)}`,
-              value: `${format(player.position)}/${track.info.isStream ? "∞" : format(track.info.length)}`,
+              value: `${formatDuration(player.position)}/${track.info.isStream ? "∞" : formatDuration(track.info.length)}`,
             },
           ],
         },

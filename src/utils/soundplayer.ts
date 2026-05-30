@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import process from "node:process";
 import { setTimeout } from "node:timers/promises";
-import format from "format-duration";
 import {
   type AnyVoiceChannel,
   type Client,
@@ -25,6 +24,7 @@ import {
 } from "shoukaku";
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";
+import { formatDuration } from "./misc.ts";
 
 export type SoundPlayer = {
   player: Player;
@@ -252,7 +252,7 @@ export async function nextSong(
             },
             {
               name: `🔘${"▬".repeat(10)}`,
-              value: `0:00/${info?.isStream ? "∞" : format(info?.length ?? 0)}`,
+              value: `00:00:00/${info?.isStream ? "∞" : formatDuration(info?.length ?? 0)}`,
             },
           ],
         },
