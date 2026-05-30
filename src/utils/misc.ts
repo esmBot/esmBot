@@ -19,8 +19,6 @@ import packageJson from "../../package.json" with { type: "json" };
 import type { DatabasePlugin } from "../database.ts";
 import { disconnect, servers } from "./media.ts";
 
-const pm2 = process.env.CLUSTER_TYPE === "pm2" ? (await import("pm2")).default : null;
-
 let broadcast = false;
 
 export async function getVers() {
@@ -172,43 +170,7 @@ export async function exit(client: Client, database: DatabasePlugin | undefined)
 
 export function getServers(bot: Client): Promise<number> {
   return new Promise((resolve, reject) => {
-    if (pm2) {
-      pm2.launchBus((_err, pm2Bus) => {
-        const listener = (packet: { data: { type: string; serverCount: number } }) => {
-          if (packet.data?.type === "countResponse") {
-            resolve(packet.data.serverCount);
-            pm2Bus.off("process:msg");
-          }
-        };
-        pm2Bus.on("process:msg", listener);
-
-        pm2.list((err, list) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          const managerProc = list.find((v) => v.name === "esmBot-manager");
-          if (!managerProc) {
-            pm2Bus.off("process:msg");
-            return resolve(bot.guilds.size);
-          }
-          pm2.sendDataToProcessId(
-            managerProc.pm_id as number,
-            {
-              id: managerProc.pm_id,
-              type: "process:msg",
-              data: {
-                type: "getCount",
-              },
-              topic: true,
-            },
-            (err) => {
-              if (err) reject(err);
-            },
-          );
-        });
-      });
-    } else if (process.env.CLUSTER_TYPE === "node") {
+    if (process.env.CLUSTER_TYPE === "node") {
       const listener = (packet: { data: { type: string; serverCount: number } }) => {
         if (packet.data?.type === "countResponse") {
           clearTimeout(timeout);

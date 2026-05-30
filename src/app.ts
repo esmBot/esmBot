@@ -160,76 +160,8 @@ for (const [name, event] of Object.entries(events)) {
 }
 logger.log("info", "Registered events.");
 
-// PM2-specific handling
-if (process.env.CLUSTER_TYPE === "pm2") {
-  const { default: pm2 } = await import("pm2");
-  // callback hell :)
-  pm2.launchBus((err, pm2Bus) => {
-    if (err) {
-      logger.error(err);
-      return;
-    }
-    pm2.list((err, list) => {
-      if (err) {
-        logger.error(err);
-        return;
-      }
-      const managerProc = list.find((v) => v.name === "esmBot-manager");
-      pm2Bus.on("process:msg", async (packet: { data?: { type: string; from?: string; message: string } }) => {
-        if (packet.data?.from === process.env.pm_id) return;
-        switch (packet.data?.type) {
-          case "reload": {
-            const cmdPath = paths.get(packet.data.message);
-            if (cmdPath) await load(cmdPath);
-            break;
-          }
-          case "soundreload":
-            await reload(client);
-            break;
-          case "mediareload":
-            await reloadMediaConnections();
-            break;
-          case "broadcastStart":
-            startBroadcast(client, packet.data.message);
-            break;
-          case "broadcastEnd":
-            endBroadcast(client);
-            break;
-          case "eval":
-            // oxlint-disable-next-line no-eval
-            eval(packet.data.message);
-            break;
-          case "serverCounts":
-            if (!managerProc) break;
-            pm2.sendDataToProcessId(
-              managerProc.pm_id as number,
-              {
-                id: managerProc.pm_id,
-                type: "process:msg",
-                data: {
-                  type: "serverCounts",
-                  guilds: client.guilds.size,
-                  shards: client.shards.map((v) => {
-                    return {
-                      id: v.id,
-                      procId: Number.parseInt(process.env.pm_id as string),
-                      latency: v.latency,
-                      status: v.status,
-                    };
-                  }),
-                },
-                topic: true,
-              },
-              (err) => {
-                if (err) logger.error(err);
-              },
-            );
-            break;
-        }
-      });
-    });
-  });
-} else if (process.env.CLUSTER_TYPE === "node") {
+// Cluster-specific handling
+if (process.env.CLUSTER_TYPE === "node") {
   process.on("message", async (packet: { data?: { type: string; from?: string; message: string } }) => {
     if (packet.data?.from === process.env.pm_id) return;
     switch (packet.data?.type) {

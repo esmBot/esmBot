@@ -37,9 +37,7 @@ export default async ({ client, database }: EventParams) => {
 
   ready = true;
 
-  if (process.env.CLUSTER_TYPE === "pm2") {
-    process.send?.("ready");
-  } else if (process.env.CLUSTER_TYPE === "node") {
+  if (process.env.CLUSTER_TYPE === "node") {
     process.send?.({
       data: {
         type: "ready",

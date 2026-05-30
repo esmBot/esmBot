@@ -6,8 +6,6 @@ import detectRuntime from "#utils/detectRuntime.js";
 import { getServers } from "#utils/misc.js";
 import packageJson from "../../package.json" with { type: "json" };
 
-const pm2 = process.env.CLUSTER_TYPE === "pm2" ? (await import("pm2")).default : null;
-
 class StatsCommand extends Command {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
@@ -109,16 +107,7 @@ class StatsCommand extends Command {
    * @returns {Promise<string | null>}
    */
   getMem() {
-    if (pm2) {
-      return new Promise((resolve, reject) => {
-        pm2.list((err, list) => {
-          if (err) return reject(err);
-          const procList = list.filter((v) => v.name?.includes("esmBot-proc"));
-          const value = procList.reduce((prev, cur) => prev + (cur.monit?.memory ?? 0), 0) / 1000 / 1000;
-          resolve(`${value.toFixed(2)} MB`);
-        });
-      });
-    } else if (process.env.CLUSTER_TYPE === "node") {
+    if (process.env.CLUSTER_TYPE === "node") {
       return new Promise((resolve, reject) => {
         const listener = (/** @type {{ data: { type: string; totalMem: number; }; }} */ message) => {
           if (message.data?.type === "memResponse") {

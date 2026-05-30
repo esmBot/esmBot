@@ -83,8 +83,7 @@
   },
   "optionalDependencies": {
     "@sentry/deno": "^10.55.0",
-    "@sentry/node-core": "^10.55.0",
-    "pm2": "^7.0.1"
+    "@sentry/node-core": "^10.55.0"
   },
   "engines": {
     "node": ">=22"
