@@ -75,9 +75,8 @@ COPY --from=build /app/build/Release /app/build/Release
 COPY --from=build /app/dist /app/dist
 COPY --from=build /built/ /
 RUN rm -f .env
-RUN rm -rf config src natives
+RUN rm -rf src natives
 
-RUN mkdir /app/config && chmod 777 /app/config
 RUN mkdir /app/help && chmod 777 /app/help
 RUN mkdir /app/temp && chmod 777 /app/temp
 RUN mkdir /app/logs && chmod 777 /app/logs
