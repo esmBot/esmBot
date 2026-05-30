@@ -58,8 +58,6 @@
     "start-api:deno:debug": "DEBUG=true deno -P src/api/index.ts"
   },
   "dependencies": {
-    "@db/sqlite": "jsr:^0.12.0",
-    "better-sqlite3": "^12.10.0",
     "bufferutil": "^4.1.0",
     "dotenv": "^17.4.2",
     "file-type": "^22.0.1",
@@ -73,7 +71,6 @@
     "ws": "^8.21.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "22",
     "@types/ws": "^8.18.1",
     "cmake-js": "^8.0.0",
@@ -94,7 +91,6 @@
       "@discordjs/voice"
     ],
     "onlyBuiltDependencies": [
-      "better-sqlite3",
       "bufferutil",
       "oceanic.js"
     ]

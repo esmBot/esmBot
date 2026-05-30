@@ -24,7 +24,6 @@ esmBot uses some Deno-specific utilities when detected to add extra capabilities
 Here's the current list of behavior changes exclusive to Deno:
 
 - The stats command shows Deno's version number instead of Node's
-- The SQLite database driver uses `@db/sqlite` from [JSR](https://jsr.io/@db/sqlite) instead of `better-sqlite3`
 - Database plugins are loaded with the `.ts` extension instead of `.js`
 
 ## Known Issues

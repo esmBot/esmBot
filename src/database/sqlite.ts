@@ -1,10 +1,5 @@
 import process from "node:process";
-import type { Database as DenoDatabase, Statement as DenoStatement } from "@db/sqlite";
-import type {
-  Database as BSQLite3Database,
-  Options as BSQLite3Options,
-  Statement as BSQLite3Statement,
-} from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 import {
   commands,
   disabledCache,
@@ -16,26 +11,6 @@ import {
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
-
-// @db/sqlite is mostly compatible with better-sqlite3,
-// but has a few minor type differences that don't really matter in our case
-// here we attempt to bring them closer together
-type CombinedConnection = {
-  prepare: (query: string) => BSQLite3Statement | DenoStatement;
-  transaction: (func: () => void) => CallableFunction;
-} & (BSQLite3Database | DenoDatabase);
-
-type BSQLite3Init = (filename?: string, options?: BSQLite3Options) => BSQLite3Database;
-type CombinedConstructor = typeof DenoDatabase | BSQLite3Init;
-let dbInit: CombinedConstructor;
-
-if (process.versions.deno) {
-  const { Database } = await import("@db/sqlite");
-  dbInit = Database;
-} else {
-  const { default: sqlite3 } = await import("better-sqlite3");
-  dbInit = sqlite3;
-}
 
 const schema = `
 CREATE TABLE guilds (
@@ -88,16 +63,10 @@ const updates = [
 ];
 
 export default class SQLitePlugin implements DatabasePlugin {
-  connection: CombinedConnection;
+  connection: DatabaseSync;
 
   constructor(connectString: string) {
-    if (process.versions.deno) {
-      this.connection = new (dbInit as typeof DenoDatabase)(connectString.replace("sqlite://", ""), {
-        create: true,
-      });
-    } else {
-      this.connection = (dbInit as BSQLite3Init)(connectString.replace("sqlite://", ""));
-    }
+    this.connection = new DatabaseSync(connectString.replace("sqlite://", ""));
   }
 
   async setup() {
@@ -119,29 +88,30 @@ export default class SQLitePlugin implements DatabasePlugin {
   async upgrade() {
     this.connection.exec("PRAGMA journal_mode = WAL;");
     try {
-      this.connection.transaction(() => {
-        let version: number;
-        const result = this.connection.prepare("PRAGMA user_version").get() as { user_version: number };
-        version = result?.user_version ?? 0;
-        const latestVersion = updates.length - 1;
-        if (version === 0) {
-          logger.info("Initializing SQLite database...");
-          this.connection.exec(schema);
-        } else if (version < latestVersion) {
-          logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
-          while (version < latestVersion) {
-            version++;
-            logger.info(`Running version ${version} update script...`);
-            this.connection.exec(updates[version]);
-          }
-        } else {
-          return;
+      this.connection.exec("BEGIN TRANSACTION");
+      let version: number;
+      const result = this.connection.prepare("PRAGMA user_version").get() as { user_version: number };
+      version = result?.user_version ?? 0;
+      const latestVersion = updates.length - 1;
+      if (version === 0) {
+        logger.info("Initializing SQLite database...");
+        this.connection.exec(schema);
+      } else if (version < latestVersion) {
+        logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+        while (version < latestVersion) {
+          version++;
+          logger.info(`Running version ${version} update script...`);
+          this.connection.exec(updates[version]);
         }
-        this.connection.exec(`PRAGMA user_version = ${latestVersion}`);
-      })();
+      } else {
+        return;
+      }
+      this.connection.exec(`PRAGMA user_version = ${latestVersion}`);
+      this.connection.exec("COMMIT");
     } catch (e) {
       logger.error(`SQLite migration failed: ${e}`);
       logger.error("Unable to start the bot, quitting now.");
+      this.connection.exec("ROLLBACK");
       return 1;
     }
   }
@@ -151,7 +121,7 @@ export default class SQLitePlugin implements DatabasePlugin {
   }
 
   async getCounts(all?: boolean) {
-    const counts = this.connection.prepare("SELECT * FROM counts").all() as Count[];
+    const counts = this.connection.prepare("SELECT * FROM counts").all() as unknown as Count[];
     const commandNames = [...commands.keys(), ...messageCommands.keys(), ...userCommands.keys()];
     const countMap = new Map(
       (all ? counts : counts.filter((val) => commandNames.includes(val.command))).map((val) => [
@@ -212,7 +182,9 @@ export default class SQLitePlugin implements DatabasePlugin {
   }
 
   async getTags(guild: string) {
-    const tagArray = this.connection.prepare("SELECT * FROM tags WHERE guild_id = ?").all(guild) as Tag[];
+    const tagArray = this.connection
+      .prepare("SELECT name, content, author FROM tags WHERE guild_id = ?")
+      .all(guild) as unknown as Tag[];
     const tags: Record<string, Tag> = {};
     for (const tag of tagArray) {
       tags[tag.name] = tag;
@@ -257,7 +229,7 @@ export default class SQLitePlugin implements DatabasePlugin {
   }
 
   async setBroadcast(msg?: string) {
-    this.connection.prepare("UPDATE settings SET broadcast = ? WHERE id = 1").run(msg);
+    this.connection.prepare("UPDATE settings SET broadcast = ? WHERE id = 1").run(msg ?? null);
   }
 
   async getBroadcast() {
@@ -281,7 +253,8 @@ export default class SQLitePlugin implements DatabasePlugin {
           tag_roles: string;
         } & Omit<DBGuild, "disabled" | "disabled_commands" | "tag_roles">)
       | undefined;
-    this.connection.transaction(() => {
+    try {
+      this.connection.exec("BEGIN TRANSACTION");
       guild = this.connection.prepare("SELECT * FROM guilds WHERE guild_id = ?").get(query) as {
         disabled: string;
         disabled_commands: string;
@@ -303,7 +276,10 @@ export default class SQLitePlugin implements DatabasePlugin {
           )
           .run(guild);
       }
-    })();
+      this.connection.exec("COMMIT");
+    } catch {
+      this.connection.exec("ROLLBACK");
+    }
     if (guild) {
       guild.disabled = JSON.parse(guild.disabled);
       guild.disabled_commands = JSON.parse(guild.disabled_commands);
