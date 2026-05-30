@@ -64,6 +64,7 @@ RUN if [[ "$MAGICK" -eq "1" ]] ; then pnpm run build --CDWITH_BACKWARD=OFF ; els
 
 FROM native-build-${MAGICK} AS prod-deps
 COPY package.json /app/
+COPY pnpm-workspace.yaml /app/
 COPY pnpm-lock.yaml /app/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
