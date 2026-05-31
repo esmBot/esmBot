@@ -18,9 +18,6 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
   await new Promise((resolve) => setTimeout(resolve, 5000));
 }
 
-// load config from .env file
-import "dotenv/config";
-
 if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.ts");
 
 if (!process.env.TOKEN) {

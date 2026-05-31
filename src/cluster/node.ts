@@ -1,4 +1,3 @@
-import "dotenv/config";
 import cluster, { type Worker } from "node:cluster";
 import process from "node:process";
 import detectRuntime from "#utils/detectRuntime.js";

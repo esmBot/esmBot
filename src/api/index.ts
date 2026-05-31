@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";

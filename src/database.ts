@@ -1,5 +1,4 @@
 // wrapper for the database drivers in ./database/
-import "dotenv/config";
 import process from "node:process";
 import detectRuntime from "#utils/detectRuntime.js";
 import logger from "#utils/logger.js";

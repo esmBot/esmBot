@@ -1,7 +1,6 @@
 import { execFile as baseExecFile } from "node:child_process";
 import process from "node:process";
-import util, { promisify } from "node:util";
-import { type DotenvParseOutput, config } from "dotenv";
+import util from "node:util";
 import {
   ActivityTypes,
   type AnyChannel,
@@ -23,7 +22,7 @@ let broadcast = false;
 
 export async function getVers() {
   process.env.ESMBOT_VER = packageJson.version;
-  const execFile = promisify(baseExecFile);
+  const execFile = util.promisify(baseExecFile);
 
   process.env.GIT_REV = await execFile("git", ["rev-parse", "HEAD"]).then(
     (output) => output.stdout.substring(0, 7),
@@ -66,6 +65,8 @@ const optionalReplace = (token: string) => {
   return token === undefined || token === "" ? "" : token === "true" || token === "false" ? token : "<redacted>";
 };
 
+const sensitiveVars = ["TOKEN", "DB", "KLIPY", "REST_PROXY", "SENTRY_DSN", "OUTPUT", "TEMPDIR"];
+
 // clean(text) to clean message of any private info or mentions
 export function clean(input: string | Error, remove: string[] = [], skipEnv = false) {
   let text = input;
@@ -78,9 +79,6 @@ export function clean(input: string | Error, remove: string[] = [], skipEnv = fa
   text = text.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`);
 
   if (!skipEnv) {
-    let { parsed } = config({ quiet: true });
-    if (!parsed) parsed = process.env as DotenvParseOutput;
-
     if (servers.length !== 0) {
       for (const { server, auth } of servers) {
         text = text.replaceAll(server, optionalReplace(server));
@@ -88,8 +86,10 @@ export function clean(input: string | Error, remove: string[] = [], skipEnv = fa
       }
     }
 
-    for (const env of Object.keys(parsed)) {
-      text = text.replaceAll(parsed[env], optionalReplace(parsed[env]));
+    for (const env of sensitiveVars) {
+      if (process.env[env] && process.env[env].length > 0) {
+        text = text.replaceAll(process.env[env], optionalReplace(process.env[env]));
+      }
     }
   }
 
