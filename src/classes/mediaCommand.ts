@@ -42,10 +42,8 @@ class MediaCommand extends Command {
         : (this.message?.createdAt ?? new Date());
     // check if this command has already been run in this channel with the same arguments, and we are awaiting its result
     // if so, don't re-run it
-    if (
-      runningCommands.has(this.author?.id) &&
-      runningCommands.get(this.author?.id).getTime() - timestamp.getTime() < 5000
-    ) {
+    const running = runningCommands.get(this.author?.id);
+    if (running && running.getTime() - timestamp.getTime() < 5000) {
       return this.getString("image.slowDown");
     }
     // before awaiting the command result, add this command to the set of running commands

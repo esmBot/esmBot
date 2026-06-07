@@ -13,18 +13,35 @@ export const collectors = new Map<string, InteractionCollector>();
 
 export const locales = new Map();
 
-class TimedMap<K, V> extends Map {
+class TimedMap<K, V> extends Map<K, V> {
   time: number;
+  private timeouts: Map<K, ReturnType<typeof setTimeout>> = new Map();
+
   constructor(time: number) {
     super();
     this.time = time;
   }
+
   set(key: K, value: V) {
     super.set(key, value);
-    setTimeout(() => {
-      if (super.has(key)) super.delete(key);
+    const oldHandle = this.timeouts.get(key);
+    if (oldHandle) clearTimeout(oldHandle);
+
+    const handle = setTimeout(() => {
+      this.delete(key);
     }, this.time);
+    this.timeouts.set(key, handle);
     return this;
+  }
+
+  delete(key: K) {
+    const out = super.delete(key);
+    const handle = this.timeouts.get(key);
+    if (handle) {
+      clearTimeout(handle);
+      this.timeouts.delete(key);
+    }
+    return out;
   }
 }
 
