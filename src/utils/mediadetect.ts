@@ -102,19 +102,24 @@ async function getMedia(
   const host = url2.host;
   if (combined.includes(host)) {
     if (tenorURLs.includes(host) && url2.pathname.startsWith("/view/")) {
-      const tenorURL = url2;
-      if (!tenorURL.pathname.endsWith(".gif")) tenorURL.pathname += ".gif";
+      if (mediaURL.hostname === "media.tenor.com") {
+        // if we have an existing media link, we can extract the ID from it and mess with it a little to get a GIF
+        const id = mediaURL.pathname.split("/")[1];
+        payload.path = `https://c.tenor.com/${id.substring(0, id.length - 2) + "AC"}/tenor.gif`;
+      } else {
+        if (!url2.pathname.endsWith(".gif")) url2.pathname += ".gif";
 
-      const redirectReq = await fetch(tenorURL, { method: "HEAD", redirect: "manual" });
-      if (redirectReq.status !== 301 && redirectReq.status !== 302) return;
+        const redirectReq = await fetch(url2, { method: "HEAD", redirect: "manual" });
+        if (redirectReq.status !== 301 && redirectReq.status !== 302) return;
 
-      const redirect = redirectReq.headers.get("location");
-      if (!redirect) return;
+        const redirect = redirectReq.headers.get("location");
+        if (!redirect) return;
 
-      // format it into a "proper" raw link
-      const match = tenorRegex.exec(redirect);
-      if (!match) return;
-      payload.path = `https://c.tenor.com/${match[1]}/tenor.gif`;
+        // format it into a "proper" raw link
+        const match = tenorRegex.exec(redirect);
+        if (!match) return;
+        payload.path = `https://c.tenor.com/${match[1]}/tenor.gif`;
+      }
     } else if (klipyURLs.includes(host)) {
       if (!process.env.KLIPY || process.env.KLIPY === "") return;
       if (!media2.includes("klipy.com/gifs/")) return;
