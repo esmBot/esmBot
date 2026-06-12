@@ -45,7 +45,7 @@ export async function load(command: string): Promise<
 
   const relPath = relative(cmdPath, command);
   const commandArray = relPath.split("/");
-  let commandName = commandArray[commandArray.length - 1].split(".")[0];
+  let commandName = commandArray.at(-1)!.split(".")[0];
   const category = commandArray[0];
   const subPath = commandArray.slice(1, -1);
 
@@ -107,7 +107,7 @@ export async function load(command: string): Promise<
         if (!sub) continue;
 
         const split = sub.name.split(" ");
-        const subName = split[split.length - 1];
+        const subName = split.at(-1)!;
 
         const hasSubCommands = sub.props.flags.some(
           (v) => v.type === Constants.ApplicationCommandOptionTypes.SUB_COMMAND,

@@ -83,7 +83,7 @@ for await (const localeFile of glob(resolve(import.meta.dirname, "..", "locales"
   logger.log("main", `Loading locales from ${localeFile}...`);
   try {
     const commandArray = localeFile.split("/");
-    const localeName = commandArray[commandArray.length - 1].split(".")[0];
+    const localeName = commandArray.at(-1)!.split(".")[0];
     const data = await readFile(localeFile, { encoding: "utf8" });
     locales.set(localeName, JSON.parse(data));
   } catch (e) {
