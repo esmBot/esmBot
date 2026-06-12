@@ -1,1 +1,7 @@
+allowBuilds:
+  bufferutil: true
 autoInstallPeers: false
+ignoredOptionalDependencies:
+  - "@discordjs/voice"
+onlyBuiltDependencies:
+  - bufferutil
