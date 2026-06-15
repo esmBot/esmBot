@@ -220,6 +220,7 @@ cluster.on("exit", async (worker, code, signal) => {
 cluster.setupPrimary({
   exec: runtime.type === "deno" ? "src/app.ts" : "dist/app.js",
   serialization: "json",
+  execArgv: runtime.type === "deno" ? ["run", "-P", "--no-prompt"] : process.execArgv,
 });
 
 for (let i = 1; i <= shardArrays.length; i++) {
