@@ -75,7 +75,7 @@ type KlipyResponse = {
   };
 };
 
-const tenorRegex = /^https:\/\/media\d\.tenor\.com\/m\/([\w-%]+)\/[\w-%]+\.gif$/;
+const tenorRegex = /^https:\/\/media\d?\.tenor\.com(?:\/m)?\/([\w-%]+)\/[\w-%]+\.gif$/;
 
 /**
  * Gets proper media paths.
