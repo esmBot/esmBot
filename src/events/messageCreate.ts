@@ -144,7 +144,10 @@ export default async ({ client, database }: EventParams, message: Message) => {
   }
 
   // actually run the command
-  logger.log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
+  if (!process.env.DISABLE_CMD_LOG || process.env.DISABLE_CMD_LOG !== "true") {
+    logger.log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
+  }
+
   const reference = {
     messageReference: {
       channelID: message.channelID,

@@ -58,7 +58,10 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
-  logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${cmdName}`);
+  if (!process.env.DISABLE_CMD_LOG || process.env.DISABLE_CMD_LOG !== "true") {
+    logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${cmdName}`);
+  }
+
   try {
     const commandClass = new cmd(client, database, { type: "application", interaction });
     const result = await commandClass.run();
