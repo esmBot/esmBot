@@ -1,6 +1,7 @@
 import {
   type AnyTextableChannel,
   type Attachment,
+  AttachmentFlags,
   CommandInteraction,
   Constants,
   type JSONAttachment,
@@ -142,7 +143,7 @@ class MediaCommand extends Command {
           path.searchParams.set("animated", "true");
           selectedImages.set(this.interaction.user.id, {
             path: path.toString(),
-            spoiler: attachment.filename.startsWith("SPOILER_"),
+            spoiler: !!(attachment.flags & AttachmentFlags.IS_SPOILER),
           });
         }
         return;
@@ -214,7 +215,7 @@ class MediaCommand extends Command {
       path.searchParams.set("animated", "true");
       selectedImages.set(this.interaction.user.id, {
         path: path.toString(),
-        spoiler: attachment.filename.startsWith("SPOILER_"),
+        spoiler: !!(attachment.flags & AttachmentFlags.IS_SPOILER),
       });
     }
   }
