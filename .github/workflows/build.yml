@@ -17,28 +17,28 @@ jobs:
     strategy:
       matrix:
         platform:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             key: linux-amd64
-          - os: ubuntu-22.04-arm
+          - os: ubuntu-24.04-arm
             key: linux-aarch64
-          - os: macos-14
+          - os: macos-15
             key: macos-aarch64
     name: Build natives (${{matrix.platform.key}})
     runs-on: ${{matrix.platform.os}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.13
           cache: pnpm
 
       - name: Install dependencies (Linux)
         if: contains(matrix.platform.key, 'linux')
-        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxingcore-dev
+        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
       - name: Install dependencies (macOS)
         if: contains(matrix.platform.key, 'macos')
         run: brew install imagemagick vips
@@ -46,7 +46,7 @@ jobs:
       - name: Build
         run: pnpm install --frozen-lockfile && pnpm run build
       - name: Upload natives
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{matrix.platform.key}}
           path: build/Release/esmbmedia.node
