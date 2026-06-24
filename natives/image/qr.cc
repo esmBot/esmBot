@@ -1,11 +1,18 @@
 #ifdef ZXING_ENABLED
+#include <ZXing/ZXVersion.h>
+#include <ZXing/ReadBarcode.h>
+
+#if ZXING_VERSION_MAJOR >= 3
+#include <ZXing/CreateBarcode.h>
+#include <ZXing/WriteBarcode.h>
+#else
 #include <ZXing/BitMatrix.h>
 #include <ZXing/MultiFormatWriter.h>
-#include <ZXing/ReadBarcode.h>
-#include <ZXing/ZXVersion.h>
 #if ZXING_VERSION_MAJOR < 2
 #include <ZXing/TextUtfEncoding.h>
 #endif
+#endif
+
 #include <vips/vips8>
 
 #include "common.h"
@@ -18,6 +25,11 @@ CmdOutput esmb::Image::QrCreate([[maybe_unused]] const string &type, string &out
                                 [[maybe_unused]] bool *shouldKill) {
   string text = GetArgument<string>(arguments, "text");
 
+#if ZXING_VERSION_MAJOR >= 3
+  ZXing::Barcode barcode = ZXing::CreateBarcodeFromText(text, ZXing::CreatorOptions(ZXing::BarcodeFormat::QRCode, "eci=26"));
+  ZXing::Image bitmap = ZXing::WriteBarcodeToImage(barcode, ZXing::WriterOptions().addQuietZones(true));
+  size_t bitmapSize = bitmap.width() * bitmap.height() * bitmap.pixStride();
+#else
   auto writer =
     ZXing::MultiFormatWriter(ZXing::BarcodeFormat::QRCode).setMargin(1).setEncoding(ZXing::CharacterSet::UTF8);
 
@@ -27,8 +39,10 @@ CmdOutput esmb::Image::QrCreate([[maybe_unused]] const string &type, string &out
   ZXing::BitMatrix matrix = writer.encode(ZXing::TextUtfEncoding::FromUtf8(text), 0, 0);
 #endif
   ZXing::Matrix<unsigned char> bitmap = ZXing::ToMatrix<uint8_t>(matrix);
+  size_t bitmapSize = bitmap.size();
+#endif
 
-  vips::VImage img = vips::VImage::new_from_memory(const_cast<unsigned char *>(bitmap.data()), bitmap.size(),
+  vips::VImage img = vips::VImage::new_from_memory(const_cast<unsigned char *>(bitmap.data()), bitmapSize,
                                                    bitmap.width(), bitmap.height(), 1, VIPS_FORMAT_UCHAR)
                        .resize(4, vips::VImage::option()->set("kernel", VIPS_KERNEL_NEAREST));
 
