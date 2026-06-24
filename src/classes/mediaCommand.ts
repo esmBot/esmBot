@@ -226,14 +226,14 @@ class MediaCommand extends Command {
     });
   }
 
-  static addTextParam() {
+  static addTextParam(maxLen?: number) {
     this.flags.unshift({
       name: "text",
       nameLocalizations: getAllLocalizations("image.flagNames.text"),
       type: Constants.ApplicationCommandOptionTypes.STRING,
       description: "The text to put on the image",
       descriptionLocalizations: getAllLocalizations("image.flags.text"),
-      maxLength: 4096,
+      maxLength: maxLen ?? 4096,
       required: !this.textOptional,
       classic: true,
     });

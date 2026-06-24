@@ -1,6 +1,13 @@
 import MediaCommand from "#cmd-classes/mediaCommand.js";
 
+const textEncoder = new TextEncoder();
+
 class QrCreateCommand extends MediaCommand {
+  async criteria(text) {
+    if (textEncoder.encode(text).length > 2952) return false;
+    return true;
+  }
+
   paramsFunc() {
     const inputText = this.getOptionString("text") ?? this.args.join(" ");
     return {
@@ -10,7 +17,7 @@ class QrCreateCommand extends MediaCommand {
 
   static init() {
     super.init();
-    this.addTextParam();
+    this.addTextParam(2952);
     return this;
   }
 
