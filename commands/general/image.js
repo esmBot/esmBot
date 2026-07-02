@@ -35,7 +35,7 @@ class ImageSearchCommand extends Command {
         embeds: [
           {
             title: value.title,
-            url: encodeURI(value.url),
+            url: value.url,
             color: 0xff0000,
             footer: {
               text: this.getString("pagination.page", {
@@ -46,7 +46,7 @@ class ImageSearchCommand extends Command {
               }),
             },
             image: {
-              url: encodeURI(value.img_src),
+              url: value.img_src,
             },
             author: {
               name: this.getString("commands.responses.image.results"),
