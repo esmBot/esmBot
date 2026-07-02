@@ -19,7 +19,7 @@ class ImageSearchCommand extends Command {
      * @type {import("#utils/types.ts").SearXNGResults}
      */
     const rawImages = await fetch(
-      `${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=google%20images,bing%20images&q=${encodeURIComponent(query)}`,
+      `${random(serversConfig.searx)}/search?format=json&safesearch=2&engines=startpage%20images,presearch%20images,dogpile%20images,privacywall%20images&q=${encodeURIComponent(query)}`,
       {
         signal: controller.signal,
       },
