@@ -61,7 +61,7 @@
     "bufferutil": "^4.1.0",
     "file-type": "^22.0.1",
     "ipaddr.js": "^2.4.0",
-    "node-addon-api": "^8.8.0",
+    "node-addon-api": "^8.9.0",
     "oceanic.js": "1.14.0",
     "postgres": "^3.4.9",
     "shoukaku": "^4.3.0",
@@ -72,13 +72,13 @@
     "@types/node": "22",
     "@types/ws": "^8.18.1",
     "cmake-js": "^8.0.0",
-    "oxfmt": "^0.52.0",
-    "oxlint": "^1.67.0",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
     "typescript": "^6.0.3"
   },
   "optionalDependencies": {
-    "@sentry/deno": "^10.55.0",
-    "@sentry/node-core": "^10.55.0"
+    "@sentry/deno": "^10.63.0",
+    "@sentry/node-core": "^10.63.0"
   },
   "engines": {
     "node": ">=22.13"
