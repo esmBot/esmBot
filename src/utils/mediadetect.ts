@@ -270,17 +270,19 @@ async function checkEmbeds(message: Message | MessageSnapshotMessage) {
     (message.embeds[0].provider.url === "https://klipy.com" ? process.env.KLIPY && process.env.KLIPY !== "" : true)
   ) {
     const media = await getMedia(message.embeds[0].video.url, message.embeds[0].url, hasSpoiler);
-    if (media) arr.push(media);
-  } else if (message.embeds[0].thumbnail) {
-    // then thumbnails
+    if (media) return [media];
+  }
+  // then thumbnails
+  if (message.embeds[0].thumbnail) {
     const media = await getMedia(
       message.embeds[0].thumbnail.proxyURL ?? message.embeds[0].thumbnail.url,
       message.embeds[0].thumbnail.url,
       hasSpoiler,
     );
     if (media) arr.push(media);
-  } else if (message.embeds[0].image) {
-    // and finally direct images
+  }
+  // and finally direct images
+  if (message.embeds[0].image) {
     const media = await getMedia(
       message.embeds[0].image.proxyURL ?? message.embeds[0].image.url,
       message.embeds[0].image.url,
