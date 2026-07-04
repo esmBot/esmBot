@@ -268,7 +268,7 @@ export function cleanInteraction(interaction: CommandInteraction, content: strin
 }
 
 export function isEmpty(string: string) {
-  return string.length === 0 || string.replace(/[\s\u2800\p{C}]/gu, "").length === 0;
+  return string.length === 0 || string.replace(/[\s\u2800\p{Cc}\p{Cf}\p{Cs}\p{Co}]/gu, "").length === 0;
 }
 
 export function safeBigInt(input: string | number | bigint | boolean) {
