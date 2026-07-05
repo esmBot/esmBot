@@ -13,7 +13,7 @@ class RestartCommand extends Command {
   }
 
   async finalize() {
-    await exit(this.client, this.database);
+    if (this.success) await exit(this.client, this.database);
   }
 
   static description = "Restarts me";
