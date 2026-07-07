@@ -8,10 +8,13 @@ class DogCommand extends Command {
       controller.abort();
     }, 15000);
     try {
-      const imageData = await fetch("https://dog.ceo/api/breeds/image/random", { signal: controller.signal });
+      const data = await fetch("https://files.esmbot.net/dog", {
+        method: "HEAD",
+        signal: controller.signal,
+        redirect: "manual",
+      });
       clearTimeout(timeout);
-      const json = await imageData.json();
-      return json.message;
+      return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {
         this.success = false;
