@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/esmbot.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -512,7 +512,7 @@
 <p>esmBot primarily targets Node.js, and as such running on Deno could introduce extra bugs. If you find any issues while running the bot on Deno, please test if the same issue occurs on Node; if it doesn't, then specify that it's an issue specific to Deno and provide the version you experienced the bug on (you can find this by running <code>deno --version</code>).</p>
 </div>
 <h2 id="setup">Setup</h2>
-<p>esmBot requires Node.js 22.0.0 or Deno 2.3 minimum to run.</p>
+<p>esmBot requires Node.js 22.13.0/23.4.0 or Deno 2.3 minimum to run.</p>
 <p>To set up the bot for usage with Deno, follow the <a href="https://docs.esmbot.net/setup">setup guide</a> as usual. However, depending on which runtime you choose, the launch command will be different:</p>
 <ul>
 <li>Node.js: <code>pnpm start</code></li>
@@ -524,12 +524,11 @@
 <p>Here's the current list of behavior changes exclusive to Deno:</p>
 <ul>
 <li>The stats command shows Deno's version number instead of Node's</li>
-<li>The SQLite database driver uses <code>@db/sqlite</code> from <a href="https://jsr.io/@db/sqlite">JSR</a> instead of <code>better-sqlite3</code></li>
 <li>Database plugins are loaded with the <code>.ts</code> extension instead of <code>.js</code></li>
 </ul>
 <h2 id="known-issues">Known Issues</h2>
 <ul>
-<li>You may experience crashes on startup involving native modules (e.g. better-sqlite3, the media natives) when running with Deno. If this happens on your end, try switching your Node.js version to 22 and running <code>pnpm rebuild</code>.</li>
+<li>You may experience crashes on startup involving native modules (e.g. the media natives) when running with Deno. If this happens on your end, try switching your Node.js version to 24 and running <code>pnpm rebuild</code>.</li>
 </ul>
 
 
@@ -551,7 +550,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 7, 2025 04:19:42 UTC">December 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 30, 2026 22:23:42 UTC">May 30, 2026</span>
   </span>
 
     
@@ -661,7 +660,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["toc.integrate", "content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   
