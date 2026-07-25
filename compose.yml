@@ -21,10 +21,6 @@ services:
       lavalink:
         condition: service_healthy
 
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.2
-
   lavalink:
     container_name: lavalink
     image: ghcr.io/lavalink-devs/lavalink:4
@@ -35,17 +31,8 @@ services:
     healthcheck:
       test: 'curl -H "Authorization: $$(cat /opt/Lavalink/application.yml | grep password: | sed ''s/^ *password: //g'' | tr -d ''"'')" -f http://localhost:2333/version'
       interval: 15s
+      timeout: 10s
       retries: 5
-    networks:
-      esmbot:
-        ipv4_address: 172.20.0.3
 
 volumes:
   lavaplugins:
-
-networks:
-  esmbot:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
