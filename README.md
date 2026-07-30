@@ -1,6 +1,6 @@
 # <img src="./docs/assets/esmbot.png?raw=true" width="128"> esmBot
 
-[![esmBot Support](https://discordapp.com/api/guilds/592399417676529688/embed.png)](https://discord.gg/esmbot) ![GitHub license](https://img.shields.io/github/license/esmBot/esmBot.svg)
+[![esmBot Support](https://discord.com/api/guilds/592399417676529688/embed.png)](https://esmbot.net/support) ![GitHub license](https://img.shields.io/github/license/esmBot/esmBot.svg)
 
 esmBot is a free and open-source Discord bot designed to entertain your server. It's made using [Oceanic](https://oceanic.ws) and comes with image, music, and utility commands out of the box.
 
