@@ -17,7 +17,7 @@ If you have any further questions regarding setup, feel free to ask in the #supp
 
 !!! tip
 
-    You can run the bot using Docker or Podman for a somewhat simpler setup experience. [Click here to go to the container setup guide.](https://docs.esmbot.net/containers)
+    You can run the bot using Docker or Podman for a somewhat simpler setup experience. See the [container setup guide](https://docs.esmbot.net/containers).
 
 ### 1. Install the required native dependencies.
 
@@ -35,7 +35,7 @@ Choose the OS you're using below for insallation instructions.
 
     These instructions apply to Fedora 38/RHEL 9 or later.
 
-    Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions on how to add them [here](https://rpmfusion.org/Configuration).
+    Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions in the [RPM Fusion configuration guide](https://rpmfusion.org/Configuration).
     ```sh
     sudo dnf install git curl cmake ffmpeg sqlite gcc-c++ ImageMagick-c++-devel vips-devel cabextract zxing-cpp-devel
     ```
@@ -104,7 +104,7 @@ esmBot officially supports two database systems: SQLite and PostgreSQL. While SQ
 
 If you would like to use the SQLite database, no configuration is needed and you can move on to the next step.
 
-If you would like to use the PostgreSQL database, view the setup instructions [here](https://docs.esmbot.net/postgresql) and come back here when you're finished.
+If you would like to use the PostgreSQL database, view the [PostgreSQL setup instructions](https://docs.esmbot.net/postgresql) and come back here when you're finished.
 
 ---
 
@@ -178,7 +178,7 @@ java -jar Lavalink.jar
 
 !!! info
 
-    You'll need to run Lavalink alongside the bot in order to use it. There are a few methods to do this, such as the `screen` command, creating a new systemd service, or simply just opening a new terminal session alongside your current one.
+    You'll need to run Lavalink alongside the bot in order to use it. There are a few methods to do this, such as the `screen` command, creating a new systemd service, or opening a new terminal session alongside your current one.
 
 ---
 
@@ -200,11 +200,11 @@ To edit this file in the terminal, run this command:
 nano .env
 ```
 
-This will launch a text editor with the file ready to go. Create a Discord application [here](https://discord.com/developers/applications) and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the `TOKEN` variable.
+This will launch a text editor with the file ready to go. Create a Discord application in the [Discord developer portal](https://discord.com/developers/applications) and select the Bot tab on the left, then create a bot user. Once you've done this, copy the token it gives you and put it in the `TOKEN` variable.
 
 When you're finished editing the file, press Ctrl + X, then Y and Enter.
 
-An overview of each of the variables in the `.env` file can be found [here](https://docs.esmbot.net/config).
+The [config reference](https://docs.esmbot.net/config) gives an overview of each of the variables in the `.env` file.
 
 ---
 
@@ -272,7 +272,7 @@ pm2 start ecosystem.config.cjs
 
 ??? faq "Gifs from Tenor and KLIPY result in a "no decode delegate for this image format" or "improper image header" error"
 
-    Tenor and KLIPY GIFs are typically delivered as videos, which libvips can't decode most of the time. This should be handled for Tenor GIFs; if this happens, it is most likely a bug and should be reported [here](https://github.com/esmBot/esmBot/issues) or in the [esmBot Support server](https://esmbot.net/support). For KLIPY, you'll need to get a KLIPY API key from [here](https://partner.klipy.com) and put it in the `KLIPY` variable in .env.
+    Tenor and KLIPY GIFs are typically delivered as videos, which libvips can't decode most of the time. This should be handled for Tenor GIFs; if this happens, it is most likely a bug and should be reported on the [issue tracker](https://github.com/esmBot/esmBot/issues) or in the [esmBot Support server](https://esmbot.net/support). For KLIPY, you'll need to get a KLIPY API key from the [KLIPY partner panel](https://partner.klipy.com) and put it in the `KLIPY` variable in .env.
 
 ---
 

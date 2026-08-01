@@ -22,9 +22,9 @@ esmBot is a free and open-source Discord bot designed to entertain your server. 
 
 You can invite the main instance of esmBot to your server using this link: https://esmbot.net/invite
 
-A command list can be found [here](https://esmbot.net/help.html).
+You can browse the full [command list](https://esmbot.net/help.html) on the website.
 
-If you want to self-host the bot, a guide can be found [here](https://docs.esmbot.net/setup).
+If you want to self-host the bot, follow the [self-hosting guide](https://docs.esmbot.net/setup).
 
 ## Contributing
 
