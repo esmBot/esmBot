@@ -506,7 +506,7 @@
 
 
 <h1 id="custom-commands">Custom Commands</h1>
-<p>esmBot has a powerful and flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.</p>
+<p>esmBot has a powerful and flexible command handler, allowing you to create new commands and categories by creating new files. This page will provide a reference for creating new commands.</p>
 <h2 id="directory-structure">Directory Structure</h2>
 <p>The bot loads commands from subdirectories inside of the <code>commands</code> directory, which looks something like this by default:</p>
 <div class="highlight"><pre><span></span><code>commands/
@@ -522,14 +522,14 @@
     &gt; speed.js
     &gt; ...
 </code></pre></div>
-<p>As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the <code>commands</code> directory, and to create a new command, you can create a new JS file under one of those subdirectories.</p>
+<p>As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can create a new directory inside of the <code>commands</code> directory, and to create a new command, you can create a new JS file under one of those subdirectories.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>The <code>message</code> and <code>user</code> categories are special; instead of being registered as classic or slash commands, commands in these categories are registered as right-click context menu commands. Commands in the <code>message</code> category show when selecting messages, while commands in the <code>user</code> category show when selecting users.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the <code>--experimental-strip-types</code> flag enabled, or Deno, it is possible to create commands using TypeScript instead of JavaScript. To do so, simply create a file with a <code>.ts</code> extension instead of <code>.js</code>; the command will be loaded and handled at runtime as if it were a regular JavaScript command.</p>
+<p>When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the <code>--experimental-strip-types</code> flag enabled, or Deno, it is possible to create commands using TypeScript instead of JavaScript. To do so, create a file with a <code>.ts</code> extension instead of <code>.js</code>; the command will be loaded and handled at runtime as if it were a regular JavaScript command.</p>
 </div>
 <h2 id="command-structure">Command Structure</h2>
 <p>It's recommended to use the <code>Command</code> class located at <code>#cmd-classes/command.js</code> to create a new command in most cases. This class provides various parameters and fields that will likely be useful when creating a command. Here is a simple example of a working command file:</p>
@@ -547,7 +547,7 @@
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">HelloCommand</span><span class="p">;</span>
 </code></pre></div>
 <p>As you can see, the first thing we do is import the Command class. We then create a new class for the command that extends that class to provide the needed parameters. We then define the command function, which is named <code>run</code>. Some static parameters, including the command description and an alias for the command, <code>helloworld</code>, are also defined. Finally, once everything in the command class is defined, we export the new class to be loaded as a module by the command handler.</p>
-<p>The default command name is the same as the filename that you save it as, excluding the <code>.js</code> file extension. If you ever want to change the name of the command, just rename the file.</p>
+<p>The default command name is the same as the filename that you save it as, excluding the <code>.js</code> file extension. If you ever want to change the name of the command, rename the file.</p>
 <p>The parameters available to your command consist of the following:</p>
 <ul>
 <li><code>this.client</code>: An instance of an Oceanic <a href="https://docs.oceanic.ws/latest/classes/Client.Client.html"><code>Client</code></a>, useful for getting info or performing lower-level communication with the Discord API.</li>
@@ -636,7 +636,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 17, 2026 20:31:37 UTC">February 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 4, 2026 18:02:13 UTC">August 4, 2026</span>
   </span>
 
     
