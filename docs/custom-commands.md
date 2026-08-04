@@ -1,6 +1,6 @@
 # Custom Commands
 
-esmBot has a powerful and flexible command handler, allowing you to create new commands and categories simply by creating new files. This page will provide a reference for creating new commands.
+esmBot has a powerful and flexible command handler, allowing you to create new commands and categories by creating new files. This page will provide a reference for creating new commands.
 
 ## Directory Structure
 
@@ -21,7 +21,7 @@ commands/
     > ...
 ```
 
-As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can simply create a new directory inside of the `commands` directory, and to create a new command, you can create a new JS file under one of those subdirectories.
+As you can see, each command is grouped into categories, which are represented by subdirectories. To create a new category, you can create a new directory inside of the `commands` directory, and to create a new command, you can create a new JS file under one of those subdirectories.
 
 !!! tip
 
@@ -29,7 +29,7 @@ As you can see, each command is grouped into categories, which are represented b
 
 !!! tip
 
-    When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the `--experimental-strip-types` flag enabled, or Deno, it is possible to create commands using TypeScript instead of JavaScript. To do so, simply create a file with a `.ts` extension instead of `.js`; the command will be loaded and handled at runtime as if it were a regular JavaScript command.
+    When using Node.js v23.6.0 or above, Node.js v22.6.0 or above with the `--experimental-strip-types` flag enabled, or Deno, it is possible to create commands using TypeScript instead of JavaScript. To do so, create a file with a `.ts` extension instead of `.js`; the command will be loaded and handled at runtime as if it were a regular JavaScript command.
 
 ## Command Structure
 
@@ -52,7 +52,7 @@ export default HelloCommand;
 
 As you can see, the first thing we do is import the Command class. We then create a new class for the command that extends that class to provide the needed parameters. We then define the command function, which is named `run`. Some static parameters, including the command description and an alias for the command, `helloworld`, are also defined. Finally, once everything in the command class is defined, we export the new class to be loaded as a module by the command handler.
 
-The default command name is the same as the filename that you save it as, excluding the `.js` file extension. If you ever want to change the name of the command, just rename the file.
+The default command name is the same as the filename that you save it as, excluding the `.js` file extension. If you ever want to change the name of the command, rename the file.
 
 The parameters available to your command consist of the following:
 
