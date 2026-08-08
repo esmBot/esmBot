@@ -35,6 +35,7 @@ export async function request(
   media: URL,
   typeMedia: MediaTypes[],
   typeOnly: true,
+  maxBytes?: number,
 ): Promise<
   | {
       url: string;
@@ -48,6 +49,7 @@ export async function request(
   media: URL,
   typeMedia: MediaTypes[],
   typeOnly: false,
+  maxBytes?: number,
 ): Promise<
   | {
       buf: Buffer;
@@ -62,6 +64,7 @@ export async function request(
   media: URL,
   typeMedia: MediaTypes[],
   typeOnly = false,
+  maxBytes = 41943040,
 ): Promise<
   | {
       buf?: Buffer;
@@ -99,7 +102,6 @@ export async function request(
         "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
       },
     });
-    clearTimeout(timeout);
     url = res.url;
     if (res.status === 429) throw "ratelimit";
 
@@ -118,8 +120,8 @@ export async function request(
       if (contentLength) size = Number.parseInt(contentLength);
     }
 
-    if (size > 41943040) {
-      // 40 MB
+    if (size > maxBytes) {
+      controller.abort();
       throw "large";
     }
 
@@ -157,24 +159,26 @@ export async function request(
   const reader = stream.getReader();
   const bufs: Uint8Array[] = [];
   let bufSize = 0;
+  const bodyTimeout = setTimeout(() => {
+    controller.abort();
+  }, 15000);
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
+      bufs.push(value);
+      bufSize += value.byteLength;
 
-    bufs.push(value);
-    bufSize += value.byteLength;
-
-    if (size && bufSize >= size) break;
-
-    if (bufSize > 41943040) {
-      await stream.cancel();
-      // 40 MB
-      throw "large";
+      if (bufSize > maxBytes) {
+        await reader.cancel();
+        throw "large";
+      }
     }
+  } finally {
+    clearTimeout(bodyTimeout);
+    reader.releaseLock();
   }
-
-  if (!stream.locked) await stream.cancel();
 
   const buf = Buffer.concat(bufs);
   return { buf, ext, url, type, mediaType };

@@ -1,4 +1,6 @@
 import { Buffer } from "node:buffer";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { request } from "./media.ts";
 import type { FuncObject, MediaLib } from "./mediaLib.ts";
@@ -10,6 +12,49 @@ let media: MediaLib | undefined;
 const defaultExts = {
   image: "png",
 };
+
+const captionImageMaxBytes = 10 * 1024 * 1024;
+const captionImageHosts = new Set(["cdn.discordapp.com", "media.discordapp.net"]);
+
+function isCaptionImageUrl(url: URL) {
+  return url.protocol === "https:" && captionImageHosts.has(url.hostname);
+}
+
+async function fetchCaptionImage(rawUrl: string, id: string) {
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    throw new Error("caption_image_bad_url");
+  }
+
+  if (!isCaptionImageUrl(url)) throw new Error("caption_image_bad_url");
+
+  let result;
+  try {
+    result = await request(url, ["image"], false, captionImageMaxBytes);
+  } catch (e) {
+    if (e === "large") throw new Error("caption_image_too_large");
+    if (
+      e === "ratelimit" ||
+      (e instanceof Error && (e.name === "AbortError" || e.name === "TypeError" || "code" in e))
+    ) {
+      throw new Error("caption_image_bad_url");
+    }
+    throw e;
+  }
+
+  if (!result || !isCaptionImageUrl(new URL(result.url))) throw new Error("caption_image_bad_url");
+
+  const captionImagePath = path.join(os.tmpdir(), `esmbot-caption-image-${id}.${result.ext}`);
+  try {
+    await fs.promises.writeFile(captionImagePath, result.buf);
+  } catch (e) {
+    await fs.promises.unlink(captionImagePath).catch(() => {});
+    throw e;
+  }
+  return captionImagePath;
+}
 
 export default async function run(object: MediaParams): Promise<JobOutput> {
   // dynamically load media library
@@ -54,6 +99,13 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
     }
     if ((!inputBuffer || !mediaType) && possibleFuncs.some((v) => v.input)) throw "nomedia";
   } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      return {
+        buffer: Buffer.alloc(0),
+        type: "downloadtimeout",
+        spoiler: false,
+      };
+    }
     if (typeof e !== "string") throw e;
     return {
       buffer: Buffer.alloc(0),
@@ -105,10 +157,24 @@ export default async function run(object: MediaParams): Promise<JobOutput> {
   };
 
   object.params.basePath = path.join(import.meta.dirname, "../../");
-  const { data, type } = await media.process(mediaType, object.cmd, object.params, inputBuffer ? inputObj : {});
-  return {
-    buffer: data,
-    type,
-    spoiler,
-  };
+
+  let captionImageTempPath: string | undefined;
+  try {
+    if (object.cmd === "captionImage") {
+      delete object.params.overlayPath;
+      if (typeof object.params.captionImageUrl !== "string") throw new Error("caption_image_bad_url");
+      captionImageTempPath = await fetchCaptionImage(object.params.captionImageUrl, object.id);
+      object.params.overlayPath = captionImageTempPath;
+      delete object.params.captionImageUrl;
+    }
+
+    const { data, type } = await media.process(mediaType, object.cmd, object.params, inputBuffer ? inputObj : {});
+    return {
+      buffer: data,
+      type,
+      spoiler,
+    };
+  } finally {
+    if (captionImageTempPath) await fs.promises.unlink(captionImageTempPath).catch(() => {});
+  }
 }

@@ -160,7 +160,7 @@ async function getMedia(
 /**
  * Checks a single message for media
  */
-async function checkMedia(message: Message): Promise<MediaMeta[]> {
+async function checkMedia(message: Message, skipAttachments = false): Promise<MediaMeta[]> {
   const types: MediaMeta[] = [];
 
   // first check the embeds
@@ -176,7 +176,7 @@ async function checkMedia(message: Message): Promise<MediaMeta[]> {
   }
 
   // then check the attachments
-  if (message.attachments.size !== 0) {
+  if (!skipAttachments && message.attachments.size !== 0) {
     const firstAttachment = message.attachments.first();
     if (firstAttachment) {
       const type = await getMedia(
@@ -357,6 +357,8 @@ export default async (
   cmdMessage?: Message,
   interaction?: CommandInteraction,
   singleMessage = false,
+  skipCurrentAttachments = false,
+  directLink?: string,
 ): Promise<MediaMeta[]> => {
   const arr: MediaMeta[] = [];
   // we start by determining whether or not we're dealing with an interaction or a message
@@ -378,6 +380,11 @@ export default async (
     }
   }
   if (arr.length > 0) return arr;
+  if (typeof directLink === "string") {
+    const link = directLink.trim().replace(/^<(.+)>$/, "$1");
+    const media = await getMedia(link, link, false, client);
+    if (media) return [media];
+  }
   if (cmdMessage) {
     // check if the message is a reply to another message
     if (cmdMessage.messageReference?.channelID && cmdMessage.messageReference.messageID && !singleMessage) {
@@ -390,7 +397,7 @@ export default async (
       }
     }
     // then we check the current message
-    const result = await checkMedia(cmdMessage);
+    const result = await checkMedia(cmdMessage, skipCurrentAttachments);
     if (result) arr.push(...result);
   }
   if (arr.length > 0) return arr;
@@ -414,6 +421,7 @@ export default async (
     const messages = await channel.getMessages({ limit: 50 });
     // iterate over each message
     for (const message of messages) {
+      if (cmdMessage && message.id === cmdMessage.id) continue;
       const result = await checkMedia(message);
       if (result.length > 0) {
         arr.push(...result);

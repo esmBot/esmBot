@@ -11,6 +11,7 @@ set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/blur.cc
   natives/image/bounce.cc
   natives/image/caption.cc
+  natives/image/captionimage.cc
   natives/image/caption2.cc
   natives/image/circle.cc
   natives/image/colors.cc

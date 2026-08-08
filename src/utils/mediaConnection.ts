@@ -25,7 +25,7 @@ interface RequestState {
 
 type WaitResponse = { sent: true; data: Buffer } | { sent: false };
 
-const etcTypes = ["noanim", "nocmd", "text", "empty", "frames", "ratelimit", "nomedia", "large"];
+const etcTypes = ["noanim", "nocmd", "text", "empty", "frames", "ratelimit", "nomedia", "large", "downloadtimeout"];
 
 class MediaConnection {
   requests: Map<number, RequestState>;

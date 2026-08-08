@@ -59,12 +59,23 @@ class MediaCommand extends Command {
     if (staticProps.requiresImage) {
       try {
         let selection: MediaMeta | undefined;
-        if (!this.getOptionAttachment("image") && !this.getOptionString("link")) {
+        const linkOption = this.getOptionString("link");
+        const link = typeof linkOption === "string" ? linkOption : undefined;
+        const attachmentAlwaysAuxiliary = this.type === "classic" && staticProps.attachmentAlwaysAuxiliary;
+        if ((!this.getOptionAttachment("image") || attachmentAlwaysAuxiliary) && !link) {
           selection = selectedImages.get(this.author.id);
         }
         const media = selection
           ? [selection]
-          : await mediaDetect(this.client, this.permissions, this.message, this.interaction).catch((e) => {
+          : await mediaDetect(
+              this.client,
+              this.permissions,
+              this.message,
+              this.interaction,
+              false,
+              attachmentAlwaysAuxiliary,
+              link,
+            ).catch((e) => {
               if (e.name === "AbortError") {
                 runningCommands.delete(this.author.id);
                 return this.getString("image.timeout");
@@ -155,6 +166,7 @@ class MediaCommand extends Command {
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
       if (type === "noanim") return this.getString("image.noanim");
+      if (type === "downloadtimeout") return this.getString("image.timeoutDownload");
       if (type === "nomedia")
         return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip", { params: { name: this.client.user.globalName ?? this.client.user.username } })}`;
       if (type === "empty") return staticProps.empty;
@@ -197,9 +209,12 @@ class MediaCommand extends Command {
       if (err.toString().includes("media_not_working")) return this.getString("image.notWorking");
       if (err.toString().includes("Request ended prematurely due to a closed connection"))
         return this.getString("image.tryAgain");
+      if (err.name === "AbortError") return this.getString("image.timeoutDownload");
       if (err.toString().includes("media_job_killed") || err.toString().includes("Timeout"))
         return this.getString("image.tooLong");
       if (err.toString().includes("No available servers")) return this.getString("image.noServers");
+      if (err.toString().includes("caption_image_too_large")) return this.getString("image.captionImageTooLarge");
+      if (err.toString().includes("caption_image_bad_url")) return this.getString("image.captionImageBadUrl");
       throw err;
     } finally {
       if (status) await status.delete().catch((e) => logger.warn(`Failed to delete status message: ${e}`));
@@ -308,6 +323,7 @@ class MediaCommand extends Command {
   static requiredParamType: ExtendedConstructedCommandOptions["type"] = "string";
   static textOptional = false;
   static alwaysGIF = false;
+  static attachmentAlwaysAuxiliary = false;
   static noImage = "You need to provide an image/GIF!";
   static noParam = "You need to provide some text!";
   static empty = "The resulting output was empty!";

@@ -7,6 +7,7 @@ namespace esmb::Image {
   declare_input_func(Blur);
   declare_input_func(Bounce);
   declare_input_func(Caption);
+  declare_input_func(CaptionImage);
   declare_input_func(CaptionTwo);
   declare_input_func(Circle);
   declare_input_func(Colors);
@@ -60,6 +61,7 @@ namespace esmb::Image {
   // Declare our Input Args
   declare_input_args(BlurArgs);
   declare_input_args(CaptionArgs);
+  declare_input_args(CaptionImageArgs);
   declare_input_args(CaptionTwoArgs);
   declare_input_args(ColorsArgs);
   declare_input_args(DistortArgs);

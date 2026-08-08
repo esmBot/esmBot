@@ -11,6 +11,7 @@ namespace esmb {
         {"blur",       &Blur      },
         {"bounce",     &Bounce    },
         {"caption",    &Caption   },
+        {"captionImage", &CaptionImage},
         {"captionTwo", &CaptionTwo},
         {"circle",     &Circle    },
         {"colors",     &Colors    },
@@ -73,6 +74,7 @@ namespace esmb {
     const std::map<std::string, FunctionArgs *> FunctionArgsMap = {
       {"blur",       &BlurArgs      },
       {"caption",    &CaptionArgs   },
+      {"captionImage", &CaptionImageArgs},
       {"captionTwo", &CaptionTwoArgs},
       {"colors",     &ColorsArgs    },
       {"distort",    &DistortArgs   },

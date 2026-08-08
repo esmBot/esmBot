@@ -39,6 +39,7 @@
       "bounce": "Makes an image bounce up and down",
       "caption": "Adds a caption to an image",
       "caption2": "Adds a bottom caption/tag list to an image",
+      "captionimage": "Captions an image with another image",
       "circle": "Applies a radial blur effect on an image",
       "crop": "Crops an image to 1:1",
       "deepfry": "Deep-fries an image",
@@ -181,6 +182,9 @@
       "caption2": {
         "top": "top",
         "font": "font"
+      },
+      "captionimage": {
+        "capimage": "capimage"
       },
       "fade": {
         "alpha": "alpha"
@@ -407,6 +411,9 @@
         "top": "Put the caption on the top of an image instead of the bottom",
         "font": "Specify the font you want to use (default: helvetica)"
       },
+      "captionimage": {
+        "capimage": "The image to put on top of the selected image"
+      },
       "fade": {
         "alpha": "Fade in from transparency"
       },
@@ -582,6 +589,7 @@
       "bounce": "bounce",
       "caption": "caption",
       "caption2": "caption2",
+      "captionimage": "captionimage",
       "circle": "circle",
       "crop": "crop",
       "deepfry": "deepfry",
@@ -645,6 +653,7 @@
       "bounce": "You need to provide an image/GIF to bounce!",
       "caption": "You need to provide an image/GIF to add a caption!",
       "caption2": "You need to provide an image/GIF to add a caption!",
+      "captionimage": "You need to provide an image/GIF to caption!",
       "circle": "You need to provide an image/GIF to add radial blur!",
       "crop": "You need to provide an image/GIF to crop!",
       "deepfry": "You need to provide an image/GIF to fry!",
@@ -996,6 +1005,10 @@
   "errorCaps": "ERROR",
   "guildOnly": "This command only works in servers!",
   "image": {
+    "captionImageBadUrl": "I couldn't fetch that caption image. Try a direct PNG, JPEG, WebP, GIF, or AVIF URL.",
+    "captionImageInvalid": "The caption attachment needs to be an image!",
+    "captionImageRequired": "You need to attach an image to use as the caption!",
+    "captionImageTooLarge": "That caption image is too large. Try an image under 10 MB.",
     "couldNotFind": "I couldn't find an image in that message!",
     "empty": "The resulting output was empty!",
     "flagNames": {
