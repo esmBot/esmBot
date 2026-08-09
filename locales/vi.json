@@ -364,7 +364,7 @@
                 "list": "danhsach",
                 "owner": "chu",
                 "random": "ngau",
-                "role": "vai trò"
+                "role": ""
             },
             "tags get": {
                 "name": "ten"
@@ -463,7 +463,7 @@
             },
             "eval": {
                 "code": "ma",
-                "broadcast": "phát sóng"
+                "broadcast": ""
             },
             "help": {
                 "command": "lenh"
@@ -524,19 +524,19 @@
                 "angle": "góc"
             },
             "slide": {
-                "reverse": "đảo ngược",
-                "vertical": "chiều dọc"
+                "reverse": "",
+                "vertical": ""
             },
             "tags role": {
                 "add": "thêm",
-                "list": "danh sách",
-                "remove": "xóa bỏ"
+                "list": "",
+                "remove": ""
             },
             "tags role add": {
-                "role": "vai trò"
+                "role": ""
             },
             "tags role remove": {
-                "role": "vai trò"
+                "role": ""
             },
             "qr": {
                 "create": "tạo",
@@ -632,7 +632,7 @@
             "fade": "modan",
             "mediareload": "mediareload",
             "mediastats": "mediastats",
-            "hue": "sắc độ",
+            "hue": "",
             "rotate": "xoay",
             "slide": "trượt"
         },
