@@ -363,8 +363,7 @@
                 "get": "lay",
                 "list": "danhsach",
                 "owner": "chu",
-                "random": "ngau",
-                "role": ""
+                "random": "ngau"
             },
             "tags get": {
                 "name": "ten"
@@ -462,8 +461,7 @@
                 "command": "lenh"
             },
             "eval": {
-                "code": "ma",
-                "broadcast": ""
+                "code": "ma"
             },
             "help": {
                 "command": "lenh"
@@ -523,20 +521,8 @@
             "rotate": {
                 "angle": "góc"
             },
-            "slide": {
-                "reverse": "",
-                "vertical": ""
-            },
             "tags role": {
-                "add": "thêm",
-                "list": "",
-                "remove": ""
-            },
-            "tags role add": {
-                "role": ""
-            },
-            "tags role remove": {
-                "role": ""
+                "add": "thêm"
             },
             "qr": {
                 "create": "tạo",
@@ -632,7 +618,6 @@
             "fade": "modan",
             "mediareload": "mediareload",
             "mediastats": "mediastats",
-            "hue": "",
             "rotate": "xoay",
             "slide": "trượt"
         },
