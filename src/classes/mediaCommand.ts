@@ -150,6 +150,7 @@ class MediaCommand extends Command {
       }
       if (type === "large") return this.getString("image.large");
       if (type === "frames") return this.getString("image.frames");
+      if (type === "avis") return this.getString("image.animatedAVIF");
       if (type === "unknown") return this.getString("image.unknown");
       if (type === "noresult") return this.getString("image.noResult");
       if (type === "ratelimit") return this.getString("image.ratelimit");

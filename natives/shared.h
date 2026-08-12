@@ -31,3 +31,8 @@ inline uint32_t readUint32LE(const unsigned char *buffer) {
   return static_cast<uint32_t>(buffer[0]) | (static_cast<uint32_t>(buffer[1]) << 8) |
          (static_cast<uint32_t>(buffer[2]) << 16) | (static_cast<uint32_t>(buffer[3]) << 24);
 }
+
+inline uint32_t readUint32BE(const unsigned char *buffer) {
+  return static_cast<uint32_t>(buffer[3]) | (static_cast<uint32_t>(buffer[2]) << 8) |
+         (static_cast<uint32_t>(buffer[1]) << 16) | (static_cast<uint32_t>(buffer[0]) << 24);
+}

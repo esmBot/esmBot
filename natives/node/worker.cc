@@ -15,6 +15,24 @@ void MediaAsyncWorker::Execute() {
 
   try {
     if (bufSize != 0) {
+      if (type == "avif" && bufSize >= 20) {
+        uint32_t size = readUint32BE(reinterpret_cast<const unsigned char *>(bufData));
+        if (size > bufSize) {
+          SetError("Invalid file");
+          return;
+        }
+
+        int curSize = size - 16;
+        while (curSize > 0) {
+          if (memcmp(bufData + size - curSize, "avis", 4) == 0) {
+            outType = "avis";
+            outData = {nullptr, 0};
+            return;
+          }
+          curSize -= 4;
+        }
+      }
+
       outData = esmb::Image::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
     } else {
       outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);

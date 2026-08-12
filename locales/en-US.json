@@ -996,6 +996,7 @@
   "errorCaps": "ERROR",
   "guildOnly": "This command only works in servers!",
   "image": {
+    "animatedAVIF": "Animated AVIF files are currently unsupported.",
     "couldNotFind": "I couldn't find an image in that message!",
     "empty": "The resulting output was empty!",
     "flagNames": {
