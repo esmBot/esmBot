@@ -360,7 +360,7 @@ process.on("SIGINT", (s) => sigHandler(s));
 process.on("SIGTERM", (s) => sigHandler(s));
 
 const allowedExtensions = ["gif", "png", "jpeg", "jpg", "webp", "avif"];
-const fileSize = 10485760;
+const fileSize = 20971520;
 
 async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws: WSocket) {
   log(`Sending result of job ${job.id}`, job.num);

@@ -280,7 +280,7 @@ export function safeBigInt(input: string | number | bigint | boolean) {
 }
 
 export function maxFileSize(guild: Guild | null) {
-  let fileSize = 10485760;
+  let fileSize = 20971520;
   switch (guild?.premiumTier) {
     case 2:
       fileSize = 52428800;
