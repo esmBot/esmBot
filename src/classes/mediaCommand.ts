@@ -248,6 +248,7 @@ class MediaCommand extends Command {
           name: "image",
           nameLocalizations: getAllLocalizations("image.flagNames.image"),
           type: Constants.ApplicationCommandOptionTypes.ATTACHMENT,
+          fileTypes: this.supportedTypes,
           description: "An image/GIF attachment",
           descriptionLocalizations: getAllLocalizations("image.flags.image"),
         },
