@@ -64,7 +64,8 @@ export function connect(client: Client) {
   if (nodes.length === 0) return true;
   manager = new Shoukaku(new Connectors.OceanicJS(client), nodes, { moveOnDisconnect: true, resume: true });
   manager.on("error", (node, error) => {
-    logger.error(`An error occurred on Lavalink node ${node}: ${error}`);
+    logger.error(`An error occurred on Lavalink node ${node}:`);
+    logger.error(error);
   });
   manager.on("debug", (node, info) => {
     logger.debug(`Debug event from Lavalink node ${node}: ${info}`);
