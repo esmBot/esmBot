@@ -195,12 +195,13 @@ class MediaCommand extends Command {
       }
     } catch (e) {
       const err = e as Error;
-      if (err.toString().includes("media_not_working")) return this.getString("image.notWorking");
-      if (err.toString().includes("Request ended prematurely due to a closed connection"))
+      const errString = err.toString();
+      if (errString.includes("media_not_working")) return this.getString("image.notWorking");
+      if (errString.includes("Request ended prematurely due to a closed connection"))
         return this.getString("image.tryAgain");
-      if (err.toString().includes("media_job_killed") || err.toString().includes("Timeout"))
+      if (errString.includes("media_job_killed") || errString.includes("Timeout"))
         return this.getString("image.tooLong");
-      if (err.toString().includes("No available servers")) return this.getString("image.noServers");
+      if (errString.includes("No available servers")) return this.getString("image.noServers");
       throw err;
     } finally {
       if (status) await status.delete().catch((e) => logger.warn(`Failed to delete status message: ${e}`));
