@@ -1,9 +1,6 @@
 #include "media.h"
 #include "../common/maps.h"
 
-#if defined(WIN32) && defined(MAGICK_ENABLED)
-#include <Magick++.h>
-#endif
 #include <vips/vips8>
 
 const char *esmb_media_version() {
@@ -53,9 +50,6 @@ extern "C" {
 #endif
 
 void esmb_media_init() {
-#if defined(WIN32) && defined(MAGICK_ENABLED)
-  Magick::InitializeMagick("");
-#endif
   if (VIPS_INIT("")) vips_error_exit(NULL);
   vips_cache_set_max(0);
 #if VIPS_MAJOR_VERSION > 8 || (VIPS_MAJOR_VERSION == 8 && VIPS_MINOR_VERSION >= 13)
