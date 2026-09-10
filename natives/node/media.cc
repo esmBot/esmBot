@@ -8,9 +8,6 @@
 #include "../shared.h"
 #include "worker.h"
 
-#if defined(WIN32) && defined(MAGICK_ENABLED)
-#include <Magick++.h>
-#endif
 #include <vips/vips8>
 
 #ifdef WITH_BACKWARD
@@ -135,10 +132,6 @@ Napi::Value MediaInit(const Napi::CallbackInfo &info) {
     More info here from a COSMIC dev: https://fosstodon.org/@mmstick/113952008189644564
   */
   mallopt(M_MMAP_THRESHOLD, 131072);
-#endif
-
-#if defined(WIN32) && defined(MAGICK_ENABLED)
-  Magick::InitializeMagick("");
 #endif
 
   if (VIPS_INIT("")) vips_error_exit(NULL);

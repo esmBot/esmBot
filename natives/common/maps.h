@@ -25,7 +25,7 @@ namespace esmb {
         {"globe",      &Globe     },
         {"invert",     &Invert    },
         {"jpeg",       &Jpeg      },
-#ifdef MAGICK_ENABLED
+#ifdef LQR_ENABLED
         {"magik",      &Magik     },
 #endif
         {"meme",       &Meme      },

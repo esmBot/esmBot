@@ -1,7 +1,7 @@
 # Docker/Podman/Kubernetes file for running the bot
 
-# Enable/disable usage of ImageMagick
-ARG MAGICK="1"
+# Enable/disable usage of liblqr
+ARG LQR="1"
 
 FROM node:lts-alpine AS base
 ENV PNPM_HOME="/pnpm"
@@ -13,20 +13,17 @@ RUN update-ms-fonts && fc-cache -fv
 RUN mkdir /built
 WORKDIR /app
 
-# Path without ImageMagick
+# Path without liblqr
 FROM base AS native-build-0
 RUN apk add --no-cache git cmake python3 alpine-sdk \
 		fontconfig-dev vips-dev zxing-cpp-dev
 
-# Path with ImageMagick
+# Path with liblqr
 FROM base AS native-build-1
-RUN apk add --no-cache git cmake python3 alpine-sdk \
-    zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev \
-    libtool libwebp-dev libxml2-dev \
-		vips-dev libc6-compat zxing-cpp-dev
+RUN apk add --no-cache git cmake python3 alpine-sdk libtool glib-dev \
+		fontconfig-dev vips-dev zxing-cpp-dev
 
-# liblqr needs to be built manually for magick to work
-# and because alpine doesn't have it in their repos
+# liblqr needs to be built manually since alpine doesn't have it in their repos
 RUN git clone https://github.com/carlobaldassi/liblqr ~/liblqr \
 		&& cd ~/liblqr \
 		&& ./configure --prefix=/usr \
@@ -35,35 +32,14 @@ RUN git clone https://github.com/carlobaldassi/liblqr ~/liblqr \
 
 RUN cp -a /built/* /
 
-# install imagemagick from source rather than using the package
-# since the alpine package does not include liblqr support.
-RUN git clone https://github.com/ImageMagick/ImageMagick.git ~/ImageMagick \
-    && cd ~/ImageMagick \
-    && git checkout $(git describe --abbrev=0) \
-    && ./configure \
-		--prefix=/usr \
-		--disable-static \
-		--disable-openmp \
-		--with-threads \
-		--with-png \
-		--with-webp \
-		--with-modules \
-		--with-pango \
-		--without-hdri \
-		--with-lqr \
-    && make -j$(nproc) \
-    && make DESTDIR=/built install
-
-RUN cp -a /built/* /
-
-FROM native-build-${MAGICK} AS build
-ARG MAGICK
+FROM native-build-${LQR} AS build
+ARG LQR
 COPY . /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-# Detect ImageMagick usage and adjust build accordingly
-RUN if [[ "$MAGICK" -eq "1" ]] ; then pnpm run build --CDWITH_BACKWARD=OFF ; else pnpm run build:no-magick --CDWITH_BACKWARD=OFF ; fi
+# Detect liblqr usage and adjust build accordingly
+RUN if [ "$LQR" = "1" ] ; then pnpm run build --CDWITH_BACKWARD=OFF ; else pnpm run build:no-lqr --CDWITH_BACKWARD=OFF ; fi
 
-FROM native-build-${MAGICK} AS prod-deps
+FROM native-build-${LQR} AS prod-deps
 COPY package.json /app/
 COPY pnpm-workspace.yaml /app/
 COPY pnpm-lock.yaml /app/
