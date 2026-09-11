@@ -31,7 +31,6 @@ function updateStats(memOnly: boolean = false): Promise<void> {
     responseCount = 0;
     totalMem = process.memoryUsage().heapUsed;
     clusterCount = processes.length;
-    let timeout: ReturnType<typeof setTimeout> | undefined;
     const done: boolean[] = Array(clusterCount).fill(false);
     for (const [i, worker] of processes.entries()) {
       if (!worker.isConnected()) {
@@ -45,6 +44,7 @@ function updateStats(memOnly: boolean = false): Promise<void> {
         continue;
       }
 
+      let timeout: ReturnType<typeof setTimeout> | undefined;
       const listener = (packet: IncomingProcMessage) => {
         if (packet.data?.type === "serverCounts") {
           const countData = packet as ServerCountMessage;
