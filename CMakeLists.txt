@@ -49,14 +49,8 @@ set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/watermark.cc
   natives/image/whisper.cc)
 
-if (APPLE)
-  set(WITH_ZXING_DEFAULT OFF)
-else()
-  set(WITH_ZXING_DEFAULT ON)
-endif()
-
 option(WITH_LQR "Build with liblqr, enables the magik command" ON)
-option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ${WITH_ZXING_DEFAULT})
+option(WITH_ZXING "Build with zxing-cpp, enables the qr command" ON)
 option(WITH_BACKWARD "Build with backward-cpp, prints a backtrace on crash/abort" ON)
 
 option(WITH_CLI "Build the CLI interface" OFF)
@@ -110,6 +104,8 @@ if (WITH_ZXING)
   if (ZXing_FOUND)
     add_definitions(-DZXING_ENABLED)
     target_link_libraries(${PROJECT_NAME} ZXing::ZXing)
+  else()
+    message(STATUS "zxing-cpp not found, the qr command will be unavailable")
   endif()
 endif()
 

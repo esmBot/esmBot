@@ -83,9 +83,8 @@ Choose the OS you're using below for installation instructions.
 === "macOS (Homebrew)"
 
     ```sh
-    brew install cmake ninja ffmpeg liblqr libvips
+    brew install cmake ninja ffmpeg liblqr libvips zxing-cpp
     ```
-    The `zxing-cpp` package is not available through Homebrew, so unfortunately the QR commands will be unavailable on macOS without further intervention.
 
 ---
 
