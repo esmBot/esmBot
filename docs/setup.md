@@ -21,7 +21,7 @@ If you have any further questions regarding setup, feel free to ask in the #supp
 
 ### 1. Install the required native dependencies.
 
-Choose the OS you're using below for insallation instructions.
+Choose the OS you're using below for installation instructions.
 
 === "Debian/Ubuntu"
 
@@ -29,11 +29,12 @@ Choose the OS you're using below for insallation instructions.
     ```sh
     sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev
     ```
-    On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
+    
+    On Debian, the `ttf-mscorefonts-installer` is in the `contrib` component, which is not enabled by default.  The manual page for `sources.list` includes examples and instructions on how to enable certain components.
 
 === "Fedora/RHEL"
 
-    These instructions apply to Fedora 38/RHEL 9 or later.
+    These instructions apply to Fedora 43/RHEL 9 or later.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions in the [RPM Fusion configuration guide](https://rpmfusion.org/Configuration).
     ```sh
@@ -48,15 +49,15 @@ Choose the OS you're using below for insallation instructions.
 
 === "Alpine"
 
-    These instructions should apply to version 3.17 or later.
+    These instructions should apply to version 3.21 or later.
     ```sh
-    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
+    sudo apk add git curl msttcorefonts-installer python3 sqlite alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
     ```
 
 === "Arch/Manjaro"
 
     ```sh
-    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp
+    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite zxing-cpp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 
