@@ -21,7 +21,7 @@ namespace esmb::Image {
   declare_input_func(Globe);
   declare_input_func(Invert);
   declare_input_func(Jpeg);
-#if MAGICK_ENABLED
+#if LQR_ENABLED
   declare_input_func(Magik);
 #endif
   declare_input_func(Meme);

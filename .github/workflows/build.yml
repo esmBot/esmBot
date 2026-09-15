@@ -38,10 +38,10 @@ jobs:
 
       - name: Install dependencies (Linux)
         if: contains(matrix.platform.key, 'linux')
-        run: sudo apt update && sudo apt install -y cmake libvips-dev libmagick++-dev libzxing-dev
+        run: sudo apt update && sudo apt install -y cmake libvips-dev liblqr-1-0-dev libzxing-dev
       - name: Install dependencies (macOS)
         if: contains(matrix.platform.key, 'macos')
-        run: brew install imagemagick vips
+        run: brew install liblqr vips
 
       - name: Build
         run: pnpm install --frozen-lockfile && pnpm run build
