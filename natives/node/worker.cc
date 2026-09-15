@@ -33,6 +33,8 @@ void MediaAsyncWorker::Execute() {
         }
       }
 
+      CheckPixelLimit(bufData, bufSize);
+
       outData = esmb::Image::FunctionMap.at(command)(type, outType, bufData, bufSize, inArgs, &shouldKill);
     } else {
       outData = esmb::Image::NoInputFunctionMap.at(command)(type, outType, inArgs, &shouldKill);

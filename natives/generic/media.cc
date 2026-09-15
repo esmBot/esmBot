@@ -1,5 +1,6 @@
 #include "media.h"
 #include "../common/maps.h"
+#include "../image/common.h"
 
 #if defined(WIN32) && defined(MAGICK_ENABLED)
 #include <Magick++.h>
@@ -22,6 +23,7 @@ esmb_media_result *esmb_media_process(const char *command, esmb::ArgumentMap arg
   CmdOutput outData;
   if (length != 0) {
     if (MapContainsKey(esmb::Image::FunctionMap, command)) {
+      CheckPixelLimit(data, length);
       outData = esmb::Image::FunctionMap.at(command)(type, outType, data, length, args, NULL);
     } else { // Vultu: I don't think we will ever be here, but just in case we need a descriptive error
       std::string cmd(command);
