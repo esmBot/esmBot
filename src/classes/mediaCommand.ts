@@ -200,6 +200,7 @@ class MediaCommand extends Command {
       if (errString.includes("media_not_working")) return this.getString("image.notWorking");
       if (errString.includes("Request ended prematurely due to a closed connection"))
         return this.getString("image.tryAgain");
+      if (errString.includes("image_pixel_limit")) return this.getString("image.pixelLimit");
       if (errString.includes("media_job_killed") || errString.includes("Timeout"))
         return this.getString("image.tooLong");
       if (errString.includes("No available servers")) return this.getString("image.noServers");

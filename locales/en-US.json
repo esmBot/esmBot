@@ -1028,6 +1028,7 @@
     "noTempServer": "The resulting file was larger than Discord's upload limit, so I can't upload it.",
     "noParam": "You need to provide some text!",
     "notWorking": "I couldn't find a way to process this image; this likely means that I haven't been set up correctly. Please contact the bot owner.",
+    "pixelLimit": "That image is too big (over 64 megapixels)! Try using a smaller image.",
     "processing": "Processing... This might take a while",
     "ratelimit": "I've been ratelimited by the server hosting that image. Try uploading your image somewhere else.",
     "selected": "The image has been selected for your next command.",

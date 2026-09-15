@@ -18,10 +18,12 @@ typedef struct {
   bool *shouldKill;
 } CallbackData;
 #define IMG_TIMEOUT 600
+#define MAX_PIXELS (64 * 1000000)
 
 #include "commands.h"
 
 void LoadFonts(string basePath);
+void CheckPixelLimit(const char *bufferData, size_t bufferLength);
 vips::VImage NormalizeVips(vips::VImage in, int *width, int *pageHeight, int nPages);
 vips::VOption *GetInputOptions(string type, bool sequential, bool sequentialIfAnim);
 

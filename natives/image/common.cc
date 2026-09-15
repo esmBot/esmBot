@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include <vips/vips8>
 
 #include "common.h"
@@ -13,6 +14,15 @@ void LoadFonts(string basePath) {
   if (!FcConfigParseAndLoad(FcConfigGetCurrent(), (const FcChar8 *)(basePath + "assets/fonts/fontconfig.xml").c_str(),
                             true)) {
     std::cerr << "Unable to load local fontconfig, some fonts may be inaccurate!" << std::endl;
+  }
+}
+
+void CheckPixelLimit(const char *bufferData, size_t bufferLength) {
+  // this only parses the header, vips is lazy
+  vips::VImage probe = vips::VImage::new_from_buffer(bufferData, bufferLength, "");
+
+  if ((int64_t)probe.width() * probe.height() > MAX_PIXELS) {
+    throw std::runtime_error("image_pixel_limit");
   }
 }
 
