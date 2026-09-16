@@ -21,19 +21,38 @@ If you have any further questions regarding setup, feel free to ask in the #supp
 
 ### 1. Install the required native dependencies.
 
-Choose the OS you're using below for insallation instructions.
+Choose the OS you're using below for installation instructions.
 
-=== "Debian/Ubuntu"
+=== "Ubuntu"
 
-    These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
+    These instructions apply to Ubuntu version 24.04 (noble) or later.
+
     ```sh
     sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev
     ```
-    On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.
+
+=== "Debian"
+
+    These instructions apply to Debian version 12 (bookworm) or later.
+
+    !!! note "Enable the `contrib` component first"
+
+        On Debian, `ttf-mscorefonts-installer` is in the `contrib` component, which isn't enabled by default. To enable it:
+
+        1. Open your APT sources file as root. If `/etc/apt/sources.list.d/debian.sources` exists, edit that one; otherwise, edit `/etc/apt/sources.list`. For example:
+        ```sh
+        sudo nano /etc/apt/sources.list.d/debian.sources
+        ```
+        2. Add `contrib` after `main` on each `Components:` or `deb` line that points to the Debian archive (see the [format reference](https://manpages.debian.org/stable/apt/sources.list.5.en.html#THE_DEB_AND_DEB-SRC_TYPES:_GENERAL_FORMAT)).
+        3. Press Ctrl + X, then Y and Enter to save, then run `sudo apt-get update`.
+
+    ```sh
+    sudo apt-get install git curl build-essential cmake ffmpeg sqlite3 ttf-mscorefonts-installer libmagick++-dev libvips-dev libzxing-dev
+    ```
 
 === "Fedora/RHEL"
 
-    These instructions apply to Fedora 38/RHEL 9 or later.
+    These instructions apply to Fedora 43/RHEL 9 or later.
 
     Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions in the [RPM Fusion configuration guide](https://rpmfusion.org/Configuration).
     ```sh
@@ -48,15 +67,15 @@ Choose the OS you're using below for insallation instructions.
 
 === "Alpine"
 
-    These instructions should apply to version 3.17 or later.
+    These instructions should apply to version 3.21 or later.
     ```sh
-    sudo apk add git curl msttcorefonts-installer python3 sqlite3 alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
+    sudo apk add git curl msttcorefonts-installer python3 sqlite alpine-sdk cmake ffmpeg imagemagick-dev vips-dev zxing-cpp-dev
     ```
 
 === "Arch/Manjaro"
 
     ```sh
-    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite3 zxing-cpp
+    sudo pacman -S git curl cmake ffmpeg npm imagemagick libvips sqlite zxing-cpp
     ```
     You'll also need to install [`ttf-ms-win10-auto`](https://aur.archlinux.org/packages/ttf-ms-win10-auto/) from the AUR.
 
