@@ -581,17 +581,32 @@
 <p>You can run the bot using Docker or Podman for a somewhat simpler setup experience. See the <a href="https://docs.esmbot.net/containers">container setup guide</a>.</p>
 </div>
 <h3 id="1-install-the-required-native-dependencies">1. Install the required native dependencies.</h3>
-<p>Choose the OS you're using below for insallation instructions.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><input id="__tabbed_1_5" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Debian/Ubuntu</label><label for="__tabbed_1_2">Fedora/RHEL</label><label for="__tabbed_1_3">Alpine</label><label for="__tabbed_1_4">Arch/Manjaro</label><label for="__tabbed_1_5">macOS (Homebrew)</label></div>
+<p>Choose the OS you're using below for installation instructions.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:6"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><input id="__tabbed_1_5" name="__tabbed_1" type="radio"><input id="__tabbed_1_6" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">Debian</label><label for="__tabbed_1_3">Fedora/RHEL</label><label for="__tabbed_1_4">Alpine</label><label for="__tabbed_1_5">Arch/Manjaro</label><label for="__tabbed_1_6">macOS (Homebrew)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>These instructions apply to Debian version 12 (bookworm) or Ubuntu version 24.04 (noble) or later.
-</p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxing-dev
+<p>These instructions apply to Ubuntu version 24.04 (noble) or later.</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxing-dev
 </code></pre></div>
-On older Debian/Ubuntu versions, you may need to install some of these packages (notably libcgif-dev and meson) through alternative methods.<p></p>
 </div>
 <div class="tabbed-block">
-<p>These instructions apply to Fedora 38/RHEL 9 or later.</p>
+<p>These instructions apply to Debian version 12 (bookworm) or later.</p>
+<div class="admonition note">
+<p class="admonition-title">Enable the <code>contrib</code> component first</p>
+<p>On Debian, <code>ttf-mscorefonts-installer</code> is in the <code>contrib</code> component, which isn't enabled by default. To enable it:</p>
+<ol>
+<li>Open your APT sources file as root. If <code>/etc/apt/sources.list.d/debian.sources</code> exists, edit that one; otherwise, edit <code>/etc/apt/sources.list</code>. For example:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/apt/sources.list.d/debian.sources
+</code></pre></div></li>
+<li>Add <code>contrib</code> after <code>main</code> on each <code>Components:</code> or <code>deb</code> line that points to the Debian archive (see the <a href="https://manpages.debian.org/stable/apt/sources.list.5.en.html#THE_DEB_AND_DEB-SRC_TYPES:_GENERAL_FORMAT">format reference</a>).</li>
+<li>Press Ctrl + X, then Y and Enter to save, then run <code>sudo apt-get update</code>.</li>
+</ol>
+</div>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite3<span class="w"> </span>ttf-mscorefonts-installer<span class="w"> </span>libmagick++-dev<span class="w"> </span>libvips-dev<span class="w"> </span>libzxing-dev
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>These instructions apply to Fedora 43/RHEL 9 or later.</p>
 <p>Some of these packages require that you add the RPM Fusion and/or EPEL repositories. You can find instructions in the <a href="https://rpmfusion.org/Configuration">RPM Fusion configuration guide</a>.
 </p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>sqlite<span class="w"> </span>gcc-c++<span class="w"> </span>ImageMagick-c++-devel<span class="w"> </span>vips-devel<span class="w"> </span>cabextract<span class="w"> </span>zxing-cpp-devel
 </code></pre></div>
@@ -601,12 +616,12 @@ On RHEL-based distros like AlmaLinux and Rocky Linux, you may need to add <a hre
 </code></pre></div><p></p>
 </div>
 <div class="tabbed-block">
-<p>These instructions should apply to version 3.17 or later.
-</p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>msttcorefonts-installer<span class="w"> </span>python3<span class="w"> </span>sqlite3<span class="w"> </span>alpine-sdk<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick-dev<span class="w"> </span>vips-dev<span class="w"> </span>zxing-cpp-dev
+<p>These instructions should apply to version 3.21 or later.
+</p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>msttcorefonts-installer<span class="w"> </span>python3<span class="w"> </span>sqlite<span class="w"> </span>alpine-sdk<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>imagemagick-dev<span class="w"> </span>vips-dev<span class="w"> </span>zxing-cpp-dev
 </code></pre></div><p></p>
 </div>
 <div class="tabbed-block">
-<p></p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>npm<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>sqlite3<span class="w"> </span>zxing-cpp
+<p></p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>git<span class="w"> </span>curl<span class="w"> </span>cmake<span class="w"> </span>ffmpeg<span class="w"> </span>npm<span class="w"> </span>imagemagick<span class="w"> </span>libvips<span class="w"> </span>sqlite<span class="w"> </span>zxing-cpp
 </code></pre></div>
 You'll also need to install <a href="https://aur.archlinux.org/packages/ttf-ms-win10-auto/"><code>ttf-ms-win10-auto</code></a> from the AUR.<p></p>
 </div>
@@ -781,7 +796,7 @@ pnpm<span class="w"> </span>install
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 4, 2026 18:02:13 UTC">August 4, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 16, 2026 15:20:44 UTC">September 16, 2026</span>
   </span>
 
     
