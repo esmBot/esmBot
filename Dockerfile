@@ -15,12 +15,12 @@ WORKDIR /app
 
 # Path without liblqr
 FROM base AS native-build-0
-RUN apk add --no-cache git cmake python3 alpine-sdk \
+RUN apk add --no-cache git cmake ninja python3 alpine-sdk \
 		fontconfig-dev vips-dev zxing-cpp-dev
 
 # Path with liblqr
 FROM base AS native-build-1
-RUN apk add --no-cache git cmake python3 alpine-sdk libtool glib-dev \
+RUN apk add --no-cache git cmake ninja python3 alpine-sdk libtool glib-dev \
 		fontconfig-dev vips-dev zxing-cpp-dev
 
 # liblqr needs to be built manually since alpine doesn't have it in their repos

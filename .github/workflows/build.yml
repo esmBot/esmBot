@@ -41,7 +41,7 @@ jobs:
         run: sudo apt update && sudo apt install -y cmake libvips-dev liblqr-1-0-dev libzxing-dev
       - name: Install dependencies (macOS)
         if: contains(matrix.platform.key, 'macos')
-        run: brew install liblqr vips
+        run: brew install liblqr vips zxing-cpp
 
       - name: Build
         run: pnpm install --frozen-lockfile && pnpm run build
