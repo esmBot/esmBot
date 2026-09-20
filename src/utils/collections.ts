@@ -1,3 +1,4 @@
+import type Command from "#cmd-classes/command.js";
 import type InteractionCollector from "../pagination/awaitinteractions.ts";
 import type { ExtCommand, MediaMeta } from "./types.ts";
 
@@ -47,3 +48,4 @@ class TimedMap<K, V> extends Map<K, V> {
 
 export const runningCommands = new TimedMap<string, Date>(5000);
 export const selectedImages = new TimedMap<string, MediaMeta>(180000);
+export const pendingCommands = new TimedMap<string, Command>(120000);

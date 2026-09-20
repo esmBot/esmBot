@@ -1,8 +1,9 @@
 import { Message } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import { selectedImages } from "#utils/collections.js";
+import { pendingCommands, selectedImages } from "#utils/collections.js";
 import { request } from "#utils/media.js";
 import imageDetect from "#utils/mediadetect.js";
+import { awaitRerun, rerunButton } from "#utils/rerunprompt.js";
 
 class SelectImageCommand extends Command {
   async run() {
@@ -27,7 +28,24 @@ class SelectImageCommand extends Command {
     if (!final) return this.getString("image.couldNotFind");
 
     selectedImages.set(this.author.id, final);
-    return this.getString("image.selected");
+
+    const pending = pendingCommands.get(this.author.id);
+    if (!pending) return this.getString("image.selected");
+    return {
+      content: this.getString("image.selected"),
+      components: rerunButton(pending.cmdName, this.locale),
+    };
+  }
+
+  /**
+   * @param {Message} [res]
+   */
+  async finalize(res) {
+    if (!res?.components.length || !this.interaction) return;
+    const pending = pendingCommands.get(this.author.id);
+    if (!pending) return;
+    pendingCommands.delete(this.author.id);
+    awaitRerun(this.interaction, res, pending);
   }
 
   static ephemeral = true;
