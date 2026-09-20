@@ -12,6 +12,7 @@ class MusicNowPlayingCommand extends MusicCommand {
     const player = this.connection.player;
     if (!player || !player.track) return this.getString("sound.notPlaying");
     const track = this.queue[0];
+    if (!track) return this.getString("commands.responses.nowplaying.noTrack");
     const voiceChannel =
       this.client.getChannel(this.connection.voiceChannel) ??
       (await this.client.rest.channels.get(this.connection.voiceChannel));
