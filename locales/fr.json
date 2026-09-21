@@ -7,7 +7,7 @@
             "avatar": "Récupère l'avatar d'un utilisateur",
             "base64": "Encode/Décode un texte en Base64",
             "count": "Combien de fois chaque commande a été utilisée",
-            "bird": "Image d'oiseau aléatoire",
+            "bird": "Lance les dés",
             "cat": "Image de chat aléatoire",
             "donate": "Découvrez comment vous pouvez soutenir le développement d'esmBot",
             "emote": "Récupère l'image d'un émoji",
@@ -90,7 +90,8 @@
             "slide": "Fait déplacer une image dans une direction",
             "tags": "La commande de tags principale. Pour plus d'informations : https://esmbot.net/help.html",
             "mediareload": "Tente de se reconnecter à tous les serveurs de traitement de médias",
-            "mediastats": "Obtiens des statistiques sur les serveurs médias"
+            "mediastats": "Obtiens des statistiques sur les serveurs médias",
+            "rotate": "Tourne une image"
         },
         "flagNames": {
             "8ball": {
