@@ -450,6 +450,16 @@ git<span class="w"> </span>clone<span class="w"> </span>--recurse-submodules<spa
 <span class="w">  </span><span class="c1">// ...</span>
 <span class="p">}</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Docker only</p>
+<p>On Docker, the <code>lavaplugins</code> volume is created owned by <code>root</code>, while Lavalink runs as the unprivileged <code>lavalink</code> user. Since Lavalink downloads its plugins into that volume on startup, it will fail to start with an error like this:</p>
+<div class="highlight"><pre><span></span><code>Caused by: java.io.FileNotFoundException: ./plugins/lava-xm-plugin-0.2.8.jar (Permission denied)
+</code></pre></div>
+<p>Podman handles volume ownership on its own, so you can skip this if you're using it.</p>
+</div>
+<p>Before starting the bot for the first time, run this command to create the plugin volume and give it to the <code>lavalink</code> user:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--user<span class="w"> </span>root<span class="w"> </span>--entrypoint<span class="w"> </span>chown<span class="w"> </span>lavalink<span class="w"> </span>-R<span class="w"> </span>lavalink:lavalink<span class="w"> </span>/opt/Lavalink/plugins
+</code></pre></div>
 <p>Finally, start the bot by running the following command (click to select your container runtime):</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Podman</label><label for="__tabbed_1_2">Docker</label></div>
 <div class="tabbed-content">
@@ -483,7 +493,7 @@ git<span class="w"> </span>clone<span class="w"> </span>--recurse-submodules<spa
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 23, 2026 03:13:46 UTC">July 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 24, 2026 22:59:58 UTC">September 24, 2026</span>
   </span>
 
     
