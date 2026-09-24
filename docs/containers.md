@@ -33,21 +33,13 @@ You should then modify the `config/servers.json` file to change the IP addresses
 
     Podman handles volume ownership on its own, so you can skip this if you're using it.
 
-Before starting the bot for the first time, run this command to create the plugin volume and give it to the `lavalink` user (click to select your container runtime):
+Before starting the bot for the first time, run this command to create the plugin volume and give it to the `lavalink` user:
 
-=== "Podman"
+```sh
+docker compose run --rm --user root --entrypoint chown lavalink -R lavalink:lavalink /opt/Lavalink/plugins
+```
 
-    ```sh
-    podman-compose run --rm --user root --entrypoint chown lavalink -R lavalink:lavalink /opt/Lavalink/plugins
-    ```
-
-=== "Docker"
-
-    ```sh
-    docker compose run --rm --user root --entrypoint chown lavalink -R lavalink:lavalink /opt/Lavalink/plugins
-    ```
-
-Finally, start the bot by running the following command:
+Finally, start the bot by running the following command (click to select your container runtime):
 
 === "Podman"
 
