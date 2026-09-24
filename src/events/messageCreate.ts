@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import process from "node:process";
 import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, ThreadChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import { aliases, commands, disabledCache, disabledCmdCache, prefixCache } from "#utils/collections.js";
+import { aliases, commands } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
@@ -60,17 +60,11 @@ export default async ({ client, database }: EventParams, message: Message) => {
   if (mentionResult) {
     text = message.content.substring(mentionResult[0].length).trim();
   } else if (message.guildID && database) {
-    const cachedPrefix = prefixCache.get(message.guildID);
-    if (cachedPrefix && message.content.startsWith(cachedPrefix)) {
-      text = message.content.substring(cachedPrefix.length).trim();
+    guildDB = await database.getGuild(message.guildID);
+    if (message.content.startsWith(guildDB.prefix)) {
+      text = message.content.substring(guildDB.prefix.length).trim();
     } else {
-      guildDB = await database.getGuild(message.guildID);
-      if (message.content.startsWith(guildDB.prefix)) {
-        text = message.content.substring(guildDB.prefix.length).trim();
-        prefixCache.set(message.guildID, guildDB.prefix);
-      } else {
-        return;
-      }
+      return;
     }
   } else if (message.content.startsWith(defaultPrefix)) {
     text = message.content.substring(defaultPrefix.length).trim();
@@ -126,20 +120,10 @@ export default async ({ client, database }: EventParams, message: Message) => {
 
   // don't run if message is in a disabled channel
   if (message.guildID && database) {
-    let disabled = disabledCache.get(message.guildID);
-    if (!disabled) {
-      if (!guildDB) guildDB = await database.getGuild(message.guildID);
-      disabledCache.set(message.guildID, guildDB.disabled);
-      disabled = guildDB.disabled;
-    }
-    if (disabled.includes(message.channelID) && command !== "channel") return;
+    if (!guildDB) guildDB = await database.getGuild(message.guildID);
+    if (guildDB.disabled.includes(message.channelID) && command !== "channel") return;
 
-    let disabledCmds = disabledCmdCache.get(message.guildID);
-    if (!disabledCmds) {
-      if (!guildDB) guildDB = await database.getGuild(message.guildID);
-      disabledCmdCache.set(message.guildID, guildDB.disabled_commands);
-      disabledCmds = guildDB.disabled_commands;
-    }
+    const disabledCmds = guildDB.disabled_commands;
     if (disabledCmds.includes(command) || disabledCmds.includes(cmdName) || disabledCmds.includes(canon)) return;
   }
 

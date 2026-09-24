@@ -47,21 +47,3 @@ class TimedMap<K, V> extends Map<K, V> {
 
 export const runningCommands = new TimedMap<string, Date>(5000);
 export const selectedImages = new TimedMap<string, MediaMeta>(180000);
-
-class Cache<K, V> extends Map {
-  maxValues: number;
-  constructor() {
-    super();
-    this.maxValues = 2048;
-  }
-
-  set(key: K, value: V) {
-    super.set(key, value);
-    if (this.size > this.maxValues) this.delete(this.keys().next().value);
-    return this;
-  }
-}
-
-export const prefixCache = new Cache<string, string>();
-export const disabledCache = new Cache<string, string[]>();
-export const disabledCmdCache = new Cache<string, string[]>();

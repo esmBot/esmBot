@@ -1,13 +1,6 @@
 import process from "node:process";
 import Postgres from "postgres";
-import {
-  commands,
-  disabledCache,
-  disabledCmdCache,
-  messageCommands,
-  prefixCache,
-  userCommands,
-} from "#utils/collections.js";
+import { commands, messageCommands, userCommands } from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
@@ -146,7 +139,6 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async setPrefix(prefix: string, guild: string) {
     await this.sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild}`;
-    prefixCache.set(guild, prefix);
   }
 
   async getTag(guild: string, tag: string) {
@@ -201,30 +193,23 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     const guildDB = await this.getGuild(guild);
     await this
       .sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
-    disabledCmdCache.set(
-      guild,
-      guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v),
-    );
   }
 
   async enableCommand(guild: string, command: string) {
     const guildDB = await this.getGuild(guild);
     const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter((item) => item !== command) : [];
     await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
-    disabledCmdCache.set(guild, newDisabled);
   }
 
   async disableChannel(channel: string, guild: string) {
     const guildDB = await this.getGuild(guild);
     await this.sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel]} WHERE guild_id = ${guild}`;
-    disabledCache.set(guild, [...guildDB.disabled, channel]);
   }
 
   async enableChannel(channel: string, guild: string) {
     const guildDB = await this.getGuild(guild);
     const newDisabled = guildDB.disabled.filter((item) => item !== channel);
     await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
-    disabledCache.set(guild, newDisabled);
   }
 
   async getCounts(all?: boolean) {

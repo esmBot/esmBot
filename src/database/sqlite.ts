@@ -1,13 +1,6 @@
 import process from "node:process";
 import { DatabaseSync } from "node:sqlite";
-import {
-  commands,
-  disabledCache,
-  disabledCmdCache,
-  messageCommands,
-  prefixCache,
-  userCommands,
-} from "#utils/collections.js";
+import { commands, messageCommands, userCommands } from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
@@ -148,10 +141,6 @@ export default class SQLitePlugin implements DatabasePlugin {
         ),
         guild,
       );
-    disabledCmdCache.set(
-      guild,
-      guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v),
-    );
   }
 
   async enableCommand(guild: string, command: string) {
@@ -160,7 +149,6 @@ export default class SQLitePlugin implements DatabasePlugin {
     this.connection
       .prepare("UPDATE guilds SET disabled_commands = ? WHERE guild_id = ?")
       .run(JSON.stringify(newDisabled), guild);
-    disabledCmdCache.set(guild, newDisabled);
   }
 
   async disableChannel(channel: string, guild: string) {
@@ -168,7 +156,6 @@ export default class SQLitePlugin implements DatabasePlugin {
     this.connection
       .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
       .run(JSON.stringify([...guildDB.disabled, channel]), guild);
-    disabledCache.set(guild, [...guildDB.disabled, channel]);
   }
 
   async enableChannel(channel: string, guild: string) {
@@ -177,7 +164,6 @@ export default class SQLitePlugin implements DatabasePlugin {
     this.connection
       .prepare("UPDATE guilds SET disabled = ? WHERE guild_id = ?")
       .run(JSON.stringify(newDisabled), guild);
-    disabledCache.set(guild, newDisabled);
   }
 
   async getTag(guild: string, tag: string) {
@@ -247,7 +233,6 @@ export default class SQLitePlugin implements DatabasePlugin {
 
   async setPrefix(prefix: string, guild: string) {
     this.connection.prepare("UPDATE guilds SET prefix = ? WHERE guild_id = ?").run(prefix, guild);
-    prefixCache.set(guild, prefix);
   }
 
   async getGuild(query: string): Promise<DBGuild> {
