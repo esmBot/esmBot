@@ -23,6 +23,22 @@ You should then modify the `config/servers.json` file to change the IP addresses
 }
 ```
 
+!!! warning "Docker only"
+
+    On Docker, the `lavaplugins` volume is created owned by `root`, while Lavalink runs as the unprivileged `lavalink` user. Since Lavalink downloads its plugins into that volume on startup, it will fail to start with an error like this:
+
+    ```
+    Caused by: java.io.FileNotFoundException: ./plugins/lava-xm-plugin-0.2.8.jar (Permission denied)
+    ```
+
+    Podman handles volume ownership on its own, so you can skip this if you're using it.
+
+Before starting the bot for the first time, run this command to create the plugin volume and give it to the `lavalink` user:
+
+```sh
+docker compose run --rm --user root --entrypoint chown lavalink -R lavalink:lavalink /opt/Lavalink/plugins
+```
+
 Finally, start the bot by running the following command (click to select your container runtime):
 
 === "Podman"
