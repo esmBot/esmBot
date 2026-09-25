@@ -109,6 +109,11 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
             await sql.unsafe(updates[version]);
           }
         } else {
+          if (version > latestVersion) {
+            logger.warn(
+              `PostgreSQL database is at version ${version}, but this version of esmBot only supports up to version ${latestVersion}. Running an older version of esmBot on a newer database is not supported.`,
+            );
+          }
           return;
         }
         await sql`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;

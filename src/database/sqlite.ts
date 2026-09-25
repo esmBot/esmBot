@@ -104,6 +104,12 @@ export default class SQLitePlugin implements DatabasePlugin {
           this.connection.exec(updates[version]);
         }
       } else {
+        if (version > latestVersion) {
+          logger.warn(
+            `SQLite database is at version ${version}, but this version of esmBot only supports up to version ${latestVersion}. Running an older version of esmBot on a newer database is not supported.`,
+          );
+        }
+        this.connection.exec("ROLLBACK");
         return;
       }
       this.connection.exec(`PRAGMA user_version = ${latestVersion}`);
