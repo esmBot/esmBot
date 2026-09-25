@@ -167,14 +167,13 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async addTagRole(guild: string, role: string) {
-    const guildDB = await this.getGuild(guild);
-    await this.sql`UPDATE guilds SET tag_roles = ${[...guildDB.tag_roles, role]} WHERE guild_id = ${guild}`;
+    await this.getGuild(guild);
+    await this
+      .sql`UPDATE guilds SET tag_roles = array_append(tag_roles, ${role}) WHERE guild_id = ${guild} AND NOT (${role} = ANY(tag_roles))`;
   }
 
   async removeTagRole(guild: string, role: string) {
-    const guildDB = await this.getGuild(guild);
-    await this
-      .sql`UPDATE guilds SET tag_roles = ${guildDB.tag_roles.filter((v) => v !== role)} WHERE guild_id = ${guild}`;
+    await this.sql`UPDATE guilds SET tag_roles = array_remove(tag_roles, ${role}) WHERE guild_id = ${guild}`;
   }
 
   async setBroadcast(msg?: string) {
@@ -187,26 +186,24 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async disableCommand(guild: string, command: string) {
-    const guildDB = await this.getGuild(guild);
+    await this.getGuild(guild);
     await this
-      .sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
+      .sql`UPDATE guilds SET disabled_commands = array_append(disabled_commands, ${command}) WHERE guild_id = ${guild} AND NOT (${command} = ANY(disabled_commands))`;
   }
 
   async enableCommand(guild: string, command: string) {
-    const guildDB = await this.getGuild(guild);
-    const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter((item) => item !== command) : [];
-    await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
+    await this
+      .sql`UPDATE guilds SET disabled_commands = array_remove(disabled_commands, ${command}) WHERE guild_id = ${guild}`;
   }
 
   async disableChannel(channel: string, guild: string) {
-    const guildDB = await this.getGuild(guild);
-    await this.sql`UPDATE guilds SET disabled = ${[...guildDB.disabled, channel]} WHERE guild_id = ${guild}`;
+    await this.getGuild(guild);
+    await this
+      .sql`UPDATE guilds SET disabled = array_append(disabled, ${channel}) WHERE guild_id = ${guild} AND NOT (${channel} = ANY(disabled))`;
   }
 
   async enableChannel(channel: string, guild: string) {
-    const guildDB = await this.getGuild(guild);
-    const newDisabled = guildDB.disabled.filter((item) => item !== channel);
-    await this.sql`UPDATE guilds SET disabled = ${newDisabled} WHERE guild_id = ${guild}`;
+    await this.sql`UPDATE guilds SET disabled = array_remove(disabled, ${channel}) WHERE guild_id = ${guild}`;
   }
 
   async getCounts(all?: boolean) {
