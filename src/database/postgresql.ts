@@ -118,23 +118,20 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     }
   }
 
-  getGuild(query: string): Promise<DBGuild> {
-    return new Promise((resolve) => {
-      this.sql.begin(async (sql) => {
-        let [guild]: [DBGuild?] = await sql`SELECT * FROM guilds WHERE guild_id = ${query}`;
-        if (!guild) {
-          guild = {
-            guild_id: query,
-            prefix: process.env.PREFIX ?? "&",
-            disabled: [],
-            disabled_commands: [],
-            tag_roles: [],
-          };
-          await sql`INSERT INTO guilds ${sql(guild)}`;
-        }
-        resolve(guild);
-      });
-    });
+  async getGuild(query: string): Promise<DBGuild> {
+    const [existing] = await this.sql<DBGuild[]>`SELECT * FROM guilds WHERE guild_id = ${query}`;
+    if (existing) return existing;
+
+    const guild: DBGuild = {
+      guild_id: query,
+      prefix: process.env.PREFIX ?? "&",
+      disabled: [],
+      disabled_commands: [],
+      tag_roles: [],
+    };
+    await this.sql`INSERT INTO guilds ${this.sql(guild)} ON CONFLICT (guild_id) DO NOTHING`;
+    const [row] = await this.sql<DBGuild[]>`SELECT * FROM guilds WHERE guild_id = ${query}`;
+    return row;
   }
 
   async setPrefix(prefix: string, guild: string) {
