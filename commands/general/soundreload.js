@@ -21,7 +21,7 @@ class SoundReloadCommand extends Command {
       });
     }
     if (length) {
-      return this.getString("commands.responses.soundreload.failed", { params: { length: length.toString() } });
+      return this.getString("commands.responses.soundreload.connected", { params: { length: length.toString() } });
     }
     return this.getString("commands.responses.soundreload.failed");
   }
