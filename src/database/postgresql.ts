@@ -1,13 +1,6 @@
 import process from "node:process";
 import Postgres from "postgres";
-import {
-  commands,
-  disabledCache,
-  disabledCmdCache,
-  messageCommands,
-  prefixCache,
-  userCommands,
-} from "#utils/collections.js";
+import { commands, messageCommands, userCommands } from "#utils/collections.js";
 import logger from "#utils/logger.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
@@ -109,6 +102,11 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
             await sql.unsafe(updates[version]);
           }
         } else {
+          if (version > latestVersion) {
+            logger.warn(
+              `PostgreSQL database is at version ${version}, but this version of esmBot only supports up to version ${latestVersion}. Running an older version of esmBot on a newer database is not supported.`,
+            );
+          }
           return;
         }
         await sql`INSERT INTO settings ${sql({ id: 1, version: latestVersion })} ON CONFLICT (id) DO UPDATE SET version = ${latestVersion}`;
@@ -120,28 +118,24 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
     }
   }
 
-  getGuild(query: string): Promise<DBGuild> {
-    return new Promise((resolve) => {
-      this.sql.begin(async (sql) => {
-        let [guild]: [DBGuild?] = await sql`SELECT * FROM guilds WHERE guild_id = ${query}`;
-        if (!guild) {
-          guild = {
-            guild_id: query,
-            prefix: process.env.PREFIX ?? "&",
-            disabled: [],
-            disabled_commands: [],
-            tag_roles: [],
-          };
-          await sql`INSERT INTO guilds ${sql(guild)}`;
-        }
-        resolve(guild);
-      });
-    });
+  async getGuild(query: string): Promise<DBGuild> {
+    const [existing] = await this.sql<DBGuild[]>`SELECT * FROM guilds WHERE guild_id = ${query}`;
+    if (existing) return existing;
+
+    const guild: DBGuild = {
+      guild_id: query,
+      prefix: process.env.PREFIX ?? "&",
+      disabled: [],
+      disabled_commands: [],
+      tag_roles: [],
+    };
+    await this.sql`INSERT INTO guilds ${this.sql(guild)} ON CONFLICT (guild_id) DO NOTHING`;
+    const [row] = await this.sql<DBGuild[]>`SELECT * FROM guilds WHERE guild_id = ${query}`;
+    return row;
   }
 
   async setPrefix(prefix: string, guild: string) {
     await this.sql`UPDATE guilds SET prefix = ${prefix} WHERE guild_id = ${guild}`;
-    prefixCache.set(guild, prefix);
   }
 
   async getTag(guild: string, tag: string) {
@@ -173,14 +167,13 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async addTagRole(guild: string, role: string) {
-    const guildDB = await this.getGuild(guild);
-    await this.sql`UPDATE guilds SET tag_roles = ${[...guildDB.tag_roles, role]} WHERE guild_id = ${guild}`;
+    await this.getGuild(guild);
+    await this
+      .sql`UPDATE guilds SET tag_roles = array_append(tag_roles, ${role}) WHERE guild_id = ${guild} AND NOT (${role} = ANY(tag_roles))`;
   }
 
   async removeTagRole(guild: string, role: string) {
-    const guildDB = await this.getGuild(guild);
-    await this
-      .sql`UPDATE guilds SET tag_roles = ${guildDB.tag_roles.filter((v) => v !== role)} WHERE guild_id = ${guild}`;
+    await this.sql`UPDATE guilds SET tag_roles = array_remove(tag_roles, ${role}) WHERE guild_id = ${guild}`;
   }
 
   async setBroadcast(msg?: string) {
@@ -193,33 +186,24 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async disableCommand(guild: string, command: string) {
-    const guildDB = await this.getGuild(guild);
+    await this.getGuild(guild);
     await this
-      .sql`UPDATE guilds SET disabled_commands = ${(guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command]).filter((v) => !!v)} WHERE guild_id = ${guild}`;
-    disabledCmdCache.set(
-      guild,
-      guildDB.disabled_commands ? [...guildDB.disabled_commands, command] : [command].filter((v) => !!v),
-    );
+      .sql`UPDATE guilds SET disabled_commands = array_append(disabled_commands, ${command}) WHERE guild_id = ${guild} AND NOT (${command} = ANY(disabled_commands))`;
   }
 
   async enableCommand(guild: string, command: string) {
-    const guildDB = await this.getGuild(guild);
-    const newDisabled = guildDB.disabled_commands ? guildDB.disabled_commands.filter((item) => item !== command) : [];
-    await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
-    disabledCmdCache.set(guild, newDisabled);
+    await this
+      .sql`UPDATE guilds SET disabled_commands = array_remove(disabled_commands, ${command}) WHERE guild_id = ${guild}`;
   }
 
   async disableChannel(channel: string, guild: string) {
-    const guildDB = await this.getGuild(guild);
-    await this.sql`UPDATE guilds SET disabled_commands = ${[...guildDB.disabled, channel]} WHERE guild_id = ${guild}`;
-    disabledCache.set(guild, [...guildDB.disabled, channel]);
+    await this.getGuild(guild);
+    await this
+      .sql`UPDATE guilds SET disabled = array_append(disabled, ${channel}) WHERE guild_id = ${guild} AND NOT (${channel} = ANY(disabled))`;
   }
 
   async enableChannel(channel: string, guild: string) {
-    const guildDB = await this.getGuild(guild);
-    const newDisabled = guildDB.disabled.filter((item) => item !== channel);
-    await this.sql`UPDATE guilds SET disabled_commands = ${newDisabled} WHERE guild_id = ${guild}`;
-    disabledCache.set(guild, newDisabled);
+    await this.sql`UPDATE guilds SET disabled = array_remove(disabled, ${channel}) WHERE guild_id = ${guild}`;
   }
 
   async getCounts(all?: boolean) {
