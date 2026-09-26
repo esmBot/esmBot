@@ -987,7 +987,6 @@
             "togif": "sanggif",
             "media": "media"
         },
-        "tempImageSent": "Ảnh của bạn đây nhé!",
         "notWorking": "Có vẻ như mình không thể xử lý được tấm ảnh này, điều này có thể do cấu hình của mình chưa được thiết lập đúng cách. Bạn có thể liên hệ với người sở hữu bot để được hỗ trợ.",
         "couldNotFind": "Mình không thể tìm thấy ảnh trong tin nhắn ấy!",
         "empty": "Kết quả được trở về là trống!",
@@ -1067,8 +1066,7 @@
         "no": "Không",
         "node": "Node",
         "noVoiceState": "Bạn phải ở trong một kênh thoại trước!",
-        "nowPlaying": "Đang phát",
-        "noYouTube": "Phát lại từ YouTube đã bị vô hiệu hóa trên phiên này."
+        "nowPlaying": "Đang phát"
     },
     "tooLarge": "Kết quả có kích thước quá lơn, nên đây là tệp của nó:",
     "noDatabase": "Lệnh này không khả dụng trên các phiên bản không trạng thái (stateless) của esmBot.",

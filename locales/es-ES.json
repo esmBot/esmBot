@@ -235,7 +235,6 @@
         "ratelimit": "El servidor en el que está subida tu imagen está bloqueándome temporariamente. Intenta subir tu imagen a otro lado.",
         "selected": "Se he seleccionado la imagen para tu siguiente comando.",
         "slowDown": "Por favor, ve más despacio.",
-        "tempImageSent": "¡Aquí está tu imagen!",
         "tempSite": "La imagen que resultó del comando pesa más de 25MB, así que se subió a una página externa.",
         "timeout": "Recuperar la imagen del servidor tardó demasiado. Por favor intenta de nuevo, sube tu imagen a otro lado, o usa otra imagen.",
         "tip": "(Consejo: intenta hacer click derecho/mantener presionado un mensaje y presionar Aplicaciones -> Seleccionar imagen, e intentálo de nuevo.)",

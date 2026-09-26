@@ -373,7 +373,6 @@
         "noParam": "Du musst etwas Text bereitstellen!",
         "processing": "Wird verarbeitet... Das könnte eine Weile dauern",
         "selected": "Das Bild wurde für deinen nächsten Befehl ausgewählt.",
-        "slowDown": "Bitte mach es etwas langsamer.",
-        "tempImageSent": "Hier ist dein Bild!"
+        "slowDown": "Bitte mach es etwas langsamer."
     }
 }
