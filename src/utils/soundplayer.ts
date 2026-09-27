@@ -82,7 +82,7 @@ export async function reload(client: Client) {
   if (!manager && connect(client)) return;
   const activeNodes = manager.nodes;
   const names = nodes.map((a) => a.name);
-  for (const name in activeNodes) {
+  for (const name of activeNodes.keys()) {
     if (!names.includes(name)) {
       manager.removeNode(name);
     }
