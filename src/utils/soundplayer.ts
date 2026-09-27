@@ -344,15 +344,7 @@ export async function nextSong(
             channel: voiceChannel.name,
           },
         })}`;
-        if (options.interaction) {
-          if (Date.now() - options.interaction.createdAt.getTime() >= 900000) {
-            await client.rest.channels.createMessage(options.channel.id, { content });
-          } else {
-            await options.interaction.createFollowup({ content });
-          }
-        } else {
-          await client.rest.channels.createMessage(options.channel.id, { content });
-        }
+        await sendUpdate(client, options, content);
       } catch {
         // no-op
       }
@@ -368,6 +360,14 @@ export async function nextSong(
       }
     }
   });
+}
+
+async function sendUpdate(client: Client, options: Options, content: string) {
+  if (options.interaction && Date.now() - options.interaction.createdAt.getTime() < 900000) {
+    await options.interaction.createFollowup({ content });
+  } else {
+    await client.rest.channels.createMessage(options.channel.id, { content });
+  }
 }
 
 export async function errHandle(
@@ -397,15 +397,7 @@ export async function errHandle(
   connection.removeAllListeners("end");
   try {
     const content = `🔊 ${getString("sound.error", { locale: options.locale })}\n\`\`\`${exception.exception.cause}: ${exception.exception.message}\`\`\``;
-    if (options.interaction) {
-      if (Date.now() - options.interaction.createdAt.getTime() >= 900000) {
-        await client.rest.channels.createMessage(options.channel.id, { content });
-      } else {
-        await options.interaction.createFollowup({ content });
-      }
-    } else {
-      if (playingMessage?.channel) await client.rest.channels.createMessage(playingMessage.channel.id, { content });
-    }
+    await sendUpdate(client, options, content);
   } catch {
     // no-op
   }
