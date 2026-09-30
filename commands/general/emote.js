@@ -22,7 +22,9 @@ class EmoteCommand extends Command {
     const emojiMatches = emoji.match(/\p{RGI_Emoji}/gv);
     if (emojiMatches) {
       for (const emoji of emojiMatches) {
-        const codePoints = [...emoji].map((v) => v.codePointAt(0)?.toString(16)).join("-");
+        // Twemoji names files without U+FE0F unless the emoji contains a ZWJ (U+200D)
+        const name = emoji.includes("\u200d") ? emoji : emoji.replaceAll("\ufe0f", "");
+        const codePoints = [...name].map((v) => v.codePointAt(0)?.toString(16)).join("-");
         urls.push(`https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/${codePoints}.png`);
       }
     }
