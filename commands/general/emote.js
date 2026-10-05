@@ -22,7 +22,10 @@ class EmoteCommand extends Command {
     const emojiMatches = emoji.match(/\p{RGI_Emoji}/gv);
     if (emojiMatches) {
       for (const emoji of emojiMatches) {
-        const codePoints = [...emoji].map((v) => v.codePointAt(0)?.toString(16)).join("-");
+        const fixed = emoji.includes("\u200d") ? emoji : emoji.replaceAll("\ufe0f", "");
+        let codePoints = [...fixed].map((v) => v.codePointAt(0)?.toString(16)).join("-");
+        // edge case, the twemoji js parser happens to miss this
+        if (emoji == "👁️‍🗨️") codePoints = "1f441-200d-1f5e8";
         urls.push(`https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/${codePoints}.png`);
       }
     }
