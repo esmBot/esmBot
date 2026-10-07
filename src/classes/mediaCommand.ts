@@ -63,20 +63,25 @@ class MediaCommand extends Command {
         if (!this.getOptionAttachment("image") && !this.getOptionString("link")) {
           selection = selectedImages.get(this.author.id);
         }
-        const media = selection
-          ? [selection]
-          : await mediaDetect(this.client, this.permissions, this.message, this.interaction).catch((e) => {
-              if (e.name === "AbortError") {
-                runningCommands.delete(this.author.id);
-                return this.getString("image.timeout");
-              }
-              throw e;
-            });
+        const media =
+          selection && !selection.result
+            ? [selection]
+            : await mediaDetect(this.client, this.permissions, this.message, this.interaction).catch((e) => {
+                if (e.name === "AbortError") {
+                  runningCommands.delete(this.author.id);
+                  return this.getString("image.timeout");
+                }
+                if (selection) return [];
+                throw e;
+              });
+        if (typeof media === "string") return media;
+        if (selection && selection.result) {
+          media.push(selection);
+        }
         if (media.length === 0) {
           runningCommands.delete(this.author.id);
           return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip", { params: { name: this.client.user.globalName ?? this.client.user.username } })}`;
         }
-        if (typeof media === "string") return media;
         selectedImages.delete(this.author.id);
         mediaParams = {
           cmd: staticProps.command,
@@ -145,6 +150,7 @@ class MediaCommand extends Command {
           selectedImages.set(this.interaction.user.id, {
             path: path.toString(),
             spoiler: !!(attachment.flags & AttachmentFlags.IS_SPOILER),
+            result: true,
           });
         }
         return;
@@ -221,6 +227,7 @@ class MediaCommand extends Command {
       selectedImages.set(this.interaction.user.id, {
         path: path.toString(),
         spoiler: !!(attachment.flags & AttachmentFlags.IS_SPOILER),
+        result: true,
       });
     }
   }

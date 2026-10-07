@@ -57,6 +57,7 @@ export async function upload(client: Client, result: File & { flags?: number }, 
       selectedImages.set(authorId, {
         path: imageURL,
         spoiler: result.name.startsWith("SPOILER_"),
+        result: true,
       });
     }
   } else {

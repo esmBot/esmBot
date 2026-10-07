@@ -83,6 +83,7 @@ export interface MediaParams {
 export interface MediaMeta {
   path: string;
   spoiler: boolean;
+  result?: boolean;
 }
 
 export interface JobOutput {
