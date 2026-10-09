@@ -23,7 +23,7 @@ void MediaAsyncWorker::Execute() {
         }
 
         int curSize = size - 16;
-        while (curSize > 0) {
+        while (curSize >= 4) {
           if (memcmp(bufData + size - curSize, "avis", 4) == 0) {
             outType = "avis";
             outData = {nullptr, 0};

@@ -196,9 +196,20 @@ class Command {
     throw Error("Unknown command type");
   }
 
+  private clampClassicOption(key: string, value: number) {
+    if (!Number.isFinite(value)) return Number.NaN;
+    const flag = (this.constructor as typeof Command).flags.find((f) => f.name === key);
+    if (flag?.minValue !== undefined) value = Math.max(flag.minValue, value);
+    if (flag?.maxValue !== undefined) value = Math.min(flag.maxValue, value);
+    return value;
+  }
+
   getOptionNumber(key: string, defaultArg?: boolean): number | undefined {
     if (this.type === "classic") {
-      return Number.parseFloat((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string);
+      return this.clampClassicOption(
+        key,
+        Number.parseFloat((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string),
+      );
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getNumber(key);
@@ -208,7 +219,10 @@ class Command {
 
   getOptionInteger(key: string, defaultArg?: boolean): number | undefined {
     if (this.type === "classic") {
-      return Number.parseInt((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string);
+      return this.clampClassicOption(
+        key,
+        Number.parseInt((defaultArg ? this.args.join(" ").trim() : this.options?.[key]) as string),
+      );
     }
     if (this.type === "application") {
       return this.interaction?.data.options.getInteger(key);

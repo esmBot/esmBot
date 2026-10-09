@@ -9,6 +9,7 @@ int RIFF::findChunk(char *data, size_t length, const char *chunk, size_t &positi
   while (position + 8 <= length && pos == -1) {
     const char *fourCC = &data[position];
     chunkSize = readUint32LE(reinterpret_cast<unsigned char *>(data) + position + 4);
+    if (chunkSize > length - position - 8) break;
 
     if (memcmp(fourCC, chunk, 4) == 0) {
       pos = position + 8;
