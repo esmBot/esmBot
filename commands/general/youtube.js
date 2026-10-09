@@ -34,7 +34,7 @@ class YouTubeCommand extends Command {
     const videos = await fetch(
       new URL(
         server.type === "degoog"
-          ? `/api/command?format=json&safeMode=on&q=!youtube_noapi%20${encodeURIComponent(query)}` // relies on searxng compatibility mode with the "Youtube Noapi" engine installed/enabled
+          ? `/api/command?format=json&type=videos&q=${server.ytBang ?? "!youtube_noapi"}%20${encodeURIComponent(query)}`
           : `/search?format=json&safesearch=2&categories=videos&q=!youtube%20${encodeURIComponent(query)}`,
         server.url,
       ),
