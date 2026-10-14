@@ -3,6 +3,7 @@ import paginator from "#pagination";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
 import serversConfig from "#utils/servers.js";
+/** @import { CommandFlag, SearXNGResults } from "#utils/types.js" */
 
 class ImageSearchCommand extends Command {
   async run() {
@@ -30,9 +31,6 @@ class ImageSearchCommand extends Command {
     const timeout = setTimeout(() => {
       controller.abort();
     }, 6000);
-    /**
-     * @type {import("#utils/types.ts").SearXNGResults}
-     */
     const rawImages = await fetch(
       new URL(
         server.type === "degoog"
@@ -43,7 +41,7 @@ class ImageSearchCommand extends Command {
       {
         signal: controller.signal,
       },
-    ).then((res) => res.json());
+    ).then((res) => /** @type {Promise<SearXNGResults>} */ (res.json()));
     clearTimeout(timeout);
     if (rawImages.results.length === 0) return this.getString("commands.responses.image.noResults");
     const images = rawImages.results
@@ -52,14 +50,14 @@ class ImageSearchCommand extends Command {
         if (!val.url.startsWith("https://")) return;
         const canonURL =
           server.type === "degoog" ? new URL(val.img_src, server.url).searchParams.get("url") : val.img_src;
-        if (!canonURL.startsWith("https://")) return;
+        if (!canonURL?.startsWith("https://")) return;
         return {
           img_src: canonURL,
           title: val.title,
           url: val.url,
         };
       })
-      .filter(Boolean);
+      .filter((val) => val !== undefined);
     for (const [i, value] of images.entries()) {
       embeds.push({
         embeds: [
@@ -94,6 +92,7 @@ class ImageSearchCommand extends Command {
     );
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "query",

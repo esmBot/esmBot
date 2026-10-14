@@ -68,9 +68,8 @@ const optionalReplace = (token: string) => {
 const sensitiveVars = ["TOKEN", "DB", "KLIPY", "REST_PROXY", "SENTRY_DSN", "OUTPUT", "TEMPDIR"];
 
 // clean(text) to clean message of any private info or mentions
-export function clean(input: string | Error, remove: string[] = [], skipEnv = false) {
-  let text = input;
-  if (typeof text !== "string") text = util.inspect(text, { depth: 1 });
+export function clean(input: unknown, remove: string[] = [], skipEnv = false) {
+  let text = typeof input === "string" ? input : util.inspect(input, { depth: 1 });
 
   for (const entry of remove) {
     text = text.replaceAll(entry, optionalReplace(entry));

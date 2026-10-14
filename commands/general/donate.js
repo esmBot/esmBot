@@ -10,8 +10,8 @@ class DonateCommand extends Command {
       controller.abort();
     }, 5000);
     try {
-      const patrons = await fetch("https://esmbot.net/patrons", { signal: controller.signal }).then((data) =>
-        data.json(),
+      const patrons = await fetch("https://esmbot.net/patrons", { signal: controller.signal }).then(
+        (data) => /** @type {Promise<string[]>} */ (data.json()),
       );
       clearTimeout(timeout);
       for (const patron of patrons) {

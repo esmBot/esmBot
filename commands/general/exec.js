@@ -4,6 +4,7 @@ import process from "node:process";
 import { promisify } from "node:util";
 import Command from "#cmd-classes/command.js";
 import { clean } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 const exec = promisify(baseExec);
 
 class ExecCommand extends Command {
@@ -37,6 +38,7 @@ class ExecCommand extends Command {
     }
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "cmd",

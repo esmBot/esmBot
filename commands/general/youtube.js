@@ -3,6 +3,7 @@ import paginator from "#pagination";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
 import serversConfig from "#utils/servers.js";
+/** @import { CommandFlag, SearXNGResults } from "#utils/types.js" */
 
 class YouTubeCommand extends Command {
   async run() {
@@ -26,9 +27,6 @@ class YouTubeCommand extends Command {
     const timeout = setTimeout(() => {
       controller.abort();
     }, 6000);
-    /**
-     * @type {import("#utils/types.ts").SearXNGResults}
-     */
     const videos = await fetch(
       new URL(
         server?.type === "degoog"
@@ -39,7 +37,7 @@ class YouTubeCommand extends Command {
       {
         signal: controller.signal,
       },
-    ).then((res) => res.json());
+    ).then((res) => /** @type {Promise<SearXNGResults>} */ (res.json()));
     clearTimeout(timeout);
     if (videos.results.length === 0) return this.getString("commands.responses.youtube.noResults");
     for (const [i, value] of videos.results.entries()) {
@@ -60,6 +58,7 @@ class YouTubeCommand extends Command {
     );
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "query",

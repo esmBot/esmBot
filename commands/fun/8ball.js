@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { random } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class EightBallCommand extends Command {
   static responses = [
@@ -29,6 +30,7 @@ class EightBallCommand extends Command {
     return `🎱 ${this.getString(`commands.responses.8ball.${random(EightBallCommand.responses)}`)}`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "question",

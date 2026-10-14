@@ -1,6 +1,7 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { endBroadcast, startBroadcast } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class BroadcastCommand extends Command {
   async run() {
@@ -39,6 +40,7 @@ class BroadcastCommand extends Command {
     return this.getString("commands.responses.broadcast.ended");
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "message",

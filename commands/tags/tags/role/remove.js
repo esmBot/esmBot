@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { mentionToObject } from "#utils/mentions.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class TagsRoleRemoveCommand extends Command {
   async run() {
@@ -32,6 +33,7 @@ class TagsRoleRemoveCommand extends Command {
     });
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "role",

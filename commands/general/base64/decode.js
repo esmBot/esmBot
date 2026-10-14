@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class Base64DecodeCommand extends Command {
   async run() {
@@ -11,6 +12,7 @@ class Base64DecodeCommand extends Command {
     return `\`\`\`\n${b64Decoded.replaceAll("`", `\`${String.fromCharCode(8203)}`).replaceAll("@", `@${String.fromCharCode(8203)}`)}\`\`\``;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "text",

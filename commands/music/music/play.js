@@ -1,6 +1,7 @@
 import { GuildChannel } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { play } from "#utils/soundplayer.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 const prefixes = ["scsearch:", "spsearch:", "sprec:", "amsearch:", "dzsearch:", "dzisrc:", "ytsearch:", "ytmsearch:"];
 
 class MusicPlayCommand extends MusicCommand {
@@ -53,6 +54,7 @@ class MusicPlayCommand extends MusicCommand {
     }
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "query",

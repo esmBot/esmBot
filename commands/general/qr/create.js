@@ -3,6 +3,7 @@ import MediaCommand from "#cmd-classes/mediaCommand.js";
 const textEncoder = new TextEncoder();
 
 class QrCreateCommand extends MediaCommand {
+  /** @param {string} text */
   async criteria(text) {
     if (textEncoder.encode(text).length > 2952) return false;
     return true;

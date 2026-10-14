@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 const blacklist = ["create", "add", "edit", "remove", "delete", "list", "random", "own", "owner"];
 
@@ -39,6 +40,7 @@ class TagsAddCommand extends Command {
     });
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "name",

@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { safeBigInt } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class SnowflakeCommand extends Command {
   async run() {
@@ -24,6 +25,7 @@ class SnowflakeCommand extends Command {
 
   static description = "Converts a Discord snowflake id into a timestamp";
   static aliases = ["timestamp", "snowstamp", "snow"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "id",

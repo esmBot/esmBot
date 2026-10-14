@@ -2,6 +2,7 @@ import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { paths } from "#utils/collections.js";
 import { load, send } from "#utils/handler.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class ReloadCommand extends Command {
   async run() {
@@ -35,6 +36,7 @@ class ReloadCommand extends Command {
     });
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "cmd",

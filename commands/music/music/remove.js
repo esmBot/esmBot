@@ -1,6 +1,7 @@
 import process from "node:process";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import { queues } from "#utils/soundplayer.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class MusicRemoveCommand extends MusicCommand {
   async run() {
@@ -22,6 +23,7 @@ class MusicRemoveCommand extends MusicCommand {
     return `🔊 ${this.getString("commands.responses.remove.removed", { params: { song: removed[0].info.title ? removed[0].info.title : this.getString("sound.blank") } })}`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "position",

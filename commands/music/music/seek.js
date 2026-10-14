@@ -1,4 +1,5 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class MusicSeekCommand extends MusicCommand {
   async run() {
@@ -26,6 +27,7 @@ class MusicSeekCommand extends MusicCommand {
     return `🔊 ${this.getString("commands.responses.seek.seeked", { params: { seconds: seconds.toString() } })}`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "position",

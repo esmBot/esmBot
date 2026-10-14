@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { aliases, commands } from "#utils/collections.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class CommandEnableCommand extends Command {
   async run() {
@@ -26,6 +27,7 @@ class CommandEnableCommand extends Command {
   }
 
   static description = "Enables a classic command";
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "cmd",

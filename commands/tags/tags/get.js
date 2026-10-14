@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class TagsGetCommand extends Command {
   async run() {
@@ -24,6 +25,7 @@ class TagsGetCommand extends Command {
     return getResult.content;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "name",
