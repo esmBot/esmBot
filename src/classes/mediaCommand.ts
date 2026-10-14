@@ -18,7 +18,7 @@ import { runMediaJob } from "#utils/media.js";
 import mediaDetect from "#utils/mediadetect.js";
 import { clean, isEmpty, maxFileSize, random } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
-import type { ExtendedConstructedCommandOptions, MediaParams, MediaMeta, MediaTypes } from "#utils/types.js";
+import type { CommandFlag, MediaParams, MediaMeta, MediaTypes } from "#utils/types.js";
 import Command from "./command.ts";
 
 class MediaCommand extends Command {
@@ -318,7 +318,7 @@ class MediaCommand extends Command {
   static requiresImage = true;
   static requiresParam = false;
   static requiredParam = "text";
-  static requiredParamType: ExtendedConstructedCommandOptions["type"] = "string";
+  static requiredParamType: CommandFlag["type"] = "string";
   static textOptional = false;
   static alwaysGIF = false;
   static noImage = "You need to provide an image/GIF!";

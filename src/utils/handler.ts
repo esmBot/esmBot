@@ -15,11 +15,11 @@ import { aliases, categories, commands, messageCommands, paths, userCommands } f
 import { getAllLocalizations } from "./i18n.ts";
 import { log } from "./logger.ts";
 import type {
+  CommandFlag,
   CommandFlagType,
   CommandsConfig,
   ExtCommand,
   ExtendedCommandOptions,
-  ExtendedConstructedCommandOptions,
   Param,
 } from "./types.ts";
 
@@ -160,7 +160,7 @@ export const flagMap: Array<CommandFlagType | null> = [
   "attachment",
 ];
 
-export function convFlagType(type: ExtendedConstructedCommandOptions["type"]): Constants.ApplicationCommandOptionTypes {
+export function convFlagType(type: CommandFlag["type"]): Constants.ApplicationCommandOptionTypes {
   if (typeof type === "number") return type;
   return flagMap.indexOf(type);
 }
@@ -168,7 +168,7 @@ export function convFlagType(type: ExtendedConstructedCommandOptions["type"]): C
 /**
  * Convert command flags to params
  */
-function parseFlags(flags: ExtendedConstructedCommandOptions[]) {
+function parseFlags(flags: CommandFlag[]) {
   const params: Param[] = [];
   for (const flag of flags) {
     const convedType = convFlagType(flag.type);
@@ -189,7 +189,7 @@ function parseFlags(flags: ExtendedConstructedCommandOptions[]) {
   return params;
 }
 
-function extendFlags(flags: ExtendedConstructedCommandOptions[], name: string) {
+function extendFlags(flags: CommandFlag[], name: string) {
   const outFlags: ExtendedCommandOptions[] = [];
   for (const flag of flags) {
     if (!flag.nameLocalizations)
