@@ -11,9 +11,9 @@ class YouTubeCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.youtube.noInput");
     await this.acknowledge();
     const messages = [];
-    let server = random(serversConfig.search);
+    let server = random(serversConfig.search ?? []);
     if (!server) {
-      if (!serversConfig.searx && serversConfig.searx.length === 0)
+      if (!serversConfig.searx?.length)
         return this.getString("commands.responses.youtube.noEngines");
       logger.warn('!!! THE "searx" FIELD IN config/servers.json IS DEPRECATED !!!');
       logger.warn(

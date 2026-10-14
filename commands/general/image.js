@@ -12,9 +12,9 @@ class ImageSearchCommand extends Command {
     if (!query || !query.trim()) return this.getString("commands.responses.image.noInput");
     await this.acknowledge();
     const embeds = [];
-    let server = random(serversConfig.search);
+    let server = random(serversConfig.search ?? []);
     if (!server) {
-      if (!serversConfig.searx && serversConfig.searx.length === 0)
+      if (!serversConfig.searx?.length)
         return this.getString("commands.responses.image.noEngines");
       logger.warn('!!! THE "searx" FIELD IN config/servers.json IS DEPRECATED !!!');
       logger.warn(
@@ -23,6 +23,7 @@ class ImageSearchCommand extends Command {
       server = {
         type: "searxng",
         url: random(serversConfig.searx),
+        engines: ["duckduckgo images", "privacywall images", "google cse images"],
       };
     }
     const controller = new AbortController();
