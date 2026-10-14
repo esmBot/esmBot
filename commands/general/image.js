@@ -1,8 +1,8 @@
 import Command from "#cmd-classes/command.js";
-import serversConfig from "#config/servers.json" with { type: "json" };
 import paginator from "#pagination";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
+import serversConfig from "#utils/servers.js";
 
 class ImageSearchCommand extends Command {
   async run() {
