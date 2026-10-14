@@ -1,19 +1,11 @@
-import { Buffer } from "node:buffer";
 import process from "node:process";
 import type { AnyInteractionGateway } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
-import detectRuntime from "#utils/detectRuntime.js";
 import { getString } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
-import { clean } from "#utils/misc.js";
+import { respond, respondError } from "#utils/respond.js";
 import type { EventParams } from "#utils/types.js";
-
-let Sentry: typeof import("@sentry/node-core") | undefined;
-if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
-  const { type } = detectRuntime();
-  Sentry = await import(`@sentry/${type === "node" ? "node-core/light" : type}`);
-}
 
 /**
  * Runs when a slash command/interaction is executed.
@@ -65,79 +57,9 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
   try {
     const commandClass = new cmd(client, database, { type: "application", interaction });
     const result = await commandClass.run();
-
-    let res;
-    if (typeof result === "string") {
-      res = await interaction.createFollowup({
-        content: result,
-        flags: commandClass.success ? 0 : 64,
-      });
-    } else if (typeof result === "object") {
-      res = await interaction.createFollowup(
-        Object.assign(
-          {
-            flags: result.flags ?? (commandClass.success ? 0 : 64),
-          },
-          result,
-        ),
-      );
-    } else {
-      logger.debug(`Unknown return type for command ${cmdName}: ${result} (${typeof result})`);
-    }
-
-    await commandClass.finalize(res?.message);
+    await respond({ result, cmdName, commandClass, context: interaction });
   } catch (e) {
-    const error = e as Error;
-    Sentry?.captureException(error, {
-      tags: {
-        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
-        cmdName,
-        args: JSON.stringify(interaction.data.options.raw),
-      },
-    });
-    if (error.toString().includes("Request entity too large")) {
-      await interaction.createFollowup({
-        content: getString("image.tooLarge", { locale: interaction.locale }),
-        flags: 64,
-      });
-    } else if (error.toString().includes("Job ended prematurely")) {
-      await interaction.createFollowup({
-        content: getString("image.jobEnded", { locale: interaction.locale }),
-        flags: 64,
-      });
-    } else {
-      logger.error(
-        `Error occurred with application command ${cmdName} with arguments ${JSON.stringify(interaction.data.options.raw)}: ${(error as Error).stack || error}`,
-      );
-      try {
-        await interaction.createFollowup({
-          content: `${getString("error", { locale: interaction.locale })} <https://github.com/esmBot/esmBot/issues>`,
-          files: [
-            {
-              contents: Buffer.from(clean(error, [interaction.token])),
-              name: "error.txt",
-            },
-          ],
-          components: [
-            {
-              type: 1,
-              components: [
-                {
-                  type: 2,
-                  label: getString("support", { locale: interaction.locale }),
-                  style: 5,
-                  url: "https://discord.gg/esmbot-support-592399417676529688",
-                },
-              ],
-            },
-          ],
-        });
-      } catch (err) {
-        logger.error(
-          `While attempting to send the previous error message, another error occurred: ${(err as Error).stack || err}`,
-        );
-      }
-    }
+    await respondError({ error: e as Error, cmdName, context: interaction, args: interaction.data.options.raw });
   } finally {
     if (database) {
       await database.addCount(cmdBaseName);
