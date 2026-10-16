@@ -3,8 +3,8 @@ import type { AnyInteractionGateway } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
+import { invokeCommand } from "#utils/invoke.js";
 import logger from "#utils/logger.js";
-import { respond, respondError } from "#utils/respond.js";
 import type { EventParams } from "#utils/types.js";
 
 /**
@@ -54,15 +54,5 @@ export default async ({ client, database }: EventParams, interaction: AnyInterac
     logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${cmdName}`);
   }
 
-  try {
-    const commandClass = new cmd(client, database, { type: "application", interaction });
-    const result = await commandClass.run();
-    await respond({ result, cmdName, commandClass, context: interaction });
-  } catch (e) {
-    await respondError({ error: e as Error, cmdName, context: interaction, args: interaction.data.options.raw });
-  } finally {
-    if (database) {
-      await database.addCount(cmdBaseName);
-    }
-  }
+  await invokeCommand(new cmd(client, database, { type: "application", interaction }));
 };

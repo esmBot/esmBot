@@ -3,9 +3,9 @@ import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, Th
 import Command from "#cmd-classes/command.js";
 import { aliases, commands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
+import { invokeCommand } from "#utils/invoke.js";
 import logger from "#utils/logger.js";
 import parseCommand from "#utils/parseCommand.js";
-import { respond, respondError } from "#utils/respond.js";
 import type { DBGuild, EventParams } from "#utils/types.js";
 
 let mentionRegex: RegExp;
@@ -124,22 +124,13 @@ export default async ({ client, database }: EventParams, message: Message) => {
     logger.log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
   }
 
-  try {
-    const commandClass = new cmd(client, database, {
-      type: "classic",
-      cmdName: canon,
-      message,
-      args: parsed.args,
-      content: text.replace(command, "").trim(), // we also provide the message content as a parameter for cases where we need more accuracy
-      specialArgs: parsed.flags,
-    });
-    const result = await commandClass.run();
-    await respond({ result, cmdName, commandClass, context: message });
-  } catch (e) {
-    await respondError({ error: e as Error, cmdName, context: message, args: preArgs });
-  } finally {
-    if (database) {
-      await database.addCount(cmdName);
-    }
-  }
+  const commandClass = new cmd(client, database, {
+    type: "classic",
+    cmdName: canon,
+    message,
+    args: parsed.args,
+    content: text.replace(command, "").trim(), // we also provide the message content as a parameter for cases where we need more accuracy
+    specialArgs: parsed.flags,
+  });
+  await invokeCommand(commandClass);
 };
