@@ -721,7 +721,6 @@
         "ratelimit": "Am atins limita de cereri către serverul care găzduiește acea imagine. Încearcă să încarci imaginea ta în altă parte.",
         "selected": "Imaginea a fost selectată pentru următoarea comandă.",
         "slowDown": "Te rog să încetinești puțin.",
-        "tempImageSent": "Iată imaginea ta!",
         "tempSite": "Imaginea obținută a fost mai mare decât limita de încărcare a Discord, așa că a fost încărcată pe un site extern."
     },
     "pagination": {
@@ -748,7 +747,6 @@
         "title": "Titlu",
         "blank": "(gol)",
         "serversDown": "Hmm, se pare că toate serverele audio sunt offline. Încearcă din nou mai târziu.",
-        "noYouTube": "Redarea YouTube este dezactivată în această instanță.",
         "notVoiceChannel": "Canalul care mi l-ai dat nu este un canal vocal!",
         "noQueue": "Nu e nimic la coadă!",
         "noManager": "Comenzile sonore încă sunt în curs de pornire!",

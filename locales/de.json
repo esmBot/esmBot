@@ -87,7 +87,9 @@
             "snapchat": "Fügt einen Text wie bei Snapshat hinzu",
             "fade": "Blendet ein Bild aus",
             "whisper": "Fügt einem Bild eine Beschriftung im Whisper-Stil hinzu",
-            "hue": "Farbtonverschiebung eines Bildes"
+            "hue": "Farbtonverschiebung eines Bildes",
+            "rotate": "Dreht ein Bild",
+            "slide": "Schiebt ein Bild in eine Richtung"
         },
         "flagNames": {
             "8ball": {
@@ -259,6 +261,16 @@
             },
             "tags role": {
                 "add": "hinzufügen"
+            },
+            "rotate": {
+                "angle": "winkel"
+            },
+            "slide": {
+                "vertical": "vertikal"
+            },
+            "music": {
+                "loop": "schleife",
+                "remove": "entfernen"
             }
         },
         "flags": {
@@ -335,5 +347,32 @@
     "sound": {
         "yes": "Ja",
         "no": "Nein"
+    },
+    "image": {
+        "animatedAVIF": "Animierte AVIF-Dateien werden derzeit nicht unterstützt.",
+        "couldNotFind": "Ich konnte in dieser Nachricht kein Bild finden!",
+        "empty": "Die resultierende Ausgabe war leer!",
+        "flagNames": {
+            "ephemeral": "vergänglich",
+            "image": "bild",
+            "link": "link",
+            "media": "medien",
+            "text": "text"
+        },
+        "flags": {
+            "image": "Ein Bild-/GIF-Anhang",
+            "link": "Eine Bild-/GIF-URL",
+            "media": "Ein Medienanhang",
+            "togif": "GIF-Ausgabe erzwingen"
+        },
+        "frames": "Dieses GIF hat viel zu viele Einzelbilder (über 1000)!",
+        "large": "Diese Datei ist zu groß (>= 40 MB)! Versuch es mit einer kleineren Datei.",
+        "nocmd": "Dieser Befehl wird auf dieser Instanz von esmBot nicht unterstützt.",
+        "noanim": "Dieses Bild liegt nicht in einem animierten Format (GIF oder WEBP) vor!",
+        "noImage": "Du musst ein Bild/GIF bereitstellen!",
+        "noParam": "Du musst etwas Text bereitstellen!",
+        "processing": "Wird verarbeitet... Das könnte eine Weile dauern",
+        "selected": "Das Bild wurde für deinen nächsten Befehl ausgewählt.",
+        "slowDown": "Bitte mach es etwas langsamer."
     }
 }

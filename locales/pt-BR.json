@@ -595,7 +595,6 @@
         "ratelimit": "Fui limitado pelo serviço que hospeda essa imagem. Tente enviar sua imagem em outro lugar.",
         "selected": "A imagem foi selecionada para o seu próximo comando.",
         "slowDown": "Por favor, diminua a velocidade um pouco.",
-        "tempImageSent": "Aqui está sua imagem!",
         "tempSite": "A imagem resultante era maior do que o limite de upload do Discord, portanto, foi enviada para um site externo.",
         "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
         "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente.)",
