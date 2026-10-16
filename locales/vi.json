@@ -1001,7 +1001,6 @@
         },
         "nocmd": "Lệnh đó không được hỗ trợ trên phiên esmBot này.",
         "frames": "Tấm GIF này có quá nhiều khung hình (hơn 1000)!",
-        "jobEnded": "Đã có sự cố xảy ra với các máy chủ media trước khi mình có thể nhận được nó. Hãy thử chạy lại lệnh nhé.",
         "large": "Tệp đó quá lớn (>=40MB)! Hãy gửi tệp bé hơn.",
         "noanim": "Tấm đó không phải định dạng hoạt ảnh (GIF hoặc WEBP)!",
         "noTempServer": "Kích thước của tệp tạo ra lớn hơn giới hạn tải lên của Discord, vì vậy mình không thể tải nó lên.",
@@ -1016,9 +1015,7 @@
         "slowDown": "Xin hãy từ từ thôi.",
         "tempSite": "Tệp được tạo ra quá lớn so với giới hạn tải lên của Discord, vì vậy nó đã được tải lên một trang web bên ngoài.",
         "tooLong": "Hình ảnh mất quá nhiều thời gian để xử lý (>=10 phút), nên tác vụ đã bị hủy. Hãy thử sử dụng hình ảnh bé hơn.",
-        "timeoutDownload": "Yêu cầu đã hết hạn trước khi mình có thể tải ảnh đó. Bạn hãy thử tải ảnh lên ở chỗ khác hoặc là giảm kích thước ảnh.",
         "tip": "(Mẹo: hãy thử nhấp chuột phải/nhấn giữ vào tin nhắn, chọn Ứng dụng -> {{name}} -> Chọn hình ảnh, rồi thử lại.)",
-        "tooLarge": "Kết quả của tệp có kích thước quá lớn để tải lên. Hãy thử lại với một tấm ảnh bé hơn nhé.",
         "tryAgain": "Không thể hoàn tất tác vụ này vì máy chủ mà đang chạy nó đã đột nhiên ngừng hoạt động. Hãy thử chạy lại lệnh nhé.",
         "unknown": "Tệp xuất ra không ở định dạng mà mình có thể nhận diện được. Vui lòng thử lại."
     },

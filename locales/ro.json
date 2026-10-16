@@ -692,7 +692,6 @@
             "ephemeral": "Încearcă să trimiți rezultatul ca un răspuns efemer/temporar"
         },
         "frames": "Acest GIF are prea multe cadre (peste 1000)!",
-        "jobEnded": "Ceva s-a întâmplat cu serverele de imagini înainte să pot obține imaginea. Încearcă să rulezi comanda din nou.",
         "large": "Imaginea este prea mare (>= 40MB)! Încearcă să utilizezi o imagine mai mică.",
         "nocmd": "Comanda nu funcționează pe această instanță esmBot.",
         "noanim": "Imaginea nu este într-un format animat (GIF sau WEBP)!",
@@ -703,7 +702,6 @@
         "couldNotFind": "Nu am găsit o imagine în acel mesaj!",
         "empty": "Rezultatul a fost gol!",
         "tryAgain": "Cererea de procesare a imaginii nu a putut fi finalizată deoarece serverul pe care rula s-a defectat. Încearcă să rulezi comanda din nou.",
-        "tooLarge": "Fișierul rezultat a fost prea mare pentru a fi încărcat. Încearcă din nou cu o imagine mai mică, dacă e posibil.",
         "tip": "(Sfat: încearcă să dai clic dreapta sau să ții apăsat pe un mesaj și să apeși Aplicații -> Selectează o imagine, apoi încearcă din nou.)",
         "tooLong": "Procesarea imaginii durează prea mult (>= 10 minute), așa că cererea de procesare a fost anulată. Încearcă să folosești o imagine mai mică.",
         "unknown": "Imaginea rezultat nu a fost într-un format cunoscut. Te rog să încerci din nou.",

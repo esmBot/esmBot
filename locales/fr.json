@@ -961,18 +961,15 @@
         "selected": "L'image a été sélectionnée pour votre prochaine commande.",
         "slowDown": "S'il vous plaît, ralentissez un peu.",
         "tip": "(Astuce : essayez de cliquer avec le bouton droit de la souris/de maintenir enfoncé un message et d'appuyer sur Applications -> {{name}} -> Sélectionner une image, puis réessayez.)",
-        "tooLarge": "Le fichier résultant était trop volumineux pour être téléchargé. Réessayez avec une image plus petite si possible.",
         "unknown": "Le résultat n'était pas dans un format valide. Veuillez réessayer.",
         "noServers": "Je n'arrive pas à contacter les serveurs multimédias, ils sont peut-être en panne ou tentent encore de démarrer. Veuillez patienter un peu.",
         "tempSite": "Le résultat était plus grand que la limite de téléchargement de Discord, il a donc été téléchargé sur un site externe.",
         "tryAgain": "Cette tâche n'a pas pu être terminée car le serveur sur lequel elle était exécutée est tombé en panne. Essayez d'exécuter à nouveau votre commande.",
         "tooLong": "Le traitement de l'image prend trop de temps (>=10 minutes), la tâche a donc été annulée. Essayez d'utiliser une image plus petite.",
         "couldNotFind": "Je n'ai pas trouvé d'image dans ce message !",
-        "jobEnded": "Un problème est survenu sur les serveurs multimédias avant que je puisse recevoir l'image. Essayez d'exécuter à nouveau votre commande.",
         "noResult": "Je n'ai pas pu obtenir de réponse du serveur multimédias. Veuillez réessayer.",
         "timeout": "La demande d'obtention de cette image a expiré. Veuillez réessayer, télécharger votre image ailleurs ou utiliser une autre image.",
-        "notWorking": "Je n'ai pas pu traiter cette image ; cela signifie probablement que ma configuration est incorrecte. Veuillez contacter le propriétaire du robot.",
-        "timeoutDownload": "La requête a expiré avant que je puisse télécharger cette image. Essayez de télécharger votre image ailleurs ou de réduire sa taille."
+        "notWorking": "Je n'ai pas pu traiter cette image ; cela signifie probablement que ma configuration est incorrecte. Veuillez contacter le propriétaire du robot."
     },
     "noDatabase": "Cette commande n'est pas disponible sur les instances sans état d'esmBot.",
     "pagination": {

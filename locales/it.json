@@ -1012,12 +1012,9 @@
             "media": "Un media in allegato"
         },
         "frames": "Quella GIF ha ben troppi fotogrammi (più di 1000)!",
-        "jobEnded": "È successo qualcosa ai server di elaborazione media prima che potessi ricevere il risultato. Prova ad eseguire il tuo comando di nuovo.",
         "large": "Quel file è troppo grande (>= 40MB)! Prova ad usare un'immagine più piccola.",
         "noTempServer": "Il file risultante era più grande del limite di upload di Discord, quindi non ho potuto inviarlo.",
-        "timeoutDownload": "La richiesta è scaduta prima che potessi scaricare quell'immagine. Prova ad uploadare la tua immagine altrove o ridurne le dimensioni.",
         "tip": "(Consiglio: prova a fare tasto-destro/tenere premuto un messaggio e premere App -> Seleziona Immagine, poi prova di nuovo.)",
-        "tooLarge": "Il file risultante era troppo grande per essere uploadato. Prova di nuovo con un'immagine più piccola se possibile.",
         "tooLong": "L'immagine sta richiedendo troppo per essere elaborata (>=10 minuti), quindi il lavoro è stato annullato. Prova ad usare un'immagine più piccola.",
         "selected": "L'immagine è stata selezionata per il tuo prossimo comando.",
         "slowDown": "Per piacere, rallenta un po'.",

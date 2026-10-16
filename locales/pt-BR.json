@@ -582,7 +582,6 @@
             "togif": "Força resultado como GIF"
         },
         "frames": "Esse GIF tem muitas frames (mais de 1000)!",
-        "jobEnded": "Algo aconteceu com os servidores de imagem antes que eu pudesse receber a imagem. Tente executar seu comando novamente.",
         "large": "Essa imagem é muito grande (>= 40MB)! Tente usar uma imagem menor.",
         "nocmd": "Esse comando não é compatível com esta instância do esmBot.",
         "noanim": "Essa imagem não está em um formato animado (GIF ou WEBP)!",
@@ -598,7 +597,6 @@
         "tempSite": "A imagem resultante era maior do que o limite de upload do Discord, portanto, foi enviada para um site externo.",
         "timeout": "A solicitação para obter essa imagem atingiu o tempo limite. Tente novamente, envie sua imagem em outro lugar ou use outra imagem.",
         "tip": "(Dica: tente clicar com o botão direito do mouse/manter pressionado em uma mensagem e pressione Apps -> Selecionar Imagem. Em seguida, tente novamente.)",
-        "tooLarge": "O arquivo resultante era muito grande para ser enviado. Tente novamente com uma imagem menor, se possível.",
         "tooLong": "A imagem está demorando muito para ser processada (>=10 minutos), por isso o processsamento foi cancelado. Tente usar uma imagem menor.",
         "tryAgain": "Não foi possível concluir o processamento dessa imagem porque o servidor em que ela estava sendo processada caiu. Tente executar seu comando novamente.",
         "unknown": "A imagem resultante não estava em um formato reconhecível. Tente novamente."

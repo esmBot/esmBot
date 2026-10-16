@@ -108,7 +108,6 @@
             "togif": "Forzar un GIF como resultado"
         },
         "frames": "¡Ese GIF tiene demasiados frames (más de 1000)!",
-        "jobEnded": "Sucedió algo en los servidores y no recibí la imágen. Intenta correr el comando de nuevo.",
         "large": "¡Esa imágen es demasiado grande (>= 40MB)! Intenta subir una imágen más pequeña.",
         "nocmd": "Ese comando no tiene soporte en esta instancia de esmBot.",
         "noanim": "¡Eso no es un GIF!",
@@ -124,7 +123,6 @@
         "tempSite": "La imágen que resultó del comando pesa más de 25MB, así que se subió a una página externa.",
         "timeout": "Recuperar la imágen del servidor tardó demasiado. Por favor intenta de nuevo, sube tu imágen a otro lado, o usa otra imágen.",
         "tip": "(Consejo: intenta hacer click derecho/mantener presionado un mensaje y presionar Apps -> Seleccionar imágen, e intentálo de nuevo.)",
-        "tooLarge": "El archivo que resultó es demasiado grande. Si es posible, intenta subir una imágen más pequeña.",
         "tooLong": "La imágen tardó demasiado en ser procesada (>=10 minutes), así que se canceló el trabajo. Intenta subir una imágen más pequeña.",
         "tryAgain": "Este trabajo de imágen no se pudo completar porque el servidor en el que corría se apagó. Intenta correr el comando de nuevo.",
         "unknown": "La imágen que resultó no estaba en un formato reconocible. Por favor inténtalo de nuevo."
