@@ -263,13 +263,13 @@
                 "add": "hinzufügen"
             },
             "rotate": {
-                "angle": "Winkel"
+                "angle": "winkel"
             },
             "slide": {
                 "vertical": "vertikal"
             },
             "music": {
-                "loop": "Schleife",
+                "loop": "schleife",
                 "remove": "entfernen"
             }
         },
@@ -354,10 +354,10 @@
         "empty": "Die resultierende Ausgabe war leer!",
         "flagNames": {
             "ephemeral": "vergänglich",
-            "image": "Bild",
-            "link": "Link",
-            "media": "Medien",
-            "text": "Text"
+            "image": "bild",
+            "link": "link",
+            "media": "medien",
+            "text": "text"
         },
         "flags": {
             "image": "Ein Bild-/GIF-Anhang",
