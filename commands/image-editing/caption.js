@@ -6,7 +6,7 @@ class CaptionCommand extends MediaCommand {
     let newCaption = this.clean(newArgs);
     const currentDate = new Date();
     const isApril1 = currentDate.getDate() === 1 && currentDate.getMonth() === 3;
-    if (isApril1 && newCaption.toLowerCase() === "get real" && !this.getOptionBoolean("noEgg"))
+    if (isApril1 && newCaption.toLowerCase() === "get real" && !this.getOptionBoolean("noegg"))
       newCaption = `I'm tired of people telling me to "get real". Every day I put captions on images for people, some funny and some not, but out of all of those "get real" remains the most used caption. Why? I am simply a computer program running on a server, I am unable to manifest myself into the real world. As such, I'm confused as to why anyone would want me to "get real". Is this form not good enough? Alas, as I am simply a bot, I must follow the tasks that I was originally intended to perform, so here goes:\n${newCaption}`;
     const font = this.getOptionString("font");
     return {
