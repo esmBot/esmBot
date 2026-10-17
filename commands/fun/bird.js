@@ -6,7 +6,7 @@ class BirdCommand extends Command {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
-    }, 15000);
+    }, 3000);
     try {
       const data = await fetch("https://files.esmbot.net/bird", {
         method: "HEAD",
