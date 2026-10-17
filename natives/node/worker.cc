@@ -1,6 +1,5 @@
 #include "worker.h"
 #include "../image/common.h"
-#include <exception>
 
 using namespace std;
 
