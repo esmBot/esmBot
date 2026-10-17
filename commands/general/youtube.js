@@ -15,8 +15,7 @@ class YouTubeCommand extends Command {
     const server = random(serversConfig.search ?? []);
     let baseUrl = server?.url;
     if (!baseUrl) {
-      if (!serversConfig.searx?.length)
-        return this.getString("commands.responses.youtube.noEngines");
+      if (!serversConfig.searx?.length) return this.getString("commands.responses.youtube.noEngines");
       logger.warn('!!! THE "searx" FIELD IN config/servers.json IS DEPRECATED !!!');
       logger.warn(
         'The "searx" field has been renamed to "search" and has a different format. Please update your config; esmBot will no longer read this field in a future version.',

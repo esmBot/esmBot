@@ -1,9 +1,11 @@
 {
   "lava": [{ "name": "localhost", "url": "localhost:2333", "auth": "youshallnotpass" }],
   "media": [{ "name": "localhost", "server": "localhost", "auth": "verycoolpass100", "tls": false }],
-  "search": [{
-    "type": "searxng",
-    "url": "https://searx.projectlounge.pw",
-    "engines": ["duckduckgo images", "privacywall images", "google cse images"]
-  }]
+  "search": [
+    {
+      "type": "searxng",
+      "url": "https://searx.projectlounge.pw",
+      "engines": ["duckduckgo images", "privacywall images", "google cse images"]
+    }
+  ]
 }

@@ -15,8 +15,7 @@ class ImageSearchCommand extends Command {
     const embeds = [];
     let server = random(serversConfig.search ?? []);
     if (!server) {
-      if (!serversConfig.searx?.length)
-        return this.getString("commands.responses.image.noEngines");
+      if (!serversConfig.searx?.length) return this.getString("commands.responses.image.noEngines");
       logger.warn('!!! THE "searx" FIELD IN config/servers.json IS DEPRECATED !!!');
       logger.warn(
         'The "searx" field has been renamed to "search" and has a different format. Please update your config; esmBot will no longer read this field in a future version.',
