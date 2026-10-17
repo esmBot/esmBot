@@ -4,14 +4,6 @@
 
 #include <vips/vips8>
 
-const char *esmb_media_version() {
-#ifdef ESMB_VERSION
-  return ESMB_VERSION;
-#else
-  return "unknown";
-#endif
-}
-
 esmb_media_result *esmb_media_process(const char *command, esmb::ArgumentMap args, const char *type,
                                       const char *out_type, const char *data, size_t length) {
   // std::string outType = GetArgumentWithFallback<bool>(args, "togif", false) ? "gif" : type;
@@ -50,6 +42,14 @@ esmb_media_result *esmb_media_process(const char *command, esmb::ArgumentMap arg
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+const char *esmb_media_version() {
+#ifdef ESMB_VERSION
+  return ESMB_VERSION;
+#else
+  return "unknown";
+#endif
+}
 
 void esmb_media_init() {
   if (VIPS_INIT("")) vips_error_exit(NULL);
