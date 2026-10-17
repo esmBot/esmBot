@@ -195,21 +195,16 @@ class MediaConnection {
   }
 
   async getCount() {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 1000);
     const req = await fetch(`${this.httpurl}/count`, {
-      signal: controller.signal,
-      headers: this.auth
-        ? {
-            authentication: this.auth,
-          }
-        : undefined,
+      signal: AbortSignal.timeout(1000),
+      headers: this.auth ? { authentication: this.auth } : undefined,
     });
-    clearTimeout(timeout);
-    if (req.status !== 200) return -1;
+    if (req.status !== 200) {
+      await req.body?.cancel();
+      throw new Error(`count request failed with status ${req.status}`);
+    }
     const res = Number.parseInt(await req.text());
+    if (Number.isNaN(res)) throw new Error("server sent a bad count");
     return res;
   }
 
