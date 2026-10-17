@@ -2,14 +2,14 @@ import { Message } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { pendingCommands, selectedImages } from "#utils/collections.js";
 import { request } from "#utils/media.js";
-import imageDetect from "#utils/mediadetect.js";
+import mediaDetect from "#utils/mediadetect.js";
 import { awaitRerun, rerunButton } from "#utils/rerunprompt.js";
 
 class SelectImageCommand extends Command {
   async run() {
     const message = this.interaction?.data.target;
     if (!(message instanceof Message)) throw Error("Target is not a message");
-    const mediaArr = await imageDetect(this.client, this.permissions, message, this.interaction, true).catch((e) => {
+    const mediaArr = await mediaDetect(this.client, this.permissions, message, this.interaction, true).catch((e) => {
       if (e.name === "AbortError") return this.getString("image.timeout");
       throw e;
     });
