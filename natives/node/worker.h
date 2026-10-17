@@ -12,6 +12,7 @@ public:
   virtual ~MediaAsyncWorker() {};
 
   void Execute();
+  void EndCleanup();
   void OnError(const Error &e);
   void OnOK();
 
