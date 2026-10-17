@@ -45,6 +45,9 @@ jobs:
 
       - name: Build
         run: pnpm install --frozen-lockfile && pnpm run build
+      - name: Type-check commands
+        if: matrix.platform.key == 'linux-amd64'
+        run: pnpm run build:ts:commands
       - name: Upload natives
         uses: actions/upload-artifact@v7
         with:

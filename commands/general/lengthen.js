@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class LengthenCommand extends Command {
   async run() {
@@ -34,6 +35,7 @@ class LengthenCommand extends Command {
     return false;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "url",

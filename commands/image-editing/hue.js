@@ -1,4 +1,5 @@
 import MediaCommand from "#cmd-classes/mediaCommand.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class HueCommand extends MediaCommand {
   paramsFunc() {
@@ -29,6 +30,7 @@ class HueCommand extends MediaCommand {
 
   static requiresParam = true;
   static requiredParam = "shift";
+  /** @type {CommandFlag["type"]} */
   static requiredParamType = "integer";
   static noParam = "You need to provide the amount you want to hue shift by!";
 

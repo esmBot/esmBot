@@ -1,6 +1,7 @@
 import Command from "#cmd-classes/command.js";
 import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class CountCommand extends Command {
   async run() {
@@ -73,6 +74,7 @@ class CountCommand extends Command {
 
   static description = "Gets how many times every command was used";
   static aliases = ["counts"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "command",

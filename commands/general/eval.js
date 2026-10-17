@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { clean } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class EvalCommand extends Command {
   async run() {
@@ -45,6 +46,7 @@ class EvalCommand extends Command {
     }
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "code",

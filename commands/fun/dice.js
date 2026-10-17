@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class DiceCommand extends Command {
   async run() {
@@ -10,6 +11,7 @@ class DiceCommand extends Command {
     })}`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "max",

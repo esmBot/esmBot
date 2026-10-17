@@ -1,5 +1,6 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class PrefixCommand extends Command {
   async run() {
@@ -35,6 +36,7 @@ class PrefixCommand extends Command {
 
   static description = "Checks/changes the server prefix";
   static aliases = ["setprefix", "changeprefix", "checkprefix"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "prefix",

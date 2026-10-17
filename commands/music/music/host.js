@@ -4,6 +4,7 @@ import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";
 import { safeBigInt } from "#utils/misc.js";
 import { players } from "#utils/soundplayer.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class MusicHostCommand extends MusicCommand {
   async run() {
@@ -62,6 +63,7 @@ class MusicHostCommand extends MusicCommand {
     return `🔊 ${this.getString("commands.responses.host.currentHost", { params: { member: member.username } })}`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "user",

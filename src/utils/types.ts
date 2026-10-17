@@ -52,7 +52,7 @@ export type ExtendedCommandOptions = {
   classic?: boolean;
 } & ApplicationCommandOptions;
 
-export type ExtendedConstructedCommandOptions = {
+export type CommandFlag = {
   type: Constants.ApplicationCommandOptionTypes | CommandFlagType;
   classic?: boolean;
 } & Omit<CombinedApplicationCommandOption, "type">;

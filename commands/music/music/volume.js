@@ -1,4 +1,5 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class MusicVolumeCommand extends MusicCommand {
   async run() {
@@ -16,6 +17,7 @@ class MusicVolumeCommand extends MusicCommand {
     return `🔊 The volume has been changed to \`${vol}\`.`;
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "level",

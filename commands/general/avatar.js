@@ -1,6 +1,7 @@
 import { Member } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { getUser, mentionToObject } from "#utils/mentions.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 const imageSize = 512;
 
 class AvatarCommand extends Command {
@@ -40,6 +41,7 @@ class AvatarCommand extends Command {
 
   static description = "Gets a user's avatar";
   static aliases = ["pfp", "ava"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "member",
@@ -52,7 +54,6 @@ class AvatarCommand extends Command {
       type: "boolean",
       description: "Gets a user's server avatar",
       classic: true,
-      default: false,
     },
   ];
 }

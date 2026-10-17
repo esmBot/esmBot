@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class EmoteCommand extends Command {
   async run() {
@@ -34,6 +35,7 @@ class EmoteCommand extends Command {
     return this.getString("commands.responses.emote.invalidEmoji");
   }
 
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "emoji",

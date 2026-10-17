@@ -1,6 +1,7 @@
 import { GuildChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { safeBigInt } from "#utils/misc.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class ChannelDisableCommand extends Command {
   async run() {
@@ -44,6 +45,7 @@ class ChannelDisableCommand extends Command {
   }
 
   static description = "Disables classic commands in a channel";
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "channel",

@@ -1,6 +1,7 @@
 import Command from "#cmd-classes/command.js";
 import { request } from "#utils/media.js";
 import mediaDetect from "#utils/mediadetect.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class RawCommand extends Command {
   async run() {
@@ -26,6 +27,7 @@ class RawCommand extends Command {
 
   static description = "Gets a direct image URL (useful for saving GIFs from sites like Tenor)";
   static aliases = ["giflink", "imglink", "getimg", "rawgif", "rawimg"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "image",

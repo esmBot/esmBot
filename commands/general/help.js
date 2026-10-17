@@ -4,6 +4,7 @@ import paginator from "#pagination";
 import * as collections from "#utils/collections.js";
 import { convFlagType, flagMap } from "#utils/handler.js";
 import * as help from "#utils/help.js";
+/** @import { CommandFlag } from "#utils/types.js" */
 
 class HelpCommand extends Command {
   async run() {
@@ -149,6 +150,7 @@ class HelpCommand extends Command {
 
   static description = "Gets a list of commands";
   static aliases = ["commands"];
+  /** @type {CommandFlag[]} */
   static flags = [
     {
       name: "command",
