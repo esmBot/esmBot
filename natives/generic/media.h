@@ -4,6 +4,10 @@
 #include "../common/argmap.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct esmb_media_result {
   const char *type;
   size_t length;
@@ -11,6 +15,7 @@ struct esmb_media_result {
 };
 
 #ifdef __cplusplus
+}
 
 esmb_media_result *esmb_media_process(const char *command, esmb::ArgumentMap args, const char *type,
                                       const char *out_ype, const char *data, size_t length);
