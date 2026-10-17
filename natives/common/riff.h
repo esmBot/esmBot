@@ -15,5 +15,5 @@ namespace RIFF {
     uint32_t size;
   };
 
-  int findChunk(char *data, size_t length, const char *fourCC, size_t &position, uint32_t *size);
+  int findChunk(const char *data, size_t length, const char *fourCC, size_t &position, uint32_t *size);
 } // namespace RIFF
