@@ -4,64 +4,70 @@
 #include "argmap.h"
 
 namespace esmb {
-  namespace Image {
-    const std::map<std::string, CmdOutput (*)(const std::string &type, std::string &outType, const char *bufferData,
+  typedef std::map<std::string, CmdOutput (*)(const std::string &type, std::string &outType, const char *bufferData,
                                               size_t bufferLength, esmb::ArgumentMap arguments, bool *shouldKill)>
-      FunctionMap = {
-        {"blur",       &Blur      },
-        {"bounce",     &Bounce    },
-        {"caption",    &Caption   },
-        {"captionTwo", &CaptionTwo},
-        {"circle",     &Circle    },
-        {"colors",     &Colors    },
-        {"crop",       &Crop      },
-        {"deepfry",    &Deepfry   },
-        {"distort",    &Distort   },
-        {"fade",       &Fade      },
-        {"flag",       &Flag      },
-        {"flip",       &Flip      },
-        {"freeze",     &Freeze    },
-        {"gamexplain", &Gamexplain},
-        {"globe",      &Globe     },
-        {"invert",     &Invert    },
-        {"jpeg",       &Jpeg      },
+    FunctionMapSig;
+
+  typedef std::map<std::string, CmdOutput (*)(const std::string &type, std::string &outType,
+                                              esmb::ArgumentMap arguments, bool *shouldKill)>
+    NoInputFunctionMapSig;
+
+  typedef std::map<std::string, FunctionArgs *> FunctionArgsMapSig;
+
+  namespace Image {
+    const FunctionMapSig FunctionMap = {
+      {"blur",       &Blur      },
+      {"bounce",     &Bounce    },
+      {"caption",    &Caption   },
+      {"captionTwo", &CaptionTwo},
+      {"circle",     &Circle    },
+      {"colors",     &Colors    },
+      {"crop",       &Crop      },
+      {"deepfry",    &Deepfry   },
+      {"distort",    &Distort   },
+      {"fade",       &Fade      },
+      {"flag",       &Flag      },
+      {"flip",       &Flip      },
+      {"freeze",     &Freeze    },
+      {"gamexplain", &Gamexplain},
+      {"globe",      &Globe     },
+      {"invert",     &Invert    },
+      {"jpeg",       &Jpeg      },
 #ifdef LQR_ENABLED
-        {"magik",      &Magik     },
+      {"magik",      &Magik     },
 #endif
-        {"meme",       &Meme      },
-        {"mirror",     &Mirror    },
-        {"motivate",   &Motivate  },
+      {"meme",       &Meme      },
+      {"mirror",     &Mirror    },
+      {"motivate",   &Motivate  },
 #ifdef ZXING_ENABLED
-        {"qrread",     &QrRead    },
+      {"qrread",     &QrRead    },
 #endif
-        {"reddit",     &Reddit    },
-        {"resize",     &Resize    },
-        {"reverse",    &Reverse   },
-        {"scott",      &Scott     },
-        {"slide",      &Slide     },
-        {"snapchat",   &Snapchat  },
-        {"speed",      &Speed     },
-        {"spin",       &Spin      },
-        {"spotify",    &Spotify   },
-        {"squish",     &Squish    },
-        {"swirl",      &Swirl     },
-        {"tile",       &Tile      },
-        {"togif",      &ToGif     },
-        {"uncanny",    &Uncanny   },
-        {"uncaption",  &Uncaption },
-        {"wall",       &Wall      },
-        {"watermark",  &Watermark },
-        {"whisper",    &Whisper   }
+      {"reddit",     &Reddit    },
+      {"resize",     &Resize    },
+      {"reverse",    &Reverse   },
+      {"scott",      &Scott     },
+      {"slide",      &Slide     },
+      {"snapchat",   &Snapchat  },
+      {"speed",      &Speed     },
+      {"spin",       &Spin      },
+      {"spotify",    &Spotify   },
+      {"squish",     &Squish    },
+      {"swirl",      &Swirl     },
+      {"tile",       &Tile      },
+      {"togif",      &ToGif     },
+      {"uncanny",    &Uncanny   },
+      {"uncaption",  &Uncaption },
+      {"wall",       &Wall      },
+      {"watermark",  &Watermark },
+      {"whisper",    &Whisper   }
     };
 
-    const std::map<std::string, CmdOutput (*)(const std::string &type, std::string &outType,
-                                              esmb::ArgumentMap arguments, bool *shouldKill)>
-      NoInputFunctionMap = {
-        {"homebrew", &Homebrew},
+    const NoInputFunctionMapSig NoInputFunctionMap = {
+      {"homebrew", &Homebrew},
 #if ZXING_ENABLED
-        {"qrcreate", &QrCreate},
+      {"qrcreate", &QrCreate},
 #endif
-        {"sonic",    &Sonic   }
+      {"sonic",    &Sonic   }
     };
 
     const std::vector<std::string> AnimFunctions = {
@@ -70,7 +76,7 @@ namespace esmb {
       "speed",
     };
 
-    const std::map<std::string, FunctionArgs *> FunctionArgsMap = {
+    const FunctionArgsMapSig FunctionArgsMap = {
       {"blur",       &BlurArgs      },
       {"caption",    &CaptionArgs   },
       {"captionTwo", &CaptionTwoArgs},
