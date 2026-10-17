@@ -56,7 +56,7 @@ class MediaCommand extends Command {
     const ephemeral = this.getOptionBoolean("ephemeral");
     const spoiler = this.getOptionBoolean("spoiler");
     const sizeLimit = this.interaction?.attachmentSizeLimit ?? maxFileSize(this.guild);
-    const canUseSelection = !this.getOptionAttachment("file") && !this.getOptionString("link");
+    const canUseSelection = !this.getOptionAttachment("image") && !this.getOptionString("link");
     let mediaParams: MediaParams;
 
     if (staticProps.requiresImage) {
