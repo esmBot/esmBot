@@ -1,6 +1,6 @@
 #ifdef ZXING_ENABLED
-#include <ZXing/ZXVersion.h>
 #include <ZXing/ReadBarcode.h>
+#include <ZXing/ZXVersion.h>
 
 #if ZXING_VERSION_MAJOR >= 3
 #include <ZXing/CreateBarcode.h>
@@ -26,7 +26,8 @@ CmdOutput esmb::Image::QrCreate([[maybe_unused]] const string &type, string &out
   string text = GetArgument<string>(arguments, "text");
 
 #if ZXING_VERSION_MAJOR >= 3
-  ZXing::Barcode barcode = ZXing::CreateBarcodeFromText(text, ZXing::CreatorOptions(ZXing::BarcodeFormat::QRCode, "eci=26"));
+  ZXing::Barcode barcode =
+    ZXing::CreateBarcodeFromText(text, ZXing::CreatorOptions(ZXing::BarcodeFormat::QRCode, "eci=26"));
   ZXing::Image bitmap = ZXing::WriteBarcodeToImage(barcode, ZXing::WriterOptions().addQuietZones(true));
   size_t bitmapSize = bitmap.width() * bitmap.height() * bitmap.pixStride();
 #else

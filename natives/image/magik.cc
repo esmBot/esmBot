@@ -1,6 +1,6 @@
 #ifdef LQR_ENABLED
-#include <vips/vips8>
 #include <lqr.h>
+#include <vips/vips8>
 
 #include <algorithm>
 #include <cstring>
@@ -59,11 +59,10 @@ static VImage LqrRescale(VImage img, int target_w, int target_h) {
   return out;
 }
 
-CmdOutput esmb::Image::Magik(const string &type, string &outType, const char *bufferdata,
-                             size_t bufferLength, [[maybe_unused]] esmb::ArgumentMap arguments,
-                             bool *shouldKill) {
+CmdOutput esmb::Image::Magik(const string &type, string &outType, const char *bufferdata, size_t bufferLength,
+                             [[maybe_unused]] esmb::ArgumentMap arguments, bool *shouldKill) {
   VImage in = VImage::new_from_buffer(bufferdata, bufferLength, "", GetInputOptions(type, true, false))
-                 .colourspace(VIPS_INTERPRETATION_sRGB);
+                .colourspace(VIPS_INTERPRETATION_sRGB);
 
   int width = in.width();
   int pageHeight = vips_image_get_page_height(in.get_image());
