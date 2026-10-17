@@ -10,7 +10,7 @@ import {
   type User,
 } from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
-import { runningCommands, selectedImages } from "#utils/collections.js";
+import { pendingCommands, runningCommands, selectedImages } from "#utils/collections.js";
 import { convFlagType } from "#utils/handler.js";
 import { getAllLocalizations } from "#utils/i18n.js";
 import logger from "#utils/logger.js";
@@ -49,6 +49,7 @@ class MediaCommand extends Command {
     }
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
+    pendingCommands.delete(this.author.id);
 
     const staticProps = this.constructor as typeof MediaCommand;
 
@@ -60,7 +61,8 @@ class MediaCommand extends Command {
     if (staticProps.requiresImage) {
       try {
         let selection: MediaMeta | undefined;
-        if (!this.getOptionAttachment("image") && !this.getOptionString("link")) {
+        const canUseSelection = !this.getOptionAttachment("image") && !this.getOptionString("link");
+        if (canUseSelection) {
           selection = selectedImages.get(this.author.id);
         }
         const media =
@@ -80,6 +82,9 @@ class MediaCommand extends Command {
         }
         if (media.length === 0) {
           runningCommands.delete(this.author.id);
+          if (canUseSelection) {
+            pendingCommands.set(this.author.id, new staticProps(this.client, this.database, this.origOptions));
+          }
           return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip", { params: { name: this.client.user.globalName ?? this.client.user.username } })}`;
         }
         selectedImages.delete(this.author.id);
