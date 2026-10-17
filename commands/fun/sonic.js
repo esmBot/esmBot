@@ -16,7 +16,7 @@ class SonicCommand extends MediaCommand {
 
   static description = "Creates a Sonic speech bubble image";
 
-  static requiresImage = false;
+  static requiresMedia = false;
   static requiresParam = true;
   static noParam = "You need to provide some text to make a Sonic meme!";
   static command = "sonic";

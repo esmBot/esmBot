@@ -24,7 +24,7 @@ class QrCreateCommand extends MediaCommand {
   static description = "Generates a QR code";
   static aliases = ["qrcreate"];
 
-  static requiresImage = false;
+  static requiresMedia = false;
   static requiresParam = true;
   static noParam = "You need to provide some text to generate a QR code!";
   static command = "qrcreate";

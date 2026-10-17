@@ -59,7 +59,7 @@ class MediaCommand extends Command {
     const canUseSelection = !this.getOptionAttachment("image") && !this.getOptionString("link");
     let mediaParams: MediaParams;
 
-    if (staticProps.requiresImage) {
+    if (staticProps.requiresMedia) {
       try {
         let selection: MediaMeta | undefined;
         if (canUseSelection) {
@@ -262,7 +262,7 @@ class MediaCommand extends Command {
 
   static init() {
     this.flags = [];
-    if (this.requiresImage) {
+    if (this.requiresMedia) {
       this.flags.push(
         {
           name: "image",
@@ -324,7 +324,7 @@ class MediaCommand extends Command {
 
   static supportedTypes: MediaTypes[] = ["image"];
 
-  static requiresImage = true;
+  static requiresMedia = true;
   static requiresParam = false;
   static requiredParam = "text";
   static requiredParamType: ExtendedConstructedCommandOptions["type"] = "string";

@@ -17,7 +17,7 @@ class HomebrewCommand extends MediaCommand {
   static description = "Creates a Homebrew Channel edit";
   static aliases = ["hbc", "brew", "wiibrew"];
 
-  static requiresImage = false;
+  static requiresMedia = false;
   static requiresParam = true;
   static noParam = "You need to provide some text to make a Homebrew Channel edit!";
   static command = "homebrew";
