@@ -56,12 +56,12 @@ class MediaCommand extends Command {
     const ephemeral = this.getOptionBoolean("ephemeral");
     const spoiler = this.getOptionBoolean("spoiler");
     const sizeLimit = this.interaction?.attachmentSizeLimit ?? maxFileSize(this.guild);
+    const canUseSelection = !this.getOptionAttachment("file") && !this.getOptionString("link");
     let mediaParams: MediaParams;
 
     if (staticProps.requiresImage) {
       try {
         let selection: MediaMeta | undefined;
-        const canUseSelection = !this.getOptionAttachment("image") && !this.getOptionString("link");
         if (canUseSelection) {
           selection = selectedImages.get(this.author.id);
         }
@@ -169,8 +169,12 @@ class MediaCommand extends Command {
       if (type === "ratelimit") return this.getString("image.ratelimit");
       if (type === "nocmd") return this.getString("image.nocmd");
       if (type === "noanim") return this.getString("image.noanim");
-      if (type === "nomedia")
+      if (type === "nomedia") {
+        if (canUseSelection) {
+          pendingCommands.set(this.author.id, new staticProps(this.client, this.database, this.origOptions));
+        }
         return `${this.getString(`commands.noImage.${this.cmdName}`, { returnNull: true }) || this.getString("image.noImage", { returnNull: true }) || staticProps.noImage} ${this.getString("image.tip", { params: { name: this.client.user.globalName ?? this.client.user.username } })}`;
+      }
       if (type === "empty") return staticProps.empty;
 
       this.success = true;
