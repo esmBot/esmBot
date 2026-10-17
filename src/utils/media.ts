@@ -216,32 +216,24 @@ export async function reloadMediaConnections() {
 }
 
 async function getIdeal(object: MediaParams): Promise<MediaConnection | undefined> {
-  const idealServers: Array<
-    | {
-        connection: MediaConnection;
-        count: number;
-      }
-    | undefined
-  > = [];
-  for (const connection of connections.values()) {
-    if (connection.conn.readyState !== 1) {
-      continue;
-    }
-    if (!connection.types[object.cmd] || connection.types[object.cmd].length === 0) {
-      idealServers.push(undefined);
-      continue;
-    }
-    try {
-      const count = await connection.getCount();
-      idealServers.push({ connection, count });
-    } catch {
-      continue;
-    }
-  }
-  if (idealServers.length === 0) throw "No available servers";
-  const sorted = idealServers.filter((v) => !!v).sort((a, b) => a.count - b.count);
-  if (sorted.length === 0) return;
-  return (sorted.every((v) => v.count === 0) ? random(sorted) : sorted[0]).connection;
+  const all = [...connections.values()];
+  const open = all.filter((c) => c.conn.readyState === 1);
+  const capable = open.filter((c) => c.types[object.cmd]?.length);
+  // Only say the command is unsupported if every server says so, otherwise some
+  // disconnected server might support it.
+  if (all.length > 0 && capable.length === 0 && open.length === all.length) return;
+
+  const counts = await Promise.all(
+    capable.map((c) =>
+      c.getCount().catch((e) => {
+        logger.warn(`Failed to get job count from media server ${c.host}: ${e}`);
+        return Infinity;
+      }),
+    ),
+  );
+  const min = Math.min(...counts);
+  if (min === Infinity) throw "No available servers";
+  return random(capable.filter((_, i) => counts[i] === min));
 }
 
 let running = 0;
