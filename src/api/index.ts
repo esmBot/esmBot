@@ -320,6 +320,7 @@ function stopHTTPServer() {
       process.exit(1);
     }
     logger.info("Stopped HTTP server");
+    media.shutdown();
     process.exit();
   });
 }
@@ -329,6 +330,7 @@ let stopping = false;
 function sigHandler(signal: NodeJS.Signals) {
   if (stopping) {
     logger.info(`Another ${signal} detected, forcing shutdown...`);
+    media.shutdown();
     process.exit();
   }
   stopping = true;

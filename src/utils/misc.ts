@@ -165,6 +165,10 @@ export async function exit(client: Client, database: DatabasePlugin | undefined)
   client.disconnect(false);
   if (database) await database.stop();
   disconnect();
+  if (process.env.API_TYPE !== "ws") {
+    const { media } = await import("./mediaLib.ts");
+    media.shutdown();
+  }
   process.exit();
 }
 

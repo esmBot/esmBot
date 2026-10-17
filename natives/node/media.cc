@@ -1,5 +1,4 @@
 #include <napi.h>
-#include <string>
 
 #ifdef __GLIBC__
 #include <malloc.h>
@@ -153,9 +152,15 @@ Napi::Value MediaInit(const Napi::CallbackInfo &info) {
   return formats;
 }
 
+Napi::Value MediaShutdown(const Napi::CallbackInfo &info) {
+  vips_shutdown();
+  return info.Env().Undefined();
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set(Napi::String::New(env, "process"), Napi::Function::New(env, ProcessMedia));
   exports.Set(Napi::String::New(env, "init"), Napi::Function::New(env, MediaInit));
+  exports.Set(Napi::String::New(env, "shutdown"), Napi::Function::New(env, MediaShutdown));
   exports.Set(Napi::String::New(env, "trim"), Napi::Function::New(env, Trim));
 
   Napi::Object funcs = Napi::Object::New(env);

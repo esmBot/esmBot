@@ -26,6 +26,7 @@ export interface MediaLib {
   init(): {
     image?: string[];
   };
+  shutdown(): void;
   trim(): number;
 }
 
