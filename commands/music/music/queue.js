@@ -13,9 +13,10 @@ class MusicQueueCommand extends MusicCommand {
     if (!player) return this.getString("sound.noConnection");
     const trackList = [];
     const tracks = this.queue;
-    const firstTrack = tracks.shift();
+    const firstTrack = tracks[0];
     if (!firstTrack) return this.getString("sound.notPlaying");
     for (const [i, track] of tracks.entries()) {
+      if (i === 0) continue;
       trackList.push(
         `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : formatDuration(track.info.length)})`,
       );
