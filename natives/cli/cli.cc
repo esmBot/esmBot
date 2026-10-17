@@ -7,7 +7,16 @@
 #include <optional>
 #include <sstream>
 #include <stdexcept>
+#include <typeindex>
+#include <unordered_map>
 #include <vector>
+
+const std::unordered_map<std::type_index, std::string> typeMap = {
+  {std::type_index(typeid(std::string)), "string"},
+  {std::type_index(typeid(float)),       "float" },
+  {std::type_index(typeid(bool)),        "bool"  },
+  {std::type_index(typeid(int)),         "int"   }
+};
 
 static bool ends_with(std::string_view str, std::string_view suffix) {
   return str.size() >= suffix.size() && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -123,6 +132,22 @@ std::string printHelp() {
   return out.str();
 }
 
+std::string printFunctionHelp(std::string function, bool input) {
+  std::stringstream out;
+  out << "Usage: esmb-cli " << function << (input ? " <input>" : "") << " <output>" << std::endl;
+
+  if (MapContainsKey(esmb::Image::FunctionArgsMap, function)) {
+    out << std::endl << "Available flags:" << std::endl;
+    FunctionArgs *funcArgs = esmb::Image::FunctionArgsMap.at(function);
+    for (auto arg : *funcArgs) {
+      out << "  --" << arg.first << "=<" << typeMap.at(std::type_index(arg.second.type)) << ">";
+      out << std::endl;
+    }
+  }
+
+  return out.str();
+}
+
 int main(int argc, char *argv[]) {
   Args args = parseArguments(argc, argv);
 
@@ -140,7 +165,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  if (args.args.size() < 3) {
+  if (args.args.size() < 2) {
     std::cerr << printHelp();
     return 1;
   }
@@ -148,8 +173,13 @@ int main(int argc, char *argv[]) {
   std::string function = args.args[1];
   bool isInputFunc = MapContainsKey(esmb::Image::FunctionMap, function);
   bool isNoInputFunc = MapContainsKey(esmb::Image::NoInputFunctionMap, function);
-  if ((!isInputFunc && !isNoInputFunc) || (isInputFunc && args.args.size() < 4)) {
+  if (!isInputFunc && !isNoInputFunc) {
     std::cerr << printHelp();
+    return 1;
+  }
+
+  if (args.args.size() < 3 || (isInputFunc && args.args.size() < 4)) {
+    std::cerr << printFunctionHelp(function, isInputFunc);
     return 1;
   }
 
