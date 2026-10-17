@@ -26,6 +26,13 @@ let threshold: number | undefined;
 export async function upload(client: Client, result: File & { flags?: number }, context: CommandInteraction | Message) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
   await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
+
+  if (threshold) {
+    const size = dirSizeCache + result.contents.length;
+    dirSizeCache = size;
+    await removeOldImages(size);
+  }
+
   const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
   const payload: InteractionContent = {
     components: [
@@ -76,12 +83,6 @@ export async function upload(client: Client, result: File & { flags?: number }, 
         },
       }),
     );
-  }
-
-  if (threshold) {
-    const size = dirSizeCache + result.contents.length;
-    dirSizeCache = size;
-    await removeOldImages(size);
   }
 }
 
