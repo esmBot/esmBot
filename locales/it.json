@@ -90,7 +90,8 @@
             "hue": "Cambia la tonalità di un'immagine",
             "mediareload": "Prova a riconnettere il bot a tutti i server di elaborazione media",
             "mediastats": "Invia alcune statistiche sui server di elaborazione media",
-            "slide": "Applica una transizione a scorrimento ad un'immagine"
+            "slide": "Applica una transizione a scorrimento ad un'immagine",
+            "rotate": "Ruota un'immagine"
         },
         "flagNames": {
             "8ball": {
@@ -312,6 +313,9 @@
             "slide": {
                 "reverse": "contrario",
                 "vertical": "verticale"
+            },
+            "rotate": {
+                "angle": "angolo"
             }
         },
         "flags": {
@@ -534,6 +538,9 @@
             "slide": {
                 "reverse": "Cambia la direzione in cui scorre l'immagine",
                 "vertical": "Fa scorrere l'immagine verticalmente"
+            },
+            "rotate": {
+                "angle": "Imposta l'angolo di rotazione"
             }
         },
         "names": {
@@ -600,7 +607,7 @@
             "soos": "soos",
             "speechbubble": "fumetto",
             "speed": "velocità",
-            "spin": "ruota",
+            "spin": "gira",
             "spotify": "spotify",
             "squish": "stringi",
             "stretch": "allarga",
@@ -626,7 +633,8 @@
             "hue": "tonalità",
             "mediareload": "mediaricarica",
             "mediastats": "mediastatistiche",
-            "slide": "scorri"
+            "slide": "scorri",
+            "rotate": "ruota"
         },
         "noImage": {
             "watermark 9gag": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di 9GAG!",
@@ -692,7 +700,8 @@
             "fade": "Devi fornire un'immagine/GIF a cui applicare una dissolvenza in entrata!",
             "hue": "Devi fornire un'immagine/GIF a cui cambiare la tonalità!",
             "watermark powerdirector": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di PowerDirector!",
-            "slide": "Devi fornire un'immagine/GIF a cui applicare una transizione a scorrimento!"
+            "slide": "Devi fornire un'immagine/GIF a cui applicare una transizione a scorrimento!",
+            "rotate": "Devi fornire un'immagine/GIF da ruotare!"
         },
         "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
@@ -799,7 +808,7 @@
             },
             "channel": {
                 "adminOnly": "Devi essere un amministratore per attivarmi/disattivarmi in questo canale!",
-                "invalid": "Quella non è un'opzione valida!",
+                "invalid": "Devi specificare se vuoi abilitarmi/disattivarmi in questo canale!",
                 "notInServer": "Quel canale non è in questo server!",
                 "alreadyDisabled": "Sono già disattivato in questo canale!",
                 "disabled": "Sono stato disattivato in questo canale. Per riabilitarmi, invia `{{prefix}}canale abilita`.",
@@ -811,7 +820,7 @@
                 "alreadyDisabled": "Quel comando è già disattivato!",
                 "cannotDisable": "Non puoi disattivare quel comando!",
                 "disabled": "Il comando `{{command}}` è stato disabilitato. Per riabilitarlo, esegui `{{prefix}}comando abilita {{command}}`.",
-                "invalid": "Quella non è un'opzione valida!",
+                "invalid": "Devi specificare se vuoi attivare/disattivare un comando!",
                 "invalidCmd": "Quello non è un comando!",
                 "notDisabled": "Quel comando non è disattivato!",
                 "noInput": "Devi specificare quale comando abilitare/disabilitare!",
@@ -822,7 +831,8 @@
             },
             "donate": {
                 "thanks": "Grazie ai seguenti patroni per il loro supporto:",
-                "support": "Ti piace esmBot? Prendi in considerazione di supportare lə sviluppatorə su Patreon per mantenerlo in funzione!"
+                "support": "Prendi in considerazione di supportare lə sviluppatorə su [Patreon]({{patreon}}) o [Ko-fi]({{kofi}}) per aiutare a mantenerlo in funzione!",
+                "like": "Ti piace esmBot?"
             },
             "prefix": {
                 "adminOnly": "Devi essere un amministratore per cambiare il prefisso del bot!",
@@ -898,7 +908,8 @@
                 "missingRole": "Non puoi rimuovere un ruolo che non è ancora stato aggiunto!",
                 "roleAdded": "Il ruolo `{{name}}` è stato aggiunto all'elenco dei ruoli consentiti.",
                 "roleList": "Ruoli consentiti",
-                "roleRemoved": "È stato rimosso l'accesso dal ruolo `{{name}}`."
+                "roleRemoved": "È stato rimosso l'accesso dal ruolo `{{name}}`.",
+                "existingRole": "Quel ruolo ha già permessi per gestire i tag!"
             },
             "stop": {
                 "ended": "La sessione vocale attuale è terminata.",
@@ -906,7 +917,8 @@
             },
             "youtube": {
                 "noInput": "Devi fornire qualcosa da ricercare!",
-                "noResults": "Non ho potuto trovare alcun risultato!"
+                "noResults": "Non ho potuto trovare alcun risultato!",
+                "noEngines": "Su questa istanza di esmBot non ci sono motori di ricerca configurati!"
             },
             "banner": {
                 "noSelfBanner": "Non hai un banner!",
@@ -927,7 +939,8 @@
             "image": {
                 "noResults": "Non ho trovato alcun risultato!",
                 "noInput": "Devi fornire qualcosa da cercare!",
-                "results": "Risultati della ricerca"
+                "results": "Risultati della ricerca",
+                "noEngines": "Su questa istanza di esmBot non ci sono motori di ricerca configurati!"
             },
             "exec": {
                 "botOwnerOnly": "Solo il proprietario del bot può usare exec!"
@@ -979,6 +992,9 @@
                 "header": "Statistiche media di esmBot",
                 "runningJobs": "Elaborazioni in corso: {{count}}",
                 "server": "Server {{num}}"
+            },
+            "qr": {
+                "invalid": "Devi specificare se vuoi creare o leggere un QR code!"
             }
         }
     },
@@ -1014,7 +1030,7 @@
         "frames": "Quella GIF ha ben troppi fotogrammi (più di 1000)!",
         "large": "Quel file è troppo grande (>= 40MB)! Prova ad usare un'immagine più piccola.",
         "noTempServer": "Il file risultante era più grande del limite di upload di Discord, quindi non ho potuto inviarlo.",
-        "tip": "(Consiglio: prova a fare tasto-destro/tenere premuto un messaggio e premere App -> Seleziona Immagine, poi prova di nuovo.)",
+        "tip": "(Consiglio: prova a fare tasto-destro/tenere premuto un messaggio e premere App -> {{name}} -> Seleziona Immagine, poi prova di nuovo.)",
         "tooLong": "L'immagine sta richiedendo troppo per essere elaborata (>=10 minuti), quindi il lavoro è stato annullato. Prova ad usare un'immagine più piccola.",
         "selected": "L'immagine è stata selezionata per il tuo prossimo comando.",
         "slowDown": "Per piacere, rallenta un po'.",
@@ -1022,7 +1038,10 @@
         "timeout": "La richiesta di recuperare quell'immagine è scaduta. Per piacere, prova di nuovo, carica la tua immagine altrove, o usa un'immagine diversa.",
         "processing": "Elaborazione... Questo potrebbe richiedere un po'",
         "ratelimit": "Sono stato limitato dal server che ospita quell'immagine. Prova ad uploadare la tua immagine altrove.",
-        "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova."
+        "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova.",
+        "animatedAVIF": "I file AVIF animati non sono supportati al momento.",
+        "pixelLimit": "Quell'immagine è troppo grande (più di 64 megapixel)! Prova ad usare un'immagine più piccola.",
+        "small": "Quell'immagine è troppo piccola per applicarvi questo effetto!"
     },
     "permissions": {
         "noAttachFiles": "Non ho il permesso `Allegare i file`!",
