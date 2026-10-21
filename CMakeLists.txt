@@ -5,7 +5,7 @@ include(FindPkgConfig)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(SOURCE_FILES natives/common/riff.cc)
+set(SOURCE_FILES natives/common/gif.cc natives/common/riff.cc)
 
 set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/blur.cc
@@ -22,6 +22,7 @@ set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/flip.cc
   natives/image/freeze.cc
   natives/image/gamexplain.cc
+  natives/image/gifcanvas.cc
   natives/image/globe.cc
   natives/image/homebrew.cc
   natives/image/invert.cc

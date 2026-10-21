@@ -2,6 +2,7 @@
 #include <vips/vips8>
 
 #include "common.h"
+#include "gifcanvas.h"
 
 using namespace std;
 using namespace vips;
@@ -50,13 +51,22 @@ CmdOutput esmb::Image::CaptionTwo(const string &type, string &outType, const cha
       .ifthenelse(255, text)
       .embed(width / 25, width / 25, width, text.height() + size, VImage::option()->set("extend", "white"));
 
+  auto captionFrame = [&](VImage frame) {
+    return (top ? captionImage : frame)
+      .join(top ? frame : captionImage, VIPS_DIRECTION_VERTICAL,
+            VImage::option()->set("background", 0xffffff)->set("expand", true));
+  };
+
+  if (type == "gif" && outType == "gif") {
+    if (auto output =
+          GifExtendCanvas(bufferdata, bufferLength, in, captionFrame, 0, top ? captionImage.height() : 0, shouldKill))
+      return *output;
+  }
+
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage frame = (top ? captionImage : img_frame)
-                     .join(top ? img_frame : captionImage, VIPS_DIRECTION_VERTICAL,
-                           VImage::option()->set("background", 0xffffff)->set("expand", true));
-    img.push_back(frame);
+    img.push_back(captionFrame(img_frame));
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());

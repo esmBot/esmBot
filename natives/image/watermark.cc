@@ -1,6 +1,7 @@
 #include <vips/vips8>
 
 #include "common.h"
+#include "gifcanvas.h"
 
 using namespace std;
 using namespace vips;
@@ -67,6 +68,14 @@ CmdOutput esmb::Image::Watermark(const string &type, string &outType, const char
     }
   }
 
+  auto appendFrame = [&](VImage frame) {
+    return frame.join(watermark, VIPS_DIRECTION_VERTICAL, VImage::option()->set("expand", true));
+  };
+
+  if (append && type == "gif" && outType == "gif") {
+    if (auto output = GifExtendCanvas(bufferdata, bufferLength, in, appendFrame, 0, 0, shouldKill)) return *output;
+  }
+
   int x = 0, y = 0;
   switch (gravity) {
     case 1:
@@ -109,9 +118,8 @@ CmdOutput esmb::Image::Watermark(const string &type, string &outType, const char
     for (int i = 0; i < nPages; i++) {
       VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
       if (append) {
-        VImage appended = img_frame.join(watermark, VIPS_DIRECTION_VERTICAL, VImage::option()->set("expand", true));
         addedHeight = watermark.height();
-        img.push_back(appended);
+        img.push_back(appendFrame(img_frame));
       } else if (mc) {
         VImage padded = img_frame.embed(0, 0, width, pageHeight + 15, VImage::option()->set("background", 0xffffff));
         VImage composited = padded.composite2(watermark, VIPS_BLEND_MODE_OVER,

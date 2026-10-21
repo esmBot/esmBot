@@ -26,6 +26,15 @@ typedef const std::map<std::string, FunctionArg> FunctionArgs;
   CmdOutput NAME(const std::string &type, std::string &outType, esmb::ArgumentMap arguments, bool *shouldKill)
 #define declare_input_args(NAME) extern FunctionArgs NAME;
 
+inline uint16_t readUint16LE(const unsigned char *buffer) {
+  return static_cast<uint16_t>(buffer[0] | (buffer[1] << 8));
+}
+
+inline void writeUint16LE(unsigned char *buffer, uint16_t value) {
+  buffer[0] = value & 0xff;
+  buffer[1] = value >> 8;
+}
+
 inline uint32_t readUint32LE(const unsigned char *buffer) {
   return static_cast<uint32_t>(buffer[0]) | (static_cast<uint32_t>(buffer[1]) << 8) |
          (static_cast<uint32_t>(buffer[2]) << 16) | (static_cast<uint32_t>(buffer[3]) << 24);

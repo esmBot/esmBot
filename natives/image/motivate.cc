@@ -1,6 +1,7 @@
 #include <vips/vips8>
 
 #include "common.h"
+#include "gifcanvas.h"
 
 using namespace std;
 using namespace vips;
@@ -64,20 +65,16 @@ CmdOutput esmb::Image::Motivate(const string &type, string &outType, const char 
     bottomImage = VImage::text(bottomText.c_str(), bottomTextOptions);
   }
 
-  vector<VImage> img;
-  int height = 0;
-  for (int i = 0; i < nPages; i++) {
-    VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+  int borderSize = max(2, width / 66);
+  int borderSize2 = borderSize * 0.5;
+  int addition = width / 8;
+  int sideAddition = pageHeight * 0.4;
 
-    int borderSize = max(2, width / 66);
-    int borderSize2 = borderSize * 0.5;
+  auto motivate = [&](VImage img_frame) {
     VImage bordered = img_frame.embed(borderSize, borderSize, width + (borderSize * 2), pageHeight + (borderSize * 2),
                                       VImage::option()->set("extend", "black"));
     VImage bordered2 = bordered.embed(borderSize2, borderSize2, bordered.width() + (borderSize2 * 2),
                                       bordered.height() + (borderSize2 * 2), VImage::option()->set("extend", "white"));
-
-    int addition = width / 8;
-    int sideAddition = pageHeight * 0.4;
 
     VImage bordered3 = bordered2.embed(sideAddition / 2, addition / 2, bordered2.width() + sideAddition,
                                        bordered2.height() + addition, VImage::option()->set("extend", "black"));
@@ -95,6 +92,24 @@ CmdOutput esmb::Image::Motivate(const string &type, string &outType, const char 
                                        bottomImage.height() + (size / 4), VImage::option()->set("extend", "black")),
                    VIPS_DIRECTION_VERTICAL, VImage::option()->set("background", 0x000000)->set("expand", true));
     }
+    return frame;
+  };
+
+  if (type == "gif" && outType == "gif") {
+    auto first = [&](VImage frame) {
+      return motivate(frame).extract_band(0, VImage::option()->set("n", 3));
+    };
+    int offset = borderSize + borderSize2;
+    if (auto output = GifExtendCanvas(bufferdata, bufferLength, in, first, sideAddition / 2 + offset,
+                                      addition / 2 + offset, shouldKill))
+      return *output;
+  }
+
+  vector<VImage> img;
+  int height = 0;
+  for (int i = 0; i < nPages; i++) {
+    VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
+    VImage frame = motivate(img_frame);
     height = frame.height();
     img.push_back(frame);
   }
