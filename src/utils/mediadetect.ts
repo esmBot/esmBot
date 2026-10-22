@@ -27,8 +27,9 @@ const giphyMediaURLs = [
   "media4.giphy.com",
 ];
 const klipyURLs = ["klipy.com"];
+const gifdexURLs = ["gifdex.net"];
 
-const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...klipyURLs];
+const combined = [...tenorURLs, ...giphyURLs, ...giphyMediaURLs, ...klipyURLs, ...gifdexURLs];
 
 const providerUrls = ["https://tenor.co", "https://tenor.com", "https://giphy.com", "https://klipy.com"];
 
@@ -138,6 +139,13 @@ async function getMedia(
       payload.path = `https://media0.giphy.com/media/${media2.split("/")[4].split("-").pop()}/giphy.webp`;
     } else if (giphyMediaURLs.includes(host)) {
       payload.path = `https://media0.giphy.com/media/${media2.split("/")[4]}/giphy.webp`;
+    } else if (gifdexURLs.includes(host)) {
+      // technically any atproto blob CDN/proxy could work here
+      // (or even fetching the original data from the uploader's PDS!),
+      // we're just using gifdex's proxy for now for simplicity's sake
+      // could look into swapping it out in the future
+      const split = media2.split("/");
+      payload.path = `https://media.gifdex.net/media/gif/${split[4]}/${split[6].split(":")[1]}.webp`;
     }
   } else {
     if (discordRegex.test(mediaURL.host)) {
