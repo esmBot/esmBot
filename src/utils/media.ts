@@ -88,45 +88,41 @@ export async function request(
 
   let size = 0;
 
-  try {
-    const res = await fetch(media, {
-      signal: AbortSignal.timeout(15000),
-      headers: {
-        "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
-      },
-    });
-    url = res.url;
-    if (res.status === 429) throw "ratelimit";
+  const res = await fetch(media, {
+    signal: AbortSignal.timeout(15000),
+    headers: {
+      "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
+    },
+  });
+  url = res.url;
+  if (res.status === 429) throw "ratelimit";
 
-    if (res.redirected) {
-      const redirectHost = new URL(res.url).host;
-      const remoteIP = await lookup(redirectHost);
-      const parsedIP = ipaddr.parse(remoteIP.address);
-      if (parsedIP.range() !== "unicast") return;
-    }
+  if (res.redirected) {
+    const redirectHost = new URL(res.url).host;
+    const remoteIP = await lookup(redirectHost);
+    const parsedIP = ipaddr.parse(remoteIP.address);
+    if (parsedIP.range() !== "unicast") return;
+  }
 
-    if (res.headers.has("content-range")) {
-      const contentRange = res.headers.get("content-range");
-      if (contentRange) size = Number.parseInt(contentRange.split("/")[1]);
-    } else if (res.headers.has("content-length")) {
-      const contentLength = res.headers.get("content-length");
-      if (contentLength) size = Number.parseInt(contentLength);
-    }
+  if (res.headers.has("content-range")) {
+    const contentRange = res.headers.get("content-range");
+    if (contentRange) size = Number.parseInt(contentRange.split("/")[1]);
+  } else if (res.headers.has("content-length")) {
+    const contentLength = res.headers.get("content-length");
+    if (contentLength) size = Number.parseInt(contentLength);
+  }
 
-    if (size > 41943040) {
-      // 40 MB
-      throw "large";
-    }
+  if (size > 41943040) {
+    // 40 MB
+    throw "large";
+  }
 
-    if (!res.body) return;
+  if (!res.body) return;
 
-    stream = await fileTypeStream(res.body, { sampleSize: 1024 });
-    if (!stream.fileType?.mime) {
-      await stream.cancel();
-      return;
-    }
-  } finally {
-    clearTimeout(timeout);
+  stream = await fileTypeStream(res.body, { sampleSize: 1024 });
+  if (!stream.fileType?.mime) {
+    await stream.cancel();
+    return;
   }
 
   if (typeMedia.length === 0) {
