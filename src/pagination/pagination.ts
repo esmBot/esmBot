@@ -16,7 +16,7 @@ import InteractionCollector from "./awaitinteractions.ts";
 type Pages = (CreateMessageOptions | InteractionContent)[];
 
 interface ClassType<InstanceType extends {} = {}> extends Function {
-  new(...args: any[]): InstanceType;
+  new (...args: any[]): InstanceType;
   prototype: InstanceType;
 }
 
