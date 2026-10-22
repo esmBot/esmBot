@@ -1,12 +1,12 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 import * as collections from "#utils/collections.js";
 import { convFlagType, flagMap } from "#utils/handler.js";
 import * as help from "#utils/help.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
-class HelpCommand extends Command {
+class HelpCommand extends PaginationMixin(Command) {
   async run() {
     if (!this.permissions.has("EMBED_LINKS")) {
       this.success = false;
@@ -141,11 +141,7 @@ class HelpCommand extends Command {
         ],
       });
     }
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   static description = "Gets a list of commands";

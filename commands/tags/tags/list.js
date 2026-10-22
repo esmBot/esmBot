@@ -1,7 +1,7 @@
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 
-class TagsListCommand extends Command {
+class TagsListCommand extends PaginationMixin(Command) {
   async run() {
     if (!this.database) return this.getString("noDatabase");
     if (!this.guild) return this.getString("guildOnly");
@@ -40,11 +40,7 @@ class TagsListCommand extends Command {
     }
     if (embeds.length === 0) return this.getString("commands.responses.tags.noTags");
     this.success = true;
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   static description = "Lists every tag in this server";

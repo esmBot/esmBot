@@ -1,9 +1,9 @@
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 import * as collections from "#utils/collections.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
-class CountCommand extends Command {
+class CountCommand extends PaginationMixin(Command) {
   async run() {
     if (!this.database) return this.getString("noDatabase");
     const cmd = (this.getOptionString("command") ?? this.args.join(" ")).trim();
@@ -65,11 +65,7 @@ class CountCommand extends Command {
         ],
       });
     }
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   static description = "Gets how many times every command was used";

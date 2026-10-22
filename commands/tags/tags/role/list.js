@@ -1,7 +1,7 @@
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 
-class TagsRoleListCommand extends Command {
+class TagsRoleListCommand extends PaginationMixin(Command) {
   async run() {
     this.success = false;
     if (!this.database) return this.getString("noDatabase");
@@ -41,11 +41,7 @@ class TagsRoleListCommand extends Command {
     }
     if (embeds.length === 0) return this.getString("commands.responses.tags.noRoles");
     this.success = true;
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   static description = "List the roles that are capable of managing tags";

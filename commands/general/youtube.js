@@ -1,11 +1,11 @@
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
 import serversConfig from "#utils/servers.js";
 /** @import { CommandFlag, SearXNGResults } from "#utils/types.js" */
 
-class YouTubeCommand extends Command {
+class YouTubeCommand extends PaginationMixin(Command) {
   async run() {
     const query = this.getOptionString("query") ?? this.args.join(" ");
     this.success = false;
@@ -50,11 +50,7 @@ class YouTubeCommand extends Command {
       });
     }
     this.success = true;
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      messages,
-    );
+    return this.paginator(messages);
   }
 
   /** @type {CommandFlag[]} */

@@ -1,8 +1,8 @@
 import MusicCommand from "#cmd-classes/musicCommand.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 import { formatDuration } from "#utils/misc.js";
 
-class MusicQueueCommand extends MusicCommand {
+class MusicQueueCommand extends PaginationMixin(MusicCommand) {
   async run() {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
@@ -71,11 +71,7 @@ class MusicQueueCommand extends MusicCommand {
     }
     if (embeds.length === 0) return this.getString("sound.noQueue");
     this.success = true;
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   static description = "Shows the current queue";

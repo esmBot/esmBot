@@ -1,11 +1,11 @@
 import Command from "#cmd-classes/command.js";
-import paginator from "#pagination";
+import { PaginationMixin } from "#pagination";
 import logger from "#utils/logger.js";
 import { random } from "#utils/misc.js";
 import serversConfig from "#utils/servers.js";
 /** @import { CommandFlag, SearXNGResults } from "#utils/types.js" */
 
-class ImageSearchCommand extends Command {
+class ImageSearchCommand extends PaginationMixin(Command) {
   async run() {
     this.success = false;
     if (!this.permissions.has("EMBED_LINKS")) return this.getString("permissions.noEmbedLinks");
@@ -84,11 +84,7 @@ class ImageSearchCommand extends Command {
       });
     }
     this.success = true;
-    return paginator(
-      this.client,
-      { message: this.message, interaction: this.interaction, author: this.author },
-      embeds,
-    );
+    return this.paginator(embeds);
   }
 
   /** @type {CommandFlag[]} */
