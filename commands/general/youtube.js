@@ -22,10 +22,6 @@ class YouTubeCommand extends PaginationMixin(Command) {
       );
       baseUrl = random(serversConfig.searx);
     }
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 6000);
     const videos = await fetch(
       new URL(
         server?.type === "degoog"
@@ -34,10 +30,9 @@ class YouTubeCommand extends PaginationMixin(Command) {
         baseUrl,
       ),
       {
-        signal: controller.signal,
+        signal: AbortSignal.timeout(6000),
       },
     ).then((res) => /** @type {Promise<SearXNGResults>} */ (res.json()));
-    clearTimeout(timeout);
     if (videos.results.length === 0) return this.getString("commands.responses.youtube.noResults");
     for (const [i, value] of videos.results.entries()) {
       messages.push({

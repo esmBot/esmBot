@@ -389,20 +389,12 @@ async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws:
     const form = new FormData();
     const filename = `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`;
     form.set("files[0]", new Blob([jobObject.data]), filename);
-    const controller = new AbortController();
-    const timeout = setTimeout(
-      () => {
-        controller.abort();
-      },
-      Number(process.env.REST_TIMEOUT_MS) || 15000,
-    );
     try {
       const res = await fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
         method: "POST",
-        signal: controller.signal,
+        signal: AbortSignal.timeout(Number(process.env.REST_TIMEOUT_MS) || 15000),
         body: form,
       });
-      clearTimeout(timeout);
       if (!res.ok) {
         let resObj: string | object;
         try {

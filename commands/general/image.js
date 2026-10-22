@@ -26,10 +26,6 @@ class ImageSearchCommand extends PaginationMixin(Command) {
         engines: ["duckduckgo images", "privacywall images", "google cse images"],
       };
     }
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 6000);
     const rawImages = await fetch(
       new URL(
         server.type === "degoog"
@@ -38,10 +34,9 @@ class ImageSearchCommand extends PaginationMixin(Command) {
         server.url,
       ),
       {
-        signal: controller.signal,
+        signal: AbortSignal.timeout(6000),
       },
     ).then((res) => /** @type {Promise<SearXNGResults>} */ (res.json()));
-    clearTimeout(timeout);
     if (rawImages.results.length === 0) return this.getString("commands.responses.image.noResults");
     const images = rawImages.results
       .map((val) => {

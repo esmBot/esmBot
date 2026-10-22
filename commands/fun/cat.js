@@ -3,17 +3,12 @@ import Command from "#cmd-classes/command.js";
 class CatCommand extends Command {
   async run() {
     await this.acknowledge();
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 3000);
     try {
       const data = await fetch("https://files.esmbot.net/cta", {
         method: "HEAD",
-        signal: controller.signal,
+        signal: AbortSignal.timeout(3000),
         redirect: "manual",
       });
-      clearTimeout(timeout);
       return `https://files.esmbot.net${data.headers.get("location")}`;
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {

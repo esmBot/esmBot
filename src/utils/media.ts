@@ -88,18 +88,13 @@ export async function request(
 
   let size = 0;
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, 15000);
   try {
     const res = await fetch(media, {
-      signal: controller.signal,
+      signal: AbortSignal.timeout(15000),
       headers: {
         "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
       },
     });
-    clearTimeout(timeout);
     url = res.url;
     if (res.status === 429) throw "ratelimit";
 

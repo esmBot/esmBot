@@ -5,15 +5,10 @@ class DonateCommand extends Command {
   async run() {
     await this.acknowledge();
     let desc = "";
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 5000);
     try {
-      const patrons = await fetch("https://esmbot.net/patrons", { signal: controller.signal }).then(
+      const patrons = await fetch("https://esmbot.net/patrons", { signal: AbortSignal.timeout(3000) }).then(
         (data) => /** @type {Promise<string[]>} */ (data.json()),
       );
-      clearTimeout(timeout);
       for (const patron of patrons) {
         desc += `\n- **${patron}**`;
       }
