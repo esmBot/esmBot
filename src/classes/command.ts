@@ -1,3 +1,4 @@
+import type { ServerResponse } from "node:http";
 import process from "node:process";
 import {
   type AllowedMentions,
@@ -39,6 +40,7 @@ type CommandOptionsClassic = {
 type CommandOptionsApplication = {
   type: "application";
   interaction: CommandInteraction;
+  res?: ServerResponse;
 };
 
 export type CommandOptions = CommandOptionsClassic | CommandOptionsApplication;
@@ -63,6 +65,7 @@ class Command {
   member?: Member | null;
   content?: string;
   reference?: { messageReference: MessageReference; allowedMentions: AllowedMentions };
+  res?: ServerResponse;
   private options?: { [key: string]: string | number | boolean } | null;
 
   constructor(client: Client, database: DatabasePlugin | undefined, options: CommandOptions) {
@@ -103,6 +106,7 @@ class Command {
         },
       };
     } else {
+      this.res = options.res;
       this.interaction = options.interaction;
       this.locale = options.interaction.locale as Locale;
       this.cmdName = options.interaction.data.options.raw.some((v) => v.type === 1 || v.type === 2)
@@ -149,11 +153,34 @@ class Command {
     options: { ephemeral?: boolean; mention?: boolean } = {},
   ): Promise<Message> {
     if (this.interaction) {
-      const res = await this.interaction.createFollowup({
-        flags: options.ephemeral ? 64 : 0,
-        ...(content as InteractionContent),
-      });
-      return res.message;
+      let res;
+      if (this.interaction.acknowledged) {
+        res = await this.interaction.createFollowup({
+          flags: options.ephemeral ? 64 : 0,
+          ...(content as InteractionContent),
+        });
+      } else if (this.res && !this.res.writableEnded && !content.files) {
+        // TODO: figure out a method to send files as an HTTP interaction response
+        this.res.setHeader("Content-Type", "application/json");
+        this.res.end(
+          JSON.stringify({
+            type: 4,
+            data: {
+              flags: options.ephemeral ? 64 : 0,
+              ...(content as InteractionContent),
+              components: content.components ? this.client.util.componentsToRaw(content.components) : undefined,
+              embeds: content.embeds ? this.client.util.embedsToRaw(content.embeds) : undefined,
+            },
+          }),
+        );
+        this.interaction.acknowledged = true;
+      } else {
+        res = await this.interaction.createMessage({
+          flags: options.ephemeral ? 64 : 0,
+          ...(content as InteractionContent),
+        });
+      }
+      return res?.getMessage() ?? this.interaction.getOriginal();
     }
     if (this.message && this.reference) {
       return this.client.rest.channels.createMessage(this.message.channelID, {
@@ -168,6 +195,25 @@ class Command {
   async acknowledge() {
     if (this.type === "classic" && this.message) {
       await this.client.rest.channels.sendTyping(this.message.channelID);
+    } else if (this.interaction && !this.interaction.acknowledged) {
+      const flags =
+        (this.constructor as typeof Command).ephemeral || this.interaction.data.options.getBoolean("ephemeral", false)
+          ? 64
+          : undefined;
+      if (this.res && !this.res.writableEnded) {
+        this.res.setHeader("Content-Type", "application/json");
+        this.res.end(
+          JSON.stringify({
+            type: 5,
+            data: {
+              flags,
+            },
+          }),
+        );
+        this.interaction.acknowledged = true;
+      } else {
+        await this.interaction.defer(flags);
+      }
     }
   }
 

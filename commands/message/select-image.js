@@ -9,6 +9,7 @@ class SelectImageCommand extends Command {
   async run() {
     const message = this.interaction?.data.target;
     if (!(message instanceof Message)) throw Error("Target is not a message");
+    await this.acknowledge();
     const mediaArr = await mediaDetect(this.client, this.permissions, message, this.interaction, true).catch((e) => {
       if (e.name === "AbortError") return this.getString("image.timeout");
       throw e;

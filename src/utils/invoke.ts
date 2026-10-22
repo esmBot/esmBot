@@ -21,11 +21,25 @@ export async function invokeCommand(command: Command) {
     const result = await command.run();
     const tookLong = Date.now() - startTime >= 180000;
 
+    const ephemeral =
+      !command.success ||
+      (command.constructor as typeof Command).ephemeral ||
+      command.interaction?.data.options.getBoolean("ephemeral", false);
+
     let res;
     if (typeof result === "string") {
-      res = await command.reply({ content: result }, { ephemeral: !command.success, mention: true });
+      res = await command.reply(
+        { content: result },
+        {
+          ephemeral,
+          mention: true,
+        },
+      );
     } else if (typeof result === "object") {
-      res = await command.reply(result, { ephemeral: !command.success, mention: tookLong });
+      res = await command.reply(result, {
+        ephemeral,
+        mention: tookLong,
+      });
     } else {
       logger.debug(`Unknown return type for command ${command.cmdName}: ${result} (${typeof result})`);
     }

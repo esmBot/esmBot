@@ -19,6 +19,7 @@ class MusicPlayCommand extends MusicCommand {
       this.success = false;
       return this.getString("commands.responses.play.noInput");
     }
+    await this.acknowledge();
     let query = input ? input.trim() : "";
     const attachment = this.type === "classic" ? this.message?.attachments.first() : undefined;
     if (query.startsWith("||") && query.endsWith("||")) {

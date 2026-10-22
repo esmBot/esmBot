@@ -47,6 +47,9 @@ class MediaCommand extends Command {
     if (running && running.getTime() - timestamp.getTime() < 5000) {
       return this.getString("image.slowDown");
     }
+
+    await this.acknowledge();
+
     // before awaiting the command result, add this command to the set of running commands
     runningCommands.set(this.author.id, timestamp);
     pendingCommands.delete(this.author.id);

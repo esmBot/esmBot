@@ -1,8 +1,9 @@
 // oceanic doesn't come with a method to wait for interactions by default, so we make our own
+import type { ServerResponse } from "node:http";
 import { TypedEmitter, type Client, type ComponentInteraction, type ModalSubmitInteraction } from "oceanic.js";
 
 interface InteractionCollectorEvents {
-  interaction: [interaction: ComponentInteraction | ModalSubmitInteraction];
+  interaction: [interaction: ComponentInteraction | ModalSubmitInteraction, res?: ServerResponse];
   end: [deleted?: boolean];
 }
 

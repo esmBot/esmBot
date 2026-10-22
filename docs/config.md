@@ -31,6 +31,8 @@ These variables that are not necessarily required for the bot to run, but can gr
 - `CLUSTER_PORT`: The HTTP port to serve cluster management endpoints and [Prometheus](https://prometheus.io/)-compatible metrics on.
 - `API_TYPE`: Set this to "none" if you want to process all media locally. Alternatively, set it to "ws" to use a media API server specified in the `media` block of `config/servers.json`.
 - `ADMIN_SERVER`: A Discord server/guild ID to limit owner-only commands such as eval to.
+- `INTERACTIONS_PORT`: The port to serve the HTTP interaction endpoints on. Both this and `PUBLIC_KEY` need to be set to enable the HTTP interactions server.
+- `PUBLIC_KEY`: Your bot's public key; setting this to a non-empty value will enable the HTTP interactions server on the port specified by `INTERACTIONS_PORT`. You can find this in the [Discord developer portal](https://discord.com/developers/applications) under your application's Bot tab.
 
 ## JSON
 

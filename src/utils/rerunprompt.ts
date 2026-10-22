@@ -36,10 +36,21 @@ export function awaitRerun(interaction: CommandInteraction, message: Message, co
     clicked = true;
     collector.stop();
     try {
-      await click.editParent({
+      const data = {
         content: getString("image.rerunning", { locale: click.locale, params: { command: command.cmdName } }),
         components: [],
-      });
+      };
+      if (command.res && !command.res.writableEnded) {
+        command.res.setHeader("Content-Type", "application/json");
+        command.res.end(
+          JSON.stringify({
+            type: 7,
+            data,
+          }),
+        );
+      } else {
+        await click.editParent(data);
+      }
     } catch (e) {
       logger.warn(`Failed to update re-run prompt: ${e}`);
     }

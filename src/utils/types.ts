@@ -1,3 +1,4 @@
+import type { ServerResponse } from "node:http";
 import type { ApplicationCommandOptions, Client, CombinedApplicationCommandOption, Constants } from "oceanic.js";
 import type Command from "#cmd-classes/command.js";
 import type { DatabasePlugin } from "../database.ts";
@@ -119,6 +120,7 @@ export interface SearXNGResults {
 export interface EventParams {
   client: Client;
   database: DatabasePlugin | undefined;
+  res?: ServerResponse;
 }
 
 export function isError(error: unknown): error is NodeJS.ErrnoException {

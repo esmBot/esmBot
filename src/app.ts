@@ -39,6 +39,7 @@ import commandConfig from "#config/commands.json" with { type: "json" };
 import { locales, paths } from "#utils/collections.js";
 import detectRuntime from "#utils/detectRuntime.js";
 import { load } from "#utils/handler.js";
+import { createInteractionServer } from "#utils/httpInteractions.js";
 import logger from "#utils/logger.js";
 import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
 import { endBroadcast, exit, getVers, initLog, startBroadcast } from "#utils/misc.js";
@@ -216,6 +217,17 @@ process.on("SIGTERM", async () => {
   logger.info("SIGTERM detected, shutting down...");
   await exit(client, database);
 });
+
+if (process.env.PUBLIC_KEY && process.env.INTERACTIONS_PORT && !Number.isNaN(process.env.INTERACTIONS_PORT)) {
+  const pubKey = await crypto.subtle.importKey("raw", Buffer.from(process.env.PUBLIC_KEY, "hex"), "Ed25519", false, [
+    "verify",
+  ]);
+  const interactServer = createInteractionServer(client, pubKey, database);
+  interactServer.listen(Number(process.env.INTERACTIONS_PORT));
+  interactServer.on("listening", () => {
+    logger.info(`Started HTTP interactions server on port ${process.env.INTERACTIONS_PORT}`);
+  });
+}
 
 try {
   await client.connect();

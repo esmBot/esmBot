@@ -39,6 +39,7 @@ ${
       });
     } else {
       if (!this.interaction) throw Error("No interaction found");
+      await this.acknowledge();
       const pingMessage = await this.interaction.getOriginal();
       let shard;
       if (this.interaction.guildID) {

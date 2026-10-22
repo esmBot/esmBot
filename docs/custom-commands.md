@@ -69,6 +69,7 @@ The parameters available to your command consist of the following:
 - `this.locale`: The language/locale being used. For classic commands, this is always the value of the `LOCALE` environment variable (or "en-US" if it hasn't been set), and for application commands this is the language set by the user that ran the command.
 - `this.cmdName`: The name of the running command. If this is a subcommand, it should have the full name of the subcommand (e.g. `base64 decode`). Otherwise, it should always be the same as the running command's filename without the .js extension.
 - `this.options`: When run as a "classic" command, this is an object of special arguments (e.g. `--argument=true`) passed to the command. These arguments are stored in a key/value format, so following the previous example, `this.options.argument` would return true. When run as a slash command, this is an object of every argument passed to the command. **This parameter is deprecated. It's recommended to use the `this.getOption*` helper functions instead.**
+- `this.res`: When run via an HTTP interaction, this is a [`ServerResponse`](https://nodejs.org/api/http.html#class-httpserverresponse) object of the HTTP response stream/handle. This can be used to respond to the interaction, add headers, and check the interaction response status.
 
 Some options are only available depending on the context/original message type, which can be checked with `this.type`. The options only available with "classic" messages are listed below:
 
@@ -105,7 +106,7 @@ static flags = [{
 
 In addition, a few helper functions are available inside the `Command` class:
 
-- `this.acknowledge()`: Sends a typing indicator in the current channel. Only works with classic commands.
+- `this.acknowledge()`: Acknowledges the command request and sends a loading indicator. When used with classic commands, this sends a typing indicator; when used with application commands, this sends a defer response.
 - `this.getString(key, returnNull)`: Gets a localized string for the input locale. If `returnNull` is set to false (the default) and the string does not exist on the input or default locales, the `key` string will be returned; otherwise, `null` will be returned.
 - `this.clean(text)`: Strips and normalizes user, role, and channel mentions found in `text`
 

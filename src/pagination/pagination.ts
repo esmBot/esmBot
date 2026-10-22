@@ -85,10 +85,19 @@ export function PaginationMixin<TBase extends ClassType<Command>>(Base: TBase) {
       if (!currentPage) return;
       if (this.pages && this.pages.length > 1) {
         const interactionCollector = new InteractionCollector(this.client);
-        interactionCollector.on("interaction", async (interaction) => {
+        interactionCollector.on("interaction", async (interaction, res) => {
           try {
             if (interaction.data.customID !== "jump") {
-              await interaction.deferUpdate();
+              if (res && !res.writableEnded) {
+                res.setHeader("Content-Type", "application/json");
+                res.end(
+                  JSON.stringify({
+                    type: 6,
+                  }),
+                );
+              } else {
+                await interaction.deferUpdate();
+              }
             }
           } catch (e) {
             logger.warn(`Could not defer update, cannot continue further with pagination: ${e}`);
@@ -161,7 +170,21 @@ export function PaginationMixin<TBase extends ClassType<Command>>(Base: TBase) {
                     j++;
                   }
                   try {
-                    await interaction.createModal(jumpModal);
+                    if (res && !res.writableEnded) {
+                      res.setHeader("Content-Type", "application/json");
+                      res.end(
+                        JSON.stringify({
+                          type: 9,
+                          data: {
+                            custom_id: jumpModal.customID,
+                            ...jumpModal,
+                            components: this.client.util.componentsToRaw(jumpModal.components),
+                          },
+                        }),
+                      );
+                    } else {
+                      await interaction.createModal(jumpModal);
+                    }
                   } catch (e) {
                     logger.warn(`Failed to create pagination jump modal: ${e}`);
                   }
