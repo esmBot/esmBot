@@ -2,13 +2,12 @@ import {
   Constants,
   type CreateMessageOptions,
   type InteractionContent,
-  type Message,
   type MessageActionRow,
   type ModalData,
   type ModalLabel,
   type StringSelectMenu,
 } from "oceanic.js";
-import type Command from "#cmd-classes/command.js";
+import type { default as Command, Reply } from "#cmd-classes/command.js";
 import { collectors } from "../utils/collections.ts";
 import logger from "../utils/logger.ts";
 import InteractionCollector from "./awaitinteractions.ts";
@@ -81,9 +80,10 @@ export function PaginationMixin<TBase extends ClassType<Command>>(Base: TBase) {
       return Object.assign(pages[this.page], pages.length > 1 ? this.components : {});
     }
 
-    async finalize(currentPage: Message) {
-      if (!currentPage) return;
+    async finalize(reply?: Reply) {
+      if (!reply) return;
       if (this.pages && this.pages.length > 1) {
+        let currentPage = await reply.getMessage();
         const interactionCollector = new InteractionCollector(this.client);
         interactionCollector.on("interaction", async (interaction, res) => {
           try {

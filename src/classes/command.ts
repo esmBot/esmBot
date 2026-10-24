@@ -25,6 +25,8 @@ import { cleanInteraction, cleanMessage } from "#utils/misc.js";
 import type { CommandFlag, CommandType } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 
+export type Reply = { getMessage(): Promise<Message> };
+
 type CommandOptionsClassic = {
   type: "classic";
   cmdName: string;
@@ -143,7 +145,7 @@ class Command {
   /**
    * The function to run after sending the output.
    */
-  async finalize(_res?: Message) {}
+  async finalize(_reply?: Reply) {}
 
   /**
    * Replies to the message or interaction that invoked the command.
@@ -151,15 +153,14 @@ class Command {
   async reply(
     content: InteractionContent | CreateMessageOptions,
     options: { ephemeral?: boolean; mention?: boolean } = {},
-  ): Promise<Message> {
+  ): Promise<Reply> {
     if (this.interaction) {
-      let res;
-      if (this.interaction.acknowledged) {
-        res = await this.interaction.createFollowup({
-          flags: options.ephemeral ? 64 : 0,
-          ...(content as InteractionContent),
-        });
-      } else if (this.res && !this.res.writableEnded && !content.files) {
+      const payload = {
+        flags: options.ephemeral ? 64 : 0,
+        ...(content as InteractionContent),
+      };
+      if (interaction.acknowledged) return interaction.createFollowup(payload);
+      if (this.res && !this.res.writableEnded && !content.files) {
         // TODO: figure out a method to send files as an HTTP interaction response
         this.res.setHeader("Content-Type", "application/json");
         this.res.end(
@@ -173,21 +174,18 @@ class Command {
             },
           }),
         );
-        this.interaction.acknowledged = true;
-      } else {
-        res = await this.interaction.createMessage({
-          flags: options.ephemeral ? 64 : 0,
-          ...(content as InteractionContent),
-        });
+        interaction.acknowledged = true;
+        return { getMessage: () => interaction.getOriginal() };
       }
-      return res?.getMessage() ?? this.interaction.getOriginal();
+      return interaction.createMessage(payload);
     }
     if (this.message && this.reference) {
-      return this.client.rest.channels.createMessage(this.message.channelID, {
+      const message = await this.client.rest.channels.createMessage(this.message.channelID, {
         ...(content as CreateMessageOptions),
         ...this.reference,
         allowedMentions: { repliedUser: options.mention ?? false },
       });
+      return { getMessage: async () => message };
     }
     throw Error("Unknown command type");
   }

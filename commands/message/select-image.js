@@ -39,12 +39,13 @@ class SelectImageCommand extends Command {
   }
 
   /**
-   * @param {Message} [res]
+   * @param {import("#cmd-classes/command.js").Reply} [reply]
    */
-  async finalize(res) {
-    if (!res?.components.length || !this.interaction) return;
+  async finalize(reply) {
+    if (!reply || !this.interaction || !pendingCommands.has(this.author.id)) return;
+    const res = await reply.getMessage();
     const pending = pendingCommands.get(this.author.id);
-    if (!pending) return;
+    if (!res.components.length || !pending) return;
     pendingCommands.delete(this.author.id);
     awaitRerun(this.interaction, res, pending);
   }

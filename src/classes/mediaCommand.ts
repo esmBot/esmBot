@@ -19,7 +19,7 @@ import mediaDetect from "#utils/mediadetect.js";
 import { clean, isEmpty, maxFileSize, random } from "#utils/misc.js";
 import { upload } from "#utils/tempimages.js";
 import type { CommandFlag, MediaParams, MediaMeta, MediaTypes } from "#utils/types.js";
-import Command from "./command.ts";
+import Command, { type Reply } from "./command.ts";
 
 class MediaCommand extends Command {
   params?: object;
@@ -230,9 +230,9 @@ class MediaCommand extends Command {
     }
   }
 
-  async finalize(res?: Message) {
-    if (!this.interaction || !res) return;
-    const attachment = res.attachments.first();
+  async finalize(reply?: Reply) {
+    if (!this.interaction || !reply) return;
+    const attachment = (await reply.getMessage()).attachments.first();
     if (attachment) {
       const path = new URL(attachment.proxyURL);
       path.searchParams.set("animated", "true");
