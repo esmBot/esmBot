@@ -1,6 +1,7 @@
 #include <vips/vips8>
 
 #include "common.h"
+#include "gifcanvas.h"
 
 using namespace std;
 using namespace vips;
@@ -48,12 +49,20 @@ CmdOutput esmb::Image::Caption(const string &type, string &outType, const char *
       .ifthenelse(255, text)
       .gravity(VIPS_COMPASS_DIRECTION_CENTRE, width, text.height() + size, VImage::option()->set("extend", "white"));
 
+  auto captionFrame = [&](VImage frame) {
+    return captionImage.join(frame, VIPS_DIRECTION_VERTICAL,
+                             VImage::option()->set("background", 0xffffff)->set("expand", true));
+  };
+
+  if (type == "gif" && outType == "gif") {
+    if (auto output = GifExtendCanvas(bufferdata, bufferLength, in, captionFrame, 0, captionImage.height(), shouldKill))
+      return *output;
+  }
+
   vector<VImage> img;
   for (int i = 0; i < nPages; i++) {
     VImage img_frame = nPages > 1 ? in.crop(0, i * pageHeight, width, pageHeight) : in;
-    VImage frame = captionImage.join(img_frame, VIPS_DIRECTION_VERTICAL,
-                                     VImage::option()->set("background", 0xffffff)->set("expand", true));
-    img.push_back(frame);
+    img.push_back(captionFrame(img_frame));
   }
   VImage final = VImage::arrayjoin(img, VImage::option()->set("across", 1));
   final.set(VIPS_META_PAGE_HEIGHT, pageHeight + captionImage.height());

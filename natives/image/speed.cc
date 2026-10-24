@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <cstdint>
 #include <vips/vips8>
 
+#include "../common/gif.h"
 #include "../common/riff.h"
 #include "common.h"
 
@@ -11,13 +13,6 @@ FunctionArgs esmb::Image::SpeedArgs = {
   {"slow",  {typeid(bool), false} },
   {"speed", {typeid(float), false}}
 };
-
-void *memset16(void *m, uint16_t val, size_t count) {
-  uint16_t *buf = (uint16_t *)m;
-
-  while (count--) *buf++ = val;
-  return m;
-}
 
 char *vipsRemove(const char *data, size_t length, size_t &dataSize, float speed, string suffix, bool *shouldKill) {
   VOption *options = VImage::option()->set("access", "sequential");
@@ -56,42 +51,20 @@ CmdOutput esmb::Image::Speed([[maybe_unused]] const string &type, [[maybe_unused
   memcpy(fileData, bufferdata, bufferLength);
 
   if (type == "gif") {
-    const char *match = "\x00\x21\xF9\x04";
-
-    vector<uint16_t> old_delays;
+    unsigned char *buf = reinterpret_cast<unsigned char *>(fileData);
     bool removeFrames = false;
-    char *lastPos;
 
-    lastPos = static_cast<char *>(memchr(fileData, '\x00', bufferLength));
-    while (lastPos != NULL) {
-      if (static_cast<size_t>(bufferLength - (lastPos - fileData)) < 7 || memcmp(lastPos, match, 4) != 0) {
-        lastPos = static_cast<char *>(memchr(lastPos + 1, '\x00', (bufferLength - (lastPos - fileData)) - 1));
-        continue;
-      }
-      uint16_t old_delay;
-      memcpy(&old_delay, lastPos + 5, 2);
-      old_delays.push_back(old_delay);
-      lastPos = static_cast<char *>(memchr(lastPos + 1, '\x00', (bufferLength - (lastPos - fileData)) - 1));
-    }
-
-    int currentFrame = 0;
-    lastPos = static_cast<char *>(memchr(fileData, '\x00', bufferLength));
-    while (lastPos != NULL) {
-      if (static_cast<size_t>(bufferLength - (lastPos - fileData)) < 7 || memcmp(lastPos, match, 4) != 0) {
-        lastPos = static_cast<char *>(memchr(lastPos + 1, '\x00', (bufferLength - (lastPos - fileData)) - 1));
-        continue;
-      }
-      if (currentFrame >= static_cast<int>(old_delays.size())) break;
-      uint16_t new_delay = slow ? old_delays[currentFrame] * speed : old_delays[currentFrame] / speed;
-      if (!slow && new_delay <= 1) {
+    GIF::Block block;
+    for (size_t pos = GIF::firstBlock(buf, bufferLength); pos && GIF::readBlock(buf, bufferLength, pos, block);
+         pos = block.end) {
+      if (!GIF::isGce(buf, block)) continue;
+      unsigned char *delay = buf + block.pos + GIF::GCE_DELAY_OFFSET;
+      uint16_t newDelay = min(slow ? readUint16LE(delay) * speed : readUint16LE(delay) / speed, (float)UINT16_MAX);
+      if (!slow && newDelay <= 1) {
         removeFrames = true;
         break;
       }
-
-      memset16(lastPos + 5, new_delay, 1);
-
-      lastPos = static_cast<char *>(memchr(lastPos + 1, '\x00', (bufferLength - (lastPos - fileData)) - 1));
-      ++currentFrame;
+      writeUint16LE(delay, newDelay);
     }
 
     if (removeFrames) {
