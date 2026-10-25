@@ -21,6 +21,7 @@ namespace esmb::Image {
   declare_input_func(Globe);
   declare_input_func(Invert);
   declare_input_func(Jpeg);
+  declare_input_func(Jumble);
 #if LQR_ENABLED
   declare_input_func(Magik);
 #endif
@@ -71,6 +72,7 @@ namespace esmb::Image {
   declare_input_args(GlobeArgs);
   declare_input_args(HomebrewArgs);
   declare_input_args(JpegArgs);
+  declare_input_args(JumbleArgs);
   declare_input_args(MemeArgs);
   declare_input_args(MirrorArgs);
   declare_input_args(MotivateArgs);

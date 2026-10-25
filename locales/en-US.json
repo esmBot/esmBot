@@ -58,6 +58,7 @@
       "implode": "Implodes an image",
       "invert": "Inverts an image",
       "jpeg": "Adds JPEG compression to an image",
+      "jumble": "Jumbles/shuffles an image sequence",
       "magik": "Adds a content aware scale effect to an image",
       "meme": "Generates a meme from an image (separate top/bottom text with a comma)",
       "motivate": "Generates a motivational poster",
@@ -196,6 +197,9 @@
       },
       "jpeg": {
         "quality": "quality"
+      },
+      "jumble": {
+        "groupsize": "groupsize"
       },
       "meme": {
         "case": "case",
@@ -422,6 +426,9 @@
       "jpeg": {
         "quality": "Set the JPEG quality (default: 1)"
       },
+      "jumble": {
+        "groupsize": "Set the amount of frames to group together when jumbling (default: 3)"
+      },
       "meme": {
         "case": "Make the meme text case-sensitive (allows for lowercase text)",
         "font": "Specify the font you want to use (default: impact)"
@@ -601,6 +608,7 @@
       "implode": "implode",
       "invert": "invert",
       "jpeg": "jpeg",
+      "jumble": "jumble",
       "magik": "magik",
       "meme": "meme",
       "motivate": "motivate",
@@ -668,6 +676,7 @@
       "implode": "You need to provide an image/GIF to implode!",
       "invert": "You need to provide an image/GIF to invert!",
       "jpeg": "You need to provide an image/GIF to add more JPEG!",
+      "jumble": "You need to provide an image/GIF to jumble!",
       "watermark kinemaster": "You need to provide an image/GIF to add a KineMaster watermark!",
       "magik": "You need to provide an image/GIF to add some magik!",
       "meme": "You need to provide an image/GIF to generate a meme!",

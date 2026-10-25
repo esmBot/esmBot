@@ -33,6 +33,7 @@ namespace esmb {
       {"globe",      &Globe     },
       {"invert",     &Invert    },
       {"jpeg",       &Jpeg      },
+      {"jumble",     &Jumble    },
 #ifdef LQR_ENABLED
       {"magik",      &Magik     },
 #endif
@@ -90,6 +91,7 @@ namespace esmb {
       {"globe",      &GlobeArgs     },
       {"homebrew",   &HomebrewArgs  },
       {"jpeg",       &JpegArgs      },
+      {"jumble",     &JumbleArgs    },
       {"meme",       &MemeArgs      },
       {"mirror",     &MirrorArgs    },
       {"motivate",   &MotivateArgs  },

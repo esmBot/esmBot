@@ -26,6 +26,7 @@ set(IMAGE_SOURCE_FILES natives/image/common.cc
   natives/image/homebrew.cc
   natives/image/invert.cc
   natives/image/jpeg.cc
+  natives/image/jumble.cc
   natives/image/meme.cc
   natives/image/mirror.cc
   natives/image/motivate.cc
