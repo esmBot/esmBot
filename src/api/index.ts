@@ -410,7 +410,10 @@ async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws:
       }
       r = (await res.json()) as RawMessage;
     } catch (e) {
-      error(`Error while sending job ${job.id}, will attempt to send back to the bot: ${e}`, job.num);
+      error(
+        `Error while sending job ${job.id}, will attempt to send back to the bot: ${e instanceof Error && e.cause ? e.cause : e}`,
+        job.num,
+      );
     }
   }
 
