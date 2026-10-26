@@ -1,15 +1,7 @@
 import { Buffer } from "node:buffer";
-import process from "node:process";
 import type Command from "#cmd-classes/command.js";
-import detectRuntime from "./detectRuntime.ts";
 import logger from "./logger.ts";
 import { clean } from "./misc.ts";
-
-let Sentry: typeof import("@sentry/node-core") | undefined;
-if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") {
-  const { type } = detectRuntime();
-  Sentry = await import(`@sentry/${type === "node" ? "node-core/light" : type}`);
-}
 
 /**
  * Runs a command and sends its result or error.
@@ -47,13 +39,6 @@ export async function invokeCommand(command: Command) {
     await command.finalize(res);
   } catch (e) {
     const error = e as Error;
-    Sentry?.captureException(error, {
-      tags: {
-        process: process.env.pm_id ? Number.parseInt(process.env.pm_id) - 1 : 0,
-        cmdName: command.cmdName,
-        args,
-      },
-    });
     logger.error(
       `Error occurred in ${command.type} command ${command.cmdName} with arguments ${args}: ${error.stack || error}`,
     );

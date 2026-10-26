@@ -65,7 +65,7 @@ const optionalReplace = (token: string) => {
   return token === undefined || token === "" ? "" : token === "true" || token === "false" ? token : "<redacted>";
 };
 
-const sensitiveVars = ["TOKEN", "DB", "KLIPY", "REST_PROXY", "SENTRY_DSN", "OUTPUT", "TEMPDIR"];
+const sensitiveVars = ["TOKEN", "DB", "KLIPY", "REST_PROXY", "OUTPUT", "TEMPDIR"];
 
 // clean(text) to clean message of any private info or mentions
 export function clean(input: unknown, remove: string[] = [], skipEnv = false) {

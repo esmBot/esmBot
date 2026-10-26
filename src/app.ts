@@ -18,8 +18,6 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
   await new Promise((resolve) => setTimeout(resolve, 5000));
 }
 
-if (process.env.SENTRY_DSN && process.env.SENTRY_DSN !== "") await import("./utils/sentry.ts");
-
 if (!process.env.TOKEN) {
   console.error(`No token was provided!
 esmBot requires a valid Discord bot token to function. Generate a new token from the "Bot" tab in your Discord application settings and paste it into your .env file.`);
