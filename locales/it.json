@@ -91,7 +91,8 @@
             "mediareload": "Prova a riconnettere il bot a tutti i server di elaborazione media",
             "mediastats": "Invia alcune statistiche sui server di elaborazione media",
             "slide": "Applica una transizione a scorrimento ad un'immagine",
-            "rotate": "Ruota un'immagine"
+            "rotate": "Ruota un'immagine",
+            "jumble": "Mescola una sequenza di immagini"
         },
         "flagNames": {
             "8ball": {
@@ -316,6 +317,9 @@
             },
             "rotate": {
                 "angle": "angolo"
+            },
+            "jumble": {
+                "groupsize": "dimensionegruppo"
             }
         },
         "flags": {
@@ -541,6 +545,9 @@
             },
             "rotate": {
                 "angle": "Imposta l'angolo di rotazione"
+            },
+            "jumble": {
+                "groupsize": "Specifica il numero di frame da raggruppare insieme nel mescolamento (predefinito: 3)"
             }
         },
         "names": {
@@ -634,7 +641,8 @@
             "mediareload": "mediaricarica",
             "mediastats": "mediastatistiche",
             "slide": "scorri",
-            "rotate": "ruota"
+            "rotate": "ruota",
+            "jumble": "mescola"
         },
         "noImage": {
             "watermark 9gag": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di 9GAG!",
@@ -701,7 +709,8 @@
             "hue": "Devi fornire un'immagine/GIF a cui cambiare la tonalità!",
             "watermark powerdirector": "Devi fornire un'immagine/GIF a cui aggiungere un watermark di PowerDirector!",
             "slide": "Devi fornire un'immagine/GIF a cui applicare una transizione a scorrimento!",
-            "rotate": "Devi fornire un'immagine/GIF da ruotare!"
+            "rotate": "Devi fornire un'immagine/GIF da ruotare!",
+            "jumble": "Devi fornire un'immagine/GIF da mescolare!"
         },
         "noParam": {
             "homebrew": "Devi fornire del testo da cui fare una variante dell'Homebrew Channel!",
@@ -1041,7 +1050,9 @@
         "unknown": "Il risultato non era in un formato riconoscibile. Per piacere, riprova.",
         "animatedAVIF": "I file AVIF animati non sono supportati al momento.",
         "pixelLimit": "Quell'immagine è troppo grande (più di 64 megapixel)! Prova ad usare un'immagine più piccola.",
-        "small": "Quell'immagine è troppo piccola per applicarvi questo effetto!"
+        "small": "Quell'immagine è troppo piccola per applicarvi questo effetto!",
+        "rerun": "Esegui {{command}} con immagine",
+        "rerunning": "Eseguo `{{command}}` di nuovo con l'immagine selezionata. (Suggerimento: puoi anche usare Seleziona Immagine prima di eseguire un comando.)"
     },
     "permissions": {
         "noAttachFiles": "Non ho il permesso `Allegare i file`!",
