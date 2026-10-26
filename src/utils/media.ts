@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import { lookup } from "node:dns/promises";
 import fs from "node:fs";
 import process from "node:process";
-import { fileTypeStream, type AnyWebReadableByteStreamWithFileType } from "file-type";
+import { fileTypeStream } from "file-type";
 import ipaddr from "ipaddr.js";
 import logger from "./logger.ts";
 import MediaConnection from "./mediaConnection.ts";
@@ -83,9 +83,6 @@ export async function request(
     throw e;
   }
 
-  let url: string;
-  let stream: AnyWebReadableByteStreamWithFileType;
-
   let size = 0;
 
   const res = await fetch(media, {
@@ -94,7 +91,7 @@ export async function request(
       "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
     },
   });
-  url = res.url;
+  const url = res.url;
   if (res.status === 429) throw "ratelimit";
 
   if (res.redirected) {
@@ -119,7 +116,7 @@ export async function request(
 
   if (!res.body) return;
 
-  stream = await fileTypeStream(res.body, { sampleSize: 1024 });
+  const stream = await fileTypeStream(res.body, { sampleSize: 1024 });
   if (!stream.fileType?.mime) {
     await stream.cancel();
     return;

@@ -11,7 +11,6 @@ import {
 import { selectedImages } from "./collections.ts";
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";
-import { request } from "./media.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {
