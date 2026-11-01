@@ -6,7 +6,7 @@ ARG LQR="1"
 FROM node:lts-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN npm install -g corepack@latest --force && corepack enable
 RUN apk add --no-cache msttcorefonts-installer freetype fontconfig \
 		vips vips-cpp grep libltdl icu-libs zxing-cpp
 RUN update-ms-fonts && fc-cache -fv
