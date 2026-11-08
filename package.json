@@ -61,22 +61,22 @@
     "start-api:deno:debug": "DEBUG=true deno run -P src/api/index.ts"
   },
   "dependencies": {
-    "bufferutil": "^4.1.0",
-    "file-type": "^22.2.0",
+    "bufferutil": "^4.2.0",
+    "file-type": "^22.3.0",
     "ipaddr.js": "^2.5.0",
     "node-addon-api": "^8.9.2",
     "oceanic.js": "1.15.0",
     "postgres": "^3.4.9",
     "shoukaku": "^4.3.0",
     "winston": "^3.19.0",
-    "ws": "^8.22.0"
+    "ws": "^8.22.1"
   },
   "devDependencies": {
     "@types/node": "22",
     "@types/ws": "^8.18.2",
     "cmake-js": "^8.0.0",
-    "oxfmt": "^0.74.0",
-    "oxlint": "^1.89.0",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
     "typescript": "^7.0.2"
   },
   "engines": {
