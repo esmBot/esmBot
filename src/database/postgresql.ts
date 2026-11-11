@@ -153,13 +153,11 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async setTag(tag: Tag, guild: string) {
-    await this
-      .sql`INSERT INTO tags ${this.sql({ guild_id: guild, name: tag.name, content: tag.content, author: tag.author }, "guild_id", "name", "content", "author")}`;
+    await this.sql`INSERT INTO tags ${this.sql({ guild_id: guild, name: tag.name, content: tag.content, author: tag.author }, "guild_id", "name", "content", "author")}`;
   }
 
   async editTag(tag: Tag, guild: string) {
-    await this
-      .sql`UPDATE tags SET content = ${tag.content}, author = ${tag.author} WHERE guild_id = ${guild} AND name = ${tag.name}`;
+    await this.sql`UPDATE tags SET content = ${tag.content}, author = ${tag.author} WHERE guild_id = ${guild} AND name = ${tag.name}`;
   }
 
   async removeTag(name: string, guild: string) {
@@ -168,8 +166,7 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async addTagRole(guild: string, role: string) {
     await this.getGuild(guild);
-    await this
-      .sql`UPDATE guilds SET tag_roles = array_append(tag_roles, ${role}) WHERE guild_id = ${guild} AND NOT (${role} = ANY(tag_roles))`;
+    await this.sql`UPDATE guilds SET tag_roles = array_append(tag_roles, ${role}) WHERE guild_id = ${guild} AND NOT (${role} = ANY(tag_roles))`;
   }
 
   async removeTagRole(guild: string, role: string) {
@@ -187,19 +184,16 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
   async disableCommand(guild: string, command: string) {
     await this.getGuild(guild);
-    await this
-      .sql`UPDATE guilds SET disabled_commands = array_append(disabled_commands, ${command}) WHERE guild_id = ${guild} AND NOT (${command} = ANY(disabled_commands))`;
+    await this.sql`UPDATE guilds SET disabled_commands = array_append(disabled_commands, ${command}) WHERE guild_id = ${guild} AND NOT (${command} = ANY(disabled_commands))`;
   }
 
   async enableCommand(guild: string, command: string) {
-    await this
-      .sql`UPDATE guilds SET disabled_commands = array_remove(disabled_commands, ${command}) WHERE guild_id = ${guild}`;
+    await this.sql`UPDATE guilds SET disabled_commands = array_remove(disabled_commands, ${command}) WHERE guild_id = ${guild}`;
   }
 
   async disableChannel(channel: string, guild: string) {
     await this.getGuild(guild);
-    await this
-      .sql`UPDATE guilds SET disabled = array_append(disabled, ${channel}) WHERE guild_id = ${guild} AND NOT (${channel} = ANY(disabled))`;
+    await this.sql`UPDATE guilds SET disabled = array_append(disabled, ${channel}) WHERE guild_id = ${guild} AND NOT (${channel} = ANY(disabled))`;
   }
 
   async enableChannel(channel: string, guild: string) {
@@ -219,8 +213,7 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
   }
 
   async addCount(command: string) {
-    await this
-      .sql`INSERT INTO counts ${this.sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
+    await this.sql`INSERT INTO counts ${this.sql({ command, count: 1 }, "command", "count")} ON CONFLICT (command) DO UPDATE SET count = counts.count + 1 WHERE counts.command = ${command}`;
   }
 
   async stop() {
