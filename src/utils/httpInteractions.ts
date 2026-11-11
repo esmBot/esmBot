@@ -14,7 +14,7 @@ export const createInteractionServer = (client: Client, key: webcrypto.CryptoKey
     const signature = req.headers["x-signature-ed25519"];
     const timestamp = req.headers["x-signature-timestamp"];
 
-    if (!signature && !timestamp) {
+    if (!signature || !timestamp) {
       res.statusCode = 400;
       return res.end();
     }
