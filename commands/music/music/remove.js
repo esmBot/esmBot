@@ -1,5 +1,5 @@
-import process from "node:process";
 import MusicCommand from "#cmd-classes/musicCommand.js";
+import { getEnv } from "#utils/runtime.js";
 import { queues } from "#utils/soundplayer.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
@@ -10,7 +10,7 @@ class MusicRemoveCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
     if (!this.connection) return this.getString("sound.noConnection");
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (this.connection.host !== this.author.id && !owners.includes(this.connection.host))
       return this.getString("commands.responses.remove.notHost");
     const pos = this.getOptionInteger("position", true) ?? Number.parseInt(this.args[0]);

@@ -1,12 +1,13 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
+import { getEnv } from "#utils/runtime.js";
 import { clean } from "#utils/sanitize.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class EvalCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.eval.botOwnerOnly");
@@ -16,12 +17,12 @@ class EvalCommand extends Command {
     try {
       // oxlint-disable-next-line no-eval
       let evaled = eval(code);
-      if (process.env.CLUSTER_TYPE && this.getOptionBoolean("broadcast")) {
+      if (getEnv("CLUSTER_TYPE") && this.getOptionBoolean("broadcast")) {
         process.send?.({
           type: "process:msg",
           data: {
             type: "eval",
-            from: process.env.pm_id,
+            from: getEnv("pm_id"),
             message: code,
           },
         });

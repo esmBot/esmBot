@@ -1,5 +1,6 @@
 import { GuildChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
+import { getEnv } from "#utils/runtime.js";
 import { safeBigInt } from "#utils/sanitize.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
@@ -9,7 +10,7 @@ class ChannelEnableCommand extends Command {
     if (!this.guild) return this.getString("guildOnly");
     if (!this.database) return this.getString("noDatabase");
     if (!this.channel) throw Error("No channel found");
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id))
       return this.getString("commands.responses.channel.adminOnly");
 

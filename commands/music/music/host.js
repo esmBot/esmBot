@@ -1,7 +1,7 @@
-import process from "node:process";
 import { User } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import { safeBigInt } from "#utils/sanitize.js";
 import { players } from "#utils/soundplayer.js";
 /** @import { CommandFlag } from "#utils/types.js" */
@@ -13,7 +13,7 @@ class MusicHostCommand extends MusicCommand {
     if (!this.member?.voiceState) return this.getString("sound.noVoiceState");
     if (!this.connection) return this.getString("sound.noConnection");
     if (!this.guild.voiceStates.get(this.client.user.id)?.channelID) return this.getString("sound.notInVoice");
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (this.connection.host !== this.author.id && !owners.includes(this.connection.host))
       return this.getString("commands.responses.host.notHost");
     const input = this.getOptionUser("user") ?? this.args.join(" ");

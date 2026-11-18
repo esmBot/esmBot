@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { aliases, commands } from "#utils/collections.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class CommandEnableCommand extends Command {
@@ -7,7 +8,7 @@ class CommandEnableCommand extends Command {
     this.success = false;
     if (!this.guild) return this.getString("guildOnly");
     if (!this.database) return this.getString("noDatabase");
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id))
       return this.getString("commands.responses.command.adminOnly");
 

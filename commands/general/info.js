@@ -1,6 +1,6 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { getServers } from "#utils/misc.js";
+import { getEnv } from "#utils/runtime.js";
 import packageJson from "../../package.json" with { type: "json" };
 
 class InfoCommand extends Command {
@@ -9,7 +9,7 @@ class InfoCommand extends Command {
       this.success = false;
       return this.getString("permissions.noEmbedLinks");
     }
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     let owner;
     if (owners.length !== 0) {
       owner = this.client.users.get(owners[0]);
@@ -29,7 +29,7 @@ class InfoCommand extends Command {
           fields: [
             {
               name: `ℹ️ ${this.getString("commands.responses.info.version")}`,
-              value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`,
+              value: `v${packageJson.version}${getEnv("NODE_ENV") === "development" ? `-dev (${getEnv("GIT_REV")})` : ""}`,
             },
             {
               name: `📝 ${this.getString("commands.responses.info.creditsHeader")}`,

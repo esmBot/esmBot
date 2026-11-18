@@ -25,7 +25,7 @@ function canLoadTS(): boolean {
   return false;
 }
 
-export default function detectRuntime() {
+export function detectRuntime() {
   if (process.versions.deno) {
     return {
       type: "deno",
@@ -45,4 +45,9 @@ export default function detectRuntime() {
     version: null,
     tsLoad: false,
   };
+}
+
+// abstraction for future runtime support
+export function getEnv(name: string) {
+  return process.env[name];
 }

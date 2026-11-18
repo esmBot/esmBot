@@ -1,4 +1,5 @@
 import Command from "#cmd-classes/command.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class TagsEditCommand extends Command {
@@ -9,7 +10,7 @@ class TagsEditCommand extends Command {
     if (!tagName || !tagName.trim()) return this.getString("commands.responses.tags.editName");
     const getResult = await this.database.getTag(this.guild.id, tagName);
     if (!getResult) return this.getString("commands.responses.tags.invalid");
-    const owners = process.env.OWNER?.split(",");
+    const owners = getEnv("OWNER")?.split(",");
     if (
       getResult.author !== this.author.id &&
       !this.memberPermissions.has("MANAGE_MESSAGES") &&

@@ -1,10 +1,11 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { reloadMediaConnections } from "#utils/media.js";
+import { getEnv } from "#utils/runtime.js";
 
 class MediaReloadCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.mediareload.owner");
@@ -12,12 +13,12 @@ class MediaReloadCommand extends Command {
     await this.acknowledge();
     const length = await reloadMediaConnections();
     if (length) {
-      if (process.env.CLUSTER_TYPE) {
+      if (getEnv("CLUSTER_TYPE")) {
         process.send?.({
           type: "process:msg",
           data: {
             type: "mediareload",
-            from: process.env.pm_id,
+            from: getEnv("pm_id"),
           },
         });
       }

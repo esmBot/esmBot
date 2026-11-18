@@ -2,11 +2,12 @@ import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { paths } from "#utils/collections.js";
 import { load, send } from "#utils/handler.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class ReloadCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) return this.getString("commands.responses.reload.botOwnerOnly");
     const commandName = this.getOptionString("cmd") ?? this.args.join(" ");
     if (!commandName || !commandName.trim()) return this.getString("commands.responses.reload.noInput");
@@ -19,12 +20,12 @@ class ReloadCommand extends Command {
       await send(this.client);
     }
     if (result?.name !== commandName) return this.getString("commands.responses.reload.reloadFailed");
-    if (process.env.CLUSTER_TYPE) {
+    if (getEnv("CLUSTER_TYPE")) {
       process.send?.({
         type: "process:msg",
         data: {
           type: "reload",
-          from: process.env.pm_id,
+          from: getEnv("pm_id"),
           message: commandName,
         },
       });

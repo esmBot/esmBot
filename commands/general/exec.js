@@ -1,15 +1,15 @@
 import { Buffer } from "node:buffer";
 import { exec as baseExec } from "node:child_process";
-import process from "node:process";
 import { promisify } from "node:util";
 import Command from "#cmd-classes/command.js";
+import { getEnv } from "#utils/runtime.js";
 import { clean } from "#utils/sanitize.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 const exec = promisify(baseExec);
 
 class ExecCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.exec.botOwnerOnly");

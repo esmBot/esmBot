@@ -1,7 +1,7 @@
 // wrapper for the database drivers in ./database/
 import process from "node:process";
-import detectRuntime from "#utils/detectRuntime.js";
 import logger from "#utils/logger.js";
+import { detectRuntime } from "#utils/runtime.js";
 import { type DBGuild, isError, type Tag } from "#utils/types.js";
 
 export declare class DatabasePlugin {

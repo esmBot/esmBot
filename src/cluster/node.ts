@@ -1,8 +1,8 @@
 import cluster, { type Worker } from "node:cluster";
 import process from "node:process";
-import detectRuntime from "#utils/detectRuntime.js";
 import logger from "#utils/logger.js";
 import { getVers, initLog } from "#utils/misc.js";
+import { detectRuntime } from "#utils/runtime.js";
 import {
   calcShards,
   createManageServer,

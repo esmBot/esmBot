@@ -2,8 +2,8 @@ import os from "node:os";
 import process from "node:process";
 import { VERSION } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import detectRuntime from "#utils/detectRuntime.js";
 import { getServers } from "#utils/misc.js";
+import { detectRuntime, getEnv } from "#utils/runtime.js";
 import packageJson from "../../package.json" with { type: "json" };
 
 class StatsCommand extends Command {
@@ -14,7 +14,7 @@ class StatsCommand extends Command {
     }
     const uptime = process.uptime() * 1000;
     const connUptime = this.client.uptime;
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     let owner;
     if (owners.length !== 0) {
       owner = this.client.users.get(owners[0]) ?? (await this.client.rest.users.get(owners[0]));
@@ -34,7 +34,7 @@ class StatsCommand extends Command {
           fields: [
             {
               name: this.getString("commands.responses.stats.version"),
-              value: `v${packageJson.version}${process.env.NODE_ENV === "development" ? `-dev (${process.env.GIT_REV})` : ""}`,
+              value: `v${packageJson.version}${getEnv("NODE_ENV") === "development" ? `-dev (${getEnv("GIT_REV")})` : ""}`,
             },
             {
               name: this.getString("commands.responses.stats.processUsage"),
@@ -107,7 +107,7 @@ class StatsCommand extends Command {
    * @returns {Promise<string | null>}
    */
   getMem() {
-    if (process.env.CLUSTER_TYPE === "node") {
+    if (getEnv("CLUSTER_TYPE") === "node") {
       return new Promise((resolve, reject) => {
         const listener = (/** @type {{ data: { type: string; totalMem: number; }; }} */ message) => {
           if (message.data?.type === "memResponse") {

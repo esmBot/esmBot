@@ -1,9 +1,9 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { PaginationMixin } from "#pagination";
 import * as collections from "#utils/collections.js";
 import { convFlagType, flagMap } from "#utils/handler.js";
 import * as help from "#utils/help.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class HelpCommand extends PaginationMixin(Command) {
@@ -16,7 +16,7 @@ class HelpCommand extends PaginationMixin(Command) {
     if (this.guild && this.database) {
       prefix = (await this.database.getGuild(this.guild.id)).prefix;
     } else {
-      prefix = process.env.PREFIX ?? "&";
+      prefix = getEnv("PREFIX") ?? "&";
     }
     if (
       this.args.length !== 0 &&

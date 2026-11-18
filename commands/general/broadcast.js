@@ -1,11 +1,12 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { endBroadcast, startBroadcast } from "#utils/activity.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class BroadcastCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.broadcast.owner");
@@ -14,12 +15,12 @@ class BroadcastCommand extends Command {
     if (message?.trim()) {
       await this.database?.setBroadcast(message);
       startBroadcast(this.client, message);
-      if (process.env.CLUSTER_TYPE) {
+      if (getEnv("CLUSTER_TYPE")) {
         process.send?.({
           type: "process:msg",
           data: {
             type: "broadcastStart",
-            from: process.env.pm_id,
+            from: getEnv("pm_id"),
             message,
           },
         });
@@ -28,12 +29,12 @@ class BroadcastCommand extends Command {
     }
     await this.database?.setBroadcast();
     endBroadcast(this.client);
-    if (process.env.CLUSTER_TYPE) {
+    if (getEnv("CLUSTER_TYPE")) {
       process.send?.({
         type: "process:msg",
         data: {
           type: "broadcastEnd",
-          from: process.env.pm_id,
+          from: getEnv("pm_id"),
         },
       });
     }

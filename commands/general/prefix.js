@@ -1,5 +1,5 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class PrefixCommand extends Command {
@@ -7,7 +7,7 @@ class PrefixCommand extends Command {
     if (!this.guild)
       return this.getString("commands.responses.prefix.current", {
         params: {
-          prefix: process.env.PREFIX ?? "&",
+          prefix: getEnv("PREFIX") ?? "&",
         },
       });
     const guild = await this.database?.getGuild(this.guild.id);
@@ -15,7 +15,7 @@ class PrefixCommand extends Command {
       if (!this.database) {
         return this.getString("commands.responses.prefix.stateless");
       }
-      const owners = process.env.OWNER?.split(",") ?? [];
+      const owners = getEnv("OWNER")?.split(",") ?? [];
       if (!this.memberPermissions.has("ADMINISTRATOR") && !owners.includes(this.author.id)) {
         this.success = false;
         return this.getString("commands.responses.prefix.adminOnly");
@@ -29,7 +29,7 @@ class PrefixCommand extends Command {
     }
     return this.getString("commands.responses.prefix.current", {
       params: {
-        prefix: guild?.prefix ?? process.env.PREFIX ?? "&",
+        prefix: guild?.prefix ?? getEnv("PREFIX") ?? "&",
       },
     });
   }

@@ -1,5 +1,6 @@
 import Command from "#cmd-classes/command.js";
 import { mentionToObject } from "#utils/mentions.js";
+import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class TagsRoleRemoveCommand extends Command {
@@ -7,7 +8,7 @@ class TagsRoleRemoveCommand extends Command {
     this.success = false;
     if (!this.database) return this.getString("noDatabase");
     if (!this.guild) return this.getString("guildOnly");
-    const owners = process.env.OWNER?.split(",");
+    const owners = getEnv("OWNER")?.split(",");
     if (!this.memberPermissions.has("MANAGE_MESSAGES") && !owners?.includes(this.author.id))
       return this.getString("commands.responses.tags.notOwnerRole");
 

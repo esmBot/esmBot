@@ -1,10 +1,10 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { exit } from "#utils/misc.js";
+import { getEnv } from "#utils/runtime.js";
 
 class RestartCommand extends Command {
   async run() {
-    const owners = process.env.OWNER?.split(",") ?? [];
+    const owners = getEnv("OWNER")?.split(",") ?? [];
     if (!owners.includes(this.author.id)) {
       this.success = false;
       return this.getString("commands.responses.restart.owner");
