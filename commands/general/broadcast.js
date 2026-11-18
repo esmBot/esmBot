@@ -1,6 +1,6 @@
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
-import { endBroadcast, startBroadcast } from "#utils/misc.js";
+import { endBroadcast, startBroadcast } from "#utils/activity.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class BroadcastCommand extends Command {

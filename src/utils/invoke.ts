@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import type Command from "#cmd-classes/command.js";
 import logger from "./logger.ts";
-import { clean } from "./misc.ts";
+import { clean } from "./sanitize.ts";
 
 /**
  * Runs a command and sends its result or error.

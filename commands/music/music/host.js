@@ -2,7 +2,7 @@ import process from "node:process";
 import { User } from "oceanic.js";
 import MusicCommand from "#cmd-classes/musicCommand.js";
 import logger from "#utils/logger.js";
-import { safeBigInt } from "#utils/misc.js";
+import { safeBigInt } from "#utils/sanitize.js";
 import { players } from "#utils/soundplayer.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 

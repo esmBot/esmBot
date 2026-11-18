@@ -1,5 +1,5 @@
 import Command from "#cmd-classes/command.js";
-import { safeBigInt } from "#utils/misc.js";
+import { safeBigInt } from "#utils/sanitize.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class SnowflakeCommand extends Command {

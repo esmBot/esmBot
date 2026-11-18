@@ -21,7 +21,7 @@ import {
   type User,
 } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
-import { cleanInteraction, cleanMessage } from "#utils/misc.js";
+import { cleanInteraction, cleanMessage } from "#utils/sanitize.js";
 import type { CommandFlag, CommandType } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 

@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import process from "node:process";
 import Command from "#cmd-classes/command.js";
-import { clean } from "#utils/misc.js";
+import { clean } from "#utils/sanitize.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
 class EvalCommand extends Command {

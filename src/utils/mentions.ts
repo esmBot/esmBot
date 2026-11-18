@@ -1,5 +1,5 @@
 import type { AnyChannel, Client, Guild, Member, Role, User } from "oceanic.js";
-import { safeBigInt } from "./misc.ts";
+import { safeBigInt } from "./sanitize.ts";
 
 const mentionRegex = /^<?[@#]?[&!]?(\d+)>?$/;
 
