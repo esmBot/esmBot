@@ -1,7 +1,7 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { paths } from "#utils/collections.js";
 import { load, send } from "#utils/handler.js";
+import { sendIPCMessage } from "#utils/ipc.js";
 import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
@@ -20,16 +20,7 @@ class ReloadCommand extends Command {
       await send(this.client);
     }
     if (result?.name !== commandName) return this.getString("commands.responses.reload.reloadFailed");
-    if (getEnv("CLUSTER_TYPE")) {
-      process.send?.({
-        type: "process:msg",
-        data: {
-          type: "reload",
-          from: getEnv("pm_id"),
-          message: commandName,
-        },
-      });
-    }
+    sendIPCMessage("reload", commandName);
     return this.getString("commands.responses.reload.reloaded", {
       params: {
         command: commandName,

@@ -1,5 +1,5 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
+import { sendIPCMessage } from "#utils/ipc.js";
 import { getEnv } from "#utils/runtime.js";
 import { reload } from "#utils/soundplayer.js";
 
@@ -12,15 +12,7 @@ class SoundReloadCommand extends Command {
     }
     await this.acknowledge();
     const length = await reload(this.client);
-    if (getEnv("CLUSTER_TYPE")) {
-      process.send?.({
-        type: "process:msg",
-        data: {
-          type: "soundreload",
-          from: getEnv("pm_id"),
-        },
-      });
-    }
+    sendIPCMessage("soundreload");
     if (length) {
       return this.getString("commands.responses.soundreload.connected", { params: { length: length.toString() } });
     }

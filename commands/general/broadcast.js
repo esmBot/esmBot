@@ -1,6 +1,6 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
 import { endBroadcast, startBroadcast } from "#utils/activity.js";
+import { sendIPCMessage } from "#utils/ipc.js";
 import { getEnv } from "#utils/runtime.js";
 /** @import { CommandFlag } from "#utils/types.js" */
 
@@ -15,29 +15,12 @@ class BroadcastCommand extends Command {
     if (message?.trim()) {
       await this.database?.setBroadcast(message);
       startBroadcast(this.client, message);
-      if (getEnv("CLUSTER_TYPE")) {
-        process.send?.({
-          type: "process:msg",
-          data: {
-            type: "broadcastStart",
-            from: getEnv("pm_id"),
-            message,
-          },
-        });
-      }
+      sendIPCMessage("broadcastStart", message);
       return this.getString("commands.responses.broadcast.started");
     }
     await this.database?.setBroadcast();
     endBroadcast(this.client);
-    if (getEnv("CLUSTER_TYPE")) {
-      process.send?.({
-        type: "process:msg",
-        data: {
-          type: "broadcastEnd",
-          from: getEnv("pm_id"),
-        },
-      });
-    }
+    sendIPCMessage("broadcastEnd");
     return this.getString("commands.responses.broadcast.ended");
   }
 

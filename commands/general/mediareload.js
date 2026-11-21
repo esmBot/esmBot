@@ -1,5 +1,5 @@
-import process from "node:process";
 import Command from "#cmd-classes/command.js";
+import { sendIPCMessage } from "#utils/ipc.js";
 import { reloadMediaConnections } from "#utils/media.js";
 import { getEnv } from "#utils/runtime.js";
 
@@ -13,15 +13,7 @@ class MediaReloadCommand extends Command {
     await this.acknowledge();
     const length = await reloadMediaConnections();
     if (length) {
-      if (getEnv("CLUSTER_TYPE")) {
-        process.send?.({
-          type: "process:msg",
-          data: {
-            type: "mediareload",
-            from: getEnv("pm_id"),
-          },
-        });
-      }
+      sendIPCMessage("mediareload");
       return this.getString("commands.responses.mediareload.connected", { params: { length: length.toString() } });
     }
     return this.getString("commands.responses.mediareload.couldNotConnect");

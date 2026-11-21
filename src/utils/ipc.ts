@@ -28,3 +28,16 @@ export function getServers(bot: Client): Promise<number> {
     }
   });
 }
+
+export function sendIPCMessage(type: string, message?: string) {
+  if (getEnv("CLUSTER_TYPE")) {
+    process.send?.({
+      type: "process:msg",
+      data: {
+        type,
+        from: getEnv("pm_id"),
+        message,
+      },
+    });
+  }
+}
