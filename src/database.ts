@@ -29,7 +29,7 @@ export declare class DatabasePlugin {
 
 export async function init(): Promise<DatabasePlugin | undefined> {
   const db = getEnv("DB");
-  if (db && db !== "") {
+  if (db) {
     const dbtype = db.split("://")[0];
     try {
       const construct = (await import(`./database/${dbtype}.${detectRuntime().tsLoad ? "ts" : "js"}`)).default;

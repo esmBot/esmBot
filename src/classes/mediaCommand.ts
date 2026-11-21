@@ -198,7 +198,7 @@ class MediaCommand extends Command {
       };
       if (buffer.length > sizeLimit) {
         const tempdir = getEnv("TEMPDIR");
-        if (tempdir && tempdir !== "" && this.permissions.has("EMBED_LINKS")) {
+        if (tempdir && this.permissions.has("EMBED_LINKS")) {
           if (this.interaction) {
             await upload(this.client, { ...file, flags }, this.interaction, tempdir);
           } else if (this.message) {

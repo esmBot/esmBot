@@ -183,11 +183,7 @@ export async function play(client: Client, soundUrl: string, options: Options) {
     return getString("sound.addedToQueue", {
       locale: options.locale,
       params: {
-        name:
-          playlistInfo?.name.trim() ??
-          (info[0].title && info[0].title !== ""
-            ? info[0].title.trim()
-            : getString("sound.blank", { locale: options.locale })),
+        name: playlistInfo?.name.trim() || info[0].title?.trim() || getString("sound.blank", { locale: options.locale }),
         type: response.loadType,
       },
     });
@@ -235,13 +231,11 @@ export async function nextSong(
           fields: [
             {
               name: `ℹ️ ${getString("sound.title", { locale: options.locale })}`,
-              value:
-                info && info.title.trim() !== "" ? info.title : getString("sound.blank", { locale: options.locale }),
+              value: info?.title.trim() || getString("sound.blank", { locale: options.locale }),
             },
             {
               name: `🎤 ${getString("sound.artist", { locale: options.locale })}`,
-              value:
-                info && info.author.trim() !== "" ? info.author : getString("sound.blank", { locale: options.locale }),
+              value: info?.author.trim() || getString("sound.blank", { locale: options.locale }),
             },
             {
               name: `💬 ${getString("sound.channel", { locale: options.locale })}`,

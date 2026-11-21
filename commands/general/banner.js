@@ -49,9 +49,10 @@ class BannerCommand extends Command {
           this.getString("commands.responses.banner.noUserBanner")
         );
     }
-    if (this.args.join(" ") !== "" && this.guild) {
+    const query = this.args.join(" ");
+    if (query && this.guild) {
       const searched = await this.guild.searchMembers({
-        query: this.args.join(" "),
+        query,
         limit: 1,
       });
       if (searched.length > 0) {

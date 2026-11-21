@@ -25,7 +25,7 @@ export default async ({ client, database }: EventParams) => {
 
   // generate docs
   const docsOutput = getEnv("OUTPUT");
-  if (docsOutput && docsOutput !== "") {
+  if (docsOutput) {
     generateList();
     await createPage(docsOutput);
     logger.log("info", "The help docs have been generated.");

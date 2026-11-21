@@ -27,7 +27,7 @@ export default (cmd: string[] | string) => {
             }
           } else if (value.endsWith('"')) {
             args.flags[arg] += a.slice(0, -1);
-          } else if (value !== "") {
+          } else if (value) {
             args.flags[arg] = value;
           } else {
             args.flags[arg] = true;
@@ -50,7 +50,7 @@ export default (cmd: string[] | string) => {
         args.flags[curr] += `${a} `;
       }
     } else {
-      if (concated !== "") {
+      if (concated) {
         concated += `${a} `;
       } else {
         args.args.push(a);

@@ -18,7 +18,7 @@ class MusicQueueCommand extends PaginationMixin(MusicCommand) {
     for (const [i, track] of tracks.entries()) {
       if (i === 0) continue;
       trackList.push(
-        `${i + 1}. ${track.info.author !== "" ? track.info.author : this.getString("sound.blank")} - **${track.info.title !== "" ? track.info.title : this.getString("sound.blank")}** (${track.info.isStream ? "∞" : formatDuration(track.info.length)})`,
+        `${i + 1}. ${track.info.author || this.getString("sound.blank")} - **${track.info.title || this.getString("sound.blank")}** (${track.info.isStream ? "∞" : formatDuration(track.info.length)})`,
       );
     }
     const pageSize = 5;
@@ -50,7 +50,7 @@ class MusicQueueCommand extends PaginationMixin(MusicCommand) {
             fields: [
               {
                 name: `🎶 ${this.getString("sound.nowPlaying")}`,
-                value: `${firstTrack.info.author !== "" ? firstTrack.info.author : this.getString("sound.blank")} - **${firstTrack.info.title !== "" ? firstTrack.info.title : this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : formatDuration(firstTrack.info.length)})`,
+                value: `${firstTrack.info.author || this.getString("sound.blank")} - **${firstTrack.info.title || this.getString("sound.blank")}** (${firstTrack.info.isStream ? "∞" : formatDuration(firstTrack.info.length)})`,
               },
               {
                 name: `🔁 ${this.getString("sound.looping")}`,

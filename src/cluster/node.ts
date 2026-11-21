@@ -155,7 +155,7 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
 
 const port = getEnv("CLUSTER_PORT");
 
-if (port && port !== "") {
+if (port) {
   createManageServer(
     port,
     () => {

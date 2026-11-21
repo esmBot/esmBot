@@ -26,9 +26,10 @@ class AvatarCommand extends Command {
       });
       if (user) return user.avatarURL(undefined, imageSize);
     }
-    if (this.args.join(" ") !== "" && this.guild) {
+    const query = this.args.join(" ");
+    if (query && this.guild) {
       const searched = await this.guild.searchMembers({
-        query: this.args.join(" "),
+        query,
         limit: 1,
       });
       if (searched.length > 0) {

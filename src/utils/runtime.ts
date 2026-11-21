@@ -7,7 +7,7 @@ function canLoadTS(): boolean {
   if (major > 23 || (major === 23 && minor >= 6) || (major === 22 && minor >= 18)) {
     if (process.argv.includes("--no-experimental-strip-types")) return false;
 
-    if (process.env.NODE_ARGS && process.env.NODE_ARGS !== "") {
+    if (process.env.NODE_ARGS) {
       const splitArgs = process.env.NODE_ARGS.split(" ");
       if (splitArgs.includes("--no-experimental-strip-types")) return false;
     }
@@ -17,7 +17,7 @@ function canLoadTS(): boolean {
 
   if (process.argv.includes("--experimental-strip-types")) return true;
 
-  if (process.env.NODE_ARGS && process.env.NODE_ARGS !== "") {
+  if (process.env.NODE_ARGS) {
     const splitArgs = process.env.NODE_ARGS.split(" ");
     if (splitArgs.includes("--experimental-strip-types")) return true;
   }

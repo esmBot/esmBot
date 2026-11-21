@@ -251,7 +251,7 @@ export async function send(bot: Client) {
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;
   const adminServer = getEnv("ADMIN_SERVER");
-  if (adminServer && adminServer !== "") {
+  if (adminServer) {
     await bot.application.bulkEditGuildCommands(
       adminServer,
       commandArray.private as CreateGuildApplicationCommandOptions[],
