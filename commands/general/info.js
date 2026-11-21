@@ -1,5 +1,5 @@
 import Command from "#cmd-classes/command.js";
-import { getServers } from "#utils/misc.js";
+import { getServers } from "#utils/ipc.js";
 import { getEnv } from "#utils/runtime.js";
 import packageJson from "../../package.json" with { type: "json" };
 

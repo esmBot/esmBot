@@ -2,7 +2,7 @@ import os from "node:os";
 import process from "node:process";
 import { VERSION } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
-import { getServers } from "#utils/misc.js";
+import { getServers } from "#utils/ipc.js";
 import { detectRuntime, getEnv } from "#utils/runtime.js";
 import packageJson from "../../package.json" with { type: "json" };
 
