@@ -153,7 +153,7 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
   });
 }
 
-const port = process.env.CLUSTER_PORT ?? process.env.METRICS;
+const port = process.env.CLUSTER_PORT;
 
 if (port && port !== "") {
   createManageServer(

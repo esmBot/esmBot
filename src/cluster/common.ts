@@ -216,12 +216,6 @@ esmbot_total_mem ${info.totalMem}
     return res.end("404 Not Found");
   });
 
-  if (process.env.METRICS && process.env.METRICS !== "") {
-    logger.warn('!!! THE "METRICS" ENVIRONMENT VARIABLE IS DEPRECATED !!!');
-    logger.warn(
-      'The "METRICS" variable has been renamed to "CLUSTER_PORT". Please rename it in your .env file or other environment configuration; esmBot will no longer read this variable in a future version.',
-    );
-  }
   httpServer.listen(port, () => {
     logger.log("info", `Serving management endpoints/metrics at ${port}`);
   });
