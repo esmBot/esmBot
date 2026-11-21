@@ -183,7 +183,8 @@ export async function play(client: Client, soundUrl: string, options: Options) {
     return getString("sound.addedToQueue", {
       locale: options.locale,
       params: {
-        name: playlistInfo?.name.trim() || info[0].title?.trim() || getString("sound.blank", { locale: options.locale }),
+        name:
+          playlistInfo?.name.trim() || info[0].title?.trim() || getString("sound.blank", { locale: options.locale }),
         type: response.loadType,
       },
     });
