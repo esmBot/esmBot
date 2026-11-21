@@ -8,6 +8,7 @@ import { WebSocketServer, type ErrorEvent } from "ws";
 import logger from "#utils/logger.js";
 import { media } from "#utils/mediaLib.js";
 import run from "#utils/mediaRunner.js";
+import { getEnv } from "#utils/runtime.js";
 import type { JobOutput, MediaFormats, MediaParams } from "#utils/types.js";
 
 const formats = media.init();
@@ -84,12 +85,11 @@ class JobCache<K, V> extends Map<K, V> {
 const jobs = new JobCache<bigint, Job>();
 // Should look like ID : { msg: "request", num: <job number> }
 
-const PASS = process.env.PASS ? process.env.PASS : undefined;
+const PASS = getEnv("PASS");
 
 // Used for direct media uploads
-const clientID = process.env.CLIENT_ID;
-const discordBaseURL =
-  process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : "https://discord.com/api/v10";
+const clientID = getEnv("CLIENT_ID");
+const discordBaseURL = getEnv("REST_PROXY") || "https://discord.com/api/v10";
 
 /**
  * Accept a media job.
@@ -308,7 +308,7 @@ httpServer.on("upgrade", (req, sock, head) => {
 httpServer.on("error", (e) => {
   error("An HTTP error occurred: " + e);
 });
-const port = process.env.PORT && process.env.PORT !== "" ? Number.parseInt(process.env.PORT) : 3762;
+const port = Number(getEnv("PORT")) || 3762;
 httpServer.listen(port, () => {
   logger.info(`HTTP and WS listening on port ${port}`);
 });
@@ -392,7 +392,7 @@ async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws:
     try {
       const res = await fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
         method: "POST",
-        signal: AbortSignal.timeout(Number(process.env.REST_TIMEOUT_MS) || 15000),
+        signal: AbortSignal.timeout(Number(getEnv("REST_TIMEOUT_MS")) || 15000),
         body: form,
       });
       if (!res.ok) {

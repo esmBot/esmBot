@@ -4,6 +4,7 @@ import { activityChanger, checkBroadcast } from "#utils/activity.js";
 import { send } from "#utils/handler.js";
 import { createPage, generateList } from "#utils/help.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import type { EventParams } from "#utils/types.js";
 let ready = false;
 
@@ -13,7 +14,7 @@ export default async ({ client, database }: EventParams) => {
   if (ready) return;
 
   // send slash command data
-  if (commandsConfig.types.application && !(process.env.CLUSTER_TYPE && process.env.pm_id !== "1")) {
+  if (commandsConfig.types.application && !(getEnv("CLUSTER_TYPE") && getEnv("pm_id") !== "1")) {
     try {
       await send(client);
     } catch (e) {
@@ -23,9 +24,10 @@ export default async ({ client, database }: EventParams) => {
   }
 
   // generate docs
-  if (process.env.OUTPUT && process.env.OUTPUT !== "") {
+  const docsOutput = getEnv("OUTPUT");
+  if (docsOutput && docsOutput !== "") {
     generateList();
-    await createPage(process.env.OUTPUT);
+    await createPage(docsOutput);
     logger.log("info", "The help docs have been generated.");
   }
 
@@ -37,7 +39,7 @@ export default async ({ client, database }: EventParams) => {
 
   ready = true;
 
-  if (process.env.CLUSTER_TYPE === "node") {
+  if (getEnv("CLUSTER_TYPE") === "node") {
     process.send?.({
       data: {
         type: "ready",
@@ -45,5 +47,5 @@ export default async ({ client, database }: EventParams) => {
     });
   }
 
-  if (process.env.CLUSTER_TYPE !== "node") logger.log("info", "Started esmBot.");
+  if (getEnv("CLUSTER_TYPE") !== "node") logger.log("info", "Started esmBot.");
 };

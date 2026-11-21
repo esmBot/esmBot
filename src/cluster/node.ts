@@ -2,7 +2,7 @@ import cluster, { type Worker } from "node:cluster";
 import process from "node:process";
 import logger from "#utils/logger.js";
 import { getVers, initLog } from "#utils/misc.js";
-import { detectRuntime } from "#utils/runtime.js";
+import { detectRuntime, getEnv } from "#utils/runtime.js";
 import {
   calcShards,
   createManageServer,
@@ -153,7 +153,7 @@ function awaitStart(i: number, shardArray: number[]): Promise<Worker> {
   });
 }
 
-const port = process.env.CLUSTER_PORT;
+const port = getEnv("CLUSTER_PORT");
 
 if (port && port !== "") {
   createManageServer(

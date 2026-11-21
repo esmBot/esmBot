@@ -1,7 +1,6 @@
 // wrapper for the database drivers in ./database/
-import process from "node:process";
 import logger from "#utils/logger.js";
-import { detectRuntime } from "#utils/runtime.js";
+import { detectRuntime, getEnv } from "#utils/runtime.js";
 import { type DBGuild, isError, type Tag } from "#utils/types.js";
 
 export declare class DatabasePlugin {
@@ -29,11 +28,12 @@ export declare class DatabasePlugin {
 }
 
 export async function init(): Promise<DatabasePlugin | undefined> {
-  if (process.env.DB && process.env.DB.length !== 0) {
-    const dbtype = process.env.DB.split("://")[0];
+  const db = getEnv("DB");
+  if (db && db !== "") {
+    const dbtype = db.split("://")[0];
     try {
       const construct = (await import(`./database/${dbtype}.${detectRuntime().tsLoad ? "ts" : "js"}`)).default;
-      return new construct(process.env.DB);
+      return new construct(db);
     } catch (error) {
       if (isError(error) && error.code === "ERR_MODULE_NOT_FOUND") {
         logger.error(`DB config option has unknown database type '${dbtype}'`);

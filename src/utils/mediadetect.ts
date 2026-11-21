@@ -1,4 +1,3 @@
-import process from "node:process";
 import {
   type Client,
   type CommandInteraction,
@@ -13,6 +12,7 @@ import {
   ThreadChannel,
 } from "oceanic.js";
 import logger from "./logger.ts";
+import { getEnv } from "./runtime.ts";
 import type { MediaMeta } from "./types.ts";
 
 const tenorURLs = ["tenor.com", "www.tenor.com"];
@@ -122,11 +122,12 @@ async function getMedia(
         payload.path = `https://c.tenor.com/${match[1]}/tenor.gif`;
       }
     } else if (klipyURLs.includes(host)) {
-      if (!process.env.KLIPY || process.env.KLIPY === "") return;
+      const klipyKey = getEnv("KLIPY");
+      if (!klipyKey || klipyKey === "") return;
       if (!media2.includes("klipy.com/gifs/")) return;
 
       const id = url2.pathname.replace("/gifs/", "");
-      const data = await fetch(`https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/items?slugs=${id}`);
+      const data = await fetch(`https://api.klipy.com/api/v1/${klipyKey}/gifs/items?slugs=${id}`);
       if (data.status === 429) return;
 
       const json = (await data.json()) as KlipyResponse;
@@ -270,7 +271,7 @@ async function checkEmbeds(message: Message | MessageSnapshotMessage) {
     providerUrls.includes(message.embeds[0].provider?.url) &&
     message.embeds[0].video?.url &&
     message.embeds[0].url &&
-    (message.embeds[0].provider.url === "https://klipy.com" ? process.env.KLIPY && process.env.KLIPY !== "" : true)
+    (message.embeds[0].provider.url === "https://klipy.com" ? getEnv("KLIPY") || false : true)
   ) {
     const media = await getMedia(message.embeds[0].video.url, message.embeds[0].url, hasSpoiler);
     if (media) return [media];

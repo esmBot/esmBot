@@ -1,5 +1,5 @@
-import process from "node:process";
 import { locales } from "./collections.ts";
+import { getEnv } from "./runtime.ts";
 
 const templateRegex = /{{(\w+?)}}/g;
 
@@ -12,7 +12,7 @@ type GetStringParams = {
 export function getString(key: string, params?: { returnNull?: false } & GetStringParams): string;
 export function getString(key: string, params: { returnNull: boolean } & GetStringParams): string | undefined;
 export function getString(key: string, params?: GetStringParams): string | undefined {
-  const locale = params?.locale ?? process.env.LOCALE ?? "en-US";
+  const locale = params?.locale ?? getEnv("LOCALE") ?? "en-US";
   const obj = locales.get(locale);
   const splitKey = key.split(".");
   let string: string;

@@ -1,13 +1,18 @@
 import process from "node:process";
+import { detectRuntime, getEnv } from "#utils/runtime.js";
 
-const [major, minor] = process.versions.node.split(".").map(Number);
-if (major < 22 || (major === 22 && minor < 13) || (major === 23 && minor < 4)) {
-  console.error(`You are currently running Node.js version ${process.versions.node}.
+const runtimeInfo = detectRuntime();
+
+if (runtimeInfo.type === "node" && runtimeInfo.version) {
+  const [major, minor] = runtimeInfo.version.split(".").map(Number);
+  if (major < 22 || (major === 22 && minor < 13) || (major === 23 && minor < 4)) {
+    console.error(`You are currently running Node.js version ${runtimeInfo.version.split}.
 esmBot requires Node.js version 22.13.0/23.4.0 or above.
 Please refer to step 2 of the setup guide: https://docs.esmbot.net/setup/#2-install-nodejs`);
-  process.exit(1);
+    process.exit(1);
+  }
 }
-if (process.platform === "win32") {
+if (runtimeInfo.platform === "win32") {
   console.error(
     "\x1b[1m\x1b[31m\x1b[40m" +
       `WINDOWS IS NOT OFFICIALLY SUPPORTED!
@@ -18,13 +23,14 @@ esmBot will continue to run past this message in 5 seconds, but keep in mind tha
   await new Promise((resolve) => setTimeout(resolve, 5000));
 }
 
-if (!process.env.TOKEN) {
+const botToken = getEnv("TOKEN");
+if (!botToken) {
   console.error(`No token was provided!
 esmBot requires a valid Discord bot token to function. Generate a new token from the "Bot" tab in your Discord application settings and paste it into your .env file.`);
   process.exit(1);
 }
 
-if (process.env.TOKEN.length < 59) {
+if (botToken.length < 59) {
   console.error(`Incorrect bot token length!
 You may have accidentally copied the OAuth2 client secret. Try generating a new token from the "Bot" tab in your Discord application settings.`);
   process.exit(1);
@@ -41,7 +47,6 @@ import { createInteractionServer } from "#utils/httpInteractions.js";
 import logger from "#utils/logger.js";
 import { initMediaLib, reloadMediaConnections } from "#utils/media.js";
 import { exit, getVers, initLog } from "#utils/misc.js";
-import { detectRuntime } from "#utils/runtime.js";
 import { connect, connected, reload } from "#utils/soundplayer.js";
 import { parseThreshold } from "#utils/tempimages.js";
 import { init as dbInit } from "./database.ts";
@@ -56,7 +61,7 @@ if (commandConfig.types.classic) {
 const runtime = detectRuntime();
 
 await getVers();
-if (process.env.CLUSTER_TYPE !== "node") initLog();
+if (getEnv("CLUSTER_TYPE") !== "node") initLog();
 
 if (!commandConfig.types.classic && !commandConfig.types.application) {
   logger.error(
@@ -73,8 +78,10 @@ if (database) {
 }
 
 // process the threshold into bytes early
-if (process.env.TEMPDIR && process.env.THRESHOLD) {
-  await parseThreshold();
+const tempdir = getEnv("TEMPDIR");
+const threshold = getEnv("THRESHOLD");
+if (tempdir && threshold) {
+  await parseThreshold(tempdir, threshold);
 }
 
 // register locales
@@ -108,14 +115,15 @@ logger.log("info", "Finished loading commands.");
 if (database) {
   await database.setup();
 }
-if (process.env.API_TYPE === "ws") await reloadMediaConnections();
+if (getEnv("API_TYPE") === "ws") await reloadMediaConnections();
 else await initMediaLib();
 
-const shardArray = process.env.SHARDS ? JSON.parse(process.env.SHARDS) : null;
+const shards = getEnv("SHARDS");
+const shardArray = shards ? JSON.parse(shards) : null;
 
 // create the oceanic client
 const client = new Client({
-  auth: `Bot ${process.env.TOKEN}`,
+  auth: `Bot ${botToken}`,
   allowedMentions: {
     everyone: false,
     roles: false,
@@ -138,8 +146,8 @@ const client = new Client({
     intents,
   },
   rest: {
-    baseURL: process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : undefined,
-    requestTimeout: Number(process.env.REST_TIMEOUT_MS) || 15000,
+    baseURL: getEnv("REST_PROXY") || undefined,
+    requestTimeout: Number(getEnv("REST_TIMEOUT_MS")) || 15000,
   },
   collectionLimits: {
     messages: 50,
@@ -158,9 +166,10 @@ for (const [name, event] of Object.entries(events)) {
 logger.log("info", "Registered events.");
 
 // Cluster-specific handling
-if (process.env.CLUSTER_TYPE === "node") {
+if (getEnv("CLUSTER_TYPE") === "node") {
   process.on("message", async (packet: { data?: { type: string; from?: string; message: string } }) => {
-    if (packet.data?.from === process.env.pm_id) return;
+    const pm_id = getEnv("pm_id");
+    if (packet.data?.from === pm_id) return;
     switch (packet.data?.type) {
       case "reload": {
         const cmdPath = paths.get(packet.data.message);
@@ -191,7 +200,7 @@ if (process.env.CLUSTER_TYPE === "node") {
             shards: client.shards.map((v) => {
               return {
                 id: v.id,
-                procId: Number.parseInt(process.env.pm_id as string),
+                procId: Number.parseInt(pm_id as string),
                 latency: v.latency,
                 status: v.status,
               };
@@ -217,14 +226,14 @@ process.on("SIGTERM", async () => {
   await exit(client, database);
 });
 
-if (process.env.PUBLIC_KEY && process.env.INTERACTIONS_PORT && !Number.isNaN(process.env.INTERACTIONS_PORT)) {
-  const pubKey = await crypto.subtle.importKey("raw", Buffer.from(process.env.PUBLIC_KEY, "hex"), "Ed25519", false, [
-    "verify",
-  ]);
+const publicKey = getEnv("PUBLIC_KEY");
+const interactionsPort = getEnv("INTERACTIONS_PORT");
+if (publicKey && interactionsPort && !Number.isNaN(interactionsPort)) {
+  const pubKey = await crypto.subtle.importKey("raw", Buffer.from(publicKey, "hex"), "Ed25519", false, ["verify"]);
   const interactServer = createInteractionServer(client, pubKey, database);
-  interactServer.listen(Number(process.env.INTERACTIONS_PORT));
+  interactServer.listen(Number(interactionsPort));
   interactServer.on("listening", () => {
-    logger.info(`Started HTTP interactions server on port ${process.env.INTERACTIONS_PORT}`);
+    logger.info(`Started HTTP interactions server on port ${interactionsPort}`);
   });
 }
 

@@ -1,13 +1,13 @@
 import { Buffer } from "node:buffer";
 import { lookup } from "node:dns/promises";
 import fs from "node:fs";
-import process from "node:process";
 import { fileTypeStream } from "file-type";
 import ipaddr from "ipaddr.js";
 import logger from "./logger.ts";
 import MediaConnection from "./mediaConnection.ts";
 import run from "./mediaRunner.ts";
 import { random } from "./misc.ts";
+import { getEnv } from "./runtime.ts";
 import { mediaTypes, type MediaParams, type MediaTypes } from "./types.ts";
 
 let mediaLib: import("./mediaLib.ts").MediaLib | undefined;
@@ -88,7 +88,7 @@ export async function request(
   const res = await fetch(media, {
     signal: AbortSignal.timeout(15000),
     headers: {
-      "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${process.env.ESMBOT_VER}`,
+      "User-Agent": `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com) esmBot/${getEnv("ESMBOT_VER")}`,
     },
   });
   const url = res.url;
@@ -227,7 +227,7 @@ async function getIdeal(object: MediaParams): Promise<MediaConnection | undefine
 let running = 0;
 
 export async function runMediaJob(params: MediaParams): Promise<{ buffer: Buffer; type: string; spoiler: boolean }> {
-  if (process.env.API_TYPE === "ws") {
+  if (getEnv("API_TYPE") === "ws") {
     const currentServer = await getIdeal(params);
     if (!currentServer)
       return {

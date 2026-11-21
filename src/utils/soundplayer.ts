@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import process from "node:process";
 import { setTimeout } from "node:timers/promises";
 import {
   type AnyVoiceChannel,
@@ -25,6 +24,7 @@ import {
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";
 import { formatDuration } from "./misc.ts";
+import { getEnv } from "./runtime.ts";
 
 export type SoundPlayer = {
   player: Player;
@@ -331,7 +331,7 @@ export async function nextSong(
         player?.shuffle,
         track,
       );
-    } else if (process.env.STAYVC !== "true" && data.reason !== "stopped") {
+    } else if (getEnv("STAYVC") !== "true" && data.reason !== "stopped") {
       await setTimeout(400);
       players.delete(voiceChannel.guildID);
       queues.delete(voiceChannel.guildID);

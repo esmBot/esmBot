@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { availableParallelism } from "node:os";
 import type { ShardStatus } from "oceanic.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import { init as dbInit } from "../database.ts";
 
 export type ShardData = {
@@ -29,12 +30,11 @@ export type ServerCountMessage = {
 export type IncomingProcMessage = BaseProcMessage | ServerCountMessage;
 
 export async function getGatewayData() {
-  const base =
-    process.env.REST_PROXY && process.env.REST_PROXY !== "" ? process.env.REST_PROXY : "https://discord.com/api/v10";
+  const base = getEnv("REST_PROXY") || "https://discord.com/api/v10";
 
   const request = await fetch(`${base}/gateway/bot`, {
     headers: {
-      Authorization: `Bot ${process.env.TOKEN}`,
+      Authorization: `Bot ${getEnv("TOKEN")}`,
     },
   });
   if (!request.ok) {

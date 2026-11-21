@@ -1,7 +1,7 @@
-import process from "node:process";
 import Postgres from "postgres";
 import { commands, messageCommands, userCommands } from "#utils/collections.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 
@@ -124,7 +124,7 @@ export default class PostgreSQLPlugin implements DatabasePlugin {
 
     const guild: DBGuild = {
       guild_id: query,
-      prefix: process.env.PREFIX ?? "&",
+      prefix: getEnv("PREFIX") ?? "&",
       disabled: [],
       disabled_commands: [],
       tag_roles: [],

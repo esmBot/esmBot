@@ -1,7 +1,7 @@
-import process from "node:process";
 import { DatabaseSync } from "node:sqlite";
 import { commands, messageCommands, userCommands } from "#utils/collections.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import type { Count, DBGuild, Tag } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
 
@@ -90,7 +90,7 @@ export default class SQLitePlugin implements DatabasePlugin {
         logger.info("Initializing SQLite database...");
         this.connection.exec(schema);
       } else if (version < latestVersion) {
-        logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+        logger.info(`Migrating SQLite database at ${getEnv("DB")}, which is currently at version ${version}...`);
         while (version < latestVersion) {
           version++;
           logger.info(`Running version ${version} update script...`);
@@ -253,7 +253,7 @@ export default class SQLitePlugin implements DatabasePlugin {
       } & Omit<DBGuild, "disabled" | "disabled_commands" | "tag_roles">;
       if (!guild) {
         const guild_id = query;
-        const prefix = process.env.PREFIX ?? "&";
+        const prefix = getEnv("PREFIX") ?? "&";
         guild = {
           guild_id,
           prefix,
@@ -279,7 +279,7 @@ export default class SQLitePlugin implements DatabasePlugin {
     return (
       (guild as DBGuild | undefined) ?? {
         guild_id: query,
-        prefix: process.env.PREFIX ?? "&",
+        prefix: getEnv("PREFIX") ?? "&",
         disabled: [],
         disabled_commands: [],
         tag_roles: [],

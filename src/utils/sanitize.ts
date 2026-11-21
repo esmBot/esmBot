@@ -1,6 +1,7 @@
 import { inspect } from "node:util";
 import type { AnyChannel, AnyPrivateChannel, CommandInteraction, Message } from "oceanic.js";
 import { servers } from "./media.ts";
+import { getEnv } from "./runtime.ts";
 
 const optionalReplace = (token: string) => {
   return token === undefined || token === "" ? "" : token === "true" || token === "false" ? token : "<redacted>";
@@ -27,8 +28,9 @@ export function clean(input: unknown, remove: string[] = [], skipEnv = false) {
     }
 
     for (const env of sensitiveVars) {
-      if (process.env[env] && process.env[env].length > 0) {
-        text = text.replaceAll(process.env[env], optionalReplace(process.env[env]));
+      const envValue = getEnv(env);
+      if (envValue && envValue.length > 0) {
+        text = text.replaceAll(envValue, optionalReplace(envValue));
       }
     }
   }

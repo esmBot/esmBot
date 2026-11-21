@@ -26,11 +26,13 @@ function canLoadTS(): boolean {
 }
 
 export function detectRuntime() {
+  // todo: rely less on node:process for deno (and other runtimes) detection
   if (process.versions.deno) {
     return {
       type: "deno",
       version: process.versions.deno,
       tsLoad: true,
+      platform: process.platform,
     };
   }
   if (process.versions.node) {
@@ -38,12 +40,14 @@ export function detectRuntime() {
       type: "node",
       version: process.versions.node,
       tsLoad: canLoadTS(),
+      platform: process.platform,
     };
   }
   return {
     type: "unknown",
     version: null,
     tsLoad: false,
+    platform: "unknown",
   };
 }
 

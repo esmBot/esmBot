@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { createRequire } from "node:module";
-import process from "node:process";
+import { getEnv } from "./runtime.ts";
 import type { MediaParams, MediaTypes } from "./types.ts";
 
 export interface FuncObject {
@@ -31,6 +31,7 @@ export interface MediaLib {
 }
 
 const nodeRequire = createRequire(import.meta.url);
-const relPath = `../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/esmbmedia.node`;
+const debug = getEnv("DEBUG");
+const relPath = `../../build/${debug && debug === "true" ? "Debug" : "Release"}/esmbmedia.node`;
 
 export const media = nodeRequire(relPath) as MediaLib;

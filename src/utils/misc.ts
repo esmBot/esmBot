@@ -5,6 +5,7 @@ import { type Client, type Guild } from "oceanic.js";
 import packageJson from "../../package.json" with { type: "json" };
 import type { DatabasePlugin } from "../database.ts";
 import { disconnect } from "./media.ts";
+import { getEnv } from "./runtime.ts";
 
 export async function getVers() {
   process.env.ESMBOT_VER = packageJson.version;
@@ -38,7 +39,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^
           \`"""
 
-esmBot ${process.env.ESMBOT_VER} (${process.env.GIT_REV})
+esmBot ${getEnv("ESMBOT_VER")} (${getEnv("GIT_REV")})
 `);
 }
 
@@ -51,7 +52,7 @@ export async function exit(client: Client, database: DatabasePlugin | undefined)
   client.disconnect(false);
   if (database) await database.stop();
   disconnect();
-  if (process.env.API_TYPE !== "ws") {
+  if (getEnv("API_TYPE") !== "ws") {
     const { media } = await import("./mediaLib.ts");
     media.shutdown();
   }

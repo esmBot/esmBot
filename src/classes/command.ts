@@ -1,5 +1,4 @@
 import type { ServerResponse } from "node:http";
-import process from "node:process";
 import {
   type AllowedMentions,
   type AnyTextableChannel,
@@ -21,6 +20,7 @@ import {
   type User,
 } from "oceanic.js";
 import { getString } from "#utils/i18n.js";
+import { getEnv } from "#utils/runtime.js";
 import { cleanInteraction, cleanMessage } from "#utils/sanitize.js";
 import type { CommandFlag, CommandType } from "#utils/types.js";
 import type { DatabasePlugin } from "../database.ts";
@@ -77,7 +77,7 @@ class Command {
     if (options.type === "classic") {
       this.message = options.message;
       this.args = options.args;
-      this.locale = options.locale ?? (process.env.LOCALE as Locale) ?? "en-US";
+      this.locale = options.locale ?? (getEnv("LOCALE") as Locale) ?? "en-US";
       this.cmdName = options.cmdName;
       this.channel = options.message.channel ?? {
         id: options.message.channelID,

@@ -1,5 +1,4 @@
 import { lstat, readdir, rm, stat, writeFile } from "node:fs/promises";
-import process from "node:process";
 import {
   type Client,
   CommandInteraction,
@@ -11,6 +10,7 @@ import {
 import { selectedImages } from "./collections.ts";
 import { getString } from "./i18n.ts";
 import logger from "./logger.ts";
+import { getEnv } from "./runtime.ts";
 
 type SizeSuffix = "K" | "M" | "G" | "T";
 type FileStats = {
@@ -22,17 +22,22 @@ type FileStats = {
 let dirSizeCache: number;
 let threshold: number | undefined;
 
-export async function upload(client: Client, result: File & { flags?: number }, context: CommandInteraction | Message) {
+export async function upload(
+  client: Client,
+  result: File & { flags?: number },
+  context: CommandInteraction | Message,
+  tempdir: string,
+) {
   const filename = `${Math.random().toString(36).substring(2, 15)}.${result.name.split(".")[1]}`;
-  await writeFile(`${process.env.TEMPDIR}/${filename}`, result.contents);
+  await writeFile(`${tempdir}/${filename}`, result.contents);
 
-  if (threshold) {
+  if (threshold && tempdir) {
     const size = dirSizeCache + result.contents.length;
     dirSizeCache = size;
-    await removeOldImages(size);
+    await removeOldImages(size, tempdir);
   }
 
-  const imageURL = `${process.env.TMP_DOMAIN || "https://tmp.esmbot.net"}/${filename}`;
+  const imageURL = `${getEnv("TMP_DOMAIN") || "https://tmp.esmbot.net"}/${filename}`;
   const payload: InteractionContent = {
     components: [
       {
@@ -85,13 +90,12 @@ export async function upload(client: Client, result: File & { flags?: number }, 
   }
 }
 
-async function removeOldImages(s: number) {
+async function removeOldImages(s: number, tempdir: string) {
   if (!threshold) return;
-  if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
   let size = s;
   if (size > threshold) {
-    const files = (await readdir(process.env.TEMPDIR)).map(async (file) => {
-      const stats = await lstat(`${process.env.TEMPDIR}/${file}`);
+    const files = (await readdir(tempdir)).map(async (file) => {
+      const stats = await lstat(`${tempdir}/${file}`);
       if (stats.isSymbolicLink()) return;
       return {
         name: file,
@@ -107,7 +111,7 @@ async function removeOldImages(s: number) {
 
     do {
       if (!oldestFiles[0]) break;
-      await rm(`${process.env.TEMPDIR}/${oldestFiles[0].name}`);
+      await rm(`${tempdir}/${oldestFiles[0].name}`);
       logger.log(`Removed oldest image file: ${oldestFiles[0].name}`);
       size -= oldestFiles[0].size;
       oldestFiles.shift();
@@ -120,10 +124,8 @@ async function removeOldImages(s: number) {
   }
 }
 
-export async function parseThreshold() {
-  if (!process.env.THRESHOLD || process.env.THRESHOLD === "") return;
-  if (!process.env.TEMPDIR || process.env.TEMPDIR === "") return;
-  const matched = process.env.THRESHOLD.match(/(\d+)([KMGT])/);
+export async function parseThreshold(tempdir: string, inThreshold: string) {
+  const matched = inThreshold.match(/(\d+)([KMGT])/);
   const sizes = {
     K: 1024,
     M: 1048576,
@@ -136,8 +138,8 @@ export async function parseThreshold() {
     logger.error("Invalid THRESHOLD config.");
     threshold = undefined;
   }
-  const dirstat = (await readdir(process.env.TEMPDIR)).map((file) => {
-    return stat(`${process.env.TEMPDIR}/${file}`).then((stats) => stats.size);
+  const dirstat = (await readdir(tempdir)).map((file) => {
+    return stat(`${tempdir}/${file}`).then((stats) => stats.size);
   });
   const size = await Promise.all(dirstat);
   const reduced = size.reduce((a, b) => {

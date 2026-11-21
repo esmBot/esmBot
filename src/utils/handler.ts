@@ -1,6 +1,5 @@
 import { readdir } from "node:fs/promises";
 import { relative, resolve } from "node:path";
-import process from "node:process";
 import {
   type ApplicationCommandOptions,
   type Client,
@@ -14,6 +13,7 @@ import commandConfig from "#config/commands.json" with { type: "json" };
 import { aliases, categories, commands, messageCommands, paths, userCommands } from "./collections.ts";
 import { getAllLocalizations } from "./i18n.ts";
 import { log } from "./logger.ts";
+import { getEnv } from "./runtime.ts";
 import type {
   CommandFlag,
   CommandFlagType,
@@ -250,9 +250,10 @@ export async function send(bot: Client) {
   const commandArray = update();
   log("info", "Sending application command data to Discord...");
   let cmdArray = commandArray.main;
-  if (process.env.ADMIN_SERVER && process.env.ADMIN_SERVER !== "") {
+  const adminServer = getEnv("ADMIN_SERVER");
+  if (adminServer && adminServer !== "") {
     await bot.application.bulkEditGuildCommands(
-      process.env.ADMIN_SERVER,
+      adminServer,
       commandArray.private as CreateGuildApplicationCommandOptions[],
     );
   } else {

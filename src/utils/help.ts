@@ -1,7 +1,7 @@
 import { promises } from "node:fs";
-import process from "node:process";
 import commandConfig from "#config/commands.json" with { type: "json" };
 import { commands } from "./collections.ts";
+import { getEnv } from "./runtime.ts";
 import type { Param } from "./types.ts";
 
 export const categoryTemplate = {
@@ -49,7 +49,7 @@ export async function createPage(output: string) {
 title: "esmBot Command List"
 ---
 
-# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${process.env.NODE_ENV === "development" ? " Dev" : ""} Command List
+# <img src="https://esmbot.net/pictures/esmbot.png" width="64"> esmBot${getEnv("NODE_ENV") === "development" ? " Dev" : ""} Command List
 
 This page was last generated on \`${new Date().toString()}\`.
 

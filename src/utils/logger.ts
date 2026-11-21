@@ -1,5 +1,5 @@
-import process from "node:process";
 import winston from "winston";
+import { getEnv } from "./runtime.ts";
 
 const logger = winston.createLogger({
   levels: {
@@ -28,13 +28,14 @@ const logger = winston.createLogger({
       maxFiles: 8,
     }),
   ],
-  level: process.env.DEBUG_LOG ? "debug" : "main",
+  level: getEnv("DEBUG_LOG") ? "debug" : "main",
   format: winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     winston.format.printf((info) => {
       const { timestamp, level, message, ...args } = info;
 
-      return `[${timestamp}]: [${level.toUpperCase()}${process.env.pm_id ? `-${process.env.pm_id}` : ""}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
+      const pm_id = getEnv("pm_id");
+      return `[${timestamp}]: [${level.toUpperCase()}${pm_id ? `-${pm_id}` : ""}] - ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ""}`;
     }),
   ),
 });

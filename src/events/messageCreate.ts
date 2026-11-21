@@ -1,4 +1,3 @@
-import process from "node:process";
 import { type AnyTextableChannel, GroupChannel, type Message, PrivateChannel, ThreadChannel } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { aliases, commands } from "#utils/collections.js";
@@ -6,6 +5,7 @@ import { getString } from "#utils/i18n.js";
 import { invokeCommand } from "#utils/invoke.js";
 import logger from "#utils/logger.js";
 import parseCommand from "#utils/parseCommand.js";
+import { getEnv } from "#utils/runtime.js";
 import type { DBGuild, EventParams } from "#utils/types.js";
 
 let mentionRegex: RegExp;
@@ -47,7 +47,7 @@ export default async ({ client, database }: EventParams, message: Message) => {
 
   let guildDB: DBGuild | undefined;
   let text: string;
-  const defaultPrefix = process.env.PREFIX ?? "&";
+  const defaultPrefix = getEnv("PREFIX") ?? "&";
   const mentionResult = message.content.match(mentionRegex);
   if (mentionResult) {
     text = message.content.substring(mentionResult[0].length).trim();
@@ -120,7 +120,8 @@ export default async ({ client, database }: EventParams, message: Message) => {
   }
 
   // actually run the command
-  if (!process.env.DISABLE_CMD_LOG || process.env.DISABLE_CMD_LOG !== "true") {
+  const disableLog = getEnv("DISABLE_CMD_LOG");
+  if (!disableLog || disableLog !== "true") {
     logger.log("log", `${message.author.username} (${message.author.id}) ran classic command ${command}`);
   }
 

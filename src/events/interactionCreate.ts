@@ -1,10 +1,10 @@
-import process from "node:process";
 import type { AnyInteraction } from "oceanic.js";
 import Command from "#cmd-classes/command.js";
 import { collectors, commands, messageCommands, userCommands } from "#utils/collections.js";
 import { getString } from "#utils/i18n.js";
 import { invokeCommand } from "#utils/invoke.js";
 import logger from "#utils/logger.js";
+import { getEnv } from "#utils/runtime.js";
 import type { EventParams } from "#utils/types.js";
 
 /**
@@ -68,7 +68,8 @@ export default async ({ client, database, res }: EventParams, interaction: AnyIn
   const invoker = interaction.member ?? interaction.user;
 
   // actually run the command
-  if (!process.env.DISABLE_CMD_LOG || process.env.DISABLE_CMD_LOG !== "true") {
+  const disableLog = getEnv("DISABLE_CMD_LOG");
+  if (!disableLog || disableLog !== "true") {
     logger.log("main", `${invoker.username} (${invoker.id}) ran application command ${cmdName}`);
   }
 

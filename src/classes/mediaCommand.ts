@@ -17,6 +17,7 @@ import logger from "#utils/logger.js";
 import { runMediaJob } from "#utils/media.js";
 import mediaDetect from "#utils/mediadetect.js";
 import { maxFileSize, random } from "#utils/misc.js";
+import { getEnv } from "#utils/runtime.js";
 import { clean, isEmpty } from "#utils/sanitize.js";
 import { upload } from "#utils/tempimages.js";
 import type { CommandFlag, MediaParams, MediaMeta, MediaTypes } from "#utils/types.js";
@@ -196,11 +197,12 @@ class MediaCommand extends Command {
         name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${staticProps.command}.${type}`,
       };
       if (buffer.length > sizeLimit) {
-        if (process.env.TEMPDIR && process.env.TEMPDIR !== "" && this.permissions.has("EMBED_LINKS")) {
+        const tempdir = getEnv("TEMPDIR");
+        if (tempdir && tempdir !== "" && this.permissions.has("EMBED_LINKS")) {
           if (this.interaction) {
-            await upload(this.client, { ...file, flags }, this.interaction);
+            await upload(this.client, { ...file, flags }, this.interaction, tempdir);
           } else if (this.message) {
-            await upload(this.client, { ...file, flags }, this.message);
+            await upload(this.client, { ...file, flags }, this.message, tempdir);
           }
         } else {
           return {
