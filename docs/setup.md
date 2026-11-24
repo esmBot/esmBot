@@ -101,7 +101,7 @@ Node.js is the runtime that esmBot is built on top of. The bot requires version 
 We suggest using nvm to manage your Node.js install. Run the following command to install it:
 
 ```sh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.41.0/install.sh | bash
 ```
 
 Then run the following to install Node.js:
@@ -111,21 +111,12 @@ nvm install 26
 nvm use 26
 ```
 
-esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack (a tool included with Node.js) to enable it, and once you attempt to run it for the first time it will ask you to install it:
+esmBot uses the pnpm package manager to manage dependencies and run build scripts. You can use Corepack to enable it, and once you attempt to run it for the first time it will ask you to install it:
 
 ```sh
+npm install -g corepack
 corepack enable
 ```
-
-!!! warning
-
-    Node.js v25 and above no longer include Corepack. If you get a "command not found" error when running the above command, then run the below command to install Corepack:
-
-    ```sh
-    npm install -g corepack
-    ```
-
-    Afterwards, you should be able to run `corepack enable` like normal.
 
 ---
 
