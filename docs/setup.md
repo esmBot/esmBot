@@ -1,5 +1,11 @@
 # Setup
 
+!!! danger
+
+    **If you want to use the bot right now, head on over to [esmbot.net](https://esmbot.net) and click the big "Invite" button! After adding it to your account/server, no further setup is required; type / to view the list of commands.**
+
+    The following guide is intended for people who want to run their own versions of esmBot on their own computers using the public source code. If you've never heard of (or are uninterested in messing with) package managers, Node.js, or Git, and your goal is to use commands like /caption or /gif, please reread the beginning of this big red box; otherwise, continue below for steps on how to self-host esmBot.
+
 Here are some instructions to get esmBot up and running from source.
 
 ??? check "Recommended system requirements"
