@@ -117,6 +117,16 @@ esmBot uses the pnpm package manager to manage dependencies and run build script
 corepack enable
 ```
 
+!!! warning
+
+    Node.js v25 and above no longer include Corepack. If you get a "command not found" error when running the above command, then run the below command to install Corepack:
+
+    ```sh
+    npm install -g corepack
+    ```
+
+    Afterwards, you should be able to run `corepack enable` like normal.
+
 ---
 
 ### 3. Set up the database.
