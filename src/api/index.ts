@@ -275,7 +275,7 @@ httpServer.on("request", (req, res) => {
     return res.end(job.data);
   }
   if (reqUrl.pathname === "/count" && req.method === "GET") {
-    log(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
+    logger.debug(`Sending job count to ${req.socket.remoteAddress}:${req.socket.remotePort} via HTTP`);
     return res.end(jobs.size.toString());
   }
   res.statusCode = 404;
