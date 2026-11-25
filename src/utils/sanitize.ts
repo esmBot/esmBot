@@ -155,8 +155,8 @@ export function cleanFilename(filename: string): string {
   return cleanFilename;
 }
 
-export function cleanAlt(alt: string | undefined): string | undefined {
+export function cleanAlt(alt: string): string | undefined {
   const cleaned = alt?.trim().substring(0, 1024);
-  if (cleaned && !isEmpty(cleaned)) return cleaned;
+  if (!isEmpty(cleaned)) return cleaned;
   return undefined;
 }
