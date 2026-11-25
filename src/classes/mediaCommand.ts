@@ -1,3 +1,4 @@
+import type { File, MessageAttachment } from "oceanic.js";
 import {
   type AnyTextableChannel,
   type Attachment,
@@ -18,9 +19,9 @@ import { runMediaJob } from "#utils/media.js";
 import mediaDetect from "#utils/mediadetect.js";
 import { maxFileSize, random } from "#utils/misc.js";
 import { getEnv } from "#utils/runtime.js";
-import { clean, isEmpty } from "#utils/sanitize.js";
+import { clean, cleanAlt, cleanFilename, isEmpty } from "#utils/sanitize.js";
 import { upload } from "#utils/tempimages.js";
-import type { CommandFlag, MediaParams, MediaMeta, MediaTypes } from "#utils/types.js";
+import type { CommandFlag, MediaMeta, MediaParams, MediaTypes } from "#utils/types.js";
 import Command from "./command.ts";
 
 class MediaCommand extends Command {
@@ -62,6 +63,9 @@ class MediaCommand extends Command {
     const spoiler = this.getOptionBoolean("spoiler");
     const sizeLimit = this.interaction?.attachmentSizeLimit ?? maxFileSize(this.guild);
     const canUseSelection = !this.getOptionAttachment("image") && !this.getOptionString("link");
+    const filename = this.getOptionString("filename");
+    const alt = cleanAlt(this.getOptionString("alt"));
+
     let mediaParams: MediaParams;
 
     if (staticProps.requiresMedia) {
@@ -101,6 +105,8 @@ class MediaCommand extends Command {
           spoiler,
           token: this.interaction?.token,
           filesize: sizeLimit,
+          filename,
+          alt,
         };
       } catch (e) {
         runningCommands.delete(this.author.id);
@@ -115,6 +121,8 @@ class MediaCommand extends Command {
         spoiler,
         token: this.interaction?.token,
         filesize: sizeLimit,
+        filename,
+        alt,
       };
     }
 
@@ -192,10 +200,19 @@ class MediaCommand extends Command {
         };
       }
 
-      const file = {
+      const file: File = {
+        index: 0,
         contents: buffer,
-        name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${staticProps.command}.${type}`,
+        name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${cleanFilename(mediaParams.filename) || staticProps.command}.${type}`,
       };
+
+      const attachment: MessageAttachment | undefined = alt
+        ? {
+            id: 0,
+            description: alt,
+          }
+        : undefined;
+
       if (buffer.length > sizeLimit) {
         const tempdir = getEnv("TEMPDIR");
         if (tempdir && this.permissions.has("EMBED_LINKS")) {
@@ -213,6 +230,7 @@ class MediaCommand extends Command {
       } else {
         return {
           files: [file],
+          attachments: attachment ? [attachment] : undefined,
           flags,
         };
       }
@@ -311,6 +329,22 @@ class MediaCommand extends Command {
         type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
         description: "Attempt to send output as an ephemeral/temporary response",
         descriptionLocalizations: getAllLocalizations("image.flags.ephemeral"),
+      },
+      {
+        name: "filename",
+        nameLocalizations: getAllLocalizations("image.flagNames.filename"),
+        maxLength: 240,
+        type: Constants.ApplicationCommandOptionTypes.STRING,
+        description: "Custom filename of the resulting media",
+        descriptionLocalizations: getAllLocalizations("image.flags.filename"),
+      },
+      {
+        name: "alt",
+        nameLocalizations: getAllLocalizations("image.flagNames.alt"),
+        maxLength: 1024,
+        type: Constants.ApplicationCommandOptionTypes.STRING,
+        description: "Alt text in the resulting media",
+        descriptionLocalizations: getAllLocalizations("image.flags.alt"),
       },
     );
     return this;
