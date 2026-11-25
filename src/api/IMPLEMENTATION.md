@@ -66,6 +66,8 @@ The job object is formatted like this:
   "spoiler": boolean,   // whether to post the output as a spoiler (only when responding directly, see below section)
   "token": string,      // the interaction token (only when responding directly, see below section)
   "filesize": number,   // maximum attachment size in bytes allowed for the response (only when responding directly, see below section)
+  "filename": string,   // optional custom filename without extension (only when responding directly, see below section)
+  "alt": string,        // optional attachment description, maximum 1024 characters (only when responding directly, see below section)
 }
 ```
 
