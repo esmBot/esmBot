@@ -135,8 +135,7 @@ export function safeBigInt(input: string | number | bigint | boolean) {
 }
 
 // cleans a filename to make sure it is valid
-export function cleanFilename(filename: string | undefined): string | undefined {
-  if (!filename) return undefined;
+export function cleanFilename(filename: string): string {
   let cleanFilename = filename;
 
   // Source - https://stackoverflow.com/a/48487959
@@ -146,20 +145,12 @@ export function cleanFilename(filename: string | undefined): string | undefined 
   cleanFilename = cleanFilename.replace(/[\\/:*?\p{Cc}"<>|]/gu, "").trim();
 
   // Make sure the cleaned filename doesn't exceed 240 bytes
-  const filenameArray = Array.from(cleanFilename);
-  while (Buffer.byteLength(cleanFilename) > 240) {
-    filenameArray.pop(); // Pop from the array rather than just .slice(0, -1) to keep emojis intact
-
-    cleanFilename = filenameArray.join("");
-  }
+  // NOTE: This is a soft limit, as Discord can accept filenames over 240 bytes.
+  const filenameArray = Array.from(new Intl.Segmenter().segment(cleanFilename)).map((s) => s.segment);
+  cleanFilename = filenameArray.slice(0, 240).join("");
 
   // Remove trailing periods and whitespace
   cleanFilename = cleanFilename.replace(/[.\s]+$/, "");
-
-  // Finally, if it uses a windows reserved filename, just prepend an underscore
-  if (/^(CON|PRN|AUX|NUL|COM[1-9¹²³]|LPT[1-9¹²³])(\.|$)/i.test(cleanFilename)) {
-    cleanFilename = "_" + cleanFilename;
-  }
 
   return cleanFilename;
 }

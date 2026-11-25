@@ -1,15 +1,3 @@
-import type { File, MessageAttachment } from "oceanic.js";
-import {
-  type AnyTextableChannel,
-  type Attachment,
-  AttachmentFlags,
-  CommandInteraction,
-  Constants,
-  type JSONAttachment,
-  type Message,
-  type RawAttachment,
-  type User,
-} from "oceanic.js";
 import messages from "#config/messages.json" with { type: "json" };
 import { pendingCommands, runningCommands, selectedImages } from "#utils/collections.js";
 import { convFlagType } from "#utils/handler.js";
@@ -22,6 +10,18 @@ import { getEnv } from "#utils/runtime.js";
 import { clean, cleanAlt, cleanFilename, isEmpty } from "#utils/sanitize.js";
 import { upload } from "#utils/tempimages.js";
 import type { CommandFlag, MediaMeta, MediaParams, MediaTypes } from "#utils/types.js";
+import type { File, MessageAttachment } from "oceanic.js";
+import {
+    type AnyTextableChannel,
+    type Attachment,
+    AttachmentFlags,
+    CommandInteraction,
+    Constants,
+    type JSONAttachment,
+    type Message,
+    type RawAttachment,
+    type User,
+} from "oceanic.js";
 import Command from "./command.ts";
 
 class MediaCommand extends Command {
@@ -203,7 +203,7 @@ class MediaCommand extends Command {
       const file: File = {
         index: 0,
         contents: buffer,
-        name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${cleanFilename(mediaParams.filename) || staticProps.command}.${type}`,
+        name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${mediaParams.filename && cleanFilename(mediaParams.filename) || staticProps.command}.${type}`,
       };
 
       const attachment: MessageAttachment | undefined = alt

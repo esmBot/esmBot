@@ -1,3 +1,9 @@
+import logger from "#utils/logger.js";
+import { media } from "#utils/mediaLib.js";
+import run from "#utils/mediaRunner.js";
+import { getEnv } from "#utils/runtime.js";
+import { cleanAlt, cleanFilename } from "#utils/sanitize.js";
+import type { JobOutput, MediaFormats, MediaParams } from "#utils/types.js";
 import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import { createServer } from "node:http";
@@ -5,12 +11,6 @@ import process from "node:process";
 import { DiscordHTTPError, DiscordRESTError, type RawMessage } from "oceanic.js";
 import type WSocket from "ws";
 import { WebSocketServer, type ErrorEvent } from "ws";
-import logger from "#utils/logger.js";
-import { media } from "#utils/mediaLib.js";
-import run from "#utils/mediaRunner.js";
-import { getEnv } from "#utils/runtime.js";
-import { cleanAlt, cleanFilename } from "#utils/sanitize.js";
-import type { JobOutput, MediaFormats, MediaParams } from "#utils/types.js";
 
 const formats = media.init();
 
@@ -388,7 +388,7 @@ async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws:
   const fileSize = object.filesize && object.filesize > 0 ? object.filesize : defaultFileSize;
   if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length <= fileSize) {
     const form = new FormData();
-    const filename = `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${cleanFilename(object.filename) || object.cmd}.${jobObject.ext}`;
+    const filename = `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${object.filename && cleanFilename(object.filename) || object.cmd}.${jobObject.ext}`;
     form.set("files[0]", new Blob([jobObject.data]), filename);
     const alt = cleanAlt(object.alt);
     if (alt)
