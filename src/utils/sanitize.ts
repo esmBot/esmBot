@@ -133,3 +133,30 @@ export function safeBigInt(input: string | number | bigint | boolean) {
     return -1;
   }
 }
+
+// cleans a filename to make sure it is valid
+export function cleanFilename(filename: string): string {
+  let cleanFilename = filename;
+
+  // Source - https://stackoverflow.com/a/48487959
+  // Posted by Jason
+  // Retrieved 2026-11-24, License - CC BY-SA 3.0
+  // Further modified
+  cleanFilename = cleanFilename.replace(/[\\/:*?\p{Cc}"<>|]/gu, "").trim();
+
+  // Make sure the cleaned filename doesn't exceed 240 characters
+  // NOTE: This is a soft limit, as Discord can accept larger filenames
+  const filenameArray = Array.from(new Intl.Segmenter().segment(cleanFilename)).map((s) => s.segment);
+  cleanFilename = filenameArray.slice(0, 240).join("");
+
+  // Remove trailing periods and whitespace
+  cleanFilename = cleanFilename.replace(/[.\s]+$/, "");
+
+  return cleanFilename;
+}
+
+export function cleanAlt(alt: string): string | undefined {
+  const cleaned = alt?.trim().substring(0, 1024);
+  if (!isEmpty(cleaned)) return cleaned;
+  return undefined;
+}

@@ -1021,7 +1021,9 @@
       "media": "media",
       "spoiler": "spoiler",
       "text": "text",
-      "togif": "togif"
+      "togif": "togif",
+      "filename": "filename",
+      "alt": "alt"
     },
     "flags": {
       "ephemeral": "Attempt to send output as an ephemeral/temporary response",
@@ -1030,7 +1032,9 @@
       "media": "A media attachment",
       "spoiler": "Attempt to send output as a spoiler",
       "text": "The text to put on the image",
-      "togif": "Force GIF output"
+      "togif": "Force GIF output",
+      "filename": "Custom filename of the resulting media",
+      "alt": "Alt text in the resulting media"
     },
     "frames": "That GIF has way too many frames (over 1000)!",
     "large": "That file is too large (>= 40MB)! Try using a smaller file.",

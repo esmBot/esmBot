@@ -9,6 +9,7 @@ import logger from "#utils/logger.js";
 import { media } from "#utils/mediaLib.js";
 import run from "#utils/mediaRunner.js";
 import { getEnv } from "#utils/runtime.js";
+import { cleanAlt, cleanFilename } from "#utils/sanitize.js";
 import type { JobOutput, MediaFormats, MediaParams } from "#utils/types.js";
 
 const formats = media.init();
@@ -387,8 +388,21 @@ async function finishJob(data: JobOutput, job: MiniJob, object: MediaParams, ws:
   const fileSize = object.filesize && object.filesize > 0 ? object.filesize : defaultFileSize;
   if (clientID && object.token && allowedExtensions.includes(jobObject.ext) && jobObject.data.length <= fileSize) {
     const form = new FormData();
-    const filename = `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${object.cmd}.${jobObject.ext}`;
+    const filename = `${jobObject.spoiler || object.spoiler ? "SPOILER_" : ""}${(object.filename && cleanFilename(object.filename)) || object.cmd}.${jobObject.ext}`;
     form.set("files[0]", new Blob([jobObject.data]), filename);
+    const alt = object.alt && cleanAlt(object.alt);
+    if (alt)
+      form.set(
+        "payload_json",
+        JSON.stringify({
+          attachments: [
+            {
+              id: 0,
+              description: alt,
+            },
+          ],
+        }),
+      );
     try {
       const res = await fetch(`${discordBaseURL}/webhooks/${clientID}/${object.token}`, {
         method: "POST",
