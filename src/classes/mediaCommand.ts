@@ -7,7 +7,6 @@ import {
   type File,
   type JSONAttachment,
   type Message,
-  type MessageAttachment,
   type RawAttachment,
   type User,
 } from "oceanic.js";
