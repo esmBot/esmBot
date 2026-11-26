@@ -1,12 +1,13 @@
-import type { File, MessageAttachment } from "oceanic.js";
 import {
   type AnyTextableChannel,
   type Attachment,
   AttachmentFlags,
   CommandInteraction,
   Constants,
+  type File,
   type JSONAttachment,
   type Message,
+  type MessageAttachment,
   type RawAttachment,
   type User,
 } from "oceanic.js";
@@ -207,13 +208,6 @@ class MediaCommand extends Command {
         name: `${spoiler || result.spoiler ? "SPOILER_" : ""}${(mediaParams.filename && cleanFilename(mediaParams.filename)) || staticProps.command}.${type}`,
       };
 
-      const attachment: MessageAttachment | undefined = alt
-        ? {
-            id: 0,
-            description: alt,
-          }
-        : undefined;
-
       if (buffer.length > sizeLimit) {
         const tempdir = getEnv("TEMPDIR");
         if (tempdir && this.permissions.has("EMBED_LINKS")) {
@@ -231,7 +225,14 @@ class MediaCommand extends Command {
       } else {
         return {
           files: [file],
-          attachments: attachment ? [attachment] : undefined,
+          attachments: alt
+            ? [
+                {
+                  id: 0,
+                  description: alt,
+                },
+              ]
+            : undefined,
           flags,
         };
       }

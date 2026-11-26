@@ -144,8 +144,8 @@ export function cleanFilename(filename: string): string {
   // Further modified
   cleanFilename = cleanFilename.replace(/[\\/:*?\p{Cc}"<>|]/gu, "").trim();
 
-  // Make sure the cleaned filename doesn't exceed 240 bytes
-  // NOTE: This is a soft limit, as Discord can accept filenames over 240 bytes.
+  // Make sure the cleaned filename doesn't exceed 240 characters
+  // NOTE: This is a soft limit, as Discord can accept larger filenames
   const filenameArray = Array.from(new Intl.Segmenter().segment(cleanFilename)).map((s) => s.segment);
   cleanFilename = filenameArray.slice(0, 240).join("");
 
