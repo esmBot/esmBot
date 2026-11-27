@@ -28,7 +28,7 @@ If you want to self-host the bot, follow the [self-hosting guide](https://docs.e
 
 ## Contributing
 
-esmBot is licensed under the MIT License. Issues and pull requests are accepted to introduce features and fix bugs, and translations into different languages are accepted via [Weblate](https://translate.codeberg.org/projects/esmbot/esmbot/).
+esmBot is licensed under the MIT License. Issues and pull requests are accepted to introduce features and fix bugs, and translations into different languages are accepted via [Weblate](https://translate.codeberg.org/projects/esmbot/esmbot/). More information can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 <a href="https://translate.codeberg.org/engage/esmbot/">
 <img src="https://translate.codeberg.org/widget/esmbot/esmbot/multi-auto.svg" alt="Translation status" />
